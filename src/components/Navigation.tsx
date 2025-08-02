@@ -33,9 +33,6 @@ const Navigation = () => {
             <a href="#companies" className="text-primary-foreground hover:text-secondary transition-colors duration-200">
               شركاتنا
             </a>
-            <a href="#certifications" className="text-primary-foreground hover:text-secondary transition-colors duration-200">
-              التوثيقات
-            </a>
             <a href="#contact" className="text-primary-foreground hover:text-secondary transition-colors duration-200">
               تواصل معنا
             </a>
@@ -87,13 +84,6 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               >
                 شركاتنا
-              </a>
-              <a 
-                href="#certifications" 
-                className="block px-3 py-2 text-primary-foreground hover:text-secondary transition-colors duration-200"
-                onClick={() => setIsOpen(false)}
-              >
-                التوثيقات
               </a>
               <a 
                 href="#contact" 
