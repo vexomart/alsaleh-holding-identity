@@ -134,17 +134,10 @@ const HeroSection = () => {
       {/* Enhanced Content */}
       <div className="relative z-10 container mx-auto px-6 text-center">
         
-        {/* Top Badge */}
-        <div className="mb-8 animate-fade-in">
-          <div className="inline-flex items-center gap-4 mb-6 p-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-2xl animate-scale-in group hover:scale-105 transition-all duration-500">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-              <Sparkles className="w-5 h-5 text-secondary animate-pulse" />
-            </div>
+        {/* Top Badge - Simplified */}
+        <div className="mb-12 animate-fade-in">
+          <div className="inline-flex items-center justify-center p-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-2xl animate-scale-in group hover:scale-105 transition-all duration-500">
             <span className="text-lg font-bold text-primary-foreground">شركة عالمية رائدة • منذ 2016</span>
-            <Badge className="bg-gradient-to-r from-secondary to-primary text-white border-0">
-              متميزون
-            </Badge>
           </div>
         </div>
         
