@@ -4,6 +4,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import signatureImage from "@/assets/signature-ali-alshehri.png";
 import { 
   Users, 
   Target, 
@@ -439,11 +440,17 @@ const About = () => {
                               <div className="text-sm text-muted-foreground">{leader.position}</div>
                               <div className="text-xs text-muted-foreground mt-1">شركة علي صالح الشهري القابضة</div>
                             </div>
-                            <div className="text-right">
-                              <div className="w-32 h-16 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center border border-primary/30">
-                                <div className="text-2xl font-bold text-primary italic">علي الشهري</div>
+                            <div className="text-center">
+                              <div className="mb-3">
+                                <img 
+                                  src={signatureImage} 
+                                  alt="توقيع علي صالح الشهري" 
+                                  className="w-32 h-16 object-contain mx-auto opacity-80 hover:opacity-100 transition-opacity duration-300"
+                                />
                               </div>
-                              <div className="text-xs text-muted-foreground mt-2">التوقيع الرسمي</div>
+                              <div className="w-24 h-0.5 bg-gradient-to-r from-primary to-secondary mx-auto mb-1" />
+                              <div className="text-xs text-muted-foreground font-medium">التوقيع الرسمي</div>
+                              <div className="text-xs text-muted-foreground/70 mt-1">المؤسس والرئيس التنفيذي</div>
                             </div>
                           </div>
                         </div>
