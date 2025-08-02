@@ -94,8 +94,8 @@ const SubsidiariesSection = () => {
       icon: ShoppingCart,
       stats: { projects: "980+", clients: "540+", countries: "22", revenue: "$1.8M" },
       color: "from-green-600 to-emerald-500",
-      website: "https://e-commerce.ash.holdings/",
-      websiteName: "e-commerce.ash.holdings",
+      website: "https://vexomart.com/",
+      websiteName: "vexomart.com",
       growth: "+312%",
       rating: "4.6/5",
       specialties: ["التجارة الذكية", "الدفع الآمن", "تجربة المستخدم"]
