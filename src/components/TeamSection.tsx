@@ -44,8 +44,8 @@ const TeamSection = () => {
       bgEffect: "from-blue-500/10 to-cyan-500/10"
     },
     {
-      name: "هانز مولر",
-      nameEn: "Hans Müller",
+      name: "محمود عبد الخالق السعيد",
+      nameEn: "Mahmoud Abdul Khaliq Al-Saeed",
       position: "رئيس قسم التقنية والابتكار",
       positionEn: "Chief Technology Officer",
       department: "التقنية والذكاء الاصطناعي",
@@ -112,50 +112,73 @@ const TeamSection = () => {
             return (
               <Card 
                 key={index} 
-                className="group premium-card hover:shadow-glow transition-all duration-500 border-0 bg-white/5 backdrop-blur-md overflow-hidden animate-fade-in"
-                style={{ animationDelay: `${index * 0.15}s` }}
+                className="group premium-card hover:shadow-glow transition-all duration-700 border-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl overflow-hidden animate-fade-in hover:transform hover:scale-105 hover:-translate-y-2"
+                style={{ animationDelay: `${index * 0.2}s` }}
               >
-                <CardContent className="p-8 relative">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${member.bgEffect} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <CardContent className="p-8 relative h-full">
+                  {/* Background overlay with member color */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${member.bgEffect} opacity-0 group-hover:opacity-100 transition-all duration-700`} />
                   
-                  <div className="relative z-10">
-                    {/* Header with Icon */}
+                  {/* Floating particles effect */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute w-2 h-2 bg-primary/20 rounded-full animate-float top-4 right-4" />
+                    <div className="absolute w-1 h-1 bg-secondary/30 rounded-full animate-float-delayed top-8 right-8" />
+                    <div className="absolute w-1.5 h-1.5 bg-primary/15 rounded-full animate-float bottom-8 left-6" />
+                  </div>
+                  
+                  <div className="relative z-10 h-full flex flex-col">
+                    {/* Header with Enhanced Icon */}
                     <div className="flex items-start justify-between mb-6">
-                      <div className={`w-20 h-20 bg-gradient-to-br ${member.color} rounded-3xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl`}>
-                        <IconComponent className="w-10 h-10 text-white animate-pulse" />
+                      <div className={`relative w-24 h-24 bg-gradient-to-br ${member.color} rounded-3xl flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-700 shadow-2xl group-hover:shadow-glow`}>
+                        <div className="absolute inset-0 rounded-3xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <IconComponent className="w-12 h-12 text-white group-hover:animate-pulse relative z-10" />
+                        {/* Icon glow effect */}
+                        <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${member.color} opacity-0 group-hover:opacity-50 blur-xl transition-all duration-700`} />
+                      </div>
+                      
+                      {/* Status indicator */}
+                      <div className="flex flex-col items-end">
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse mb-2" />
+                        <span className="text-xs text-green-400 font-medium">متاح</span>
                       </div>
                     </div>
                     
-                    {/* Member Info */}
-                    <div className="mb-6">
-                      <Badge variant="secondary" className="text-xs font-medium mb-3 bg-white/10 border-white/20">
+                    {/* Enhanced Member Info */}
+                    <div className="mb-6 flex-grow">
+                      <Badge variant="secondary" className="text-xs font-bold mb-4 bg-white/15 border-white/30 text-primary/90 px-3 py-1 rounded-full">
                         {member.department}
                       </Badge>
-                      <h3 className="text-xl font-bold text-primary mb-1 group-hover:text-gradient-primary transition-all duration-300">
-                        {member.name}
-                      </h3>
-                      <p className="text-sm text-secondary font-medium mb-2">
-                        {member.nameEn}
-                      </p>
-                      <p className="text-base font-semibold text-primary/90 mb-1">
-                        {member.position}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {member.positionEn}
-                      </p>
+                      
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-bold text-primary mb-1 group-hover:text-gradient-primary transition-all duration-500 group-hover:scale-105 transform-gpu">
+                          {member.name}
+                        </h3>
+                        <p className="text-sm text-secondary/80 font-medium mb-3 group-hover:text-secondary transition-colors duration-300">
+                          {member.nameEn}
+                        </p>
+                        <div className="border-l-4 border-gradient-primary pl-3 space-y-1">
+                          <p className="text-base font-bold text-primary/90 group-hover:text-primary transition-colors duration-300">
+                            {member.position}
+                          </p>
+                          <p className="text-sm text-muted-foreground group-hover:text-muted-foreground/80 transition-colors duration-300">
+                            {member.positionEn}
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Specialties */}
-                    <div className="mb-4">
-                      <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
-                        <Brain className="w-4 h-4" />
-                        التخصصات:
+                    {/* Enhanced Specialties */}
+                    <div className="mb-6">
+                      <h4 className="text-sm font-bold text-primary mb-3 flex items-center gap-2 group-hover:scale-105 transition-transform duration-300">
+                        <Brain className="w-4 h-4 animate-pulse" />
+                        <span>التخصصات المتقدمة</span>
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {member.specialties.map((specialty, specialtyIndex) => (
                           <Badge 
                             key={specialtyIndex} 
-                            className={`text-xs bg-gradient-to-r ${member.color} text-white border-0 hover:scale-105 transition-transform duration-200`}
+                            className={`text-xs bg-gradient-to-r ${member.color} text-white border-0 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg font-medium px-3 py-1`}
+                            style={{ animationDelay: `${specialtyIndex * 0.1}s` }}
                           >
                             {specialty}
                           </Badge>
@@ -163,16 +186,22 @@ const TeamSection = () => {
                       </div>
                     </div>
 
-                    {/* Achievement */}
-                    <div className="mb-6">
-                      <div className="flex items-center gap-2 text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2">
-                        <Award className="w-4 h-4 text-yellow-500" />
-                        <span className="text-muted-foreground">{member.achievements}</span>
+                    {/* Enhanced Achievement */}
+                    <div className="mb-4">
+                      <div className="flex items-start gap-3 text-sm bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-xl px-4 py-3 group-hover:from-white/15 group-hover:to-white/10 transition-all duration-500 shadow-inner">
+                        <Award className="w-5 h-5 text-yellow-500 mt-0.5 group-hover:rotate-12 transition-transform duration-300" />
+                        <div>
+                          <div className="text-xs text-primary/80 font-medium mb-1">الإنجاز البارز</div>
+                          <span className="text-muted-foreground group-hover:text-foreground transition-colors duration-300 leading-relaxed">
+                            {member.achievements}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Bottom Accent */}
-                    <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${member.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300`} />
+                    {/* Enhanced Bottom Accent with pulse effect */}
+                    <div className={`absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r ${member.color} transform scale-x-0 group-hover:scale-x-100 transition-all duration-500 rounded-b-xl`} />
+                    <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${member.color} opacity-50 animate-pulse`} />
                   </div>
                 </CardContent>
               </Card>
