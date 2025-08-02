@@ -11,6 +11,7 @@ import TeamSection from "@/components/TeamSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SignLanguageSupport from "@/components/SignLanguageSupport";
+import CertificationsSection from "@/components/CertificationsSection";
 
 const Index = () => {
   return (
@@ -37,6 +38,9 @@ const Index = () => {
         </section>
         <section id="team">
           <TeamSection />
+        </section>
+        <section id="certifications">
+          <CertificationsSection />
         </section>
         <section id="commitments">
           <CommitmentsSection />
