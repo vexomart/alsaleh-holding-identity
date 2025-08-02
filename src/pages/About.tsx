@@ -270,9 +270,16 @@ const About = () => {
                       <div className={`absolute inset-0 bg-gradient-to-br ${value.bgEffect} opacity-0 group-hover:opacity-100 transition-all duration-700`} />
                       
                       <div className="relative z-10">
-                        <div className={`w-20 h-20 bg-gradient-to-br ${value.color} rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-2xl`}>
-                          <IconComponent className="w-10 h-10 text-white" />
-                        </div>
+                        <a 
+                          href="https://wa.me/966555812567?text=مرحباً، أريد معرفة المزيد عن قيم الشركة"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                        >
+                          <div className={`w-20 h-20 bg-gradient-to-br ${value.color} rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-2xl cursor-pointer`}>
+                            <IconComponent className="w-10 h-10 text-white" />
+                          </div>
+                        </a>
                         
                         <h3 className="text-2xl font-bold text-primary mb-4 group-hover:text-gradient-primary transition-all duration-300">
                           {value.title}
@@ -333,9 +340,16 @@ const About = () => {
                               <Badge className={`bg-gradient-to-r ${milestone.color} text-white font-bold text-lg px-4 py-2`}>
                                 {milestone.year}
                               </Badge>
-                              <div className={`w-12 h-12 bg-gradient-to-br ${milestone.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                                <IconComponent className="w-6 h-6 text-white" />
-                              </div>
+                              <a 
+                                href="https://wa.me/966555812567?text=مرحباً، أريد معرفة المزيد عن تاريخ الشركة ومحطاتها المهمة"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block"
+                              >
+                                <div className={`w-12 h-12 bg-gradient-to-br ${milestone.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 cursor-pointer`}>
+                                  <IconComponent className="w-6 h-6 text-white" />
+                                </div>
+                              </a>
                             </div>
                             
                             <h3 className="text-2xl font-bold text-primary mb-3 group-hover:text-gradient-primary transition-all duration-300">
