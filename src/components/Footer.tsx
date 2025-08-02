@@ -35,6 +35,11 @@ const Footer = () => {
                   تواصل معنا
                 </a>
               </li>
+              <li>
+                <a href="/job-application" className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200">
+                  طلب توظيف
+                </a>
+              </li>
             </ul>
           </div>
           
