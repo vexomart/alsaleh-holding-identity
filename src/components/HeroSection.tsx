@@ -196,9 +196,13 @@ const HeroSection = () => {
             variant="outline" 
             size="lg"
             className="border-3 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground hover:text-primary px-12 py-8 text-xl font-bold transition-all duration-500 hover:scale-110 backdrop-blur-md bg-white/5 rounded-2xl group"
+            onClick={() => {
+              const visionSection = document.getElementById('vision');
+              visionSection?.scrollIntoView({ behavior: 'smooth' });
+            }}
           >
             <Heart className="w-6 h-6 mr-3 group-hover:scale-125 group-hover:text-red-500 transition-all duration-300" />
-            تواصل معنا
+            اكتشف رؤيتنا التفصيلية
           </Button>
 
           {/* Video Play Button */}
