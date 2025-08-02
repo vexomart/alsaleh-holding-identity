@@ -219,20 +219,21 @@ const ServicesSection = () => {
                   </div>
 
                   {/* CTA Button */}
-                  <Button 
-                    className="w-full group/btn" 
-                    variant="outline"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const message = "مرحباً، أريد الاستفسار عن خدماتكم والحصول على استشارة مجانية";
-                      const phoneNumber = "966555812567";
-                      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                      window.open(whatsappUrl, '_blank');
-                    }}
+                  <a 
+                    href="https://wa.me/966555812567?text=مرحباً، أريد الاستفسار عن خدماتكم"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-block"
                   >
-                    اطلب الخدمة
-                    <ArrowRight className="w-4 h-4 mr-2 group-hover/btn:translate-x-1 transition-transform" />
-                  </Button>
+                    <Button 
+                      className="w-full group/btn hover:scale-105 transition-all duration-300" 
+                      variant="outline"
+                      type="button"
+                    >
+                      اطلب الخدمة
+                      <ArrowRight className="w-4 h-4 mr-2 group-hover/btn:translate-x-1 transition-transform" />
+                    </Button>
+                  </a>
                 </CardContent>
               </Card>
             );

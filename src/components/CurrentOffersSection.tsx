@@ -140,24 +140,21 @@ const CurrentOffersSection = () => {
                   </div>
 
                   {/* CTA Button */}
-                  <Button 
-                    className="w-full group/btn" 
-                    size="lg"
-                    type="button"
-                    onClick={() => {
-                      try {
-                        const message = "مرحباً، أريد الاستفسار عن العروض الحالية";
-                        const url = `https://wa.me/966555812567?text=${encodeURIComponent(message)}`;
-                        window.location.href = url;
-                      } catch (error) {
-                        console.error('خطأ في فتح الواتساب:', error);
-                        alert('حدث خطأ، يرجى المحاولة مرة أخرى');
-                      }
-                    }}
+                  <a 
+                    href="https://wa.me/966555812567?text=مرحباً، أريد الاستفسار عن العروض الحالية"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-block"
                   >
-                    احصل على العرض الآن
-                    <ArrowRight className="w-4 h-4 mr-2 group-hover/btn:translate-x-1 transition-transform" />
-                  </Button>
+                    <Button 
+                      className="w-full group/btn hover:scale-105 transition-all duration-300" 
+                      size="lg"
+                      type="button"
+                    >
+                      احصل على العرض الآن
+                      <ArrowRight className="w-4 h-4 mr-2 group-hover/btn:translate-x-1 transition-transform" />
+                    </Button>
+                  </a>
                 </CardContent>
               </Card>
             );
