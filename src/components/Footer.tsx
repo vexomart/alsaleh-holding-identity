@@ -30,7 +30,7 @@ const Footer = () => {
     { name: "من نحن", href: "/about", icon: Users },
     { name: "رؤيتنا", href: "/vision", icon: Target },
     { name: "فريق العمل", href: "/team", icon: Award },
-    { name: "تواصل معنا", href: "#contact", icon: Mail }
+    { name: "تواصل معنا", href: "/contact", icon: Mail }
   ];
 
   const supportLinks = [
@@ -260,7 +260,7 @@ const Footer = () => {
                   انضم إلى رحلة النجاح والابتكار
                 </p>
                 <a 
-                  href="#contact" 
+                  href="/contact" 
                   className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors duration-300 font-medium text-sm group/cta"
                 >
                   <span>تواصل معنا الآن</span>
