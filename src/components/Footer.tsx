@@ -581,12 +581,11 @@ const Footer = () => {
               <p className="text-primary-foreground/60 text-base">
                 © 2024 شركة علي صالح الشهري القابضة. جميع الحقوق محفوظة.
               </p>
-              <div className="space-y-1">
-                <p className="text-primary-foreground/50 text-sm flex items-center justify-center md:justify-start gap-2">
-                  <Building2 className="w-4 h-4" />
-                  السجل التجاري: 4030554749
+              <div className="space-y-1 text-primary-foreground/50 text-xs leading-relaxed">
+                <p className="max-w-4xl">
+                  شركة علي صالح الشهري القابضة | نوع الكيان: شركة الشخص الواحد | رأس المال: 500,000 ريال سعودي | رقم السجل التجاري: 4030554749 | هاتف: 0555812567 | العنوان: 5081 شارع الأمير سلطان – حي البساتين، المملكة العربية السعودية | الموقع الإلكتروني: www.alialshehriholding.com | مرخصة من وزارة التجارة.
                 </p>
-                <p className="text-primary-foreground/50 text-sm flex items-center justify-center md:justify-start gap-2">
+                <p className="text-primary-foreground/50 text-sm flex items-center justify-center md:justify-start gap-2 mt-2">
                   <FileText className="w-4 h-4" />
                   الرقم الضريبي: 312206352700003
                 </p>
