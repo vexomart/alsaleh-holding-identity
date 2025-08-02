@@ -1,107 +1,185 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Code, Megaphone, GraduationCap, TrendingUp, Users, Cog } from "lucide-react";
+import { 
+  Smartphone, 
+  Globe, 
+  Palette, 
+  BarChart3, 
+  Shield, 
+  Code2,
+  Zap,
+  Brain,
+  Cloud,
+  Database,
+  LucideIcon 
+} from "lucide-react";
+
+// Define global-scale departments with advanced technologies
+const departments = [
+  {
+    name: "تطوير التطبيقات المتقدمة",
+    description: "تطوير تطبيقات ذكية بتقنيات الذكاء الاصطناعي والواقع المعزز",
+    icon: "Smartphone",
+    services: ["تطبيقات AI-powered", "الواقع المعزز AR", "تطبيقات البلوك تشين", "Progressive Web Apps"],
+    color: "from-blue-600 to-cyan-500",
+    globalTech: "React Native • Flutter • AI/ML Integration"
+  },
+  {
+    name: "التسويق الرقمي العالمي",
+    description: "استراتيجيات التسويق الرقمي بمعايير عالمية وذكاء اصطناعي",
+    icon: "Globe",
+    services: ["التسويق بالذكاء الاصطناعي", "التحليل التنبؤي", "الأتمتة المتقدمة", "حملات عالمية"],
+    color: "from-emerald-600 to-teal-500",
+    globalTech: "Google Analytics 4 • Marketing Automation • Predictive AI"
+  },
+  {
+    name: "التصميم والإبداع الرقمي",
+    description: "تصميم تجارب مستخدم متطورة بأحدث أدوات التصميم العالمية",
+    icon: "Palette",
+    services: ["تصميم UX/UI متقدم", "تصميم ثلاثي الأبعاد", "الهوية الرقمية", "Motion Graphics"],
+    color: "from-purple-600 to-pink-500",
+    globalTech: "Figma • Adobe CC • Blender • After Effects"
+  },
+  {
+    name: "علوم البيانات والذكاء الاصطناعي",
+    description: "تحليل البيانات الضخمة وتطوير نماذج الذكاء الاصطناعي المتقدمة",
+    icon: "Brain",
+    services: ["Machine Learning", "Big Data Analytics", "تعلم الآلة العميق", "معالجة اللغة الطبيعية"],
+    color: "from-orange-600 to-red-500",
+    globalTech: "Python • TensorFlow • AWS SageMaker • Apache Spark"
+  },
+  {
+    name: "الأمن السيبراني المتقدم",
+    description: "حماية متطورة بأحدث تقنيات الأمان العالمية والذكاء الاصطناعي",
+    icon: "Shield",
+    services: ["AI-Powered Security", "Zero Trust Architecture", "حماية السحابة", "تحليل التهديدات"],
+    color: "from-gray-700 to-slate-600",
+    globalTech: "Microsoft Sentinel • CrowdStrike • Splunk • Palo Alto"
+  },
+  {
+    name: "الحلول السحابية المتقدمة",
+    description: "تطوير وإدارة البنية التحتية السحابية بمعايير المؤسسات العالمية",
+    icon: "Cloud",
+    services: ["Multi-Cloud Strategy", "Kubernetes", "Microservices", "DevOps/GitOps"],
+    color: "from-indigo-600 to-blue-600",
+    globalTech: "AWS • Azure • GCP • Docker • Terraform"
+  },
+  {
+    name: "إدارة البيانات المؤسسية",
+    description: "حلول قواعد البيانات المتقدمة وإدارة البيانات الضخمة عالمياً",
+    icon: "Database",
+    services: ["Data Warehousing", "Real-time Analytics", "Data Governance", "BI Solutions"],
+    color: "from-teal-600 to-green-500",
+    globalTech: "MongoDB • PostgreSQL • Snowflake • Power BI"
+  },
+  {
+    name: "الابتكار والأتمتة",
+    description: "تطوير حلول الأتمتة الذكية وعمليات الابتكار التقني المتقدم",
+    icon: "Zap",
+    services: ["RPA Solutions", "Process Automation", "Innovation Labs", "Digital Transformation"],
+    color: "from-yellow-500 to-orange-500",
+    globalTech: "UiPath • Microsoft Power Platform • Zapier • Custom APIs"
+  }
+];
 
 const DepartmentsSection = () => {
-  const departments = [
-    {
-      name: "قسم التقنية والبرمجة",
-      description: "يركز على تطوير الحلول التقنية المبتكرة والبرمجيات المتقدمة",
-      icon: Code,
-      services: ["تطوير التطبيقات", "البرمجة المتقدمة", "الذكاء الاصطناعي", "أنظمة إدارة البيانات"],
-      color: "bg-blue-500"
-    },
-    {
-      name: "قسم التسويق والإعلام",
-      description: "متخصص في استراتيجيات التسويق الرقمي وإنتاج المحتوى الإعلامي",
-      icon: Megaphone,
-      services: ["التسويق الرقمي", "إنتاج المحتوى", "إدارة وسائل التواصل", "الحملات الإعلانية"],
-      color: "bg-green-500"
-    },
-    {
-      name: "قسم التعليم والأبحاث",
-      description: "يقدم خدمات تعليمية متقدمة وحلول البحث العلمي والأكاديمي",
-      icon: GraduationCap,
-      services: ["التعليم المتخصص", "الأبحاث العلمية", "الترجمة المهنية", "النشر الأكاديمي"],
-      color: "bg-purple-500"
-    },
-    {
-      name: "قسم التطوير والاستثمار",
-      description: "يركز على تحديد الفرص الاستثمارية وتطوير المشاريع الجديدة",
-      icon: TrendingUp,
-      services: ["تحليل الاستثمارات", "تطوير المشاريع", "دراسات الجدوى", "إدارة المحافظ"],
-      color: "bg-orange-500"
-    },
-    {
-      name: "قسم الموارد البشرية",
-      description: "يهتم بتطوير المواهب وإدارة الكفاءات البشرية في جميع الشركات الفرعية",
-      icon: Users,
-      services: ["إدارة المواهب", "التدريب والتطوير", "التوظيف المتخصص", "تقييم الأداء"],
-      color: "bg-pink-500"
-    },
-    {
-      name: "قسم العمليات والإدارة",
-      description: "يضمن كفاءة العمليات التشغيلية والإدارية عبر جميع الشركات",
-      icon: Cog,
-      services: ["إدارة العمليات", "ضمان الجودة", "الامتثال والحوكمة", "التطوير المؤسسي"],
-      color: "bg-indigo-500"
-    }
-  ];
-
   return (
-    <section className="section-spacing bg-accent/30">
-      <div className="container mx-auto container-responsive">
-        <div className="text-center mb-12 md:mb-16 animate-fade-in">
-          <h2 className="responsive-title text-primary mb-4 md:mb-6">
-            أقسام الشركة
+    <section className="py-24 bg-gradient-subtle relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      <div className="absolute top-20 right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-20 left-20 w-32 h-32 bg-secondary/10 rounded-full blur-3xl animate-float-delayed" />
+      
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-20 animate-fade-in">
+          <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
+            <Zap className="w-6 h-6 text-primary animate-pulse" />
+            <span className="text-sm font-medium text-primary">أقسام متخصصة • تقنيات عالمية</span>
+          </div>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
+            أقسامنا <span className="text-gradient-primary">التقنية</span>
           </h2>
-          <p className="responsive-text text-muted-foreground max-w-3xl mx-auto">
-            تضم شركتنا القابضة أقساماً متخصصة تعمل بتناغم لتقديم خدمات شاملة ومتكاملة
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            نقدم خدمات متكاملة عبر أقسام متخصصة تعمل بأحدث التقنيات العالمية والذكاء الاصطناعي المتقدم
           </p>
         </div>
-        
-        <div className="responsive-grid">
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {departments.map((dept, index) => {
-            const IconComponent = dept.icon;
+            // Dynamically import icon components
+            const IconComponent = {
+              Smartphone,
+              Globe,
+              Palette,
+              BarChart3,
+              Shield,
+              Code2,
+              Brain,
+              Cloud,
+              Database,
+              Zap
+            }[dept.icon as keyof typeof import("lucide-react")] as LucideIcon;
+
             return (
               <Card 
                 key={index} 
-                className="card-animated shadow-elegant border-0 bg-card animate-scale-in group"
+                className="group premium-card hover:shadow-glow transition-all duration-500 cursor-pointer border-0 bg-white/5 backdrop-blur-md overflow-hidden animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <CardHeader className="pb-3 sm:pb-4">
-                  <div className="flex items-center space-x-reverse space-x-3 sm:space-x-4 mb-3 sm:mb-4">
-                    <div className={`w-10 h-10 sm:w-12 sm:h-12 ${dept.color} rounded-full flex items-center justify-center icon-float group-hover:scale-110 transition-transform duration-300`}>
-                      <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <CardContent className="p-8 relative h-full">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${dept.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                  
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className={`w-20 h-20 bg-gradient-to-br ${dept.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow`}>
+                      <IconComponent className="w-10 h-10 text-white animate-pulse" />
                     </div>
-                    <CardTitle className="text-base sm:text-lg text-primary">
+                    
+                    <h3 className="text-xl font-bold text-primary mb-4 group-hover:text-gradient-primary transition-all duration-300 min-h-[3rem]">
                       {dept.name}
-                    </CardTitle>
-                  </div>
-                  <p className="text-sm sm:text-base text-foreground leading-relaxed">
-                    {dept.description}
-                  </p>
-                </CardHeader>
-                
-                <CardContent className="pt-0">
-                  <div>
-                    <h4 className="font-semibold text-primary mb-2 sm:mb-3 text-sm sm:text-base">الخدمات المقدمة:</h4>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                      {dept.services.map((service, serviceIndex) => (
-                        <Badge 
-                          key={serviceIndex} 
-                          variant="outline" 
-                          className="text-xs border-primary/30 text-primary"
-                        >
-                          {service}
-                        </Badge>
-                      ))}
+                    </h3>
+                    
+                    <p className="text-muted-foreground mb-6 leading-relaxed text-sm flex-grow">
+                      {dept.description}
+                    </p>
+                    
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap gap-2">
+                        {dept.services.map((service, serviceIndex) => (
+                          <Badge 
+                            key={serviceIndex} 
+                            variant="outline"
+                            className="text-xs transition-all duration-200 hover:bg-primary hover:text-primary-foreground bg-white/10 border-white/20"
+                          >
+                            {service}
+                          </Badge>
+                        ))}
+                      </div>
+                      
+                      <div className="pt-4 border-t border-white/10">
+                        <p className="text-xs text-muted-foreground font-medium">
+                          <span className="text-primary">Tech Stack:</span> {dept.globalTech}
+                        </p>
+                      </div>
                     </div>
+                    
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
                   </div>
                 </CardContent>
               </Card>
             );
           })}
+        </div>
+
+        {/* Global Technology Partners */}
+        <div className="mt-20 text-center">
+          <h3 className="text-2xl font-bold text-primary mb-8">شركاؤنا التقنيون العالميون</h3>
+          <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+            {["Microsoft", "AWS", "Google Cloud", "Adobe", "Figma", "MongoDB", "Docker", "Kubernetes"].map((partner, index) => (
+              <div key={index} className="px-4 py-2 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-all duration-300">
+                <span className="text-sm font-medium text-primary">{partner}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
