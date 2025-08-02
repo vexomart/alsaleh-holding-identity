@@ -225,7 +225,7 @@ const ServicesSection = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       const message = "مرحباً، أريد الاستفسار عن خدماتكم والحصول على استشارة مجانية";
-                      const phoneNumber = "966555123456"; // ضع رقم الواتساب الفعلي للشركة هنا
+                      const phoneNumber = "966555812567";
                       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
@@ -250,7 +250,7 @@ const ServicesSection = () => {
             onClick={(e) => {
               e.preventDefault();
               const message = "مرحباً، أريد الحصول على استشارة مجانية حول خدماتكم";
-              const phoneNumber = "966555123456"; // ضع رقم الواتساب الفعلي للشركة هنا
+              const phoneNumber = "966555812567";
               const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
               window.open(whatsappUrl, '_blank');
             }}

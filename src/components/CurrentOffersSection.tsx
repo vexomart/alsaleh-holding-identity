@@ -96,7 +96,7 @@ const CurrentOffersSection = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         const message = "مرحباً، أريد الاستفسار عن عروضكم الحالية والحصول على تفاصيل أكثر";
-                        const phoneNumber = "966555123456";
+                        const phoneNumber = "966555812567";
                         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                         window.open(whatsappUrl, '_blank');
                       }}
@@ -146,7 +146,7 @@ const CurrentOffersSection = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       const message = "مرحباً، أريد الاستفسار عن عروضكم الحالية والحصول على تفاصيل أكثر";
-                      const phoneNumber = "966555123456"; // ضع رقم الواتساب الفعلي للشركة هنا
+                      const phoneNumber = "966555812567";
                       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
