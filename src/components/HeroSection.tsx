@@ -82,7 +82,7 @@ const HeroSection = () => {
         </div>
         
         {/* Animated Stats Grid */}
-        <div className="mt-16 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: '1.2s' }}>
+        <div className="mt-16 grid md:grid-cols-4 gap-6 max-w-5xl mx-auto animate-fade-in" style={{ animationDelay: '1.2s' }}>
           <div className="text-center group bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
             <div className="mb-4 flex justify-center">
               <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow">
@@ -92,6 +92,17 @@ const HeroSection = () => {
             <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">2016</div>
             <div className="text-primary-foreground font-medium">سنة التأسيس</div>
             <div className="text-primary-foreground/70 text-sm">Foundation Year</div>
+          </div>
+
+          <div className="text-center group bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
+            <div className="mb-4 flex justify-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow">
+                <Star className="w-8 h-8 text-white animate-pulse" />
+              </div>
+            </div>
+            <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">2024</div>
+            <div className="text-primary-foreground font-medium">شركة قابضة</div>
+            <div className="text-primary-foreground/70 text-sm">Holding Company</div>
           </div>
           
           <div className="text-center group bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
