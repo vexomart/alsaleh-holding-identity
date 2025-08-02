@@ -181,7 +181,7 @@ const ServicesSection = () => {
   const whatsappNumber = "966555812567";
   
   const openWhatsApp = (serviceTitle: string, price: string, services: string[], technologies: string[], deliveryTime: string, rating: number, projectsCount: number) => {
-    const message = `🚀 مرحبا بك في شركتنا
+    const message = `🚀 مرحبا بك في شركة علي صالح الشهري القابضة
 
 💼 طلب خدمة احترافية
 ═══════════════════
@@ -339,7 +339,7 @@ ${technologies.slice(0, 3).map((tech, index) => `${index + 1}. ${tech}`).join('\
                   {/* CTA Buttons */}
                   <div className="space-y-3 pt-2">
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🚀 مرحبا بك في شركتنا
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🚀 مرحبا بك في شركة علي صالح الشهري القابضة
 
 💼 طلب خدمة احترافية
 ═══════════════════
@@ -424,7 +424,7 @@ ${service.technologies.slice(0, 3).map((tech: string, index: number) => `${index
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a 
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎯 مرحبا بك في شركتنا
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎯 مرحبا بك في شركة علي صالح الشهري القابضة
 
 💼 طلب استشارة شاملة
 ═══════════════════

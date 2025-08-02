@@ -73,7 +73,7 @@ const CurrentOffersSection = () => {
   const whatsappNumber = "966555812567";
   
   const openWhatsApp = (offerTitle: string, price: string, originalPrice: string, discount: string, timeLeft: string, features: string[]) => {
-    const message = `🌟 مرحبا بك في شركتنا
+    const message = `🌟 مرحبا بك في شركة علي صالح الشهري القابضة
 
 🎯 طلب عرض خاص
 ═══════════════════
@@ -208,7 +208,7 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
                   {/* CTA Buttons */}
                   <div className="space-y-3 pt-4">
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🌟 مرحبا بك في شركتنا
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🌟 مرحبا بك في شركة علي صالح الشهري القابضة
 
 🎯 طلب عرض خاص
 ═══════════════════
@@ -287,7 +287,7 @@ ${offer.features.map((feature: string, index: number) => `${index + 1}. ${featur
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a 
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎊 مرحبا بك في شركتنا
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎊 مرحبا بك في شركة علي صالح الشهري القابضة
 
 🛍️ طلب عرض شامل
 ═══════════════════
