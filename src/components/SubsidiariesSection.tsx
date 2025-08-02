@@ -1,74 +1,73 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Globe, TrendingUp, Users, Award, Rocket, Zap, Star } from "lucide-react";
+import { Building2, Globe, TrendingUp, Users, Award, Rocket, Zap, Star, ExternalLink, GraduationCap, Monitor, ShoppingCart, BarChart3 } from "lucide-react";
 
 const SubsidiariesSection = () => {
   const subsidiaries = [
     {
-      name: "شركة الشهري للتقنية المتقدمة",
-      nameEn: "Al-Shahri Advanced Technology",
-      description: "رائدة في تطوير الحلول التقنية المتقدمة والذكاء الاصطناعي على المستوى العالمي",
-      category: "التقنية المتقدمة",
+      name: "فكرة هولدينق",
+      nameEn: "Fekrah Holding",
+      description: "متخصصة بخدمات التعليم من أبحاث للطلاب والموظفين والترجمة والتحليل الإحصائي والنشر بالمجلات المعتمدة",
+      category: "الخدمات التعليمية",
+      established: "2019",
+      services: ["أبحاث الطلاب والموظفين", "خدمات الترجمة", "التحليل الإحصائي", "النشر الأكاديمي"],
+      icon: GraduationCap,
+      stats: { projects: "500+", clients: "250+", countries: "15" },
+      color: "from-blue-600 to-cyan-500",
+      website: "https://fekrah-holding.com/",
+      websiteName: "fekrah-holding.com"
+    },
+    {
+      name: "فكرة تيك",
+      nameEn: "Fekrah Tech",
+      description: "شركة تقنية رائدة متخصصة في تطوير الحلول التقنية المتقدمة والابتكارات الرقمية",
+      category: "التقنية والبرمجة",
       established: "2020",
-      services: ["حلول الذكاء الاصطناعي", "البلوك تشين", "إنترنت الأشياء", "الحوسبة السحابية"],
-      icon: Rocket,
-      stats: { projects: "150+", clients: "85+", countries: "12" },
-      color: "from-blue-600 to-cyan-500"
+      services: ["تطوير التطبيقات", "الحلول التقنية", "الابتكار الرقمي", "الاستشارات التقنية"],
+      icon: Monitor,
+      stats: { projects: "300+", clients: "180+", countries: "12" },
+      color: "from-emerald-600 to-teal-500",
+      website: "https://fekrahtech.com",
+      websiteName: "fekrahtech.com"
     },
     {
-      name: "شركة الشهري للإعلام الرقمي",
-      nameEn: "Al-Shahri Digital Media",
-      description: "منصة إعلامية رقمية عالمية متخصصة في إنتاج المحتوى التقني والإبداعي",
-      category: "الإعلام الرقمي",
-      established: "2021",
-      services: ["إنتاج المحتوى الرقمي", "البث المباشر", "المنصات الإعلامية", "التسويق الرقمي"],
-      icon: Globe,
-      stats: { projects: "200+", clients: "120+", countries: "18" },
-      color: "from-emerald-600 to-teal-500"
-    },
-    {
-      name: "شركة الشهري للاستشارات العالمية",
-      nameEn: "Al-Shahri Global Consulting",
-      description: "شركة استشارات عالمية متخصصة في التحول الرقمي والابتكار التقني",
-      category: "الاستشارات العالمية",
-      established: "2022",
-      services: ["استشارات التحول الرقمي", "الإدارة الاستراتيجية", "تطوير الأعمال", "حلول المؤسسات"],
-      icon: TrendingUp,
-      stats: { projects: "100+", clients: "60+", countries: "15" },
-      color: "from-purple-600 to-pink-500"
-    },
-    {
-      name: "شركة الشهري للتجارة الإلكترونية العالمية",
-      nameEn: "Al-Shahri Global E-Commerce",
-      description: "منصة تجارة إلكترونية عالمية متطورة بتقنيات الذكاء الاصطناعي",
-      category: "التجارة الإلكترونية",
-      established: "2023",
-      services: ["منصات التجارة الذكية", "حلول الدفع الرقمي", "اللوجستيات الذكية", "تحليل البيانات"],
+      name: "شركة علي صالح الشهري القابضة",
+      nameEn: "Ali Saleh Al-Shahri Holding",
+      description: "الموقع الرسمي للشركة القابضة، متخصصة في خدمات الدعم والطلبات والمشاريع المتنوعة",
+      category: "الشركة القابضة",
+      established: "2016",
+      services: ["خدمات الدعم", "إدارة الطلبات", "تنفيذ المشاريع", "الاستشارات الإدارية"],
       icon: Building2,
-      stats: { projects: "80+", clients: "45+", countries: "10" },
-      color: "from-orange-600 to-red-500"
+      stats: { projects: "800+", clients: "400+", countries: "20" },
+      color: "from-purple-600 to-pink-500",
+      website: "http://ash.holdings/",
+      websiteName: "ash.holdings"
     },
     {
-      name: "شركة الشهري للابتكار والبحث",
-      nameEn: "Al-Shahri Innovation & Research",
-      description: "مختبرات أبحاث متقدمة تركز على تطوير التقنيات المستقبلية والابتكار",
-      category: "البحث والتطوير",
-      established: "2024",
-      services: ["مختبرات الابتكار", "البحث والتطوير", "حاضنات التقنية", "براءات الاختراع"],
-      icon: Zap,
-      stats: { projects: "25+", clients: "15+", countries: "5" },
-      color: "from-indigo-600 to-blue-600"
+      name: "أدفيكسو ميديا",
+      nameEn: "Advixo Media",
+      description: "وكالة تسويق رقمي متخصصة في تقديم حلول التسويق الإبداعية والاستراتيجيات الرقمية المتقدمة",
+      category: "التسويق الرقمي",
+      established: "2021",
+      services: ["التسويق الرقمي", "إدارة المحتوى", "الإعلانات الممولة", "الاستراتيجيات التسويقية"],
+      icon: TrendingUp,
+      stats: { projects: "400+", clients: "200+", countries: "10" },
+      color: "from-orange-600 to-red-500",
+      website: "https://advixo.media/",
+      websiteName: "advixo.media"
     },
     {
-      name: "شركة الشهري للحلول المالية الرقمية",
-      nameEn: "Al-Shahri Digital Financial Solutions",
-      description: "حلول مالية رقمية متطورة تعتمد على البلوك تشين والذكاء الاصطناعي",
-      category: "التقنية المالية",
-      established: "2024",
-      services: ["حلول البلوك تشين", "العملات الرقمية", "التمويل الذكي", "أنظمة الدفع المبتكرة"],
-      icon: Award,
-      stats: { projects: "40+", clients: "30+", countries: "8" },
-      color: "from-yellow-500 to-orange-500"
+      name: "نوماكسيو",
+      nameEn: "Numaxio",
+      description: "منصة محاسبة وفواتير متطورة مع نظام إدارة المخزون الذكي للشركات والمؤسسات",
+      category: "الحلول المحاسبية",
+      established: "2022",
+      services: ["نظام المحاسبة", "إدارة الفواتير", "إدارة المخزون", "التقارير المالية"],
+      icon: BarChart3,
+      stats: { projects: "200+", clients: "120+", countries: "8" },
+      color: "from-yellow-500 to-orange-500",
+      website: "https://numaxio.com/",
+      websiteName: "numaxio.com"
     }
   ];
 
@@ -152,7 +151,7 @@ const SubsidiariesSection = () => {
                       </div>
                     </div>
                     
-                    <div>
+                    <div className="mb-6">
                       <h4 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
                         <Users className="w-5 h-5" />
                         الخدمات المتخصصة:
@@ -168,6 +167,23 @@ const SubsidiariesSection = () => {
                           </Badge>
                         ))}
                       </div>
+                    </div>
+
+                    {/* Website Link */}
+                    <div className="mt-6">
+                      <a 
+                        href={company.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-primary to-secondary text-primary-foreground rounded-xl hover:shadow-glow transition-all duration-300 hover:scale-105 group/link"
+                      >
+                        <Globe className="w-5 h-5 group-hover/link:rotate-12 transition-transform duration-300" />
+                        <div className="text-right">
+                          <div className="text-sm font-medium">اضغط هنا للدخول</div>
+                          <div className="text-xs opacity-90">{company.websiteName}</div>
+                        </div>
+                        <ExternalLink className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
+                      </a>
                     </div>
 
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
