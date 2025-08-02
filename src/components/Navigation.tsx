@@ -131,9 +131,9 @@ const Navigation = () => {
                   className={`${isScrolled ? 'text-gray-600 hover:text-blue-600' : 'text-primary-foreground hover:text-blue-400'}`}
                   asChild
                 >
-                  <a href="/support">
-                    <HeadphonesIcon className="w-4 h-4 text-blue-500 ml-1" />
-                    الدعم
+                  <a href="tel:+966555812567">
+                    <Phone className="w-4 h-4 text-blue-500 ml-1" />
+                    اتصال فوري
                   </a>
                 </Button>
               </div>
@@ -258,20 +258,17 @@ const Navigation = () => {
               <div className="px-2 pt-2 pb-3 space-y-1">
                 {/* Contact Info */}
                 <div className="px-3 py-3 border-b border-gray-100 mb-2">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-4 mb-2">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <MessageCircle className="w-4 h-4 text-green-500" />
-                      <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer" className="hover:text-green-600">
-                        واتساب: 0555812567
+                      <a href="https://wa.me/966555812567?text=مرحباً، أحتاج للدعم الفني" target="_blank" rel="noopener noreferrer" className="hover:text-green-600">
+                        دعم واتساب فوري
                       </a>
                     </div>
-                    <Badge variant="secondary" className="bg-green-500 text-white text-xs">
-                      متاح الآن
-                    </Badge>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <HeadphonesIcon className="w-4 h-4 text-blue-500" />
-                    <a href="/support" className="hover:text-blue-600">الدعم الفني</a>
+                    <Phone className="w-4 h-4 text-blue-500" />
+                    <a href="tel:+966555812567" className="hover:text-blue-600">اتصال مباشر: 0555812567</a>
                   </div>
                 </div>
 
