@@ -272,14 +272,14 @@ const SubsidiariesSection = () => {
                     {/* Website Link */}
                     <div className="mt-4">
                       {company.inDevelopment ? (
-                        <div className="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 rounded-lg text-sm w-full justify-center relative overflow-hidden">
-                          <div className="absolute inset-0 bg-amber-500/10 animate-pulse" />
-                          <Zap className="w-4 h-4 animate-pulse relative z-10" />
+                        <div className="inline-flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 border-2 border-yellow-400 text-white rounded-lg text-sm w-full justify-center relative overflow-hidden shadow-lg">
+                          <div className="absolute inset-0 bg-yellow-400/20 animate-pulse" />
+                          <Zap className="w-5 h-5 animate-bounce relative z-10 text-white" />
                           <div className="text-center relative z-10">
-                            <div className="font-medium">🚧 قيد التطوير</div>
-                            <div className="text-xs opacity-90">{company.websiteName} • قريباً</div>
+                            <div className="font-bold text-white">🚧 قيد التطوير</div>
+                            <div className="text-xs text-yellow-100 font-medium">{company.websiteName} • قريباً جداً</div>
                           </div>
-                          <Clock className="w-4 h-4 animate-spin relative z-10" />
+                          <Clock className="w-5 h-5 animate-spin relative z-10 text-white" />
                         </div>
                       ) : (
                         <a 
