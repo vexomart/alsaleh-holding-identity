@@ -148,46 +148,29 @@ const HeroSection = () => {
           </div>
         </div>
         
-        {/* Enhanced Main Title with Advanced Typography */}
+        {/* Enhanced Main Title - Clearer and More Visible */}
         <div className="mb-8 space-y-6">
           <div className="relative">
-            {/* Animated Background Glow */}
-            <div className="absolute inset-0 text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary animate-pulse blur-sm opacity-50">
+            {/* Main Title with Better Visibility */}
+            <h1 className="relative text-3xl md:text-5xl lg:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl">
               شركة علي صالح الشهري القابضة
-            </div>
-            
-            {/* Main Title with Advanced Effects */}
-            <h1 className="relative text-3xl md:text-4xl lg:text-5xl font-bold leading-tight animate-fade-in group">
-              <span className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-primary-foreground via-white to-primary-foreground animate-gradient-x">
-                شركة علي صالح الشهري القابضة
-              </span>
               
               {/* Animated Underline */}
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-secondary to-primary group-hover:w-full transition-all duration-1000 rounded-full shadow-glow" />
-              
-              {/* 3D Shadow Effect */}
-              <div className="absolute inset-0 text-3xl md:text-4xl lg:text-5xl font-bold text-primary/20 transform translate-x-2 translate-y-2 -z-10">
-                شركة علي صالح الشهري القابضة
-              </div>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-secondary to-primary hover:w-full transition-all duration-1000 rounded-full shadow-glow" />
             </h1>
             
-            {/* Reflection Effect */}
-            <div className="absolute top-full left-0 right-0 h-20 overflow-hidden opacity-30">
-              <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-primary-foreground/50 to-transparent transform scale-y-[-1] blur-sm">
-                شركة علي صالح الشهري القابضة
-              </div>
+            {/* Text Glow Effect for Better Visibility */}
+            <div className="absolute inset-0 text-3xl md:text-5xl lg:text-6xl font-bold text-white/20 blur-sm">
+              شركة علي صالح الشهري القابضة
             </div>
           </div>
           
-          {/* Enhanced Subtitle with typing effect */}
-          <div className="flex justify-center items-center gap-3 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+          {/* Enhanced Subtitle */}
+          <div className="flex justify-center items-center gap-3 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Target className="w-6 h-6 text-secondary animate-pulse" />
-            <div className="relative">
-              <p className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary via-primary to-secondary animate-gradient-x">
-                رؤية • ابتكار • تميز
-              </p>
-              <div className="absolute -inset-1 bg-gradient-to-r from-secondary/20 to-primary/20 rounded-lg blur opacity-60 animate-pulse" />
-            </div>
+            <p className="text-xl md:text-2xl font-bold text-secondary drop-shadow-lg">
+              رؤية • ابتكار • تميز
+            </p>
             <Rocket className="w-6 h-6 text-secondary animate-bounce" />
           </div>
         </div>
@@ -289,20 +272,20 @@ const HeroSection = () => {
         </div>
       </div>
       
-      {/* Enhanced Slide Indicators */}
-      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
+      {/* Enhanced Slide Indicators - More Visible */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4 z-30 bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">
         {businessImages.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`relative overflow-hidden transition-all duration-500 rounded-full ${
+            className={`relative overflow-hidden transition-all duration-500 rounded-full border-2 ${
               index === currentSlide 
-                ? 'w-12 h-4 bg-secondary shadow-glow' 
-                : 'w-4 h-4 bg-primary-foreground/50 hover:bg-primary-foreground/70 hover:scale-125'
+                ? 'w-12 h-4 bg-secondary border-secondary shadow-2xl shadow-secondary/50' 
+                : 'w-4 h-4 bg-white/60 border-white/40 hover:bg-white/80 hover:scale-125 hover:border-secondary'
             }`}
           >
             {index === currentSlide && (
-              <div className="absolute inset-0 bg-gradient-to-r from-secondary/50 to-secondary animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-secondary/70 to-secondary animate-pulse rounded-full" />
             )}
           </button>
         ))}
