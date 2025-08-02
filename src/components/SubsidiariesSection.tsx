@@ -114,7 +114,25 @@ const SubsidiariesSection = () => {
       websiteName: "nest.academy",
       growth: "قيد التطوير",
       rating: "قريباً",
-      specialties: ["الذكاء الاصطناعي", "التعلم التفاعلي", "الشهادات المهنية"]
+      specialties: ["الذكاء الاصطناعي", "التعلم التفاعلي", "الشهادات المهنية"],
+      inDevelopment: true
+    },
+    {
+      name: "بلوت كود",
+      nameEn: "Plute Code",
+      description: "شركة تطوير برمجيات متخصصة في حلول البرمجة المتقدمة وتطوير التطبيقات المبتكرة والحلول التقنية المخصصة للشركات والمؤسسات",
+      category: "تطوير البرمجيات والحلول التقنية",
+      established: "2024",
+      services: ["تطوير التطبيقات المخصصة", "حلول البرمجة المتقدمة", "استشارات تقنية", "تطوير المواقع الديناميكية", "أنظمة إدارة المحتوى", "الحلول السحابية"],
+      icon: Monitor,
+      stats: { projects: "قريباً", clients: "قريباً", countries: "قريباً" },
+      color: "from-cyan-600 to-blue-500",
+      website: "https://plutecode.com/",
+      websiteName: "plutecode.com",
+      growth: "قيد التطوير",
+      rating: "قريباً",
+      specialties: ["البرمجة المتقدمة", "التطوير المخصص", "الحلول التقنية"],
+      inDevelopment: true
     }
   ];
 
@@ -253,19 +271,31 @@ const SubsidiariesSection = () => {
 
                     {/* Website Link */}
                     <div className="mt-4">
-                      <a 
-                        href={company.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-primary to-secondary text-primary-foreground rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105 group/link text-sm w-full justify-center"
-                      >
-                        <Globe className="w-4 h-4 group-hover/link:rotate-12 transition-transform duration-300" />
-                        <div className="text-center">
-                          <div className="font-medium">زيارة الموقع</div>
-                          <div className="text-xs opacity-90">{company.websiteName}</div>
+                      {company.inDevelopment ? (
+                        <div className="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 rounded-lg text-sm w-full justify-center relative overflow-hidden">
+                          <div className="absolute inset-0 bg-amber-500/10 animate-pulse" />
+                          <Zap className="w-4 h-4 animate-pulse relative z-10" />
+                          <div className="text-center relative z-10">
+                            <div className="font-medium">🚧 قيد التطوير</div>
+                            <div className="text-xs opacity-90">{company.websiteName} • قريباً</div>
+                          </div>
+                          <Clock className="w-4 h-4 animate-spin relative z-10" />
                         </div>
-                        <ExternalLink className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
-                      </a>
+                      ) : (
+                        <a 
+                          href={company.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-primary to-secondary text-primary-foreground rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105 group/link text-sm w-full justify-center"
+                        >
+                          <Globe className="w-4 h-4 group-hover/link:rotate-12 transition-transform duration-300" />
+                          <div className="text-center">
+                            <div className="font-medium">زيارة الموقع</div>
+                            <div className="text-xs opacity-90">{company.websiteName}</div>
+                          </div>
+                          <ExternalLink className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
+                        </a>
+                      )}
                     </div>
 
                     {/* Bottom Accent */}
