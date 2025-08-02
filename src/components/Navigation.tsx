@@ -24,10 +24,10 @@ const Navigation = () => {
               <MessageCircle className="w-4 h-4 text-green-400" />
               <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer" className="hover:text-green-400">واتساب: 0555812567</a>
             </div>
-            <a href="#home" className="text-primary-foreground hover:text-secondary transition-colors duration-200">
+            <a href="/" className="text-primary-foreground hover:text-secondary transition-colors duration-200">
               الرئيسية
             </a>
-            <a href="#about" className="text-primary-foreground hover:text-secondary transition-colors duration-200">
+            <a href="/about" className="text-primary-foreground hover:text-secondary transition-colors duration-200">
               من نحن
             </a>
             <a href="/vision" className="text-primary-foreground hover:text-secondary transition-colors duration-200">
@@ -68,14 +68,14 @@ const Navigation = () => {
                 </div>
               </div>
               <a 
-                href="#home" 
+                href="/" 
                 className="block px-3 py-2 text-primary-foreground hover:text-secondary transition-colors duration-200"
                 onClick={() => setIsOpen(false)}
               >
                 الرئيسية
               </a>
               <a 
-                href="#about" 
+                href="/about" 
                 className="block px-3 py-2 text-primary-foreground hover:text-secondary transition-colors duration-200"
                 onClick={() => setIsOpen(false)}
               >
