@@ -36,7 +36,7 @@ const Footer = () => {
     { name: "الدعم الفني", href: "/support", icon: HeadphonesIcon, badge: "24/7" },
     { name: "الأسئلة الشائعة", href: "#faq", icon: MessageCircle },
     { name: "دليل المستخدم", href: "#guide", icon: FileText },
-    { name: "سياسة الخصوصية", href: "#privacy", icon: Shield },
+    { name: "سياسة الخصوصية", href: "/privacy", icon: Shield },
     { name: "شروط الاستخدام", href: "#terms", icon: FileText }
   ];
 
