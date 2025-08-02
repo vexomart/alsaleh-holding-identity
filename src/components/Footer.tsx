@@ -277,11 +277,21 @@ const Footer = () => {
         <div className="border-t border-primary-foreground/20 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             
-            {/* Copyright */}
-            <div className="text-center md:text-right">
+            {/* Copyright & Legal Info */}
+            <div className="text-center md:text-right space-y-2">
               <p className="text-primary-foreground/60 text-lg">
                 © 2024 شركة علي صالح الشهري القابضة. جميع الحقوق محفوظة.
               </p>
+              <div className="space-y-1">
+                <p className="text-primary-foreground/50 text-sm flex items-center justify-center md:justify-start gap-2">
+                  <Building2 className="w-4 h-4" />
+                  السجل التجاري: 4030554749
+                </p>
+                <p className="text-primary-foreground/50 text-sm flex items-center justify-center md:justify-start gap-2">
+                  <FileText className="w-4 h-4" />
+                  الرقم الضريبي: 312206352700003
+                </p>
+              </div>
               <p className="text-primary-foreground/40 text-sm mt-1">
                 تم التطوير بأحدث التقنيات العالمية
               </p>
