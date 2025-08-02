@@ -11,12 +11,10 @@ const TeamSection = () => {
       positionEn: "Chairman & Founder",
       department: "القيادة الاستراتيجية",
       departmentEn: "Strategic Leadership",
-      experience: "18+ سنة",
       specialties: ["الريادة", "الإبداع", "الاستراتيجية"],
       achievements: "قائد 100+ مشروع عالمي",
       color: "from-purple-600 to-blue-600",
       icon: Crown,
-      rating: "5.0",
       bgEffect: "from-purple-500/10 to-blue-500/10"
     },
     {
@@ -26,12 +24,10 @@ const TeamSection = () => {
       positionEn: "Chief Operating Officer",
       department: "العمليات والتطوير",
       departmentEn: "Operations & Development",
-      experience: "15+ سنة",
       specialties: ["إدارة العمليات", "التحسين", "الكفاءة"],
       achievements: "زيادة الكفاءة بنسبة 300%",
       color: "from-emerald-600 to-teal-600",
       icon: Building2,
-      rating: "4.9",
       bgEffect: "from-emerald-500/10 to-teal-500/10"
     },
     {
@@ -41,27 +37,23 @@ const TeamSection = () => {
       positionEn: "Head of Human Resources",
       department: "تطوير المواهب",
       departmentEn: "Talent Development",
-      experience: "12+ سنة",
       specialties: ["تطوير المواهب", "التدريب", "الثقافة المؤسسية"],
       achievements: "تطوير +850 موظف",
       color: "from-blue-600 to-cyan-600",
       icon: Users,
-      rating: "4.8",
       bgEffect: "from-blue-500/10 to-cyan-500/10"
     },
     {
-      name: "جيمس أندرسون",
-      nameEn: "James Anderson",
+      name: "هانز مولر",
+      nameEn: "Hans Müller",
       position: "رئيس قسم التقنية والابتكار",
       positionEn: "Chief Technology Officer",
       department: "التقنية والذكاء الاصطناعي",
       departmentEn: "Technology & AI",
-      experience: "14+ سنة",
       specialties: ["الذكاء الاصطناعي", "البرمجة المتقدمة", "الابتكار"],
       achievements: "تطوير 50+ منتج تقني",
       color: "from-indigo-600 to-purple-600",
       icon: Code,
-      rating: "4.9",
       bgEffect: "from-indigo-500/10 to-purple-500/10"
     },
     {
@@ -71,12 +63,10 @@ const TeamSection = () => {
       positionEn: "Investment & Growth Director",
       department: "الاستثمار والتطوير",
       departmentEn: "Investment & Development",
-      experience: "16+ سنة",
       specialties: ["الاستثمار الذكي", "التحليل المالي", "النمو"],
       achievements: "إدارة استثمارات +500 مليون",
       color: "from-orange-600 to-red-600",
       icon: TrendingUp,
-      rating: "4.8",
       bgEffect: "from-orange-500/10 to-red-500/10"
     },
     {
@@ -86,12 +76,10 @@ const TeamSection = () => {
       positionEn: "Quality & Compliance Director",
       department: "الجودة والأمان",
       departmentEn: "Quality & Security",
-      experience: "11+ سنة",
       specialties: ["إدارة الجودة", "الامتثال", "الأمان"],
       achievements: "تحقيق 99.8% معدل الجودة",
       color: "from-green-600 to-emerald-600",
       icon: Shield,
-      rating: "4.9",
       bgEffect: "from-green-500/10 to-emerald-500/10"
     }
   ];
@@ -135,15 +123,6 @@ const TeamSection = () => {
                     <div className="flex items-start justify-between mb-6">
                       <div className={`w-20 h-20 bg-gradient-to-br ${member.color} rounded-3xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl`}>
                         <IconComponent className="w-10 h-10 text-white animate-pulse" />
-                      </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-1 mb-2">
-                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                          <span className="text-sm font-bold text-primary">{member.rating}</span>
-                        </div>
-                        <Badge className={`bg-gradient-to-r ${member.color} text-white border-0 font-bold text-xs`}>
-                          {member.experience}
-                        </Badge>
                       </div>
                     </div>
                     
@@ -190,18 +169,6 @@ const TeamSection = () => {
                         <Award className="w-4 h-4 text-yellow-500" />
                         <span className="text-muted-foreground">{member.achievements}</span>
                       </div>
-                    </div>
-
-                    {/* Contact Button */}
-                    <div className="mt-4">
-                      <button className="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-primary to-secondary text-primary-foreground rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105 group/btn text-sm w-full justify-center">
-                        <Heart className="w-4 h-4 group-hover/btn:animate-pulse" />
-                        <div className="text-center">
-                          <div className="font-medium">تواصل مع الخبير</div>
-                          <div className="text-xs opacity-90">Professional Contact</div>
-                        </div>
-                        <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                      </button>
                     </div>
 
                     {/* Bottom Accent */}
