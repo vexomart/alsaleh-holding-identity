@@ -8,6 +8,7 @@ import About from "./pages/About";
 import Team from "./pages/Team";
 import Support from "./pages/Support";
 import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import JobApplication from "./pages/JobApplication";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/team" element={<Team />} />
           <Route path="/support" element={<Support />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/jobs" element={<JobApplication />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

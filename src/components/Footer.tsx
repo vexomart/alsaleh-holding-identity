@@ -37,7 +37,7 @@ const Footer = () => {
     { name: "الأسئلة الشائعة", href: "#faq", icon: MessageCircle },
     { name: "دليل المستخدم", href: "#guide", icon: FileText },
     { name: "سياسة الخصوصية", href: "/privacy", icon: Shield },
-    { name: "شروط الاستخدام", href: "#terms", icon: FileText }
+    { name: "شروط الاستخدام", href: "/terms", icon: FileText }
   ];
 
   const services = [
