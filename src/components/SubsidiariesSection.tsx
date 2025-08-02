@@ -12,7 +12,7 @@ const SubsidiariesSection = () => {
       established: "2019",
       services: ["أبحاث الطلاب والموظفين", "خدمات الترجمة المتخصصة", "التحليل الإحصائي المتقدم", "النشر الأكاديمي الدولي", "استشارات تعليمية", "برامج التدريب المهني"],
       icon: GraduationCap,
-      stats: { projects: "2,850+", clients: "1,420+", countries: "28", revenue: "$2.5M" },
+      stats: { projects: "2,850+", clients: "1,420+", countries: "28" },
       color: "from-blue-600 to-cyan-500",
       website: "https://fekrah-holding.com/",
       websiteName: "fekrah-holding.com",
@@ -28,7 +28,7 @@ const SubsidiariesSection = () => {
       established: "2020",
       services: ["تطوير التطبيقات الذكية", "حلول الذكاء الاصطناعي", "الحوسبة السحابية", "أمن المعلومات", "تطوير المواقع المتقدمة", "استشارات تقنية متخصصة"],
       icon: Monitor,
-      stats: { projects: "1,950+", clients: "890+", countries: "35", revenue: "$4.2M" },
+      stats: { projects: "1,950+", clients: "890+", countries: "35" },
       color: "from-emerald-600 to-teal-500",
       website: "https://fekrahtech.com",
       websiteName: "fekrahtech.com",
@@ -44,7 +44,7 @@ const SubsidiariesSection = () => {
       established: "2016",
       services: ["إدارة الاستثمارات", "الاستشارات الإستراتيجية", "تطوير المشاريع الكبرى", "خدمات الدعم المؤسسي", "إدارة الطلبات المتقدمة", "التخطيط الإستراتيجي"],
       icon: Building2,
-      stats: { projects: "3,200+", clients: "1,650+", countries: "42", revenue: "$8.7M" },
+      stats: { projects: "3,200+", clients: "1,650+", countries: "42" },
       color: "from-purple-600 to-pink-500",
       website: "http://ash.holdings/",
       websiteName: "ash.holdings",
@@ -60,7 +60,7 @@ const SubsidiariesSection = () => {
       established: "2021",
       services: ["التسويق الرقمي المتقدم", "إدارة الحملات الإعلانية", "تحليل البيانات التسويقية", "التسويق بالمؤثرين", "تطوير العلامات التجارية", "التسويق بالذكاء الاصطناعي"],
       icon: TrendingUp,
-      stats: { projects: "1,780+", clients: "920+", countries: "31", revenue: "$3.8M" },
+      stats: { projects: "1,780+", clients: "920+", countries: "31" },
       color: "from-orange-600 to-red-500",
       website: "https://advixo.media/",
       websiteName: "advixo.media",
@@ -76,7 +76,7 @@ const SubsidiariesSection = () => {
       established: "2022",
       services: ["أنظمة ERP المتطورة", "إدارة الفواتير الذكية", "التقارير المالية التفاعلية", "إدارة المخزون بالـ AI", "التحليل المالي المتقدم", "الامتثال الضريبي"],
       icon: BarChart3,
-      stats: { projects: "1,240+", clients: "685+", countries: "25", revenue: "$2.9M" },
+      stats: { projects: "1,240+", clients: "685+", countries: "25" },
       color: "from-yellow-500 to-orange-500",
       website: "https://numaxio.com/",
       websiteName: "numaxio.com",
@@ -92,7 +92,7 @@ const SubsidiariesSection = () => {
       established: "2021",
       services: ["تطوير المتاجر الإلكترونية", "حلول الدفع الرقمي", "إدارة المخزون الذكية", "التسويق الإلكتروني", "خدمات الشحن والتوصيل", "تحليل سلوك المستهلكين"],
       icon: ShoppingCart,
-      stats: { projects: "980+", clients: "540+", countries: "22", revenue: "$1.8M" },
+      stats: { projects: "980+", clients: "540+", countries: "22" },
       color: "from-green-600 to-emerald-500",
       website: "https://vexomart.com/",
       websiteName: "vexomart.com",
@@ -179,7 +179,7 @@ const SubsidiariesSection = () => {
                     </div>
 
                     {/* Enhanced Stats Grid */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 p-4 bg-white/5 rounded-xl backdrop-blur-sm border border-white/10">
+                    <div className="grid grid-cols-3 gap-3 mb-6 p-4 bg-white/5 rounded-xl backdrop-blur-sm border border-white/10">
                       <div className="text-center">
                         <div className="text-lg font-bold text-gradient-primary">{company.stats.projects}</div>
                         <div className="text-xs text-muted-foreground">مشروع</div>
@@ -191,10 +191,6 @@ const SubsidiariesSection = () => {
                       <div className="text-center">
                         <div className="text-lg font-bold text-gradient-primary">{company.stats.countries}</div>
                         <div className="text-xs text-muted-foreground">دولة</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-gradient-primary">{company.stats.revenue}</div>
-                        <div className="text-xs text-muted-foreground">إيرادات</div>
                       </div>
                     </div>
 
@@ -273,7 +269,7 @@ const SubsidiariesSection = () => {
             <Trophy className="w-8 h-8 text-secondary animate-bounce" />
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 border border-white/10">
               <div className="absolute top-4 right-4">
                 <Briefcase className="w-6 h-6 text-blue-400 opacity-50" />
@@ -302,16 +298,6 @@ const SubsidiariesSection = () => {
               <div className="text-xl font-semibold text-primary mb-1">دولة حول العالم</div>
               <div className="text-sm text-muted-foreground">Countries Worldwide</div>
               <div className="text-xs text-green-500 font-medium mt-2">+65 دولة جديدة</div>
-            </div>
-            
-            <div className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 border border-white/10">
-              <div className="absolute top-4 right-4">
-                <Award className="w-6 h-6 text-yellow-400 opacity-50" />
-              </div>
-              <div className="text-5xl font-bold text-gradient-primary mb-3 group-hover:scale-110 transition-transform duration-300">$24.8M</div>
-              <div className="text-xl font-semibold text-primary mb-1">إجمالي الإيرادات</div>
-              <div className="text-sm text-muted-foreground">Total Revenue Generated</div>
-              <div className="text-xs text-green-500 font-medium mt-2">+165% نمو سنوي</div>
             </div>
           </div>
 
