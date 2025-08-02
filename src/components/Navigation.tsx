@@ -14,7 +14,7 @@ const Navigation = () => {
             <img 
               src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
               alt="Ash Holdings Logo" 
-              className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300 drop-shadow-lg"
+              className="h-20 md:h-24 w-auto object-contain hover:scale-110 transition-all duration-500 drop-shadow-2xl brightness-110 contrast-110"
             />
           </div>
           
