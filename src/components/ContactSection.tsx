@@ -194,11 +194,19 @@ const ContactSection = () => {
                   
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button 
+                      asChild
                       size="lg" 
                       className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 px-8 py-6 text-lg font-bold shadow-glow transition-all duration-300 hover:scale-105 group/btn"
                     >
-                      <Send className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                      ابدأ المحادثة الآن
+                      <a 
+                        href="https://wa.me/966555812567?text=مرحباً، أريد بدء محادثة حول خدماتكم"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center"
+                      >
+                        <Send className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                        ابدأ المحادثة الآن
+                      </a>
                     </Button>
                     
                     <Button 
