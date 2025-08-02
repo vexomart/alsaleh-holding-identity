@@ -45,7 +45,7 @@ const Footer = () => {
     { name: "الاستثمار التقني", href: "/tech-investment", icon: TrendingUp },
     { name: "التطوير والابتكار", href: "/development", icon: Lightbulb },
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Building2 },
-    { name: "الحلول المتكاملة", href: "#solutions", icon: Zap }
+    { name: "الحلول المتكاملة", href: "/integrated-solutions", icon: Zap }
   ];
 
   const contactInfo = [
