@@ -180,8 +180,35 @@ const services = [
 const ServicesSection = () => {
   const whatsappNumber = "966555812567";
   
-  const openWhatsApp = (serviceTitle: string, price: string) => {
-    const message = `مرحباً، أريد الاستفسار عن خدمة ${serviceTitle} التي تبدأ من ${price} ر.س`;
+  const openWhatsApp = (serviceTitle: string, price: string, services: string[], technologies: string[], deliveryTime: string, rating: number, projectsCount: number) => {
+    const message = `🚀 مرحباً بك في شركتنا! 🚀
+
+💼 **طلب خدمة احترافية**
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 **تفاصيل الخدمة:**
+• 🏷️ الخدمة: ${serviceTitle}
+• 💰 يبدأ من: ${price} ريال سعودي
+• ⭐ التقييم: ${rating}/5
+• 📊 عدد المشاريع: ${projectsCount} مشروع
+• 🕐 مدة التسليم: ${deliveryTime}
+
+🛠️ **الخدمات المتضمنة:**
+${services.slice(0, 5).map((service) => `• 🔹 ${service}`).join('\n')}
+
+💻 **التقنيات المستخدمة:**
+${technologies.slice(0, 4).map((tech) => `• ⚙️ ${tech}`).join('\n')}
+
+🎊 **مميزات إضافية:**
+• 🔧 إدارة ومتابعة شاملة
+• 💬 دعم فني مستمر
+• 📞 استشارة مجانية
+• 🚀 ضمان الجودة والسرعة
+
+💡 **أريد البدء في هذه الخدمة والحصول على عرض سعر مفصل!**
+
+📱 في انتظار ردكم الكريم...`;
+    
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
@@ -225,7 +252,7 @@ const ServicesSection = () => {
                   <div className="flex items-center gap-4 mb-4">
                     <div 
                       className={`p-4 rounded-2xl bg-gradient-to-br ${service.color} cursor-pointer hover:scale-110 transition-transform duration-300 shadow-lg relative z-20`}
-                      onClick={() => openWhatsApp(service.title, service.startingPrice)}
+                      onClick={() => openWhatsApp(service.title, service.startingPrice, service.services, service.technologies, service.deliveryTime, service.rating, service.projectsCount)}
                       title="تواصل عبر الواتساب"
                     >
                       <IconComponent className="w-8 h-8 text-white" />
@@ -312,7 +339,33 @@ const ServicesSection = () => {
                   {/* CTA Buttons */}
                   <div className="space-y-3 pt-2">
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`مرحباً، أريد طلب خدمة ${service.title} والحصول على عرض سعر مفصل`)}`}
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🚀 مرحباً بك في شركتنا! 🚀
+
+💼 **طلب خدمة احترافية**
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 **تفاصيل الخدمة:**
+• 🏷️ الخدمة: ${service.title}
+• 💰 يبدأ من: ${service.startingPrice} ريال سعودي
+• ⭐ التقييم: ${service.rating}/5
+• 📊 عدد المشاريع: ${service.projectsCount} مشروع
+• 🕐 مدة التسليم: ${service.deliveryTime}
+
+🛠️ **الخدمات المتضمنة:**
+${service.services.slice(0, 5).map((serv: string) => `• 🔹 ${serv}`).join('\n')}
+
+💻 **التقنيات المستخدمة:**
+${service.technologies.slice(0, 4).map((tech: string) => `• ⚙️ ${tech}`).join('\n')}
+
+🎊 **مميزات إضافية:**
+• 🔧 إدارة ومتابعة شاملة
+• 💬 دعم فني مستمر
+• 📞 استشارة مجانية
+• 🚀 ضمان الجودة والسرعة
+
+💡 **أريد البدء في هذه الخدمة والحصول على عرض سعر مفصل!**
+
+📱 في انتظار ردكم الكريم...`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full inline-block"
@@ -328,7 +381,22 @@ const ServicesSection = () => {
                     </a>
                     
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`أريد استشارة مجانية حول خدمة ${service.title}`)}`}
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`💭 استشارة مجانية حول الخدمات
+
+📋 **تفاصيل الاستشارة:**
+• 🏷️ الخدمة: ${service.title}
+• 💰 السعر: يبدأ من ${service.startingPrice} ريال سعودي
+• 🤔 أريد استشارة مجانية حول هذه الخدمة
+
+❓ **أسئلتي:**
+• ما هي أفضل حلول لمشروعي؟
+• كم المدة المتوقعة للتنفيذ؟
+• ما هي التقنيات الأنسب؟
+• هل يمكن تخصيص الخدمة؟
+
+💡 **أريد جلسة استشارة تفصيلية مجانية!**
+
+📱 في انتظار ردكم...`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full inline-block"
@@ -356,7 +424,32 @@ const ServicesSection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a 
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('مرحباً، أريد الحصول على استشارة مجانية حول خدماتكم وعرض سعر مخصص لمشروعي')}`}
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎯 مرحباً بك في شركتنا! 🎯
+
+💼 **طلب استشارة شاملة**
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 **تفاصيل الطلب:**
+• 🚀 أريد استشارة مجانية شاملة
+• 💡 أريد تحديد أفضل الخدمات لمشروعي
+• 💰 أريد عرض سعر مخصص ومفصل
+
+🤔 **معلومات أحتاجها:**
+• 📊 تحليل احتياجات مشروعي
+• ⏱️ الجدول الزمني للتنفيذ
+• 💻 أفضل التقنيات المناسبة
+• 📈 استراتيجية النجاح
+
+🎊 **الخدمات المطلوبة:**
+• 🔸 البرمجة والتطوير
+• 🔸 التسويق الإلكتروني
+• 🔸 التصميم الإبداعي
+• 🔸 الربط والتطوير
+• 🔸 المتاجر الإلكترونية
+
+💡 **أريد خطة متكاملة ومخصصة لمشروعي!**
+
+📱 في انتظار ردكم الكريم...`)}`}
               target="_blank"
               rel="noopener noreferrer"
             >

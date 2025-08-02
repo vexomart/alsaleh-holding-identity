@@ -72,8 +72,32 @@ const currentOffers = [
 const CurrentOffersSection = () => {
   const whatsappNumber = "966555812567";
   
-  const openWhatsApp = (offerTitle: string, price: string) => {
-    const message = `مرحباً، أريد الاستفسار عن عرض ${offerTitle} بسعر ${price} ر.س مع الإدارة والمتابعة لمدة 6 شهور`;
+  const openWhatsApp = (offerTitle: string, price: string, originalPrice: string, discount: string, timeLeft: string, features: string[]) => {
+    const message = `🌟 مرحباً بك في شركتنا! 🌟
+
+🎯 **طلب عرض خاص**
+━━━━━━━━━━━━━━━━━━━━━
+
+📋 **تفاصيل العرض:**
+• 🏷️ العرض: ${offerTitle}
+• 💰 السعر الحالي: ${price} ريال سعودي
+• 🔥 السعر الأصلي: ${originalPrice} ريال سعودي  
+• 🎁 نسبة الخصم: ${discount}
+• ⏰ الوقت المتبقي: ${timeLeft}
+
+✨ **مميزات العرض:**
+${features.map((feature, index) => `• ✅ ${feature}`).join('\n')}
+
+🎊 **مميزات إضافية:**
+• 🔧 إدارة ومتابعة لمدة 6 شهور
+• 💬 دعم فني 24/7
+• 📞 استشارة مجانية
+• 🚀 بداية سريعة للمشروع
+
+💡 **أريد الحصول على هذا العرض والبدء فوراً!**
+
+📱 في انتظار ردكم الكريم...`;
+    
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
@@ -134,7 +158,7 @@ const CurrentOffersSection = () => {
                   <div className="flex items-center gap-4 mb-4">
                     <div 
                       className={`p-4 rounded-2xl bg-gradient-to-br ${offer.color} cursor-pointer hover:scale-110 transition-transform duration-300 shadow-lg relative z-20`}
-                      onClick={() => openWhatsApp(offer.title, offer.currentPrice)}
+                      onClick={() => openWhatsApp(offer.title, offer.currentPrice, offer.originalPrice, offer.discount, offer.timeLeft, offer.features)}
                       title="تواصل عبر الواتساب"
                     >
                       <IconComponent className="w-8 h-8 text-white" />
@@ -184,7 +208,30 @@ const CurrentOffersSection = () => {
                   {/* CTA Buttons */}
                   <div className="space-y-3 pt-4">
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`مرحباً، أريد الحصول على عرض ${offer.title} بسعر ${offer.currentPrice} ر.س مع جميع المميزات المذكورة`)}`}
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🌟 مرحباً بك في شركتنا! 🌟
+
+🎯 **طلب عرض خاص**
+━━━━━━━━━━━━━━━━━━━━━
+
+📋 **تفاصيل العرض:**
+• 🏷️ العرض: ${offer.title}
+• 💰 السعر الحالي: ${offer.currentPrice} ريال سعودي
+• 🔥 السعر الأصلي: ${offer.originalPrice} ريال سعودي  
+• 🎁 نسبة الخصم: ${offer.discount}
+• ⏰ الوقت المتبقي: ${offer.timeLeft}
+
+✨ **مميزات العرض:**
+${offer.features.map((feature: string) => `• ✅ ${feature}`).join('\n')}
+
+🎊 **مميزات إضافية:**
+• 🔧 إدارة ومتابعة لمدة 6 شهور
+• 💬 دعم فني 24/7
+• 📞 استشارة مجانية
+• 🚀 بداية سريعة للمشروع
+
+💡 **أريد الحصول على هذا العرض والبدء فوراً!**
+
+📱 في انتظار ردكم الكريم...`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full inline-block"
@@ -200,7 +247,19 @@ const CurrentOffersSection = () => {
                     </a>
                     
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`أريد تفاصيل أكثر عن عرض ${offer.title}`)}`}
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`💭 استفسار سريع عن العروض
+
+📋 **تفاصيل الاستفسار:**
+• 🏷️ العرض: ${offer.title}
+• 💰 السعر: ${offer.currentPrice} ريال سعودي
+• ❓ أريد تفاصيل أكثر عن هذا العرض
+
+🤔 **أسئلتي:**
+• ما هي مدة تنفيذ المشروع؟
+• هل يمكن التعديل على المميزات؟
+• ما هي طريقة الدفع المتاحة؟
+
+📱 في انتظار ردكم...`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full inline-block"
@@ -228,7 +287,25 @@ const CurrentOffersSection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a 
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('مرحباً، أريد الاستفسار عن جميع العروض الحالية المتاحة')}`}
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎊 مرحباً بك في شركتنا! 🎊
+
+🛍️ **طلب عرض شامل لجميع الخدمات**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 **تفاصيل الطلب:**
+• 🎯 أريد الاطلاع على جميع العروض الحالية
+• 💰 أريد مقارنة الأسعار والمميزات
+• ⚡ أريد الاستفادة من العروض المحدودة
+
+🤔 **معلومات إضافية أحتاجها:**
+• 📅 مدة تنفيذ كل مشروع
+• 💳 طرق الدفع المتاحة
+• 🔧 تفاصيل الدعم الفني
+• 📊 نماذج من الأعمال السابقة
+
+💡 **أريد استشارة شاملة لاختيار الأنسب لي!**
+
+📱 في انتظار ردكم الكريم...`)}`}
               target="_blank"
               rel="noopener noreferrer"
             >
