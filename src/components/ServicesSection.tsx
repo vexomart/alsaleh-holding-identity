@@ -219,7 +219,15 @@ const ServicesSection = () => {
                   </div>
 
                   {/* CTA Button */}
-                  <Button className="w-full group/btn" variant="outline">
+                  <Button 
+                    className="w-full group/btn" 
+                    variant="outline"
+                    onClick={() => {
+                      const message = `مرحباً، أريد الاستفسار عن ${service.title} - يبدأ من ${service.startingPrice} ر.س`;
+                      const whatsappUrl = `https://wa.me/966500000000?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                  >
                     اطلب الخدمة
                     <ArrowRight className="w-4 h-4 mr-2 group-hover/btn:translate-x-1 transition-transform" />
                   </Button>
