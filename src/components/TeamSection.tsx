@@ -5,8 +5,8 @@ import { Crown, Users, Code, TrendingUp, Building2, Shield, Star, Award, Chevron
 const TeamSection = () => {
   const teamMembers = [
     {
-      name: "أحمد محمد السعيد",
-      nameEn: "Ahmed Mohamed Al-Saeed",
+      name: "أ/علي صالح الشهري",
+      nameEn: "Ali Saleh Al-Shahri",
       position: "رئيس مجلس الإدارة والمؤسس",
       positionEn: "Chairman & Founder",
       department: "القيادة الاستراتيجية",
@@ -20,9 +20,9 @@ const TeamSection = () => {
       bgEffect: "from-purple-500/10 to-blue-500/10"
     },
     {
-      name: "سارة أحمد الزهراني",
-      nameEn: "Sarah Ahmed Al-Zahrani",
-      position: "المديرة التنفيذية للعمليات",
+      name: "خالد بن محمد الحارثي",
+      nameEn: "Khalid Bin Mohammed Al-Harthi",
+      position: "المدير التنفيذي للعمليات",
       positionEn: "Chief Operating Officer",
       department: "العمليات والتطوير",
       departmentEn: "Operations & Development",
@@ -50,9 +50,9 @@ const TeamSection = () => {
       bgEffect: "from-blue-500/10 to-cyan-500/10"
     },
     {
-      name: "لينا سعد القحطاني",
-      nameEn: "Lina Saad Al-Qahtani",
-      position: "رئيسة قسم التقنية والابتكار",
+      name: "جيمس أندرسون",
+      nameEn: "James Anderson",
+      position: "رئيس قسم التقنية والابتكار",
       positionEn: "Chief Technology Officer",
       department: "التقنية والذكاء الاصطناعي",
       departmentEn: "Technology & AI",
@@ -80,9 +80,9 @@ const TeamSection = () => {
       bgEffect: "from-orange-500/10 to-red-500/10"
     },
     {
-      name: "نورا يوسف العتيبي",
-      nameEn: "Nora Yousef Al-Otaibi",
-      position: "مديرة الجودة والامتثال",
+      name: "سعود فهد الشمري",
+      nameEn: "Saud Fahad Al-Shamri",
+      position: "مدير الجودة والامتثال",
       positionEn: "Quality & Compliance Director",
       department: "الجودة والأمان",
       departmentEn: "Quality & Security",
