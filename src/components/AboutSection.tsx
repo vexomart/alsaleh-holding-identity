@@ -9,18 +9,36 @@ const AboutSection = () => {
             من نحن
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            شركة علي صالح الشهري القابضة هي كيان استثماري رائد يهدف إلى بناء مستقبل أفضل من خلال الاستثمار في الشركات المبتكرة
+            شركة علي صالح الشهري القابضة - كيان استثماري رائد يضم مجموعة من الشركات المتخصصة في التقنية والإعلام والتعليم
           </p>
+        </div>
+        
+        {/* Stats Section */}
+        <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <Card className="shadow-elegant border-0 bg-gradient-primary text-center">
+            <CardContent className="p-8">
+              <div className="text-5xl font-bold text-primary-foreground mb-4">1,392</div>
+              <h3 className="text-xl font-semibold text-primary-foreground">مشروع منجز</h3>
+              <p className="text-primary-foreground/80 mt-2">مشاريع متنوعة عبر جميع الشركات الفرعية</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="shadow-elegant border-0 bg-gradient-secondary text-center">
+            <CardContent className="p-8">
+              <div className="text-5xl font-bold text-secondary-foreground mb-4">857</div>
+              <h3 className="text-xl font-semibold text-secondary-foreground">عميل راضٍ</h3>
+              <p className="text-secondary-foreground/80 mt-2">عملاء يثقون في خدماتنا المتميزة</p>
+            </CardContent>
+          </Card>
         </div>
         
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <Card className="shadow-elegant border-0 bg-gradient-primary">
               <CardContent className="p-8 text-primary-foreground">
-                <h3 className="text-2xl font-bold mb-4">رؤيتنا</h3>
+                <h3 className="text-2xl font-bold mb-4">نبذة عن الشركة</h3>
                 <p className="text-lg leading-relaxed mb-6">
-                  أن نكون الشركة القابضة الرائدة في المنطقة في مجال الاستثمار التقني والإعلامي، 
-                  نساهم في بناء اقتصاد المعرفة ونمكن الشركات الناشئة من تحقيق إمكاناتها الكاملة.
+                  تأسست شركة علي صالح الشهري القابضة عام 2024 كشركة قابضة متخصصة في الاستثمار بالمجالات التقنية والإعلامية والتعليمية، حيث تضم تحت مظلتها مجموعة من الشركات الفرعية المتخصصة.
                 </p>
                 <div className="w-16 h-1 bg-secondary rounded-full" />
               </CardContent>
@@ -30,15 +48,24 @@ const AboutSection = () => {
           <div>
             <Card className="shadow-elegant border-0 bg-card">
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-primary mb-4">مهمتنا</h3>
-                <p className="text-lg text-foreground leading-relaxed mb-6">
-                  نستثمر في الشركات التقنية والإعلامية المبتكرة، نوفر لها الدعم المالي والاستراتيجي 
-                  لتحقيق النمو المستدام والتأثير الإيجابي في المجتمع.
-                </p>
-                <div className="flex items-center space-x-reverse space-x-4">
-                  <div className="w-3 h-3 bg-secondary rounded-full" />
-                  <div className="w-3 h-3 bg-primary rounded-full" />
-                  <div className="w-3 h-3 bg-secondary rounded-full" />
+                <h3 className="text-2xl font-bold text-primary mb-4">قيمنا الأساسية</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-reverse space-x-3">
+                    <div className="w-2 h-2 bg-secondary rounded-full" />
+                    <span className="text-foreground">الابتكار والتميز في جميع أعمالنا</span>
+                  </div>
+                  <div className="flex items-center space-x-reverse space-x-3">
+                    <div className="w-2 h-2 bg-primary rounded-full" />
+                    <span className="text-foreground">الشراكة الاستراتيجية مع عملائنا</span>
+                  </div>
+                  <div className="flex items-center space-x-reverse space-x-3">
+                    <div className="w-2 h-2 bg-secondary rounded-full" />
+                    <span className="text-foreground">المساهمة في التنمية الاقتصادية</span>
+                  </div>
+                  <div className="flex items-center space-x-reverse space-x-3">
+                    <div className="w-2 h-2 bg-primary rounded-full" />
+                    <span className="text-foreground">دعم الشباب السعودي ومواهبهم</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
