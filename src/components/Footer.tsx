@@ -263,7 +263,7 @@ const Footer = () => {
                   href="https://wa.me/966555812567?text=مرحباً، أريد بدء مشروع جديد معكم" 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors duration-300 font-medium text-sm group/cta"
+                  className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors duration-300 font-medium text-sm group/cta"
                 >
                   <span>تواصل معنا الآن</span>
                   <ChevronRight className="w-4 h-4 group-hover/cta:translate-x-1 transition-transform duration-300" />
