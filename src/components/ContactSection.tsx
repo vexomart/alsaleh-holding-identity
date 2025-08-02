@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Globe, Clock } from "lucide-react";
 
 const ContactSection = () => {
   return (
@@ -59,6 +59,20 @@ const ContactSection = () => {
                     <div>
                       <p className="font-semibold text-primary">الموقع الإلكتروني</p>
                       <p className="text-muted-foreground">ash.holdings</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-reverse space-x-4">
+                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center animate-pulse">
+                      <Clock className="w-6 h-6 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-primary">مواعيد العمل</p>
+                      <div className="text-muted-foreground space-y-1">
+                        <p>من السبت للخميس</p>
+                        <p className="direction-ltr">9:00 ص - 5:00 م</p>
+                        <p className="text-sm text-secondary font-medium">خدمة العملاء متاحة على مدار الساعة</p>
+                      </div>
                     </div>
                   </div>
                 </div>
