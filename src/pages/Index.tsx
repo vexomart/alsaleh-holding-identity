@@ -10,7 +10,7 @@ import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import SignLanguageSupport from "@/components/SignLanguageSupport";
+
 
 
 const Index = () => {
@@ -48,7 +48,7 @@ const Index = () => {
       </main>
       <Footer />
       <WhatsAppButton />
-      <SignLanguageSupport />
+      
     </div>
   );
 };
