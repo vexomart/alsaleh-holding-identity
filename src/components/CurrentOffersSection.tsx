@@ -130,7 +130,15 @@ const CurrentOffersSection = () => {
                   </div>
 
                   {/* CTA Button */}
-                  <Button className="w-full group/btn" size="lg">
+                  <Button 
+                    className="w-full group/btn" 
+                    size="lg"
+                    onClick={() => {
+                      const message = `مرحباً، أريد الاستفسار عن ${offer.title} - العرض بسعر ${offer.currentPrice} ر.س`;
+                      const whatsappUrl = `https://wa.me/966500000000?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                  >
                     احصل على العرض الآن
                     <ArrowRight className="w-4 h-4 mr-2 group-hover/btn:translate-x-1 transition-transform" />
                   </Button>
@@ -145,7 +153,15 @@ const CurrentOffersSection = () => {
           <p className="text-muted-foreground mb-4">
             العروض محدودة الوقت - لا تفوت الفرصة!
           </p>
-          <Button variant="outline" size="lg" className="px-8">
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="px-8"
+            onClick={() => {
+              const offersSection = document.getElementById('offers');
+              offersSection?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
             عرض جميع العروض
             <ArrowRight className="w-4 h-4 mr-2" />
           </Button>
