@@ -145,10 +145,19 @@ const CurrentOffersSection = () => {
                     size="lg"
                     onClick={(e) => {
                       e.preventDefault();
-                      const message = "مرحباً، أريد الاستفسار عن عروضكم الحالية والحصول على تفاصيل أكثر";
+                      e.stopPropagation();
+                      console.log('زر احصل على العرض الآن تم الضغط عليه');
+                      const message = `مرحباً، أريد الاستفسار عن العروض الحالية المحدودة الوقت، خاصة العرض الذي يشمل الإدارة والمتابعة لمدة 6 شهور والدعم الفني الشامل`;
                       const phoneNumber = "966555812567";
                       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                      window.open(whatsappUrl, '_blank');
+                      console.log('فتح رابط الواتساب:', whatsappUrl);
+                      
+                      // فتح الواتساب بطريقتين للتأكد
+                      const opened = window.open(whatsappUrl, '_blank');
+                      if (!opened) {
+                        // إذا فشل، جرب طريقة أخرى
+                        location.href = whatsappUrl;
+                      }
                     }}
                   >
                     احصل على العرض الآن
