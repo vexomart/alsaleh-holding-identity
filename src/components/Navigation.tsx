@@ -104,7 +104,7 @@ const Navigation = () => {
                 <div className="flex items-center gap-1 mt-1">
                   <Star className="w-3 h-3 text-yellow-400 fill-current" />
                   <span className={`text-xs ${isScrolled ? 'text-gray-500' : 'text-primary-foreground/70'}`}>
-                    منذ 2020
+                    منذ 2016
                   </span>
                 </div>
               </div>
