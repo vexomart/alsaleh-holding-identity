@@ -43,7 +43,7 @@ const Footer = () => {
 
   const services = [
     { name: "الاستثمار التقني", href: "/tech-investment", icon: TrendingUp },
-    { name: "التطوير والابتكار", href: "#development", icon: Lightbulb },
+    { name: "التطوير والابتكار", href: "/development", icon: Lightbulb },
     { name: "الاستشارات الإستراتيجية", href: "#consulting", icon: Building2 },
     { name: "الحلول المتكاملة", href: "#solutions", icon: Zap }
   ];
