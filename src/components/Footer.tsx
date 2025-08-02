@@ -28,7 +28,7 @@ const Footer = () => {
   const quickLinks = [
     { name: "الرئيسية", href: "#hero", icon: Home },
     { name: "من نحن", href: "/about", icon: Users },
-    { name: "رؤيتنا", href: "#vision", icon: Target },
+    { name: "رؤيتنا", href: "/vision", icon: Target },
     { name: "فريق العمل", href: "/team", icon: Award },
     { name: "تواصل معنا", href: "#contact", icon: Mail }
   ];
@@ -156,7 +156,7 @@ const Footer = () => {
                 </div>
 
                 <a 
-                  href="#vision" 
+                  href="/vision" 
                   className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors duration-300 font-medium text-sm group/vision mt-3"
                 >
                   <span>اكتشف رؤيتنا الكاملة</span>
