@@ -223,8 +223,8 @@ const ServicesSection = () => {
                     className="w-full group/btn" 
                     variant="outline"
                     onClick={() => {
-                      const message = `مرحباً، أريد الاستفسار عن ${service.title} - يبدأ من ${service.startingPrice} ر.س`;
-                      const whatsappUrl = `https://wa.me/966500000000?text=${encodeURIComponent(message)}`;
+                      const message = `مرحباً، أريد الاستفسار عن ${service.title} - يبدأ من ${service.startingPrice} ر.س مع الإدارة والمتابعة والدعم الفني`;
+                      const whatsappUrl = `https://wa.me/966123456789?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
                   >

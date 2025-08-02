@@ -12,7 +12,7 @@ const currentOffers = [
     currentPrice: "9,999",
     discount: "35%",
     timeLeft: "15 يوم",
-    features: ["تصميم مخصص", "استضافة مجانية لسنة", "دعم فني 24/7", "تحسين محركات البحث"],
+    features: ["تصميم مخصص", "استضافة مجانية لسنة", "دعم فني 24/7", "تحسين محركات البحث", "إدارة ومتابعة لمدة 6 شهور", "دعم فني شامل"],
     badge: "الأكثر طلباً",
     icon: Zap,
     color: "from-blue-500 to-purple-600"
@@ -25,7 +25,7 @@ const currentOffers = [
     currentPrice: "5,999",
     discount: "25%",
     timeLeft: "10 أيام",
-    features: ["إدارة 5 منصات", "محتوى شهري", "تقارير أداء", "استشارة مجانية"],
+    features: ["إدارة 5 منصات", "محتوى شهري", "تقارير أداء", "استشارة مجانية", "إدارة ومتابعة لمدة 6 شهور", "دعم فني متواصل"],
     badge: "عرض محدود",
     icon: Star,
     color: "from-pink-500 to-red-600"
@@ -38,7 +38,7 @@ const currentOffers = [
     currentPrice: "18,999",
     discount: "24%",
     timeLeft: "20 يوم",
-    features: ["تطبيق جوال", "أنظمة دفع متعددة", "إدارة مخزون", "تقارير مبيعات"],
+    features: ["تطبيق جوال", "أنظمة دفع متعددة", "إدارة مخزون", "تقارير مبيعات", "إدارة ومتابعة لمدة 6 شهور", "دعم فني كامل"],
     badge: "جديد",
     icon: Gift,
     color: "from-green-500 to-teal-600"
@@ -134,8 +134,8 @@ const CurrentOffersSection = () => {
                     className="w-full group/btn" 
                     size="lg"
                     onClick={() => {
-                      const message = `مرحباً، أريد الاستفسار عن ${offer.title} - العرض بسعر ${offer.currentPrice} ر.س`;
-                      const whatsappUrl = `https://wa.me/966500000000?text=${encodeURIComponent(message)}`;
+                      const message = `مرحباً، أريد الاستفسار عن ${offer.title} - العرض بسعر ${offer.currentPrice} ر.س مع الإدارة والمتابعة لمدة 6 شهور والدعم الفني الشامل`;
+                      const whatsappUrl = `https://wa.me/966123456789?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
                   >
