@@ -21,7 +21,7 @@ import tamaraLogo from "@/assets/tamara-logo.png";
 import tabbyLogo from "@/assets/tabby-logo.png";
 import madfuLogo from "@/assets/madfu-logo.png";
 import emkanLogo from "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png";
-import tasaheelLogo from "@/assets/tasaheel-official-logo.png";
+import tasaheelLogo from "@/assets/alrajhi-bank-logo.png";
 
 const PaymentMethodsSection = () => {
   const traditionalMethods = [
