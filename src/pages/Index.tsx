@@ -15,7 +15,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-32">{/* Added pt-32 for top bars */}
       <Navigation />
       
       <main className="relative overflow-hidden">
