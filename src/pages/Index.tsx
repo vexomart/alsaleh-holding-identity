@@ -6,6 +6,7 @@ import StatsSection from "@/components/StatsSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import SubsidiariesSection from "@/components/SubsidiariesSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
+import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -37,6 +38,9 @@ const Index = () => {
         </section>
         <section id="commitments">
           <CommitmentsSection />
+        </section>
+        <section id="payment-methods">
+          <PaymentMethodsSection />
         </section>
         <section id="contact">
           <ContactSection />
