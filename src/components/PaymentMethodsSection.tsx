@@ -83,6 +83,20 @@ const PaymentMethodsSection = () => {
       benefits: ["عملية تقديم رقمية", "موافقة خلال دقائق", "إدارة ذكية للأقساط"],
       color: "orange",
       gradient: "from-orange-500 to-red-500"
+    },
+    {
+      name: "امكان",
+      logo: "🏪", 
+      description: "منصة التقسيط الرائدة مع حلول دفع مبتكرة ومرنة",
+      features: [
+        "تقسيط حتى 60 شهر",
+        "بدون دفعة أولى في بعض المنتجات",
+        "موافقة سريعة خلال دقائق",
+        "متاح لجميع المواطنين والمقيمين"
+      ],
+      benefits: ["أسعار فائدة تنافسية", "إجراءات ميسرة", "خدمة عملاء متميزة"],
+      color: "violet",
+      gradient: "from-violet-500 to-purple-600"
     }
   ];
 
@@ -165,7 +179,7 @@ const PaymentMethodsSection = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-8">
             {installmentOptions.map((option, index) => (
               <Card key={index} className="group hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-card to-card/50 backdrop-blur-sm overflow-hidden animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
                 <div className={`h-2 bg-gradient-to-r ${option.gradient}`} />
