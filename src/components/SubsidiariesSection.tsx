@@ -99,6 +99,22 @@ const SubsidiariesSection = () => {
       growth: "+312%",
       rating: "4.6/5",
       specialties: ["التجارة الذكية", "الدفع الآمن", "تجربة المستخدم"]
+    },
+    {
+      name: "أكاديمية نيست",
+      nameEn: "Nest Academy",
+      description: "منصة تعليمية متطورة ومبتكرة تقدم برامج تدريبية متخصصة في التقنية والذكاء الاصطناعي والتطوير المهني مع أحدث المناهج العالمية",
+      category: "التعليم والتدريب المتخصص",
+      established: "2024",
+      services: ["برامج تدريبية متقدمة", "شهادات معتمدة دولياً", "تعليم الذكاء الاصطناعي", "ورش عمل تفاعلية", "استشارات مهنية", "التعلم الرقمي"],
+      icon: GraduationCap,
+      stats: { projects: "قريباً", clients: "قريباً", countries: "قريباً" },
+      color: "from-indigo-600 to-purple-500",
+      website: "https://nest.academy/",
+      websiteName: "nest.academy",
+      growth: "قيد التطوير",
+      rating: "قريباً",
+      specialties: ["الذكاء الاصطناعي", "التعلم التفاعلي", "الشهادات المهنية"]
     }
   ];
 
