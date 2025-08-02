@@ -148,18 +148,58 @@ const HeroSection = () => {
           </div>
         </div>
         
-        {/* Enhanced Main Title */}
-        <div className="mb-8 space-y-4">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight animate-fade-in">
-            شركة علي صالح الشهري القابضة
-          </h1>
+        {/* Enhanced Main Title with Advanced Typography */}
+        <div className="mb-8 space-y-6">
+          <div className="relative">
+            {/* Animated Background Glow */}
+            <div className="absolute inset-0 text-4xl md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary animate-pulse blur-sm opacity-50">
+              شركة علي صالح الشهري القابضة
+            </div>
+            
+            {/* Main Title with Advanced Effects */}
+            <h1 className="relative text-4xl md:text-6xl lg:text-7xl font-bold leading-tight animate-fade-in group">
+              <span className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-primary-foreground via-white to-primary-foreground animate-gradient-x">
+                شركة علي صالح الشهري
+              </span>
+              <br />
+              <span className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-secondary via-primary to-secondary animate-gradient-x mt-2" style={{ animationDelay: '0.5s' }}>
+                القابضة
+              </span>
+              
+              {/* Animated Underline */}
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-secondary to-primary group-hover:w-full transition-all duration-1000 rounded-full shadow-glow" />
+              
+              {/* Sparkle Effects */}
+              <div className="absolute top-0 right-0 animate-ping">
+                <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-secondary opacity-70" />
+              </div>
+              <div className="absolute bottom-0 left-0 animate-ping" style={{ animationDelay: '1s' }}>
+                <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-primary opacity-60" />
+              </div>
+              
+              {/* 3D Shadow Effect */}
+              <div className="absolute inset-0 text-4xl md:text-6xl lg:text-7xl font-bold text-primary/20 transform translate-x-2 translate-y-2 -z-10">
+                شركة علي صالح الشهري القابضة
+              </div>
+            </h1>
+            
+            {/* Reflection Effect */}
+            <div className="absolute top-full left-0 right-0 h-20 overflow-hidden opacity-30">
+              <div className="text-4xl md:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-primary-foreground/50 to-transparent transform scale-y-[-1] blur-sm">
+                شركة علي صالح الشهري القابضة
+              </div>
+            </div>
+          </div>
           
-          {/* Subtitle with typing effect */}
-          <div className="flex justify-center items-center gap-3 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          {/* Enhanced Subtitle with typing effect */}
+          <div className="flex justify-center items-center gap-3 animate-fade-in" style={{ animationDelay: '0.8s' }}>
             <Target className="w-6 h-6 text-secondary animate-pulse" />
-            <p className="text-2xl md:text-3xl font-bold text-secondary">
-              رؤية • ابتكار • تميز
-            </p>
+            <div className="relative">
+              <p className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary via-primary to-secondary animate-gradient-x">
+                رؤية • ابتكار • تميز
+              </p>
+              <div className="absolute -inset-1 bg-gradient-to-r from-secondary/20 to-primary/20 rounded-lg blur opacity-60 animate-pulse" />
+            </div>
             <Rocket className="w-6 h-6 text-secondary animate-bounce" />
           </div>
         </div>
