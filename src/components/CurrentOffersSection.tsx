@@ -133,9 +133,11 @@ const CurrentOffersSection = () => {
                   <Button 
                     className="w-full group/btn" 
                     size="lg"
-                    onClick={() => {
-                      const message = `مرحباً، أريد الاستفسار عن ${offer.title} - العرض بسعر ${offer.currentPrice} ر.س مع الإدارة والمتابعة لمدة 6 شهور والدعم الفني الشامل`;
-                      const whatsappUrl = `https://wa.me/966123456789?text=${encodeURIComponent(message)}`;
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const message = "مرحباً، أريد الاستفسار عن عروضكم الحالية والحصول على تفاصيل أكثر";
+                      const phoneNumber = "966555123456"; // ضع رقم الواتساب الفعلي للشركة هنا
+                      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
                   >

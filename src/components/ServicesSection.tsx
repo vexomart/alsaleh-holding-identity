@@ -224,10 +224,9 @@ const ServicesSection = () => {
                     variant="outline"
                     onClick={(e) => {
                       e.preventDefault();
-                      console.log('Button clicked for service:', service.title);
-                      const message = `مرحباً، أريد الاستفسار عن ${service.title} - يبدأ من ${service.startingPrice} ر.س مع الإدارة والمتابعة والدعم الفني`;
-                      const whatsappUrl = `https://wa.me/966123456789?text=${encodeURIComponent(message)}`;
-                      console.log('Opening WhatsApp URL:', whatsappUrl);
+                      const message = "مرحباً، أريد الاستفسار عن خدماتكم والحصول على استشارة مجانية";
+                      const phoneNumber = "966555123456"; // ضع رقم الواتساب الفعلي للشركة هنا
+                      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
                   >
@@ -245,7 +244,17 @@ const ServicesSection = () => {
           <p className="text-muted-foreground mb-4">
             هل تحتاج خدمة مخصصة؟ تواصل معنا للحصول على استشارة مجانية
           </p>
-          <Button size="lg" className="px-8">
+          <Button 
+            size="lg" 
+            className="px-8"
+            onClick={(e) => {
+              e.preventDefault();
+              const message = "مرحباً، أريد الحصول على استشارة مجانية حول خدماتكم";
+              const phoneNumber = "966555123456"; // ضع رقم الواتساب الفعلي للشركة هنا
+              const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+              window.open(whatsappUrl, '_blank');
+            }}
+          >
             احصل على استشارة مجانية
             <ArrowRight className="w-4 h-4 mr-2" />
           </Button>
