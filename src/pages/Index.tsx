@@ -10,6 +10,7 @@ import ContactSection from "@/components/ContactSection";
 import TeamSection from "@/components/TeamSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SignLanguageSupport from "@/components/SignLanguageSupport";
 
 const Index = () => {
   return (
@@ -46,6 +47,7 @@ const Index = () => {
       </main>
       <Footer />
       <WhatsAppButton />
+      <SignLanguageSupport />
     </div>
   );
 };
