@@ -16,6 +16,12 @@ import {
   Gift
 } from "lucide-react";
 
+// Import company logos
+import tamaraLogo from "@/assets/tamara-logo.png";
+import tabbyLogo from "@/assets/tabby-logo.png";
+import madfuLogo from "@/assets/madfu-logo.png";
+import emkanLogo from "@/assets/emkan-logo.png";
+
 const PaymentMethodsSection = () => {
   const traditionalMethods = [
     {
@@ -44,7 +50,7 @@ const PaymentMethodsSection = () => {
   const installmentOptions = [
     {
       name: "تمارا",
-      logo: "🛒",
+      logo: tamaraLogo,
       description: "اشتر الآن وادفع لاحقاً على 4 دفعات بدون فوائد",
       features: [
         "قسط مشترياتك على 4 دفعات متساوية",
@@ -58,7 +64,7 @@ const PaymentMethodsSection = () => {
     },
     {
       name: "تابي", 
-      logo: "💳",
+      logo: tabbyLogo,
       description: "خيارات دفع مرنة مع تقسيط ميسر وبدون فوائد",
       features: [
         "تقسيط على 4 دفعات كل أسبوعين",
@@ -72,7 +78,7 @@ const PaymentMethodsSection = () => {
     },
     {
       name: "مدفوع",
-      logo: "💰", 
+      logo: madfuLogo, 
       description: "حلول دفع متقدمة مع خيارات تقسيط مبتكرة",
       features: [
         "تقسيط مرن حسب إمكانياتك",
@@ -86,7 +92,7 @@ const PaymentMethodsSection = () => {
     },
     {
       name: "امكان",
-      logo: "🏪", 
+      logo: emkanLogo, 
       description: "منصة التقسيط الرائدة مع حلول دفع مبتكرة ومرنة",
       features: [
         "تقسيط حتى 60 شهر",
@@ -186,8 +192,12 @@ const PaymentMethodsSection = () => {
                 
                 <CardContent className="p-8">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className={`w-14 h-14 bg-gradient-to-br ${option.gradient} rounded-xl flex items-center justify-center text-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                      {option.logo}
+                    <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 border">
+                      <img 
+                        src={option.logo} 
+                        alt={`${option.name} logo`}
+                        className="w-12 h-12 object-contain"
+                      />
                     </div>
                     <div>
                       <h4 className="text-2xl font-bold text-foreground">{option.name}</h4>
