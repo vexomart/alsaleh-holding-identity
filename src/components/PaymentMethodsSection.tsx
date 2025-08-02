@@ -269,8 +269,14 @@ const PaymentMethodsSection = () => {
               اختر طريقة الدفع التي تناسبك واستمتع بحلول تقنية متطورة مع خيارات دفع مرنة
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
-                تواصل مع فريق المبيعات
+              <Button asChild size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
+                <a 
+                  href="https://wa.me/966555812567?text=مرحباً، أريد التواصل مع فريق المبيعات لمناقشة مشروعي"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  تواصل مع فريق المبيعات
+                </a>
               </Button>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 تعرف على الأسعار
