@@ -10,9 +10,12 @@ const Navigation = () => {
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="text-2xl font-bold text-primary-foreground">
-            شركة علي صالح الشهري
-            <span className="block text-sm text-secondary font-normal">القابضة</span>
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+              alt="Ash Holdings Logo" 
+              className="h-12 w-auto object-contain"
+            />
           </div>
           
           {/* Desktop Menu */}
