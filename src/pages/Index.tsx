@@ -5,6 +5,7 @@ import VisionSection from "@/components/VisionSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import SubsidiariesSection from "@/components/SubsidiariesSection";
 import ContactSection from "@/components/ContactSection";
+import TeamSection from "@/components/TeamSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
@@ -27,6 +28,9 @@ const Index = () => {
         </section>
         <section id="companies">
           <SubsidiariesSection />
+        </section>
+        <section id="team">
+          <TeamSection />
         </section>
         <section id="contact">
           <ContactSection />

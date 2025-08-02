@@ -90,12 +90,23 @@ const ContactSection = () => {
               </div>
             </div>
             
-            <Button 
-              size="lg" 
-              className="mt-8 bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-6 text-lg font-semibold shadow-glow transition-all duration-300"
-            >
-              ابدأ المحادثة
-            </Button>
+            <div className="flex gap-4 mt-8">
+              <Button 
+                size="lg" 
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-6 text-lg font-semibold shadow-glow transition-all duration-300"
+              >
+                ابدأ المحادثة
+              </Button>
+              
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-8 py-6 text-lg font-semibold transition-all duration-300"
+                onClick={() => window.open('/jobs', '_blank')}
+              >
+                طلب توظيف
+              </Button>
+            </div>
           </div>
         </div>
       </div>
