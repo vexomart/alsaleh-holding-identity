@@ -181,33 +181,33 @@ const ServicesSection = () => {
   const whatsappNumber = "966555812567";
   
   const openWhatsApp = (serviceTitle: string, price: string, services: string[], technologies: string[], deliveryTime: string, rating: number, projectsCount: number) => {
-    const message = `🚀 مرحباً بك في شركتنا! 🚀
+    const message = `🚀 مرحبا بك في شركتنا
 
-💼 **طلب خدمة احترافية**
-━━━━━━━━━━━━━━━━━━━━━━━━
+💼 طلب خدمة احترافية
+═══════════════════
 
-📋 **تفاصيل الخدمة:**
-• 🏷️ الخدمة: ${serviceTitle}
-• 💰 يبدأ من: ${price} ريال سعودي
-• ⭐ التقييم: ${rating}/5
-• 📊 عدد المشاريع: ${projectsCount} مشروع
-• 🕐 مدة التسليم: ${deliveryTime}
+📌 تفاصيل الخدمة:
+🏷️ الخدمة: ${serviceTitle}
+💰 يبدا من: ${price} ريال
+⭐ التقييم: ${rating}/5
+📊 المشاريع: ${projectsCount} مشروع
+🕐 التسليم: ${deliveryTime}
 
-🛠️ **الخدمات المتضمنة:**
-${services.slice(0, 5).map((service) => `• 🔹 ${service}`).join('\n')}
+🛠️ الخدمات المتضمنة:
+${services.slice(0, 4).map((service, index) => `${index + 1}. ${service}`).join('\n')}
 
-💻 **التقنيات المستخدمة:**
-${technologies.slice(0, 4).map((tech) => `• ⚙️ ${tech}`).join('\n')}
+💻 التقنيات المستخدمة:
+${technologies.slice(0, 3).map((tech, index) => `${index + 1}. ${tech}`).join('\n')}
 
-🎊 **مميزات إضافية:**
-• 🔧 إدارة ومتابعة شاملة
-• 💬 دعم فني مستمر
-• 📞 استشارة مجانية
-• 🚀 ضمان الجودة والسرعة
+🎊 مميزات اضافية:
+• ادارة ومتابعة شاملة
+• دعم فني مستمر
+• استشارة مجانية
+• ضمان الجودة
 
-💡 **أريد البدء في هذه الخدمة والحصول على عرض سعر مفصل!**
+💡 اريد البدء في هذه الخدمة!
 
-📱 في انتظار ردكم الكريم...`;
+شكرا لكم 🙏`;
     
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
@@ -339,33 +339,33 @@ ${technologies.slice(0, 4).map((tech) => `• ⚙️ ${tech}`).join('\n')}
                   {/* CTA Buttons */}
                   <div className="space-y-3 pt-2">
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🚀 مرحباً بك في شركتنا! 🚀
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🚀 مرحبا بك في شركتنا
 
-💼 **طلب خدمة احترافية**
-━━━━━━━━━━━━━━━━━━━━━━━━
+💼 طلب خدمة احترافية
+═══════════════════
 
-📋 **تفاصيل الخدمة:**
-• 🏷️ الخدمة: ${service.title}
-• 💰 يبدأ من: ${service.startingPrice} ريال سعودي
-• ⭐ التقييم: ${service.rating}/5
-• 📊 عدد المشاريع: ${service.projectsCount} مشروع
-• 🕐 مدة التسليم: ${service.deliveryTime}
+📌 تفاصيل الخدمة:
+🏷️ الخدمة: ${service.title}
+💰 يبدا من: ${service.startingPrice} ريال
+⭐ التقييم: ${service.rating}/5
+📊 المشاريع: ${service.projectsCount} مشروع
+🕐 التسليم: ${service.deliveryTime}
 
-🛠️ **الخدمات المتضمنة:**
-${service.services.slice(0, 5).map((serv: string) => `• 🔹 ${serv}`).join('\n')}
+🛠️ الخدمات المتضمنة:
+${service.services.slice(0, 4).map((serv: string, index: number) => `${index + 1}. ${serv}`).join('\n')}
 
-💻 **التقنيات المستخدمة:**
-${service.technologies.slice(0, 4).map((tech: string) => `• ⚙️ ${tech}`).join('\n')}
+💻 التقنيات المستخدمة:
+${service.technologies.slice(0, 3).map((tech: string, index: number) => `${index + 1}. ${tech}`).join('\n')}
 
-🎊 **مميزات إضافية:**
-• 🔧 إدارة ومتابعة شاملة
-• 💬 دعم فني مستمر
-• 📞 استشارة مجانية
-• 🚀 ضمان الجودة والسرعة
+🎊 مميزات اضافية:
+• ادارة ومتابعة شاملة
+• دعم فني مستمر
+• استشارة مجانية
+• ضمان الجودة
 
-💡 **أريد البدء في هذه الخدمة والحصول على عرض سعر مفصل!**
+💡 اريد البدء في هذه الخدمة!
 
-📱 في انتظار ردكم الكريم...`)}`}
+شكرا لكم 🙏`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full inline-block"
@@ -381,22 +381,22 @@ ${service.technologies.slice(0, 4).map((tech: string) => `• ⚙️ ${tech}`).j
                     </a>
                     
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`💭 استشارة مجانية حول الخدمات
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`💭 استشارة مجانية
 
-📋 **تفاصيل الاستشارة:**
-• 🏷️ الخدمة: ${service.title}
-• 💰 السعر: يبدأ من ${service.startingPrice} ريال سعودي
-• 🤔 أريد استشارة مجانية حول هذه الخدمة
+📌 تفاصيل الاستشارة:
+🏷️ الخدمة: ${service.title}
+💰 السعر: يبدا من ${service.startingPrice} ريال
+🤔 اريد استشارة مجانية
 
-❓ **أسئلتي:**
-• ما هي أفضل حلول لمشروعي؟
-• كم المدة المتوقعة للتنفيذ؟
-• ما هي التقنيات الأنسب؟
-• هل يمكن تخصيص الخدمة؟
+❓ اسئلتي:
+• ما افضل حلول لمشروعي؟
+• كم المدة المتوقعة؟
+• ما التقنيات الانسب؟
+• هل يمكن التخصيص؟
 
-💡 **أريد جلسة استشارة تفصيلية مجانية!**
+💡 اريد جلسة استشارة مجانية!
 
-📱 في انتظار ردكم...`)}`}
+شكرا لكم 🙏`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full inline-block"
@@ -424,32 +424,32 @@ ${service.technologies.slice(0, 4).map((tech: string) => `• ⚙️ ${tech}`).j
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a 
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎯 مرحباً بك في شركتنا! 🎯
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎯 مرحبا بك في شركتنا
 
-💼 **طلب استشارة شاملة**
-━━━━━━━━━━━━━━━━━━━━━━━━━
+💼 طلب استشارة شاملة
+═══════════════════
 
-📋 **تفاصيل الطلب:**
-• 🚀 أريد استشارة مجانية شاملة
-• 💡 أريد تحديد أفضل الخدمات لمشروعي
-• 💰 أريد عرض سعر مخصص ومفصل
+📌 تفاصيل الطلب:
+🚀 اريد استشارة مجانية شاملة
+💡 اريد تحديد افضل الخدمات
+💰 اريد عرض سعر مخصص
 
-🤔 **معلومات أحتاجها:**
-• 📊 تحليل احتياجات مشروعي
-• ⏱️ الجدول الزمني للتنفيذ
-• 💻 أفضل التقنيات المناسبة
-• 📈 استراتيجية النجاح
+🤔 معلومات احتاجها:
+• تحليل احتياجات مشروعي
+• الجدول الزمني للتنفيذ
+• افضل التقنيات المناسبة
+• استراتيجية النجاح
 
-🎊 **الخدمات المطلوبة:**
-• 🔸 البرمجة والتطوير
-• 🔸 التسويق الإلكتروني
-• 🔸 التصميم الإبداعي
-• 🔸 الربط والتطوير
-• 🔸 المتاجر الإلكترونية
+🎊 الخدمات المطلوبة:
+• البرمجة والتطوير
+• التسويق الالكتروني
+• التصميم الابداعي
+• الربط والتطوير
+• المتاجر الالكترونية
 
-💡 **أريد خطة متكاملة ومخصصة لمشروعي!**
+💡 اريد خطة متكاملة لمشروعي!
 
-📱 في انتظار ردكم الكريم...`)}`}
+شكرا لكم 🙏`)}`}
               target="_blank"
               rel="noopener noreferrer"
             >

@@ -73,30 +73,30 @@ const CurrentOffersSection = () => {
   const whatsappNumber = "966555812567";
   
   const openWhatsApp = (offerTitle: string, price: string, originalPrice: string, discount: string, timeLeft: string, features: string[]) => {
-    const message = `🌟 مرحباً بك في شركتنا! 🌟
+    const message = `🌟 مرحبا بك في شركتنا
 
-🎯 **طلب عرض خاص**
-━━━━━━━━━━━━━━━━━━━━━
+🎯 طلب عرض خاص
+═══════════════════
 
-📋 **تفاصيل العرض:**
-• 🏷️ العرض: ${offerTitle}
-• 💰 السعر الحالي: ${price} ريال سعودي
-• 🔥 السعر الأصلي: ${originalPrice} ريال سعودي  
-• 🎁 نسبة الخصم: ${discount}
-• ⏰ الوقت المتبقي: ${timeLeft}
+📌 تفاصيل العرض:
+🏷️ العرض: ${offerTitle}
+💰 السعر الحالي: ${price} ريال
+🔥 السعر الاصلي: ${originalPrice} ريال  
+🎁 الخصم: ${discount}
+⏰ متبقي: ${timeLeft}
 
-✨ **مميزات العرض:**
-${features.map((feature, index) => `• ✅ ${feature}`).join('\n')}
+✅ مميزات العرض:
+${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
 
-🎊 **مميزات إضافية:**
-• 🔧 إدارة ومتابعة لمدة 6 شهور
-• 💬 دعم فني 24/7
-• 📞 استشارة مجانية
-• 🚀 بداية سريعة للمشروع
+🎊 مميزات اضافية:
+• ادارة ومتابعة 6 شهور
+• دعم فني 24/7
+• استشارة مجانية
+• بداية سريعة
 
-💡 **أريد الحصول على هذا العرض والبدء فوراً!**
+💡 اريد الحصول على هذا العرض!
 
-📱 في انتظار ردكم الكريم...`;
+شكرا لكم 🙏`;
     
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
@@ -208,30 +208,30 @@ ${features.map((feature, index) => `• ✅ ${feature}`).join('\n')}
                   {/* CTA Buttons */}
                   <div className="space-y-3 pt-4">
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🌟 مرحباً بك في شركتنا! 🌟
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🌟 مرحبا بك في شركتنا
 
-🎯 **طلب عرض خاص**
-━━━━━━━━━━━━━━━━━━━━━
+🎯 طلب عرض خاص
+═══════════════════
 
-📋 **تفاصيل العرض:**
-• 🏷️ العرض: ${offer.title}
-• 💰 السعر الحالي: ${offer.currentPrice} ريال سعودي
-• 🔥 السعر الأصلي: ${offer.originalPrice} ريال سعودي  
-• 🎁 نسبة الخصم: ${offer.discount}
-• ⏰ الوقت المتبقي: ${offer.timeLeft}
+📌 تفاصيل العرض:
+🏷️ العرض: ${offer.title}
+💰 السعر الحالي: ${offer.currentPrice} ريال
+🔥 السعر الاصلي: ${offer.originalPrice} ريال  
+🎁 الخصم: ${offer.discount}
+⏰ متبقي: ${offer.timeLeft}
 
-✨ **مميزات العرض:**
-${offer.features.map((feature: string) => `• ✅ ${feature}`).join('\n')}
+✅ مميزات العرض:
+${offer.features.map((feature: string, index: number) => `${index + 1}. ${feature}`).join('\n')}
 
-🎊 **مميزات إضافية:**
-• 🔧 إدارة ومتابعة لمدة 6 شهور
-• 💬 دعم فني 24/7
-• 📞 استشارة مجانية
-• 🚀 بداية سريعة للمشروع
+🎊 مميزات اضافية:
+• ادارة ومتابعة 6 شهور
+• دعم فني 24/7
+• استشارة مجانية
+• بداية سريعة
 
-💡 **أريد الحصول على هذا العرض والبدء فوراً!**
+💡 اريد الحصول على هذا العرض!
 
-📱 في انتظار ردكم الكريم...`)}`}
+شكرا لكم 🙏`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full inline-block"
@@ -247,19 +247,19 @@ ${offer.features.map((feature: string) => `• ✅ ${feature}`).join('\n')}
                     </a>
                     
                     <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`💭 استفسار سريع عن العروض
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`💭 استفسار سريع
 
-📋 **تفاصيل الاستفسار:**
-• 🏷️ العرض: ${offer.title}
-• 💰 السعر: ${offer.currentPrice} ريال سعودي
-• ❓ أريد تفاصيل أكثر عن هذا العرض
+📌 تفاصيل الاستفسار:
+🏷️ العرض: ${offer.title}
+💰 السعر: ${offer.currentPrice} ريال
+❓ اريد تفاصيل اكثر
 
-🤔 **أسئلتي:**
-• ما هي مدة تنفيذ المشروع؟
-• هل يمكن التعديل على المميزات؟
-• ما هي طريقة الدفع المتاحة؟
+🤔 اسئلتي:
+• كم مدة التنفيذ؟
+• هل يمكن التعديل؟
+• ما طريقة الدفع؟
 
-📱 في انتظار ردكم...`)}`}
+شكرا لكم 🙏`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full inline-block"
@@ -287,25 +287,25 @@ ${offer.features.map((feature: string) => `• ✅ ${feature}`).join('\n')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a 
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎊 مرحباً بك في شركتنا! 🎊
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎊 مرحبا بك في شركتنا
 
-🛍️ **طلب عرض شامل لجميع الخدمات**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛍️ طلب عرض شامل
+═══════════════════
 
-📋 **تفاصيل الطلب:**
-• 🎯 أريد الاطلاع على جميع العروض الحالية
-• 💰 أريد مقارنة الأسعار والمميزات
-• ⚡ أريد الاستفادة من العروض المحدودة
+📌 تفاصيل الطلب:
+🎯 اريد الاطلاع على جميع العروض
+💰 اريد مقارنة الاسعار
+⚡ اريد الاستفادة من العروض
 
-🤔 **معلومات إضافية أحتاجها:**
-• 📅 مدة تنفيذ كل مشروع
-• 💳 طرق الدفع المتاحة
-• 🔧 تفاصيل الدعم الفني
-• 📊 نماذج من الأعمال السابقة
+🤔 معلومات احتاجها:
+• مدة تنفيذ كل مشروع
+• طرق الدفع المتاحة
+• تفاصيل الدعم الفني
+• نماذج من الاعمال
 
-💡 **أريد استشارة شاملة لاختيار الأنسب لي!**
+💡 اريد استشارة شاملة!
 
-📱 في انتظار ردكم الكريم...`)}`}
+شكرا لكم 🙏`)}`}
               target="_blank"
               rel="noopener noreferrer"
             >
