@@ -106,7 +106,17 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    direction: rtl;
+  }
+
   body {
     @apply bg-background text-foreground;
+    direction: rtl;
+  }
+
+  .direction-ltr {
+    direction: ltr;
   }
 }

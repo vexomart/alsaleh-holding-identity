@@ -28,7 +28,7 @@ const ContactSection = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-primary">البريد الإلكتروني</p>
-                      <p className="text-muted-foreground">info@alshahri-holding.com</p>
+                      <p className="text-muted-foreground">info@ash.holdings</p>
                     </div>
                   </div>
                   
@@ -38,7 +38,7 @@ const ContactSection = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-primary">الهاتف</p>
-                      <p className="text-muted-foreground direction-ltr">+966 50 XXX XXXX</p>
+                      <p className="text-muted-foreground direction-ltr">0555812567</p>
                     </div>
                   </div>
                   
@@ -58,7 +58,7 @@ const ContactSection = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-primary">الموقع الإلكتروني</p>
-                      <p className="text-muted-foreground">www.alshahri-holding.com</p>
+                      <p className="text-muted-foreground">ash.holdings</p>
                     </div>
                   </div>
                 </div>

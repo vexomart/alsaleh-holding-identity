@@ -47,6 +47,7 @@ const Footer = () => {
               <li className="text-primary-foreground/80">شركة فكرة</li>
               <li className="text-primary-foreground/80">advixo.media</li>
               <li className="text-primary-foreground/80">فكرة تيك</li>
+              <li className="text-primary-foreground/80">فكرة هولدينق</li>
             </ul>
           </div>
         </div>
