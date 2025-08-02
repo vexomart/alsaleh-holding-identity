@@ -235,7 +235,7 @@ const Navigation = () => {
                 className="font-semibold shadow-md hover:shadow-lg transition-shadow duration-200"
                 asChild
               >
-                <a href="/contact">
+                <a href="https://ash.holdings" target="_blank" rel="noopener noreferrer">
                   ابدأ معنا
                 </a>
               </Button>
@@ -341,7 +341,7 @@ const Navigation = () => {
                     className="w-full font-semibold"
                     asChild
                   >
-                    <a href="/contact">
+                    <a href="https://ash.holdings" target="_blank" rel="noopener noreferrer">
                       ابدأ معنا
                     </a>
                   </Button>
