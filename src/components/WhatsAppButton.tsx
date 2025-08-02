@@ -11,10 +11,10 @@ const WhatsAppButton = () => {
   return (
     <button
       onClick={handleWhatsAppClick}
-      className="fixed bottom-6 left-6 z-50 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-glow flex items-center justify-center transition-all duration-300 hover:scale-110"
+      className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 z-50 w-12 h-12 sm:w-14 sm:h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-glow flex items-center justify-center transition-all duration-300 hover:scale-110 mobile-touch"
       aria-label="تواصل عبر واتساب"
     >
-      <MessageCircle className="w-7 h-7" />
+      <MessageCircle className="w-5 h-5 sm:w-7 sm:h-7" />
     </button>
   );
 };

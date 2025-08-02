@@ -44,10 +44,10 @@ const Navigation = () => {
   return (
     <>
       {/* Top Bar */}
-      <div className="bg-gradient-to-r from-secondary to-primary text-primary-foreground py-2 text-sm">
+      <div className="bg-gradient-to-r from-secondary to-primary text-primary-foreground py-1 sm:py-2 text-xs sm:text-sm">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+            <div className="hidden sm:flex items-center gap-4 lg:gap-6">
               <div className="flex items-center gap-2">
                 <Clock className="w-3 h-3" />
                 <span>ساعات العمل: الأحد - الخميس 8:00 ص - 6:00 م</span>
@@ -57,16 +57,16 @@ const Navigation = () => {
                 <span>المملكة العربية السعودية</span>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <div className="flex items-center gap-2">
                 <Mail className="w-3 h-3" />
-                <a href="mailto:info@ash.holdings" className="hover:text-secondary transition-colors">
+                <a href="mailto:info@ash.holdings" className="hover:text-secondary transition-colors text-xs sm:text-sm">
                   info@ash.holdings
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3 h-3" />
-                <a href="tel:+966555812567" className="hover:text-secondary transition-colors">
+                <a href="tel:+966555812567" className="hover:text-secondary transition-colors text-xs sm:text-sm">
                   0555812567
                 </a>
               </div>
@@ -79,13 +79,13 @@ const Navigation = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className={`fixed top-12 w-full z-50 transition-all duration-300 ${
+      <nav className={`fixed top-8 sm:top-12 w-full z-50 transition-all duration-300 ${
         isScrolled 
           ? 'bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-lg' 
           : 'bg-primary/95 backdrop-blur-sm border-b border-primary-foreground/10'
       }`}>
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between h-20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
             <div className="flex items-center">
               <a href="/" className="block">

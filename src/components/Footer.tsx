@@ -286,7 +286,7 @@ const Footer = () => {
             </div>
           </div>
           
-          <div className="grid lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             
             {/* Column 1: Company Info & Contact */}
             <div className="space-y-6 animate-fade-in">

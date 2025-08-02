@@ -341,4 +341,76 @@ All colors MUST be HSL.
     height: 2px;
     background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
   }
+  }
+
+  /* Mobile-Specific Optimizations */
+  @media (max-width: 640px) {
+    /* Reduce blur effects on mobile for better performance */
+    .blur-3xl { @apply blur-xl; }
+    .blur-2xl { @apply blur-lg; }
+    .blur-xl { @apply blur-md; }
+    
+    /* Smaller decorative elements on mobile */
+    .mobile-reduce { 
+      transform: scale(0.7);
+    }
+    
+    /* Optimize font sizes for mobile readability */
+    .text-5xl { @apply text-3xl; }
+    .text-4xl { @apply text-2xl; }
+    .text-3xl { @apply text-xl; }
+    
+    /* Improve touch targets */
+    .mobile-touch {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Reduce padding on mobile for better space usage */
+    .mobile-compact {
+      @apply p-4 gap-4;
+    }
+  }
+
+  /* Tablet-Specific Optimizations */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .tablet-optimized {
+      @apply px-6 py-8;
+    }
+  }
+
+  /* Mobile Navigation Improvements */
+  .mobile-nav {
+    @apply fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/50;
+    height: auto;
+    padding: 0.5rem 1rem;
+  }
+
+  /* Mobile Cards Optimization */
+  .mobile-card {
+    @apply rounded-lg shadow-md p-4 mb-4;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-card:active {
+    transform: scale(0.98);
+  }
+
+  /* Mobile Typography */
+  .mobile-heading {
+    @apply text-xl font-bold mb-3 leading-tight;
+  }
+
+  .mobile-body {
+    @apply text-sm leading-relaxed text-gray-600;
+  }
+
+  /* Mobile Spacing Utilities */
+  .mobile-section {
+    @apply py-8 px-4;
+  }
+
+  .mobile-container {
+    @apply max-w-sm mx-auto;
+  }
 }
