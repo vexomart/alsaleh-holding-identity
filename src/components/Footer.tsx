@@ -260,7 +260,9 @@ const Footer = () => {
                   انضم إلى رحلة النجاح والابتكار
                 </p>
                 <a 
-                  href="/contact" 
+                  href="https://wa.me/966555812567?text=مرحباً، أريد بدء مشروع جديد معكم" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors duration-300 font-medium text-sm group/cta"
                 >
                   <span>تواصل معنا الآن</span>
