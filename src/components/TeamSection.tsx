@@ -48,36 +48,40 @@ const TeamSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+    <section className="section-spacing bg-background">
+      <div className="container mx-auto container-responsive">
+        <div className="text-center mb-12 md:mb-16 animate-fade-in">
+          <h2 className="responsive-title text-primary mb-4 md:mb-6">
             فريق العمل
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="responsive-text text-muted-foreground max-w-3xl mx-auto">
             نفخر بفريق عمل متميز من الخبراء والمختصين الذين يقودون شركتنا نحو التميز والنجاح
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="responsive-team-grid">
           {teamMembers.map((member, index) => {
             const IconComponent = member.icon;
             return (
-              <Card key={index} className="shadow-elegant hover:shadow-glow transition-all duration-300 transform hover:-translate-y-2 border-0 bg-card">
-                <CardContent className="p-6 text-center">
-                  <div className="mb-6">
-                    <div className={`w-20 h-20 mx-auto mb-4 rounded-full ${member.color} flex items-center justify-center`}>
-                      <IconComponent className="w-10 h-10 text-white" />
+              <Card 
+                key={index} 
+                className="card-animated shadow-elegant border-0 bg-card animate-scale-in group"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="mb-4 sm:mb-6">
+                    <div className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 rounded-full ${member.color} flex items-center justify-center icon-float group-hover:icon-glow transition-all duration-300`}>
+                      <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 text-white group-hover:scale-110 transition-transform duration-300" />
                     </div>
                     <Badge variant="outline" className="text-xs border-primary/30 text-primary mb-2">
                       {member.department}
                     </Badge>
                   </div>
                   
-                  <h3 className="text-lg font-bold text-primary mb-2">
+                  <h3 className="text-base sm:text-lg font-bold text-primary mb-2">
                     {member.name}
                   </h3>
-                  <p className="text-muted-foreground font-medium">
+                  <p className="text-sm sm:text-base text-muted-foreground font-medium">
                     {member.position}
                   </p>
                 </CardContent>

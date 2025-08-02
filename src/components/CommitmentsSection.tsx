@@ -36,33 +36,37 @@ const CommitmentsSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-muted/30">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+    <section className="section-spacing bg-muted/30">
+      <div className="container mx-auto container-responsive">
+        <div className="text-center mb-12 md:mb-16 animate-fade-in">
+          <h2 className="responsive-title text-primary mb-4 md:mb-6">
             التزاماتنا
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="responsive-text text-muted-foreground max-w-3xl mx-auto">
             نحن ملتزمون بمجموعة من القيم والمبادئ التي توجه عملنا وتحدد علاقتنا مع عملائنا وشركائنا
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="responsive-grid">
           {commitments.map((commitment, index) => {
             const IconComponent = commitment.icon;
             return (
-              <Card key={index} className="shadow-elegant hover:shadow-glow transition-all duration-300 transform hover:-translate-y-2 border-0 bg-card">
-                <CardContent className="p-6 text-center">
-                  <div className="mb-6">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                      <IconComponent className="w-8 h-8 text-primary" />
+              <Card 
+                key={index} 
+                className="card-animated shadow-elegant border-0 bg-card animate-scale-in group"
+                style={{ animationDelay: `${index * 0.15}s` }}
+              >
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="mb-4 sm:mb-6">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-primary/10 rounded-full flex items-center justify-center icon-float group-hover:bg-primary/20 transition-all duration-300">
+                      <IconComponent className="w-7 h-7 sm:w-8 sm:h-8 text-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
                   </div>
                   
-                  <h3 className="text-xl font-bold text-primary mb-4">
+                  <h3 className="responsive-subtitle text-primary mb-3 sm:mb-4">
                     {commitment.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                     {commitment.description}
                   </p>
                 </CardContent>

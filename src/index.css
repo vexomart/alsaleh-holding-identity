@@ -120,3 +120,69 @@ All colors MUST be HSL.
     direction: ltr;
   }
 }
+
+@layer components {
+  /* Animated Icon Containers */
+  .icon-float {
+    @apply hover:animate-bounce-gentle transition-all duration-300;
+  }
+  
+  .icon-glow {
+    @apply animate-pulse-glow;
+  }
+  
+  .icon-rotate {
+    @apply hover:animate-rotate-slow transition-all duration-300;
+  }
+
+  /* Responsive Grid Classes */
+  .responsive-grid {
+    @apply grid gap-6 
+           grid-cols-1 
+           sm:grid-cols-2 
+           lg:grid-cols-3 
+           xl:grid-cols-4;
+  }
+
+  .responsive-team-grid {
+    @apply grid gap-6 
+           grid-cols-1 
+           sm:grid-cols-2 
+           md:grid-cols-3
+           lg:grid-cols-5;
+  }
+
+  .responsive-stats-grid {
+    @apply grid gap-6 
+           grid-cols-1 
+           md:grid-cols-2;
+  }
+
+  /* Mobile-First Responsive Text */
+  .responsive-title {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold;
+  }
+
+  .responsive-subtitle {
+    @apply text-lg sm:text-xl md:text-2xl font-semibold;
+  }
+
+  .responsive-text {
+    @apply text-base sm:text-lg leading-relaxed;
+  }
+
+  /* Container Responsive Padding */
+  .container-responsive {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+
+  /* Card Animations */
+  .card-animated {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-glow;
+  }
+
+  /* Section Spacing */
+  .section-spacing {
+    @apply py-12 sm:py-16 md:py-20;
+  }
+}

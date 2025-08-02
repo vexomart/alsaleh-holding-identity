@@ -49,52 +49,59 @@ const DepartmentsSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-accent/30">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+    <section className="section-spacing bg-accent/30">
+      <div className="container mx-auto container-responsive">
+        <div className="text-center mb-12 md:mb-16 animate-fade-in">
+          <h2 className="responsive-title text-primary mb-4 md:mb-6">
             أقسام الشركة
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="responsive-text text-muted-foreground max-w-3xl mx-auto">
             تضم شركتنا القابضة أقساماً متخصصة تعمل بتناغم لتقديم خدمات شاملة ومتكاملة
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {departments.map((dept, index) => (
-            <Card key={index} className="shadow-elegant hover:shadow-glow transition-all duration-300 transform hover:-translate-y-2 border-0 bg-card">
-              <CardHeader className="pb-4">
-                <div className="flex items-center space-x-reverse space-x-4 mb-4">
-                  <div className={`w-12 h-12 ${dept.color} rounded-full flex items-center justify-center`}>
-                    <dept.icon className="w-6 h-6 text-white" />
+        <div className="responsive-grid">
+          {departments.map((dept, index) => {
+            const IconComponent = dept.icon;
+            return (
+              <Card 
+                key={index} 
+                className="card-animated shadow-elegant border-0 bg-card animate-scale-in group"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex items-center space-x-reverse space-x-3 sm:space-x-4 mb-3 sm:mb-4">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 ${dept.color} rounded-full flex items-center justify-center icon-float group-hover:scale-110 transition-transform duration-300`}>
+                      <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                    </div>
+                    <CardTitle className="text-base sm:text-lg text-primary">
+                      {dept.name}
+                    </CardTitle>
                   </div>
-                  <CardTitle className="text-lg text-primary">
-                    {dept.name}
-                  </CardTitle>
-                </div>
-                <p className="text-foreground leading-relaxed">
-                  {dept.description}
-                </p>
-              </CardHeader>
-              
-              <CardContent>
-                <div>
-                  <h4 className="font-semibold text-primary mb-3">الخدمات المقدمة:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {dept.services.map((service, serviceIndex) => (
-                      <Badge 
-                        key={serviceIndex} 
-                        variant="outline" 
-                        className="text-xs border-primary/30 text-primary"
-                      >
-                        {service}
-                      </Badge>
-                    ))}
+                  <p className="text-sm sm:text-base text-foreground leading-relaxed">
+                    {dept.description}
+                  </p>
+                </CardHeader>
+                
+                <CardContent className="pt-0">
+                  <div>
+                    <h4 className="font-semibold text-primary mb-2 sm:mb-3 text-sm sm:text-base">الخدمات المقدمة:</h4>
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                      {dept.services.map((service, serviceIndex) => (
+                        <Badge 
+                          key={serviceIndex} 
+                          variant="outline" 
+                          className="text-xs border-primary/30 text-primary"
+                        >
+                          {service}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>

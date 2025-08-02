@@ -38,50 +38,54 @@ const SubsidiariesSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-accent/30">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+    <section className="section-spacing bg-accent/30">
+      <div className="container mx-auto container-responsive">
+        <div className="text-center mb-12 md:mb-16 animate-fade-in">
+          <h2 className="responsive-title text-primary mb-4 md:mb-6">
             شركاتنا الفرعية
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="responsive-text text-muted-foreground max-w-3xl mx-auto">
             نفخر بمحفظة متنوعة من الشركات المتخصصة في التقنية والإعلام الرقمي
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="responsive-grid">
           {subsidiaries.map((company, index) => (
-            <Card key={index} className="shadow-elegant hover:shadow-glow transition-all duration-300 transform hover:-translate-y-2 border-0 bg-card">
-              <CardHeader className="pb-4">
+            <Card 
+              key={index} 
+              className="card-animated shadow-elegant border-0 bg-card animate-scale-in group"
+              style={{ animationDelay: `${index * 0.12}s` }}
+            >
+              <CardHeader className="pb-3 sm:pb-4">
                 <div className="flex justify-between items-start mb-2">
-                  <Badge variant="secondary" className="text-secondary-foreground">
+                  <Badge variant="secondary" className="text-secondary-foreground text-xs sm:text-sm group-hover:scale-105 transition-transform duration-300">
                     {company.category}
                   </Badge>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-xs sm:text-sm text-muted-foreground">
                     {company.established}
                   </span>
                 </div>
-                <CardTitle className="text-xl text-primary mb-2">
+                <CardTitle className="text-lg sm:text-xl text-primary mb-2">
                   {company.name}
                 </CardTitle>
-                <p className="text-sm text-muted-foreground font-medium">
+                <p className="text-xs sm:text-sm text-muted-foreground font-medium">
                   {company.nameEn}
                 </p>
               </CardHeader>
               
-              <CardContent>
-                <p className="text-foreground leading-relaxed mb-6">
+              <CardContent className="pt-0">
+                <p className="text-sm sm:text-base text-foreground leading-relaxed mb-4 sm:mb-6">
                   {company.description}
                 </p>
                 
                 <div>
-                  <h4 className="font-semibold text-primary mb-3">خدماتنا:</h4>
-                  <div className="flex flex-wrap gap-2">
+                  <h4 className="font-semibold text-primary mb-2 sm:mb-3 text-sm sm:text-base">خدماتنا:</h4>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {company.services.map((service, serviceIndex) => (
                       <Badge 
                         key={serviceIndex} 
                         variant="outline" 
-                        className="text-xs border-primary/30 text-primary"
+                        className="text-xs border-primary/30 text-primary hover:bg-primary/10 transition-colors duration-300"
                       >
                         {service}
                       </Badge>

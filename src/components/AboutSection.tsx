@@ -2,69 +2,69 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const AboutSection = () => {
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+    <section className="section-spacing bg-background">
+      <div className="container mx-auto container-responsive">
+        <div className="text-center mb-12 md:mb-16 animate-fade-in">
+          <h2 className="responsive-title text-primary mb-4 md:mb-6">
             من نحن
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="responsive-text text-muted-foreground max-w-3xl mx-auto">
             شركة علي صالح الشهري القابضة - كيان استثماري رائد يضم مجموعة من الشركات المتخصصة في التقنية والإعلام والتعليم
           </p>
         </div>
         
         {/* Stats Section */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          <Card className="shadow-elegant border-0 bg-gradient-primary text-center">
-            <CardContent className="p-8">
-              <div className="text-5xl font-bold text-primary-foreground mb-4">1,392</div>
-              <h3 className="text-xl font-semibold text-primary-foreground">مشروع منجز</h3>
-              <p className="text-primary-foreground/80 mt-2">مشاريع متنوعة عبر جميع الشركات الفرعية</p>
+        <div className="responsive-stats-grid mb-12 md:mb-16">
+          <Card className="shadow-elegant border-0 bg-gradient-primary text-center card-animated animate-slide-in-left">
+            <CardContent className="p-6 sm:p-8">
+              <div className="text-4xl sm:text-5xl font-bold text-primary-foreground mb-3 sm:mb-4 animate-bounce-gentle">1,392</div>
+              <h3 className="text-lg sm:text-xl font-semibold text-primary-foreground">مشروع منجز</h3>
+              <p className="text-primary-foreground/80 mt-2 text-sm sm:text-base">مشاريع متنوعة عبر جميع الشركات الفرعية</p>
             </CardContent>
           </Card>
           
-          <Card className="shadow-elegant border-0 bg-gradient-secondary text-center">
-            <CardContent className="p-8">
-              <div className="text-5xl font-bold text-secondary-foreground mb-4">857</div>
-              <h3 className="text-xl font-semibold text-secondary-foreground">عميل راضٍ</h3>
-              <p className="text-secondary-foreground/80 mt-2">عملاء يثقون في خدماتنا المتميزة</p>
+          <Card className="shadow-elegant border-0 bg-gradient-secondary text-center card-animated animate-slide-in-right">
+            <CardContent className="p-6 sm:p-8">
+              <div className="text-4xl sm:text-5xl font-bold text-secondary-foreground mb-3 sm:mb-4 animate-bounce-gentle">857</div>
+              <h3 className="text-lg sm:text-xl font-semibold text-secondary-foreground">عميل راضٍ</h3>
+              <p className="text-secondary-foreground/80 mt-2 text-sm sm:text-base">عملاء يثقون في خدماتنا المتميزة</p>
             </CardContent>
           </Card>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <Card className="shadow-elegant border-0 bg-gradient-primary">
-              <CardContent className="p-8 text-primary-foreground">
-                <h3 className="text-2xl font-bold mb-4">نبذة عن الشركة</h3>
-                <p className="text-lg leading-relaxed mb-6">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="animate-scale-in">
+            <Card className="shadow-elegant border-0 bg-gradient-primary card-animated">
+              <CardContent className="p-6 sm:p-8 text-primary-foreground">
+                <h3 className="responsive-subtitle mb-3 sm:mb-4">نبذة عن الشركة</h3>
+                <p className="responsive-text leading-relaxed mb-4 sm:mb-6">
                   بدأت شركة علي صالح الشهري العمل منذ عام 2016، وتم تحويلها رسمياً إلى شركة قابضة عام 2024. نحن متخصصون في الاستثمار بالمجالات التقنية والإعلامية والتعليمية، ونضم تحت مظلتنا مجموعة من الشركات الفرعية المتخصصة التي تقدم حلولاً شاملة لعملائنا.
                 </p>
-                <div className="w-16 h-1 bg-secondary rounded-full" />
+                <div className="w-12 sm:w-16 h-1 bg-secondary rounded-full animate-pulse-glow" />
               </CardContent>
             </Card>
           </div>
           
-          <div>
-            <Card className="shadow-elegant border-0 bg-card">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-primary mb-4">قيمنا الأساسية</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-reverse space-x-3">
-                    <div className="w-2 h-2 bg-secondary rounded-full" />
-                    <span className="text-foreground">الابتكار والتميز في جميع أعمالنا</span>
+          <div className="animate-scale-in" style={{ animationDelay: '0.2s' }}>
+            <Card className="shadow-elegant border-0 bg-card card-animated">
+              <CardContent className="p-6 sm:p-8">
+                <h3 className="responsive-subtitle text-primary mb-3 sm:mb-4">قيمنا الأساسية</h3>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center space-x-reverse space-x-3 group">
+                    <div className="w-2 h-2 bg-secondary rounded-full group-hover:scale-150 transition-transform duration-300" />
+                    <span className="text-foreground text-sm sm:text-base">الابتكار والتميز في جميع أعمالنا</span>
                   </div>
-                  <div className="flex items-center space-x-reverse space-x-3">
-                    <div className="w-2 h-2 bg-primary rounded-full" />
-                    <span className="text-foreground">الشراكة الاستراتيجية مع عملائنا</span>
+                  <div className="flex items-center space-x-reverse space-x-3 group">
+                    <div className="w-2 h-2 bg-primary rounded-full group-hover:scale-150 transition-transform duration-300" />
+                    <span className="text-foreground text-sm sm:text-base">الشراكة الاستراتيجية مع عملائنا</span>
                   </div>
-                  <div className="flex items-center space-x-reverse space-x-3">
-                    <div className="w-2 h-2 bg-secondary rounded-full" />
-                    <span className="text-foreground">المساهمة في التنمية الاقتصادية</span>
+                  <div className="flex items-center space-x-reverse space-x-3 group">
+                    <div className="w-2 h-2 bg-secondary rounded-full group-hover:scale-150 transition-transform duration-300" />
+                    <span className="text-foreground text-sm sm:text-base">المساهمة في التنمية الاقتصادية</span>
                   </div>
-                  <div className="flex items-center space-x-reverse space-x-3">
-                    <div className="w-2 h-2 bg-primary rounded-full" />
-                    <span className="text-foreground">دعم الشباب السعودي ومواهبهم</span>
+                  <div className="flex items-center space-x-reverse space-x-3 group">
+                    <div className="w-2 h-2 bg-primary rounded-full group-hover:scale-150 transition-transform duration-300" />
+                    <span className="text-foreground text-sm sm:text-base">دعم الشباب السعودي ومواهبهم</span>
                   </div>
                 </div>
               </CardContent>
