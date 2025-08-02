@@ -70,7 +70,7 @@ const Footer = () => {
             <div className="lg:col-span-1 space-y-6 animate-fade-in">
               <div>
                 <h3 className="text-3xl font-bold text-primary-foreground mb-4 group hover:text-secondary transition-colors duration-300">
-                  الشهري
+                  شركة علي صالح الشهري القابضة
                 </h3>
                 <p className="text-primary-foreground/80 leading-relaxed text-lg">
                   شركة قابضة رائدة في الاستثمار التقني والإعلامي، نساهم في بناء مستقبل أفضل 
@@ -278,7 +278,7 @@ const Footer = () => {
             {/* Copyright */}
             <div className="text-center md:text-right">
               <p className="text-primary-foreground/60 text-lg">
-                © 2024 الشهري. جميع الحقوق محفوظة.
+                © 2024 شركة علي صالح الشهري القابضة. جميع الحقوق محفوظة.
               </p>
               <p className="text-primary-foreground/40 text-sm mt-1">
                 تم التطوير بأحدث التقنيات العالمية
