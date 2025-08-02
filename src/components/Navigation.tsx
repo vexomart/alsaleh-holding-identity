@@ -18,7 +18,9 @@ import {
   Building2,
   HeadphonesIcon,
   Search,
-  Bell
+  Bell,
+  Gift,
+  Settings
 } from "lucide-react";
 
 const Navigation = () => {
@@ -35,6 +37,8 @@ const Navigation = () => {
   }, []);
 
   const services = [
+    { name: "العروض الحالية", href: "#offers", icon: Gift },
+    { name: "خدماتنا الاحترافية", href: "#services", icon: Settings },
     { name: "الاستثمار التقني", href: "/tech-investment", icon: Zap },
     { name: "التطوير والابتكار", href: "/development", icon: Building2 },
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Users },
@@ -178,7 +182,7 @@ const Navigation = () => {
                 </button>
                 
                 {showServices && (
-                  <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden animate-fade-in">
+                  <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden animate-fade-in z-50">
                     {services.map((service, index) => {
                       const IconComponent = service.icon;
                       return (
@@ -186,9 +190,20 @@ const Navigation = () => {
                           key={index}
                           href={service.href}
                           className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100 last:border-b-0"
+                          onClick={(e) => {
+                            if (service.href.startsWith('#')) {
+                              e.preventDefault();
+                              const element = document.getElementById(service.href.substring(1));
+                              element?.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }}
                         >
-                          <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                            <IconComponent className="w-4 h-4 text-primary" />
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                            index < 2 ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-primary/10'
+                          }`}>
+                            <IconComponent className={`w-4 h-4 ${
+                              index < 2 ? 'text-white' : 'text-primary'
+                            }`} />
                           </div>
                           <span className="text-gray-700 font-medium">{service.name}</span>
                         </a>
@@ -299,7 +314,16 @@ const Navigation = () => {
                           key={index}
                           href={service.href}
                           className="flex items-center gap-3 px-2 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors duration-200 rounded-md"
-                          onClick={() => setIsOpen(false)}
+                          onClick={(e) => {
+                            setIsOpen(false);
+                            if (service.href.startsWith('#')) {
+                              e.preventDefault();
+                              setTimeout(() => {
+                                const element = document.getElementById(service.href.substring(1));
+                                element?.scrollIntoView({ behavior: 'smooth' });
+                              }, 100);
+                            }
+                          }}
                         >
                           <IconComponent className="w-4 h-4" />
                           <span className="text-sm">{service.name}</span>
