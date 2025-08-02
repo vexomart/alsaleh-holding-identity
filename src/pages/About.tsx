@@ -118,7 +118,19 @@ const About = () => {
       name: "علي صالح الشهري",
       position: "المؤسس والرئيس التنفيذي",
       experience: "13 سنة خبرة في الاستثمار والتقنية",
-      quote: "نؤمن بأن التقنية هي مفتاح مستقبل أفضل للجميع",
+      message: `بسم الله الرحمن الرحيم
+
+أعزائي الشركاء والعملاء الكرام،
+
+يسعدني أن أرحب بكم في شركة علي صالح الشهري القابضة، حيث نؤمن بأن التقنية والابتكار هما أساس بناء مستقبل أفضل للجميع.
+
+منذ بداية مسيرتنا في عام 2016، كان هدفنا الأساسي هو تقديم حلول تقنية متطورة تساهم في تطوير الأعمال ودعم رؤية المملكة العربية السعودية 2030. نحن نفخر بأن نكون جزءاً من التحول الرقمي الذي تشهده المملكة، ونسعى لأن نكون شركاء في نجاح عملائنا.
+
+إن رحلتنا مبنية على الثقة والشراكة الحقيقية مع عملائنا، وعلى فريق عمل متخصص يضع الجودة والإبداع في مقدمة أولوياته. نحن لا نقدم مجرد خدمات، بل نبني علاقات طويلة الأمد ونساهم في تحقيق أهداف شركائنا.
+
+أتطلع للمستقبل بثقة كبيرة، حيث سنواصل الاستثمار في أحدث التقنيات وأفضل الكوادر، لنقدم لعملائنا تجربة استثنائية تفوق توقعاتهم.
+
+شكراً لثقتكم الغالية، ونتطلع لشراكة مثمرة معكم.`,
       achievements: [
         "خبير في الاستثمار في المتاجر الإلكترونية والبرمجيات", 
         "رائد في الابتكار",
@@ -399,22 +411,46 @@ const About = () => {
                         </Button>
                       </div>
 
-                      <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-3xl p-8 border border-primary/20">
-                        <div className="flex items-start gap-4 mb-6">
-                          <Quote className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-                          <blockquote className="text-xl font-medium text-primary leading-relaxed italic">
-                            "{leader.quote}"
-                          </blockquote>
+                      <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-3xl p-8 border border-primary/20 relative overflow-hidden">
+                        {/* Background Pattern */}
+                        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+                        
+                        {/* Header */}
+                        <div className="text-center mb-8 relative z-10">
+                          <div className="inline-flex items-center gap-3 mb-4 p-3 bg-primary/10 rounded-full">
+                            <Quote className="w-6 h-6 text-primary" />
+                            <span className="text-sm font-bold text-primary">رسالة الرئيس التنفيذي</span>
+                          </div>
+                          <div className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full" />
                         </div>
                         
-                        <div className="flex items-center gap-2">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                            ))}
+                        {/* Message Content */}
+                        <div className="relative z-10 mb-8">
+                          <div className="text-base leading-relaxed text-muted-foreground whitespace-pre-line text-justify">
+                            {leader.message}
                           </div>
-                          <span className="text-sm text-muted-foreground">قائد ملهم ورائد في الابتكار</span>
                         </div>
+                        
+                        {/* Signature Section */}
+                        <div className="border-t border-primary/20 pt-6 relative z-10">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="text-lg font-bold text-primary mb-1">{leader.name}</div>
+                              <div className="text-sm text-muted-foreground">{leader.position}</div>
+                              <div className="text-xs text-muted-foreground mt-1">شركة علي صالح الشهري القابضة</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="w-32 h-16 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center border border-primary/30">
+                                <div className="text-2xl font-bold text-primary italic">علي الشهري</div>
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-2">التوقيع الرسمي</div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Decorative Elements */}
+                        <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-xl" />
+                        <div className="absolute bottom-4 left-4 w-8 h-8 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full blur-lg" />
                       </div>
                     </div>
                   </CardContent>
