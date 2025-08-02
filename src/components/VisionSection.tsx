@@ -182,10 +182,10 @@ const VisionSection = () => {
                   
                   <div className="relative z-10">
                     <div className="flex items-start justify-between mb-6">
-                      <div className={`w-20 h-20 bg-gradient-to-br ${pillar.color} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow`}>
-                        <pillar.icon className="w-10 h-10 text-white" />
+                      <div className={`icon-container w-20 h-20 bg-gradient-to-br ${pillar.color} rounded-2xl flex items-center justify-center icon-bg-gradient icon-scale group-hover:rotate-6 transition-all duration-500 shadow-glow animate-bounce-in stagger-${index + 1}`}>
+                        <pillar.icon className="w-10 h-10 text-white icon-glow" />
                       </div>
-                      <Badge variant="outline" className="bg-white/10 border-white/20 text-primary font-semibold">
+                      <Badge variant="outline" className="bg-white/10 border-white/20 text-primary font-semibold animate-slide-in-up stagger-${index + 2}">
                         {pillar.stats}
                       </Badge>
                     </div>

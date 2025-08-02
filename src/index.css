@@ -122,9 +122,13 @@ All colors MUST be HSL.
 }
 
 @layer components {
-  /* Animated Icon Containers */
+  /* Enhanced Icon Animation Classes */
+  .icon-container {
+    @apply relative inline-block transition-all duration-300;
+  }
+  
   .icon-float {
-    @apply hover:animate-bounce-gentle transition-all duration-300;
+    @apply hover:animate-bounce-gentle transform-gpu;
   }
   
   .icon-glow {
@@ -132,8 +136,50 @@ All colors MUST be HSL.
   }
   
   .icon-rotate {
-    @apply hover:animate-rotate-slow transition-all duration-300;
+    @apply hover:animate-rotate-slow transform-gpu;
   }
+  
+  .icon-scale {
+    @apply hover:scale-110 transition-transform duration-300 transform-gpu;
+  }
+  
+  .icon-wobble {
+    @apply hover:animate-wobble transform-gpu;
+  }
+  
+  .icon-spin-slow {
+    @apply hover:animate-spin-slow transform-gpu;
+  }
+  
+  .icon-bounce-in {
+    @apply animate-bounce-in;
+  }
+  
+  .icon-slide-in {
+    @apply animate-slide-in-up;
+  }
+  
+  /* Icon Background Effects */
+  .icon-bg-gradient {
+    @apply bg-gradient-to-br shadow-xl relative overflow-hidden;
+  }
+  
+  .icon-bg-gradient::before {
+    content: '';
+    @apply absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300;
+  }
+  
+  .icon-bg-gradient:hover::before {
+    @apply opacity-100;
+  }
+  
+  /* Staggered Animation Classes */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
 
   /* Responsive Grid Classes */
   .responsive-grid {
@@ -224,6 +270,20 @@ All colors MUST be HSL.
       0 0 10px currentColor,
       0 0 15px currentColor,
       0 0 20px currentColor;
+  }
+
+  /* Premium Card Effect */
+  .premium-card {
+    @apply relative overflow-hidden;
+  }
+  
+  .premium-card::before {
+    content: '';
+    @apply absolute -inset-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-xl opacity-0 transition-opacity duration-500 blur-sm;
+  }
+  
+  .premium-card:hover::before {
+    @apply opacity-30;
   }
 
   /* Floating Animation */
