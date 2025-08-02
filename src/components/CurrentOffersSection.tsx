@@ -143,20 +143,15 @@ const CurrentOffersSection = () => {
                   <Button 
                     className="w-full group/btn" 
                     size="lg"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      console.log('زر احصل على العرض الآن تم الضغط عليه');
-                      const message = `مرحباً، أريد الاستفسار عن العروض الحالية المحدودة الوقت، خاصة العرض الذي يشمل الإدارة والمتابعة لمدة 6 شهور والدعم الفني الشامل`;
-                      const phoneNumber = "966555812567";
-                      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                      console.log('فتح رابط الواتساب:', whatsappUrl);
-                      
-                      // فتح الواتساب بطريقتين للتأكد
-                      const opened = window.open(whatsappUrl, '_blank');
-                      if (!opened) {
-                        // إذا فشل، جرب طريقة أخرى
-                        location.href = whatsappUrl;
+                    type="button"
+                    onClick={() => {
+                      try {
+                        const message = "مرحباً، أريد الاستفسار عن العروض الحالية";
+                        const url = `https://wa.me/966555812567?text=${encodeURIComponent(message)}`;
+                        window.location.href = url;
+                      } catch (error) {
+                        console.error('خطأ في فتح الواتساب:', error);
+                        alert('حدث خطأ، يرجى المحاولة مرة أخرى');
                       }
                     }}
                   >
