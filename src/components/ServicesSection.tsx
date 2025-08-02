@@ -11,254 +11,368 @@ import {
   ArrowRight,
   Star,
   CheckCircle,
-  Zap
+  Zap,
+  Phone,
+  TrendingUp,
+  Award,
+  Clock
 } from "lucide-react";
 
 const services = [
   {
     id: 1,
     title: "خدمات البرمجة",
-    description: "تطوير تطبيقات ومواقع إلكترونية بأحدث التقنيات",
+    description: "تطوير تطبيقات ومواقع إلكترونية بأحدث التقنيات العالمية",
     icon: Code,
     color: "from-blue-500 to-cyan-500",
+    bgGradient: "from-blue-50 to-cyan-50",
     services: [
-      "تطوير مواقع الويب",
-      "تطبيقات الجوال",
-      "أنظمة إدارة المحتوى",
-      "واجهات برمجة التطبيقات",
+      "تطوير مواقع الويب المتقدمة",
+      "تطبيقات الجوال (iOS & Android)",
+      "أنظمة إدارة المحتوى CMS",
+      "واجهات برمجة التطبيقات API",
       "تطبيقات سطح المكتب"
     ],
-    technologies: ["React", "Node.js", "Python", "Flutter", "Laravel"],
+    technologies: ["React", "Node.js", "Python", "Flutter", "Laravel", "TypeScript"],
     startingPrice: "5,000",
     rating: 4.9,
-    projectsCount: 150
+    projectsCount: 150,
+    deliveryTime: "2-4 أسابيع",
+    features: [
+      "كود نظيف ومحسن",
+      "تصميم متجاوب",
+      "أمان عالي",
+      "سرعة في التحميل"
+    ]
   },
   {
     id: 2,
-    title: "خدمات التسويق الالكتروني",
+    title: "التسويق الإلكتروني",
     description: "استراتيجيات تسويقية شاملة لزيادة المبيعات والوصول",
     icon: Megaphone,
     color: "from-pink-500 to-red-500",
+    bgGradient: "from-pink-50 to-red-50",
     services: [
-      "إدارة وسائل التواصل",
-      "الإعلانات المدفوعة",
-      "تحسين محركات البحث",
-      "التسويق بالمحتوى",
-      "التسويق عبر الإيميل"
+      "إدارة وسائل التواصل الاجتماعي",
+      "الإعلانات المدفوعة (Google & Facebook)",
+      "تحسين محركات البحث SEO",
+      "التسويق بالمحتوى الإبداعي",
+      "التسويق عبر البريد الإلكتروني"
     ],
-    technologies: ["Google Ads", "Facebook Ads", "Instagram", "LinkedIn", "Analytics"],
+    technologies: ["Google Ads", "Facebook Ads", "Instagram", "LinkedIn", "Analytics", "SEMrush"],
     startingPrice: "3,000",
     rating: 4.8,
-    projectsCount: 200
+    projectsCount: 200,
+    deliveryTime: "1-2 أسابيع",
+    features: [
+      "زيادة المبيعات",
+      "بناء الهوية",
+      "تقارير شاملة",
+      "استهداف دقيق"
+    ]
   },
   {
     id: 3,
-    title: "خدمات التصميم",
-    description: "تصاميم إبداعية تعكس هوية علامتك التجارية",
+    title: "التصميم الإبداعي",
+    description: "تصاميم إبداعية احترافية تعكس هوية علامتك التجارية",
     icon: Palette,
     color: "from-purple-500 to-pink-500",
+    bgGradient: "from-purple-50 to-pink-50",
     services: [
-      "تصميم الهوية البصرية",
-      "تصميم واجهات المستخدم",
-      "تصميم المطبوعات",
-      "تصميم الإعلانات",
-      "الرسوم المتحركة"
+      "تصميم الهوية البصرية الكاملة",
+      "تصميم واجهات المستخدم UI/UX",
+      "تصميم المطبوعات التسويقية",
+      "تصميم الإعلانات الرقمية",
+      "الرسوم المتحركة والموشن"
     ],
-    technologies: ["Adobe Creative Suite", "Figma", "Sketch", "Blender", "After Effects"],
+    technologies: ["Adobe Creative Suite", "Figma", "Sketch", "Blender", "After Effects", "Canva"],
     startingPrice: "2,500",
     rating: 4.9,
-    projectsCount: 300
+    projectsCount: 300,
+    deliveryTime: "1-3 أسابيع",
+    features: [
+      "تصميم احترافي",
+      "هوية مميزة",
+      "ملفات عالية الجودة",
+      "تعديلات مجانية"
+    ]
   },
   {
     id: 4,
-    title: "خدمات الربط والتطوير",
-    description: "ربط الأنظمة وتطوير الحلول المتكاملة",
+    title: "الربط والتطوير",
+    description: "ربط الأنظمة وتطوير الحلول المتكاملة والأتمتة",
     icon: Link,
     color: "from-green-500 to-emerald-500",
+    bgGradient: "from-green-50 to-emerald-50",
     services: [
-      "ربط أنظمة الدفع",
-      "تكامل واجهات البرمجة",
-      "أتمتة العمليات",
-      "ربط قواعد البيانات",
-      "الحلول السحابية"
+      "ربط أنظمة الدفع الآمنة",
+      "تكامل واجهات برمجة التطبيقات",
+      "أتمتة العمليات التجارية",
+      "ربط قواعد البيانات المتقدمة",
+      "الحلول السحابية المتطورة"
     ],
-    technologies: ["AWS", "Azure", "Google Cloud", "Docker", "Kubernetes"],
+    technologies: ["AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Microservices"],
     startingPrice: "4,000",
     rating: 4.7,
-    projectsCount: 100
+    projectsCount: 100,
+    deliveryTime: "2-6 أسابيع",
+    features: [
+      "تكامل سلس",
+      "أمان عالي",
+      "قابلية التوسع",
+      "مراقبة مستمرة"
+    ]
   },
   {
     id: 5,
-    title: "أنظمة المتاجر الالكترونية",
-    description: "متاجر إلكترونية احترافية لزيادة مبيعاتك",
+    title: "المتاجر الإلكترونية",
+    description: "متاجر إلكترونية احترافية متكاملة لزيادة مبيعاتك",
     icon: ShoppingCart,
     color: "from-orange-500 to-red-500",
+    bgGradient: "from-orange-50 to-red-50",
     services: [
-      "متاجر متكاملة",
-      "أنظمة الدفع الآمنة",
-      "إدارة المخزون",
-      "تقارير المبيعات",
+      "متاجر إلكترونية متكاملة",
+      "أنظمة الدفع الآمنة المتعددة",
+      "إدارة المخزون الذكية",
+      "تقارير المبيعات المتقدمة",
       "تطبيق جوال للمتجر"
     ],
-    technologies: ["WooCommerce", "Shopify", "Magento", "Custom Solutions"],
+    technologies: ["WooCommerce", "Shopify", "Magento", "Custom Solutions", "Payment Gateways"],
     startingPrice: "8,000",
     rating: 4.8,
-    projectsCount: 120
+    projectsCount: 120,
+    deliveryTime: "3-6 أسابيع",
+    features: [
+      "تجربة مستخدم ممتازة",
+      "دفع آمن",
+      "إدارة سهلة",
+      "تقارير تفصيلية"
+    ]
   },
   {
     id: 6,
-    title: "خدمات العمال والتجار",
-    description: "منصات ربط العمال بالعملاء وحلول تجارية",
+    title: "منصات العمال والتجار",
+    description: "منصات ذكية لربط العمال بالعملاء وحلول تجارية متقدمة",
     icon: Users,
     color: "from-teal-500 to-blue-500",
+    bgGradient: "from-teal-50 to-blue-50",
     services: [
-      "منصات الخدمات",
-      "تطبيقات العمال",
-      "أنظمة الحجز",
-      "إدارة العملاء",
-      "نظام التقييمات"
+      "منصات الخدمات التفاعلية",
+      "تطبيقات العمال المتخصصة",
+      "أنظمة الحجز والمواعيد",
+      "إدارة العملاء CRM",
+      "نظام التقييمات والمراجعات"
     ],
-    technologies: ["Real-time Chat", "GPS Integration", "Payment Systems", "Rating Systems"],
+    technologies: ["Real-time Chat", "GPS Integration", "Payment Systems", "Rating Systems", "Notifications"],
     startingPrice: "6,000",
     rating: 4.6,
-    projectsCount: 80
+    projectsCount: 80,
+    deliveryTime: "4-8 أسابيع",
+    features: [
+      "ربط فوري",
+      "تتبع GPS",
+      "دفع آمن",
+      "نظام تقييم"
+    ]
   }
 ];
 
 const ServicesSection = () => {
+  const whatsappNumber = "966555812567";
+  
+  const openWhatsApp = (serviceTitle: string, price: string) => {
+    const message = `مرحباً، أريد الاستفسار عن خدمة ${serviceTitle} التي تبدأ من ${price} ر.س`;
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
   return (
-    <section className="py-12 md:py-20">
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-24 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-blue-50/30 to-cyan-50/50 dark:from-purple-950/20 dark:via-blue-950/10 dark:to-cyan-950/20"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-purple-200/20 to-blue-200/20 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-cyan-200/20 to-teal-200/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s' }}></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Zap className="w-8 h-8 text-primary" />
-            <Badge variant="secondary" className="text-lg px-4 py-2">
-              خدماتنا المتنوعة
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+              <Zap className="w-8 h-8 text-white" />
+            </div>
+            <Badge variant="secondary" className="text-lg px-6 py-3 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700">
+              خدماتنا المتنوعة 🚀
             </Badge>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-6">
             خدماتنا الاحترافية
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            نقدم مجموعة شاملة من الخدمات التقنية والتسويقية لتحقيق أهدافك التجارية
+          <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            نقدم مجموعة شاملة ومتكاملة من الخدمات التقنية والتسويقية المتطورة لتحقيق أهدافك التجارية بأعلى معايير الجودة والاحترافية
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8 mb-12">
           {services.map((service) => {
             const IconComponent = service.icon;
             return (
-              <Card key={service.id} className="relative overflow-hidden group hover:scale-105 transition-all duration-300 border-2 hover:border-primary/50">
-                {/* Gradient Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
+              <Card key={service.id} className="relative overflow-hidden group hover:scale-105 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-white/90 backdrop-blur-sm">
+                {/* Background Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                 
-                <CardHeader>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${service.color}`}>
-                      <IconComponent className="w-6 h-6 text-white" />
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div 
+                      className={`p-4 rounded-2xl bg-gradient-to-br ${service.color} cursor-pointer hover:scale-110 transition-transform duration-300 shadow-lg`}
+                      onClick={() => openWhatsApp(service.title, service.startingPrice)}
+                      title="تواصل عبر الواتساب"
+                    >
+                      <IconComponent className="w-8 h-8 text-white" />
                     </div>
                     <div className="flex-1">
-                      <CardTitle className="text-xl">{service.title}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
+                      <CardTitle className="text-2xl mb-2">{service.title}</CardTitle>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm text-muted-foreground">{service.rating}</span>
+                          <span className="font-medium">{service.rating}</span>
                         </div>
-                        <span className="text-sm text-muted-foreground">•</span>
-                        <span className="text-sm text-muted-foreground">{service.projectsCount} مشروع</span>
+                        <div className="flex items-center gap-1">
+                          <Award className="w-4 h-4 text-blue-500" />
+                          <span>{service.projectsCount} مشروع</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4 text-green-500" />
+                          <span>{service.deliveryTime}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <CardDescription className="text-base">
+                  <CardDescription className="text-base leading-relaxed">
                     {service.description}
                   </CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-6">
                   {/* Services List */}
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-sm text-muted-foreground mb-3">الخدمات المتوفرة:</h4>
-                    {service.services.slice(0, 4).map((item, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span className="text-sm">{item}</span>
+                  <div className="space-y-3">
+                    <h4 className="font-bold text-lg text-primary mb-3">📋 الخدمات المتوفرة</h4>
+                    {service.services.map((item, index) => (
+                      <div key={index} className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                        <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                        <span className="text-sm leading-relaxed">{item}</span>
                       </div>
                     ))}
-                    {service.services.length > 4 && (
-                      <span className="text-sm text-muted-foreground">+{service.services.length - 4} خدمات أخرى</span>
-                    )}
+                  </div>
+
+                  {/* Key Features */}
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-4">
+                    <h4 className="font-bold text-sm text-muted-foreground mb-3">✨ المميزات الرئيسية</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {service.features.map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                          <span className="text-xs">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Technologies */}
                   <div>
-                    <h4 className="font-semibold text-sm text-muted-foreground mb-2">التقنيات:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {service.technologies.slice(0, 3).map((tech, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
+                    <h4 className="font-bold text-sm text-muted-foreground mb-3">🔧 التقنيات المستخدمة</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {service.technologies.slice(0, 4).map((tech, index) => (
+                        <Badge key={index} variant="outline" className="text-xs px-2 py-1">
                           {tech}
                         </Badge>
                       ))}
-                      {service.technologies.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{service.technologies.length - 3}
+                      {service.technologies.length > 4 && (
+                        <Badge variant="outline" className="text-xs px-2 py-1">
+                          +{service.technologies.length - 4} أخرى
                         </Badge>
                       )}
                     </div>
                   </div>
 
                   {/* Pricing */}
-                  <div className="flex items-center justify-between">
-                    <div>
+                  <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-4 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-2">
                       <span className="text-sm text-muted-foreground">يبدأ من</span>
-                      <div className="text-2xl font-bold text-primary">
+                      <span className="text-3xl font-black text-primary">
                         {service.startingPrice} ر.س
-                      </div>
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1 text-xs text-green-600">
+                      <TrendingUp className="w-3 h-3" />
+                      <span>أسعار تنافسية</span>
                     </div>
                   </div>
 
-                  {/* CTA Button */}
-                  <a 
-                    href="https://wa.me/966555812567?text=مرحباً، أريد الاستفسار عن خدماتكم"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full inline-block"
-                  >
-                    <Button 
-                      className="w-full group/btn hover:scale-105 transition-all duration-300" 
-                      variant="outline"
-                      type="button"
+                  {/* CTA Buttons */}
+                  <div className="space-y-3 pt-2">
+                    <a 
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`مرحباً، أريد طلب خدمة ${service.title} والحصول على عرض سعر مفصل`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full inline-block"
                     >
-                      اطلب الخدمة
-                      <ArrowRight className="w-4 h-4 mr-2 group-hover/btn:translate-x-1 transition-transform" />
-                    </Button>
-                  </a>
+                      <Button 
+                        className={`w-full group/btn bg-gradient-to-r ${service.color} hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg py-6`}
+                        size="lg"
+                      >
+                        <Phone className="w-5 h-5 ml-2" />
+                        اطلب الخدمة الآن
+                        <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
+                      </Button>
+                    </a>
+                    
+                    <a 
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`أريد استشارة مجانية حول خدمة ${service.title}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full inline-block"
+                    >
+                      <Button 
+                        variant="outline" 
+                        className="w-full hover:bg-gray-50 transition-all duration-300"
+                        size="lg"
+                      >
+                        استشارة مجانية
+                      </Button>
+                    </a>
+                  </div>
                 </CardContent>
               </Card>
             );
           })}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center mt-12">
-          <p className="text-muted-foreground mb-4">
-            هل تحتاج خدمة مخصصة؟ تواصل معنا للحصول على استشارة مجانية
+        {/* Bottom CTA Section */}
+        <div className="text-center bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-8 text-white">
+          <h3 className="text-3xl font-bold mb-4">🎯 هل تحتاج خدمة مخصصة؟</h3>
+          <p className="text-xl mb-6 opacity-90">
+            تواصل معنا الآن واحصل على استشارة مجانية وعرض سعر مخصص لمشروعك
           </p>
-          <Button 
-            size="lg" 
-            className="px-8"
-            onClick={(e) => {
-              e.preventDefault();
-              const message = "مرحباً، أريد الحصول على استشارة مجانية حول خدماتكم";
-              const phoneNumber = "966555812567";
-              const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-              window.open(whatsappUrl, '_blank');
-            }}
-          >
-            احصل على استشارة مجانية
-            <ArrowRight className="w-4 h-4 mr-2" />
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a 
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('مرحباً، أريد الحصول على استشارة مجانية حول خدماتكم وعرض سعر مخصص لمشروعي')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button 
+                size="lg" 
+                className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-bold hover:scale-105 transition-all duration-300"
+              >
+                <Phone className="w-5 h-5 ml-2" />
+                احصل على استشارة مجانية
+                <ArrowRight className="w-5 h-5 mr-2" />
+              </Button>
+            </a>
+            <div className="text-sm opacity-75">
+              خدمة عملاء 24/7 - اتصل الآن: {whatsappNumber.replace('966', '0')}
+            </div>
+          </div>
         </div>
       </div>
     </section>
