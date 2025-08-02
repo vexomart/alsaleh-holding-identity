@@ -100,7 +100,7 @@ const HeroSection = () => {
                 <Trophy className="w-8 h-8 text-white animate-pulse" />
               </div>
             </div>
-            <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
+            <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">2846</div>
             <div className="text-primary-foreground font-medium">مشروع ناجح</div>
             <div className="text-primary-foreground/70 text-sm">Successful Projects</div>
           </div>
@@ -111,7 +111,7 @@ const HeroSection = () => {
                 <Users className="w-8 h-8 text-white animate-pulse" />
               </div>
             </div>
-            <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">100+</div>
+            <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">1744</div>
             <div className="text-primary-foreground font-medium">عميل راضٍ</div>
             <div className="text-primary-foreground/70 text-sm">Satisfied Clients</div>
           </div>
