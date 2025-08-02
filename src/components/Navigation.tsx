@@ -11,11 +11,13 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
-              alt="Ash Holdings Logo" 
-              className="h-20 md:h-24 w-auto object-contain hover:scale-110 transition-all duration-500 drop-shadow-2xl brightness-110 contrast-110"
-            />
+            <a href="/" className="block">
+              <img 
+                src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+                alt="Ash Holdings Logo" 
+                className="h-20 md:h-24 w-auto object-contain hover:scale-110 transition-all duration-500 drop-shadow-2xl brightness-110 contrast-110 cursor-pointer"
+              />
+            </a>
           </div>
           
           {/* Desktop Menu */}
