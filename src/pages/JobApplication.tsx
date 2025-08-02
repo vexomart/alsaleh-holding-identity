@@ -44,7 +44,9 @@ const JobApplication = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validation
@@ -57,24 +59,75 @@ const JobApplication = () => {
       return;
     }
 
-    // Simulate form submission
-    toast({
-      title: "تم إرسال الطلب بنجاح",
-      description: "سيتم التواصل معك خلال 3-5 أيام عمل",
-    });
+    setIsSubmitting(true);
 
-    // Reset form
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      city: "",
-      position: "",
-      experience: "",
-      education: "",
-      coverLetter: "",
-      cv: null
-    });
+    try {
+      // Prepare data for submission
+      const submitData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        position: formData.position,
+        experience: formData.experience,
+        education: formData.education,
+        coverLetter: formData.coverLetter,
+        cvFileName: formData.cv?.name,
+        cvFileSize: formData.cv?.size,
+      };
+
+      // Submit to Supabase edge function
+      const response = await fetch(
+        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/submit-job-application",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI`,
+          },
+          body: JSON.stringify(submitData),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast({
+          title: "تم إرسال الطلب بنجاح",
+          description: "سيتم التواصل معك خلال 3-5 أيام عمل",
+        });
+
+        // Reset form
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          city: "",
+          position: "",
+          experience: "",
+          education: "",
+          coverLetter: "",
+          cv: null
+        });
+
+        // Reset file input
+        const fileInput = document.getElementById('cv') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
+      } else {
+        throw new Error(result.error || "حدث خطأ أثناء الإرسال");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast({
+        title: "خطأ في الإرسال",
+        description: error instanceof Error ? error.message : "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -275,9 +328,10 @@ const JobApplication = () => {
                     <Button 
                       type="submit" 
                       size="lg" 
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg"
+                      disabled={isSubmitting}
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg disabled:opacity-50"
                     >
-                      إرسال الطلب
+                      {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
                     </Button>
                   </form>
                 </CardContent>
