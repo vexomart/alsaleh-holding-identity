@@ -211,8 +211,17 @@ const PaymentMethodsSection = () => {
                     ))}
                   </div>
                   
-                  <Button className={`w-full bg-gradient-to-r ${option.gradient} hover:opacity-90 transition-opacity duration-300 text-white border-0`}>
-                    اختر {option.name}
+                  <Button 
+                    asChild
+                    className={`w-full bg-gradient-to-r ${option.gradient} hover:opacity-90 transition-opacity duration-300 text-white border-0`}
+                  >
+                    <a 
+                      href={`https://wa.me/966555812567?text=مرحباً، أريد الاستفسار عن خدمة التقسيط عبر ${option.name}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      اختر {option.name}
+                    </a>
                   </Button>
                 </CardContent>
               </Card>
