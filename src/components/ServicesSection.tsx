@@ -217,22 +217,22 @@ const ServicesSection = () => {
           {services.map((service) => {
             const IconComponent = service.icon;
             return (
-              <Card key={service.id} className="relative overflow-hidden group hover:scale-105 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-white/90 backdrop-blur-sm">
+              <Card key={service.id} className="relative overflow-hidden group hover:scale-105 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-white/95 backdrop-blur-sm">
                 {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300 z-0`} />
                 
-                <CardHeader className="pb-4">
+                <CardHeader className="pb-4 relative z-10">
                   <div className="flex items-center gap-4 mb-4">
                     <div 
-                      className={`p-4 rounded-2xl bg-gradient-to-br ${service.color} cursor-pointer hover:scale-110 transition-transform duration-300 shadow-lg`}
+                      className={`p-4 rounded-2xl bg-gradient-to-br ${service.color} cursor-pointer hover:scale-110 transition-transform duration-300 shadow-lg relative z-20`}
                       onClick={() => openWhatsApp(service.title, service.startingPrice)}
                       title="تواصل عبر الواتساب"
                     >
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl mb-2">{service.title}</CardTitle>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex-1 relative z-10">
+                      <CardTitle className="text-2xl mb-2 text-foreground group-hover:text-foreground">{service.title}</CardTitle>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground group-hover:text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                           <span className="font-medium">{service.rating}</span>
@@ -248,14 +248,14 @@ const ServicesSection = () => {
                       </div>
                     </div>
                   </div>
-                  <CardDescription className="text-base leading-relaxed">
+                  <CardDescription className="text-base leading-relaxed text-muted-foreground group-hover:text-muted-foreground relative z-10">
                     {service.description}
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-6 relative z-10">
                   {/* Services List */}
-                  <div className="space-y-3">
+                  <div className="space-y-3 relative z-10">
                     <h4 className="font-bold text-lg text-primary mb-3">📋 الخدمات المتوفرة</h4>
                     {service.services.map((item, index) => (
                       <div key={index} className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">

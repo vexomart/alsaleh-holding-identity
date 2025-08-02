@@ -109,9 +109,9 @@ const CurrentOffersSection = () => {
           {currentOffers.map((offer) => {
             const IconComponent = offer.icon;
             return (
-              <Card key={offer.id} className="relative overflow-hidden group hover:scale-105 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-white/80 backdrop-blur-sm">
+              <Card key={offer.id} className="relative overflow-hidden group hover:scale-105 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-white/95 backdrop-blur-sm">
                 {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${offer.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${offer.bgGradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300 z-0`} />
                 
                 {/* Floating Badge */}
                 <div className="absolute -top-2 -right-2 z-20">
@@ -130,28 +130,28 @@ const CurrentOffersSection = () => {
                   </div>
                 </div>
 
-                <CardHeader className="pt-20 pb-6">
+                <CardHeader className="pt-20 pb-6 relative z-10">
                   <div className="flex items-center gap-4 mb-4">
                     <div 
-                      className={`p-4 rounded-2xl bg-gradient-to-br ${offer.color} cursor-pointer hover:scale-110 transition-transform duration-300 shadow-lg`}
+                      className={`p-4 rounded-2xl bg-gradient-to-br ${offer.color} cursor-pointer hover:scale-110 transition-transform duration-300 shadow-lg relative z-20`}
                       onClick={() => openWhatsApp(offer.title, offer.currentPrice)}
                       title="تواصل عبر الواتساب"
                     >
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl mb-2 text-right">{offer.title}</CardTitle>
-                      <CardDescription className="text-base leading-relaxed">
+                    <div className="flex-1 relative z-10">
+                      <CardTitle className="text-2xl mb-2 text-right text-foreground group-hover:text-foreground">{offer.title}</CardTitle>
+                      <CardDescription className="text-base leading-relaxed text-muted-foreground group-hover:text-muted-foreground">
                         {offer.description}
                       </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-6 relative z-10">
                   {/* Pricing Section */}
-                  <div className="text-center bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-50"></div>
+                  <div className="text-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 relative overflow-hidden border border-gray-200/50">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"></div>
                     <div className="relative z-10">
                       <div className="flex items-center justify-center gap-3 mb-3">
                         <span className="text-4xl font-black bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
