@@ -150,21 +150,12 @@ const HeroSection = () => {
         
         {/* Enhanced Main Title */}
         <div className="mb-8 space-y-4">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-primary-foreground leading-tight animate-fade-in">
-            <span className="block group">
-              شركة علي صالح الشهري
-              <Sparkles className="inline-block w-8 h-8 md:w-12 md:h-12 ml-4 text-secondary animate-spin" />
-            </span>
-            <span 
-              className="block text-gradient-primary mt-4 animate-fade-in group-hover:scale-105 transition-transform duration-700" 
-              style={{ animationDelay: '0.3s' }}
-            >
-              القابضة
-            </span>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight animate-fade-in">
+            شركة علي صالح الشهري القابضة
           </h1>
           
           {/* Subtitle with typing effect */}
-          <div className="flex justify-center items-center gap-3 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <div className="flex justify-center items-center gap-3 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Target className="w-6 h-6 text-secondary animate-pulse" />
             <p className="text-2xl md:text-3xl font-bold text-secondary">
               رؤية • ابتكار • تميز
