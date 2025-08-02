@@ -91,7 +91,17 @@ const CurrentOffersSection = () => {
 
                 <CardHeader className="pt-16">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${offer.color}`}>
+                    <div 
+                      className={`p-3 rounded-xl bg-gradient-to-br ${offer.color} cursor-pointer hover:scale-110 transition-transform`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const message = "مرحباً، أريد الاستفسار عن عروضكم الحالية والحصول على تفاصيل أكثر";
+                        const phoneNumber = "966555123456";
+                        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                        window.open(whatsappUrl, '_blank');
+                      }}
+                      title="تواصل عبر الواتساب"
+                    >
                       <IconComponent className="w-6 h-6 text-white" />
                     </div>
                     <div>
