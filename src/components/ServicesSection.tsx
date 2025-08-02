@@ -222,9 +222,12 @@ const ServicesSection = () => {
                   <Button 
                     className="w-full group/btn" 
                     variant="outline"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      console.log('Button clicked for service:', service.title);
                       const message = `مرحباً، أريد الاستفسار عن ${service.title} - يبدأ من ${service.startingPrice} ر.س مع الإدارة والمتابعة والدعم الفني`;
                       const whatsappUrl = `https://wa.me/966123456789?text=${encodeURIComponent(message)}`;
+                      console.log('Opening WhatsApp URL:', whatsappUrl);
                       window.open(whatsappUrl, '_blank');
                     }}
                   >
