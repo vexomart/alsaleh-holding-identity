@@ -21,7 +21,9 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  console.log('App component rendering...');
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
@@ -56,6 +58,7 @@ const App = () => (
       </div>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;
