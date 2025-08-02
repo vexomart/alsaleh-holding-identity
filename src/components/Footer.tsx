@@ -28,7 +28,7 @@ const Footer = () => {
     { name: "الرئيسية", href: "#hero", icon: Home },
     { name: "من نحن", href: "#about", icon: Users },
     { name: "رؤيتنا", href: "#vision", icon: Target },
-    { name: "فريق العمل", href: "#team", icon: Award },
+    { name: "فريق العمل", href: "/team", icon: Award },
     { name: "تواصل معنا", href: "#contact", icon: Mail }
   ];
 

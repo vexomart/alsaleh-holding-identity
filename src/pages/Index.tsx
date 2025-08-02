@@ -7,7 +7,6 @@ import DepartmentsSection from "@/components/DepartmentsSection";
 import SubsidiariesSection from "@/components/SubsidiariesSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
-import TeamSection from "@/components/TeamSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SignLanguageSupport from "@/components/SignLanguageSupport";
@@ -35,9 +34,6 @@ const Index = () => {
         </section>
         <section id="companies">
           <SubsidiariesSection />
-        </section>
-        <section id="team">
-          <TeamSection />
         </section>
         <section id="commitments">
           <CommitmentsSection />
