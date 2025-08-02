@@ -143,36 +143,36 @@ const Footer = () => {
       <div className="container mx-auto px-6 relative z-10">
         {/* Main Footer Content */}
         <div className="py-16">
-          <div className="grid lg:grid-cols-5 md:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-4 gap-8">
             
-            {/* Company Info Section */}
-            <div className="lg:col-span-1 space-y-6 animate-fade-in">
+            {/* Column 1: Company Info & Contact */}
+            <div className="space-y-6 animate-fade-in">
               <div>
-                <h3 className="text-3xl font-bold text-primary-foreground mb-4 group hover:text-secondary transition-colors duration-300">
+                <h3 className="text-2xl font-bold text-primary-foreground mb-4 group hover:text-secondary transition-colors duration-300">
                   شركة علي صالح الشهري القابضة
                 </h3>
-                <p className="text-primary-foreground/80 leading-relaxed text-lg">
+                <p className="text-primary-foreground/80 leading-relaxed text-sm">
                   شركة قابضة رائدة في الاستثمار التقني والإعلامي، نساهم في بناء مستقبل أفضل 
                   من خلال دعم الابتكار والشركات الناشئة.
                 </p>
               </div>
               
               {/* Contact Info */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <h4 className="text-lg font-bold text-primary-foreground flex items-center gap-2">
-                  <MapPin className="w-5 h-5 animate-pulse" />
+                  <MapPin className="w-4 h-4 animate-pulse" />
                   معلومات التواصل
                 </h4>
                 {contactInfo.map((contact, index) => {
                   const IconComponent = contact.icon;
                   return (
                     <div key={index} className="flex items-center gap-3 group hover:scale-105 transition-transform duration-300">
-                      <div className="w-8 h-8 bg-secondary/20 rounded-lg flex items-center justify-center group-hover:bg-secondary/30 transition-colors duration-300">
-                        <IconComponent className="w-4 h-4 text-secondary" />
+                      <div className="w-6 h-6 bg-secondary/20 rounded-lg flex items-center justify-center group-hover:bg-secondary/30 transition-colors duration-300">
+                        <IconComponent className="w-3 h-3 text-secondary" />
                       </div>
                       <div>
                         <p className="text-xs text-primary-foreground/60">{contact.label}</p>
-                        <p className="text-primary-foreground/90 font-medium">{contact.value}</p>
+                        <p className="text-primary-foreground/90 font-medium text-sm">{contact.value}</p>
                       </div>
                     </div>
                   );
@@ -180,185 +180,141 @@ const Footer = () => {
               </div>
 
               {/* Rating Badge */}
-              <div className="flex items-center gap-2 mt-6">
+              <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-xs">
                   تقييم ممتاز
                 </Badge>
               </div>
             </div>
 
-            {/* Vision Section */}
-            <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
-                <Target className="w-5 h-5 text-secondary animate-pulse" />
-                رؤيتنا العالمية
-              </h4>
-              <div className="space-y-4">
-                <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20 group hover:bg-secondary/15 transition-colors duration-300">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                      <Eye className="w-4 h-4 text-white" />
-                    </div>
-                    <h5 className="text-primary-foreground font-bold text-sm">رؤية 2030+</h5>
-                  </div>
-                  <p className="text-primary-foreground/70 text-sm leading-relaxed">
-                    نقود مستقبل التقنية عالمياً من خلال الابتكار المستمر والشراكات الاستراتيجية
-                  </p>
-                </div>
-                
-                <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20 group hover:bg-secondary/15 transition-colors duration-300">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                      <Heart className="w-4 h-4 text-white" />
-                    </div>
-                    <h5 className="text-primary-foreground font-bold text-sm">رسالتنا</h5>
-                  </div>
-                  <p className="text-primary-foreground/70 text-sm leading-relaxed">
-                    تطوير حلول تقنية مبتكرة تحسن جودة الحياة وتدعم التنمية المستدامة
-                  </p>
-                </div>
+            {/* Column 2: Quick Links & Services */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              {/* Quick Links */}
+              <div>
+                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4 text-secondary animate-pulse" />
+                  روابط سريعة
+                </h4>
+                <ul className="space-y-2">
+                  {quickLinks.map((link, index) => {
+                    const IconComponent = link.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={link.href} 
+                          className="flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {link.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
 
-                <div className="grid grid-cols-2 gap-3 mt-4">
-                  <div className="text-center p-3 bg-white/5 rounded-lg backdrop-blur-sm">
+              {/* Services */}
+              <div>
+                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
+                  <Award className="w-4 h-4 text-secondary animate-pulse" />
+                  خدماتنا المتميزة
+                </h4>
+                <ul className="space-y-2">
+                  {services.map((service, index) => {
+                    const IconComponent = service.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={service.href} 
+                          className="flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {service.name}
+                          </span>
+                          <ExternalLink className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            {/* Column 3: Support & Vision */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              {/* Help & Support */}
+              <div>
+                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
+                  <HeadphonesIcon className="w-4 h-4 text-secondary animate-pulse" />
+                  المساعدة والدعم
+                </h4>
+                <ul className="space-y-2">
+                  {supportLinks.map((link, index) => {
+                    const IconComponent = link.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={link.href} 
+                          className="flex items-center justify-between text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <div className="flex items-center gap-2">
+                            <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                            <span className="group-hover:font-medium transition-all duration-300">
+                              {link.name}
+                            </span>
+                          </div>
+                          {link.badge && (
+                            <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">
+                              {link.badge}
+                            </Badge>
+                          )}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Vision Stats */}
+              <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <Eye className="w-4 h-4 text-secondary" />
+                  <h5 className="text-primary-foreground font-bold text-sm">رؤية 2030+</h5>
+                </div>
+                <p className="text-primary-foreground/70 text-xs leading-relaxed mb-3">
+                  نقود مستقبل التقنية عالمياً من خلال الابتكار المستمر
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="text-center p-2 bg-white/5 rounded-lg">
                     <div className="text-lg font-bold text-secondary">68+</div>
                     <div className="text-xs text-primary-foreground/60">دولة</div>
                   </div>
-                  <div className="text-center p-3 bg-white/5 rounded-lg backdrop-blur-sm">
+                  <div className="text-center p-2 bg-white/5 rounded-lg">
                     <div className="text-lg font-bold text-secondary">2.5M+</div>
                     <div className="text-xs text-primary-foreground/60">مستخدم</div>
                   </div>
                 </div>
-
-                <a 
-                  href="/vision" 
-                  className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors duration-300 font-medium text-sm group/vision mt-3"
-                >
-                  <span>اكتشف رؤيتنا الكاملة</span>
-                  <ChevronRight className="w-4 h-4 group-hover/vision:translate-x-1 transition-transform duration-300" />
-                </a>
               </div>
             </div>
 
-            {/* Quick Links */}
-            <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
-                <ChevronRight className="w-5 h-5 text-secondary animate-pulse" />
-                روابط سريعة
-              </h4>
-              <ul className="space-y-3">
-                {quickLinks.map((link, index) => {
-                  const IconComponent = link.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={link.href} 
-                        className="flex items-center gap-3 text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-2"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                        <span className="group-hover:font-medium transition-all duration-300">
-                          {link.name}
-                        </span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Help & Support */}
-            <div className="animate-fade-in" style={{ animationDelay: "0.6s" }}>
-              <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
-                <HeadphonesIcon className="w-5 h-5 text-secondary animate-pulse" />
-                المساعدة والدعم
-              </h4>
-              <ul className="space-y-3">
-                {supportLinks.map((link, index) => {
-                  const IconComponent = link.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={link.href} 
-                        className="flex items-center justify-between text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-2"
-                      >
-                        <div className="flex items-center gap-3">
-                          <IconComponent className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {link.name}
-                          </span>
-                        </div>
-                        {link.badge && (
-                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">
-                            {link.badge}
-                          </Badge>
-                        )}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Services */}
-            <div className="animate-fade-in" style={{ animationDelay: "0.8s" }}>
-              <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
-                <Award className="w-5 h-5 text-secondary animate-pulse" />
-                خدماتنا المتميزة
-              </h4>
-              <ul className="space-y-3">
-                {services.map((service, index) => {
-                  const IconComponent = service.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={service.href} 
-                        className="flex items-center gap-3 text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-2"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                        <span className="group-hover:font-medium transition-all duration-300">
-                          {service.name}
-                        </span>
-                        <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-
-              {/* CTA Section */}
-              <div className="mt-8 p-4 bg-secondary/10 rounded-xl border border-secondary/20 group hover:bg-secondary/15 transition-colors duration-300">
-                <div className="flex items-center gap-3 mb-2">
-                  <Heart className="w-5 h-5 text-secondary animate-pulse" />
-                  <h5 className="text-primary-foreground font-bold">ابدأ مشروعك معنا</h5>
-                </div>
-                <p className="text-primary-foreground/70 text-sm mb-3">
-                  انضم إلى رحلة النجاح والابتكار
-                </p>
-                <a 
-                  href="https://wa.me/966555812567?text=مرحباً، أريد بدء مشروع جديد معكم" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors duration-300 font-medium text-sm group/cta"
-                >
-                  <span>تواصل معنا الآن</span>
-                  <ChevronRight className="w-4 h-4 group-hover/cta:translate-x-1 transition-transform duration-300" />
-                </a>
-            </div>
-
-            {/* Newsletter & Social Media */}
-            <div className="animate-fade-in" style={{ animationDelay: "1.0s" }}>
+            {/* Column 4: Newsletter & Social Media */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
               {/* Newsletter Subscription */}
-              <div className="mb-8">
-                <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-secondary animate-pulse" />
+              <div>
+                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-secondary animate-pulse" />
                   النشرة الإخبارية
                 </h4>
                 <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20">
-                  <p className="text-primary-foreground/80 text-sm mb-4 leading-relaxed">
+                  <p className="text-primary-foreground/80 text-xs mb-3 leading-relaxed">
                     اشترك في نشرتنا الإخبارية لتحصل على أحدث الأخبار والتطورات
                   </p>
                   <form onSubmit={handleNewsletterSubmit} className="space-y-3">
@@ -367,7 +323,7 @@ const Footer = () => {
                       placeholder="الاسم (اختياري)"
                       value={newsletterName}
                       onChange={(e) => setNewsletterName(e.target.value)}
-                      className="bg-white/10 border-white/20 text-primary-foreground placeholder:text-primary-foreground/60"
+                      className="bg-white/10 border-white/20 text-primary-foreground placeholder:text-primary-foreground/60 text-sm h-8"
                     />
                     <Input
                       type="email"
@@ -375,36 +331,43 @@ const Footer = () => {
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
                       required
-                      className="bg-white/10 border-white/20 text-primary-foreground placeholder:text-primary-foreground/60"
+                      className="bg-white/10 border-white/20 text-primary-foreground placeholder:text-primary-foreground/60 text-sm h-8"
                     />
                     <Button 
                       type="submit" 
                       disabled={isSubscribing}
+                      size="sm"
                       className="w-full bg-secondary hover:bg-secondary/90 text-white font-medium"
                     >
                       {isSubscribing ? (
                         <span className="flex items-center gap-2">
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           جاري الاشتراك...
                         </span>
                       ) : (
                         <span className="flex items-center gap-2">
-                          <Send className="w-4 h-4" />
+                          <Send className="w-3 h-3" />
                           اشترك الآن
                         </span>
                       )}
                     </Button>
                   </form>
+                  
+                  {/* Newsletter Stats */}
+                  <div className="mt-3 text-center p-2 bg-white/5 rounded-lg">
+                    <div className="text-sm font-bold text-secondary">15,000+</div>
+                    <div className="text-xs text-primary-foreground/60">مشترك</div>
+                  </div>
                 </div>
               </div>
 
               {/* Social Media Links */}
               <div>
-                <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-secondary animate-pulse" />
+                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-secondary animate-pulse" />
                   تابعنا على
                 </h4>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                   {socialLinks.map((social, index) => {
                     const IconComponent = social.icon;
                     return (
@@ -413,9 +376,9 @@ const Footer = () => {
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`flex flex-col items-center gap-2 p-3 bg-secondary/10 rounded-lg border border-secondary/20 hover:bg-secondary/20 transition-all duration-300 group hover:scale-105 ${social.color}`}
+                        className={`flex flex-col items-center gap-1 p-2 bg-secondary/10 rounded-lg border border-secondary/20 hover:bg-secondary/20 transition-all duration-300 group hover:scale-105 ${social.color}`}
                       >
-                        <IconComponent className="w-5 h-5 text-primary-foreground group-hover:scale-110 transition-transform duration-300" />
+                        <IconComponent className="w-4 h-4 text-primary-foreground group-hover:scale-110 transition-transform duration-300" />
                         <span className="text-xs text-primary-foreground/80 group-hover:text-primary-foreground transition-colors duration-300">
                           {social.name}
                         </span>
@@ -425,32 +388,45 @@ const Footer = () => {
                 </div>
 
                 {/* Social Stats */}
-                <div className="mt-6 p-4 bg-gradient-to-r from-secondary/10 to-primary/10 rounded-xl border border-secondary/20">
-                  <div className="flex items-center justify-between mb-3">
-                    <h5 className="text-primary-foreground font-bold text-sm">إحصائيات التواصل</h5>
-                    <Heart className="w-4 h-4 text-red-400 animate-pulse" />
+                <div className="mt-4 p-3 bg-gradient-to-r from-secondary/10 to-primary/10 rounded-xl border border-secondary/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <h5 className="text-primary-foreground font-bold text-xs">إحصائيات التواصل</h5>
+                    <Heart className="w-3 h-3 text-red-400 animate-pulse" />
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     <div className="text-center">
-                      <div className="text-lg font-bold text-secondary">125K+</div>
+                      <div className="text-sm font-bold text-secondary">125K+</div>
                       <div className="text-xs text-primary-foreground/60">متابع</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-bold text-secondary">89%</div>
+                      <div className="text-sm font-bold text-secondary">89%</div>
                       <div className="text-xs text-primary-foreground/60">تفاعل</div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Newsletter Count */}
-                <div className="mt-4 text-center p-3 bg-white/5 rounded-lg backdrop-blur-sm">
-                  <div className="text-lg font-bold text-secondary">15,000+</div>
-                  <div className="text-xs text-primary-foreground/60">مشترك في النشرة</div>
+              {/* CTA Section */}
+              <div className="p-3 bg-secondary/10 rounded-xl border border-secondary/20 group hover:bg-secondary/15 transition-colors duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <Heart className="w-4 h-4 text-secondary animate-pulse" />
+                  <h5 className="text-primary-foreground font-bold text-sm">ابدأ مشروعك معنا</h5>
                 </div>
+                <p className="text-primary-foreground/70 text-xs mb-2">
+                  انضم إلى رحلة النجاح والابتكار
+                </p>
+                <a 
+                  href="https://wa.me/966555812567?text=مرحباً، أريد بدء مشروع جديد معكم" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-green-400 hover:text-green-300 transition-colors duration-300 font-medium text-xs group/cta"
+                >
+                  <span>تواصل معنا الآن</span>
+                  <ChevronRight className="w-3 h-3 group-hover/cta:translate-x-1 transition-transform duration-300" />
+                </a>
               </div>
             </div>
           </div>
-        </div>
         </div>
 
         {/* Enhanced Bottom Section */}
@@ -459,7 +435,7 @@ const Footer = () => {
             
             {/* Copyright & Legal Info */}
             <div className="text-center md:text-right space-y-2">
-              <p className="text-primary-foreground/60 text-lg">
+              <p className="text-primary-foreground/60 text-base">
                 © 2024 شركة علي صالح الشهري القابضة. جميع الحقوق محفوظة.
               </p>
               <div className="space-y-1">
