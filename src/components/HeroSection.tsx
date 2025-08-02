@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { Calendar, Trophy, Users, Star } from "lucide-react";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -80,19 +81,39 @@ const HeroSection = () => {
           </Button>
         </div>
         
-        {/* Stats Grid */}
-        <div className="mt-16 grid md:grid-cols-3 gap-8 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '1.2s' }}>
-          <div className="text-center group">
-            <div className="text-3xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">2016</div>
-            <div className="text-primary-foreground/90 text-sm">سنة التأسيس</div>
+        {/* Animated Stats Grid */}
+        <div className="mt-16 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: '1.2s' }}>
+          <div className="text-center group bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
+            <div className="mb-4 flex justify-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow">
+                <Calendar className="w-8 h-8 text-primary-foreground animate-pulse" />
+              </div>
+            </div>
+            <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">2016</div>
+            <div className="text-primary-foreground font-medium">سنة التأسيس</div>
+            <div className="text-primary-foreground/70 text-sm">Foundation Year</div>
           </div>
-          <div className="text-center group">
-            <div className="text-3xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
-            <div className="text-primary-foreground/90 text-sm">مشروع ناجح</div>
+          
+          <div className="text-center group bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
+            <div className="mb-4 flex justify-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow">
+                <Trophy className="w-8 h-8 text-white animate-pulse" />
+              </div>
+            </div>
+            <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
+            <div className="text-primary-foreground font-medium">مشروع ناجح</div>
+            <div className="text-primary-foreground/70 text-sm">Successful Projects</div>
           </div>
-          <div className="text-center group">
-            <div className="text-3xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">100+</div>
-            <div className="text-primary-foreground/90 text-sm">عميل راضٍ</div>
+          
+          <div className="text-center group bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
+            <div className="mb-4 flex justify-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow">
+                <Users className="w-8 h-8 text-white animate-pulse" />
+              </div>
+            </div>
+            <div className="text-4xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">100+</div>
+            <div className="text-primary-foreground font-medium">عميل راضٍ</div>
+            <div className="text-primary-foreground/70 text-sm">Satisfied Clients</div>
           </div>
         </div>
       </div>
