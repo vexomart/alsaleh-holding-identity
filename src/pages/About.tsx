@@ -107,10 +107,10 @@ const About = () => {
 
   const stats = [
     { number: "8+", label: "سنوات من التميز", sublabel: "Years of Excellence" },
-    { number: "200+", label: "مشروع ناجح", sublabel: "Successful Projects" },
-    { number: "50+", label: "شراكة عالمية", sublabel: "Global Partnerships" },
-    { number: "1000+", label: "عميل راضي", sublabel: "Satisfied Clients" },
-    { number: "98%", label: "معدل النجاح", sublabel: "Success Rate" }
+    { number: "150+", label: "مشروع ناجح", sublabel: "Successful Projects" },
+    { number: "45+", label: "شراكة عالمية", sublabel: "Global Partnerships" },
+    { number: "850+", label: "عميل راضي", sublabel: "Satisfied Clients" },
+    { number: "96%", label: "معدل النجاح", sublabel: "Success Rate" }
   ];
 
   const leadership = [
