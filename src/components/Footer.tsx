@@ -20,7 +20,8 @@ import {
   Building2,
   Lightbulb,
   TrendingUp,
-  Zap
+  Zap,
+  Eye
 } from "lucide-react";
 
 const Footer = () => {
@@ -112,8 +113,60 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Quick Links */}
+            {/* Vision Section */}
             <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
+                <Target className="w-5 h-5 text-secondary animate-pulse" />
+                رؤيتنا العالمية
+              </h4>
+              <div className="space-y-4">
+                <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20 group hover:bg-secondary/15 transition-colors duration-300">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                      <Eye className="w-4 h-4 text-white" />
+                    </div>
+                    <h5 className="text-primary-foreground font-bold text-sm">رؤية 2030+</h5>
+                  </div>
+                  <p className="text-primary-foreground/70 text-sm leading-relaxed">
+                    نقود مستقبل التقنية عالمياً من خلال الابتكار المستمر والشراكات الاستراتيجية
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20 group hover:bg-secondary/15 transition-colors duration-300">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                      <Heart className="w-4 h-4 text-white" />
+                    </div>
+                    <h5 className="text-primary-foreground font-bold text-sm">رسالتنا</h5>
+                  </div>
+                  <p className="text-primary-foreground/70 text-sm leading-relaxed">
+                    تطوير حلول تقنية مبتكرة تحسن جودة الحياة وتدعم التنمية المستدامة
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mt-4">
+                  <div className="text-center p-3 bg-white/5 rounded-lg backdrop-blur-sm">
+                    <div className="text-lg font-bold text-secondary">68+</div>
+                    <div className="text-xs text-primary-foreground/60">دولة</div>
+                  </div>
+                  <div className="text-center p-3 bg-white/5 rounded-lg backdrop-blur-sm">
+                    <div className="text-lg font-bold text-secondary">2.5M+</div>
+                    <div className="text-xs text-primary-foreground/60">مستخدم</div>
+                  </div>
+                </div>
+
+                <a 
+                  href="#vision" 
+                  className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors duration-300 font-medium text-sm group/vision mt-3"
+                >
+                  <span>اكتشف رؤيتنا الكاملة</span>
+                  <ChevronRight className="w-4 h-4 group-hover/vision:translate-x-1 transition-transform duration-300" />
+                </a>
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
               <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
                 <ChevronRight className="w-5 h-5 text-secondary animate-pulse" />
                 روابط سريعة
@@ -139,7 +192,7 @@ const Footer = () => {
             </div>
 
             {/* Help & Support */}
-            <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div className="animate-fade-in" style={{ animationDelay: "0.6s" }}>
               <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
                 <HeadphonesIcon className="w-5 h-5 text-secondary animate-pulse" />
                 المساعدة والدعم
@@ -172,7 +225,7 @@ const Footer = () => {
             </div>
 
             {/* Services */}
-            <div className="animate-fade-in" style={{ animationDelay: "0.6s" }}>
+            <div className="animate-fade-in" style={{ animationDelay: "0.8s" }}>
               <h4 className="text-xl font-bold text-primary-foreground mb-6 flex items-center gap-2">
                 <Award className="w-5 h-5 text-secondary animate-pulse" />
                 خدماتنا المتميزة
