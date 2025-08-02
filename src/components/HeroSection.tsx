@@ -182,6 +182,10 @@ const HeroSection = () => {
           <Button 
             size="lg" 
             className="bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary text-secondary-foreground px-12 py-8 text-xl font-bold shadow-2xl transition-all duration-500 hover:scale-110 hover:shadow-glow group rounded-2xl"
+            onClick={() => {
+              const companiesSection = document.getElementById('companies');
+              companiesSection?.scrollIntoView({ behavior: 'smooth' });
+            }}
           >
             <Globe className="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform duration-300" />
             <span className="group-hover:animate-pulse">استكشف شركاتنا</span>
