@@ -33,7 +33,7 @@ const Footer = () => {
   ];
 
   const supportLinks = [
-    { name: "الدعم الفني", href: "#support", icon: HeadphonesIcon, badge: "24/7" },
+    { name: "الدعم الفني", href: "/support", icon: HeadphonesIcon, badge: "24/7" },
     { name: "الأسئلة الشائعة", href: "#faq", icon: MessageCircle },
     { name: "دليل المستخدم", href: "#guide", icon: FileText },
     { name: "سياسة الخصوصية", href: "#privacy", icon: Shield },
