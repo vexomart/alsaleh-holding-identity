@@ -21,6 +21,7 @@ import tamaraLogo from "@/assets/tamara-logo.png";
 import tabbyLogo from "@/assets/tabby-logo.png";
 import madfuLogo from "@/assets/madfu-logo.png";
 import emkanLogo from "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png";
+import tasaheelLogo from "@/assets/tasaheel-logo.png";
 
 const PaymentMethodsSection = () => {
   const traditionalMethods = [
@@ -103,6 +104,20 @@ const PaymentMethodsSection = () => {
       benefits: ["أسعار فائدة تنافسية", "إجراءات ميسرة", "خدمة عملاء متميزة"],
       color: "violet",
       gradient: "from-violet-500 to-purple-600"
+    },
+    {
+      name: "تساهيل",
+      logo: tasaheelLogo,
+      description: "برنامج التقسيط من البنك الراجحي مع شروط ميسرة وأسعار تنافسية",
+      features: [
+        "تقسيط حتى 48 شهر",
+        "بدون كفيل أو ضمانات",
+        "موافقة سريعة خلال 24 ساعة",
+        "متاح لعملاء البنك الراجحي"
+      ],
+      benefits: ["معدلات ربح تنافسية", "إجراءات بنكية مبسطة", "دعم فني متخصص"],
+      color: "green",
+      gradient: "from-green-500 to-emerald-600"
     }
   ];
 
@@ -185,7 +200,7 @@ const PaymentMethodsSection = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-8">
+          <div className="grid lg:grid-cols-2 xl:grid-cols-5 gap-8">
             {installmentOptions.map((option, index) => (
               <Card key={index} className="group hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-card to-card/50 backdrop-blur-sm overflow-hidden animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
                 <div className={`h-2 bg-gradient-to-r ${option.gradient}`} />
