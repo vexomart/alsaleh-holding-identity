@@ -20,7 +20,7 @@ import {
 import tamaraLogo from "@/assets/tamara-logo.png";
 import tabbyLogo from "@/assets/tabby-logo.png";
 import madfuLogo from "@/assets/madfu-logo.png";
-import emkanLogo from "@/assets/emkan-logo-clear.png";
+import emkanLogo from "/lovable-uploads/2f45c50e-e8b3-44e1-97f1-5923f0084b17.png";
 
 const PaymentMethodsSection = () => {
   const traditionalMethods = [
