@@ -52,7 +52,7 @@ const Navigation = () => {
   return (
     <>
       {/* Top Bar */}
-      <div className="bg-primary text-primary-foreground py-1 sm:py-2 text-xs sm:text-sm">
+      <div className="bg-slate-900 text-white py-1 sm:py-2 text-xs sm:text-sm">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
             <div className="hidden sm:flex items-center gap-4 lg:gap-6">
