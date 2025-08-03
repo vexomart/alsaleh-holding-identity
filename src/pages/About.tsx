@@ -28,269 +28,194 @@ import {
   Quote,
   Eye,
   Compass,
-  Rocket
+  Rocket,
+  BarChart3,
+  UserCheck,
+  Handshake,
+  Briefcase
 } from "lucide-react";
 
 const About = () => {
+  const stats = [
+    { 
+      number: "14,883", 
+      label: "مشروع منجز", 
+      sublabel: "Completed Projects",
+      icon: Trophy,
+      color: "from-blue-600 to-cyan-600"
+    },
+    { 
+      number: "9,512", 
+      label: "عميل راضٍ", 
+      sublabel: "Satisfied Clients",
+      icon: Users,
+      color: "from-green-600 to-emerald-600"
+    },
+    { 
+      number: "2016", 
+      label: "سنة التأسيس", 
+      sublabel: "Foundation Year",
+      icon: Building2,
+      color: "from-purple-600 to-pink-600"
+    },
+    { 
+      number: "99.8%", 
+      label: "معدل الرضا", 
+      sublabel: "Satisfaction Rate",
+      icon: Star,
+      color: "from-yellow-600 to-orange-600"
+    }
+  ];
+
   const companyValues = [
     {
       icon: Heart,
       title: "الشغف والالتزام",
-      description: "نؤمن بقوة الشغف في تحقيق التميز وتقديم أفضل الحلول لعملائنا",
+      description: "نؤمن بقوة الشغف في تحقيق التميز وتقديم أفضل الحلول التقنية المبتكرة",
       color: "from-red-500 to-pink-500",
-      bgEffect: "from-red-500/10 to-pink-500/10"
+      features: ["التميز في الخدمة", "الالتزام بالمواعيد", "جودة عالية"]
     },
     {
       icon: Shield,
       title: "الثقة والشفافية",
       description: "نبني علاقاتنا على أساس الثقة المتبادلة والشفافية في جميع تعاملاتنا",
       color: "from-blue-500 to-cyan-500",
-      bgEffect: "from-blue-500/10 to-cyan-500/10"
+      features: ["شفافية كاملة", "أمان البيانات", "ثقة متبادلة"]
     },
     {
       icon: Lightbulb,
       title: "الابتكار والإبداع",
       description: "نسعى دائماً لاستكشاف آفاق جديدة وتطوير حلول مبتكرة تلبي احتياجات المستقبل",
       color: "from-yellow-500 to-orange-500",
-      bgEffect: "from-yellow-500/10 to-orange-500/10"
+      features: ["تقنيات حديثة", "حلول مبتكرة", "رؤية مستقبلية"]
     },
     {
       icon: Trophy,
       title: "التميز والجودة",
       description: "نلتزم بأعلى معايير الجودة في جميع خدماتنا ونسعى للتميز في كل ما نقوم به",
       color: "from-purple-500 to-indigo-500",
-      bgEffect: "from-purple-500/10 to-indigo-500/10"
+      features: ["معايير عالمية", "جودة مضمونة", "أداء متميز"]
     }
   ];
 
-  const milestones = [
+  const services = [
     {
-      year: "2016",
-      title: "بداية الرحلة",
-      description: "تأسيس الشركة برؤية طموحة لتكون رائدة في مجال الاستثمار التقني",
-      achievement: "تأسيس الشركة",
-      icon: Building2,
-      color: "from-green-500 to-emerald-500"
+      icon: BarChart3,
+      title: "الاستثمار التقني",
+      description: "نستثمر في الشركات التقنية الناشئة والمتقدمة لتحقيق نمو مستدام"
     },
     {
-      year: "2018",
-      title: "التوسع الأول",
-      description: "إطلاق أول استثمار تقني كبير وبناء فريق عمل متخصص",
-      achievement: "10 مشاريع ناجحة",
-      icon: TrendingUp,
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      year: "2020",
-      title: "الريادة الرقمية",
-      description: "تطوير منصات رقمية متقدمة والدخول في شراكات استراتيجية عالمية",
-      achievement: "50+ شراكة عالمية",
       icon: Globe,
-      color: "from-purple-500 to-pink-500"
+      title: "الحلول المتكاملة",
+      description: "نقدم حلولاً تقنية شاملة تلبي احتياجات الشركات والمؤسسات"
     },
     {
-      year: "2022",
-      title: "التوسع العالمي",
-      description: "افتتاح مكاتب إقليمية وتحقيق نمو استثنائي في الاستثمارات",
-      achievement: "500M+ استثمارات",
-      icon: Crown,
-      color: "from-yellow-500 to-orange-500"
-    },
-    {
-      year: "2024",
-      title: "مستقبل التقنية",
-      description: "قيادة الابتكار في الذكاء الاصطناعي والتقنيات الناشئة",
-      achievement: "رائد في الذكاء الاصطناعي",
       icon: Rocket,
-      color: "from-indigo-500 to-purple-500"
+      title: "الذكاء الاصطناعي",
+      description: "نطور حلول الذكاء الاصطناعي المتقدمة للأعمال والمؤسسات"
+    },
+    {
+      icon: Handshake,
+      title: "الشراكات الاستراتيجية",
+      description: "نبني شراكات قوية مع أفضل الشركات العالمية في مجال التقنية"
     }
   ];
 
-  const stats = [
-    { number: "8+", label: "سنوات من التميز", sublabel: "Years of Excellence" },
-    { number: "150+", label: "مشروع ناجح", sublabel: "Successful Projects" },
-    { number: "45+", label: "شراكة عالمية", sublabel: "Global Partnerships" },
-    { number: "850+", label: "عميل راضي", sublabel: "Satisfied Clients" },
-    { number: "96%", label: "معدل النجاح", sublabel: "Success Rate" }
-  ];
-
-  const leadership = [
-    {
-      name: "علي صالح الشهري",
-      position: "المؤسس والرئيس التنفيذي",
-      experience: "13 سنة خبرة في الاستثمار والتقنية",
-      message: `بسم الله الرحمن الرحيم
+  const leadership = {
+    name: "علي صالح الشهري",
+    position: "المؤسس والرئيس التنفيذي",
+    experience: "خبرة 13+ سنة في الاستثمار والتقنية",
+    message: `بسم الله الرحمن الرحيم
 
 أعزائي الشركاء والعملاء الكرام،
 
 يسعدني أن أرحب بكم في شركة علي صالح الشهري القابضة، حيث نؤمن بأن التقنية والابتكار هما أساس بناء مستقبل أفضل للجميع.
 
-منذ بداية مسيرتنا في عام 2016، كان هدفنا الأساسي هو تقديم حلول تقنية متطورة تساهم في تطوير الأعمال ودعم رؤية المملكة العربية السعودية 2030. نحن نفخر بأن نكون جزءاً من التحول الرقمي الذي تشهده المملكة، ونسعى لأن نكون شركاء في نجاح عملائنا.
+منذ بداية مسيرتنا في عام 2016، كان هدفنا الأساسي هو تقديم حلول تقنية متطورة تساهم في تطوير الأعمال ودعم رؤية المملكة العربية السعودية 2030.
 
-إن رحلتنا مبنية على الثقة والشراكة الحقيقية مع عملائنا، وعلى فريق عمل متخصص يضع الجودة والإبداع في مقدمة أولوياته. نحن لا نقدم مجرد خدمات، بل نبني علاقات طويلة الأمد ونساهم في تحقيق أهداف شركائنا.
-
-أتطلع للمستقبل بثقة كبيرة، حيث سنواصل الاستثمار في أحدث التقنيات وأفضل الكوادر، لنقدم لعملائنا تجربة استثنائية تفوق توقعاتهم.
+إن رحلتنا مبنية على الثقة والشراكة الحقيقية مع عملائنا، وعلى فريق عمل متخصص يضع الجودة والإبداع في مقدمة أولوياته.
 
 شكراً لثقتكم الغالية، ونتطلع لشراكة مثمرة معكم.`,
-      achievements: [
-        "خبير في الاستثمار في المتاجر الإلكترونية والبرمجيات", 
-        "رائد في الابتكار",
-        "خبرة في إدارة الشركات والتسويق الإلكتروني مع أفضل الشركات العالمية",
-        "خبرة برمجية متقدمة"
-      ]
-    }
-  ];
+    achievements: [
+      "رائد في الاستثمار التقني والحلول الرقمية",
+      "خبير في إدارة الشركات والتسويق الإلكتروني",
+      "شراكات مع أفضل الشركات العالمية",
+      "خبرة متقدمة في تطوير البرمجيات"
+    ]
+  };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-background via-surface to-background">
       <Navigation />
       
-      <main className="pt-20">
+      <main className="pt-16">
         {/* Hero Section */}
-        <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-600">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-blue-200/10" />
-          <div className="absolute top-1/4 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float" />
-          <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-white/5 rounded-full blur-3xl animate-float-delayed" />
+        <section className="py-20 md:py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/10 to-primary/20" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent" />
           
-          <div className="container mx-auto px-6 relative z-10">
+          {/* Animated Background Elements */}
+          <div className="absolute top-20 right-20 w-32 h-32 bg-primary/10 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-20 left-20 w-24 h-24 bg-secondary/10 rounded-full blur-3xl animate-float-delayed" />
+          
+          <div className="container mx-auto px-4 lg:px-6 relative z-10">
             <div className="text-center mb-16 animate-fade-in">
-              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-                <Users className="w-6 h-6 text-white animate-pulse" />
-                <span className="text-sm font-medium text-white/90">قصتنا • رحلتنا • مستقبلنا</span>
+              <div className="inline-flex items-center gap-3 mb-8 p-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20">
+                <Building2 className="w-6 h-6 text-primary animate-pulse" />
+                <span className="text-primary font-semibold">شركة علي صالح الشهري القابضة</span>
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-                من <span className="text-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">نحن</span>
+              
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+                <span className="text-primary">من </span>
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">نحن</span>
               </h1>
-              <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto leading-relaxed">
-                شركة علي صالح الشهري القابضة - رحلة التميز والابتكار منذ 2016
+              
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed mb-12">
+                شركة استثمارية رائدة تضم مجموعة من الشركات المتخصصة في التقنية والإعلام والتعليم
               </p>
-            </div>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-16">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 group hover:bg-white/15 transition-all duration-300 border border-white/20">
-                    <div className="text-3xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">
-                      {stat.number}
-                    </div>
-                    <div className="text-sm font-medium text-white/90 mb-1">{stat.label}</div>
-                    <div className="text-xs text-white/70">{stat.sublabel}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Our Story Section */}
-        <section className="py-24 bg-gradient-subtle relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-          
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="text-center mb-20 animate-fade-in">
-              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-                <Compass className="w-6 h-6 text-primary animate-pulse" />
-                <span className="text-sm font-medium text-primary">قصة نجاح • رحلة إلهام</span>
-              </div>
-              <h2 className="text-5xl md:text-6xl font-bold text-primary mb-8 leading-tight">
-                قصة <span className="text-gradient-primary">النجاح</span>
-              </h2>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                بدأت رحلتنا برؤية بسيطة: تمكين الشركات من خلال التقنية والابتكار
-              </p>
-            </div>
-
-            <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
-              <div className="animate-fade-in">
-                <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl">
-                  <div className="flex items-center gap-3 mb-6">
-                    <Eye className="w-8 h-8 text-primary" />
-                    <h3 className="text-3xl font-bold text-primary">رؤيتنا</h3>
-                  </div>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    أن نكون الشركة القابضة الرائدة في المنطقة، نساهم في بناء مستقبل تقني مستدام 
-                    ومبتكر يخدم المجتمع ويحقق التنمية الاقتصادية.
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white">الريادة</Badge>
-                    <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">الاستدامة</Badge>
-                    <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">الابتكار</Badge>
-                  </div>
-                </div>
-              </div>
-
-              <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl">
-                  <div className="flex items-center gap-3 mb-6">
-                    <Target className="w-8 h-8 text-secondary" />
-                    <h3 className="text-3xl font-bold text-primary">مهمتنا</h3>
-                  </div>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    تمكين الشركات والمؤسسات من تحقيق أهدافها من خلال حلول تقنية متطورة 
-                    واستثمارات ذكية تساهم في النمو الاقتصادي المستدام.
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white">التمكين</Badge>
-                    <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">النمو</Badge>
-                    <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">التطوير</Badge>
-                  </div>
-                </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-primary to-secondary hover:scale-105 transition-all duration-300 px-8 py-6 text-lg font-semibold"
+                  asChild
+                >
+                  <a href="#services">
+                    اكتشف خدماتنا
+                    <ArrowRight className="w-5 h-5 mr-2" />
+                  </a>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="border-2 border-primary/30 hover:bg-primary/10 px-8 py-6 text-lg font-semibold"
+                  asChild
+                >
+                  <a href="/contact">
+                    تواصل معنا
+                  </a>
+                </Button>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* Company Values */}
-        <section className="py-24 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 relative overflow-hidden">
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="text-center mb-20 animate-fade-in">
-              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-                <Star className="w-6 h-6 text-primary animate-pulse" />
-                <span className="text-sm font-medium text-primary">قيمنا • مبادئنا</span>
-              </div>
-              <h2 className="text-5xl md:text-6xl font-bold text-primary mb-8 leading-tight">
-                قيمنا <span className="text-gradient-primary">الأساسية</span>
-              </h2>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                القيم التي تقود كل قرار نتخذه وكل خطوة نخطوها نحو المستقبل
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 mb-16">
-              {companyValues.map((value, index) => {
-                const IconComponent = value.icon;
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              {stats.map((stat, index) => {
+                const IconComponent = stat.icon;
                 return (
                   <Card 
-                    key={index}
-                    className="group premium-card hover:shadow-glow transition-all duration-700 border-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl overflow-hidden animate-fade-in"
-                    style={{ animationDelay: `${index * 0.2}s` }}
+                    key={index} 
+                    className="bg-white/80 backdrop-blur-md border-0 shadow-lg hover:shadow-xl transition-all duration-500 group hover:scale-105"
                   >
-                    <CardContent className="p-8 relative h-full">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${value.bgEffect} opacity-0 group-hover:opacity-100 transition-all duration-700`} />
-                      
-                      <div className="relative z-10">
-                        <a 
-                          href="https://wa.me/966555812567?text=مرحباً، أريد معرفة المزيد عن قيم الشركة"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block"
-                        >
-                          <div className={`w-20 h-20 bg-gradient-to-br ${value.color} rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-2xl cursor-pointer`}>
-                            <IconComponent className="w-10 h-10 text-white" />
-                          </div>
-                        </a>
-                        
-                        <h3 className="text-2xl font-bold text-primary mb-4 group-hover:text-gradient-primary transition-all duration-300">
-                          {value.title}
-                        </h3>
-                        
-                        <p className="text-muted-foreground leading-relaxed text-lg">
-                          {value.description}
-                        </p>
+                    <CardContent className="p-6 text-center">
+                      <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                        <IconComponent className="w-8 h-8 text-white" />
                       </div>
-
-                      <div className={`absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r ${value.color} transform scale-x-0 group-hover:scale-x-100 transition-all duration-500 rounded-b-xl`} />
+                      <div className="text-3xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform duration-300">
+                        {stat.number}
+                      </div>
+                      <div className="font-semibold text-foreground mb-1">{stat.label}</div>
+                      <div className="text-sm text-muted-foreground">{stat.sublabel}</div>
                     </CardContent>
                   </Card>
                 );
@@ -299,232 +224,230 @@ const About = () => {
           </div>
         </section>
 
-        {/* Timeline Section */}
-        <section className="py-24 bg-gradient-subtle relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-          
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="text-center mb-20 animate-fade-in">
-              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-                <Clock className="w-6 h-6 text-primary animate-pulse" />
-                <span className="text-sm font-medium text-primary">رحلة الزمن • معالم التاريخ</span>
+        {/* Vision & Mission */}
+        <section className="py-20 bg-gradient-to-br from-primary/5 to-secondary/5 relative">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="animate-fade-in">
+                <div className="flex items-center gap-3 mb-6">
+                  <Eye className="w-8 h-8 text-primary" />
+                  <h2 className="text-3xl md:text-4xl font-bold text-primary">رؤيتنا</h2>
+                </div>
+                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                  أن نكون الشركة القابضة الرائدة في المنطقة، نساهم في بناء مستقبل تقني مستدام 
+                  ومبتكر يخدم المجتمع ويحقق التنمية الاقتصادية المستدامة.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2">الريادة التقنية</Badge>
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2">الاستدامة</Badge>
+                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2">الابتكار</Badge>
+                </div>
               </div>
-              <h2 className="text-5xl md:text-6xl font-bold text-primary mb-8 leading-tight">
-                رحلة <span className="text-gradient-primary">التطور</span>
-              </h2>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                معالم مهمة في رحلتنا نحو التميز والريادة في عالم الاستثمار التقني
-              </p>
-            </div>
 
-            <div className="relative">
-              {/* Timeline Line */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary via-secondary to-primary opacity-30 hidden lg:block" />
-              
-              <div className="space-y-16">
-                {milestones.map((milestone, index) => {
-                  const IconComponent = milestone.icon;
-                  const isEven = index % 2 === 0;
-                  
-                  return (
-                    <div 
-                      key={index}
-                      className={`flex items-center gap-8 ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} animate-fade-in`}
-                      style={{ animationDelay: `${index * 0.2}s` }}
-                    >
-                      {/* Content */}
-                      <div className={`flex-1 ${isEven ? 'lg:text-right' : 'lg:text-left'}`}>
-                        <Card className="premium-card bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border-0 shadow-2xl group hover:shadow-glow transition-all duration-500">
-                          <CardContent className="p-8">
-                            <div className="flex items-center gap-3 mb-4">
-                              <Badge className={`bg-gradient-to-r ${milestone.color} text-white font-bold text-lg px-4 py-2`}>
-                                {milestone.year}
-                              </Badge>
-                              <a 
-                                href="https://wa.me/966555812567?text=مرحباً، أريد معرفة المزيد عن تاريخ الشركة ومحطاتها المهمة"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block"
-                              >
-                                <div className={`w-12 h-12 bg-gradient-to-br ${milestone.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 cursor-pointer`}>
-                                  <IconComponent className="w-6 h-6 text-white" />
-                                </div>
-                              </a>
-                            </div>
-                            
-                            <h3 className="text-2xl font-bold text-primary mb-3 group-hover:text-gradient-primary transition-all duration-300">
-                              {milestone.title}
-                            </h3>
-                            
-                            <p className="text-muted-foreground leading-relaxed mb-4 text-lg">
-                              {milestone.description}
-                            </p>
-                            
-                            <div className="flex items-center gap-2">
-                              <CheckCircle className="w-5 h-5 text-green-500" />
-                              <span className="text-sm font-medium text-green-600">{milestone.achievement}</span>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      {/* Timeline Node */}
-                      <div className="hidden lg:block relative">
-                        <div className={`w-6 h-6 bg-gradient-to-br ${milestone.color} rounded-full border-4 border-white shadow-lg z-10 relative group-hover:scale-125 transition-transform duration-300`} />
-                        <div className={`absolute inset-0 w-6 h-6 bg-gradient-to-br ${milestone.color} rounded-full animate-pulse opacity-50`} />
-                      </div>
-
-                      {/* Spacer for even layout */}
-                      <div className="flex-1 hidden lg:block" />
-                    </div>
-                  );
-                })}
+              <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                <div className="flex items-center gap-3 mb-6">
+                  <Target className="w-8 h-8 text-secondary" />
+                  <h2 className="text-3xl md:text-4xl font-bold text-primary">مهمتنا</h2>
+                </div>
+                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                  تمكين الشركات والمؤسسات من تحقيق أهدافها من خلال حلول تقنية متطورة 
+                  واستثمارات ذكية تساهم في النمو الاقتصادي وتحقيق رؤية المملكة 2030.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2">تمكين الأعمال</Badge>
+                  <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 py-2">النمو المستدام</Badge>
+                  <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2">رؤية 2030</Badge>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Leadership Section */}
-        <section className="py-24 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 relative overflow-hidden">
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="text-center mb-20 animate-fade-in">
-              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-                <Crown className="w-6 h-6 text-primary animate-pulse" />
-                <span className="text-sm font-medium text-primary">القيادة • الرؤية</span>
+        {/* Company Values */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="text-center mb-16 animate-fade-in">
+              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-primary/10 rounded-full">
+                <Star className="w-6 h-6 text-primary animate-pulse" />
+                <span className="text-primary font-semibold">قيمنا الأساسية</span>
               </div>
-              <h2 className="text-5xl md:text-6xl font-bold text-primary mb-8 leading-tight">
-                القيادة <span className="text-gradient-primary">الملهمة</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+                القيم التي تقودنا
               </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                المبادئ الأساسية التي تحكم كل قرار نتخذه وكل خطوة نخطوها
+              </p>
             </div>
 
-            {leadership.map((leader, index) => (
-              <div key={index} className="max-w-6xl mx-auto animate-fade-in">
-                <Card className="premium-card bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border-0 shadow-2xl overflow-hidden">
-                  <CardContent className="p-12">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                      <div>
-                        <div className="w-24 h-24 bg-gradient-to-br from-purple-600 to-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-2xl">
-                          <Crown className="w-12 h-12 text-white" />
+            <div className="grid md:grid-cols-2 gap-8">
+              {companyValues.map((value, index) => {
+                const IconComponent = value.icon;
+                return (
+                  <Card 
+                    key={index}
+                    className="group bg-white/80 backdrop-blur-md border-0 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <CardContent className="p-8 relative">
+                      <div className={`absolute inset-0 bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-5 transition-all duration-500`} />
+                      
+                      <div className="relative">
+                        <div className={`w-16 h-16 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                          <IconComponent className="w-8 h-8 text-white" />
                         </div>
                         
-                        <h3 className="text-3xl font-bold text-primary mb-2">{leader.name}</h3>
-                        <p className="text-xl text-secondary mb-4 font-medium">{leader.position}</p>
-                        <p className="text-muted-foreground mb-6 text-lg">{leader.experience}</p>
+                        <h3 className="text-2xl font-bold text-primary mb-4">
+                          {value.title}
+                        </h3>
                         
-                        <div className="space-y-2 mb-8">
-                          {leader.achievements.map((achievement, achievementIndex) => (
-                            <div key={achievementIndex} className="flex items-center gap-3">
-                              <CheckCircle className="w-5 h-5 text-green-500" />
-                              <span className="text-muted-foreground">{achievement}</span>
+                        <p className="text-muted-foreground leading-relaxed mb-6">
+                          {value.description}
+                        </p>
+
+                        <div className="space-y-2">
+                          {value.features.map((feature, i) => (
+                            <div key={i} className="flex items-center gap-2">
+                              <CheckCircle className="w-4 h-4 text-green-500" />
+                              <span className="text-sm text-muted-foreground">{feature}</span>
                             </div>
                           ))}
                         </div>
-
-                        <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white">
-                          <ArrowRight className="w-4 h-4 mr-2" />
-                          تعرف على المزيد
-                        </Button>
                       </div>
 
-                      <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-3xl p-8 border border-primary/20 relative overflow-hidden">
-                        {/* Background Pattern */}
-                        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-                        
-                        {/* Header */}
-                        <div className="text-center mb-8 relative z-10">
-                          <div className="inline-flex items-center gap-3 mb-4 p-3 bg-primary/10 rounded-full">
-                            <Quote className="w-6 h-6 text-primary" />
-                            <span className="text-sm font-bold text-primary">رسالة الرئيس التنفيذي</span>
-                          </div>
-                          <div className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full" />
-                        </div>
-                        
-                        {/* Message Content */}
-                        <div className="relative z-10 mb-8">
-                          <div className="text-base leading-relaxed text-muted-foreground whitespace-pre-line text-justify">
-                            {leader.message}
-                          </div>
-                        </div>
-                        
-                        {/* Signature Section */}
-                        <div className="border-t border-primary/20 pt-6 relative z-10">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <div className="text-lg font-bold text-primary mb-1">{leader.name}</div>
-                              <div className="text-sm text-muted-foreground">{leader.position}</div>
-                              <div className="text-xs text-muted-foreground mt-1">شركة علي صالح الشهري القابضة</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="mb-3">
-                                <img 
-                                  src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
-                                  alt="شعار شركة علي صالح الشهري القابضة" 
-                                  className="w-24 h-24 object-contain mx-auto opacity-90 hover:opacity-100 transition-all duration-300 hover:scale-105"
-                                />
-                              </div>
-                              <div className="w-24 h-0.5 bg-gradient-to-r from-primary to-secondary mx-auto mb-1" />
-                              <div className="text-xs text-muted-foreground font-medium">شركة علي صالح الشهري القابضة</div>
-                              <div className="text-xs text-muted-foreground/70 mt-1">المؤسس والرئيس التنفيذي</div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Decorative Elements */}
-                        <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-xl" />
-                        <div className="absolute bottom-4 left-4 w-8 h-8 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full blur-lg" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${value.color} transform scale-x-0 group-hover:scale-x-100 transition-all duration-500`} />
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Services Overview */}
+        <section id="services" className="py-20 bg-gradient-to-br from-secondary/5 to-primary/5">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="text-center mb-16 animate-fade-in">
+              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-primary/10 rounded-full">
+                <Briefcase className="w-6 h-6 text-primary animate-pulse" />
+                <span className="text-primary font-semibold">خدماتنا المتميزة</span>
               </div>
-            ))}
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+                ما نقدمه لكم
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                مجموعة شاملة من الخدمات التقنية والاستثمارية المتطورة
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {services.map((service, index) => {
+                const IconComponent = service.icon;
+                return (
+                  <Card 
+                    key={index}
+                    className="group bg-white/80 backdrop-blur-md border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <CardContent className="p-6 text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-primary to-secondary rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <IconComponent className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-primary mb-3">
+                        {service.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        {service.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Leadership Message */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="max-w-4xl mx-auto">
+              <Card className="bg-gradient-to-br from-primary/5 to-secondary/5 border-0 shadow-xl">
+                <CardContent className="p-8 md:p-12">
+                  <div className="text-center mb-8">
+                    <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                      <Quote className="w-12 h-12 text-white" />
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold text-primary mb-2">
+                      {leadership.name}
+                    </h2>
+                    <p className="text-xl text-secondary font-semibold mb-2">
+                      {leadership.position}
+                    </p>
+                    <Badge className="bg-gradient-to-r from-primary to-secondary text-white">
+                      {leadership.experience}
+                    </Badge>
+                  </div>
+
+                  <div className="bg-white/50 rounded-xl p-6 mb-8">
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                      {leadership.message}
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {leadership.achievements.map((achievement, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                        <span className="text-muted-foreground">{achievement}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </section>
 
         {/* Call to Action */}
-        <section className="py-24 bg-gradient-to-br from-primary via-primary/95 to-secondary relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-          <div className="absolute top-1/4 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float" />
-          <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-white/5 rounded-full blur-3xl animate-float-delayed" />
+        <section className="py-20 bg-gradient-to-r from-primary to-secondary relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent" />
           
-          <div className="container mx-auto px-6 relative z-10">
+          <div className="container mx-auto px-4 lg:px-6 relative z-10">
             <div className="text-center animate-fade-in">
-              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-                <Sparkles className="w-6 h-6 text-white animate-pulse" />
-                <span className="text-sm font-medium text-white/90">انضم إلينا • ابدأ رحلتك</span>
-              </div>
-              
-              <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 leading-tight">
-                ابدأ رحلتك <span className="text-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">معنا</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                ابدأ رحلتك معنا اليوم
               </h2>
-              
-              <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-12">
-                انضم إلى شركة رائدة في الاستثمار التقني وكن جزءاً من قصة نجاح استثنائية
+              <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                انضم إلى آلاف العملاء الذين يثقون بخبرتنا وخدماتنا المتميزة
               </p>
-
-              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   size="lg" 
-                  className="bg-white text-primary hover:bg-white/90 px-8 py-6 text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                  variant="secondary"
+                  className="bg-white text-primary hover:bg-white/90 px-8 py-6 text-lg font-semibold"
+                  asChild
                 >
-                  <Building2 className="w-5 h-5 mr-2" />
-                  تواصل معنا
+                  <a href="/contact">
+                    تواصل معنا الآن
+                    <ArrowRight className="w-5 h-5 mr-2" />
+                  </a>
                 </Button>
-                
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-6 text-lg font-bold transition-all duration-300 hover:scale-105"
+                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold"
+                  asChild
                 >
-                  <Users className="w-5 h-5 mr-2" />
-                  انضم لفريقنا
+                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
+                    واتساب مباشر
+                  </a>
                 </Button>
               </div>
             </div>
           </div>
         </section>
       </main>
-      
+
       <Footer />
       <WhatsAppButton />
     </div>
