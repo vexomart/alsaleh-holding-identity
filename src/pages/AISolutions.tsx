@@ -219,8 +219,17 @@ const AISolutions = () => {
                     <Button 
                       size="sm" 
                       className="w-full bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 hover:from-blue-50 hover:to-purple-50 hover:text-blue-600 border-0"
+                      asChild
                     >
-                      تعرف على المزيد
+                      <Link 
+                        to={
+                          service.id === 1 ? "/nlp-solutions" :
+                          service.id === 2 ? "/computer-vision" :
+                          "#"
+                        }
+                      >
+                        تعرف على المزيد
+                      </Link>
                     </Button>
                   </CardContent>
                 </Card>

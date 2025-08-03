@@ -29,6 +29,8 @@ import AISolutions from "./pages/AISolutions";
 import IoTSolutions from "./pages/IoTSolutions";
 import CloudSolutions from "./pages/CloudSolutions";
 import SecuritySolutions from "./pages/SecuritySolutions";
+import NLPSolutions from "./pages/NLPSolutions";
+import ComputerVision from "./pages/ComputerVision";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -74,6 +76,8 @@ const App = () => {
               <Route path="/iot-solutions" element={<IoTSolutions />} />
               <Route path="/cloud-solutions" element={<CloudSolutions />} />
               <Route path="/security-solutions" element={<SecuritySolutions />} />
+              <Route path="/nlp-solutions" element={<NLPSolutions />} />
+              <Route path="/computer-vision" element={<ComputerVision />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
