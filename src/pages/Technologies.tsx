@@ -213,7 +213,7 @@ const Technologies = () => {
       {/* Technologies Sections */}
       <section className="py-20">
         <div className="container mx-auto px-6">
-          <div className="grid gap-8 lg:gap-12">
+          <div className="grid gap-12 lg:gap-16">
             {technologySections.map((section, index) => {
               const IconComponent = section.icon;
               
@@ -221,50 +221,73 @@ const Technologies = () => {
                 <div
                   key={index}
                   className="group animate-fade-in"
-                  style={{ animationDelay: `${index * 150}ms` }}
+                  style={{ animationDelay: `${index * 200}ms` }}
                 >
-                  <Card className="overflow-hidden border-0 shadow-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] hover-scale">
-                    <CardHeader className={`bg-gradient-to-r ${section.bgColor} border-b border-slate-200/50 dark:border-slate-600/50 relative overflow-hidden`}>
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent group-hover:from-white/30 transition-all duration-500" />
-                      <div className="flex items-center gap-4 relative z-10">
-                        <div className={`p-4 rounded-xl bg-gradient-to-r ${section.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300 animate-scale-in`}>
-                          <IconComponent className="w-7 h-7" />
+                  <Card className="overflow-hidden border-0 shadow-2xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl hover:shadow-3xl transition-all duration-700 hover:scale-[1.01] relative">
+                    {/* Decorative background pattern */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-slate-100/5" />
+                    <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl -translate-y-20 translate-x-20" />
+                    
+                    <CardHeader className={`bg-gradient-to-r ${section.bgColor} border-b border-slate-200/30 dark:border-slate-600/30 relative overflow-hidden py-8`}>
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-transparent group-hover:from-white/30 transition-all duration-700" />
+                      <div className="flex items-center gap-6 relative z-10">
+                        <div className={`p-5 rounded-2xl bg-gradient-to-r ${section.color} text-white shadow-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 animate-scale-in`}>
+                          <IconComponent className="w-8 h-8" />
                         </div>
-                        <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-slate-800 dark:group-hover:text-slate-100 transition-colors">
-                          {section.title}
-                        </CardTitle>
+                        <div>
+                          <CardTitle className="text-3xl font-bold text-slate-900 dark:text-white group-hover:text-slate-800 dark:group-hover:text-slate-100 transition-colors mb-2">
+                            {section.title}
+                          </CardTitle>
+                          <div className={`h-1 w-20 bg-gradient-to-r ${section.color} rounded-full`} />
+                        </div>
                       </div>
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/10 to-transparent rounded-full -translate-y-16 translate-x-16" />
                     </CardHeader>
                     
-                    <CardContent className="p-8 relative">
+                    <CardContent className="p-10 relative">
                       {section.sections ? (
-                        <div className="space-y-8">
+                        <div className="space-y-12">
                           {section.sections.map((subsection, subIndex) => {
                             const SubIcon = subsection.icon;
                             return (
                               <div 
                                 key={subIndex}
                                 className="animate-fade-in"
-                                style={{ animationDelay: `${(index * 150) + (subIndex * 100)}ms` }}
+                                style={{ animationDelay: `${(index * 200) + (subIndex * 150)}ms` }}
                               >
-                                <div className="flex items-center gap-3 mb-4">
-                                  <div className={`p-2 rounded-lg bg-gradient-to-r ${section.color} text-white shadow-md`}>
-                                    <SubIcon className="w-4 h-4" />
+                                <div className="flex items-center gap-4 mb-6">
+                                  <div className={`p-3 rounded-xl bg-gradient-to-r ${section.color} text-white shadow-lg hover:scale-110 transition-transform duration-300`}>
+                                    <SubIcon className="w-5 h-5" />
                                   </div>
-                                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+                                  <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200">
                                     {subsection.subtitle}
                                   </h3>
                                 </div>
-                                <div className="flex flex-wrap gap-3 mr-6">
+                                
+                                {/* Grid layout for technology badges */}
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mr-8">
                                   {subsection.technologies.map((tech, techIndex) => (
-                                    <Badge 
+                                    <div
                                       key={techIndex}
-                                      variant="secondary"
-                                      className={`text-sm py-2 px-4 bg-gradient-to-r ${section.bgColor} text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-slate-600/50 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer hover-scale story-link`}
+                                      className="group/tech animate-fade-in hover-scale"
+                                      style={{ animationDelay: `${(index * 200) + (subIndex * 150) + (techIndex * 100)}ms` }}
                                     >
-                                      {tech}
-                                    </Badge>
+                                      <div className={`relative p-4 rounded-xl bg-gradient-to-br ${section.bgColor} border border-slate-200/50 dark:border-slate-600/30 hover:shadow-xl hover:scale-105 transition-all duration-400 cursor-pointer overflow-hidden`}>
+                                        {/* Tech icon placeholder */}
+                                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${section.color} mb-3 flex items-center justify-center`}>
+                                          <Code2 className="w-4 h-4 text-white" />
+                                        </div>
+                                        
+                                        <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-tight">
+                                          {tech}
+                                        </div>
+                                        
+                                        {/* Hover effect overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 to-white/20 opacity-0 group-hover/tech:opacity-100 transition-opacity duration-300" />
+                                        
+                                        {/* Decorative corner */}
+                                        <div className="absolute top-0 right-0 w-6 h-6 bg-gradient-to-br from-white/20 to-transparent rounded-bl-lg" />
+                                      </div>
+                                    </div>
                                   ))}
                                 </div>
                               </div>
@@ -272,23 +295,37 @@ const Technologies = () => {
                           })}
                         </div>
                       ) : (
-                        <div className="flex flex-wrap gap-3">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                           {section.technologies?.map((tech, techIndex) => (
-                            <Badge 
+                            <div
                               key={techIndex}
-                              variant="secondary"
-                              className={`text-sm py-2 px-4 bg-gradient-to-r ${section.bgColor} text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-slate-600/50 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer hover-scale story-link animate-fade-in`}
-                              style={{ animationDelay: `${(index * 150) + (techIndex * 50)}ms` }}
+                              className="group/tech animate-fade-in hover-scale"
+                              style={{ animationDelay: `${(index * 200) + (techIndex * 100)}ms` }}
                             >
-                              {tech}
-                            </Badge>
+                              <div className={`relative p-4 rounded-xl bg-gradient-to-br ${section.bgColor} border border-slate-200/50 dark:border-slate-600/30 hover:shadow-xl hover:scale-105 transition-all duration-400 cursor-pointer overflow-hidden`}>
+                                {/* Tech icon placeholder */}
+                                <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${section.color} mb-3 flex items-center justify-center`}>
+                                  <IconComponent className="w-4 h-4 text-white" />
+                                </div>
+                                
+                                <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-tight">
+                                  {tech}
+                                </div>
+                                
+                                {/* Hover effect overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-white/0 to-white/20 opacity-0 group-hover/tech:opacity-100 transition-opacity duration-300" />
+                                
+                                {/* Decorative corner */}
+                                <div className="absolute top-0 right-0 w-6 h-6 bg-gradient-to-br from-white/20 to-transparent rounded-bl-lg" />
+                              </div>
+                            </div>
                           ))}
                         </div>
                       )}
                       
                       {/* Decorative elements */}
-                      <div className="absolute bottom-4 right-4 w-16 h-16 bg-gradient-to-br from-white/5 to-transparent rounded-full" />
-                      <div className="absolute top-4 right-4 w-8 h-8 bg-gradient-to-br from-white/10 to-transparent rounded-full" />
+                      <div className="absolute bottom-6 right-6 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full" />
+                      <div className="absolute top-6 right-6 w-12 h-12 bg-gradient-to-br from-white/10 to-transparent rounded-full" />
                     </CardContent>
                   </Card>
                 </div>
