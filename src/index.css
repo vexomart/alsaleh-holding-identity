@@ -355,9 +355,12 @@ All colors MUST be HSL.
     }
     
     /* Optimize font sizes for mobile readability */
-    .text-5xl { @apply text-3xl; }
-    .text-4xl { @apply text-2xl; }
-    .text-3xl { @apply text-xl; }
+    .text-7xl { @apply text-4xl; }
+    .text-6xl { @apply text-3xl; }
+    .text-5xl { @apply text-2xl; }
+    .text-4xl { @apply text-xl; }
+    .text-3xl { @apply text-lg; }
+    .text-2xl { @apply text-base; }
     
     /* Improve touch targets */
     .mobile-touch {
@@ -368,6 +371,47 @@ All colors MUST be HSL.
     /* Reduce padding on mobile for better space usage */
     .mobile-compact {
       @apply p-4 gap-4;
+    }
+
+    /* Force grid columns on mobile */
+    .grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Ensure proper spacing */
+    .container {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    /* Hide decorative elements on mobile for performance */
+    .absolute.blur-3xl,
+    .absolute.blur-2xl,
+    .absolute.blur-xl {
+      display: none;
+    }
+
+    /* Fix mobile layout issues */
+    .min-h-screen {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    /* Improve mobile button spacing */
+    .space-y-3 > * + * {
+      margin-top: 0.75rem;
+    }
+
+    /* Better mobile cards */
+    .hover\:scale-\[1\.02\]:hover {
+      transform: none !important;
+    }
+
+    /* Mobile-friendly text gradients */
+    .bg-clip-text {
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
   }
 
@@ -383,6 +427,20 @@ All colors MUST be HSL.
     @apply fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/50;
     height: auto;
     padding: 0.5rem 1rem;
+  }
+
+  /* Ensure proper mobile colors */
+  @media (max-width: 640px) {
+    .bg-gradient-to-br {
+      background: linear-gradient(135deg, var(--tw-gradient-from), var(--tw-gradient-to)) !important;
+    }
+    
+    .text-gradient-primary {
+      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary))) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+    }
   }
 
   /* Mobile Cards Optimization */
