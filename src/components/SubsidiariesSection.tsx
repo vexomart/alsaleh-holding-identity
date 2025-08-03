@@ -103,11 +103,11 @@ const SubsidiariesSection = () => {
       inDevelopment: true
     },
     {
-      name: "أكاديمي فكرة",
+      name: "فكرة أكاديمي",
       nameEn: "Fekrah Academy",
       description: "أكاديمية متخصصة في التعليم الأكاديمي والتدريب المهني، تقدم برامج تعليمية متطورة وورش عمل متخصصة لتطوير المهارات والقدرات الأكاديمية والمهنية",
       category: "التعليم الأكاديمي والتدريب",
-      established: "2023",
+      established: "2025",
       services: ["برامج التدريب الأكاديمي", "ورش العمل المتخصصة", "التطوير المهني", "الاستشارات التعليمية", "البرامج التأهيلية", "التعليم المستمر"],
       icon: GraduationCap,
       stats: { projects: "1,200+", clients: "850+", countries: "15" },
@@ -116,7 +116,8 @@ const SubsidiariesSection = () => {
       websiteName: "fekrah-academy.com",
       growth: "+165%",
       rating: "4.8/5",
-      specialties: ["التعليم التفاعلي", "التدريب المهني", "التطوير الأكاديمي"]
+      specialties: ["التعليم التفاعلي", "التدريب المهني", "التطوير الأكاديمي"],
+      isNewLaunch: true
     },
     {
       name: "أكاديمية نيست",
@@ -189,7 +190,14 @@ const SubsidiariesSection = () => {
                 <CardContent className="p-8 relative">
                   <div className={`absolute inset-0 bg-gradient-to-br ${company.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                   
-                  <div className="relative z-10">
+                  {/* New Launch Banner */}
+                  {company.isNewLaunch && (
+                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-center py-2 px-4 text-sm font-bold animate-pulse">
+                      🎉 تم الإطلاق حديثاً • جديد 2025 🚀
+                    </div>
+                  )}
+                  
+                  <div className={`relative z-10 ${company.isNewLaunch ? 'mt-8' : ''}`}>
                     {/* Header Section */}
                     <div className="flex items-start justify-between mb-6">
                       <div className="flex items-center gap-4">
