@@ -342,6 +342,25 @@ const ReadyProjects = () => {
       clients: "12+",
       updates: "تحديثات مجانية لسنتين",
       support: "دعم فني ولوجستي متخصص 24/7"
+    },
+    {
+      id: 18,
+      title: "نظام إدارة الصالة الرياضية والنادي",
+      description: "نظام شامل لإدارة الصالات الرياضية والأندية مع إدارة العضويات والحجوزات والمدربين",
+      detailedDescription: "نظام متكامل لإدارة الصالات الرياضية والأندية الصحية يشمل إدارة العضويات والاشتراكات، حجز الحصص والمرافق، إدارة المدربين والموظفين، نظام نقاط البيع، تتبع التمارين والتقدم، وتطبيق موبايل للأعضاء مع تحليلات شاملة للأداء والعمليات.",
+      features: ["إدارة العضويات", "حجز الحصص", "إدارة المدربين", "نقاط البيع", "تتبع التمارين", "تطبيق موبايل"],
+      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Mobile App", "IoT Integration"],
+      price: "43,000 ريال",
+      duration: "9-11 أسبوع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "الرياضة واللياقة",
+      icon: Activity,
+      color: "rose",
+      gradient: "from-rose-500 to-pink-600",
+      rating: "4.7",
+      clients: "18+",
+      updates: "تحديثات مجانية لسنة ونصف",
+      support: "دعم فني ورياضي متخصص 24/7"
     }
   ];
 
@@ -365,7 +384,8 @@ const ReadyProjects = () => {
     { name: "إدارة المشاريع", count: projects.filter(p => p.category.includes("إدارة المشاريع")).length },
     { name: "السفر والسياحة", count: projects.filter(p => p.category.includes("السفر")).length },
     { name: "التأمين الرقمي", count: projects.filter(p => p.category.includes("التأمين")).length },
-    { name: "الخدمات اللوجستية", count: projects.filter(p => p.category.includes("اللوجستية")).length }
+    { name: "الخدمات اللوجستية", count: projects.filter(p => p.category.includes("اللوجستية")).length },
+    { name: "الرياضة واللياقة", count: projects.filter(p => p.category.includes("الرياضة")).length }
   ];
 
   return (
@@ -592,11 +612,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">140+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">150+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">700+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">750+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
