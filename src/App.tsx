@@ -36,6 +36,7 @@ import SmartAssistants from "./pages/SmartAssistants";
 import SmartAnalytics from "./pages/SmartAnalytics";
 import SmartAutomation from "./pages/SmartAutomation";
 import GlobalPresence from "./pages/GlobalPresence";
+import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,7 +70,8 @@ const App = () => {
               <Route path="/strategic-consulting" element={<StrategicConsulting />} />
               <Route path="/integrated-solutions" element={<IntegratedSolutions />} />
               <Route path="/training" element={<Training />} />
-              <Route path="/volunteer" element={<Volunteer />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/job-application" element={<Careers />} />
               <Route path="/development-program" element={<DevelopmentProgram />} />
               <Route path="/company-news" element={<CompanyNews />} />
               <Route path="/press-releases" element={<PressReleases />} />

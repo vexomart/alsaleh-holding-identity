@@ -222,7 +222,7 @@ const Footer = () => {
   ];
 
   const careersAndOpportunities = [
-    { name: "طلب وظيفة", href: "#", icon: Users, onClick: () => setShowJobForm(true) },
+    { name: "طلب وظيفة", href: "/careers", icon: Users },
     { name: "فرص التدريب", href: "/training", icon: Award },
     { name: "العمل التطوعي", href: "/volunteer", icon: Heart },
     { name: "برنامج التطوير", href: "/development-program", icon: Lightbulb }
@@ -612,27 +612,15 @@ const Footer = () => {
                     const IconComponent = link.icon;
                     return (
                       <li key={index}>
-                        {link.onClick ? (
-                          <button 
-                            onClick={link.onClick}
-                            className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-sm w-full text-right"
-                          >
-                            <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                            <span className="group-hover:font-medium transition-all duration-300">
-                              {link.name}
-                            </span>
-                          </button>
-                        ) : (
-                          <a 
-                            href={link.href} 
-                            className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                          >
-                            <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                            <span className="group-hover:font-medium transition-all duration-300">
-                              {link.name}
-                            </span>
-                          </a>
-                        )}
+                        <a 
+                          href={link.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {link.name}
+                          </span>
+                        </a>
                       </li>
                     );
                   })}
