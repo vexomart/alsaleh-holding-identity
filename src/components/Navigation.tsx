@@ -94,19 +94,19 @@ const Navigation = () => {
           : 'bg-primary/95 backdrop-blur-sm border-b border-primary-foreground/10'
       }`}>
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
             {/* Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center flex-shrink-0">
               <a href="/" className="block">
                 <img 
                   src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
                   alt="ASH Holdings - شركة علي صالح الشهري القابضة" 
-                  className={`h-16 md:h-20 w-auto object-contain transition-all duration-500 cursor-pointer ${
+                  className={`h-10 sm:h-12 lg:h-16 w-auto object-contain transition-all duration-500 cursor-pointer ${
                     isScrolled ? 'brightness-75' : 'brightness-110 contrast-110 drop-shadow-2xl'
-                  } hover:scale-110`}
+                  } hover:scale-105`}
                 />
               </a>
-              <div className="hidden lg:block ml-6 border-l border-gray-300/60 pl-6">
+              <div className="hidden xl:block ml-4 border-l border-gray-300/60 pl-4">
                 <div className={`font-semibold text-sm leading-tight ${isScrolled ? 'text-gray-700' : 'text-white'}`}>
                   شركة علي صالح الشهري القابضة
                 </div>
