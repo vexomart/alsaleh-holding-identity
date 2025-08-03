@@ -127,6 +127,13 @@ const Footer = () => {
     { name: "الحلول المتكاملة", href: "/integrated-solutions", icon: Zap }
   ];
 
+  const careersAndOpportunities = [
+    { name: "طلب وظيفة", href: "/job-application", icon: Users },
+    { name: "فرص التدريب", href: "#training", icon: Award },
+    { name: "العمل التطوعي", href: "#volunteer", icon: Heart },
+    { name: "برنامج التطوير", href: "#development-program", icon: Lightbulb }
+  ];
+
   const contactInfo = [
     { label: "البريد الإلكتروني", value: "info@ash.holdings", icon: Mail },
     { label: "الهاتف", value: "0555812567", icon: Phone },
@@ -397,7 +404,7 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 3: Support & Vision */}
+            {/* Column 3: Support & Careers */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
               {/* Help & Support */}
               <div>
@@ -432,25 +439,30 @@ const Footer = () => {
                 </ul>
               </div>
 
-              {/* Vision Stats */}
-              <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20">
-                <div className="flex items-center gap-2 mb-3">
-                  <Eye className="w-4 h-4 text-secondary" />
-                  <h5 className="text-primary-foreground font-bold text-sm">رؤية 2030+</h5>
-                </div>
-                <p className="text-primary-foreground/70 text-xs leading-relaxed mb-3">
-                  نقود مستقبل التقنية عالمياً من خلال الابتكار المستمر
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="text-center p-2 bg-white/5 rounded-lg">
-                    <div className="text-lg font-bold text-secondary">68+</div>
-                    <div className="text-xs text-primary-foreground/60">دولة</div>
-                  </div>
-                  <div className="text-center p-2 bg-white/5 rounded-lg">
-                    <div className="text-lg font-bold text-secondary">2.5M+</div>
-                    <div className="text-xs text-primary-foreground/60">مستخدم</div>
-                  </div>
-                </div>
+              {/* Careers & Opportunities */}
+              <div>
+                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-secondary animate-pulse" />
+                  الوظائف والفرص
+                </h4>
+                <ul className="space-y-2">
+                  {careersAndOpportunities.map((link, index) => {
+                    const IconComponent = link.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={link.href} 
+                          className="flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {link.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             </div>
 
