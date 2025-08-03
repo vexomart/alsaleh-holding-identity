@@ -294,13 +294,15 @@ const TechProjects = () => {
 
                     {/* Actions */}
                     <div className="flex gap-2">
-                      <Button 
-                        size="sm" 
-                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                      >
-                        <Eye className="w-3 h-3 mr-1" />
-                        عرض التفاصيل
-                      </Button>
+                      <Link to={`/tech-project/${project.id}`} className="flex-1">
+                        <Button 
+                          size="sm" 
+                          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                        >
+                          <Eye className="w-3 h-3 mr-1" />
+                          عرض التفاصيل
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>

@@ -39,6 +39,7 @@ import SmartAutomation from "./pages/SmartAutomation";
 import GlobalPresence from "./pages/GlobalPresence";
 import Careers from "./pages/Careers";
 import TechProjects from "./pages/TechProjects";
+import TechProjectDetails from "./pages/TechProjectDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -94,6 +95,7 @@ const App = () => {
               <Route path="/smart-automation" element={<SmartAutomation />} />
               <Route path="/global-presence" element={<GlobalPresence />} />
               <Route path="/tech-projects" element={<TechProjects />} />
+              <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
