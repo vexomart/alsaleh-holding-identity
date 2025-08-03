@@ -134,28 +134,34 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gradient-to-br from-primary via-primary/95 to-secondary relative overflow-hidden">
+    <footer className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-      <div className="absolute top-10 right-10 w-32 h-32 bg-secondary/20 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-10 left-10 w-24 h-24 bg-primary-foreground/10 rounded-full blur-2xl animate-float-delayed" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-blue-500/10 to-purple-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-orange-500/5 to-red-500/5 rounded-full blur-3xl" />
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Main Footer Content */}
-        <div className="py-16">
+        <div className="py-20">
           {/* Global Presence Map */}
-          <div className="mb-16 text-center animate-fade-in">
-            <h3 className="text-2xl font-bold text-primary-foreground mb-8 flex items-center justify-center gap-3">
-              <Globe className="w-6 h-6 text-secondary animate-pulse" />
-              تواجدنا العالمي
-            </h3>
+          <div className="mb-20 text-center animate-fade-in">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full border border-blue-500/20 mb-6">
+                <Globe className="w-5 h-5 text-blue-400 animate-pulse" />
+                <span className="text-xl font-bold text-white">تواجدنا العالمي</span>
+              </div>
+              <p className="text-slate-300 max-w-2xl mx-auto">
+                نخدم عملائنا من خلال شبكة مكاتبنا المنتشرة عبر ثلاث قارات
+              </p>
+            </div>
             
-            <div className="relative bg-secondary/10 rounded-2xl p-8 border border-secondary/20 max-w-6xl mx-auto">
+            <div className="relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-3xl p-10 border border-slate-700/50 backdrop-blur-sm max-w-6xl mx-auto">
               {/* World Map SVG */}
-              <div className="relative w-full h-64 mb-6">
+              <div className="relative w-full h-72 mb-8">
                 <svg 
                   viewBox="0 0 800 400" 
-                  className="w-full h-full opacity-20"
+                  className="w-full h-full opacity-30"
                   fill="none" 
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -164,14 +170,14 @@ const Footer = () => {
                     d="M150 200 Q200 180 250 200 Q300 220 350 200 Q400 180 450 200 Q500 220 550 200 Q600 180 650 200"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className="text-primary-foreground/30"
+                    className="text-slate-400"
                     fill="none"
                   />
-                  <circle cx="200" cy="220" r="3" fill="currentColor" className="text-primary-foreground/30" />
-                  <circle cx="350" cy="190" r="3" fill="currentColor" className="text-primary-foreground/30" />
-                  <circle cx="500" cy="210" r="3" fill="currentColor" className="text-primary-foreground/30" />
-                  <circle cx="600" cy="180" r="3" fill="currentColor" className="text-primary-foreground/30" />
-                  <circle cx="150" cy="160" r="3" fill="currentColor" className="text-primary-foreground/30" />
+                  <circle cx="200" cy="220" r="3" fill="currentColor" className="text-slate-400" />
+                  <circle cx="350" cy="190" r="3" fill="currentColor" className="text-slate-400" />
+                  <circle cx="500" cy="210" r="3" fill="currentColor" className="text-slate-400" />
+                  <circle cx="600" cy="180" r="3" fill="currentColor" className="text-slate-400" />
+                  <circle cx="150" cy="160" r="3" fill="currentColor" className="text-slate-400" />
                 </svg>
                 
                 {/* Location pins */}
@@ -179,9 +185,9 @@ const Footer = () => {
                   {/* جدة */}
                   <div className="absolute" style={{ left: '15%', top: '65%' }}>
                     <div className="relative group">
-                      <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg"></div>
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        جدة
+                      <div className="w-4 h-4 bg-gradient-to-r from-red-400 to-red-600 rounded-full animate-pulse shadow-lg ring-2 ring-red-400/50"></div>
+                      <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-slate-600">
+                        جدة - المقر الرئيسي
                       </div>
                     </div>
                   </div>
@@ -189,9 +195,9 @@ const Footer = () => {
                   {/* الرياض */}
                   <div className="absolute" style={{ left: '20%', top: '60%' }}>
                     <div className="relative group">
-                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        الرياض
+                      <div className="w-4 h-4 bg-gradient-to-r from-green-400 to-green-600 rounded-full animate-pulse shadow-lg ring-2 ring-green-400/50"></div>
+                      <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-slate-600">
+                        الرياض - فرع رئيسي
                       </div>
                     </div>
                   </div>
@@ -199,9 +205,9 @@ const Footer = () => {
                   {/* دبي */}
                   <div className="absolute" style={{ left: '25%', top: '62%' }}>
                     <div className="relative group">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse shadow-lg"></div>
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        دبي
+                      <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse shadow-lg ring-2 ring-blue-400/50"></div>
+                      <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-slate-600">
+                        دبي - مكتب إقليمي
                       </div>
                     </div>
                   </div>
@@ -209,9 +215,9 @@ const Footer = () => {
                   {/* عمان */}
                   <div className="absolute" style={{ left: '23%', top: '58%' }}>
                     <div className="relative group">
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse shadow-lg"></div>
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        عمان
+                      <div className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full animate-pulse shadow-lg ring-2 ring-yellow-400/50"></div>
+                      <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-slate-600">
+                        عمان - مكتب تمثيلي
                       </div>
                     </div>
                   </div>
@@ -219,9 +225,9 @@ const Footer = () => {
                   {/* الأردن */}
                   <div className="absolute" style={{ left: '21%', top: '55%' }}>
                     <div className="relative group">
-                      <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse shadow-lg"></div>
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        الأردن
+                      <div className="w-4 h-4 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full animate-pulse shadow-lg ring-2 ring-orange-400/50"></div>
+                      <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-slate-600">
+                        الأردن - مكتب تنسيق
                       </div>
                     </div>
                   </div>
@@ -229,9 +235,9 @@ const Footer = () => {
                   {/* ألمانيا */}
                   <div className="absolute" style={{ left: '50%', top: '35%' }}>
                     <div className="relative group">
-                      <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse shadow-lg"></div>
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        ألمانيا
+                      <div className="w-4 h-4 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full animate-pulse shadow-lg ring-2 ring-purple-400/50"></div>
+                      <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-slate-600">
+                        ألمانيا - مكتب أوروبي
                       </div>
                     </div>
                   </div>
@@ -239,99 +245,99 @@ const Footer = () => {
               </div>
               
               {/* Location legend */}
-              <div className="flex flex-wrap justify-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span className="text-primary-foreground/90 text-sm font-medium">جدة</span>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+                <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                  <div className="w-3 h-3 bg-gradient-to-r from-red-400 to-red-600 rounded-full ring-2 ring-red-400/30"></div>
+                  <span className="text-white text-sm font-medium">جدة</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-primary-foreground/90 text-sm font-medium">الرياض</span>
+                <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                  <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-green-600 rounded-full ring-2 ring-green-400/30"></div>
+                  <span className="text-white text-sm font-medium">الرياض</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span className="text-primary-foreground/90 text-sm font-medium">دبي</span>
+                <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                  <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full ring-2 ring-blue-400/30"></div>
+                  <span className="text-white text-sm font-medium">دبي</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span className="text-primary-foreground/90 text-sm font-medium">عمان</span>
+                <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                  <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full ring-2 ring-yellow-400/30"></div>
+                  <span className="text-white text-sm font-medium">عمان</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
-                  <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                  <span className="text-primary-foreground/90 text-sm font-medium">الأردن</span>
+                <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                  <div className="w-3 h-3 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full ring-2 ring-orange-400/30"></div>
+                  <span className="text-white text-sm font-medium">الأردن</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                  <span className="text-primary-foreground/90 text-sm font-medium">ألمانيا</span>
+                <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                  <div className="w-3 h-3 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full ring-2 ring-purple-400/30"></div>
+                  <span className="text-white text-sm font-medium">ألمانيا</span>
                 </div>
               </div>
               
               {/* Stats */}
-              <div className="mt-6 flex justify-center">
-                <div className="flex items-center gap-6 text-center">
-                  <div className="px-4 py-2 bg-secondary/20 rounded-lg">
-                    <div className="text-lg font-bold text-secondary">6</div>
-                    <div className="text-xs text-primary-foreground/60">مكاتب عالمية</div>
+              <div className="flex justify-center">
+                <div className="grid grid-cols-3 gap-8">
+                  <div className="text-center p-4 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl border border-blue-500/20">
+                    <div className="text-2xl font-bold text-blue-400 mb-1">6</div>
+                    <div className="text-sm text-slate-300">مكاتب عالمية</div>
                   </div>
-                  <div className="px-4 py-2 bg-secondary/20 rounded-lg">
-                    <div className="text-lg font-bold text-secondary">3</div>
-                    <div className="text-xs text-primary-foreground/60">قارات</div>
+                  <div className="text-center p-4 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-500/20">
+                    <div className="text-2xl font-bold text-emerald-400 mb-1">3</div>
+                    <div className="text-sm text-slate-300">قارات</div>
                   </div>
-                  <div className="px-4 py-2 bg-secondary/20 rounded-lg">
-                    <div className="text-lg font-bold text-secondary">24/7</div>
-                    <div className="text-xs text-primary-foreground/60">دعم مستمر</div>
+                  <div className="text-center p-4 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl border border-orange-500/20">
+                    <div className="text-2xl font-bold text-orange-400 mb-1">24/7</div>
+                    <div className="text-sm text-slate-300">دعم مستمر</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
             
             {/* Column 1: Company Info & Contact */}
-            <div className="space-y-6 animate-fade-in">
-              <div>
-                <h3 className="text-2xl font-bold text-primary-foreground mb-4 group hover:text-secondary transition-colors duration-300">
+            <div className="space-y-8 animate-fade-in">
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white mb-4 group hover:text-blue-400 transition-colors duration-300">
                   شركة علي صالح الشهري القابضة
                 </h3>
-                <p className="text-primary-foreground/80 leading-relaxed text-sm">
+                <p className="text-slate-300 leading-relaxed text-sm">
                   شركة قابضة رائدة في الاستثمار التقني والإعلامي، نساهم في بناء مستقبل أفضل 
                   من خلال دعم الابتكار والشركات الناشئة.
                 </p>
               </div>
               
               {/* Contact Info */}
-              <div className="space-y-3">
-                <h4 className="text-lg font-bold text-primary-foreground flex items-center gap-2">
-                  <MapPin className="w-4 h-4 animate-pulse" />
+              <div className="space-y-4">
+                <h4 className="text-base font-semibold text-white flex items-center gap-2 mb-4">
+                  <MapPin className="w-4 h-4 text-blue-400" />
                   معلومات التواصل
                 </h4>
-                {contactInfo.map((contact, index) => {
-                  const IconComponent = contact.icon;
-                  return (
-                    <div key={index} className="flex items-center gap-3 group hover:scale-105 transition-transform duration-300">
-                      <div className="w-6 h-6 bg-secondary/20 rounded-lg flex items-center justify-center group-hover:bg-secondary/30 transition-colors duration-300">
-                        <IconComponent className="w-3 h-3 text-secondary" />
+                <div className="space-y-3">
+                  {contactInfo.map((contact, index) => {
+                    const IconComponent = contact.icon;
+                    return (
+                      <div key={index} className="flex items-center gap-3 group hover:scale-[1.02] transition-transform duration-300">
+                        <div className="w-8 h-8 bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg flex items-center justify-center group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300 border border-slate-600">
+                          <IconComponent className="w-4 h-4 text-slate-300 group-hover:text-white" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-400 mb-1">{contact.label}</p>
+                          <p className="text-slate-200 font-medium text-sm">{contact.value}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-xs text-primary-foreground/60">{contact.label}</p>
-                        <p className="text-primary-foreground/90 font-medium text-sm">{contact.value}</p>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Rating Badge */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg border border-yellow-500/30">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-xs">
-                  تقييم ممتاز
-                </Badge>
+                <span className="text-yellow-400 text-sm font-medium">تقييم ممتاز</span>
               </div>
             </div>
 
