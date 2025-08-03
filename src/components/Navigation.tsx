@@ -122,27 +122,27 @@ const Navigation = () => {
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center space-x-reverse space-x-8">
               {/* Quick Contact */}
-              <div className="flex items-center gap-4 border-l border-gray-300 pl-6">
+              <div className="flex items-center gap-3 border-l border-gray-300/50 pl-4">
                 <Button 
                   size="sm" 
                   variant="ghost"
-                  className={`${isScrolled ? 'text-gray-600 hover:text-green-600' : 'text-primary-foreground hover:text-green-400'}`}
+                  className={`flex items-center gap-2 ${isScrolled ? 'text-gray-600 hover:text-green-600' : 'text-white hover:text-green-400'}`}
                   asChild
                 >
-                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-4 h-4 text-green-500 ml-1" />
-                    واتساب
+                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                    <MessageCircle className="w-4 h-4 text-green-500" />
+                    <span>واتساب</span>
                   </a>
                 </Button>
                 <Button 
                   size="sm" 
                   variant="ghost"
-                  className={`${isScrolled ? 'text-gray-600 hover:text-blue-600' : 'text-primary-foreground hover:text-blue-400'}`}
+                  className={`flex items-center gap-2 ${isScrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-400'}`}
                   asChild
                 >
-                  <a href="tel:+966555812567">
-                    <Phone className="w-4 h-4 text-blue-500 ml-1" />
-                    اتصال فوري
+                  <a href="tel:+966555812567" className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-blue-500" />
+                    <span>اتصال فوري</span>
                   </a>
                 </Button>
               </div>
