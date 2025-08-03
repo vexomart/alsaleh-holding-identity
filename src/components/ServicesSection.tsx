@@ -214,28 +214,29 @@ ${technologies.slice(0, 3).map((tech, index) => `${index + 1}. ${tech}`).join('\
   };
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-blue-50/30 to-cyan-50/50 dark:from-purple-950/20 dark:via-blue-950/10 dark:to-cyan-950/20"></div>
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-purple-200/20 to-blue-200/20 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-cyan-200/20 to-teal-200/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s' }}></div>
+    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-900 dark:via-teal-900 dark:to-cyan-900">
+      {/* Modern Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-emerald-100/40 via-transparent to-teal-100/40"></div>
+      <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-emerald-400/10 to-teal-400/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-teal-400/10 to-cyan-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s' }}></div>
+      <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-gradient-to-r from-emerald-300/5 to-teal-300/5 rounded-full blur-2xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
-              <Zap className="w-8 h-8 text-white" />
+        <div className="text-center mb-20">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="p-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl shadow-lg">
+              <Zap className="w-10 h-10 text-white" />
             </div>
-            <Badge variant="secondary" className="text-lg px-6 py-3 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700">
+            <Badge variant="secondary" className="text-xl px-8 py-4 bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 border-0 rounded-full shadow-lg">
               خدماتنا المتنوعة 🚀
             </Badge>
           </div>
-          <h2 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-6">
+          <h2 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-8 tracking-tight">
             خدماتنا الاحترافية
           </h2>
-          <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            نقدم مجموعة شاملة ومتكاملة من الخدمات التقنية والتسويقية المتطورة لتحقيق أهدافك التجارية بأعلى معايير الجودة والاحترافية
+          <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-5xl mx-auto leading-relaxed font-medium">
+            نقدم مجموعة شاملة ومتكاملة من الخدمات التقنية والتسويقية المتطورة بمعايير عالمية لتحقيق أهدافك التجارية بأعلى مستويات الاحترافية
           </p>
         </div>
 
@@ -244,10 +245,10 @@ ${technologies.slice(0, 3).map((tech, index) => `${index + 1}. ${tech}`).join('\
           {services.map((service) => {
             const IconComponent = service.icon;
             return (
-              <Card key={service.id} className="relative overflow-hidden group hover:scale-105 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-white/95 backdrop-blur-sm">
-                {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300 z-0`} />
-                
+              <Card key={service.id} className="relative overflow-hidden group hover:scale-[1.02] hover:shadow-2xl transition-all duration-700 border-0 bg-white/80 backdrop-blur-lg shadow-xl">
+                {/* Modern Gradient Background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-30 transition-opacity duration-500 z-0`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-transparent"></div>
                 <CardHeader className="pb-4 relative z-10">
                   <div className="flex items-center gap-4 mb-4">
                     <div 
@@ -416,13 +417,13 @@ ${service.technologies.slice(0, 3).map((tech: string, index: number) => `${index
           })}
         </div>
 
-        {/* Bottom CTA Section */}
-        <div className="text-center bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-8 text-white">
-          <h3 className="text-3xl font-bold mb-4">🎯 هل تحتاج خدمة مخصصة؟</h3>
-          <p className="text-xl mb-6 opacity-90">
-            تواصل معنا الآن واحصل على استشارة مجانية وعرض سعر مخصص لمشروعك
+        {/* Premium CTA Section */}
+        <div className="text-center bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-12 text-white shadow-2xl border border-slate-700">
+          <h3 className="text-4xl font-black mb-6 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">🎯 هل تحتاج خدمة مخصصة؟</h3>
+          <p className="text-2xl mb-8 text-slate-300 font-medium">
+            تواصل معنا الآن واحصل على استشارة مجانية وعرض سعر مخصص لمشروعك من خبراء معتمدين
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a 
               href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎯 مرحبا بك في شركة علي صالح الشهري القابضة
 
@@ -455,14 +456,14 @@ ${service.technologies.slice(0, 3).map((tech: string, index: number) => `${index
             >
               <Button 
                 size="lg" 
-                className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-bold hover:scale-105 transition-all duration-300"
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-12 py-6 text-xl font-bold hover:scale-105 transition-all duration-300 shadow-xl border-0 rounded-2xl"
               >
-                <Phone className="w-5 h-5 ml-2" />
+                <Phone className="w-6 h-6 ml-3" />
                 احصل على استشارة مجانية
-                <ArrowRight className="w-5 h-5 mr-2" />
+                <ArrowRight className="w-6 h-6 mr-3" />
               </Button>
             </a>
-            <div className="text-sm opacity-75">
+            <div className="text-slate-400 text-lg font-medium">
               خدمة عملاء 24/7 - اتصل الآن: {whatsappNumber.replace('966', '0')}
             </div>
           </div>

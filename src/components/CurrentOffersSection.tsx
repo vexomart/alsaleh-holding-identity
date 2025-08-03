@@ -103,28 +103,29 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
   };
 
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-950/20 dark:via-purple-950/10 dark:to-pink-950/20"></div>
-      <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-pink-200/20 to-red-200/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900">
+      {/* Modern Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-indigo-100/40"></div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-indigo-400/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-blue-300/5 to-indigo-300/5 rounded-full blur-2xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="p-3 bg-gradient-to-r from-red-500 to-orange-500 rounded-full animate-pulse">
-              <Timer className="w-8 h-8 text-white" />
+        <div className="text-center mb-20">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="p-4 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl shadow-lg animate-pulse">
+              <Timer className="w-10 h-10 text-white" />
             </div>
-            <Badge variant="destructive" className="text-lg px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 animate-bounce">
+            <Badge variant="destructive" className="text-xl px-8 py-4 bg-gradient-to-r from-red-500 to-orange-500 shadow-lg animate-bounce text-white border-0 rounded-full">
               عروض محدودة الوقت ⏰
             </Badge>
           </div>
-          <h2 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
+          <h2 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-8 tracking-tight">
             العروض الحالية
           </h2>
-          <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            استفد من عروضنا الحصرية المحدودة واحصل على أفضل الخدمات التقنية بأسعار لا تُقاوم مع ضمان الجودة والدعم الشامل
+          <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-5xl mx-auto leading-relaxed font-medium">
+            استفد من عروضنا الحصرية المحدودة واحصل على أفضل الخدمات التقنية بأسعار استثنائية مع ضمان الجودة العالمية
           </p>
         </div>
 
@@ -133,10 +134,10 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
           {currentOffers.map((offer) => {
             const IconComponent = offer.icon;
             return (
-              <Card key={offer.id} className="relative overflow-hidden group hover:scale-105 hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/50 bg-white/95 backdrop-blur-sm">
-                {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${offer.bgGradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300 z-0`} />
-                
+              <Card key={offer.id} className="relative overflow-hidden group hover:scale-[1.02] hover:shadow-2xl transition-all duration-700 border-0 bg-white/80 backdrop-blur-lg shadow-xl">
+                {/* Modern Gradient Background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${offer.bgGradient} opacity-0 group-hover:opacity-30 transition-opacity duration-500 z-0`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-transparent"></div>
                 {/* Floating Badge */}
                 <div className="absolute -top-2 -right-2 z-20">
                   <div className="relative">
@@ -279,46 +280,28 @@ ${offer.features.map((feature: string, index: number) => `${index + 1}. ${featur
           })}
         </div>
 
-        {/* Bottom CTA Section */}
-        <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 text-white">
-          <h3 className="text-3xl font-bold mb-4">⚡ العروض تنتهي قريباً!</h3>
-          <p className="text-xl mb-6 opacity-90">
-            لا تفوت الفرصة - احجز عرضك الآن واحصل على خصومات حصرية
+        {/* Premium CTA Section */}
+        <div className="text-center bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-12 text-white shadow-2xl border border-slate-700">
+          <h3 className="text-4xl font-black mb-6 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">⚡ العروض تنتهي قريباً!</h3>
+          <p className="text-2xl mb-8 text-slate-300 font-medium">
+            لا تفوت الفرصة - احجز عرضك الآن واحصل على خصومات حصرية تصل إلى 35%
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a 
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🎊 مرحبا بك في شركة علي صالح الشهري القابضة
-
-🛍️ طلب عرض شامل
-═══════════════════
-
-📌 تفاصيل الطلب:
-🎯 اريد الاطلاع على جميع العروض
-💰 اريد مقارنة الاسعار
-⚡ اريد الاستفادة من العروض
-
-🤔 معلومات احتاجها:
-• مدة تنفيذ كل مشروع
-• طرق الدفع المتاحة
-• تفاصيل الدعم الفني
-• نماذج من الاعمال
-
-💡 اريد استشارة شاملة!
-
-شكرا لكم 🙏`)}`}
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('مرحبا بك في شركة علي صالح الشهري القابضة\n\n🛍️ طلب عرض شامل\n═══════════════════\n\n📌 تفاصيل الطلب:\n🎯 اريد الاطلاع على جميع العروض\n💰 اريد مقارنة الاسعار\n⚡ اريد الاستفادة من العروض\n\n🤔 معلومات احتاجها:\n• مدة تنفيذ كل مشروع\n• طرق الدفع المتاحة\n• تفاصيل الدعم الفني\n• نماذج من الاعمال\n\n💡 اريد استشارة شاملة!\n\nشكرا لكم 🙏')}`}
               target="_blank"
               rel="noopener noreferrer"
             >
               <Button 
                 size="lg" 
-                className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-bold hover:scale-105 transition-all duration-300"
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-12 py-6 text-xl font-bold hover:scale-105 transition-all duration-300 shadow-xl border-0 rounded-2xl"
               >
-                <Phone className="w-5 h-5 ml-2" />
+                <Phone className="w-6 h-6 ml-3" />
                 عرض جميع العروض
-                <ArrowRight className="w-5 h-5 mr-2" />
+                <ArrowRight className="w-6 h-6 mr-3" />
               </Button>
             </a>
-            <div className="text-sm opacity-75">
+            <div className="text-slate-400 text-lg font-medium">
               أو اتصل الآن: {whatsappNumber.replace('966', '0')}
             </div>
           </div>
