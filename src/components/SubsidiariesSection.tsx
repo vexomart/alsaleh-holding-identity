@@ -137,11 +137,12 @@ const SubsidiariesSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-gradient-subtle relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-      <div className="absolute top-1/4 right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-secondary/10 rounded-full blur-3xl animate-float-delayed" />
+    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-amber-900 dark:via-yellow-900 dark:to-orange-900">
+      {/* Modern Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-100/40 via-transparent to-yellow-100/40"></div>
+      <div className="absolute top-1/4 right-10 w-40 h-40 bg-amber-400/10 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-yellow-400/10 rounded-full blur-3xl animate-float-delayed" />
+      <div className="absolute top-1/3 left-1/2 w-56 h-56 bg-orange-400/5 rounded-full blur-2xl animate-pulse"></div>
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-20 animate-fade-in">

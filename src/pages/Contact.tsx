@@ -122,14 +122,14 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 dark:from-emerald-950 dark:via-teal-950 dark:to-green-950">
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-        <div className="absolute top-1/4 right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-secondary/10 rounded-full blur-3xl animate-float-delayed" />
+      <section className="pt-32 pb-16 relative overflow-hidden bg-gradient-to-br from-emerald-100/50 to-teal-100/50 dark:from-emerald-900/20 dark:to-teal-900/20">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-200/20 via-transparent to-teal-200/20" />
+        <div className="absolute top-1/4 right-10 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-teal-400/10 rounded-full blur-3xl animate-float-delayed" />
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16 animate-fade-in">

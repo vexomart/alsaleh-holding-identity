@@ -59,12 +59,12 @@ const ContactSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-gradient-subtle relative overflow-hidden">
-      {/* Enhanced Background Elements */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-      <div className="absolute top-1/4 right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-secondary/10 rounded-full blur-3xl animate-float-delayed" />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-full blur-3xl" />
+    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-red-50 via-orange-50 to-pink-50 dark:from-red-900 dark:via-orange-900 dark:to-pink-900">
+      {/* Modern Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-red-100/40 via-transparent to-orange-100/40"></div>
+      <div className="absolute top-1/4 right-10 w-40 h-40 bg-red-400/10 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-orange-400/10 rounded-full blur-3xl animate-float-delayed" />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-r from-red-300/5 to-orange-300/5 rounded-full blur-3xl" />
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Enhanced Header */}

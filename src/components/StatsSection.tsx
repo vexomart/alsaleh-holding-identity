@@ -99,8 +99,12 @@ const StatsSection = () => {
   };
 
   return (
-    <section id="stats-section" className="py-20 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-hidden">
-      <div className="container mx-auto px-4">
+    <section id="stats-section" className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-slate-900 dark:via-gray-900 dark:to-zinc-900">
+      {/* Modern Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-100/40 via-transparent to-gray-100/40"></div>
+      <div className="absolute top-0 left-1/4 w-64 h-64 bg-gradient-to-br from-slate-400/10 to-gray-400/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tr from-gray-400/10 to-zinc-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
             إنجازاتنا بالأرقام

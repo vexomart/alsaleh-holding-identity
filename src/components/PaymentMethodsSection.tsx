@@ -129,11 +129,12 @@ const PaymentMethodsSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-background via-secondary/5 to-primary/5 relative overflow-hidden" id="payment-methods">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-      <div className="absolute top-20 right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-20 left-20 w-32 h-32 bg-secondary/10 rounded-full blur-2xl animate-float-delayed" />
+    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-cyan-50 via-teal-50 to-blue-50 dark:from-cyan-900 dark:via-teal-900 dark:to-blue-900" id="payment-methods">
+      {/* Modern Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center_bottom,_var(--tw-gradient-stops))] from-cyan-100/40 via-transparent to-teal-100/40"></div>
+      <div className="absolute top-20 right-20 w-40 h-40 bg-cyan-400/10 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-20 left-20 w-32 h-32 bg-teal-400/10 rounded-full blur-2xl animate-float-delayed" />
+      <div className="absolute top-1/3 left-1/3 w-48 h-48 bg-blue-400/5 rounded-full blur-xl animate-pulse"></div>
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Header */}

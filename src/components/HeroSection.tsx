@@ -105,9 +105,9 @@ const HeroSection = () => {
         ))}
       </div>
       
-      {/* Enhanced Overlay with gradient animation */}
-      <div className="absolute inset-0 bg-gradient-hero opacity-95" />
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-secondary/30 animate-pulse" />
+      {/* Modern Overlay with professional gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 via-blue-800/70 to-purple-900/80" />
+      <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/50 via-transparent to-blue-800/30" />
       
       {/* Enhanced Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">

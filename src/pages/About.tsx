@@ -147,8 +147,8 @@ const About = () => {
       
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="py-24 bg-gradient-to-br from-primary via-primary/95 to-secondary relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+        <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-600">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-blue-200/10" />
           <div className="absolute top-1/4 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float" />
           <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-white/5 rounded-full blur-3xl animate-float-delayed" />
           
