@@ -247,6 +247,21 @@ const ReadyProjects = () => {
       clients: "50+",
       updates: "تحديثات مجانية لسنة",
       support: "دعم فني شامل"
+    },
+    {
+      id: 13,
+      title: "الحل الكامل لإدارة المطاعم",
+      description: "نظام شامل لإدارة المطاعم مع نقاط البيع وإدارة الطلبات والمخزون وتطبيق توصيل",
+      detailedDescription: "نظام متكامل لإدارة المطاعم والمقاهي يشمل نظام نقاط البيع (POS)، إدارة الطلبات والقوائم، إدارة المخزون والموردين، نظام التوصيل، إدارة الموظفين، والتقارير المالية. مع تطبيق موبايل للعملاء ولوحة تحكم شاملة للإدارة.",
+      features: ["نظام POS", "إدارة الطلبات", "إدارة المخزون", "تطبيق توصيل", "تقارير مالية", "إدارة الموظفين"],
+      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Mobile App", "Real-time"],
+      price: "12,000 ريال",
+      duration: "4-5 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "إدارة المطاعم",
+      icon: Building2,
+      color: "orange",
+      gradient: "from-orange-500 to-red-600",
     }
   ];
 
@@ -265,7 +280,8 @@ const ReadyProjects = () => {
     { name: "إدارة الأعمال", count: projects.filter(p => p.category.includes("إدارة الأعمال")).length },
     { name: "منصات الخدمات", count: projects.filter(p => p.category.includes("منصات الخدمات")).length },
     { name: "الأنظمة العقارية", count: projects.filter(p => p.category.includes("العقارية")).length },
-    { name: "المواقع التعريفية", count: projects.filter(p => p.category.includes("التعريفية")).length }
+    { name: "المواقع التعريفية", count: projects.filter(p => p.category.includes("التعريفية")).length },
+    { name: "إدارة المطاعم", count: projects.filter(p => p.category.includes("المطاعم")).length }
   ];
 
   return (
@@ -492,11 +508,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">90+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">100+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">450+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">500+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
