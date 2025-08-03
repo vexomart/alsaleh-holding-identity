@@ -285,6 +285,21 @@ const ReadyProjects = () => {
       clients: "35+",
       updates: "تحديثات مجانية لسنة",
       support: "دعم فني شامل"
+    },
+    {
+      id: 15,
+      title: "منصة الحجوزات والسفر",
+      description: "منصة شاملة لحجز الرحلات والفنادق والسيارات مع نظام دفع آمن وإدارة الحجوزات",
+      detailedDescription: "منصة سفر متكاملة تجمع حجز الطيران، الفنادق، السيارات، والرحلات السياحية في مكان واحد. تشمل مقارنة الأسعار، نظام دفع آمن، إدارة الحجوزات، برنامج الولاء، وتطبيق موبايل للمسافرين مع خدمات ما بعد الحجز.",
+      features: ["حجز الطيران", "حجز الفنادق", "حجز السيارات", "الدفع الآمن", "إدارة الحجوزات", "تطبيق موبايل"],
+      technologies: ["React", "Node.js", "PostgreSQL", "Payment APIs", "Travel APIs", "Mobile App"],
+      price: "15,000 ريال",
+      duration: "6-7 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "السفر والسياحة",
+      icon: Globe,
+      color: "cyan",
+      gradient: "from-cyan-500 to-blue-600",
     }
   ];
 
@@ -305,7 +320,8 @@ const ReadyProjects = () => {
     { name: "الأنظمة العقارية", count: projects.filter(p => p.category.includes("العقارية")).length },
     { name: "المواقع التعريفية", count: projects.filter(p => p.category.includes("التعريفية")).length },
     { name: "إدارة المطاعم", count: projects.filter(p => p.category.includes("المطاعم")).length },
-    { name: "إدارة المشاريع", count: projects.filter(p => p.category.includes("إدارة المشاريع")).length }
+    { name: "إدارة المشاريع", count: projects.filter(p => p.category.includes("إدارة المشاريع")).length },
+    { name: "السفر والسياحة", count: projects.filter(p => p.category.includes("السفر")).length }
   ];
 
   return (
@@ -532,11 +548,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">110+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">120+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">550+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">600+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
