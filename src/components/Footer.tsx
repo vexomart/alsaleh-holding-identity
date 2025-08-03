@@ -138,10 +138,10 @@ const Footer = () => {
   ];
 
   const readyProjects = [
-    { name: "منصة إمكان التقنية", href: "#emkan-platform", icon: Code },
-    { name: "نظام إدارة المحتوى", href: "#cms-system", icon: FileText },
-    { name: "تطبيق التجارة الإلكترونية", href: "#ecommerce-app", icon: Building2 },
-    { name: "منصة التعلم الذكي", href: "#learning-platform", icon: GraduationCap }
+    { name: "جميع مشاريعنا الجاهزة", href: "/ready-projects", icon: Code },
+    { name: "نظام إدارة المحتوى", href: "/ready-projects", icon: FileText },
+    { name: "تطبيق التجارة الإلكترونية", href: "/ready-projects", icon: Building2 },
+    { name: "منصة التعلم الذكي", href: "/ready-projects", icon: GraduationCap }
   ];
 
   const companyUpdates = [
@@ -152,10 +152,10 @@ const Footer = () => {
   ];
 
   const digitalSolutions = [
-    { name: "الذكاء الاصطناعي", href: "#ai-solutions", icon: Zap },
-    { name: "إنترنت الأشياء", href: "#iot-solutions", icon: Lightbulb },
-    { name: "الحوسبة السحابية", href: "#cloud-solutions", icon: Globe },
-    { name: "الأمن السيبراني", href: "#security-solutions", icon: Shield }
+    { name: "الذكاء الاصطناعي", href: "/ai-solutions", icon: Zap },
+    { name: "إنترنت الأشياء", href: "/iot-solutions", icon: Lightbulb },
+    { name: "الحوسبة السحابية", href: "/cloud-solutions", icon: Globe },
+    { name: "الأمن السيبراني", href: "/security-solutions", icon: Shield }
   ];
 
   const contactInfo = [

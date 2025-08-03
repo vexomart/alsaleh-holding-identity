@@ -24,6 +24,11 @@ import PressReleases from "./pages/PressReleases";
 import UpcomingEvents from "./pages/UpcomingEvents";
 import AnnualReports from "./pages/AnnualReports";
 import FAQ from "./pages/FAQ";
+import ReadyProjects from "./pages/ReadyProjects";
+import AISolutions from "./pages/AISolutions";
+import IoTSolutions from "./pages/IoTSolutions";
+import CloudSolutions from "./pages/CloudSolutions";
+import SecuritySolutions from "./pages/SecuritySolutions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -64,6 +69,11 @@ const App = () => {
               <Route path="/upcoming-events" element={<UpcomingEvents />} />
               <Route path="/annual-reports" element={<AnnualReports />} />
               <Route path="/faq" element={<FAQ />} />
+              <Route path="/ready-projects" element={<ReadyProjects />} />
+              <Route path="/ai-solutions" element={<AISolutions />} />
+              <Route path="/iot-solutions" element={<IoTSolutions />} />
+              <Route path="/cloud-solutions" element={<CloudSolutions />} />
+              <Route path="/security-solutions" element={<SecuritySolutions />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
