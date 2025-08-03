@@ -494,6 +494,25 @@ const ReadyProjects = () => {
       clients: "8+",
       updates: "تحديثات مجانية لثلاث سنوات",
       support: "دعم فني وتعليمي متخصص 24/7"
+    },
+    {
+      id: 26,
+      title: "نظام دعم التذاكر وخدمة العملاء المطور",
+      description: "نظام متقدم لإدارة تذاكر الدعم وخدمة العملاء مع الذكاء الاصطناعي والأتمتة",
+      detailedDescription: "نظام دعم عملاء متطور يجمع بين إدارة التذاكر التقليدية والتقنيات الحديثة. يشمل نظام تذاكر ذكي، دردشة مباشرة، روبوت محادثة بالذكاء الاصطناعي، قاعدة معرفة تفاعلية، تصنيف تلقائي للمشاكل، تقارير الأداء، تطبيق موبايل للفريق، وتحليلات رضا العملاء المتقدمة.",
+      features: ["نظام التذاكر", "دردشة مباشرة", "روبوت ذكي", "قاعدة المعرفة", "تصنيف تلقائي", "تحليلات الرضا"],
+      technologies: ["React", "Node.js", "PostgreSQL", "AI Chatbot", "Real-time Chat", "Analytics"],
+      price: "4,500 ريال",
+      duration: "2-3 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "خدمة العملاء",
+      icon: MessageCircle,
+      color: "green",
+      gradient: "from-green-500 to-emerald-600",
+      rating: "4.8",
+      clients: "40+",
+      updates: "تحديثات مجانية لسنة",
+      support: "دعم فني ومجتمعي متخصص"
     }
   ];
 
@@ -525,7 +544,8 @@ const ReadyProjects = () => {
     { name: "الإعلانات المبوبة", count: projects.filter(p => p.category.includes("الإعلانات")).length },
     { name: "النقل البحري", count: projects.filter(p => p.category.includes("النقل البحري")).length },
     { name: "إدارة الفنادق", count: projects.filter(p => p.category.includes("إدارة الفنادق")).length },
-    { name: "التعليم الذكي", count: projects.filter(p => p.category.includes("التعليم الذكي")).length }
+    { name: "التعليم الذكي", count: projects.filter(p => p.category.includes("التعليم الذكي")).length },
+    { name: "خدمة العملاء", count: projects.filter(p => p.category.includes("خدمة العملاء")).length }
   ];
 
   return (
@@ -752,11 +772,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">220+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">230+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">1100+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">1150+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
