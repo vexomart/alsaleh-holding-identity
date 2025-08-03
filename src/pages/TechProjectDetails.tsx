@@ -33,59 +33,116 @@ import { Link, useParams } from "react-router-dom";
 const TechProjectDetails = () => {
   const { projectId } = useParams();
   
-  // Mock project data - in real app this would come from API
-  const project = {
-    id: 1,
-    title: "نظام المحاسبة والفواتير",
-    description: "نظام شامل لإدارة المحاسبة والفواتير مع تقارير مالية متطورة وإدارة العملاء والموردين بطريقة احترافية ومتطورة",
-    category: "web",
-    status: "قيد التطوير",
-    progress: 65,
-    technologies: ["React", "Node.js", "PostgreSQL", "TypeScript", "Docker", "AWS"],
-    startDate: "2025-07-23",
-    estimatedCompletion: "2025-08-15",
-    budget: "12,600 ريال",
-    client: "داخلي - مبادرة الشركة",
-    features: [
-      "إدارة الفواتير والعروض",
-      "تتبع المدفوعات والمستحقات",
-      "تقارير مالية تفصيلية",
-      "إدارة العملاء والموردين",
-      "نظام الإشعارات الذكي",
-      "تكامل مع البنوك السعودية",
-      "دعم الفواتير الإلكترونية",
-      "تقارير الضرائب المضافة",
-      "نظام الموافقات متعدد المستويات",
-      "تحليلات مالية متقدمة"
-    ],
-    milestones: [
-      { title: "تحليل المتطلبات", status: "completed", date: "2025-07-23", progress: 100 },
-      { title: "تصميم قاعدة البيانات", status: "completed", date: "2025-07-30", progress: 100 },
-      { title: "تطوير واجهات المستخدم", status: "in-progress", date: "2025-08-05", progress: 75 },
-      { title: "تطوير APIs الخلفية", status: "in-progress", date: "2025-08-08", progress: 60 },
-      { title: "التكامل والاختبار", status: "pending", date: "2025-08-12", progress: 0 },
-      { title: "النشر والتسليم", status: "pending", date: "2025-08-15", progress: 0 }
-    ],
-    objectives: [
-      "تطوير نظام محاسبة متكامل وحديث",
-      "تحسين كفاءة العمليات المالية",
-      "توفير تقارير مالية دقيقة وفورية",
-      "ضمان الامتثال للوائح المحاسبية السعودية",
-      "تقليل الأخطاء البشرية في العمليات المالية"
-    ],
-    challenges: [
-      "التكامل مع الأنظمة المحاسبية الموجودة",
-      "ضمان أمان البيانات المالية الحساسة",
-      "تطوير واجهة مستخدم بديهية ومرنة",
-      "تحقيق الامتثال للوائح الحكومية"
-    ],
-    images: [
-      "/placeholder.svg",
-      "/placeholder.svg",
-      "/placeholder.svg",
-      "/placeholder.svg"
-    ]
-  };
+  // Projects data
+  const projects = [
+    {
+      id: 1,
+      title: "نظام المحاسبة والفواتير",
+      description: "نظام شامل لإدارة المحاسبة والفواتير مع تقارير مالية متطورة وإدارة العملاء والموردين بطريقة احترافية ومتطورة",
+      category: "web",
+      status: "قيد التطوير",
+      progress: 65,
+      technologies: ["React", "Node.js", "PostgreSQL", "TypeScript", "Docker", "AWS"],
+      startDate: "2025-07-23",
+      estimatedCompletion: "2025-08-15",
+      budget: "12,600 ريال",
+      client: "داخلي - مبادرة الشركة",
+      features: [
+        "إدارة الفواتير والعروض",
+        "تتبع المدفوعات والمستحقات",
+        "تقارير مالية تفصيلية",
+        "إدارة العملاء والموردين",
+        "نظام الإشعارات الذكي",
+        "تكامل مع البنوك السعودية",
+        "دعم الفواتير الإلكترونية",
+        "تقارير الضرائب المضافة",
+        "نظام الموافقات متعدد المستويات",
+        "تحليلات مالية متقدمة"
+      ],
+      milestones: [
+        { title: "تحليل المتطلبات", status: "completed", date: "2025-07-23", progress: 100 },
+        { title: "تصميم قاعدة البيانات", status: "completed", date: "2025-07-30", progress: 100 },
+        { title: "تطوير واجهات المستخدم", status: "in-progress", date: "2025-08-05", progress: 75 },
+        { title: "تطوير APIs الخلفية", status: "in-progress", date: "2025-08-08", progress: 60 },
+        { title: "التكامل والاختبار", status: "pending", date: "2025-08-12", progress: 0 },
+        { title: "النشر والتسليم", status: "pending", date: "2025-08-15", progress: 0 }
+      ],
+      objectives: [
+        "تطوير نظام محاسبة متكامل وحديث",
+        "تحسين كفاءة العمليات المالية",
+        "توفير تقارير مالية دقيقة وفورية",
+        "ضمان الامتثال للوائح المحاسبية السعودية",
+        "تقليل الأخطاء البشرية في العمليات المالية"
+      ],
+      challenges: [
+        "التكامل مع الأنظمة المحاسبية الموجودة",
+        "ضمان أمان البيانات المالية الحساسة",
+        "تطوير واجهة مستخدم بديهية ومرنة",
+        "تحقيق الامتثال للوائح الحكومية"
+      ],
+      images: [
+        "/placeholder.svg",
+        "/placeholder.svg",
+        "/placeholder.svg",
+        "/placeholder.svg"
+      ]
+    },
+    {
+      id: 2,
+      title: "مساعد الذكاء الاصطناعي لخدمة العملاء",
+      description: "برنامج ذكاء اصطناعي متطور مصمم ومطور لخدمة العملاء على الموقع الرسمي للشركة مع إجابات فورية وذكية ومعالجة طبيعية للغة",
+      category: "ai",
+      status: "مكتمل",
+      progress: 100,
+      technologies: ["Python", "TensorFlow", "OpenAI API", "Node.js", "React", "WebSocket", "NLP", "Machine Learning"],
+      startDate: "2024-10-01",
+      estimatedCompletion: "2024-12-15",
+      budget: "7,000 ريال",
+      client: "داخلي - مبادرة الشركة",
+      features: [
+        "إجابات فورية على استفسارات العملاء",
+        "دعم اللغة العربية والإنجليزية",
+        "تكامل مع قاعدة بيانات الشركة",
+        "تعلم مستمر من التفاعلات",
+        "واجهة دردشة تفاعلية وذكية",
+        "تحليلات لسلوك العملاء",
+        "إدارة التذاكر الآلية",
+        "تصعيد للموظفين عند الحاجة",
+        "دعم ملفات متعددة الوسائط",
+        "تتبع رضا العملاء"
+      ],
+      milestones: [
+        { title: "تحليل متطلبات الذكاء الاصطناعي", status: "completed", date: "2024-10-01", progress: 100 },
+        { title: "تطوير نموذج المعالجة الطبيعية", status: "completed", date: "2024-10-15", progress: 100 },
+        { title: "تطوير واجهة الدردشة", status: "completed", date: "2024-11-01", progress: 100 },
+        { title: "التكامل مع قاعدة البيانات", status: "completed", date: "2024-11-15", progress: 100 },
+        { title: "الاختبار والتحسين", status: "completed", date: "2024-12-01", progress: 100 },
+        { title: "النشر والتفعيل", status: "completed", date: "2024-12-15", progress: 100 }
+      ],
+      objectives: [
+        "تطوير مساعد ذكي لخدمة العملاء على مدار الساعة",
+        "تحسين تجربة العملاء وتقليل أوقات الانتظار",
+        "توفير إجابات دقيقة ومفيدة للاستفسارات الشائعة",
+        "تقليل العبء على فريق خدمة العملاء",
+        "جمع وتحليل بيانات تفاعل العملاء"
+      ],
+      challenges: [
+        "فهم اللغة العربية والسياق المحلي",
+        "تدريب النموذج على بيانات الشركة الخاصة",
+        "ضمان الاستجابة السريعة والدقيقة",
+        "التكامل مع الأنظمة الموجودة"
+      ],
+      images: [
+        "/placeholder.svg",
+        "/placeholder.svg",
+        "/placeholder.svg",
+        "/placeholder.svg"
+      ]
+    }
+  ];
+
+  // Find project by ID
+  const project = projects.find(p => p.id === parseInt(projectId || '1')) || projects[0];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -309,8 +366,12 @@ const TechProjectDetails = () => {
                 </div>
                 <div>
                   <div className="text-sm text-slate-400 mb-1">الفئة</div>
-                  <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
-                    تطبيقات الويب
+                  <Badge variant="outline" className={`${
+                    project.category === 'ai' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
+                    project.category === 'web' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
+                    'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                  }`}>
+                    {project.category === 'ai' ? 'الذكاء الاصطناعي' : 'تطبيقات الويب'}
                   </Badge>
                 </div>
                 <Separator className="bg-slate-700" />

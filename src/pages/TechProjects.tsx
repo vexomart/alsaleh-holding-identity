@@ -42,13 +42,38 @@ const TechProjects = () => {
       technologies: ["React", "Node.js", "PostgreSQL", "TypeScript"],
       startDate: "2025-07-23",
       estimatedCompletion: "2025-08-15",
-      team: ["أحمد محمد", "سارة أحمد", "محمد علي"],
+      budget: "12,600 ريال",
+      client: "داخلي - مبادرة الشركة",
       features: [
         "إدارة الفواتير والعروض",
         "تتبع المدفوعات والمستحقات",
         "تقارير مالية تفصيلية",
         "إدارة العملاء والموردين",
         "نظام الإشعارات الذكي"
+      ],
+      image: "/placeholder.svg"
+    },
+    {
+      id: 2,
+      title: "مساعد الذكاء الاصطناعي لخدمة العملاء",
+      description: "برنامج ذكاء اصطناعي متطور مصمم لخدمة العملاء على الموقع الرسمي للشركة مع إجابات فورية وذكية",
+      category: "ai",
+      status: "مكتمل",
+      progress: 100,
+      technologies: ["Python", "TensorFlow", "OpenAI API", "Node.js", "React", "WebSocket"],
+      startDate: "2024-10-01",
+      estimatedCompletion: "2024-12-15",
+      budget: "7,000 ريال",
+      client: "داخلي - مبادرة الشركة",
+      features: [
+        "إجابات فورية على استفسارات العملاء",
+        "دعم اللغة العربية والإنجليزية",
+        "تكامل مع قاعدة بيانات الشركة",
+        "تعلم مستمر من التفاعلات",
+        "واجهة دردشة تفاعلية",
+        "تحليلات لسلوك العملاء",
+        "إدارة التذاكر الآلية",
+        "تصعيد للموظفين عند الحاجة"
       ],
       image: "/placeholder.svg"
     }
@@ -268,14 +293,6 @@ const TechProjects = () => {
                             {tech}
                           </Badge>
                         ))}
-                      </div>
-                    </div>
-
-                    {/* Team */}
-                    <div className="mb-4">
-                      <div className="flex items-center gap-2 text-sm text-slate-400">
-                        <Users className="w-4 h-4" />
-                        <span>فريق العمل: {project.team.length} أعضاء</span>
                       </div>
                     </div>
 
