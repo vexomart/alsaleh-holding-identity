@@ -300,6 +300,29 @@ const ReadyProjects = () => {
       icon: Globe,
       color: "cyan",
       gradient: "from-cyan-500 to-blue-600",
+      rating: "4.8",
+      clients: "25+",
+      updates: "تحديثات مجانية لسنة ونصف",
+      support: "دعم فني وتجاري متخصص"
+    },
+    {
+      id: 16,
+      title: "منصة التأمين الرقمية",
+      description: "منصة متكاملة لإدارة التأمين الرقمي مع إصدار وإدارة البوالص ومعالجة المطالبات",
+      detailedDescription: "منصة تأمين رقمية شاملة تغطي جميع أنواع التأمين (السيارات، الصحي، العقاري، التجاري). تشمل إصدار البوالص الفوري، معالجة المطالبات الذكية، تقييم المخاطر بالذكاء الاصطناعي، ونظام إدارة العملاء المتقدم مع تكامل مع الجهات الحكومية والطبية.",
+      features: ["إصدار البوالص", "معالجة المطالبات", "تقييم المخاطر", "إدارة العملاء", "التكامل الحكومي", "الذكاء الاصطناعي"],
+      technologies: ["React", "Node.js", "PostgreSQL", "AI/ML", "Blockchain", "API Integration"],
+      price: "45,000 ريال",
+      duration: "10-12 أسبوع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "التأمين الرقمي",
+      icon: Shield,
+      color: "emerald",
+      gradient: "from-emerald-500 to-green-600",
+      rating: "4.9",
+      clients: "15+",
+      updates: "تحديثات مجانية لسنتين",
+      support: "دعم فني ومالي متخصص 24/7"
     }
   ];
 
@@ -321,7 +344,8 @@ const ReadyProjects = () => {
     { name: "المواقع التعريفية", count: projects.filter(p => p.category.includes("التعريفية")).length },
     { name: "إدارة المطاعم", count: projects.filter(p => p.category.includes("المطاعم")).length },
     { name: "إدارة المشاريع", count: projects.filter(p => p.category.includes("إدارة المشاريع")).length },
-    { name: "السفر والسياحة", count: projects.filter(p => p.category.includes("السفر")).length }
+    { name: "السفر والسياحة", count: projects.filter(p => p.category.includes("السفر")).length },
+    { name: "التأمين الرقمي", count: projects.filter(p => p.category.includes("التأمين")).length }
   ];
 
   return (
@@ -548,11 +572,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">120+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">130+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">600+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">650+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
