@@ -1,1 +1,11 @@
 project_id = "ibfcgweykqkzdodrfmci"
+
+# Make edge functions public (no JWT required)
+[functions.contact-form]
+verify_jwt = false
+
+[functions.newsletter-subscribe]
+verify_jwt = false
+
+[functions.job-application]
+verify_jwt = false
