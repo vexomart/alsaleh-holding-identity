@@ -132,7 +132,7 @@ const HeroSection = () => {
       </div>
       
       {/* Enhanced Content */}
-      <div className="relative z-10 container mx-auto px-6 text-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-7xl">
         
         {/* Top Badge - Simplified */}
         <div className="mb-12 animate-fade-in">
