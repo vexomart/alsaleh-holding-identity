@@ -1,7 +1,7 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
-import VisionSection from "@/components/VisionSection";
+
 import StatsSection from "@/components/StatsSection";
 import CurrentOffersSection from "@/components/CurrentOffersSection";
 import ServicesSection from "@/components/ServicesSection";
@@ -41,16 +41,6 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Vision Section */}
-          <section id="vision" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-emerald-50/80 via-teal-50/60 to-cyan-50/80 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/20"></div>
-            <div className="absolute top-5 left-5 sm:top-20 sm:left-20 w-32 h-32 sm:w-80 sm:h-80 bg-gradient-to-br from-emerald-200/40 to-teal-200/40 rounded-full blur-xl sm:blur-3xl animate-float"></div>
-            <div className="absolute bottom-5 right-5 sm:bottom-20 sm:right-20 w-24 h-24 sm:w-56 sm:h-56 bg-gradient-to-br from-cyan-200/40 to-blue-200/40 rounded-full blur-lg sm:blur-2xl animate-float-delayed"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 sm:w-96 sm:h-96 bg-gradient-to-r from-teal-100/20 to-emerald-100/20 rounded-full blur-2xl sm:blur-3xl"></div>
-            <div className="relative z-10">
-              <VisionSection />
-            </div>
-          </section>
 
           {/* Stats Section */}
           <section id="stats" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
