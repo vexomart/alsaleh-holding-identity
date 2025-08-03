@@ -380,6 +380,25 @@ const ReadyProjects = () => {
       clients: "20+",
       updates: "تحديثات مجانية لسنتين",
       support: "دعم فني وتقني متخصص 24/7"
+    },
+    {
+      id: 20,
+      title: "نظام بوابة دفع متطور",
+      description: "بوابة دفع متقدمة وآمنة مع دعم طرق الدفع المتعددة ونظام مكافحة الاحتيال",
+      detailedDescription: "نظام بوابة دفع إلكتروني متطور يدعم جميع طرق الدفع المحلية والعالمية مع نظام أمان متقدم ومكافحة الاحتيال بالذكاء الاصطناعي. يشمل معالجة المدفوعات الفورية، إدارة العملات المتعددة، تحليلات المعاملات، وامتثال كامل للمعايير الدولية PCI DSS.",
+      features: ["طرق دفع متعددة", "مكافحة الاحتيال", "العملات المتعددة", "الأمان المتقدم", "التحليلات", "الامتثال الدولي"],
+      technologies: ["React", "Node.js", "PostgreSQL", "Blockchain", "AI/ML", "Encryption"],
+      price: "75,000 ريال",
+      duration: "14-16 أسبوع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "بوابات الدفع",
+      icon: DollarSign,
+      color: "yellow",
+      gradient: "from-yellow-500 to-orange-600",
+      rating: "4.9",
+      clients: "8+",
+      updates: "تحديثات مجانية لثلاث سنوات",
+      support: "دعم فني ومالي متخصص 24/7"
     }
   ];
 
@@ -405,7 +424,8 @@ const ReadyProjects = () => {
     { name: "التأمين الرقمي", count: projects.filter(p => p.category.includes("التأمين")).length },
     { name: "الخدمات اللوجستية", count: projects.filter(p => p.category.includes("اللوجستية")).length },
     { name: "الرياضة واللياقة", count: projects.filter(p => p.category.includes("الرياضة")).length },
-    { name: "الأحداث والمؤتمرات", count: projects.filter(p => p.category.includes("الأحداث")).length }
+    { name: "الأحداث والمؤتمرات", count: projects.filter(p => p.category.includes("الأحداث")).length },
+    { name: "بوابات الدفع", count: projects.filter(p => p.category.includes("بوابات الدفع")).length }
   ];
 
   return (
@@ -632,11 +652,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">160+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">170+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">800+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">850+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
