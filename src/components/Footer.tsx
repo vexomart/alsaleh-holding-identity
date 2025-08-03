@@ -251,7 +251,8 @@ const Footer = () => {
     { name: "الذكاء الاصطناعي", href: "/ai-solutions", icon: Zap },
     { name: "إنترنت الأشياء", href: "/iot-solutions", icon: Lightbulb },
     { name: "الحوسبة السحابية", href: "/cloud-solutions", icon: Globe },
-    { name: "الأمن السيبراني", href: "/security-solutions", icon: Shield }
+    { name: "الأمن السيبراني", href: "/security-solutions", icon: Shield },
+    { name: "التقنيات والأنظمة الأساسية", href: "/technologies", icon: Code }
   ];
 
   const contactInfo = [
