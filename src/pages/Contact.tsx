@@ -17,6 +17,7 @@ import {
 
 const Contact = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,7 +27,7 @@ const Contact = () => {
     category: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Form validation
@@ -39,21 +40,60 @@ const Contact = () => {
       return;
     }
 
-    // Simulate form submission
-    toast({
-      title: "تم إرسال الرسالة بنجاح",
-      description: "سيتم التواصل معك خلال 24 ساعة"
-    });
+    if (!formData.email.includes('@')) {
+      toast({
+        title: "خطأ في البريد الإلكتروني",
+        description: "يرجى إدخال بريد إلكتروني صحيح",
+        variant: "destructive"
+      });
+      return;
+    }
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-      category: ""
-    });
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(
+        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/contact-form",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "تم إرسال الرسالة بنجاح",
+          description: "سنتواصل معك خلال 24 ساعة",
+        });
+
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+          category: ""
+        });
+      } else {
+        throw new Error(result.error || "حدث خطأ أثناء إرسال الرسالة");
+      }
+    } catch (error) {
+      console.error("Contact form error:", error);
+      toast({
+        title: "خطأ في إرسال الرسالة",
+        description: error instanceof Error ? error.message : "حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactMethods = [
@@ -264,10 +304,11 @@ const Contact = () => {
                     <Button 
                       type="submit"
                       size="lg" 
+                      disabled={isSubmitting}
                       className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 px-8 py-6 text-lg font-bold shadow-glow transition-all duration-300 hover:scale-105 group"
                     >
                       <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-                      إرسال الرسالة
+                      {isSubmitting ? "جاري الإرسال..." : "إرسال الرسالة"}
                     </Button>
                   </form>
                 </CardContent>
