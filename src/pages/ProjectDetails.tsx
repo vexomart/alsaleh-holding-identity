@@ -303,6 +303,47 @@ const ProjectDetails = () => {
         "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
       ]
+    },
+    {
+      id: 9,
+      title: "نظام تأجير السيارات الذكي",
+      description: "منصة شاملة لإدارة تأجير السيارات مع نظام حجز متقدم وإدارة الأسطول والدفع الإلكتروني",
+      detailedDescription: "نظام متكامل لإدارة شركات تأجير السيارات يشمل إدارة الأسطول، نظام الحجز الذكي، تتبع GPS للمركبات، إدارة العملاء والسائقين، والدفع الإلكتروني. مع واجهة ويب للإدارة وتطبيق موبايل للعملاء ونظام تقارير شامل.",
+      features: ["إدارة الأسطول", "نظام الحجز الذكي", "تتبع GPS", "الدفع الإلكتروني", "إدارة العملاء", "تطبيق موبايل"],
+      technologies: ["React", "Node.js", "MongoDB", "GPS Tracking", "Payment Gateway", "Mobile App"],
+      price: "35,000 ريال",
+      duration: "6-8 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "إدارة الأعمال",
+      icon: Building2,
+      color: "blue",
+      gradient: "from-blue-500 to-indigo-600",
+      rating: "4.7",
+      clients: "20+",
+      updates: "تحديثات مجانية لسنة ونصف",
+      support: "دعم فني متخصص 24/7",
+      fullFeatures: [
+        "إدارة شاملة لأسطول السيارات",
+        "نظام حجز ذكي عبر الإنترنت",
+        "تتبع GPS مباشر للمركبات",
+        "إدارة العملاء والسائقين",
+        "نظام دفع إلكتروني آمن",
+        "تطبيق موبايل للعملاء",
+        "إدارة العقود والاتفاقيات",
+        "نظام التأمين والضمانات",
+        "إدارة الصيانة والخدمة",
+        "تقارير مالية وتشغيلية",
+        "نظام تقييم السيارات",
+        "إدارة الفروع المتعددة",
+        "نظام إشعارات تلقائي",
+        "تكامل مع أنظمة المحاسبة",
+        "لوحة تحكم تحليلية متقدمة"
+      ],
+      screenshots: [
+        "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1502877338535-766e1452684a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+      ]
     }
     // يمكن إضافة المزيد من المشاريع هنا
   ];

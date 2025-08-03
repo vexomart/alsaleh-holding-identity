@@ -171,6 +171,25 @@ const ReadyProjects = () => {
       clients: "12+",
       updates: "تحديثات مجانية لسنتين",
       support: "دعم طبي متخصص 24/7"
+    },
+    {
+      id: 9,
+      title: "نظام تأجير السيارات الذكي",
+      description: "منصة شاملة لإدارة تأجير السيارات مع نظام حجز متقدم وإدارة الأسطول والدفع الإلكتروني",
+      detailedDescription: "نظام متكامل لإدارة شركات تأجير السيارات يشمل إدارة الأسطول، نظام الحجز الذكي، تتبع GPS للمركبات، إدارة العملاء والسائقين، والدفع الإلكتروني. مع واجهة ويب للإدارة وتطبيق موبايل للعملاء ونظام تقارير شامل.",
+      features: ["إدارة الأسطول", "نظام الحجز الذكي", "تتبع GPS", "الدفع الإلكتروني", "إدارة العملاء", "تطبيق موبايل"],
+      technologies: ["React", "Node.js", "MongoDB", "GPS Tracking", "Payment Gateway", "Mobile App"],
+      price: "35,000 ريال",
+      duration: "6-8 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "إدارة الأعمال",
+      icon: Building2,
+      color: "blue",
+      gradient: "from-blue-500 to-indigo-600",
+      rating: "4.7",
+      clients: "20+",
+      updates: "تحديثات مجانية لسنة ونصف",
+      support: "دعم فني متخصص 24/7"
     }
   ];
 
@@ -185,7 +204,8 @@ const ReadyProjects = () => {
     { name: "منصات إدارية", count: projects.filter(p => p.category.includes("إدارية")).length },
     { name: "التجارة الإلكترونية", count: projects.filter(p => p.category.includes("التجارة")).length },
     { name: "التعليم التقني", count: projects.filter(p => p.category.includes("التعليم")).length },
-    { name: "الأنظمة الطبية", count: projects.filter(p => p.category.includes("الطبية")).length }
+    { name: "الأنظمة الطبية", count: projects.filter(p => p.category.includes("الطبية")).length },
+    { name: "إدارة الأعمال", count: projects.filter(p => p.category.includes("إدارة الأعمال")).length }
   ];
 
   return (
@@ -412,11 +432,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">60+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">200+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">250+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
