@@ -190,6 +190,25 @@ const ReadyProjects = () => {
       clients: "20+",
       updates: "تحديثات مجانية لسنة ونصف",
       support: "دعم فني متخصص 24/7"
+    },
+    {
+      id: 10,
+      title: "منصة الخدمات المصغرة المتكاملة",
+      description: "منصة شاملة للخدمات المصغرة مثل خمسات وفايفر مع نظام مدفوعات آمن وإدارة المشاريع",
+      detailedDescription: "منصة متكاملة تربط مقدمي الخدمات المصغرة بالعملاء، تشمل نظام عرض الخدمات، إدارة الطلبات، المدفوعات الآمنة، تقييم الخدمات، ونظام رسائل متقدم. مع لوحات تحكم منفصلة للبائعين والمشترين والإدارة.",
+      features: ["عرض الخدمات", "نظام الطلبات", "المدفوعات الآمنة", "تقييم الخدمات", "نظام الرسائل", "لوحة تحكم شاملة"],
+      technologies: ["React", "Laravel", "MySQL", "Payment Gateway", "Real-time Chat", "File Upload"],
+      price: "15,000 ريال",
+      duration: "5-7 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "منصات الخدمات",
+      icon: Users,
+      color: "green",
+      gradient: "from-green-500 to-emerald-600",
+      rating: "4.8",
+      clients: "35+",
+      updates: "تحديثات مجانية لسنة",
+      support: "دعم فني وتجاري متخصص"
     }
   ];
 
@@ -205,7 +224,8 @@ const ReadyProjects = () => {
     { name: "التجارة الإلكترونية", count: projects.filter(p => p.category.includes("التجارة")).length },
     { name: "التعليم التقني", count: projects.filter(p => p.category.includes("التعليم")).length },
     { name: "الأنظمة الطبية", count: projects.filter(p => p.category.includes("الطبية")).length },
-    { name: "إدارة الأعمال", count: projects.filter(p => p.category.includes("إدارة الأعمال")).length }
+    { name: "إدارة الأعمال", count: projects.filter(p => p.category.includes("إدارة الأعمال")).length },
+    { name: "منصات الخدمات", count: projects.filter(p => p.category.includes("منصات الخدمات")).length }
   ];
 
   return (
@@ -432,11 +452,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">60+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">70+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">250+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">300+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
