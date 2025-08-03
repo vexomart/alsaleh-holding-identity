@@ -16,6 +16,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 const ContentCreationSection = () => {
+  const whatsappNumber = "966555812567";
+  
+  const getWhatsAppLink = (serviceName: string) => {
+    const message = `السلام عليكم، أود الاستفسار عن خدمة ${serviceName} وطلب عرض سعر مخصص.`;
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  };
+
   const contentServices = [
     {
       title: "كتابة السيناريو",
@@ -24,7 +31,8 @@ const ContentCreationSection = () => {
       features: ["سيناريو أفلام", "نصوص برامج", "محتوى يوتيوب", "قصص تفاعلية"],
       color: "from-purple-500 to-indigo-600",
       bgColor: "from-purple-500/10 to-indigo-500/10",
-      iconColor: "text-purple-400"
+      iconColor: "text-purple-400",
+      whatsappMessage: "أود طلب خدمة كتابة السيناريو للمشروع الخاص بي"
     },
     {
       title: "كتابة الإعلانات الممولة",
@@ -33,7 +41,8 @@ const ContentCreationSection = () => {
       features: ["إعلانات فيسبوك", "إعلانات جوجل", "حملات مدفوعة", "إعلانات تلفزيونية"],
       color: "from-orange-500 to-red-600",
       bgColor: "from-orange-500/10 to-red-500/10",
-      iconColor: "text-orange-400"
+      iconColor: "text-orange-400",
+      whatsappMessage: "أحتاج إلى كتابة إعلانات ممولة احترافية لحملتي التسويقية"
     },
     {
       title: "كتابة المحتوى الرسمي",
@@ -42,7 +51,8 @@ const ContentCreationSection = () => {
       features: ["تقارير رسمية", "مذكرات", "خطابات", "وثائق تنفيذية"],
       color: "from-slate-600 to-slate-800",
       bgColor: "from-slate-500/10 to-slate-700/10",
-      iconColor: "text-slate-400"
+      iconColor: "text-slate-400",
+      whatsappMessage: "أود طلب خدمة كتابة المحتوى الرسمي للمؤسسة"
     },
     {
       title: "كتابة المحتوى التسويقي",
@@ -51,7 +61,8 @@ const ContentCreationSection = () => {
       features: ["محتوى مواقع", "بروشورات", "كتالوجات", "عروض تقديمية"],
       color: "from-emerald-500 to-teal-600",
       bgColor: "from-emerald-500/10 to-teal-500/10",
-      iconColor: "text-emerald-400"
+      iconColor: "text-emerald-400",
+      whatsappMessage: "أحتاج إلى كتابة محتوى تسويقي مميز لعلامتي التجارية"
     },
     {
       title: "كتابة المحتوى التفاعلي",
@@ -60,7 +71,8 @@ const ContentCreationSection = () => {
       features: ["منشورات تفاعلية", "استطلاعات", "مسابقات", "تحديات"],
       color: "from-pink-500 to-rose-600",
       bgColor: "from-pink-500/10 to-rose-500/10",
-      iconColor: "text-pink-400"
+      iconColor: "text-pink-400",
+      whatsappMessage: "أود طلب خدمة كتابة المحتوى التفاعلي لزيادة التفاعل مع جمهوري"
     },
     {
       title: "كتابة محتوى المقالات",
@@ -69,7 +81,8 @@ const ContentCreationSection = () => {
       features: ["مقالات تقنية", "مقالات إعلامية", "محتوى SEO", "مدونات"],
       color: "from-blue-500 to-cyan-600",
       bgColor: "from-blue-500/10 to-cyan-500/10",
-      iconColor: "text-blue-400"
+      iconColor: "text-blue-400",
+      whatsappMessage: "أحتاج إلى كتابة مقالات احترافية ومتخصصة"
     }
   ];
 
@@ -169,14 +182,20 @@ const ContentCreationSection = () => {
                   </div>
 
                   {/* CTA */}
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="w-full border-white/20 text-white hover:bg-white/10 hover:border-violet-400 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-violet-500 group-hover:to-purple-500 group-hover:border-transparent"
+                  <a 
+                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(service.whatsappMessage)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <span>اطلب الخدمة</span>
-                    <ChevronRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="w-full border-white/20 text-white hover:bg-white/10 hover:border-violet-400 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-violet-500 group-hover:to-purple-500 group-hover:border-transparent"
+                    >
+                      <span>اطلب الخدمة</span>
+                      <ChevronRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                  </a>
                 </div>
               </div>
             );
@@ -238,21 +257,33 @@ const ContentCreationSection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white border-0 px-8 py-3 text-lg font-medium"
+              <a 
+                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("السلام عليكم، أود حجز استشارة مجانية حول خدمات صناعة المحتوى")}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                احجز استشارة مجانية
-                <ChevronRight className="w-5 h-5 mr-2" />
-              </Button>
+                <Button 
+                  size="lg"
+                  className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white border-0 px-8 py-3 text-lg font-medium"
+                >
+                  احجز استشارة مجانية
+                  <ChevronRight className="w-5 h-5 mr-2" />
+                </Button>
+              </a>
               
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-white/20 text-white hover:bg-white/10 px-8 py-3 text-lg"
+              <a 
+                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("أود الاطلاع على أعمالكم السابقة في مجال صناعة المحتوى")}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                اطلع على أعمالنا
-              </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="border-white/20 text-white hover:bg-white/10 px-8 py-3 text-lg"
+                >
+                  اطلع على أعمالنا
+                </Button>
+              </a>
             </div>
           </div>
         </div>
