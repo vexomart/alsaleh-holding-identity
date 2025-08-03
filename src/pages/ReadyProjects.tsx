@@ -475,6 +475,25 @@ const ReadyProjects = () => {
       clients: "15+",
       updates: "تحديثات مجانية لسنتين",
       support: "دعم فني وفندقي متخصص 24/7"
+    },
+    {
+      id: 25,
+      title: "نظام إدارة مدرسة ذكية",
+      description: "نظام شامل لإدارة المدارس الذكية مع منصة تعليمية ونظام إدارة متكامل",
+      detailedDescription: "نظام إدارة مدرسة ذكية متطور يجمع بين الإدارة التعليمية والتكنولوجيا الحديثة. يشمل نظام إدارة الطلاب والمعلمين، منصة التعلم الإلكتروني، إدارة المناهج والدرجات، نظام الحضور الذكي، التواصل مع أولياء الأمور، إدارة الموارد والمرافق، تطبيقات موبايل، وتحليلات تعليمية متقدمة بالذكاء الاصطناعي.",
+      features: ["إدارة الطلاب", "منصة تعليمية", "نظام الدرجات", "الحضور الذكي", "تواصل الأهالي", "تحليلات AI"],
+      technologies: ["React", "Node.js", "PostgreSQL", "AI/ML", "Mobile Apps", "IoT Integration"],
+      price: "95,000 ريال",
+      duration: "16-20 أسبوع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "التعليم الذكي",
+      icon: GraduationCap,
+      color: "indigo",
+      gradient: "from-indigo-500 to-purple-600",
+      rating: "4.9",
+      clients: "8+",
+      updates: "تحديثات مجانية لثلاث سنوات",
+      support: "دعم فني وتعليمي متخصص 24/7"
     }
   ];
 
@@ -505,7 +524,8 @@ const ReadyProjects = () => {
     { name: "الجمال والعناية", count: projects.filter(p => p.category.includes("الجمال")).length },
     { name: "الإعلانات المبوبة", count: projects.filter(p => p.category.includes("الإعلانات")).length },
     { name: "النقل البحري", count: projects.filter(p => p.category.includes("النقل البحري")).length },
-    { name: "إدارة الفنادق", count: projects.filter(p => p.category.includes("إدارة الفنادق")).length }
+    { name: "إدارة الفنادق", count: projects.filter(p => p.category.includes("إدارة الفنادق")).length },
+    { name: "التعليم الذكي", count: projects.filter(p => p.category.includes("التعليم الذكي")).length }
   ];
 
   return (
@@ -732,11 +752,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">210+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">220+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">1050+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">1100+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
