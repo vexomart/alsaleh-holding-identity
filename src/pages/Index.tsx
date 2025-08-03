@@ -3,7 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 
 import StatsSection from "@/components/StatsSection";
-import CurrentOffersSection from "@/components/CurrentOffersSection";
+
 import ServicesSection from "@/components/ServicesSection";
 import ContentCreationSection from "@/components/ContentCreationSection";
 import DesignSolutionsSection from "@/components/DesignSolutionsSection";
@@ -53,16 +53,6 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Current Offers Section */}
-          <section id="offers" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-indigo-50/80 via-blue-50/60 to-cyan-50/80 dark:from-indigo-950/20 dark:via-blue-950/10 dark:to-cyan-950/20"></div>
-            <div className="absolute inset-0 bg-[conic-gradient(from_45deg_at_50%_50%,_var(--tw-gradient-stops))] from-indigo-100/15 via-blue-100/20 via-cyan-100/15 to-indigo-100/15"></div>
-            <div className="absolute top-5 left-5 sm:top-20 sm:left-20 w-32 h-32 sm:w-88 sm:h-88 bg-gradient-to-br from-indigo-200/40 to-blue-200/40 rounded-full blur-xl sm:blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-5 right-5 sm:bottom-20 sm:right-20 w-24 h-24 sm:w-72 sm:h-72 bg-gradient-to-br from-cyan-200/40 to-indigo-200/40 rounded-full blur-lg sm:blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-            <div className="relative z-10">
-              <CurrentOffersSection />
-            </div>
-          </section>
 
           {/* Services Section */}
           <section id="services" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">

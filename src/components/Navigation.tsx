@@ -39,7 +39,7 @@ const Navigation = () => {
   }, []);
 
   const services = [
-    { name: "العروض الحالية", href: "#offers", icon: Gift },
+    { name: "العروض الحالية", href: "/current-offers", icon: Gift },
     { name: "خدماتنا الاحترافية", href: "#services", icon: Settings },
     { name: "صناعة المحتوى", href: "#content-creation", icon: PenTool },
     { name: "حلول التصميم", href: "#design-solutions", icon: Palette },
