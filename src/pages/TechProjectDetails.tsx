@@ -44,7 +44,7 @@ const TechProjectDetails = () => {
     technologies: ["React", "Node.js", "PostgreSQL", "TypeScript", "Docker", "AWS"],
     startDate: "2025-07-23",
     estimatedCompletion: "2025-08-15",
-    budget: "250,000 ريال",
+    budget: "12,600 ريال",
     client: "داخلي - مبادرة الشركة",
     features: [
       "إدارة الفواتير والعروض",
