@@ -29,7 +29,7 @@ const AboutSection = () => {
           
           <Card className="shadow-elegant border-0 bg-gradient-secondary text-center card-animated animate-slide-in-right">
             <CardContent className="p-6 sm:p-8">
-              <div className="text-4xl sm:text-5xl font-bold text-secondary-foreground mb-3 sm:mb-4 animate-bounce-gentle">12,849</div>
+              <div className="text-4xl sm:text-5xl font-bold text-secondary-foreground mb-3 sm:mb-4 animate-bounce-gentle">9,512</div>
               <h3 className="text-lg sm:text-xl font-semibold text-secondary-foreground">عميل راضٍ</h3>
               <p className="text-secondary-foreground/80 mt-2 text-sm sm:text-base">عملاء يثقون في خدماتنا المتميزة</p>
             </CardContent>

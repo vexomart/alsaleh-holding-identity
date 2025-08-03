@@ -19,7 +19,7 @@ const StatsSection = () => {
     },
     {
       icon: Users,
-      number: 12849,
+      number: 9512,
       label: "عميل راضي",
       description: "ثقة عملائنا هي أولويتنا",
       color: "from-green-600 to-teal-600"
@@ -53,7 +53,7 @@ const StatsSection = () => {
         
         setCounters({
           projects: Math.floor(14883 * progress),
-          clients: Math.floor(12849 * progress),
+          clients: Math.floor(9512 * progress),
           countries: Math.floor(45 * progress),
           years: Math.floor(15 * progress)
         });
@@ -62,7 +62,7 @@ const StatsSection = () => {
           clearInterval(interval);
           setCounters({
             projects: 14883,
-            clients: 12849,
+            clients: 9512,
             countries: 45,
             years: 15
           });
