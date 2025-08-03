@@ -25,6 +25,7 @@ import UpcomingEvents from "./pages/UpcomingEvents";
 import AnnualReports from "./pages/AnnualReports";
 import FAQ from "./pages/FAQ";
 import ReadyProjects from "./pages/ReadyProjects";
+import ProjectDetails from "./pages/ProjectDetails";
 import AISolutions from "./pages/AISolutions";
 import IoTSolutions from "./pages/IoTSolutions";
 import CloudSolutions from "./pages/CloudSolutions";
@@ -79,6 +80,7 @@ const App = () => {
               <Route path="/annual-reports" element={<AnnualReports />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/ready-projects" element={<ReadyProjects />} />
+              <Route path="/project/:projectId" element={<ProjectDetails />} />
               <Route path="/ai-solutions" element={<AISolutions />} />
               <Route path="/iot-solutions" element={<IoTSolutions />} />
               <Route path="/cloud-solutions" element={<CloudSolutions />} />
