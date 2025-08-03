@@ -31,7 +31,7 @@ const Training = () => {
       location: "جدة - المقر الرئيسي",
       skills: ["React", "Node.js", "Python", "AI/ML", "DevOps"],
       icon: Code,
-      status: "التسجيل مفتوح",
+      status: "قريباً",
       color: "from-blue-500 to-indigo-600"
     },
     {
@@ -57,7 +57,7 @@ const Training = () => {
       location: "دبي - مكتب إقليمي",
       skills: ["ريادة الأعمال", "نموذج الأعمال", "التمويل", "التسويق الرقمي"],
       icon: Lightbulb,
-      status: "التسجيل مفتوح",
+      status: "قريباً",
       color: "from-orange-500 to-red-600"
     }
   ];
@@ -164,7 +164,10 @@ const Training = () => {
                       <div className={`w-12 h-12 bg-gradient-to-r ${program.color} rounded-xl flex items-center justify-center`}>
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
-                      <Badge variant={program.status === "التسجيل مفتوح" ? "default" : "secondary"} className="text-xs">
+                      <Badge 
+                        variant={program.status === "قريباً" ? "outline" : "secondary"} 
+                        className={`text-xs ${program.status === "قريباً" ? 'border-amber-400 text-amber-600 bg-amber-50' : ''}`}
+                      >
                         {program.status}
                       </Badge>
                     </div>
@@ -209,10 +212,10 @@ const Training = () => {
                     </div>
 
                     <Button 
-                      className="w-full" 
-                      disabled={program.status !== "التسجيل مفتوح"}
+                      className={`w-full ${program.status === "قريباً" ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600' : 'bg-gray-400 hover:bg-gray-500'}`}
+                      disabled={program.status === "قريباً"}
                     >
-                      {program.status === "التسجيل مفتوح" ? "سجل الآن" : "قريباً"}
+                      {program.status === "قريباً" ? "قريباً - ترقبوا الإعلان" : "قريباً"}
                     </Button>
                   </CardContent>
                 </Card>
