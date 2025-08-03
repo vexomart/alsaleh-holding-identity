@@ -209,6 +209,25 @@ const ReadyProjects = () => {
       clients: "35+",
       updates: "تحديثات مجانية لسنة",
       support: "دعم فني وتجاري متخصص"
+    },
+    {
+      id: 11,
+      title: "نظام إدارة العقارات المتكامل",
+      description: "منصة شاملة لإدارة العقارات مع نظام المبيعات والإيجارات وإدارة المطورين والوسطاء",
+      detailedDescription: "نظام عقاري متطور يجمع المطورين والوسطاء والعملاء في منصة واحدة. يشمل إدارة العقارات، المبيعات، الإيجارات، المدفوعات، نظام الجولات الافتراضية، وتحليلات السوق المتقدمة. مع تطبيق موبايل متكامل ونظام إدارة شامل.",
+      features: ["إدارة العقارات", "المبيعات والإيجارات", "نظام الجولات الافتراضية", "إدارة المطورين", "تحليلات السوق", "تطبيق موبايل"],
+      technologies: ["React", "Node.js", "PostgreSQL", "Maps API", "Virtual Tours", "Mobile App"],
+      price: "30,000 ريال",
+      duration: "7-9 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "الأنظمة العقارية",
+      icon: Building2,
+      color: "amber",
+      gradient: "from-amber-500 to-orange-600",
+      rating: "4.8",
+      clients: "18+",
+      updates: "تحديثات مجانية لسنة ونصف",
+      support: "دعم فني وتجاري متخصص 24/7"
     }
   ];
 
@@ -225,7 +244,8 @@ const ReadyProjects = () => {
     { name: "التعليم التقني", count: projects.filter(p => p.category.includes("التعليم")).length },
     { name: "الأنظمة الطبية", count: projects.filter(p => p.category.includes("الطبية")).length },
     { name: "إدارة الأعمال", count: projects.filter(p => p.category.includes("إدارة الأعمال")).length },
-    { name: "منصات الخدمات", count: projects.filter(p => p.category.includes("منصات الخدمات")).length }
+    { name: "منصات الخدمات", count: projects.filter(p => p.category.includes("منصات الخدمات")).length },
+    { name: "الأنظمة العقارية", count: projects.filter(p => p.category.includes("العقارية")).length }
   ];
 
   return (
