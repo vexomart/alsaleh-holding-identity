@@ -32,7 +32,10 @@ import {
   Instagram,
   Linkedin,
   Youtube,
-  MessageSquare
+  MessageSquare,
+  Code,
+  GraduationCap,
+  Calendar
 } from "lucide-react";
 
 const Footer = () => {
@@ -132,6 +135,27 @@ const Footer = () => {
     { name: "فرص التدريب", href: "/training", icon: Award },
     { name: "العمل التطوعي", href: "/volunteer", icon: Heart },
     { name: "برنامج التطوير", href: "/development-program", icon: Lightbulb }
+  ];
+
+  const readyProjects = [
+    { name: "منصة إمكان التقنية", href: "#emkan-platform", icon: Code },
+    { name: "نظام إدارة المحتوى", href: "#cms-system", icon: FileText },
+    { name: "تطبيق التجارة الإلكترونية", href: "#ecommerce-app", icon: Building2 },
+    { name: "منصة التعلم الذكي", href: "#learning-platform", icon: GraduationCap }
+  ];
+
+  const companyUpdates = [
+    { name: "أخبار الشركة", href: "#company-news", icon: Globe },
+    { name: "البيانات الصحفية", href: "#press-releases", icon: FileText },
+    { name: "فعاليات قادمة", href: "#upcoming-events", icon: Calendar },
+    { name: "التقارير السنوية", href: "#annual-reports", icon: TrendingUp }
+  ];
+
+  const digitalSolutions = [
+    { name: "الذكاء الاصطناعي", href: "#ai-solutions", icon: Zap },
+    { name: "إنترنت الأشياء", href: "#iot-solutions", icon: Lightbulb },
+    { name: "الحوسبة السحابية", href: "#cloud-solutions", icon: Globe },
+    { name: "الأمن السيبراني", href: "#security-solutions", icon: Shield }
   ];
 
   const contactInfo = [
@@ -299,10 +323,10 @@ const Footer = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-10">
             
             {/* Column 1: Company Info & Contact */}
-            <div className="space-y-8 animate-fade-in">
+            <div className="space-y-8 animate-fade-in lg:col-span-2">
               <div className="space-y-4">
                 <h3 className="text-xl font-bold text-white mb-4 group hover:text-blue-400 transition-colors duration-300">
                   شركة علي صالح الشهري القابضة
