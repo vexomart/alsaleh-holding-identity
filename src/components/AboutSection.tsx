@@ -21,7 +21,7 @@ const AboutSection = () => {
         <div className="responsive-stats-grid mb-12 md:mb-16">
           <Card className="shadow-elegant border-0 bg-gradient-primary text-center card-animated animate-slide-in-left">
             <CardContent className="p-6 sm:p-8">
-              <div className="text-4xl sm:text-5xl font-bold text-primary-foreground mb-3 sm:mb-4 animate-bounce-gentle">1,392</div>
+              <div className="text-4xl sm:text-5xl font-bold text-primary-foreground mb-3 sm:mb-4 animate-bounce-gentle">14,883</div>
               <h3 className="text-lg sm:text-xl font-semibold text-primary-foreground">مشروع منجز</h3>
               <p className="text-primary-foreground/80 mt-2 text-sm sm:text-base">مشاريع متنوعة عبر جميع الشركات الفرعية</p>
             </CardContent>
@@ -29,7 +29,7 @@ const AboutSection = () => {
           
           <Card className="shadow-elegant border-0 bg-gradient-secondary text-center card-animated animate-slide-in-right">
             <CardContent className="p-6 sm:p-8">
-              <div className="text-4xl sm:text-5xl font-bold text-secondary-foreground mb-3 sm:mb-4 animate-bounce-gentle">857</div>
+              <div className="text-4xl sm:text-5xl font-bold text-secondary-foreground mb-3 sm:mb-4 animate-bounce-gentle">12,849</div>
               <h3 className="text-lg sm:text-xl font-semibold text-secondary-foreground">عميل راضٍ</h3>
               <p className="text-secondary-foreground/80 mt-2 text-sm sm:text-base">عملاء يثقون في خدماتنا المتميزة</p>
             </CardContent>

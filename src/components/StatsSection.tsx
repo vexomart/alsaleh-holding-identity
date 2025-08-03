@@ -12,7 +12,7 @@ const StatsSection = () => {
   const stats = [
     {
       icon: Briefcase,
-      number: 1392,
+      number: 14883,
       label: "مشروع منجز",
       description: "مشاريع متنوعة عبر جميع الشركات الفرعية",
       color: "from-blue-600 to-purple-600"
@@ -52,7 +52,7 @@ const StatsSection = () => {
         const progress = currentStep / steps;
         
         setCounters({
-          projects: Math.floor(1392 * progress),
+          projects: Math.floor(14883 * progress),
           clients: Math.floor(12849 * progress),
           countries: Math.floor(45 * progress),
           years: Math.floor(15 * progress)
@@ -61,7 +61,7 @@ const StatsSection = () => {
         if (currentStep >= steps) {
           clearInterval(interval);
           setCounters({
-            projects: 1392,
+            projects: 14883,
             clients: 12849,
             countries: 45,
             years: 15
