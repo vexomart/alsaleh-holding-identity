@@ -17,7 +17,10 @@ import {
   ChevronRight,
   Calendar,
   Eye,
-  Star
+  Star,
+  Clock,
+  Users,
+  CheckCircle
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -27,23 +30,44 @@ const TechProjects = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
 
-  // Empty projects array - will be populated later
-  const projects: any[] = [];
+  // Projects array
+  const projects = [
+    {
+      id: 1,
+      title: "نظام المحاسبة والفواتير",
+      description: "نظام شامل لإدارة المحاسبة والفواتير مع تقارير مالية متطورة وإدارة العملاء",
+      category: "web",
+      status: "قيد التطوير",
+      progress: 65,
+      technologies: ["React", "Node.js", "PostgreSQL", "TypeScript"],
+      startDate: "2024-12-01",
+      estimatedCompletion: "2025-03-15",
+      team: ["أحمد محمد", "سارة أحمد", "محمد علي"],
+      features: [
+        "إدارة الفواتير والعروض",
+        "تتبع المدفوعات والمستحقات",
+        "تقارير مالية تفصيلية",
+        "إدارة العملاء والموردين",
+        "نظام الإشعارات الذكي"
+      ],
+      image: "/placeholder.svg"
+    }
+  ];
 
   const projectCategories = [
     { id: 'all', name: 'جميع المشاريع', count: projects.length },
-    { id: 'web', name: 'تطبيقات الويب', count: 0 },
-    { id: 'mobile', name: 'تطبيقات الهاتف', count: 0 },
-    { id: 'ai', name: 'الذكاء الاصطناعي', count: 0 },
-    { id: 'cloud', name: 'الحوسبة السحابية', count: 0 },
-    { id: 'security', name: 'الأمن السيبراني', count: 0 }
+    { id: 'web', name: 'تطبيقات الويب', count: projects.filter(p => p.category === 'web').length },
+    { id: 'mobile', name: 'تطبيقات الهاتف', count: projects.filter(p => p.category === 'mobile').length },
+    { id: 'ai', name: 'الذكاء الاصطناعي', count: projects.filter(p => p.category === 'ai').length },
+    { id: 'cloud', name: 'الحوسبة السحابية', count: projects.filter(p => p.category === 'cloud').length },
+    { id: 'security', name: 'الأمن السيبراني', count: projects.filter(p => p.category === 'security').length }
   ];
 
   const stats = [
-    { label: 'إجمالي المشاريع', value: '0', icon: Code, color: 'text-blue-400' },
-    { label: 'المشاريع النشطة', value: '0', icon: Zap, color: 'text-green-400' },
-    { label: 'المشاريع المكتملة', value: '0', icon: Shield, color: 'text-purple-400' },
-    { label: 'المشاريع قيد التطوير', value: '0', icon: Cloud, color: 'text-orange-400' }
+    { label: 'إجمالي المشاريع', value: projects.length.toString(), icon: Code, color: 'text-blue-400' },
+    { label: 'المشاريع النشطة', value: projects.filter(p => p.status === 'قيد التطوير').length.toString(), icon: Zap, color: 'text-green-400' },
+    { label: 'المشاريع المكتملة', value: projects.filter(p => p.status === 'مكتمل').length.toString(), icon: Shield, color: 'text-purple-400' },
+    { label: 'المشاريع قيد التطوير', value: projects.filter(p => p.status === 'قيد التطوير').length.toString(), icon: Cloud, color: 'text-orange-400' }
   ];
 
   return (
@@ -190,9 +214,97 @@ const TechProjects = () => {
               </div>
             </div>
           ) : (
-            /* Projects Grid/List - Will be used when projects are added */
+            /* Projects Grid/List */
             <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
-              {/* Projects will be mapped here */}
+              {projects.map((project) => (
+                <Card key={project.id} className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/70 transition-all duration-300 group">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <Badge 
+                        className={`${
+                          project.status === 'قيد التطوير' 
+                            ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' 
+                            : 'bg-green-500/20 text-green-400 border-green-500/30'
+                        }`}
+                      >
+                        {project.status}
+                      </Badge>
+                      <div className="text-slate-400 text-sm flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {project.progress}%
+                      </div>
+                    </div>
+                    
+                    <CardTitle className="text-white text-xl mb-2 group-hover:text-blue-400 transition-colors">
+                      {project.title}
+                    </CardTitle>
+                    
+                    <CardDescription className="text-slate-300 leading-relaxed">
+                      {project.description}
+                    </CardDescription>
+                  </CardHeader>
+                  
+                  <CardContent className="pt-0">
+                    {/* Progress Bar */}
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-slate-400">تقدم المشروع</span>
+                        <span className="text-sm font-medium text-orange-400">{project.progress}%</span>
+                      </div>
+                      <div className="w-full bg-slate-700 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${project.progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    {/* Technologies */}
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-white mb-2">التقنيات المستخدمة</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {project.technologies.map((tech, index) => (
+                          <Badge key={index} variant="outline" className="text-xs bg-slate-700/50 text-slate-300 border-slate-600">
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Team */}
+                    <div className="mb-4">
+                      <div className="flex items-center gap-2 text-sm text-slate-400">
+                        <Users className="w-4 h-4" />
+                        <span>فريق العمل: {project.team.length} أعضاء</span>
+                      </div>
+                    </div>
+
+                    {/* Timeline */}
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="text-slate-400">
+                          <Calendar className="w-3 h-3 inline mr-1" />
+                          بدأ: {project.startDate}
+                        </div>
+                        <div className="text-slate-400">
+                          متوقع: {project.estimatedCompletion}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-2">
+                      <Button 
+                        size="sm" 
+                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                      >
+                        <Eye className="w-3 h-3 mr-1" />
+                        عرض التفاصيل
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
         </div>
