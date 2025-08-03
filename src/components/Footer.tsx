@@ -241,13 +241,7 @@ const Footer = () => {
     { name: "التقارير السنوية", href: "/annual-reports", icon: TrendingUp }
   ];
 
-  const currentProjects = [
-    { name: "نظام إدارة المرافق", href: "#", icon: Building2 },
-    { name: "منصة التجارة الإلكترونية", href: "#", icon: Globe },
-    { name: "تطبيق الذكاء الاصطناعي", href: "#", icon: Zap },
-    { name: "حلول إنترنت الأشياء", href: "#", icon: Lightbulb },
-    { name: "نظام إدارة البيانات", href: "#", icon: FileText }
-  ];
+  const currentProjects = [];
 
   const digitalSolutions = [
     { name: "الذكاء الاصطناعي", href: "/ai-solutions", icon: Zap },
