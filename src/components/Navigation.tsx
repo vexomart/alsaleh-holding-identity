@@ -52,9 +52,29 @@ const Navigation = () => {
   return (
     <>
       {/* Top Bar */}
-      <div className="bg-slate-900 text-white py-1 sm:py-2 text-xs sm:text-sm">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between">
+      <div className="bg-slate-900 text-white py-2 text-xs sm:text-sm">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
+            {/* Mobile: Contact Info Only */}
+            <div className="flex sm:hidden items-center justify-center gap-3 w-full">
+              <div className="flex items-center gap-2">
+                <Phone className="w-3 h-3" />
+                <a href="tel:+966555812567" className="hover:text-gray-300 transition-colors">
+                  0555812567
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-3 h-3" />
+                <a href="mailto:info@ash.holdings" className="hover:text-gray-300 transition-colors">
+                  info@ash.holdings
+                </a>
+              </div>
+              <Badge variant="secondary" className="bg-green-500 text-white text-xs px-2 py-1">
+                متاح الآن
+              </Badge>
+            </div>
+            
+            {/* Desktop: Full Info */}
             <div className="hidden sm:flex items-center gap-4 lg:gap-6">
               <div className="flex items-center gap-2">
                 <Clock className="w-3 h-3" />
@@ -65,16 +85,18 @@ const Navigation = () => {
                 <span>المملكة العربية السعودية</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-4">
+            
+            {/* Desktop: Contact Info */}
+            <div className="hidden sm:flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Mail className="w-3 h-3" />
-                <a href="mailto:info@ash.holdings" className="hover:text-secondary transition-colors text-xs sm:text-sm">
+                <a href="mailto:info@ash.holdings" className="hover:text-gray-300 transition-colors">
                   info@ash.holdings
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3 h-3" />
-                <a href="tel:+966555812567" className="hover:text-secondary transition-colors text-xs sm:text-sm">
+                <a href="tel:+966555812567" className="hover:text-gray-300 transition-colors">
                   0555812567
                 </a>
               </div>
