@@ -151,7 +151,7 @@ const services = [
   },
   {
     id: 6,
-    title: "منصات العمال والتجار",
+    title: "منصة الأعمال والتجار",
     description: "منصات ذكية لربط العمال بالعملاء وحلول تجارية متقدمة",
     icon: Users,
     color: "from-teal-500 to-blue-500",
