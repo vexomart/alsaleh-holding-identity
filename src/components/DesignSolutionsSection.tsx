@@ -32,11 +32,26 @@ const DesignSolutionsSection = () => {
       description: "تصميم هوية بصرية متكاملة تعكس قيم علامتك التجارية وتميزها في السوق",
       icon: Target,
       features: ["تصميم الشعار", "دليل الهوية البصرية", "الألوان والخطوط", "تطبيقات الهوية"],
-      color: "from-violet-500 to-purple-600",
-      bgColor: "from-violet-50 to-purple-50",
+      color: "from-emerald-500 to-teal-600",
+      bgColor: "from-emerald-50 to-teal-50",
       price: "5,000",
       deliveryTime: "2-3 أسابيع",
-      whatsappMessage: "أود إنشاء هوية تجارية احترافية لعلامتي التجارية"
+      whatsappMessage: `السلام عليكم ورحمة الله وبركاته 👋
+
+🎨 أود طلب خدمة إنشاء الهوية التجارية
+
+📋 تفاصيل الخدمة:
+• تصميم شعار احترافي
+• دليل الهوية البصرية الكامل
+• اختيار الألوان والخطوط المناسبة
+• تطبيقات الهوية على جميع المواد
+
+💰 السعر: من 5,000 ريال
+⏰ مدة التنفيذ: 2-3 أسابيع
+
+يرجى إرسال تفاصيل المشروع وأهداف العلامة التجارية.
+
+شكراً لكم 🙏`
     },
     {
       title: "إنشاء الملف التعريفي",
@@ -47,7 +62,22 @@ const DesignSolutionsSection = () => {
       bgColor: "from-blue-50 to-cyan-50",
       price: "3,500",
       deliveryTime: "1-2 أسبوع",
-      whatsappMessage: "أحتاج إلى تصميم ملف تعريفي احترافي لشركتي"
+      whatsappMessage: `السلام عليكم ورحمة الله وبركاته 👋
+
+📄 أود طلب خدمة إنشاء الملف التعريفي
+
+📋 تفاصيل الخدمة:
+• تصميم ملف تعريفي احترافي
+• كتابة محتوى جذاب ومؤثر
+• تصوير أو توفير صور عالية الجودة
+• تسليم نسخ رقمية وقابلة للطباعة
+
+💰 السعر: من 3,500 ريال
+⏰ مدة التنفيذ: 1-2 أسبوع
+
+يرجى مشاركة معلومات الشركة والخدمات المطلوب عرضها.
+
+شكراً لكم 🙏`
     },
     {
       title: "موشن جرافيك",
@@ -58,29 +88,74 @@ const DesignSolutionsSection = () => {
       bgColor: "from-orange-50 to-red-50",
       price: "4,000",
       deliveryTime: "2-4 أسابيع",
-      whatsappMessage: "أود إنشاء موشن جرافيك احترافي لمشروعي"
+      whatsappMessage: `السلام عليكم ورحمة الله وبركاته 👋
+
+🎬 أود طلب خدمة الموشن جرافيك
+
+📋 تفاصيل الخدمة:
+• رسوم متحركة ثنائية وثلاثية الأبعاد
+• انيميشن الشعار الاحترافي
+• فيديوهات تعريفية متحركة
+• مؤثرات بصرية متقدمة
+
+💰 السعر: من 4,000 ريال
+⏰ مدة التنفيذ: 2-4 أسابيع
+
+يرجى توضيح الفكرة المطلوبة ومدة الفيديو المرغوب.
+
+شكراً لكم 🙏`
     },
     {
       title: "التصوير الفوتوغرافي",
       description: "جلسات تصوير احترافية للمنتجات والفعاليات والبروفايل الشخصي والتجاري",
       icon: Camera,
       features: ["تصوير المنتجات", "تصوير الفعاليات", "البورتريه المهني", "التصوير التجاري"],
-      color: "from-emerald-500 to-teal-600",
-      bgColor: "from-emerald-50 to-teal-50",
+      color: "from-purple-500 to-violet-600",
+      bgColor: "from-purple-50 to-violet-50",
       price: "2,500",
       deliveryTime: "3-7 أيام",
-      whatsappMessage: "أحتاج إلى جلسة تصوير فوتوغرافي احترافية"
+      whatsappMessage: `السلام عليكم ورحمة الله وبركاته 👋
+
+📸 أود طلب خدمة التصوير الفوتوغرافي
+
+📋 تفاصيل الخدمة:
+• تصوير المنتجات بجودة عالية
+• تغطية الفعاليات والمناسبات
+• جلسات البورتريه المهني
+• التصوير التجاري للشركات
+
+💰 السعر: من 2,500 ريال
+⏰ مدة التنفيذ: 3-7 أيام
+
+يرجى تحديد نوع التصوير المطلوب والمكان المفضل.
+
+شكراً لكم 🙏`
     },
     {
       title: "تصوير الفيديوهات",
       description: "إنتاج فيديوهات عالية الجودة للدعاية والإعلان والمحتوى التسويقي",
       icon: Video,
       features: ["فيديوهات ترويجية", "مقاطع دعائية", "مقابلات", "تغطية الفعاليات"],
-      color: "from-pink-500 to-rose-600",
-      bgColor: "from-pink-50 to-rose-50",
+      color: "from-rose-500 to-pink-600",
+      bgColor: "from-rose-50 to-pink-50",
       price: "6,000",
       deliveryTime: "1-3 أسابيع",
-      whatsappMessage: "أود إنتاج فيديو احترافي لشركتي"
+      whatsappMessage: `السلام عليكم ورحمة الله وبركاته 👋
+
+🎥 أود طلب خدمة تصوير الفيديوهات
+
+📋 تفاصيل الخدمة:
+• إنتاج فيديوهات ترويجية احترافية
+• تصوير مقاطع دعائية مؤثرة
+• تسجيل المقابلات والحوارات
+• تغطية الفعاليات والمؤتمرات
+
+💰 السعر: من 6,000 ريال
+⏰ مدة التنفيذ: 1-3 أسابيع
+
+يرجى توضيح نوع الفيديو المطلوب والمدة المرغوبة.
+
+شكراً لكم 🙏`
     }
   ];
 
@@ -99,35 +174,35 @@ const DesignSolutionsSection = () => {
   ];
 
   return (
-    <section id="design-solutions" className="relative min-h-screen py-20 overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-900">
+    <section id="design-solutions" className="relative min-h-screen py-20 overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-800 to-teal-900">
       {/* Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-1/3 right-0 w-80 h-80 bg-gradient-to-bl from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-float-delayed" />
-        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-pink-500/20 to-rose-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-1/3 right-0 w-80 h-80 bg-gradient-to-bl from-teal-500/20 to-cyan-500/20 rounded-full blur-3xl animate-float-delayed" />
+        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl animate-float" />
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full border border-indigo-500/20 mb-6">
-            <Palette className="w-5 h-5 text-indigo-400" />
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-full border border-emerald-500/20 mb-6">
+            <Palette className="w-5 h-5 text-emerald-400" />
             <span className="text-white font-medium">حلول التصميم الإبداعية</span>
           </div>
           
-          <h2 className="text-4xl lg:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h2 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+            <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
               حلول التصميم
             </span>
             <br />
             <span className="text-white">
-              التي تلهم وتؤثر
+              الإبداعية والمتميزة
             </span>
           </h2>
           
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            نحول أفكارك إلى تصاميم بصرية مذهلة تحكي قصة علامتك التجارية وتترك أثراً لا يُنسى في أذهان جمهورك
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium">
+            نحول أفكارك إلى تصاميم بصرية مذهلة تحكي قصة علامتك التجارية وتترك أثراً لا يُنسى في أذهان جمهورك المستهدف
           </p>
         </div>
 
@@ -137,8 +212,8 @@ const DesignSolutionsSection = () => {
             const IconComponent = stat.icon;
             return (
               <div key={index} className="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 group">
-                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <IconComponent className="w-6 h-6 text-indigo-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <IconComponent className="w-6 h-6 text-emerald-400" />
                 </div>
                 <div className="text-2xl lg:text-3xl font-bold text-white mb-2">{stat.value}</div>
                 <div className="text-sm text-slate-300">{stat.label}</div>
@@ -173,7 +248,7 @@ const DesignSolutionsSection = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-indigo-300 transition-colors duration-300">
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-emerald-300 transition-colors duration-300">
                     {service.title}
                   </h3>
 
@@ -201,7 +276,7 @@ const DesignSolutionsSection = () => {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="w-full border-white/20 text-white hover:bg-white/10 hover:border-indigo-400 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-500 group-hover:border-transparent"
+                      className="w-full border-white/20 text-white hover:bg-white/10 hover:border-emerald-400 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-teal-500 group-hover:border-transparent"
                     >
                       <span>اطلب الخدمة</span>
                       <ChevronRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
@@ -220,7 +295,7 @@ const DesignSolutionsSection = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {portfolioHighlights.map((highlight, index) => (
               <div key={index} className="p-6 bg-gradient-to-br from-white/5 to-white/10 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
-                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <p className="text-white text-sm leading-relaxed">{highlight}</p>
@@ -244,16 +319,16 @@ const DesignSolutionsSection = () => {
               return (
                 <div key={index} className="relative group">
                   {index < 3 && (
-                    <div className="hidden md:block absolute top-1/2 left-full w-full h-0.5 bg-gradient-to-r from-indigo-500/50 to-transparent transform -translate-y-1/2 z-0" />
+                    <div className="hidden md:block absolute top-1/2 left-full w-full h-0.5 bg-gradient-to-r from-emerald-500/50 to-transparent transform -translate-y-1/2 z-0" />
                   )}
                   
                   <div className="relative z-10 p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 group-hover:scale-105">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg">
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg">
                       {process.step}
                     </div>
                     
-                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <IconComponent className="w-5 h-5 text-indigo-400" />
+                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <IconComponent className="w-5 h-5 text-emerald-400" />
                     </div>
                     
                     <h4 className="text-lg font-semibold text-white mb-3">{process.title}</h4>
@@ -267,10 +342,10 @@ const DesignSolutionsSection = () => {
 
         {/* CTA Section */}
         <div className="text-center animate-fade-in" style={{ animationDelay: "1s" }}>
-          <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-3xl p-12 border border-indigo-500/20 backdrop-blur-sm">
+          <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-3xl p-12 border border-emerald-500/20 backdrop-blur-sm">
             <div className="flex items-center justify-center gap-3 mb-6">
-              <Sparkles className="w-6 h-6 text-indigo-400" />
-              <Badge className="bg-indigo-500/20 text-indigo-300 border-indigo-500/30 text-sm font-medium">
+              <Sparkles className="w-6 h-6 text-emerald-400" />
+              <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-sm font-medium">
                 استشارة تصميم مجانية
               </Badge>
             </div>
@@ -285,13 +360,25 @@ const DesignSolutionsSection = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
-                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("السلام عليكم، أود حجز استشارة مجانية حول خدمات التصميم")}`}
+                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`السلام عليكم ورحمة الله وبركاته 👋
+
+🎨 أود حجز استشارة مجانية حول خدمات التصميم
+
+📋 أود معرفة المزيد عن:
+• خدمات التصميم المتاحة
+• الأسعار والعروض الحالية  
+• أمثلة من أعمالكم السابقة
+• مدة تنفيذ المشاريع
+
+متى يمكنني الحصول على الاستشارة؟
+
+شكراً لكم 🙏`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 px-8 py-3 text-lg font-medium"
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 px-8 py-3 text-lg font-medium"
                 >
                   احجز استشارة مجانية
                   <ChevronRight className="w-5 h-5 mr-2" />
@@ -299,7 +386,20 @@ const DesignSolutionsSection = () => {
               </a>
               
               <a 
-                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("أود الاطلاع على معرض أعمالكم في التصميم")}`}
+                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`السلام عليكم ورحمة الله وبركاته 👋
+
+🖼️ أود الاطلاع على معرض أعمالكم في التصميم
+
+📋 أهتم برؤية:
+• أمثلة من الهويات التجارية المصممة
+• نماذج من الملفات التعريفية
+• أعمال الموشن جرافيك
+• صور من جلسات التصوير
+• فيديوهات ترويجية منتجة
+
+يرجى مشاركة المعرض أو الرابط للأعمال السابقة.
+
+شكراً لكم 🙏`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
