@@ -399,6 +399,25 @@ const ReadyProjects = () => {
       clients: "8+",
       updates: "تحديثات مجانية لثلاث سنوات",
       support: "دعم فني ومالي متخصص 24/7"
+    },
+    {
+      id: 21,
+      title: "نظام إدارة الصالونات والحجوزات",
+      description: "نظام شامل لإدارة صالونات التجميل والحلاقة مع نظام الحجوزات والموظفين والخدمات",
+      detailedDescription: "نظام متكامل لإدارة صالونات التجميل ومراكز العناية بالجمال يشمل إدارة الحجوزات، جدولة الموظفين والمتخصصين، إدارة الخدمات والباقات، نظام نقاط البيع، إدارة العملاء وتاريخهم، تطبيق موبايل للعملاء، وتحليلات الأداء والمبيعات.",
+      features: ["إدارة الحجوزات", "جدولة الموظفين", "إدارة الخدمات", "نقاط البيع", "إدارة العملاء", "تطبيق موبايل"],
+      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Mobile App", "Calendar API"],
+      price: "25,000 ريال",
+      duration: "6-8 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "الجمال والعناية",
+      icon: Smartphone,
+      color: "pink",
+      gradient: "from-pink-500 to-rose-600",
+      rating: "4.8",
+      clients: "30+",
+      updates: "تحديثات مجانية لسنة ونصف",
+      support: "دعم فني وتجاري متخصص"
     }
   ];
 
@@ -425,7 +444,8 @@ const ReadyProjects = () => {
     { name: "الخدمات اللوجستية", count: projects.filter(p => p.category.includes("اللوجستية")).length },
     { name: "الرياضة واللياقة", count: projects.filter(p => p.category.includes("الرياضة")).length },
     { name: "الأحداث والمؤتمرات", count: projects.filter(p => p.category.includes("الأحداث")).length },
-    { name: "بوابات الدفع", count: projects.filter(p => p.category.includes("بوابات الدفع")).length }
+    { name: "بوابات الدفع", count: projects.filter(p => p.category.includes("بوابات الدفع")).length },
+    { name: "الجمال والعناية", count: projects.filter(p => p.category.includes("الجمال")).length }
   ];
 
   return (
@@ -652,11 +672,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">170+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">180+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">850+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">900+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
