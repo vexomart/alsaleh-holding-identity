@@ -52,25 +52,10 @@ const Navigation = () => {
   return (
     <>
       {/* Top Bar */}
-      <div className="bg-slate-900 text-white py-2 text-xs">
+      <div className="hidden sm:block bg-slate-900 text-white py-2 text-xs">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            {/* Mobile: Essential Info Only */}
-            <div className="flex sm:hidden items-center gap-3 w-full justify-center">
-              <div className="flex items-center gap-1">
-                <Phone className="w-3 h-3" />
-                <a href="tel:+966555812567" className="hover:text-gray-300 transition-colors">
-                  0555812567
-                </a>
-              </div>
-              <div className="w-px h-4 bg-gray-600"></div>
-              <Badge variant="secondary" className="bg-green-500 text-white text-xs px-2 py-1">
-                متاح الآن
-              </Badge>
-            </div>
-            
-            {/* Desktop: Full Layout */}
-            <div className="hidden sm:flex items-center gap-6">
+            <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <Clock className="w-3 h-3" />
                 <span>ساعات العمل: الأحد - الخميس 8:00 ص - 6:00 م</span>
@@ -81,7 +66,7 @@ const Navigation = () => {
               </div>
             </div>
             
-            <div className="hidden sm:flex items-center gap-4">
+            <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Mail className="w-3 h-3" />
                 <a href="mailto:info@ash.holdings" className="hover:text-gray-300 transition-colors">
