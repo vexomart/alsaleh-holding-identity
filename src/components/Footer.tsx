@@ -242,7 +242,7 @@ const Footer = () => {
   ];
 
   const currentProjects = [
-    { name: "المشاريع التقنية", href: "#", icon: Code },
+    { name: "المشاريع التقنية", href: "/tech-projects", icon: Code },
     { name: "مشاريع التجارة الإلكترونية", href: "#", icon: Globe },
     { name: "مشاريع المحاسبة", href: "#", icon: FileText }
   ];
