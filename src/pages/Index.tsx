@@ -5,6 +5,7 @@ import VisionSection from "@/components/VisionSection";
 import StatsSection from "@/components/StatsSection";
 import CurrentOffersSection from "@/components/CurrentOffersSection";
 import ServicesSection from "@/components/ServicesSection";
+import ContentCreationSection from "@/components/ContentCreationSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import SubsidiariesSection from "@/components/SubsidiariesSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
@@ -82,6 +83,9 @@ const Index = () => {
               <ServicesSection />
             </div>
           </section>
+
+          {/* Content Creation Section */}
+          <ContentCreationSection />
 
           {/* Departments Section */}
           <section id="departments" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
