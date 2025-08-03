@@ -367,39 +367,140 @@ const About = () => {
         </section>
 
         {/* Leadership Message */}
-        <section className="py-20">
-          <div className="container mx-auto px-4 lg:px-6">
-            <div className="max-w-4xl mx-auto">
-              <Card className="bg-gradient-to-br from-primary/5 to-secondary/5 border-0 shadow-xl">
-                <CardContent className="p-8 md:p-12">
-                  <div className="text-center mb-8">
-                    <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
-                      <Quote className="w-12 h-12 text-white" />
-                    </div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-primary mb-2">
-                      {leadership.name}
-                    </h2>
-                    <p className="text-xl text-secondary font-semibold mb-2">
-                      {leadership.position}
-                    </p>
-                    <Badge className="bg-gradient-to-r from-primary to-secondary text-white">
-                      {leadership.experience}
-                    </Badge>
-                  </div>
+        <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+          {/* Background Elements */}
+          <div className="absolute top-20 right-20 w-32 h-32 bg-blue-200/30 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-20 left-20 w-24 h-24 bg-indigo-200/30 rounded-full blur-3xl animate-float-delayed" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-100/20 via-transparent to-indigo-100/20" />
+          
+          <div className="container mx-auto px-4 lg:px-6 relative z-10">
+            {/* Section Header */}
+            <div className="text-center mb-16 animate-fade-in">
+              <div className="inline-flex items-center gap-3 mb-6 p-4 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full backdrop-blur-sm border border-blue-200/30">
+                <Quote className="w-6 h-6 text-blue-600 animate-pulse" />
+                <span className="text-blue-700 font-semibold">رسالة من القيادة</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">
+                كلمة <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">الرئيس التنفيذي</span>
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full" />
+            </div>
 
-                  <div className="bg-white/50 rounded-xl p-6 mb-8">
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                      {leadership.message}
-                    </p>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {leadership.achievements.map((achievement, index) => (
-                      <div key={index} className="flex items-center gap-3">
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                        <span className="text-muted-foreground">{achievement}</span>
+            <div className="max-w-6xl mx-auto">
+              <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-2xl overflow-hidden">
+                <CardContent className="p-0">
+                  {/* Header Section */}
+                  <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 md:p-12 text-center relative overflow-hidden">
+                    {/* Decorative Elements */}
+                    <div className="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full blur-2xl" />
+                    <div className="absolute bottom-4 left-4 w-16 h-16 bg-white/5 rounded-full blur-xl" />
+                    
+                    <div className="relative z-10">
+                      <div className="w-32 h-32 mx-auto mb-6 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/30 shadow-2xl">
+                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl">
+                          <span className="text-4xl font-bold text-blue-600">علي</span>
+                        </div>
                       </div>
-                    ))}
+                      
+                      <h3 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                        {leadership.name}
+                      </h3>
+                      <p className="text-xl text-blue-100 font-semibold mb-4">
+                        {leadership.position}
+                      </p>
+                      <Badge className="bg-white/20 backdrop-blur-md text-white border border-white/30 px-6 py-2 text-base font-medium">
+                        {leadership.experience}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Message Content */}
+                  <div className="p-8 md:p-12">
+                    <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-8 md:p-10 border border-blue-100/50 shadow-inner relative overflow-hidden">
+                      {/* Background Pattern */}
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-100/30 via-transparent to-transparent" />
+                      
+                      {/* Quote Icons */}
+                      <div className="absolute top-6 right-6 w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center">
+                        <Quote className="w-6 h-6 text-blue-500" />
+                      </div>
+                      <div className="absolute bottom-6 left-6 w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center rotate-180">
+                        <Quote className="w-6 h-6 text-blue-500" />
+                      </div>
+                      
+                      <div className="relative z-10">
+                        <div className="text-lg md:text-xl leading-relaxed text-slate-700 whitespace-pre-line text-justify mb-8 font-medium">
+                          {leadership.message}
+                        </div>
+                        
+                        {/* Signature */}
+                        <div className="border-t border-blue-200 pt-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                          <div className="text-center md:text-right">
+                            <div className="text-2xl font-bold text-slate-800 mb-1">{leadership.name}</div>
+                            <div className="text-blue-600 font-semibold mb-1">{leadership.position}</div>
+                            <div className="text-slate-500 text-sm">شركة علي صالح الشهري القابضة</div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <img 
+                              src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+                              alt="شعار الشركة" 
+                              className="w-20 h-20 object-contain mx-auto mb-3 opacity-90 hover:opacity-100 transition-opacity duration-300"
+                            />
+                            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Achievements */}
+                    <div className="mt-10">
+                      <h4 className="text-2xl font-bold text-slate-800 mb-6 text-center">
+                        المؤهلات والخبرات
+                      </h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {leadership.achievements.map((achievement, index) => (
+                          <div 
+                            key={index} 
+                            className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 hover:shadow-md transition-all duration-300 group"
+                          >
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                              <CheckCircle className="w-5 h-5 text-white" />
+                            </div>
+                            <span className="text-slate-700 font-medium leading-relaxed">{achievement}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Contact CTA */}
+                    <div className="mt-10 text-center">
+                      <div className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl p-6">
+                        <p className="text-white font-semibold mb-4">
+                          نتطلع للتواصل معكم وبناء شراكات استراتيجية مثمرة
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                          <Button 
+                            className="bg-white text-blue-600 hover:bg-blue-50 font-semibold px-6 py-2"
+                            asChild
+                          >
+                            <a href="/contact">
+                              تواصل معنا
+                              <ArrowRight className="w-4 h-4 mr-2" />
+                            </a>
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            className="border-white text-white hover:bg-white/10 font-semibold px-6 py-2"
+                            asChild
+                          >
+                            <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
+                              واتساب مباشر
+                            </a>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
