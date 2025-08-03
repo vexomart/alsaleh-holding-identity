@@ -85,20 +85,21 @@ const SubsidiariesSection = () => {
       specialties: ["التحليل المالي", "الذكاء التجاري", "الأتمتة المحاسبية"]
     },
     {
-      name: "شركة الشهري للتجارة الإلكترونية",
-      nameEn: "Al-Shahri E-Commerce Solutions",
+      name: "فيكسو مارت",
+      nameEn: "Vexo Mart",
       description: "شركة رائدة في مجال التجارة الإلكترونية وحلول الدفع الرقمي، متخصصة في تطوير المتاجر الإلكترونية المتقدمة وأنظمة الدفع الآمنة",
       category: "التجارة الإلكترونية والدفع الرقمي",
       established: "2021",
       services: ["تطوير المتاجر الإلكترونية", "حلول الدفع الرقمي", "إدارة المخزون الذكية", "التسويق الإلكتروني", "خدمات الشحن والتوصيل", "تحليل سلوك المستهلكين"],
       icon: ShoppingCart,
-      stats: { projects: "980+", clients: "540+", countries: "22" },
+      stats: { projects: "قريباً", clients: "قريباً", countries: "قريباً" },
       color: "from-green-600 to-emerald-500",
       website: "https://vexomart.com/",
       websiteName: "vexomart.com",
-      growth: "+312%",
-      rating: "4.6/5",
-      specialties: ["التجارة الذكية", "الدفع الآمن", "تجربة المستخدم"]
+      growth: "قيد التطوير",
+      rating: "قريباً",
+      specialties: ["التجارة الذكية", "الدفع الآمن", "تجربة المستخدم"],
+      inDevelopment: true
     },
     {
       name: "أكاديمي فكرة",
