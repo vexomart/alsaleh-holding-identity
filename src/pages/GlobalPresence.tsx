@@ -3,6 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
+import InteractiveMap from "@/components/InteractiveMap";
 import { 
   MapPin, 
   Building2, 
@@ -15,7 +19,11 @@ import {
   TrendingUp,
   Filter,
   ExternalLink,
-  Navigation
+  CheckCircle,
+  ArrowRight,
+  Clock,
+  Target,
+  Zap
 } from "lucide-react";
 
 interface Office {
@@ -57,10 +65,10 @@ const offices: Office[] = [
       email: 'jeddah@ash.holdings',
       address: 'جدة، المملكة العربية السعودية'
     },
-    description: 'المقر الرئيسي للشركة والمركز الإداري الأساسي لجميع العمليات',
+    description: 'المقر الرئيسي للشركة والمركز الإداري الأساسي لجميع العمليات التقنية والاستثمارية',
     color: '#dc2626',
     priority: 1,
-    achievements: ['مركز القيادة الرئيسي', 'أكبر فريق عمل', 'مركز الابتكار']
+    achievements: ['مركز القيادة الرئيسي', 'أكبر فريق عمل', 'مركز الابتكار التقني']
   },
   {
     id: 'riyadh',
@@ -78,10 +86,10 @@ const offices: Office[] = [
       email: 'riyadh@ash.holdings',
       address: 'الرياض، المملكة العربية السعودية'
     },
-    description: 'الفرع الرئيسي المتخصص في الحلول التقنية والاستشارات الاستراتيجية',
+    description: 'الفرع الرئيسي المتخصص في الحلول التقنية الذكية والاستشارات الاستراتيجية لدعم رؤية 2030',
     color: '#16a34a',
     priority: 2,
-    achievements: ['مركز الحلول الذكية', 'شراكات حكومية', 'برامج التدريب']
+    achievements: ['مركز الحلول الذكية', 'شراكات حكومية', 'برامج التدريب المتقدمة']
   },
   {
     id: 'dubai',
@@ -93,16 +101,16 @@ const offices: Office[] = [
     coordinates: { lat: 25.2048, lng: 55.2708 },
     established: '2019',
     employees: 45,
-    services: ['التوسع الإقليمي', 'الشراكات الدولية', 'التطوير'],
+    services: ['التوسع الإقليمي', 'الشراكات الدولية', 'التطوير التجاري'],
     contact: {
       phone: '+971501234567',
       email: 'dubai@ash.holdings',
       address: 'دبي، الإمارات العربية المتحدة'
     },
-    description: 'المكتب الإقليمي لمنطقة الخليج العربي ومركز التوسع الدولي',
+    description: 'المكتب الإقليمي لمنطقة الخليج العربي ومركز التوسع الدولي والشراكات الاستراتيجية',
     color: '#2563eb',
     priority: 3,
-    achievements: ['بوابة الخليج', 'شراكات إقليمية', 'مركز التوسع']
+    achievements: ['بوابة الخليج التقنية', 'شراكات إقليمية', 'مركز التوسع الدولي']
   },
   {
     id: 'muscat',
@@ -120,10 +128,10 @@ const offices: Office[] = [
       email: 'muscat@ash.holdings',
       address: 'مسقط، سلطنة عمان'
     },
-    description: 'المكتب التمثيلي لخدمة السوق العماني وتطوير الأعمال المحلية',
+    description: 'المكتب التمثيلي لخدمة السوق العماني وتطوير الأعمال المحلية والحلول التقنية المتخصصة',
     color: '#ca8a04',
     priority: 4,
-    achievements: ['تمثيل تجاري', 'شراكات محلية', 'نمو مستدام']
+    achievements: ['تمثيل تجاري متميز', 'شراكات محلية قوية', 'نمو مستدام']
   },
   {
     id: 'amman',
@@ -141,10 +149,10 @@ const offices: Office[] = [
       email: 'amman@ash.holdings',
       address: 'عمان، الأردن'
     },
-    description: 'مكتب التنسيق الإقليمي لإدارة المشاريع والعمليات في المنطقة',
+    description: 'مكتب التنسيق الإقليمي لإدارة المشاريع والعمليات في منطقة بلاد الشام والتنسيق اللوجستي',
     color: '#ea580c',
     priority: 5,
-    achievements: ['تنسيق إقليمي', 'إدارة مشاريع', 'كفاءة عالية']
+    achievements: ['تنسيق إقليمي فعال', 'إدارة مشاريع احترافية', 'كفاءة عالية']
   },
   {
     id: 'berlin',
@@ -156,16 +164,16 @@ const offices: Office[] = [
     coordinates: { lat: 52.5200, lng: 13.4050 },
     established: '2022',
     employees: 30,
-    services: ['التوسع الأوروبي', 'التكنولوجيا', 'البحث والتطوير'],
+    services: ['التوسع الأوروبي', 'التكنولوجيا المتقدمة', 'البحث والتطوير'],
     contact: {
       phone: '+493012345678',
       email: 'berlin@ash.holdings',
       address: 'Berlin, Germany'
     },
-    description: 'المكتب الأوروبي المتخصص في التكنولوجيا المتقدمة والبحث والتطوير',
+    description: 'المكتب الأوروبي المتخصص في التكنولوجيا المتقدمة والبحث والتطوير والشراكات الأوروبية',
     color: '#7c3aed',
     priority: 6,
-    achievements: ['بوابة أوروبا', 'تقنيات متقدمة', 'شراكات دولية']
+    achievements: ['بوابة أوروبا التقنية', 'تقنيات متقدمة', 'شراكات دولية مهمة']
   }
 ];
 
@@ -206,409 +214,427 @@ const GlobalPresence = () => {
   const countries = new Set(offices.map(office => office.country)).size;
 
   return (
-    <div className="min-h-screen bg-gradient-surface pt-20">
-      {/* Header Section */}
-      <div className="container-modern section-modern">
-        <div className="text-center mb-12">
-          <Badge className="mb-4 px-6 py-2 bg-primary/10 text-primary border-primary/20">
-            <Globe className="w-4 h-4 ml-2" />
-            تواجدنا العالمي
-          </Badge>
-          <h1 className="heading-hero text-gradient-modern mb-6">
-            خريطة مكاتبنا حول العالم
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            نفخر بوجودنا في ستة مكاتب استراتيجية عبر ثلاث قارات، نخدم من خلالها عملائنا ونوسع آفاق أعمالنا عالمياً
-          </p>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid-features mb-12">
-          <Card className="card-premium text-center">
-            <CardContent className="pt-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-                <Building2 className="w-6 h-6 text-primary" />
-              </div>
-              <div className="text-3xl font-bold text-primary mb-2">{offices.length}</div>
-              <div className="text-sm text-muted-foreground">مكاتب عالمية</div>
-            </CardContent>
-          </Card>
+    <div className="min-h-screen bg-gradient-to-br from-background via-surface to-background">
+      <Navigation />
+      
+      <main className="pt-16">
+        {/* Hero Section */}
+        <section className="py-20 md:py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/10" />
+          <div className="absolute top-20 right-20 w-32 h-32 bg-blue-200/20 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-20 left-20 w-24 h-24 bg-purple-200/20 rounded-full blur-3xl animate-float-delayed" />
           
-          <Card className="card-premium text-center">
-            <CardContent className="pt-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-secondary/10 mb-4">
-                <Globe className="w-6 h-6 text-secondary" />
+          <div className="container mx-auto px-4 lg:px-6 relative z-10">
+            <div className="text-center mb-16 animate-fade-in">
+              <div className="inline-flex items-center gap-3 mb-8 p-4 bg-white/80 backdrop-blur-md rounded-full border border-primary/20 shadow-lg">
+                <Globe className="w-6 h-6 text-primary animate-pulse" />
+                <span className="text-primary font-semibold">تواجدنا العالمي</span>
               </div>
-              <div className="text-3xl font-bold text-secondary mb-2">{countries}</div>
-              <div className="text-sm text-muted-foreground">دول</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="card-premium text-center">
-            <CardContent className="pt-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-success/10 mb-4">
-                <Users className="w-6 h-6 text-success" />
-              </div>
-              <div className="text-3xl font-bold text-success mb-2">{totalEmployees}</div>
-              <div className="text-sm text-muted-foreground">موظف</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="card-premium text-center">
-            <CardContent className="pt-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-warning/10 mb-4">
-                <Calendar className="w-6 h-6 text-warning" />
-              </div>
-              <div className="text-3xl font-bold text-warning mb-2">2016</div>
-              <div className="text-sm text-muted-foreground">سنة التأسيس</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters and Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-between items-start sm:items-center">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="فلترة حسب النوع" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">جميع المكاتب</SelectItem>
-                  <SelectItem value="headquarters">المقر الرئيسي</SelectItem>
-                  <SelectItem value="main-branch">الفروع الرئيسية</SelectItem>
-                  <SelectItem value="regional">المكاتب الإقليمية</SelectItem>
-                  <SelectItem value="representative">المكاتب التمثيلية</SelectItem>
-                  <SelectItem value="coordination">مكاتب التنسيق</SelectItem>
-                  <SelectItem value="european">المكاتب الأوروبية</SelectItem>
-                </SelectContent>
-              </Select>
+              
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+                <span className="text-primary">خريطة </span>
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">مكاتبنا</span>
+                <br />
+                <span className="text-muted-foreground text-3xl md:text-4xl lg:text-5xl">حول العالم</span>
+              </h1>
+              
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                نفخر بوجودنا في ستة مكاتب استراتيجية عبر ثلاث قارات، نخدم من خلالها عملائنا ونوسع آفاق أعمالنا عالمياً
+              </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-muted-foreground" />
-              <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="ترتيب حسب" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="priority">الأهمية</SelectItem>
-                  <SelectItem value="established">تاريخ التأسيس</SelectItem>
-                  <SelectItem value="employees">عدد الموظفين</SelectItem>
-                </SelectContent>
-              </Select>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+              <Card className="bg-white/80 backdrop-blur-md border-0 shadow-xl hover:shadow-2xl transition-all duration-500 group hover:scale-105">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Building2 className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-primary mb-2">{offices.length}</div>
+                  <div className="font-semibold text-foreground mb-1">مكاتب عالمية</div>
+                  <div className="text-sm text-muted-foreground">Global Offices</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/80 backdrop-blur-md border-0 shadow-xl hover:shadow-2xl transition-all duration-500 group hover:scale-105">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Globe className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-primary mb-2">{countries}</div>
+                  <div className="font-semibold text-foreground mb-1">دول</div>
+                  <div className="text-sm text-muted-foreground">Countries</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/80 backdrop-blur-md border-0 shadow-xl hover:shadow-2xl transition-all duration-500 group hover:scale-105">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Users className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-primary mb-2">{totalEmployees}</div>
+                  <div className="font-semibold text-foreground mb-1">موظف</div>
+                  <div className="text-sm text-muted-foreground">Employees</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/80 backdrop-blur-md border-0 shadow-xl hover:shadow-2xl transition-all duration-500 group hover:scale-105">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Calendar className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-primary mb-2">2016</div>
+                  <div className="font-semibold text-foreground mb-1">سنة التأسيس</div>
+                  <div className="text-sm text-muted-foreground">Since</div>
+                </CardContent>
+              </Card>
             </div>
           </div>
+        </section>
 
-          <Badge variant="outline" className="text-sm">
-            {filteredOffices.length} من {offices.length} مكتب
-          </Badge>
-        </div>
+        {/* Interactive Map Section */}
+        <section className="py-20 bg-gradient-to-br from-secondary/5 to-primary/5">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="text-center mb-12 animate-fade-in">
+              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-primary/10 rounded-full">
+                <MapPin className="w-6 h-6 text-primary animate-pulse" />
+                <span className="text-primary font-semibold">الخريطة التفاعلية</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+                استكشف مكاتبنا بالخريطة
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                خريطة تفاعلية ثلاثية الأبعاد تُظهر مواقع مكاتبنا حول العالم مع تفاصيل كل مكتب
+              </p>
+            </div>
 
-        {/* World Map Visualization */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-12">
-          <div className="lg:col-span-2">
-            <Card className="card-premium overflow-hidden">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-primary" />
-                  خريطة التواجد العالمي
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl p-8 h-96 overflow-hidden">
-                  {/* World Map Background */}
-                  <div className="absolute inset-0 opacity-10">
-                    <svg viewBox="0 0 1000 500" className="w-full h-full">
-                      {/* Simplified world continents */}
-                      <path d="M150 200 Q200 180 250 200 Q300 220 350 200 Q400 180 450 200 Q500 220 550 200 Q600 180 650 200" 
-                            stroke="#3b82f6" strokeWidth="2" fill="none" opacity="0.3" />
-                      {/* Europe */}
-                      <circle cx="500" cy="150" r="80" fill="#3b82f6" opacity="0.1" />
-                      {/* Middle East */}
-                      <circle cx="550" cy="200" r="120" fill="#3b82f6" opacity="0.1" />
-                      {/* Asia */}
-                      <circle cx="700" cy="180" r="100" fill="#3b82f6" opacity="0.1" />
-                    </svg>
-                  </div>
-
-                  {/* Office Markers */}
-                  <div className="relative h-full">
-                    {filteredOffices.map((office, index) => {
-                      // Calculate position based on coordinates (simplified projection)
-                      const x = ((office.coordinates.lng + 180) / 360) * 100;
-                      const y = ((90 - office.coordinates.lat) / 180) * 100;
-                      
-                      return (
-                        <div
-                          key={office.id}
-                          className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 hover:scale-125 ${
-                            selectedOffice?.id === office.id ? 'scale-125 z-10' : 'hover:z-10'
-                          }`}
-                          style={{ 
-                            left: `${Math.max(10, Math.min(90, x))}%`, 
-                            top: `${Math.max(10, Math.min(90, y))}%` 
-                          }}
-                          onClick={() => setSelectedOffice(office)}
-                        >
-                          <div 
-                            className={`w-6 h-6 rounded-full border-3 border-white shadow-lg animate-pulse ${
-                              office.type === 'headquarters' ? 'w-8 h-8' : 
-                              office.type === 'main-branch' ? 'w-7 h-7' : 'w-6 h-6'
-                            }`}
-                            style={{ backgroundColor: office.color }}
-                          />
-                          <div 
-                            className={`absolute top-8 left-1/2 transform -translate-x-1/2 bg-white rounded-lg px-2 py-1 text-xs font-medium shadow-lg border whitespace-nowrap transition-opacity duration-200 ${
-                              selectedOffice?.id === office.id ? 'opacity-100' : 'opacity-0 hover:opacity-100'
-                            }`}
-                          >
-                            {office.city}
-                            <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white border-l border-t rotate-45"></div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Connection Lines */}
-                  <svg className="absolute inset-0 pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    {offices.slice(0, -1).map((office, index) => {
-                      const nextOffice = offices[index + 1];
-                      const x1 = ((office.coordinates.lng + 180) / 360) * 100;
-                      const y1 = ((90 - office.coordinates.lat) / 180) * 100;
-                      const x2 = ((nextOffice.coordinates.lng + 180) / 360) * 100;
-                      const y2 = ((90 - nextOffice.coordinates.lat) / 180) * 100;
-                      
-                      return (
-                        <line
-                          key={`${office.id}-${nextOffice.id}`}
-                          x1={Math.max(10, Math.min(90, x1))}
-                          y1={Math.max(10, Math.min(90, y1))}
-                          x2={Math.max(10, Math.min(90, x2))}
-                          y2={Math.max(10, Math.min(90, y2))}
-                          stroke="#3b82f6"
-                          strokeWidth="0.2"
-                          opacity="0.3"
-                          strokeDasharray="1,1"
-                        />
-                      );
-                    })}
-                  </svg>
+            {/* Filters */}
+            <div className="flex flex-col md:flex-row gap-4 mb-8 justify-between items-start md:items-center">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-muted-foreground" />
+                  <Select value={filterType} onValueChange={setFilterType}>
+                    <SelectTrigger className="w-48 bg-white/80 backdrop-blur-md">
+                      <SelectValue placeholder="فلترة حسب النوع" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">جميع المكاتب</SelectItem>
+                      <SelectItem value="headquarters">المقر الرئيسي</SelectItem>
+                      <SelectItem value="main-branch">الفروع الرئيسية</SelectItem>
+                      <SelectItem value="regional">المكاتب الإقليمية</SelectItem>
+                      <SelectItem value="representative">المكاتب التمثيلية</SelectItem>
+                      <SelectItem value="coordination">مكاتب التنسيق</SelectItem>
+                      <SelectItem value="european">المكاتب الأوروبية</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                {/* Legend */}
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {Array.from(new Set(offices.map(o => o.type))).map(type => {
-                    const office = offices.find(o => o.type === type);
-                    return (
-                      <div key={type} className="flex items-center gap-2 text-sm">
-                        <div 
-                          className="w-3 h-3 rounded-full border border-white shadow-sm"
-                          style={{ backgroundColor: office?.color }}
-                        />
-                        <span className="text-muted-foreground">{typeLabels[type]}</span>
-                      </div>
-                    );
-                  })}
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-muted-foreground" />
+                  <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+                    <SelectTrigger className="w-48 bg-white/80 backdrop-blur-md">
+                      <SelectValue placeholder="ترتيب حسب" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="priority">الأهمية</SelectItem>
+                      <SelectItem value="established">تاريخ التأسيس</SelectItem>
+                      <SelectItem value="employees">عدد الموظفين</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              <Badge variant="outline" className="bg-white/80 backdrop-blur-md text-sm">
+                {filteredOffices.length} من {offices.length} مكتب
+              </Badge>
+            </div>
+
+            {/* Map */}
+            <div className="mb-12">
+              <InteractiveMap 
+                offices={filteredOffices}
+                selectedOffice={selectedOffice}
+                onSelectOffice={setSelectedOffice}
+              />
+            </div>
           </div>
+        </section>
 
-          {/* Office Details Panel */}
-          <div>
-            <Card className="card-premium sticky top-24">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-primary" />
-                  {selectedOffice ? 'تفاصيل المكتب' : 'اختر مكتب من الخريطة'}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {selectedOffice ? (
-                  <div className="space-y-4">
+        {/* Office Details Section */}
+        {selectedOffice && (
+          <section className="py-20 bg-gradient-to-br from-primary/5 to-secondary/5">
+            <div className="container mx-auto px-4 lg:px-6">
+              <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white p-8">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold text-lg mb-2">{selectedOffice.name}</h3>
-                      <p className="text-muted-foreground text-sm mb-3">{selectedOffice.nameEn}</p>
-                      <Badge
-                        className="mb-3"
-                        style={{ backgroundColor: selectedOffice.color, color: 'white' }}
-                      >
+                      <CardTitle className="text-3xl font-bold mb-2">
+                        {selectedOffice.name}
+                      </CardTitle>
+                      <p className="text-blue-100 text-lg">{selectedOffice.nameEn}</p>
+                      <Badge className="mt-2 bg-white/20 text-white border-white/30">
                         {typeLabels[selectedOffice.type]}
                       </Badge>
                     </div>
-
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-sm">
-                        <MapPin className="w-4 h-4 text-muted-foreground" />
-                        <span>{selectedOffice.city}, {selectedOffice.country}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Calendar className="w-4 h-4 text-muted-foreground" />
-                        <span>تأسس في {selectedOffice.established}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <Users className="w-4 h-4 text-muted-foreground" />
-                        <span>{selectedOffice.employees} موظف</span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold mb-2">الخدمات:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedOffice.services.map((service, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {service}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    {selectedOffice.achievements && (
-                      <div>
-                        <h4 className="font-semibold mb-2">الإنجازات:</h4>
-                        <div className="space-y-1">
-                          {selectedOffice.achievements.map((achievement, index) => (
-                            <div key={index} className="flex items-center gap-2 text-sm">
-                              <Award className="w-3 h-3 text-warning" />
-                              <span>{achievement}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="pt-4 border-t space-y-2">
-                      <h4 className="font-semibold">معلومات الاتصال:</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-muted-foreground" />
-                          <a href={`tel:${selectedOffice.contact.phone}`} className="hover:text-primary">
-                            {selectedOffice.contact.phone}
-                          </a>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-muted-foreground" />
-                          <a href={`mailto:${selectedOffice.contact.email}`} className="hover:text-primary">
-                            {selectedOffice.contact.email}
-                          </a>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Navigation className="w-4 h-4 text-muted-foreground" />
-                          <a 
-                            href={`https://maps.google.com/?q=${selectedOffice.coordinates.lat},${selectedOffice.coordinates.lng}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-primary"
-                          >
-                            عرض في خرائط جوجل
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Globe className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>انقر على أي نقطة في الخريطة لعرض تفاصيل المكتب</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Offices List */}
-        <div className="space-y-6">
-          <h2 className="heading-modern">قائمة جميع المكاتب مرتبة حسب {sortBy === 'priority' ? 'الأهمية' : sortBy === 'established' ? 'تاريخ التأسيس' : 'عدد الموظفين'}</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {filteredOffices.map((office, index) => (
-              <Card 
-                key={office.id} 
-                className={`card-premium cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                  selectedOffice?.id === office.id ? 'ring-2 ring-primary' : ''
-                }`}
-                onClick={() => setSelectedOffice(office)}
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-xs">#{index + 1}</Badge>
-                        <CardTitle className="text-lg">{office.name}</CardTitle>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{office.nameEn}</p>
-                      <Badge
-                        className="mb-2"
-                        style={{ backgroundColor: office.color, color: 'white' }}
-                      >
-                        {typeLabels[office.type]}
-                      </Badge>
-                    </div>
                     <div 
-                      className="w-4 h-4 rounded-full border-2 border-white shadow-md animate-pulse"
-                      style={{ backgroundColor: office.color }}
+                      className="w-20 h-20 rounded-full border-4 border-white shadow-xl"
+                      style={{ backgroundColor: selectedOffice.color }}
                     />
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">{office.description}</p>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Calendar className="w-4 h-4 text-muted-foreground" />
-                      <span>تأسس {office.established}</span>
+                <CardContent className="p-8">
+                  <div className="grid lg:grid-cols-2 gap-8">
+                    {/* Office Info */}
+                    <div>
+                      <h3 className="text-2xl font-bold text-primary mb-4">معلومات المكتب</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <MapPin className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <div className="font-semibold">{selectedOffice.country}</div>
+                            <div className="text-sm text-muted-foreground">{selectedOffice.contact.address}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <Calendar className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <div className="font-semibold">تأسس في {selectedOffice.established}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {new Date().getFullYear() - parseInt(selectedOffice.established)} سنوات من الخبرة
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <Users className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <div className="font-semibold">{selectedOffice.employees} موظف</div>
+                            <div className="text-sm text-muted-foreground">فريق متخصص ومتفاني</div>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-6">
+                          <h4 className="font-semibold mb-3">وصف المكتب</h4>
+                          <p className="text-muted-foreground leading-relaxed">
+                            {selectedOffice.description}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Users className="w-4 h-4 text-muted-foreground" />
-                      <span>{office.employees} موظف</span>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <MapPin className="w-4 h-4" />
-                      <span>{office.city}, {office.country}</span>
+                    {/* Services & Contact */}
+                    <div>
+                      <h3 className="text-2xl font-bold text-primary mb-4">الخدمات والتواصل</h3>
+                      
+                      {/* Services */}
+                      <div className="mb-6">
+                        <h4 className="font-semibold mb-3">الخدمات المتاحة</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedOffice.services.map((service, index) => (
+                            <Badge key={index} variant="outline" className="text-sm">
+                              {service}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Achievements */}
+                      {selectedOffice.achievements && (
+                        <div className="mb-6">
+                          <h4 className="font-semibold mb-3">الإنجازات الرئيسية</h4>
+                          <div className="space-y-2">
+                            {selectedOffice.achievements.map((achievement, index) => (
+                              <div key={index} className="flex items-center gap-2">
+                                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                <span className="text-sm">{achievement}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Contact */}
+                      <div className="space-y-3">
+                        <h4 className="font-semibold">معلومات التواصل</h4>
+                        
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <Button className="flex-1 bg-green-600 hover:bg-green-700" asChild>
+                            <a href={`tel:${selectedOffice.contact.phone}`}>
+                              <Phone className="w-4 h-4 mr-2" />
+                              اتصال مباشر
+                            </a>
+                          </Button>
+                          
+                          <Button variant="outline" className="flex-1" asChild>
+                            <a href={`mailto:${selectedOffice.contact.email}`}>
+                              <Mail className="w-4 h-4 mr-2" />
+                              إرسال إيميل
+                            </a>
+                          </Button>
+                        </div>
+
+                        <Button 
+                          variant="ghost" 
+                          className="w-full text-primary"
+                          onClick={() => setSelectedOffice(null)}
+                        >
+                          العودة للخريطة
+                          <ArrowRight className="w-4 h-4 mr-2" />
+                        </Button>
+                      </div>
                     </div>
-                    <Button variant="ghost" size="sm" asChild>
-                      <a 
-                        href={`https://maps.google.com/?q=${office.coordinates.lat},${office.coordinates.lng}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </div>
+            </div>
+          </section>
+        )}
 
-        {/* CTA Section */}
-        <div className="text-center mt-16 p-8 bg-gradient-primary rounded-2xl text-white">
-          <h3 className="text-2xl font-bold mb-4">هل تريد الانضمام إلى فريقنا العالمي؟</h3>
-          <p className="text-lg mb-6 opacity-90">
-            نبحث عن المواهب المتميزة للانضمام إلى مكاتبنا حول العالم
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="secondary" size="lg" asChild>
-              <a href="/jobs">
-                تقدم للوظائف الشاغرة
-              </a>
-            </Button>
-            <Button variant="outline" size="lg" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
-              <a href="/contact">
-                تواصل معنا
-              </a>
-            </Button>
+        {/* Offices Grid */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="text-center mb-12 animate-fade-in">
+              <div className="inline-flex items-center gap-3 mb-6 p-3 bg-primary/10 rounded-full">
+                <Building2 className="w-6 h-6 text-primary animate-pulse" />
+                <span className="text-primary font-semibold">جميع المكاتب</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+                مكاتبنا بالتفصيل
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                استكشف تفاصيل كل مكتب من مكاتبنا حول العالم
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredOffices.map((office, index) => (
+                <Card 
+                  key={office.id}
+                  className="bg-white/80 backdrop-blur-md border-0 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden group hover:scale-105 cursor-pointer"
+                  onClick={() => setSelectedOffice(office)}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <CardHeader className="relative overflow-hidden">
+                    <div 
+                      className="absolute inset-0 opacity-10"
+                      style={{ background: `linear-gradient(135deg, ${office.color}22, ${office.color}44)` }}
+                    />
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-3">
+                        <Badge 
+                          className="text-white border-0"
+                          style={{ backgroundColor: office.color }}
+                        >
+                          {typeLabels[office.type]}
+                        </Badge>
+                        <div 
+                          className="w-4 h-4 rounded-full"
+                          style={{ backgroundColor: office.color }}
+                        />
+                      </div>
+                      <CardTitle className="text-xl font-bold text-primary group-hover:text-secondary transition-colors duration-300">
+                        {office.name}
+                      </CardTitle>
+                      <p className="text-muted-foreground text-sm">{office.nameEn}</p>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent className="p-6">
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center gap-2 text-sm">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        <span>{office.country}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm">
+                        <Calendar className="w-4 h-4 text-muted-foreground" />
+                        <span>تأسس في {office.established}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm">
+                        <Users className="w-4 h-4 text-muted-foreground" />
+                        <span>{office.employees} موظف</span>
+                      </div>
+                    </div>
+
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-3">
+                      {office.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {office.services.slice(0, 2).map((service, i) => (
+                        <Badge key={i} variant="outline" className="text-xs">
+                          {service}
+                        </Badge>
+                      ))}
+                      {office.services.length > 2 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{office.services.length - 2}
+                        </Badge>
+                      )}
+                    </div>
+
+                    <Button 
+                      className="w-full group-hover:bg-secondary transition-colors duration-300"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedOffice(office);
+                      }}
+                    >
+                      عرض التفاصيل
+                      <ArrowRight className="w-4 h-4 mr-2" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+
+        {/* Call to Action */}
+        <section className="py-20 bg-gradient-to-r from-primary to-secondary relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent" />
+          
+          <div className="container mx-auto px-4 lg:px-6 relative z-10">
+            <div className="text-center animate-fade-in">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                تواصل مع أقرب مكتب لك
+              </h2>
+              <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                فريقنا جاهز لخدمتك في جميع مكاتبنا حول العالم
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg" 
+                  variant="secondary"
+                  className="bg-white text-primary hover:bg-white/90 px-8 py-6 text-lg font-semibold"
+                  asChild
+                >
+                  <a href="/contact">
+                    تواصل معنا
+                    <ArrowRight className="w-5 h-5 mr-2" />
+                  </a>
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold"
+                  asChild
+                >
+                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
+                    واتساب مباشر
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+      <WhatsAppButton />
     </div>
   );
 };
