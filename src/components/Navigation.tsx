@@ -105,12 +105,12 @@ const Navigation = () => {
                 />
                 <div className="hidden lg:block">
                   <div className={`font-bold text-base ${isScrolled ? 'text-gray-800' : 'text-white'}`}>
-                    شركة علي صالح الشهري القابضة
+                    منصة إدارة المشاريع
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
                     <Star className="w-3 h-3 text-yellow-500 fill-current" />
                     <span className={`text-xs ${isScrolled ? 'text-gray-500' : 'text-white/80'}`}>
-                      شركة رائدة منذ 2016
+                      منصة متطورة منذ 2016
                     </span>
                   </div>
                 </div>

@@ -146,7 +146,7 @@ const HeroSection = () => {
           <div className="relative">
             {/* Main Title with Better Visibility */}
             <h1 className="relative text-3xl md:text-5xl lg:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl">
-              شركة علي صالح الشهري القابضة
+              منصة إدارة المشاريع
               
               {/* Animated Underline */}
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-secondary to-primary hover:w-full transition-all duration-1000 rounded-full shadow-glow" />
@@ -154,7 +154,7 @@ const HeroSection = () => {
             
             {/* Text Glow Effect for Better Visibility */}
             <div className="absolute inset-0 text-3xl md:text-5xl lg:text-6xl font-bold text-white/20 blur-sm">
-              شركة علي صالح الشهري القابضة
+              منصة إدارة المشاريع
             </div>
           </div>
           
@@ -170,10 +170,10 @@ const HeroSection = () => {
         
         {/* Enhanced Description */}
         <p className="text-xl md:text-3xl text-primary-foreground/95 mb-12 max-w-5xl mx-auto leading-relaxed animate-fade-in font-medium" style={{ animationDelay: '0.9s' }}>
-          رؤية مستقبلية في عالم التقنية والإعلام، نبني جسوراً نحو الابتكار والتميز العالمي
+          منصة شاملة لإدارة وتنظيم المشاريع بكفاءة عالية، لتحقيق النجاح والتميز
           <br />
           <span className="text-lg md:text-xl text-primary-foreground/80 mt-2 block">
-            مع شركاء النجاح حول العالم لتحقيق أهداف استثنائية
+            أدوات متطورة لإدارة الفرق والمهام وتتبع التقدم بسهولة
           </span>
         </p>
         
