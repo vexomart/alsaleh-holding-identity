@@ -16,6 +16,9 @@ import TechInvestment from "./pages/TechInvestment";
 import Development from "./pages/Development";
 import StrategicConsulting from "./pages/StrategicConsulting";
 import IntegratedSolutions from "./pages/IntegratedSolutions";
+import Training from "./pages/Training";
+import Volunteer from "./pages/Volunteer";
+import DevelopmentProgram from "./pages/DevelopmentProgram";
 import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +52,9 @@ const App = () => {
               <Route path="/development" element={<Development />} />
               <Route path="/strategic-consulting" element={<StrategicConsulting />} />
               <Route path="/integrated-solutions" element={<IntegratedSolutions />} />
+              <Route path="/training" element={<Training />} />
+              <Route path="/volunteer" element={<Volunteer />} />
+              <Route path="/development-program" element={<DevelopmentProgram />} />
               <Route path="/faq" element={<FAQ />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

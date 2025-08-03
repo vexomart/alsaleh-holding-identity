@@ -129,9 +129,9 @@ const Footer = () => {
 
   const careersAndOpportunities = [
     { name: "طلب وظيفة", href: "/job-application", icon: Users },
-    { name: "فرص التدريب", href: "#training", icon: Award },
-    { name: "العمل التطوعي", href: "#volunteer", icon: Heart },
-    { name: "برنامج التطوير", href: "#development-program", icon: Lightbulb }
+    { name: "فرص التدريب", href: "/training", icon: Award },
+    { name: "العمل التطوعي", href: "/volunteer", icon: Heart },
+    { name: "برنامج التطوير", href: "/development-program", icon: Lightbulb }
   ];
 
   const contactInfo = [
