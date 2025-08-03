@@ -234,6 +234,7 @@ const Footer = () => {
   ];
 
   const companyUpdates = [
+    { name: "بورتال الشركة", href: "#", icon: Building2 },
     { name: "أخبار الشركة", href: "/company-news", icon: Globe },
     { name: "البيانات الصحفية", href: "/press-releases", icon: FileText },
     { name: "فعاليات قادمة", href: "/upcoming-events", icon: Calendar },
