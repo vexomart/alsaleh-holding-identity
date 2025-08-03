@@ -33,7 +33,8 @@ const Volunteer = () => {
       impact: "خدمة +1000 مستفيد",
       icon: Code,
       color: "from-blue-500 to-indigo-600",
-      urgent: true
+      urgent: false,
+      comingSoon: true
     },
     {
       title: "مدرب في برامج التمكين الرقمي",
@@ -46,7 +47,8 @@ const Volunteer = () => {
       impact: "تدريب +200 متدرب",
       icon: GraduationCap,
       color: "from-emerald-500 to-teal-600",
-      urgent: false
+      urgent: false,
+      comingSoon: true
     },
     {
       title: "استشاري تطوير الأعمال للشركات الناشئة",
@@ -59,7 +61,8 @@ const Volunteer = () => {
       impact: "دعم +50 شركة ناشئة",
       icon: Lightbulb,
       color: "from-orange-500 to-red-600",
-      urgent: false
+      urgent: false,
+      comingSoon: true
     },
     {
       title: "منسق مشاريع المسؤولية المجتمعية",
@@ -72,7 +75,8 @@ const Volunteer = () => {
       impact: "تنظيم +20 فعالية",
       icon: Users,
       color: "from-purple-500 to-pink-600",
-      urgent: true
+      urgent: false,
+      comingSoon: true
     }
   ];
 
@@ -185,11 +189,15 @@ const Volunteer = () => {
                         <Badge variant="outline" className="text-xs">
                           {opportunity.category}
                         </Badge>
-                        {opportunity.urgent && (
+                        {opportunity.comingSoon ? (
+                          <Badge className="bg-yellow-500 text-white text-xs">
+                            قريباً
+                          </Badge>
+                        ) : opportunity.urgent ? (
                           <Badge className="bg-red-500 text-white text-xs">
                             عاجل
                           </Badge>
-                        )}
+                        ) : null}
                       </div>
                     </div>
                     
@@ -232,8 +240,8 @@ const Volunteer = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700">
-                      تقدم للتطوع
+                    <Button className="w-full bg-gray-400 hover:bg-gray-500 cursor-not-allowed" disabled>
+                      قريباً - تحت التطوير
                     </Button>
                   </CardContent>
                 </Card>
