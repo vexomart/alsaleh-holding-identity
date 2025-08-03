@@ -38,7 +38,8 @@ const DevelopmentProgram = () => {
       outcomes: "ترقية إلى منصب قيادي",
       icon: Rocket,
       color: "from-blue-500 to-indigo-600",
-      featured: true
+      featured: true,
+      status: "قريباً"
     },
     {
       title: "مسار ريادة الأعمال التقنية",
@@ -55,7 +56,8 @@ const DevelopmentProgram = () => {
       outcomes: "إطلاق شركة ناشئة",
       icon: Lightbulb,
       color: "from-emerald-500 to-teal-600",
-      featured: false
+      featured: false,
+      status: "قريباً"
     },
     {
       title: "مسار التطوير المهني المتسارع",
@@ -72,7 +74,8 @@ const DevelopmentProgram = () => {
       outcomes: "ترقية وظيفية",
       icon: Target,
       color: "from-orange-500 to-red-600",
-      featured: false
+      featured: false,
+      status: "قريباً"
     }
   ];
 
@@ -200,27 +203,35 @@ const DevelopmentProgram = () => {
             {developmentTracks.map((track, index) => {
               const IconComponent = track.icon;
               return (
-                <Card key={index} className={`group hover:shadow-xl transition-all duration-300 border-0 bg-white/70 backdrop-blur-sm overflow-hidden ${track.featured ? 'ring-2 ring-purple-500/50 transform scale-105' : ''}`}>
-                  <div className={`h-2 bg-gradient-to-r ${track.color}`} />
+                <Card key={index} className={`group hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 border-0 bg-white/80 backdrop-blur-lg overflow-hidden relative ${track.featured ? 'ring-2 ring-purple-500/30 transform scale-105 shadow-2xl' : ''}`}>
+                  <div className={`h-2 bg-gradient-to-r ${track.color} relative overflow-hidden`}>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+                  </div>
                   
                   {track.featured && (
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                      الأكثر طلباً
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg animate-pulse">
+                      ✨ الأكثر طلباً
                     </div>
                   )}
+
+                  {/* Coming Soon Badge */}
+                  <div className="absolute top-4 left-4 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-bounce">
+                    🚀 قريباً
+                  </div>
                   
-                  <CardHeader className="p-6 pb-4">
+                  <CardHeader className="p-6 pb-4 relative">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className={`w-12 h-12 bg-gradient-to-r ${track.color} rounded-xl flex items-center justify-center`}>
+                      <div className={`w-12 h-12 bg-gradient-to-r ${track.color} rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}>
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs border-slate-300 bg-slate-50/80 backdrop-blur-sm">
                         {track.level}
                       </Badge>
                     </div>
                     
-                    <CardTitle className="text-xl font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition-colors">
+                    <CardTitle className="text-xl font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition-colors duration-300 relative">
                       {track.title}
+                      <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                     </CardTitle>
                     <CardDescription className="text-slate-600 leading-relaxed">
                       {track.description}
@@ -255,8 +266,15 @@ const DevelopmentProgram = () => {
                       </div>
                     </div>
 
-                    <Button className={`w-full ${track.featured ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700' : ''}`}>
-                      {track.featured ? 'تقدم الآن - مقاعد محدودة' : 'تقدم للمسار'}
+                    <Button className={`w-full relative overflow-hidden group/btn ${
+                      track.featured 
+                        ? 'bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 hover:from-purple-700 hover:via-pink-700 hover:to-purple-800 shadow-lg hover:shadow-xl' 
+                        : 'bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700'
+                    } transform transition-all duration-300 hover:scale-[1.02] disabled:cursor-not-allowed`} disabled>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000"></div>
+                      <span className="relative z-10 font-semibold">
+                        {track.featured ? '✨ قريباً - الأكثر انتظاراً' : '🚀 قريباً - ترقبوا الإعلان'}
+                      </span>
                     </Button>
                   </CardContent>
                 </Card>
