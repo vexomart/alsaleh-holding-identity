@@ -372,12 +372,122 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 2: Quick Links & Services */}
+            {/* Column 2: Services & Ready Projects */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              {/* Services */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-blue-400 animate-pulse" />
+                  خدماتنا المتخصصة
+                </h4>
+                <ul className="space-y-2">
+                  {services.map((service, index) => {
+                    const IconComponent = service.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={service.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {service.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Ready Projects */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Code className="w-4 h-4 text-emerald-400 animate-pulse" />
+                  مشاريعنا الجاهزة
+                </h4>
+                <ul className="space-y-2">
+                  {readyProjects.map((project, index) => {
+                    const IconComponent = project.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={project.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-emerald-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {project.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            {/* Column 3: Digital Solutions & Company Updates */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+              {/* Digital Solutions */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-purple-400 animate-pulse" />
+                  الحلول الرقمية
+                </h4>
+                <ul className="space-y-2">
+                  {digitalSolutions.map((solution, index) => {
+                    const IconComponent = solution.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={solution.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-purple-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {solution.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Company Updates */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-orange-400 animate-pulse" />
+                  تحديثات الشركة
+                </h4>
+                <ul className="space-y-2">
+                  {companyUpdates.map((update, index) => {
+                    const IconComponent = update.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={update.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {update.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            {/* Column 4: Quick Links & Careers */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
               {/* Quick Links */}
               <div>
-                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4 text-secondary animate-pulse" />
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Home className="w-4 h-4 text-blue-400 animate-pulse" />
                   روابط سريعة
                 </h4>
                 <ul className="space-y-2">
@@ -387,7 +497,7 @@ const Footer = () => {
                       <li key={index}>
                         <a 
                           href={link.href} 
-                          className="flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-1 text-sm"
+                          className="flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-all duration-300 group hover:translate-x-1 text-sm"
                         >
                           <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
                           <span className="group-hover:font-medium transition-all duration-300">
@@ -400,26 +510,25 @@ const Footer = () => {
                 </ul>
               </div>
 
-              {/* Services */}
+              {/* Careers & Opportunities */}
               <div>
-                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
-                  <Award className="w-4 h-4 text-secondary animate-pulse" />
-                  خدماتنا المتميزة
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-green-400 animate-pulse" />
+                  الوظائف والفرص
                 </h4>
                 <ul className="space-y-2">
-                  {services.map((service, index) => {
-                    const IconComponent = service.icon;
+                  {careersAndOpportunities.map((link, index) => {
+                    const IconComponent = link.icon;
                     return (
                       <li key={index}>
                         <a 
-                          href={service.href} 
-                          className="flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-1 text-sm"
+                          href={link.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-sm"
                         >
                           <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
                           <span className="group-hover:font-medium transition-all duration-300">
-                            {service.name}
+                            {link.name}
                           </span>
-                          <ExternalLink className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </a>
                       </li>
                     );
@@ -428,12 +537,12 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 3: Support & Careers */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            {/* Column 5: Support & Help */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.5s" }}>
               {/* Help & Support */}
               <div>
-                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
-                  <HeadphonesIcon className="w-4 h-4 text-secondary animate-pulse" />
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <HeadphonesIcon className="w-4 h-4 text-red-400 animate-pulse" />
                   المساعدة والدعم
                 </h4>
                 <ul className="space-y-2">
@@ -443,7 +552,7 @@ const Footer = () => {
                       <li key={index}>
                         <a 
                           href={link.href} 
-                          className="flex items-center justify-between text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-1 text-sm"
+                          className="flex items-center justify-between text-slate-300 hover:text-red-400 transition-all duration-300 group hover:translate-x-1 text-sm"
                         >
                           <div className="flex items-center gap-2">
                             <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
@@ -462,35 +571,9 @@ const Footer = () => {
                   })}
                 </ul>
               </div>
-
-              {/* Careers & Opportunities */}
-              <div>
-                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-secondary animate-pulse" />
-                  الوظائف والفرص
-                </h4>
-                <ul className="space-y-2">
-                  {careersAndOpportunities.map((link, index) => {
-                    const IconComponent = link.icon;
-                    return (
-                      <li key={index}>
-                        <a 
-                          href={link.href} 
-                          className="flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-all duration-300 group hover:translate-x-1 text-sm"
-                        >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {link.name}
-                          </span>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
             </div>
 
-            {/* Column 4: Newsletter & Social Media */}
+            {/* Column 6: Newsletter & Social Media */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
               {/* Newsletter Subscription */}
               <div>
