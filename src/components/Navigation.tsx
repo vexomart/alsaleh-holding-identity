@@ -21,7 +21,8 @@ import {
   Bell,
   Gift,
   Settings,
-  PenTool
+  PenTool,
+  Palette
 } from "lucide-react";
 
 const Navigation = () => {
@@ -41,6 +42,7 @@ const Navigation = () => {
     { name: "العروض الحالية", href: "#offers", icon: Gift },
     { name: "خدماتنا الاحترافية", href: "#services", icon: Settings },
     { name: "صناعة المحتوى", href: "#content-creation", icon: PenTool },
+    { name: "حلول التصميم", href: "#design-solutions", icon: Palette },
     { name: "الاستثمار التقني", href: "/tech-investment", icon: Zap },
     { name: "التطوير والابتكار", href: "/development", icon: Building2 },
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Users },
