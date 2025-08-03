@@ -225,6 +225,10 @@ const AISolutions = () => {
                         to={
                           service.id === 1 ? "/nlp-solutions" :
                           service.id === 2 ? "/computer-vision" :
+                          service.id === 3 ? "/machine-learning" :
+                          service.id === 4 ? "/smart-assistants" :
+                          service.id === 5 ? "/smart-analytics" :
+                          service.id === 6 ? "/smart-automation" :
                           "#"
                         }
                       >

@@ -31,6 +31,10 @@ import CloudSolutions from "./pages/CloudSolutions";
 import SecuritySolutions from "./pages/SecuritySolutions";
 import NLPSolutions from "./pages/NLPSolutions";
 import ComputerVision from "./pages/ComputerVision";
+import MachineLearning from "./pages/MachineLearning";
+import SmartAssistants from "./pages/SmartAssistants";
+import SmartAnalytics from "./pages/SmartAnalytics";
+import SmartAutomation from "./pages/SmartAutomation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -78,6 +82,10 @@ const App = () => {
               <Route path="/security-solutions" element={<SecuritySolutions />} />
               <Route path="/nlp-solutions" element={<NLPSolutions />} />
               <Route path="/computer-vision" element={<ComputerVision />} />
+              <Route path="/machine-learning" element={<MachineLearning />} />
+              <Route path="/smart-assistants" element={<SmartAssistants />} />
+              <Route path="/smart-analytics" element={<SmartAnalytics />} />
+              <Route path="/smart-automation" element={<SmartAutomation />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
