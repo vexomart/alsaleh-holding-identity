@@ -262,6 +262,29 @@ const ReadyProjects = () => {
       icon: Building2,
       color: "orange",
       gradient: "from-orange-500 to-red-600",
+      rating: "4.8",
+      clients: "45+",
+      updates: "تحديثات مجانية لسنة ونصف",
+      support: "دعم فني وتجاري متخصص"
+    },
+    {
+      id: 14,
+      title: "نظام إدارة المشاريع",
+      description: "نظام شامل لإدارة المشاريع وفرق العمل مع تتبع المهام والجدولة الزمنية وإدارة الموارد",
+      detailedDescription: "نظام متقدم لإدارة المشاريع يساعد الشركات على تنظيم وتتبع مشاريعها بكفاءة. يشمل إدارة المهام، الجدولة الزمنية، تخصيص الموارد، التعاون بين الفرق، تتبع التقدم، وتقارير الأداء التفصيلية.",
+      features: ["إدارة المهام", "الجدولة الزمنية", "إدارة الفرق", "تتبع التقدم", "تقارير الأداء", "إدارة الموارد"],
+      technologies: ["React", "Express.js", "MongoDB", "Real-time Chat", "Gantt Charts", "Notifications"],
+      price: "7,500 ريال",
+      duration: "3-4 أسابيع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "إدارة المشاريع",
+      icon: Target,
+      color: "violet",
+      gradient: "from-violet-500 to-purple-600",
+      rating: "4.7",
+      clients: "35+",
+      updates: "تحديثات مجانية لسنة",
+      support: "دعم فني شامل"
     }
   ];
 
@@ -281,7 +304,8 @@ const ReadyProjects = () => {
     { name: "منصات الخدمات", count: projects.filter(p => p.category.includes("منصات الخدمات")).length },
     { name: "الأنظمة العقارية", count: projects.filter(p => p.category.includes("العقارية")).length },
     { name: "المواقع التعريفية", count: projects.filter(p => p.category.includes("التعريفية")).length },
-    { name: "إدارة المطاعم", count: projects.filter(p => p.category.includes("المطاعم")).length }
+    { name: "إدارة المطاعم", count: projects.filter(p => p.category.includes("المطاعم")).length },
+    { name: "إدارة المشاريع", count: projects.filter(p => p.category.includes("إدارة المشاريع")).length }
   ];
 
   return (
@@ -508,11 +532,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">100+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">110+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">500+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">550+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
