@@ -35,6 +35,7 @@ import MachineLearning from "./pages/MachineLearning";
 import SmartAssistants from "./pages/SmartAssistants";
 import SmartAnalytics from "./pages/SmartAnalytics";
 import SmartAutomation from "./pages/SmartAutomation";
+import GlobalPresence from "./pages/GlobalPresence";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -86,6 +87,7 @@ const App = () => {
               <Route path="/smart-assistants" element={<SmartAssistants />} />
               <Route path="/smart-analytics" element={<SmartAnalytics />} />
               <Route path="/smart-automation" element={<SmartAutomation />} />
+              <Route path="/global-presence" element={<GlobalPresence />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
