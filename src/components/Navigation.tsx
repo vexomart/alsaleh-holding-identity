@@ -90,80 +90,47 @@ const Navigation = () => {
       {/* Main Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-lg' 
-          : 'bg-primary/95 backdrop-blur-sm border-b border-primary-foreground/10'
+          ? 'bg-white/98 backdrop-blur-lg border-b border-gray-200/30 shadow-sm' 
+          : 'bg-slate-900/95 backdrop-blur-md'
       }`}>
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
-            {/* Logo */}
-            <div className="flex items-center flex-shrink-0">
-              <a href="/" className="block">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="flex items-center justify-between h-16 lg:h-18">
+            {/* Logo & Company Name */}
+            <div className="flex items-center gap-4">
+              <a href="/" className="flex items-center gap-3">
                 <img 
                   src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
-                  alt="ASH Holdings - شركة علي صالح الشهري القابضة" 
-                  className={`h-10 sm:h-12 lg:h-16 w-auto object-contain transition-all duration-500 cursor-pointer ${
-                    isScrolled ? 'brightness-75' : 'brightness-110 contrast-110 drop-shadow-2xl'
-                  } hover:scale-105`}
+                  alt="ASH Holdings" 
+                  className="h-10 lg:h-12 w-auto object-contain transition-transform duration-300 hover:scale-105"
                 />
+                <div className="hidden lg:block">
+                  <div className={`font-bold text-base ${isScrolled ? 'text-gray-800' : 'text-white'}`}>
+                    شركة علي صالح الشهري القابضة
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                    <span className={`text-xs ${isScrolled ? 'text-gray-500' : 'text-white/80'}`}>
+                      شركة رائدة منذ 2016
+                    </span>
+                  </div>
+                </div>
               </a>
-              <div className="hidden xl:block ml-4 border-l border-gray-300/60 pl-4">
-                <div className={`font-semibold text-sm leading-tight ${isScrolled ? 'text-gray-700' : 'text-white'}`}>
-                  شركة علي صالح الشهري القابضة
-                </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                  <span className={`text-xs font-medium ${isScrolled ? 'text-gray-500' : 'text-white/80'}`}>
-                    شركة رائدة منذ 2016
-                  </span>
-                </div>
-              </div>
             </div>
-            
-            {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center space-x-reverse space-x-8">
-              {/* Quick Contact */}
-              <div className="flex items-center gap-3 border-l border-gray-300/50 pl-4">
-                <Button 
-                  size="sm" 
-                  variant="ghost"
-                  className={`flex items-center gap-2 ${isScrolled ? 'text-gray-600 hover:text-green-600' : 'text-white hover:text-green-400'}`}
-                  asChild
-                >
-                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4 text-green-500" />
-                    <span>واتساب</span>
-                  </a>
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="ghost"
-                  className={`flex items-center gap-2 ${isScrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-400'}`}
-                  asChild
-                >
-                  <a href="tel:+966555812567" className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-blue-500" />
-                    <span>اتصال فوري</span>
-                  </a>
-                </Button>
-              </div>
 
-              {/* Navigation Links */}
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-8">
               <a 
                 href="/" 
-                className={`font-medium transition-colors duration-200 ${
-                  isScrolled 
-                    ? 'text-gray-700 hover:text-primary' 
-                    : 'text-primary-foreground hover:text-secondary'
+                className={`font-medium transition-colors hover:text-primary ${
+                  isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
               >
                 الرئيسية
               </a>
               <a 
                 href="/about" 
-                className={`font-medium transition-colors duration-200 ${
-                  isScrolled 
-                    ? 'text-gray-700 hover:text-primary' 
-                    : 'text-primary-foreground hover:text-secondary'
+                className={`font-medium transition-colors hover:text-primary ${
+                  isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
               >
                 من نحن
@@ -176,10 +143,8 @@ const Navigation = () => {
                 onMouseLeave={() => setShowServices(false)}
               >
                 <button 
-                  className={`flex items-center gap-1 font-medium transition-colors duration-200 ${
-                    isScrolled 
-                      ? 'text-gray-700 hover:text-primary' 
-                      : 'text-primary-foreground hover:text-secondary'
+                  className={`flex items-center gap-1 font-medium transition-colors hover:text-primary ${
+                    isScrolled ? 'text-gray-700' : 'text-white'
                   }`}
                 >
                   خدماتنا
@@ -187,89 +152,110 @@ const Navigation = () => {
                 </button>
                 
                 {showServices && (
-                  <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden animate-fade-in z-50">
-                    {services.map((service, index) => {
-                      const IconComponent = service.icon;
-                      return (
-                        <a
-                          key={index}
-                          href={service.href}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100 last:border-b-0"
-                          onClick={(e) => {
-                            if (service.href.startsWith('#')) {
-                              e.preventDefault();
-                              const element = document.getElementById(service.href.substring(1));
-                              element?.scrollIntoView({ behavior: 'smooth' });
-                            }
-                          }}
-                        >
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                            index < 2 ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-primary/10'
-                          }`}>
-                            <IconComponent className={`w-4 h-4 ${
-                              index < 2 ? 'text-white' : 'text-primary'
-                            }`} />
-                          </div>
-                          <span className="text-gray-700 font-medium">{service.name}</span>
-                        </a>
-                      );
-                    })}
+                  <div className="absolute top-full right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50">
+                    <div className="p-2">
+                      {services.map((service, index) => {
+                        const IconComponent = service.icon;
+                        return (
+                          <a
+                            key={index}
+                            href={service.href}
+                            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors rounded-lg"
+                            onClick={(e) => {
+                              if (service.href.startsWith('#')) {
+                                e.preventDefault();
+                                const element = document.getElementById(service.href.substring(1));
+                                element?.scrollIntoView({ behavior: 'smooth' });
+                              }
+                            }}
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                              <IconComponent className="w-4 h-4 text-primary" />
+                            </div>
+                            <span className="text-gray-700 font-medium text-sm">{service.name}</span>
+                          </a>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>
 
               <a 
                 href="/vision" 
-                className={`font-medium transition-colors duration-200 ${
-                  isScrolled 
-                    ? 'text-gray-700 hover:text-primary' 
-                    : 'text-primary-foreground hover:text-secondary'
+                className={`font-medium transition-colors hover:text-primary ${
+                  isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
               >
                 رؤيتنا
               </a>
               <a 
                 href="#companies" 
-                className={`font-medium transition-colors duration-200 ${
-                  isScrolled 
-                    ? 'text-gray-700 hover:text-primary' 
-                    : 'text-primary-foreground hover:text-secondary'
+                className={`font-medium transition-colors hover:text-primary ${
+                  isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
               >
                 شركاتنا
               </a>
               <a 
                 href="/contact" 
-                className={`font-medium transition-colors duration-200 ${
-                  isScrolled 
-                    ? 'text-gray-700 hover:text-primary' 
-                    : 'text-primary-foreground hover:text-secondary'
+                className={`font-medium transition-colors hover:text-primary ${
+                  isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
               >
                 تواصل معنا
               </a>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3">
+              {/* Contact Buttons - Desktop Only */}
+              <div className="hidden xl:flex items-center gap-2">
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  className={`flex items-center gap-2 ${isScrolled ? 'text-gray-600 hover:text-green-600' : 'text-white hover:text-green-400'}`}
+                  asChild
+                >
+                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
+                    <MessageCircle className="w-4 h-4 text-green-500" />
+                    <span>واتساب</span>
+                  </a>
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  className={`flex items-center gap-2 ${isScrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-400'}`}
+                  asChild
+                >
+                  <a href="tel:+966555812567">
+                    <Phone className="w-4 h-4 text-blue-500" />
+                    <span>اتصال فوري</span>
+                  </a>
+                </Button>
+              </div>
               
               <Button 
                 variant={isScrolled ? "default" : "secondary"}
                 size="sm"
-                className="font-semibold shadow-md hover:shadow-lg transition-shadow duration-200"
+                className="hidden lg:flex font-semibold"
                 asChild
               >
                 <a href="https://ash.holdings" target="_blank" rel="noopener noreferrer">
                   ابدأ معنا
                 </a>
               </Button>
+              
+              {/* Mobile Menu Button */}
+              <button
+                className={`lg:hidden p-2 rounded-lg transition-colors ${
+                  isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
+                }`}
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {isOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
             </div>
-            
-            {/* Mobile Menu Button */}
-            <button
-              className={`lg:hidden transition-colors duration-200 ${
-                isScrolled ? 'text-gray-700' : 'text-primary-foreground'
-              }`}
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
           </div>
           
           {/* Mobile Menu */}
