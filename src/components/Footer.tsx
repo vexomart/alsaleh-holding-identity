@@ -241,6 +241,14 @@ const Footer = () => {
     { name: "التقارير السنوية", href: "/annual-reports", icon: TrendingUp }
   ];
 
+  const currentProjects = [
+    { name: "نظام إدارة المرافق", href: "#", icon: Building2 },
+    { name: "منصة التجارة الإلكترونية", href: "#", icon: Globe },
+    { name: "تطبيق الذكاء الاصطناعي", href: "#", icon: Zap },
+    { name: "حلول إنترنت الأشياء", href: "#", icon: Lightbulb },
+    { name: "نظام إدارة البيانات", href: "#", icon: FileText }
+  ];
+
   const digitalSolutions = [
     { name: "الذكاء الاصطناعي", href: "/ai-solutions", icon: Zap },
     { name: "إنترنت الأشياء", href: "/iot-solutions", icon: Lightbulb },
@@ -663,7 +671,36 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 6: Newsletter & Social Media */}
+            {/* Column 6: Current Projects */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+              {/* Current Projects */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Code className="w-4 h-4 text-orange-400 animate-pulse" />
+                  مشاريعنا الحالية
+                </h4>
+                <ul className="space-y-2">
+                  {currentProjects.map((project, index) => {
+                    const IconComponent = project.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={project.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {project.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            {/* Column 7: Newsletter & Social Media */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
               {/* Newsletter Subscription */}
               <div>
