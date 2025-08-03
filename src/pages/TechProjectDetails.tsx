@@ -46,14 +46,6 @@ const TechProjectDetails = () => {
     estimatedCompletion: "2025-08-15",
     budget: "250,000 ريال",
     client: "داخلي - مبادرة الشركة",
-    projectManager: "أحمد محمد الشهري",
-    team: [
-      { name: "أحمد محمد", role: "مدير المشروع", avatar: "/placeholder.svg" },
-      { name: "سارة أحمد", role: "مطور واجهات أمامية", avatar: "/placeholder.svg" },
-      { name: "محمد علي", role: "مطور خلفي", avatar: "/placeholder.svg" },
-      { name: "فاطمة حسن", role: "مصمم UX/UI", avatar: "/placeholder.svg" },
-      { name: "خالد عبدالله", role: "محلل أنظمة", avatar: "/placeholder.svg" }
-    ],
     features: [
       "إدارة الفواتير والعروض",
       "تتبع المدفوعات والمستحقات",
@@ -164,14 +156,10 @@ const TechProjectDetails = () => {
               </p>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
                   <div className="text-2xl font-bold text-blue-400">{project.progress}%</div>
                   <div className="text-sm text-slate-400">نسبة الإنجاز</div>
-                </div>
-                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
-                  <div className="text-2xl font-bold text-green-400">{project.team.length}</div>
-                  <div className="text-sm text-slate-400">أعضاء الفريق</div>
                 </div>
                 <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
                   <div className="text-2xl font-bold text-purple-400">{project.budget}</div>
@@ -319,12 +307,6 @@ const TechProjectDetails = () => {
                   <div className="text-sm text-slate-400 mb-1">العميل</div>
                   <div className="text-white">{project.client}</div>
                 </div>
-                <Separator className="bg-slate-700" />
-                <div>
-                  <div className="text-sm text-slate-400 mb-1">مدير المشروع</div>
-                  <div className="text-white">{project.projectManager}</div>
-                </div>
-                <Separator className="bg-slate-700" />
                 <div>
                   <div className="text-sm text-slate-400 mb-1">الفئة</div>
                   <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
@@ -358,31 +340,6 @@ const TechProjectDetails = () => {
                     <Badge key={index} variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/30">
                       {tech}
                     </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Team Members */}
-            <Card className="bg-slate-800/50 border-slate-700/50">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Users className="w-5 h-5 text-green-400" />
-                  فريق العمل
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {project.team.map((member, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                        {member.name.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="text-white font-medium">{member.name}</div>
-                        <div className="text-sm text-slate-400">{member.role}</div>
-                      </div>
-                    </div>
                   ))}
                 </div>
               </CardContent>
