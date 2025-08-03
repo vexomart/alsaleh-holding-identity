@@ -341,65 +341,6 @@ const DevelopmentProgram = () => {
         </div>
       </section>
 
-      {/* Success Stories */}
-      <section className="py-20 bg-gradient-to-br from-slate-100 to-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-6">قصص نجاح</h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              تعرف على تجارب خريجي البرنامج وكيف ساهم في تطوير مسيرتهم المهنية
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: "أحمد المالكي",
-                role: "مدير تقني أول",
-                company: "شركة إمكان للتقنية",
-                story: "برنامج القيادة التقنية ساعدني في الانتقال من مطور إلى منصب قيادي في أقل من عام",
-                track: "مسار القيادة التقنية"
-              },
-              {
-                name: "فاطمة الأحمد",
-                role: "مؤسسة شركة ناشئة",
-                company: "تطبيق ذكي للتعليم",
-                story: "حصلت على التمويل اللازم لشركتي بفضل المهارات التي تعلمتها في البرنامج",
-                track: "مسار ريادة الأعمال"
-              },
-              {
-                name: "محمد العتيبي",
-                role: "مطور واجهات متقدم",
-                company: "مجموعة الشهري القابضة",
-                story: "تطورت مهاراتي بشكل كبير وحصلت على ترقية مع زيادة في الراتب",
-                track: "التطوير المهني المتسارع"
-              }
-            ].map((story, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300 border-0 bg-white/70 backdrop-blur-sm">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
-                      <Users className="w-8 h-8 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-slate-900">{story.name}</h3>
-                      <p className="text-sm text-slate-600">{story.role}</p>
-                      <p className="text-xs text-purple-600">{story.company}</p>
-                    </div>
-                  </div>
-                  
-                  <p className="text-slate-600 leading-relaxed mb-4">"{story.story}"</p>
-                  
-                  <Badge variant="outline" className="text-xs">
-                    {story.track}
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-purple-600 to-blue-600">
         <div className="container mx-auto px-6 text-center">
