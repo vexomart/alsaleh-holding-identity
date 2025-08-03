@@ -95,8 +95,8 @@ const TechProjectDetails = () => {
       status: "مكتمل",
       progress: 100,
       technologies: ["Python", "TensorFlow", "OpenAI API", "Node.js", "React", "WebSocket", "NLP", "Machine Learning"],
-      startDate: "2024-10-01",
-      estimatedCompletion: "2024-12-15",
+      startDate: "2025-07-01",
+      estimatedCompletion: "2025-07-29",
       budget: "7,000 ريال",
       client: "داخلي - مبادرة الشركة",
       features: [
