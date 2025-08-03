@@ -1,202 +1,274 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Target, Lightbulb, TrendingUp, Users, Globe, Zap, Award, Rocket, Eye, Heart, Brain, Shield, Star, Compass, Layers, Network } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { 
+  Target, 
+  Globe, 
+  Brain, 
+  Shield, 
+  Rocket, 
+  Star, 
+  TrendingUp, 
+  Users, 
+  Network, 
+  Award, 
+  Eye, 
+  Heart, 
+  Zap, 
+  Building2, 
+  Lightbulb, 
+  Compass,
+  ChevronRight,
+  CheckCircle,
+  ArrowUpRight,
+  Sparkles
+} from "lucide-react";
 
 const VisionSection = () => {
-  const globalVisionPillars = [
-    { 
-      icon: Brain, 
-      title: "الذكاء الاصطناعي والابتكار", 
-      description: "نقود مستقبل التقنية بحلول الذكاء الاصطناعي المتطورة والابتكارات الرقمية التي تخدم البشرية",
-      color: "from-blue-500 to-indigo-600",
-      stats: "250+ مشروع AI"
+  const visionPillars = [
+    {
+      icon: Brain,
+      title: "الذكاء الاصطناعي والابتكار",
+      description: "نقود التطوير التقني بحلول ذكية متقدمة تخدم مستقبل الأعمال الرقمية",
+      color: "from-blue-600 to-indigo-700",
+      bgColor: "from-blue-50 to-indigo-50",
+      stats: "AI-Powered",
+      number: "250+",
+      metric: "مشروع ذكي"
     },
-    { 
-      icon: Globe, 
-      title: "التوسع العالمي الاستراتيجي", 
-      description: "نمتد عبر القارات بشراكات استراتيجية ومكاتب في أهم العواصم التقنية حول العالم",
-      color: "from-emerald-500 to-teal-600",
-      stats: "68+ دولة"
+    {
+      icon: Globe,
+      title: "التوسع العالمي الاستراتيجي",
+      description: "شبكة عالمية من المكاتب والشراكات تمتد عبر القارات لخدمة عملائنا",
+      color: "from-emerald-600 to-teal-700",
+      bgColor: "from-emerald-50 to-teal-50",
+      stats: "Global Reach",
+      number: "68+",
+      metric: "دولة"
     },
-    { 
-      icon: Shield, 
-      title: "الأمن السيبراني والحماية", 
-      description: "نحمي البيانات والأنظمة بأحدث تقنيات الأمن السيبراني والبلوك تشين المتقدمة",
-      color: "from-orange-500 to-red-600",
-      stats: "99.9% أمان"
+    {
+      icon: Shield,
+      title: "الأمن السيبراني المتقدم",
+      description: "حماية شاملة للبيانات والأنظمة بأعلى معايير الأمن السيبراني العالمية",
+      color: "from-orange-600 to-red-700",
+      bgColor: "from-orange-50 to-red-50",
+      stats: "Security First",
+      number: "99.9%",
+      metric: "موثوقية"
     },
-    { 
-      icon: Network, 
-      title: "الشبكات الذكية والاتصال", 
-      description: "نربط العالم بشبكات ذكية متطورة تدعم إنترنت الأشياء والجيل الخامس",
-      color: "from-purple-500 to-pink-600",
-      stats: "5G+ تقنيات"
+    {
+      icon: Network,
+      title: "الاتصال والشبكات الذكية",
+      description: "بنية تحتية متطورة تدعم التقنيات الحديثة وإنترنت الأشياء",
+      color: "from-purple-600 to-pink-700",
+      bgColor: "from-purple-50 to-pink-50",
+      stats: "Connected",
+      number: "5G+",
+      metric: "تقنيات"
     }
   ];
 
-  const globalGoals = [
+  const strategicGoals = [
+    {
+      icon: Rocket,
+      title: "قيادة التحول الرقمي",
+      description: "تمكين المؤسسات من تحقيق التحول الرقمي بحلول مبتكرة ومتكاملة"
+    },
+    {
+      icon: Star,
+      title: "التميز في الخدمات",
+      description: "تقديم خدمات بمعايير عالمية تحقق رضا العملاء وتفوق توقعاتهم"
+    },
+    {
+      icon: Compass,
+      title: "الاستدامة والمسؤولية",
+      description: "الالتزام بالممارسات المستدامة والمسؤولية الاجتماعية"
+    },
+    {
+      icon: Building2,
+      title: "الشراكات الاستراتيجية",
+      description: "بناء تحالفات قوية مع الشركات الرائدة عالمياً"
+    }
+  ];
+
+  const globalImpact = [
     { 
-      icon: Rocket, 
-      title: "قيادة التحول الرقمي", 
-      description: "نساعد الحكومات والشركات في تحقيق التحول الرقمي الشامل بحلول مبتكرة ومخصصة",
-      color: "from-blue-600 to-cyan-500"
+      number: "68+", 
+      label: "دولة", 
+      sublabel: "Countries", 
+      icon: Globe,
+      color: "from-blue-500 to-cyan-500"
     },
     { 
-      icon: Star, 
-      title: "التميز في الخدمات", 
-      description: "نقدم خدمات بمعايير عالمية تفوق توقعات العملاء وتحقق أهدافهم الاستراتيجية",
-      color: "from-emerald-600 to-green-500"
+      number: "2.5M+", 
+      label: "مستخدم", 
+      sublabel: "Active Users", 
+      icon: Users,
+      color: "from-emerald-500 to-teal-500"
     },
     { 
-      icon: Compass, 
-      title: "الاستدامة والمسؤولية", 
-      description: "نلتزم بالممارسات المستدامة والمسؤولية المجتمعية في جميع عملياتنا العالمية",
-      color: "from-amber-500 to-orange-500"
+      number: "1,200+", 
+      label: "شراكة", 
+      sublabel: "Partnerships", 
+      icon: Network,
+      color: "from-orange-500 to-red-500"
     },
     { 
-      icon: Layers, 
-      title: "التكامل والشراكة", 
-      description: "نبني نظاماً متكاملاً من الشراكات العالمية التي تخدم رؤيتنا المشتركة للمستقبل",
-      color: "from-violet-500 to-purple-500"
+      number: "150+", 
+      label: "جائزة", 
+      sublabel: "Awards", 
+      icon: Award,
+      color: "from-purple-500 to-pink-500"
     }
   ];
 
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900 dark:via-emerald-900 dark:to-teal-900">
-      {/* Modern Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-green-100/40 via-transparent to-emerald-100/40"></div>
-      <div className="absolute top-1/4 right-10 w-40 h-40 bg-green-400/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl animate-float-delayed" />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-teal-400/5 rounded-full blur-3xl animate-pulse" />
-      
+    <section className="relative min-h-screen py-20 overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900">
+      {/* Premium Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/20 via-transparent to-indigo-100/20"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-400/10 to-indigo-400/10 rounded-full blur-3xl animate-float"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-indigo-400/10 to-purple-400/10 rounded-full blur-3xl animate-float-delayed"></div>
+      <div className="absolute top-1/3 left-1/3 w-64 h-64 bg-gradient-to-r from-cyan-300/5 to-blue-300/5 rounded-full blur-2xl"></div>
+
       <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
         <div className="text-center mb-20 animate-fade-in">
-          <div className="inline-flex items-center gap-3 mb-6 p-4 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-            <Eye className="w-6 h-6 text-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">رؤية عالمية 2030+ • مستقبل رقمي</span>
-          </div>
-          <h2 className="text-5xl md:text-6xl lg:text-8xl font-bold text-primary mb-8 leading-tight">
-            رؤيتنا <span className="text-gradient-primary">العالمية</span>
-          </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-5xl mx-auto leading-relaxed">
-            نقود مستقبل التقنية عالمياً من خلال الابتكار المستمر والشراكات الاستراتيجية، 
-            نحو عالم رقمي متصل ومستدام يخدم البشرية جمعاء
-          </p>
-        </div>
-
-        {/* Main Vision & Mission Cards */}
-        <div className="grid lg:grid-cols-2 gap-12 mb-24">
-          <Card className="group premium-card hover:shadow-glow transition-all duration-500 border-0 bg-white/5 backdrop-blur-md animate-slide-in-right overflow-hidden">
-            <CardContent className="p-12 relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <div className="relative z-10">
-                <div className="flex items-center mb-8">
-                  <div className="w-24 h-24 bg-gradient-primary rounded-3xl flex items-center justify-center mr-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow">
-                    <Target className="w-12 h-12 text-white animate-pulse" />
-                  </div>
-                  <div>
-                    <h3 className="text-4xl font-bold text-primary mb-2">رؤيتنا العالمية</h3>
-                    <Badge variant="secondary" className="text-sm bg-white/20 border-white/30">Vision 2030+</Badge>
-                  </div>
-                </div>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  أن نكون الشركة القابضة الرائدة عالمياً في تقديم الحلول التقنية المبتكرة والخدمات الرقمية المتطورة، 
-                  نقود التحول الرقمي الشامل ونساهم في بناء مستقبل تقني مستدام يخدم المجتمعات حول العالم
-                </p>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-                    <div className="text-2xl font-bold text-gradient-primary">2030+</div>
-                    <div className="text-sm text-muted-foreground">رؤية مستقبلية</div>
-                  </div>
-                  <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-                    <div className="text-2xl font-bold text-gradient-primary">العالم</div>
-                    <div className="text-sm text-muted-foreground">نطاق التأثير</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-primary">
-                  <Zap className="w-5 h-5 animate-pulse" />
-                  <span className="font-semibold">Innovation • Leadership • Sustainability</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="group premium-card hover:shadow-glow transition-all duration-500 border-0 bg-white/5 backdrop-blur-md animate-slide-in-left overflow-hidden">
-            <CardContent className="p-12 relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <div className="relative z-10">
-                <div className="flex items-center mb-8">
-                  <div className="w-24 h-24 bg-gradient-secondary rounded-3xl flex items-center justify-center mr-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow">
-                    <Heart className="w-12 h-12 text-white animate-pulse" />
-                  </div>
-                  <div>
-                    <h3 className="text-4xl font-bold text-primary mb-2">رسالتنا الإنسانية</h3>
-                    <Badge variant="secondary" className="text-sm bg-white/20 border-white/30">Global Mission</Badge>
-                  </div>
-                </div>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  نسعى لتطوير وتقديم حلول تقنية مبتكرة تحسن جودة الحياة وتدعم التنمية المستدامة، 
-                  من خلال الاستثمار في أحدث التقنيات وبناء شراكات عالمية تساهم في تقدم المجتمع الإنساني
-                </p>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-                    <div className="text-2xl font-bold text-gradient-primary">الإنسان</div>
-                    <div className="text-sm text-muted-foreground">محور اهتمامنا</div>
-                  </div>
-                  <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-                    <div className="text-2xl font-bold text-gradient-primary">التقنية</div>
-                    <div className="text-sm text-muted-foreground">أداة التطوير</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-primary">
-                  <Globe className="w-5 h-5 animate-spin-slow" />
-                  <span className="font-semibold">Technology • Humanity • Progress</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Global Vision Pillars */}
-        <div className="mb-24">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl md:text-5xl font-bold text-primary mb-6">
-              أركان <span className="text-gradient-primary">رؤيتنا العالمية</span>
-            </h3>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              نقوم رؤيتنا على أربعة أركان أساسية تحدد مسارنا نحو المستقبل الرقمي
-            </p>
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full border border-blue-500/20 mb-8">
+            <Eye className="w-5 h-5 text-blue-600" />
+            <span className="text-blue-700 font-medium">Global Vision 2030+ • شركة عالمية</span>
           </div>
           
-          <div className="grid lg:grid-cols-2 gap-8">
-            {globalVisionPillars.map((pillar, index) => (
+          <h2 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
+            <span className="bg-gradient-to-r from-slate-800 via-blue-700 to-indigo-700 bg-clip-text text-transparent">
+              رؤيتنا العالمية
+            </span>
+          </h2>
+          
+          <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed mb-8">
+            نقود مستقبل التقنية عالمياً من خلال الابتكار المستمر والشراكات الاستراتيجية، 
+            نحو عالم رقمي متصل ومستدام يخدم التنمية الاقتصادية والاجتماعية
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {["Innovation", "Global Excellence", "Digital Transformation", "Sustainability"].map((tag, index) => (
+              <Badge key={index} variant="outline" className="px-4 py-2 bg-white/50 border-blue-200 text-blue-700 hover:bg-blue-50 transition-colors">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        {/* Vision & Mission Cards */}
+        <div className="grid lg:grid-cols-2 gap-8 mb-20">
+          {/* Vision Card */}
+          <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-blue-50 border-0 shadow-xl hover:shadow-2xl transition-all duration-500">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <CardContent className="p-10 relative z-10">
+              <div className="flex items-center mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <Target className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-2">رؤيتنا</h3>
+                  <Badge className="bg-blue-100 text-blue-700 border-0">Vision 2030+</Badge>
+                </div>
+              </div>
+              
+              <p className="text-slate-600 leading-relaxed mb-6 text-lg">
+                أن نكون الشركة القابضة الرائدة عالمياً في تقديم الحلول التقنية المبتكرة، 
+                نقود التحول الرقمي ونساهم في بناء مستقبل تقني مستدام يخدم المجتمعات
+              </p>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
+                  <div className="text-2xl font-bold text-blue-600">2030+</div>
+                  <div className="text-sm text-slate-600">رؤية مستقبلية</div>
+                </div>
+                <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
+                  <div className="text-2xl font-bold text-blue-600">عالمياً</div>
+                  <div className="text-sm text-slate-600">نطاق التأثير</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Mission Card */}
+          <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-emerald-50 border-0 shadow-xl hover:shadow-2xl transition-all duration-500">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <CardContent className="p-10 relative z-10">
+              <div className="flex items-center mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <Heart className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-2">رسالتنا</h3>
+                  <Badge className="bg-emerald-100 text-emerald-700 border-0">Global Mission</Badge>
+                </div>
+              </div>
+              
+              <p className="text-slate-600 leading-relaxed mb-6 text-lg">
+                تطوير وتقديم حلول تقنية مبتكرة تحسن جودة الحياة وتدعم التنمية المستدامة، 
+                من خلال الاستثمار الذكي وبناء شراكات عالمية تساهم في تقدم المجتمع
+              </p>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl">
+                  <div className="text-2xl font-bold text-emerald-600">الإنسان</div>
+                  <div className="text-sm text-slate-600">محور اهتمامنا</div>
+                </div>
+                <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl">
+                  <div className="text-2xl font-bold text-emerald-600">التقنية</div>
+                  <div className="text-sm text-slate-600">أداة التطوير</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Vision Pillars */}
+        <div className="mb-20">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold text-slate-800 mb-6">
+              أركان رؤيتنا <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">الاستراتيجية</span>
+            </h3>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              أربعة أركان أساسية تحدد مسارنا نحو المستقبل الرقمي والتميز العالمي
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {visionPillars.map((pillar, index) => (
               <Card 
                 key={index} 
-                className="group premium-card hover:shadow-glow transition-all duration-500 border-0 bg-white/5 backdrop-blur-md overflow-hidden animate-fade-in"
-                style={{ animationDelay: `${index * 0.2}s` }}
+                className="group relative overflow-hidden bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <CardContent className="p-10 relative">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${pillar.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                  
-                  <div className="relative z-10">
-                    <div className="flex items-start justify-between mb-6">
-                      <div className={`icon-container w-20 h-20 bg-gradient-to-br ${pillar.color} rounded-2xl flex items-center justify-center icon-bg-gradient icon-scale group-hover:rotate-6 transition-all duration-500 shadow-glow animate-bounce-in stagger-${index + 1}`}>
-                        <pillar.icon className="w-10 h-10 text-white icon-glow" />
-                      </div>
-                      <Badge variant="outline" className="bg-white/10 border-white/20 text-primary font-semibold animate-slide-in-up stagger-${index + 2}">
-                        {pillar.stats}
-                      </Badge>
+                <div className={`absolute inset-0 bg-gradient-to-br ${pillar.bgColor} opacity-0 group-hover:opacity-50 transition-opacity duration-500`}></div>
+                
+                <CardContent className="p-8 relative z-10">
+                  <div className="text-center mb-6">
+                    <div className={`w-20 h-20 bg-gradient-to-br ${pillar.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg`}>
+                      <pillar.icon className="w-10 h-10 text-white" />
                     </div>
-                    
-                    <h4 className="text-2xl font-bold text-primary mb-4 group-hover:text-gradient-primary transition-all duration-300">
-                      {pillar.title}
-                    </h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {pillar.description}
-                    </p>
+                    <Badge variant="outline" className="text-xs bg-white/80 border-slate-200">
+                      {pillar.stats}
+                    </Badge>
                   </div>
+
+                  <div className="text-center mb-6">
+                    <div className="text-3xl font-bold text-slate-800 mb-1">{pillar.number}</div>
+                    <div className="text-sm text-slate-500">{pillar.metric}</div>
+                  </div>
+
+                  <h4 className="text-lg font-bold text-slate-800 mb-4 group-hover:text-blue-600 transition-colors duration-300">
+                    {pillar.title}
+                  </h4>
+                  
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    {pillar.description}
+                  </p>
+
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 </CardContent>
               </Card>
             ))}
@@ -206,58 +278,78 @@ const VisionSection = () => {
         {/* Strategic Goals */}
         <div className="mb-20">
           <div className="text-center mb-16">
-            <h3 className="text-4xl md:text-5xl font-bold text-primary mb-6">
-              أهدافنا <span className="text-gradient-primary">الاستراتيجية</span>
+            <h3 className="text-4xl font-bold text-slate-800 mb-6">
+              أهدافنا <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">الاستراتيجية</span>
             </h3>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {globalGoals.map((goal, index) => (
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {strategicGoals.map((goal, index) => (
               <Card 
                 key={index} 
-                className="group premium-card hover:shadow-glow transition-all duration-500 text-center border-0 bg-white/5 backdrop-blur-md animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="group relative overflow-hidden bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
               >
-                <CardContent className="p-8 relative overflow-hidden">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${goal.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                  
-                  <div className="relative z-10">
-                    <div className={`w-20 h-20 bg-gradient-to-br ${goal.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow`}>
-                      <goal.icon className="w-10 h-10 text-white animate-pulse" />
-                    </div>
-                    <h4 className="text-xl font-bold text-primary mb-4 group-hover:text-gradient-primary transition-all duration-300">
-                      {goal.title}
-                    </h4>
-                    <p className="text-muted-foreground leading-relaxed text-sm">{goal.description}</p>
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-slate-600 to-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <goal.icon className="w-8 h-8 text-white" />
                   </div>
+                  
+                  <h4 className="text-lg font-semibold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors duration-300">
+                    {goal.title}
+                  </h4>
+                  
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    {goal.description}
+                  </p>
+
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
 
-        {/* Enhanced Global Impact Stats */}
-        <div className="text-center bg-white/5 backdrop-blur-md rounded-3xl p-12 animate-fade-in">
-          <h3 className="text-4xl font-bold text-primary mb-12">تأثيرنا العالمي</h3>
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { number: "68+", label: "دولة حول العالم", sublabel: "Countries Worldwide", icon: Globe },
-              { number: "2.5M+", label: "مستخدم نشط", sublabel: "Active Users", icon: Users },
-              { number: "1,200+", label: "شراكة استراتيجية", sublabel: "Strategic Partnerships", icon: Network },
-              { number: "150+", label: "جائزة عالمية", sublabel: "Global Awards", icon: Award }
-            ].map((stat, index) => (
-              <div key={index} className="group animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-glow">
+        {/* Global Impact Stats */}
+        <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-12 text-center">
+          <div className="mb-12">
+            <h3 className="text-4xl font-bold text-white mb-4">تأثيرنا العالمي</h3>
+            <p className="text-slate-300 text-xl max-w-2xl mx-auto">
+              أرقام تتحدث عن مسيرتنا نحو التميز والريادة العالمية
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {globalImpact.map((stat, index) => (
+              <div key={index} className="group">
+                <div className={`w-16 h-16 bg-gradient-to-br ${stat.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <stat.icon className="w-8 h-8 text-white" />
                 </div>
-                <div className="text-4xl md:text-5xl font-bold text-gradient-primary mb-2 group-hover:scale-110 transition-transform duration-300">
+                
+                <div className="text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">
                   {stat.number}
                 </div>
-                <div className="text-lg font-semibold text-primary">{stat.label}</div>
-                <div className="text-sm text-muted-foreground">{stat.sublabel}</div>
+                
+                <div className="text-lg font-medium text-slate-300 mb-1">{stat.label}</div>
+                <div className="text-sm text-slate-400">{stat.sublabel}</div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-12 pt-8 border-t border-slate-700">
+            <div className="flex flex-wrap justify-center gap-6 text-slate-400">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                <span>Innovation Excellence</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                <span>Global Leadership</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4" />
+                <span>Sustainable Growth</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
