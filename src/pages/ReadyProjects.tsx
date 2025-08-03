@@ -323,6 +323,25 @@ const ReadyProjects = () => {
       clients: "15+",
       updates: "تحديثات مجانية لسنتين",
       support: "دعم فني ومالي متخصص 24/7"
+    },
+    {
+      id: 17,
+      title: "نظام إدارة الخدمات اللوجستية",
+      description: "نظام متكامل لإدارة سلسلة التوريد والخدمات اللوجستية مع تتبع الشحنات وإدارة المخازن",
+      detailedDescription: "نظام لوجستي شامل لإدارة سلسلة التوريد من المورد إلى العميل النهائي. يشمل إدارة المخازن، تتبع الشحنات، تخطيط الطرق، إدارة الأسطول، تكامل مع شركات الشحن، ونظام تحليلات متقدم لتحسين العمليات وخفض التكاليف.",
+      features: ["إدارة المخازن", "تتبع الشحنات", "تخطيط الطرق", "إدارة الأسطول", "تكامل الشحن", "تحليلات متقدمة"],
+      technologies: ["React", "Node.js", "PostgreSQL", "GPS Tracking", "IoT Integration", "AI Analytics"],
+      price: "65,000 ريال",
+      duration: "12-14 أسبوع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "الخدمات اللوجستية",
+      icon: Layers,
+      color: "indigo",
+      gradient: "from-indigo-500 to-purple-600",
+      rating: "4.8",
+      clients: "12+",
+      updates: "تحديثات مجانية لسنتين",
+      support: "دعم فني ولوجستي متخصص 24/7"
     }
   ];
 
@@ -345,7 +364,8 @@ const ReadyProjects = () => {
     { name: "إدارة المطاعم", count: projects.filter(p => p.category.includes("المطاعم")).length },
     { name: "إدارة المشاريع", count: projects.filter(p => p.category.includes("إدارة المشاريع")).length },
     { name: "السفر والسياحة", count: projects.filter(p => p.category.includes("السفر")).length },
-    { name: "التأمين الرقمي", count: projects.filter(p => p.category.includes("التأمين")).length }
+    { name: "التأمين الرقمي", count: projects.filter(p => p.category.includes("التأمين")).length },
+    { name: "الخدمات اللوجستية", count: projects.filter(p => p.category.includes("اللوجستية")).length }
   ];
 
   return (
@@ -572,11 +592,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">130+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">140+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">650+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">700+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
