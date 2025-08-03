@@ -40,8 +40,8 @@ const TechProjects = () => {
       status: "قيد التطوير",
       progress: 65,
       technologies: ["React", "Node.js", "PostgreSQL", "TypeScript"],
-      startDate: "2024-12-01",
-      estimatedCompletion: "2025-03-15",
+      startDate: "2025-07-23",
+      estimatedCompletion: "2025-08-15",
       team: ["أحمد محمد", "سارة أحمد", "محمد علي"],
       features: [
         "إدارة الفواتير والعروض",
