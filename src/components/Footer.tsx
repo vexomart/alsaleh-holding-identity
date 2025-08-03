@@ -1,6 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -42,6 +46,19 @@ const Footer = () => {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterName, setNewsletterName] = useState("");
   const [isSubscribing, setIsSubscribing] = useState(false);
+  
+  // Job Application Form State
+  const [jobFormData, setJobFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    position: "",
+    experience: "",
+    message: ""
+  });
+  const [isSubmittingJob, setIsSubmittingJob] = useState(false);
+  const [showJobForm, setShowJobForm] = useState(false);
+  
   const { toast } = useToast();
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
@@ -98,6 +115,80 @@ const Footer = () => {
     }
   };
 
+  const handleJobInputChange = (field: string, value: string) => {
+    setJobFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleJobSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!jobFormData.fullName || !jobFormData.email || !jobFormData.phone || !jobFormData.position) {
+      toast({
+        title: "خطأ في البيانات",
+        description: "يرجى ملء جميع الحقول المطلوبة",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!jobFormData.email.includes('@')) {
+      toast({
+        title: "خطأ في البريد الإلكتروني",
+        description: "يرجى إدخال بريد إلكتروني صحيح",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmittingJob(true);
+
+    try {
+      const response = await fetch(
+        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/job-application",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI`,
+          },
+          body: JSON.stringify(jobFormData),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "تم إرسال الطلب بنجاح!",
+          description: "سنتواصل معك قريباً",
+        });
+        setJobFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          position: "",
+          experience: "",
+          message: ""
+        });
+        setShowJobForm(false);
+      } else {
+        throw new Error(result.error || "حدث خطأ أثناء إرسال الطلب");
+      }
+    } catch (error) {
+      console.error("Job application error:", error);
+      toast({
+        title: "خطأ في إرسال الطلب",
+        description: error instanceof Error ? error.message : "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmittingJob(false);
+    }
+  };
+
   const socialLinks = [
     { name: "فيسبوك", href: "https://facebook.com/AliAlshehriHolding", icon: Facebook, color: "hover:text-blue-400" },
     { name: "تويتر", href: "https://twitter.com/AliAlshehriHold", icon: Twitter, color: "hover:text-sky-400" },
@@ -131,7 +222,7 @@ const Footer = () => {
   ];
 
   const careersAndOpportunities = [
-    { name: "طلب وظيفة", href: "/job-application", icon: Users },
+    { name: "طلب وظيفة", href: "#", icon: Users, onClick: () => setShowJobForm(true) },
     { name: "فرص التدريب", href: "/training", icon: Award },
     { name: "العمل التطوعي", href: "/volunteer", icon: Heart },
     { name: "برنامج التطوير", href: "/development-program", icon: Lightbulb }
@@ -336,24 +427,22 @@ const Footer = () => {
                   من خلال دعم الابتكار والشركات الناشئة.
                 </p>
               </div>
-              
-              {/* Contact Info */}
-              <div className="space-y-4">
-                <h4 className="text-base font-semibold text-white flex items-center gap-2 mb-4">
-                  <MapPin className="w-4 h-4 text-blue-400" />
+
+              {/* Contact Information */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-blue-400 animate-pulse" />
                   معلومات التواصل
                 </h4>
                 <div className="space-y-3">
-                  {contactInfo.map((contact, index) => {
-                    const IconComponent = contact.icon;
+                  {contactInfo.map((info, index) => {
+                    const IconComponent = info.icon;
                     return (
-                      <div key={index} className="flex items-center gap-3 group hover:scale-[1.02] transition-transform duration-300">
-                        <div className="w-8 h-8 bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg flex items-center justify-center group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300 border border-slate-600">
-                          <IconComponent className="w-4 h-4 text-slate-300 group-hover:text-white" />
-                        </div>
+                      <div key={index} className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-blue-500/30 transition-all duration-300">
+                        <IconComponent className="w-4 h-4 text-blue-400" />
                         <div>
-                          <p className="text-xs text-slate-400 mb-1">{contact.label}</p>
-                          <p className="text-slate-200 font-medium text-sm">{contact.value}</p>
+                          <div className="text-xs text-slate-400">{info.label}</div>
+                          <div className="text-sm text-white font-medium">{info.value}</div>
                         </div>
                       </div>
                     );
@@ -361,24 +450,26 @@ const Footer = () => {
                 </div>
               </div>
 
-              {/* Rating Badge */}
-              <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg border border-yellow-500/30">
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                  ))}
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl border border-blue-500/20 text-center">
+                  <div className="text-2xl font-bold text-blue-400 mb-1">100+</div>
+                  <div className="text-xs text-slate-300">مشروع ناجح</div>
                 </div>
-                <span className="text-yellow-400 text-sm font-medium">تقييم ممتاز</span>
+                <div className="p-4 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-500/20 text-center">
+                  <div className="text-2xl font-bold text-emerald-400 mb-1">10+</div>
+                  <div className="text-xs text-slate-300">سنوات خبرة</div>
+                </div>
               </div>
             </div>
-
-            {/* Column 2: Services & Ready Projects */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              {/* Services - توسيع القسم */}
+            
+            {/* Column 2: Services */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+              {/* Main Services */}
               <div>
                 <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-blue-400 animate-pulse" />
-                  خدماتنا المتخصصة
+                  خدماتنا الرئيسية
                 </h4>
                 <ul className="space-y-2">
                   {services.map((service, index) => {
@@ -399,14 +490,11 @@ const Footer = () => {
                   })}
                 </ul>
               </div>
-            </div>
 
-            {/* Column 3: Digital Solutions & Company Updates */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.3s" }}>
               {/* Digital Solutions */}
               <div>
                 <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-purple-400 animate-pulse" />
+                  <Zap className="w-4 h-4 text-yellow-400 animate-pulse" />
                   الحلول الرقمية
                 </h4>
                 <ul className="space-y-2">
@@ -416,7 +504,7 @@ const Footer = () => {
                       <li key={index}>
                         <a 
                           href={solution.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-purple-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                          className="flex items-center gap-2 text-slate-300 hover:text-yellow-400 transition-all duration-300 group hover:translate-x-1 text-sm"
                         >
                           <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
                           <span className="group-hover:font-medium transition-all duration-300">
@@ -428,12 +516,15 @@ const Footer = () => {
                   })}
                 </ul>
               </div>
+            </div>
 
+            {/* Column 3: Company Updates */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
               {/* Company Updates */}
               <div>
                 <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-orange-400 animate-pulse" />
-                  تحديثات الشركة
+                  <Globe className="w-4 h-4 text-purple-400 animate-pulse" />
+                  أخبار الشركة
                 </h4>
                 <ul className="space-y-2">
                   {companyUpdates.map((update, index) => {
@@ -442,7 +533,7 @@ const Footer = () => {
                       <li key={index}>
                         <a 
                           href={update.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                          className="flex items-center gap-2 text-slate-300 hover:text-purple-400 transition-all duration-300 group hover:translate-x-1 text-sm"
                         >
                           <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
                           <span className="group-hover:font-medium transition-all duration-300">
@@ -454,14 +545,11 @@ const Footer = () => {
                   })}
                 </ul>
               </div>
-            </div>
 
-            {/* Column 4: Quick Links & Careers */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
               {/* Quick Links */}
               <div>
                 <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Home className="w-4 h-4 text-blue-400 animate-pulse" />
+                  <ChevronRight className="w-4 h-4 text-blue-400 animate-pulse" />
                   روابط سريعة
                 </h4>
                 <ul className="space-y-2">
@@ -484,7 +572,36 @@ const Footer = () => {
                 </ul>
               </div>
 
-              {/* Careers & Opportunities */}
+              {/* Ready Projects */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Code className="w-4 h-4 text-orange-400 animate-pulse" />
+                  المشاريع الجاهزة
+                </h4>
+                <ul className="space-y-2">
+                  {readyProjects.map((project, index) => {
+                    const IconComponent = project.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={project.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {project.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            {/* Column 4: Careers & Opportunities */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              {/* Careers */}
               <div>
                 <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                   <Users className="w-4 h-4 text-green-400 animate-pulse" />
@@ -495,15 +612,27 @@ const Footer = () => {
                     const IconComponent = link.icon;
                     return (
                       <li key={index}>
-                        <a 
-                          href={link.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                        >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {link.name}
-                          </span>
-                        </a>
+                        {link.onClick ? (
+                          <button 
+                            onClick={link.onClick}
+                            className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-sm w-full text-right"
+                          >
+                            <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                            <span className="group-hover:font-medium transition-all duration-300">
+                              {link.name}
+                            </span>
+                          </button>
+                        ) : (
+                          <a 
+                            href={link.href} 
+                            className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                          >
+                            <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                            <span className="group-hover:font-medium transition-all duration-300">
+                              {link.name}
+                            </span>
+                          </a>
+                        )}
                       </li>
                     );
                   })}
@@ -551,12 +680,12 @@ const Footer = () => {
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
               {/* Newsletter Subscription */}
               <div>
-                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-secondary animate-pulse" />
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-purple-400 animate-pulse" />
                   النشرة الإخبارية
                 </h4>
-                <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20">
-                  <p className="text-primary-foreground/80 text-xs mb-3 leading-relaxed">
+                <div className="p-4 bg-slate-800/30 rounded-xl border border-slate-700/30">
+                  <p className="text-slate-300 text-xs mb-3 leading-relaxed">
                     اشترك في نشرتنا الإخبارية لتحصل على أحدث الأخبار والتطورات
                   </p>
                   <form onSubmit={handleNewsletterSubmit} className="space-y-3">
@@ -565,51 +694,34 @@ const Footer = () => {
                       placeholder="الاسم (اختياري)"
                       value={newsletterName}
                       onChange={(e) => setNewsletterName(e.target.value)}
-                      className="bg-white/10 border-white/20 text-primary-foreground placeholder:text-primary-foreground/60 text-sm h-8"
+                      className="bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400 text-sm"
                     />
                     <Input
                       type="email"
-                      placeholder="البريد الإلكتروني"
+                      placeholder="بريدك الإلكتروني"
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
+                      className="bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400 text-sm"
                       required
-                      className="bg-white/10 border-white/20 text-primary-foreground placeholder:text-primary-foreground/60 text-sm h-8"
                     />
                     <Button 
                       type="submit" 
                       disabled={isSubscribing}
-                      size="sm"
-                      className="w-full bg-secondary hover:bg-secondary/90 text-white font-medium"
+                      className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white border-0 text-sm"
                     >
-                      {isSubscribing ? (
-                        <span className="flex items-center gap-2">
-                          <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          جاري الاشتراك...
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-2">
-                          <Send className="w-3 h-3" />
-                          اشترك الآن
-                        </span>
-                      )}
+                      {isSubscribing ? "جاري الاشتراك..." : "اشتراك"}
                     </Button>
                   </form>
-                  
-                  {/* Newsletter Stats */}
-                  <div className="mt-3 text-center p-2 bg-white/5 rounded-lg">
-                    <div className="text-sm font-bold text-secondary">15,000+</div>
-                    <div className="text-xs text-primary-foreground/60">مشترك</div>
-                  </div>
                 </div>
               </div>
 
               {/* Social Media Links */}
               <div>
-                <h4 className="text-lg font-bold text-primary-foreground mb-4 flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-secondary animate-pulse" />
-                  تابعنا على
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-pink-400 animate-pulse" />
+                  تابعنا
                 </h4>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   {socialLinks.map((social, index) => {
                     const IconComponent = social.icon;
                     return (
@@ -618,100 +730,181 @@ const Footer = () => {
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`flex flex-col items-center gap-1 p-2 bg-secondary/10 rounded-lg border border-secondary/20 hover:bg-secondary/20 transition-all duration-300 group hover:scale-105 ${social.color}`}
+                        className={`flex flex-col items-center gap-1 p-2 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 group hover:scale-105 ${social.color}`}
                       >
-                        <IconComponent className="w-4 h-4 text-primary-foreground group-hover:scale-110 transition-transform duration-300" />
-                        <span className="text-xs text-primary-foreground/80 group-hover:text-primary-foreground transition-colors duration-300">
-                          {social.name}
-                        </span>
+                        <IconComponent className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+                        <span className="text-xs text-slate-300 group-hover:text-white transition-colors duration-300">{social.name}</span>
                       </a>
                     );
                   })}
                 </div>
-
-                {/* Social Stats */}
-                <div className="mt-4 p-3 bg-gradient-to-r from-secondary/10 to-primary/10 rounded-xl border border-secondary/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <h5 className="text-primary-foreground font-bold text-xs">إحصائيات التواصل</h5>
-                    <Heart className="w-3 h-3 text-red-400 animate-pulse" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="text-center">
-                      <div className="text-sm font-bold text-secondary">125K+</div>
-                      <div className="text-xs text-primary-foreground/60">متابع</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-sm font-bold text-secondary">89%</div>
-                      <div className="text-xs text-primary-foreground/60">تفاعل</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Section */}
-              <div className="p-3 bg-secondary/10 rounded-xl border border-secondary/20 group hover:bg-secondary/15 transition-colors duration-300">
-                <div className="flex items-center gap-2 mb-2">
-                  <Heart className="w-4 h-4 text-secondary animate-pulse" />
-                  <h5 className="text-primary-foreground font-bold text-sm">ابدأ مشروعك معنا</h5>
-                </div>
-                <p className="text-primary-foreground/70 text-xs mb-2">
-                  انضم إلى رحلة النجاح والابتكار
-                </p>
-                <a 
-                  href="https://wa.me/966555812567?text=مرحباً، أريد بدء مشروع جديد معكم" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-green-400 hover:text-green-300 transition-colors duration-300 font-medium text-xs group/cta"
-                >
-                  <span>تواصل معنا الآن</span>
-                  <ChevronRight className="w-3 h-3 group-hover/cta:translate-x-1 transition-transform duration-300" />
-                </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Enhanced Bottom Section */}
-        <div className="border-t border-primary-foreground/20 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+        {/* Job Application Dialog */}
+        <Dialog open={showJobForm} onOpenChange={setShowJobForm}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-800 border-slate-700">
+            <DialogHeader>
+              <DialogTitle className="text-white text-xl font-bold text-center">
+                طلب توظيف
+              </DialogTitle>
+            </DialogHeader>
             
-            {/* Copyright & Legal Info */}
-            <div className="text-center md:text-right space-y-2">
-              <p className="text-primary-foreground/60 text-base">
-                © 2024 شركة علي صالح الشهري القابضة. جميع الحقوق محفوظة.
-              </p>
-              <div className="space-y-1 text-primary-foreground/50 text-xs leading-relaxed">
-                <p className="max-w-4xl">
-                  شركة علي صالح الشهري القابضة | نوع الكيان: شركة | رأس المال: 500,000 ريال سعودي | رقم السجل التجاري: 4030554749 | هاتف: 0555812567 | العنوان: 5081 شارع الأمير سلطان – حي البساتين، المملكة العربية السعودية | الموقع الإلكتروني: www.alialshehriholding.com | مرخصة من وزارة التجارة.
-                </p>
-                <p className="text-primary-foreground/50 text-sm flex items-center justify-center md:justify-start gap-2 mt-2">
-                  <FileText className="w-4 h-4" />
-                  الرقم الضريبي: 312206352700003
-                </p>
+            <form onSubmit={handleJobSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="text-white">الاسم الكامل *</Label>
+                  <Input
+                    id="fullName"
+                    type="text"
+                    value={jobFormData.fullName}
+                    onChange={(e) => handleJobInputChange("fullName", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-white">البريد الإلكتروني *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={jobFormData.email}
+                    onChange={(e) => handleJobInputChange("email", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    required
+                  />
+                </div>
               </div>
-              <p className="text-primary-foreground/40 text-sm mt-1">
-                تم التطوير بأحدث التقنيات العالمية
-              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-white">رقم الهاتف *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={jobFormData.phone}
+                    onChange={(e) => handleJobInputChange("phone", e.target.value)}
+                    className="bg-slate-700 border-slate-600 text-white"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="position" className="text-white">المنصب المطلوب *</Label>
+                  <Select value={jobFormData.position} onValueChange={(value) => handleJobInputChange("position", value)}>
+                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                      <SelectValue placeholder="اختر المنصب" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-700 border-slate-600">
+                      <SelectItem value="مطور ويب">مطور ويب</SelectItem>
+                      <SelectItem value="مطور تطبيقات">مطور تطبيقات</SelectItem>
+                      <SelectItem value="مصمم جرافيك">مصمم جرافيك</SelectItem>
+                      <SelectItem value="مسؤول تسويق">مسؤول تسويق</SelectItem>
+                      <SelectItem value="محاسب">محاسب</SelectItem>
+                      <SelectItem value="مدير مشروع">مدير مشروع</SelectItem>
+                      <SelectItem value="أخرى">أخرى</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="experience" className="text-white">سنوات الخبرة</Label>
+                <Select value={jobFormData.experience} onValueChange={(value) => handleJobInputChange("experience", value)}>
+                  <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                    <SelectValue placeholder="اختر سنوات الخبرة" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-700 border-slate-600">
+                    <SelectItem value="0-1">0-1 سنة</SelectItem>
+                    <SelectItem value="2-3">2-3 سنوات</SelectItem>
+                    <SelectItem value="4-5">4-5 سنوات</SelectItem>
+                    <SelectItem value="6-10">6-10 سنوات</SelectItem>
+                    <SelectItem value="أكثر من 10">أكثر من 10 سنوات</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message" className="text-white">رسالة تعريفية</Label>
+                <Textarea
+                  id="message"
+                  value={jobFormData.message}
+                  onChange={(e) => handleJobInputChange("message", e.target.value)}
+                  className="bg-slate-700 border-slate-600 text-white min-h-[100px]"
+                  placeholder="أخبرنا عن نفسك وسبب اهتمامك بالعمل معنا..."
+                />
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <Button
+                  type="submit"
+                  disabled={isSubmittingJob}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  {isSubmittingJob ? "جاري الإرسال..." : "إرسال الطلب"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowJobForm(false)}
+                  className="flex-1 border-slate-600 text-white hover:bg-slate-700"
+                >
+                  إلغاء
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Enhanced Bottom Section */}
+        <div className="border-t border-slate-700/50 pt-8 pb-4">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+            
+            {/* Left side - Copyright */}
+            <div className="flex flex-col lg:flex-row items-center gap-4 text-slate-400 text-sm">
+              <div className="flex items-center gap-2">
+                <span>© 2024 شركة علي صالح الشهري القابضة.</span>
+                <span className="text-slate-500">جميع الحقوق محفوظة.</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <a href="/privacy" className="hover:text-white transition-colors duration-300">
+                  سياسة الخصوصية
+                </a>
+                <span className="text-slate-600">|</span>
+                <a href="/terms" className="hover:text-white transition-colors duration-300">
+                  شروط الاستخدام
+                </a>
+              </div>
             </div>
 
-            {/* Achievements */}
-            <div className="flex flex-wrap gap-3">
-              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 hover:scale-105 transition-transform duration-200">
-                🏆 أفضل شركة قابضة 2024
-              </Badge>
-              <Badge className="bg-green-500/20 text-green-400 border-green-500/30 hover:scale-105 transition-transform duration-200">
-                🌟 ISO معتمد
-              </Badge>
-              <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 hover:scale-105 transition-transform duration-200">
-                🚀 رائد التقنية
-              </Badge>
+            {/* Center - Achievements */}
+            <div className="flex items-center gap-6 text-xs">
+              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full border border-green-500/20">
+                <Award className="w-3 h-3 text-green-400" />
+                <span className="text-green-300">ISO 9001:2015</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full border border-blue-500/20">
+                <Shield className="w-3 h-3 text-blue-400" />
+                <span className="text-blue-300">SOC 2 معتمد</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full border border-purple-500/20">
+                <Star className="w-3 h-3 text-purple-400" />
+                <span className="text-purple-300">عضو CITC</span>
+              </div>
             </div>
 
-            {/* Status Indicator */}
-            <div className="flex items-center gap-2 text-primary-foreground/60">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-sm">جميع الأنظمة تعمل بكفاءة</span>
-              <Clock className="w-4 h-4" />
+            {/* Right side - Status indicator */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full border border-green-500/20">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-green-300 text-xs">الأنظمة تعمل بصورة طبيعية</span>
+              </div>
+              <div className="text-slate-500 text-xs">
+                آخر تحديث: {new Date().toLocaleDateString('ar-SA')}
+              </div>
             </div>
           </div>
         </div>
