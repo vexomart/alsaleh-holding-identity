@@ -145,10 +145,10 @@ const Footer = () => {
   ];
 
   const companyUpdates = [
-    { name: "أخبار الشركة", href: "#company-news", icon: Globe },
-    { name: "البيانات الصحفية", href: "#press-releases", icon: FileText },
-    { name: "فعاليات قادمة", href: "#upcoming-events", icon: Calendar },
-    { name: "التقارير السنوية", href: "#annual-reports", icon: TrendingUp }
+    { name: "أخبار الشركة", href: "/company-news", icon: Globe },
+    { name: "البيانات الصحفية", href: "/press-releases", icon: FileText },
+    { name: "فعاليات قادمة", href: "/upcoming-events", icon: Calendar },
+    { name: "التقارير السنوية", href: "/annual-reports", icon: TrendingUp }
   ];
 
   const digitalSolutions = [
@@ -374,7 +374,7 @@ const Footer = () => {
 
             {/* Column 2: Services & Ready Projects */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              {/* Services */}
+              {/* Services - توسيع القسم */}
               <div>
                 <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-blue-400 animate-pulse" />
@@ -392,32 +392,6 @@ const Footer = () => {
                           <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
                           <span className="group-hover:font-medium transition-all duration-300">
                             {service.name}
-                          </span>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
-              {/* Ready Projects */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Code className="w-4 h-4 text-emerald-400 animate-pulse" />
-                  مشاريعنا الجاهزة
-                </h4>
-                <ul className="space-y-2">
-                  {readyProjects.map((project, index) => {
-                    const IconComponent = project.icon;
-                    return (
-                      <li key={index}>
-                        <a 
-                          href={project.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-emerald-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                        >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {project.name}
                           </span>
                         </a>
                       </li>

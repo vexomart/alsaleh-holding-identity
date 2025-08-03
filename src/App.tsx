@@ -19,6 +19,10 @@ import IntegratedSolutions from "./pages/IntegratedSolutions";
 import Training from "./pages/Training";
 import Volunteer from "./pages/Volunteer";
 import DevelopmentProgram from "./pages/DevelopmentProgram";
+import CompanyNews from "./pages/CompanyNews";
+import PressReleases from "./pages/PressReleases";
+import UpcomingEvents from "./pages/UpcomingEvents";
+import AnnualReports from "./pages/AnnualReports";
 import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
 
@@ -55,6 +59,10 @@ const App = () => {
               <Route path="/training" element={<Training />} />
               <Route path="/volunteer" element={<Volunteer />} />
               <Route path="/development-program" element={<DevelopmentProgram />} />
+              <Route path="/company-news" element={<CompanyNews />} />
+              <Route path="/press-releases" element={<PressReleases />} />
+              <Route path="/upcoming-events" element={<UpcomingEvents />} />
+              <Route path="/annual-reports" element={<AnnualReports />} />
               <Route path="/faq" element={<FAQ />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
