@@ -456,6 +456,25 @@ const ReadyProjects = () => {
       clients: "22+",
       updates: "تحديثات مجانية لسنة ونصف",
       support: "دعم فني وبحري متخصص"
+    },
+    {
+      id: 24,
+      title: "نظام إدارة الفنادق",
+      description: "نظام شامل لإدارة الفنادق والمنتجعات مع نظام الحجوزات وإدارة الغرف والخدمات",
+      detailedDescription: "نظام إدارة فنادق متكامل يغطي جميع احتياجات الفنادق والمنتجعات السياحية. يشمل نظام الحجوزات المباشر، إدارة الغرف والأجنحة، خدمات النزلاء، نقاط البيع، إدارة المطاعم، الحسابات والفواتير، إدارة الموظفين، تطبيق موبايل للنزلاء، وتحليلات شاملة للأداء والإشغال.",
+      features: ["نظام الحجوزات", "إدارة الغرف", "خدمات النزلاء", "نقاط البيع", "إدارة المطاعم", "تحليلات الأداء"],
+      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Mobile App", "PMS Integration"],
+      price: "45,000 ريال",
+      duration: "10-12 أسبوع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "إدارة الفنادق",
+      icon: Building2,
+      color: "emerald",
+      gradient: "from-emerald-500 to-teal-600",
+      rating: "4.9",
+      clients: "15+",
+      updates: "تحديثات مجانية لسنتين",
+      support: "دعم فني وفندقي متخصص 24/7"
     }
   ];
 
@@ -485,7 +504,8 @@ const ReadyProjects = () => {
     { name: "بوابات الدفع", count: projects.filter(p => p.category.includes("بوابات الدفع")).length },
     { name: "الجمال والعناية", count: projects.filter(p => p.category.includes("الجمال")).length },
     { name: "الإعلانات المبوبة", count: projects.filter(p => p.category.includes("الإعلانات")).length },
-    { name: "النقل البحري", count: projects.filter(p => p.category.includes("النقل البحري")).length }
+    { name: "النقل البحري", count: projects.filter(p => p.category.includes("النقل البحري")).length },
+    { name: "إدارة الفنادق", count: projects.filter(p => p.category.includes("إدارة الفنادق")).length }
   ];
 
   return (
@@ -712,11 +732,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">200+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">210+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">1000+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">1050+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
