@@ -76,13 +76,14 @@ const SubsidiariesSection = () => {
       established: "2022",
       services: ["أنظمة ERP المتطورة", "إدارة الفواتير الذكية", "التقارير المالية التفاعلية", "إدارة المخزون بالـ AI", "التحليل المالي المتقدم", "الامتثال الضريبي"],
       icon: BarChart3,
-      stats: { projects: "1,240+", clients: "685+", countries: "25" },
+      stats: { projects: "قريباً", clients: "قريباً", countries: "قريباً" },
       color: "from-yellow-500 to-orange-500",
       website: "https://numaxio.com/",
       websiteName: "numaxio.com",
-      growth: "+190%",
-      rating: "4.8/5",
-      specialties: ["التحليل المالي", "الذكاء التجاري", "الأتمتة المحاسبية"]
+      growth: "قيد التطوير",
+      rating: "قريباً",
+      specialties: ["التحليل المالي", "الذكاء التجاري", "الأتمتة المحاسبية"],
+      inDevelopment: true
     },
     {
       name: "فيكسو مارت",
