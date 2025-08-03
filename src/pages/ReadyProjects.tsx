@@ -228,6 +228,25 @@ const ReadyProjects = () => {
       clients: "18+",
       updates: "تحديثات مجانية لسنة ونصف",
       support: "دعم فني وتجاري متخصص 24/7"
+    },
+    {
+      id: 12,
+      title: "موقع تعريفي للشركات",
+      description: "موقع إلكتروني احترافي وأنيق للشركات مع تصميم متجاوب وإدارة محتوى سهلة",
+      detailedDescription: "موقع إلكتروني تعريفي متكامل للشركات والمؤسسات يتضمن صفحات رئيسية، خدمات، عن الشركة، فريق العمل، معرض الأعمال، ونموذج تواصل. مصمم ليكون سريع التحميل ومتوافق مع محركات البحث ومتجاوب مع جميع الأجهزة.",
+      features: ["تصميم متجاوب", "صفحات متعددة", "إدارة محتوى", "تحسين SEO", "سرعة تحميل", "نموذج تواصل"],
+      technologies: ["React", "Next.js", "Tailwind CSS", "Framer Motion", "Contact Forms", "SEO"],
+      price: "5,000 ريال",
+      duration: "1-2 أسبوع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "المواقع التعريفية",
+      icon: Globe,
+      color: "sky",
+      gradient: "from-sky-500 to-blue-600",
+      rating: "4.9",
+      clients: "50+",
+      updates: "تحديثات مجانية لسنة",
+      support: "دعم فني شامل"
     }
   ];
 
@@ -245,7 +264,8 @@ const ReadyProjects = () => {
     { name: "الأنظمة الطبية", count: projects.filter(p => p.category.includes("الطبية")).length },
     { name: "إدارة الأعمال", count: projects.filter(p => p.category.includes("إدارة الأعمال")).length },
     { name: "منصات الخدمات", count: projects.filter(p => p.category.includes("منصات الخدمات")).length },
-    { name: "الأنظمة العقارية", count: projects.filter(p => p.category.includes("العقارية")).length }
+    { name: "الأنظمة العقارية", count: projects.filter(p => p.category.includes("العقارية")).length },
+    { name: "المواقع التعريفية", count: projects.filter(p => p.category.includes("التعريفية")).length }
   ];
 
   return (
@@ -472,11 +492,11 @@ const ReadyProjects = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">70+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">90+</div>
               <div className="text-slate-600">مشروع مكتمل</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">300+</div>
+              <div className="text-3xl font-bold text-emerald-600 mb-2">450+</div>
               <div className="text-slate-600">عميل راضي</div>
             </div>
             <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">

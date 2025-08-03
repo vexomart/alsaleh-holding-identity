@@ -430,6 +430,47 @@ const ProjectDetails = () => {
         "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "https://images.unsplash.com/photo-1582407947304-fd86f028f716?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
       ]
+    },
+    {
+      id: 12,
+      title: "موقع تعريفي للشركات",
+      description: "موقع إلكتروني احترافي وأنيق للشركات مع تصميم متجاوب وإدارة محتوى سهلة",
+      detailedDescription: "موقع إلكتروني تعريفي متكامل للشركات والمؤسسات يتضمن صفحات رئيسية، خدمات، عن الشركة، فريق العمل، معرض الأعمال، ونموذج تواصل. مصمم ليكون سريع التحميل ومتوافق مع محركات البحث ومتجاوب مع جميع الأجهزة.",
+      features: ["تصميم متجاوب", "صفحات متعددة", "إدارة محتوى", "تحسين SEO", "سرعة تحميل", "نموذج تواصل"],
+      technologies: ["React", "Next.js", "Tailwind CSS", "Framer Motion", "Contact Forms", "SEO"],
+      price: "5,000 ريال",
+      duration: "1-2 أسبوع للتنفيذ",
+      status: "جاهز للنشر",
+      category: "المواقع التعريفية",
+      icon: Globe,
+      color: "sky",
+      gradient: "from-sky-500 to-blue-600",
+      rating: "4.9",
+      clients: "50+",
+      updates: "تحديثات مجانية لسنة",
+      support: "دعم فني شامل",
+      fullFeatures: [
+        "تصميم احترافي متجاوب مع جميع الأجهزة",
+        "صفحة رئيسية جذابة مع عناصر تفاعلية",
+        "صفحة خدمات مفصلة مع أيقونات مميزة",
+        "صفحة عن الشركة مع تاريخ وقيم المؤسسة",
+        "صفحة فريق العمل مع صور وتخصصات",
+        "معرض أعمال ومشاريع بتصميم أنيق",
+        "صفحة تواصل مع نموذج ذكي وخريطة",
+        "تحسين SEO متقدم لمحركات البحث",
+        "سرعة تحميل فائقة وأداء محسن",
+        "تكامل مع وسائل التواصل الاجتماعي",
+        "نظام إدارة محتوى سهل الاستخدام",
+        "دعم متعدد اللغات (عربي/إنجليزي)",
+        "تحليلات الزوار مع Google Analytics",
+        "شهادة SSL مجانية للأمان",
+        "استضافة مجانية لسنة كاملة"
+      ],
+      screenshots: [
+        "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+      ]
     }
     // يمكن إضافة المزيد من المشاريع هنا
   ];
