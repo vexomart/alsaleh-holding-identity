@@ -61,45 +61,45 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Top Bar - Enhanced */}
-      <div className="hidden lg:block bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white py-3 border-b border-indigo-800/30">
+      {/* Top Bar - Professional Corporate */}
+      <div className="hidden lg:block bg-primary text-primary-foreground py-3 border-b border-primary-glow/20">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-3 text-sm font-medium">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-                  <Clock className="w-4 h-4" />
+                <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                  <Clock className="w-4 h-4 text-secondary-foreground" />
                 </div>
                 <span>ساعات العمل: الأحد - الخميس 8:00 ص - 6:00 م</span>
               </div>
               <div className="flex items-center gap-3 text-sm font-medium">
-                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
-                  <MapPin className="w-4 h-4" />
+                <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-accent-foreground" />
                 </div>
                 <span>المملكة العربية السعودية - الرياض</span>
               </div>
             </div>
             
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3 text-sm font-medium hover:text-blue-300 transition-colors group">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Mail className="w-4 h-4" />
+              <div className="flex items-center gap-3 text-sm font-medium hover:text-secondary transition-colors group">
+                <div className="w-8 h-8 bg-secondary/20 rounded-full flex items-center justify-center group-hover:bg-secondary group-hover:scale-110 transition-all">
+                  <Mail className="w-4 h-4 text-secondary group-hover:text-secondary-foreground" />
                 </div>
                 <a href="mailto:info@ash.holdings" className="hover:underline">
                   info@ash.holdings
                 </a>
               </div>
-              <div className="flex items-center gap-3 text-sm font-medium hover:text-green-300 transition-colors group">
-                <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Phone className="w-4 h-4" />
+              <div className="flex items-center gap-3 text-sm font-medium hover:text-secondary transition-colors group">
+                <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center group-hover:bg-accent group-hover:scale-110 transition-all">
+                  <Phone className="w-4 h-4 text-accent group-hover:text-accent-foreground" />
                 </div>
                 <a href="tel:+966555812567" className="hover:underline">
                   +966 555 812 567
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-4 py-1.5 rounded-full border-0">
+                <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
+                <Badge className="bg-success text-success-foreground text-xs font-bold px-4 py-1.5 rounded-full border-0 shadow-lg">
                   متاح الآن للدعم
                 </Badge>
               </div>
@@ -108,8 +108,8 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Main Navigation - Enhanced */}
-      <nav className="fixed top-0 lg:top-[52px] w-full z-50 bg-gradient-to-r from-slate-900/98 via-indigo-900/98 to-slate-900/98 backdrop-blur-xl transition-all duration-500 border-b border-indigo-800/20 shadow-2xl">
+      {/* Main Navigation - Professional Corporate */}
+      <nav className="fixed top-0 lg:top-[52px] w-full z-50 bg-primary/98 backdrop-blur-xl transition-all duration-500 border-b border-primary-glow/20 shadow-corporate">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex items-center justify-between h-20 lg:h-24">
             {/* Logo & Company Name - Enhanced */}
@@ -145,39 +145,39 @@ const Navigation = () => {
               </a>
             </div>
 
-            {/* Desktop Navigation - Enhanced */}
+            {/* Desktop Navigation - Corporate Professional */}
             <div className="hidden lg:flex items-center gap-10">
               <a 
                 href="/" 
-                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-secondary text-primary-foreground group py-2"
               >
                 الرئيسية
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               <a 
                 href="/about" 
-                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-secondary text-primary-foreground group py-2"
               >
                 من نحن
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               
-              {/* Services Dropdown - Enhanced */}
+              {/* Services Dropdown - Corporate Professional */}
               <div 
                 className="relative group"
                 onMouseEnter={() => setShowServices(true)}
                 onMouseLeave={() => setShowServices(false)}
               >
                 <button 
-                  className="relative flex items-center gap-2 font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white py-2"
+                  className="relative flex items-center gap-2 font-semibold text-lg transition-all duration-300 hover:text-secondary text-primary-foreground py-2"
                 >
                   خدماتنا
                   <ChevronDown className="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" />
-                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300 rounded-full"></div>
                 </button>
                 
                 {showServices && (
-                  <div className="absolute top-full right-0 mt-4 w-96 bg-gradient-to-br from-white via-blue-50/50 to-indigo-50/30 rounded-2xl shadow-2xl border border-blue-200/50 overflow-hidden z-50 backdrop-blur-sm animate-fade-in">
+                  <div className="absolute top-full right-0 mt-4 w-96 bg-card/95 backdrop-blur-xl rounded-2xl shadow-corporate border border-border overflow-hidden z-50 animate-fade-in">
                     <div className="p-4">
                       <div className="grid grid-cols-1 gap-2">
                         {services.map((service, index) => {
@@ -186,7 +186,7 @@ const Navigation = () => {
                             <a
                               key={index}
                               href={service.href}
-                              className="flex items-center gap-4 px-4 py-4 hover:bg-gradient-to-r hover:from-blue-100/80 hover:to-indigo-100/60 transition-all duration-300 rounded-xl group border border-transparent hover:border-blue-200/50"
+                              className="flex items-center gap-4 px-4 py-4 hover:bg-muted/80 transition-all duration-300 rounded-xl group border border-transparent hover:border-border"
                               onClick={(e) => {
                                 if (service.href.startsWith('#')) {
                                   e.preventDefault();
@@ -195,14 +195,14 @@ const Navigation = () => {
                                 }
                               }}
                             >
-                              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
-                                <IconComponent className="w-6 h-6 text-white" />
+                              <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center group-hover:bg-secondary group-hover:scale-110 group-hover:shadow-glow transition-all duration-300">
+                                <IconComponent className="w-6 h-6 text-primary-foreground group-hover:text-secondary-foreground" />
                               </div>
                               <div className="flex-1">
-                                <span className="text-slate-700 font-bold text-base group-hover:text-blue-700 transition-colors duration-300">{service.name}</span>
-                                <div className="text-xs text-slate-500 mt-0.5">خدمة احترافية متميزة</div>
+                                <span className="text-foreground font-bold text-base group-hover:text-primary transition-colors duration-300">{service.name}</span>
+                                <div className="text-xs text-muted-foreground mt-0.5">خدمة احترافية متميزة</div>
                               </div>
-                              <ChevronDown className="w-4 h-4 text-slate-400 -rotate-90 group-hover:translate-x-1 transition-transform duration-300" />
+                              <ChevronDown className="w-4 h-4 text-muted-foreground -rotate-90 group-hover:translate-x-1 transition-transform duration-300" />
                             </a>
                           );
                         })}
@@ -214,49 +214,49 @@ const Navigation = () => {
 
               <a 
                 href="/vision" 
-                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-secondary text-primary-foreground group py-2"
               >
                 رؤيتنا
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               <a 
                 href="/subsidiaries"
-                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-secondary text-primary-foreground group py-2"
               >
                 شركاتنا
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               <a 
                 href="/ready-projects" 
-                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-secondary text-primary-foreground group py-2"
               >
                 منتجاتنا
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               <a 
                 href="/contact"
-                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-secondary text-primary-foreground group py-2"
               >
                 تواصل معنا
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               
-              {/* Others Dropdown - Enhanced */}
+              {/* Others Dropdown - Corporate Professional */}
               <div 
                 className="relative group"
                 onMouseEnter={() => setShowOthers(true)}
                 onMouseLeave={() => setShowOthers(false)}
               >
                 <button 
-                  className="relative flex items-center gap-2 font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white py-2"
+                  className="relative flex items-center gap-2 font-semibold text-lg transition-all duration-300 hover:text-secondary text-primary-foreground py-2"
                 >
                   أخرى
                   <ChevronDown className="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" />
-                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300 rounded-full"></div>
                 </button>
                 
                 {showOthers && (
-                  <div className="absolute top-full right-0 mt-4 w-80 bg-gradient-to-br from-white via-purple-50/50 to-pink-50/30 rounded-2xl shadow-2xl border border-purple-200/50 overflow-hidden z-50 backdrop-blur-sm animate-fade-in">
+                  <div className="absolute top-full right-0 mt-4 w-80 bg-card/95 backdrop-blur-xl rounded-2xl shadow-corporate border border-border overflow-hidden z-50 animate-fade-in">
                     <div className="p-4">
                       {othersItems.map((item, index) => {
                         const IconComponent = item.icon;
@@ -264,16 +264,16 @@ const Navigation = () => {
                           <a
                             key={index}
                             href={item.href}
-                            className="flex items-center gap-4 px-4 py-4 hover:bg-gradient-to-r hover:from-purple-100/80 hover:to-pink-100/60 transition-all duration-300 rounded-xl group border border-transparent hover:border-purple-200/50"
+                            className="flex items-center gap-4 px-4 py-4 hover:bg-muted/80 transition-all duration-300 rounded-xl group border border-transparent hover:border-border"
                           >
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
-                              <IconComponent className="w-6 h-6 text-white" />
+                            <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center group-hover:bg-secondary group-hover:scale-110 group-hover:shadow-glow transition-all duration-300">
+                              <IconComponent className="w-6 h-6 text-accent-foreground group-hover:text-secondary-foreground" />
                             </div>
                             <div className="flex-1">
-                              <span className="text-slate-700 font-bold text-base group-hover:text-purple-700 transition-colors duration-300">{item.name}</span>
-                              <div className="text-xs text-slate-500 mt-0.5">معلومات مهمة</div>
+                              <span className="text-foreground font-bold text-base group-hover:text-accent transition-colors duration-300">{item.name}</span>
+                              <div className="text-xs text-muted-foreground mt-0.5">معلومات مهمة</div>
                             </div>
-                            <ChevronDown className="w-4 h-4 text-slate-400 -rotate-90 group-hover:translate-x-1 transition-transform duration-300" />
+                            <ChevronDown className="w-4 h-4 text-muted-foreground -rotate-90 group-hover:translate-x-1 transition-transform duration-300" />
                           </a>
                         );
                       })}
@@ -283,19 +283,19 @@ const Navigation = () => {
               </div>
             </div>
 
-            {/* Action Buttons - Enhanced */}
+            {/* Action Buttons - Corporate Professional */}
             <div className="flex items-center gap-4">
               {/* Contact Buttons - Desktop Only */}
               <div className="hidden xl:flex items-center gap-3">
                 <Button 
                   size="lg" 
                   variant="ghost"
-                  className="flex items-center gap-3 text-white hover:text-green-300 bg-white/5 hover:bg-green-500/20 border border-white/20 hover:border-green-400/50 px-6 py-3 rounded-xl transition-all duration-300 group backdrop-blur-sm"
+                  className="flex items-center gap-3 text-primary-foreground hover:text-success bg-primary-foreground/5 hover:bg-success/20 border border-primary-foreground/20 hover:border-success/50 px-6 py-3 rounded-xl transition-all duration-300 group backdrop-blur-sm"
                   asChild
                 >
                   <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
-                    <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <MessageCircle className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 bg-success rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <MessageCircle className="w-4 h-4 text-success-foreground" />
                     </div>
                     <span className="font-bold">واتساب</span>
                   </a>
@@ -303,12 +303,12 @@ const Navigation = () => {
                 <Button 
                   size="lg" 
                   variant="ghost"
-                  className="flex items-center gap-3 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 border border-white/20 hover:border-blue-400/50 px-6 py-3 rounded-xl transition-all duration-300 group backdrop-blur-sm"
+                  className="flex items-center gap-3 text-primary-foreground hover:text-accent bg-primary-foreground/5 hover:bg-accent/20 border border-primary-foreground/20 hover:border-accent/50 px-6 py-3 rounded-xl transition-all duration-300 group backdrop-blur-sm"
                   asChild
                 >
                   <a href="tel:+966555812567">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Phone className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Phone className="w-4 h-4 text-accent-foreground" />
                     </div>
                     <span className="font-bold">اتصال فوري</span>
                   </a>
@@ -317,7 +317,7 @@ const Navigation = () => {
               
               <Button 
                 size="lg"
-                className="hidden lg:flex font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white px-8 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0"
+                className="hidden lg:flex font-bold text-lg bg-secondary hover:bg-secondary-dark text-secondary-foreground px-8 py-3 rounded-xl shadow-glow hover:shadow-xl transition-all duration-300 hover:scale-105 border-0"
                 asChild
               >
                 <a href="https://ash.holdings" target="_blank" rel="noopener noreferrer">

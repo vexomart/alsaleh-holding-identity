@@ -109,26 +109,26 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.15),transparent_50%)] animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
       
-      {/* Professional Corporate Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-indigo-900/75 to-blue-900/85" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-indigo-800/40" />
-      <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,0.02)_50%,transparent_75%)] bg-[length:60px_60px]" />
+      {/* Corporate Professional Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/85 to-accent/80" />
+      <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-primary/50" />
+      <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,hsl(var(--primary-glow)/0.03)_50%,transparent_75%)] bg-[length:60px_60px]" />
       
       {/* Enhanced Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Floating particles */}
-        <div className="absolute top-1/4 left-10 w-20 h-20 bg-primary/20 rounded-full blur-xl animate-float" />
-        <div className="absolute bottom-1/3 right-10 w-32 h-32 bg-secondary/20 rounded-full blur-xl animate-float-delayed" />
-        <div className="absolute top-1/2 left-1/3 w-16 h-16 bg-accent/20 rounded-full blur-xl animate-pulse" />
-        <div className="absolute top-1/5 right-1/4 w-24 h-24 bg-primary/15 rounded-full blur-2xl animate-float" />
-        <div className="absolute bottom-1/5 left-1/4 w-28 h-28 bg-secondary/15 rounded-full blur-2xl animate-float-delayed" />
+        {/* Floating particles with corporate colors */}
+        <div className="absolute top-1/4 left-10 w-20 h-20 bg-secondary/30 rounded-full blur-xl animate-float" />
+        <div className="absolute bottom-1/3 right-10 w-32 h-32 bg-accent/25 rounded-full blur-xl animate-float-delayed" />
+        <div className="absolute top-1/2 left-1/3 w-16 h-16 bg-primary-glow/20 rounded-full blur-xl animate-pulse" />
+        <div className="absolute top-1/5 right-1/4 w-24 h-24 bg-secondary/20 rounded-full blur-2xl animate-float" />
+        <div className="absolute bottom-1/5 left-1/4 w-28 h-28 bg-accent/15 rounded-full blur-2xl animate-float-delayed" />
         
-        {/* Animated grid overlay */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-5 animate-pulse" />
+        {/* Professional grid overlay */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 animate-pulse" />
         
-        {/* Interactive mouse follower */}
+        {/* Interactive mouse follower with corporate colors */}
         <div 
-          className="absolute w-40 h-40 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-3xl pointer-events-none transition-all duration-1000"
+          className="absolute w-40 h-40 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full blur-3xl pointer-events-none transition-all duration-1000"
           style={{
             left: mousePosition.x - 80,
             top: mousePosition.y - 80,
@@ -182,11 +182,11 @@ const HeroSection = () => {
           </span>
         </p>
         
-        {/* Enhanced Action Buttons */}
+        {/* Corporate Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fade-in" style={{ animationDelay: '1.2s' }}>
           <Button 
             size="lg" 
-            className="bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary text-secondary-foreground px-12 py-8 text-xl font-bold shadow-2xl transition-all duration-500 hover:scale-110 hover:shadow-glow group rounded-2xl"
+            className="bg-secondary hover:bg-secondary-dark text-secondary-foreground px-12 py-8 text-xl font-bold shadow-glow hover:shadow-xl transition-all duration-500 hover:scale-110 group rounded-2xl"
             onClick={() => {
               const companiesSection = document.getElementById('companies');
               companiesSection?.scrollIntoView({ behavior: 'smooth' });
@@ -200,13 +200,13 @@ const HeroSection = () => {
           <Button 
             variant="outline" 
             size="lg"
-            className="border-3 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground hover:text-primary px-12 py-8 text-xl font-bold transition-all duration-500 hover:scale-110 backdrop-blur-md bg-white/5 rounded-2xl group"
+            className="border-3 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground hover:text-primary px-12 py-8 text-xl font-bold transition-all duration-500 hover:scale-110 glass-effect rounded-2xl group"
             onClick={() => {
               const visionSection = document.getElementById('vision');
               visionSection?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
-            <Heart className="w-6 h-6 mr-3 group-hover:scale-125 group-hover:text-red-500 transition-all duration-300" />
+            <Heart className="w-6 h-6 mr-3 group-hover:scale-125 group-hover:text-destructive transition-all duration-300" />
             اكتشف رؤيتنا التفصيلية
           </Button>
 
@@ -215,7 +215,7 @@ const HeroSection = () => {
             variant="ghost"
             size="lg"
             onClick={() => setIsVideoPlaying(!isVideoPlaying)}
-            className="border-2 border-secondary/50 text-secondary hover:bg-secondary/10 px-8 py-8 text-lg font-bold transition-all duration-500 hover:scale-110 rounded-full group bg-white/5 backdrop-blur-md"
+            className="border-2 border-accent/50 text-accent hover:bg-accent/10 px-8 py-8 text-lg font-bold transition-all duration-500 hover:scale-110 rounded-full group glass-effect"
           >
             <Play className="w-8 h-8 group-hover:scale-125 transition-transform duration-300" />
           </Button>
