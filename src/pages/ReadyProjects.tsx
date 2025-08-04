@@ -63,7 +63,7 @@ const ReadyProjects = () => {
       category: "أنظمة المحتوى",
       icon: FileText,
       color: "emerald",
-      gradient: "from-emerald-500 to-teal-600",
+      gradient: "from-emerald-600 to-green-600", // أخضر للمحتوى والكتابة
       rating: "4.8",
       clients: "18+",
       updates: "تحديثات مجانية لسنة",
@@ -82,7 +82,7 @@ const ReadyProjects = () => {
       category: "التجارة الإلكترونية",
       icon: Building2,
       color: "orange",
-      gradient: "from-orange-500 to-red-600",
+      gradient: "from-orange-600 to-amber-600", // برتقالي للتجارة والمبيعات
       rating: "4.7",
       clients: "32+",
       updates: "تحديثات مجانية لسنتين",
@@ -101,7 +101,7 @@ const ReadyProjects = () => {
       category: "التعليم التقني",
       icon: GraduationCap,
       color: "purple",
-      gradient: "from-purple-500 to-pink-600",
+      gradient: "from-purple-600 to-violet-600", // بنفسجي للتعليم والتطوير
       rating: "4.9",
       clients: "15+",
       updates: "تحديثات المحتوى دورية",
@@ -120,7 +120,7 @@ const ReadyProjects = () => {
       category: "أنظمة إدارية",
       icon: Users,
       color: "indigo",
-      gradient: "from-indigo-500 to-blue-600",
+      gradient: "from-blue-600 to-indigo-600", // أزرق للأنظمة الإدارية
       rating: "قريباً",
       clients: "في الاختبار",
       updates: "تحديثات مجانية لسنة",
@@ -139,7 +139,7 @@ const ReadyProjects = () => {
       category: "الموارد البشرية",
       icon: Award,
       color: "teal",
-      gradient: "from-teal-500 to-cyan-600",
+      gradient: "from-teal-600 to-cyan-600", // فيروزي للموارد البشرية
       rating: "4.8",
       clients: "22+",
       updates: "تحديثات مجانية لسنة",
@@ -158,7 +158,7 @@ const ReadyProjects = () => {
       category: "التسويق الرقمي",
       icon: TrendingUp,
       color: "pink",
-      gradient: "from-pink-500 to-rose-600",
+      gradient: "from-pink-600 to-rose-600", // وردي للتسويق والإبداع
       rating: "4.9",
       clients: "28+",
       updates: "تحديثات شهرية",
@@ -177,7 +177,7 @@ const ReadyProjects = () => {
       category: "الأنظمة الطبية",
       icon: Activity,
       color: "red",
-      gradient: "from-red-500 to-pink-600",
+      gradient: "from-red-600 to-rose-600", // أحمر للطب والصحة
       rating: "4.8",
       clients: "12+",
       updates: "تحديثات مجانية لسنتين",
