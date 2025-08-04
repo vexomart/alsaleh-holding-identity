@@ -42,6 +42,7 @@ import TechProjects from "./pages/TechProjects";
 import TechProjectDetails from "./pages/TechProjectDetails";
 import Technologies from "./pages/Technologies";
 import CurrentOffers from "./pages/CurrentOffers";
+import ProfessionalServices from "./pages/ProfessionalServices";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -100,6 +101,7 @@ const App = () => {
               <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
           <Route path="/technologies" element={<Technologies />} />
           <Route path="/current-offers" element={<CurrentOffers />} />
+          <Route path="/professional-services" element={<ProfessionalServices />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

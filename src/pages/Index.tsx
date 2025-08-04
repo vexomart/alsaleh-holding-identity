@@ -4,7 +4,7 @@ import AboutSection from "@/components/AboutSection";
 
 import StatsSection from "@/components/StatsSection";
 
-import ServicesSection from "@/components/ServicesSection";
+
 import ContentCreationSection from "@/components/ContentCreationSection";
 import DesignSolutionsSection from "@/components/DesignSolutionsSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
@@ -54,16 +54,6 @@ const Index = () => {
           </section>
 
 
-          {/* Services Section */}
-          <section id="services" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-bl from-purple-50/80 via-violet-50/60 to-indigo-50/80 dark:from-purple-950/20 dark:via-violet-950/10 dark:to-indigo-950/20"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-purple-100/20 via-transparent to-violet-100/20"></div>
-            <div className="absolute top-5 right-5 sm:top-16 sm:right-16 w-28 h-28 sm:w-76 sm:h-76 bg-gradient-to-br from-purple-200/45 to-violet-200/45 rounded-full blur-lg sm:blur-2xl animate-pulse"></div>
-            <div className="absolute bottom-5 left-5 sm:bottom-16 sm:left-16 w-32 h-32 sm:w-84 sm:h-84 bg-gradient-to-br from-indigo-200/40 to-purple-200/40 rounded-full blur-xl sm:blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-            <div className="relative z-10">
-              <ServicesSection />
-            </div>
-          </section>
 
           {/* Content Creation Section */}
           <ContentCreationSection />
