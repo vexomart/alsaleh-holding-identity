@@ -37,8 +37,8 @@ const currentOffers = [
     title: "عرض الموقع الاحترافي الكامل",
     description: "تصميم وتطوير موقع إلكتروني احترافي متكامل مع لوحة تحكم إدارية وتحسين محركات البحث",
     originalPrice: "15000",
-    currentPrice: "10",
-    discount: "99%",
+    currentPrice: "9750",
+    discount: "35%",
     timeLeft: "14 يوم",
     features: [
       "تصميم مخصص وفريد احترافي",
