@@ -50,6 +50,14 @@ export default {
           light: 'hsl(var(--secondary-light))',
           dark: 'hsl(var(--secondary-dark))',
         },
+        tertiary: {
+          DEFAULT: 'hsl(var(--tertiary))',
+          foreground: 'hsl(var(--tertiary-foreground))',
+        },
+        quaternary: {
+          DEFAULT: 'hsl(var(--quaternary))',
+          foreground: 'hsl(var(--quaternary-foreground))',
+        },
         success: {
           DEFAULT: 'hsl(var(--success))',
           foreground: 'hsl(var(--success-foreground))',
@@ -98,6 +106,10 @@ export default {
         'gradient-hero': 'var(--gradient-hero)',
         'gradient-surface': 'var(--gradient-surface)',
         'gradient-glass': 'var(--gradient-glass)',
+        'gradient-electric': 'var(--gradient-electric)',
+        'gradient-sunset': 'var(--gradient-sunset)',
+        'gradient-aurora': 'var(--gradient-aurora)',
+        'gradient-mesh': 'var(--gradient-mesh)',
       },
       boxShadow: {
         'xs': 'var(--shadow-xs)',
@@ -109,6 +121,8 @@ export default {
         'primary': 'var(--shadow-primary)',
         'glow': 'var(--shadow-glow)',
         'glass': 'var(--shadow-glass)',
+        'electric': 'var(--shadow-electric)',
+        'neon': 'var(--shadow-neon)',
       },
       borderRadius: {
         'xs': 'var(--radius-xs)',
@@ -118,8 +132,8 @@ export default {
         'lg': 'var(--radius-lg)',
         'xl': 'var(--radius-xl)',
         '2xl': 'var(--radius-2xl)',
+        '3xl': 'var(--radius-3xl)',
         'full': 'var(--radius-full)',
-      },
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
@@ -238,6 +252,32 @@ export default {
         'blink': {
           '0%, 50%': { opacity: '1' },
           '51%, 100%': { opacity: '0' }
+        },
+        'magnetic': {
+          '0%': { transform: 'translate3d(0, 0, 0)' },
+          '100%': { transform: 'translate3d(var(--x), var(--y), 0)' }
+        },
+        'levitate': {
+          '0%, 100%': { transform: 'translateY(0px) rotate(0deg)', filter: 'hue-rotate(0deg)' },
+          '33%': { transform: 'translateY(-20px) rotate(1deg)', filter: 'hue-rotate(120deg)' },
+          '66%': { transform: 'translateY(-10px) rotate(-1deg)', filter: 'hue-rotate(240deg)' }
+        },
+        'morph': {
+          '0%, 100%': { borderRadius: '40% 60% 60% 40% / 60% 30% 70% 40%' },
+          '50%': { borderRadius: '60% 40% 30% 70% / 40% 70% 30% 60%' }
+        },
+        'pulse-color': {
+          '0%, 100%': { borderColor: 'hsl(var(--primary))', boxShadow: '0 0 20px hsl(var(--primary) / 0.3)' },
+          '50%': { borderColor: 'hsl(var(--tertiary))', boxShadow: '0 0 40px hsl(var(--tertiary) / 0.5)' }
+        },
+        'slide-infinite': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' }
+        },
+        'matrix-rain': {
+          '0%': { transform: 'translateY(-100vh)', opacity: '0' },
+          '10%': { opacity: '1' },
+          '100%': { transform: 'translateY(100vh)', opacity: '0' }
         }
       },
       animation: {
@@ -263,7 +303,13 @@ export default {
         'float-delayed': 'float-delayed 6s ease-in-out infinite 2s',
         'icon-hover': 'icon-hover 0.3s ease-out forwards',
         'typing': 'typing 3.5s steps(40, end)',
-        'blink': 'blink 1s infinite'
+        'blink': 'blink 1s infinite',
+        'magnetic': 'magnetic 0.3s ease-out',
+        'levitate': 'levitate 8s ease-in-out infinite',
+        'morph': 'morph 8s ease-in-out infinite',
+        'pulse-color': 'pulse-color 2s ease-in-out infinite',
+        'slide-infinite': 'slide-infinite 20s linear infinite',
+        'matrix-rain': 'matrix-rain 3s linear infinite',
       },
       transitionTimingFunction: {
         'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
