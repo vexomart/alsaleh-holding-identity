@@ -109,7 +109,7 @@ const currentOffers = [
 const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<'tap' | 'paylink' | 'tamara'>('tap');
+  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<'tap' | 'paylink'>('tap');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -139,9 +139,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
       
       // Choose payment function based on selected gateway
-      const paymentFunction = selectedPaymentGateway === 'tap' ? 'tap-payment' : 
-                             selectedPaymentGateway === 'paylink' ? 'paylink-payment' : 
-                             'tamara-payment';
+      const paymentFunction = selectedPaymentGateway === 'tap' ? 'tap-payment' : 'paylink-payment';
       
       const { data, error } = await supabase.functions.invoke(paymentFunction, {
         body: {
@@ -167,11 +165,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
         
         toast({
           title: "تم إنشاء رابط الدفع بنجاح",
-          description: `سيتم فتح صفحة الدفع الآن عبر ${
-            selectedPaymentGateway === 'tap' ? 'Tap' : 
-            selectedPaymentGateway === 'paylink' ? 'Paylink' : 
-            'Tamara'
-          }`,
+          description: `سيتم فتح صفحة الدفع الآن عبر ${selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'}`,
         });
         
         // Close dialog first
@@ -213,55 +207,49 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
             <label className="text-sm font-medium text-foreground">
               اختر بوابة الدفع
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setSelectedPaymentGateway('tap')}
-                className={`p-3 border-2 rounded-lg transition-all ${
+                className={`p-4 border-2 rounded-lg transition-all ${
                   selectedPaymentGateway === 'tap'
                     ? 'border-primary bg-primary/10'
                     : 'border-border hover:border-primary/50'
                 }`}
               >
                 <div className="text-center">
-                  <div className="font-semibold text-xs">Tap</div>
+                  <div className="font-semibold text-sm">Tap</div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    دفع آمن
+                    دفع آمن وسريع
                   </div>
                 </div>
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedPaymentGateway('paylink')}
-                className={`p-3 border-2 rounded-lg transition-all ${
+                className={`p-4 border-2 rounded-lg transition-all ${
                   selectedPaymentGateway === 'paylink'
                     ? 'border-primary bg-primary/10'
                     : 'border-border hover:border-primary/50'
                 }`}
               >
                 <div className="text-center">
-                  <div className="font-semibold text-xs">Paylink</div>
+                  <div className="font-semibold text-sm">Paylink</div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    دفع محلي
+                    دفع محلي سعودي
                   </div>
                 </div>
               </button>
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentGateway('tamara')}
-                className={`p-3 border-2 rounded-lg transition-all ${
-                  selectedPaymentGateway === 'tamara'
-                    ? 'border-primary bg-primary/10'
-                    : 'border-border hover:border-primary/50'
-                }`}
-              >
-                <div className="text-center">
-                  <div className="font-semibold text-xs">Tamara</div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    أقساط
-                  </div>
-                </div>
-              </button>
+            </div>
+            {/* Tamara Coming Soon */}
+            <div className="text-xs text-muted-foreground text-center p-3 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 rounded-lg border border-purple-200 dark:border-purple-800">
+              <div className="flex items-center justify-center gap-2">
+                <span>🔮</span>
+                <span className="font-medium">تمارا - الدفع بالأقساط</span>
+                <span className="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-2 py-1 rounded text-xs font-semibold">
+                  قريباً
+                </span>
+              </div>
             </div>
           </div>
 
@@ -332,11 +320,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
             ) : (
               <>
                 <CreditCard className="w-5 h-5 ml-2" />
-                ادفع عبر {
-                  selectedPaymentGateway === 'tap' ? 'Tap' : 
-                  selectedPaymentGateway === 'paylink' ? 'Paylink' : 
-                  'Tamara'
-                } - {offer.currentPrice} ر.س
+                ادفع عبر {selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'} - {offer.currentPrice} ر.س
               </>
             )}
           </Button>
