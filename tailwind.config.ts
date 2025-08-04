@@ -130,5 +130,41 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function({ addUtilities }) {
+      addUtilities({
+        '.hover-scale': {
+          '@apply transition-transform duration-300 hover:scale-105': {},
+        },
+        '.story-link': {
+          '@apply relative inline-block after:content-[""] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left': {},
+        },
+        '.glass-effect': {
+          '@apply bg-white/20 backdrop-blur-sm border border-white/30': {},
+        },
+        '.gradient-text': {
+          '@apply bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent': {},
+        },
+        '.shadow-glow': {
+          'box-shadow': '0 0 30px rgba(59, 130, 246, 0.3)',
+        },
+        '.delay-100': {
+          'animation-delay': '100ms',
+        },
+        '.delay-200': {
+          'animation-delay': '200ms',
+        },
+        '.delay-300': {
+          'animation-delay': '300ms',
+        },
+        '.delay-400': {
+          'animation-delay': '400ms',
+        },
+        '.delay-500': {
+          'animation-delay': '500ms',
+        },
+      });
+    }
+  ],
 } satisfies Config;
