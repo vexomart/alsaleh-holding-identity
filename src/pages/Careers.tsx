@@ -344,10 +344,10 @@ const Careers = () => {
                   <Button 
                     variant="outline" 
                     className="w-full mt-4 border-purple-500/30 text-purple-600 hover:bg-purple-50"
-                    disabled
+                    onClick={() => window.location.href = '/job-application'}
                   >
                     <Calendar className="w-4 h-4 mr-2" />
-                    قريباً
+                    التقديم الآن
                   </Button>
                 </CardContent>
               </Card>

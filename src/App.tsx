@@ -80,14 +80,14 @@ const App = () => {
               <Route path="/support" element={<Support />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
-              <Route path="/jobs" element={<JobApplication />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/jobs" element={<Careers />} />
+              <Route path="/job-application" element={<JobApplication />} />
               <Route path="/tech-investment" element={<TechInvestment />} />
               <Route path="/development" element={<Development />} />
               <Route path="/strategic-consulting" element={<StrategicConsulting />} />
               <Route path="/integrated-solutions" element={<IntegratedSolutions />} />
               <Route path="/training" element={<Training />} />
-            <Route path="/careers" element={<Careers />} />
-            <Route path="/job-application" element={<Careers />} />
               <Route path="/contracts" element={<Contracts />} />
               <Route path="/development-program" element={<DevelopmentProgram />} />
               <Route path="/company-news" element={<CompanyNews />} />
