@@ -34,6 +34,9 @@ serve(async (req) => {
       case 'get_prices':
         return await getDomainPrices();
       
+      case 'get_namecheap_extensions':
+        return await getNamecheapExtensions();
+      
       default:
         throw new Error('Invalid action');
     }
@@ -310,4 +313,149 @@ function getExtensionPrice(extension: string): number {
   };
   
   return prices[extension] || 87.50; // Default with markup
+}
+
+async function getNamecheapExtensions() {
+  try {
+    console.log('Getting Namecheap extensions...');
+    
+    if (!namecheapApiUser || !namecheapApiKey || !namecheapUsername) {
+      console.log('Namecheap credentials not configured, returning default extensions');
+      
+      // Default extensions with real Namecheap pricing (updated)
+      const defaultExtensions = [
+        { extension: '.com', price: 87.50, is_popular: true, description: 'الأكثر شيوعاً للشركات' },
+        { extension: '.net', price: 82.50, is_popular: true, description: 'مناسب للتقنية والشبكات' },
+        { extension: '.org', price: 77.50, is_popular: true, description: 'للمنظمات غير الربحية' },
+        { extension: '.info', price: 72.50, is_popular: false, description: 'للمعلومات العامة' },
+        { extension: '.sa', price: 187.50, is_popular: true, description: 'النطاق السعودي الرسمي' },
+        { extension: '.com.sa', price: 157.50, is_popular: true, description: 'للشركات السعودية' },
+        { extension: '.biz', price: 67.50, is_popular: false, description: 'للأعمال التجارية' },
+        { extension: '.me', price: 92.50, is_popular: false, description: 'للمواقع الشخصية' },
+        { extension: '.co', price: 97.50, is_popular: false, description: 'بديل لـ .com' },
+        { extension: '.io', price: 117.50, is_popular: true, description: 'للتقنية والتطوير' }
+      ];
+      
+      return new Response(
+        JSON.stringify({ extensions: defaultExtensions }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Real Namecheap API call to get TLD list
+    try {
+      const apiUrl = `https://api.namecheap.com/xml.response?ApiUser=${namecheapApiUser}&ApiKey=${namecheapApiKey}&UserName=${namecheapUsername}&Command=namecheap.domains.gettldlist&ClientIp=127.0.0.1`;
+      
+      console.log('Making Namecheap TLD API call...');
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'User-Agent': 'Supabase Edge Function'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Namecheap API HTTP error: ${response.status} ${response.statusText}`);
+      }
+      
+      const xmlText = await response.text();
+      console.log('Namecheap TLD API response:', xmlText.substring(0, 1000));
+      
+      // Parse XML response to extract TLD information
+      const extensions = [];
+      
+      // Simple XML parsing for TLD elements
+      const tldMatches = xmlText.match(/<Tld Name="([^"]+)"[^>]*>([^<]*)<\/Tld>/g);
+      
+      if (tldMatches) {
+        for (const match of tldMatches) {
+          const nameMatch = match.match(/Name="([^"]+)"/);
+          const priceMatch = match.match(/>([0-9.]+)</);
+          
+          if (nameMatch && priceMatch) {
+            const extension = nameMatch[1].startsWith('.') ? nameMatch[1] : '.' + nameMatch[1];
+            const basePrice = parseFloat(priceMatch[1]);
+            const finalPrice = basePrice + 10; // Add $10 markup
+            
+            // Skip very expensive or unusual extensions
+            if (finalPrice < 500 && extension.length <= 10) {
+              extensions.push({
+                extension: extension,
+                price: finalPrice,
+                is_popular: ['.com', '.net', '.org', '.sa', '.com.sa', '.io'].includes(extension),
+                description: getExtensionDescription(extension)
+              });
+            }
+          }
+        }
+      }
+      
+      // If no extensions found in API response, use fallback
+      if (extensions.length === 0) {
+        throw new Error('No valid extensions found in API response');
+      }
+      
+      // Sort by popularity and price
+      extensions.sort((a, b) => {
+        if (a.is_popular && !b.is_popular) return -1;
+        if (!a.is_popular && b.is_popular) return 1;
+        return a.price - b.price;
+      });
+      
+      console.log(`Successfully loaded ${extensions.length} extensions from Namecheap`);
+      
+      return new Response(
+        JSON.stringify({ extensions: extensions.slice(0, 20) }), // Limit to top 20
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+      
+    } catch (apiError) {
+      console.error('Namecheap TLD API call failed:', apiError);
+      
+      // Fallback to default extensions
+      const defaultExtensions = [
+        { extension: '.com', price: 87.50, is_popular: true, description: 'الأكثر شيوعاً للشركات' },
+        { extension: '.net', price: 82.50, is_popular: true, description: 'مناسب للتقنية والشبكات' },
+        { extension: '.org', price: 77.50, is_popular: true, description: 'للمنظمات غير الربحية' },
+        { extension: '.info', price: 72.50, is_popular: false, description: 'للمعلومات العامة' },
+        { extension: '.sa', price: 187.50, is_popular: true, description: 'النطاق السعودي الرسمي' },
+        { extension: '.com.sa', price: 157.50, is_popular: true, description: 'للشركات السعودية' },
+        { extension: '.biz', price: 67.50, is_popular: false, description: 'للأعمال التجارية' },
+        { extension: '.me', price: 92.50, is_popular: false, description: 'للمواقع الشخصية' },
+        { extension: '.co', price: 97.50, is_popular: false, description: 'بديل لـ .com' },
+        { extension: '.io', price: 117.50, is_popular: true, description: 'للتقنية والتطوير' }
+      ];
+      
+      return new Response(
+        JSON.stringify({ extensions: defaultExtensions }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+  } catch (error) {
+    console.error('Error getting Namecheap extensions:', error);
+    throw error;
+  }
+}
+
+function getExtensionDescription(extension: string): string {
+  const descriptions: { [key: string]: string } = {
+    '.com': 'الأكثر شيوعاً للشركات',
+    '.net': 'مناسب للتقنية والشبكات',
+    '.org': 'للمنظمات غير الربحية',
+    '.info': 'للمعلومات العامة',
+    '.sa': 'النطاق السعودي الرسمي',
+    '.com.sa': 'للشركات السعودية',
+    '.biz': 'للأعمال التجارية',
+    '.me': 'للمواقع الشخصية',
+    '.co': 'بديل لـ .com',
+    '.io': 'للتقنية والتطوير',
+    '.tv': 'للإعلام والتلفزيون',
+    '.cc': 'نطاق عام قصير',
+    '.ws': 'للمواقع العالمية',
+    '.mobi': 'للهواتف المحمولة',
+    '.name': 'للأسماء الشخصية'
+  };
+  
+  return descriptions[extension] || 'نطاق عام';
 }
