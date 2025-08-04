@@ -113,11 +113,12 @@ const SubsidiariesSection = () => {
       nameEn: "", 
       description: "منصة متخصصة في بيع وتأجير المتاجر الإلكترونية والمواقع والأنظمة الجاهزة للشركات",
       category: "المتاجر والأنظمة الجاهزة",
-      established: "2024",
+      established: "2025",
       icon: Package,
       color: "from-cyan-600 to-blue-600",
       website: "https://plutecode.com",
-      isEcommerce: true
+      isEcommerce: true,
+      inDevelopment: true
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -643,6 +644,17 @@ const SubsidiariesSection = () => {
     return (
       <div className="relative h-[600px]">
         <div className="relative overflow-hidden bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 rounded-3xl border-2 border-cyan-200/60 hover:border-cyan-400/80 transition-all duration-700 group h-full">
+          {/* Development Banner */}
+          {company.inDevelopment && (
+            <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 text-white text-center py-2 text-sm font-bold">
+              <div className="flex items-center justify-center gap-2 animate-pulse">
+                <span>⚡</span>
+                <span>قيد التطوير - Coming Soon</span>
+                <span>⚡</span>
+              </div>
+            </div>
+          )}
+          
           {/* E-commerce Pattern Background */}
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2242%22%20height%3D%2242%22%20viewBox%3D%220%200%2042%2042%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%230891b2%22%20fill-opacity%3D%220.08%22%3E%3Cpath%20d%3D%22M21%208l6%206-6%206-6-6z%22/%3E%3Ccircle%20cx%3D%2221%22%20cy%3D%2221%22%20r%3D%223%22/%3E%3Crect%20x%3D%2217%22%20y%3D%2217%22%20width%3D%228%22%20height%3D%222%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
           
@@ -660,7 +672,7 @@ const SubsidiariesSection = () => {
             <Laptop className="w-2.5 h-2.5 text-cyan-600 m-1.25" />
           </div>
           
-          <CardContent className="relative z-10 p-8 h-full flex flex-col justify-between">
+          <CardContent className={`relative z-10 p-8 h-full flex flex-col justify-between ${company.inDevelopment ? 'pt-12' : 'pt-8'}`}>
             {/* Header Section */}
             <div className="text-center mb-6">
               <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
@@ -734,10 +746,10 @@ const SubsidiariesSection = () => {
             
             {/* CTA Button */}
             <div className="text-center">
-              <Button asChild className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 group/btn">
+              <Button asChild className={`w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`}>
                 <a href={company.website} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
-                  استكشف المتاجر والأنظمة
+                  {company.inDevelopment ? 'قريباً - Coming Soon' : 'استكشف المتاجر والأنظمة'}
                 </a>
               </Button>
             </div>
