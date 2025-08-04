@@ -34,102 +34,109 @@ const handler = async (req: Request): Promise<Response> => {
       to: ["info@alialshehriholding.com"],
       subject: `رسالة جديدة من موقع الشركة - ${contactData.subject || 'بدون موضوع'}`,
       html: `
-        <div style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; max-width: 650px; margin: 0 auto; background: #f8fafc; padding: 30px; border-radius: 15px; direction: rtl;">
-          <div style="background: linear-gradient(135deg, #059669 0%, #0d9488 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);">
-            <div style="font-size: 40px; margin-bottom: 10px;">📬</div>
-            <h1 style="margin: 0; font-size: 24px; font-weight: 600;">رسالة جديدة من العميل</h1>
-            <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">شركة علي صالح الشهري القابضة</p>
-          </div>
-          
-          <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 20px;">
-            <div style="border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; margin-bottom: 25px;">
-              <h2 style="color: #1e293b; margin: 0; font-size: 20px; font-weight: 600; display: flex; align-items: center;">
-                <span style="margin-left: 10px; font-size: 24px;">👤</span>
-                معلومات المرسل
-              </h2>
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>رسالة جديدة من العميل</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background-color: #f8f9fa;
+                    margin: 0;
+                    padding: 20px;
+                    direction: rtl;
+                    text-align: right;
+                }
+                .container {
+                    max-width: 650px;
+                    margin: 0 auto;
+                    background: white;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    overflow: hidden;
+                }
+                .header {
+                    background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                }
+                .header h1 {
+                    margin: 0;
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+                .content {
+                    padding: 30px;
+                }
+                .message-content {
+                    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+                    padding: 20px;
+                    border-radius: 10px;
+                    border-right: 4px solid #0ea5e9;
+                    line-height: 1.6;
+                    font-size: 16px;
+                    color: #334155;
+                    margin: 20px 0;
+                }
+                .info-section {
+                    background: #f8fafc;
+                    padding: 20px;
+                    border-radius: 8px;
+                    margin: 15px 0;
+                    border-right: 4px solid #059669;
+                }
+                .footer {
+                    background: #1f2937;
+                    color: white;
+                    text-align: center;
+                    padding: 25px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <div style="font-size: 40px; margin-bottom: 10px;">📬</div>
+                    <h1>رسالة جديدة من العميل</h1>
+                    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">شركة علي صالح الشهري القابضة</p>
+                </div>
+                
+                <div class="content">
+                    <div class="info-section">
+                        <h3 style="color: #059669; margin: 0 0 15px 0;">📋 معلومات المرسل</h3>
+                        <p><strong>👤 الاسم:</strong> ${contactData.name}</p>
+                        <p><strong>📧 البريد الإلكتروني:</strong> <a href="mailto:${contactData.email}" style="color: #0ea5e9;">${contactData.email}</a></p>
+                        ${contactData.phone ? `<p><strong>📱 الهاتف:</strong> <a href="tel:${contactData.phone}" style="color: #10b981;">${contactData.phone}</a></p>` : ''}
+                        ${contactData.category ? `<p><strong>🏷️ نوع الاستفسار:</strong> ${contactData.category}</p>` : ''}
+                        ${contactData.subject ? `<p><strong>📝 الموضوع:</strong> ${contactData.subject}</p>` : ''}
+                    </div>
+                    
+                    <div class="message-content">
+                        <h3 style="color: #0284c7; margin-top: 0;">💬 نص الرسالة</h3>
+                        ${contactData.message}
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 20px; border-radius: 10px; border-right: 4px solid #f59e0b; text-align: center;">
+                        <p style="color: #92400e; margin: 0;">
+                            <strong>⏰ تاريخ الإرسال:</strong> ${new Date().toLocaleDateString('ar-SA')} - ${new Date().toLocaleTimeString('ar-SA')}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <p style="margin: 0; font-size: 14px;">
+                        تم إرسال هذا الإيميل تلقائياً من نظام إدارة المراسلات<br>
+                        شركة علي صالح الشهري القابضة - نظام التواصل الذكي
+                    </p>
+                </div>
             </div>
-            
-            <div style="display: grid; gap: 18px;">
-              <div style="background: #f8fafc; padding: 18px; border-radius: 8px; border-right: 4px solid #059669;">
-                <div style="font-weight: 600; color: #059669; margin-bottom: 5px; display: flex; align-items: center;">
-                  <span style="margin-left: 8px; font-size: 18px;">🏷️</span>
-                  الاسم الكامل
-                </div>
-                <div style="font-size: 16px; color: #334155;">${contactData.name}</div>
-              </div>
-              
-              <div style="background: #f8fafc; padding: 18px; border-radius: 8px; border-right: 4px solid #0ea5e9;">
-                <div style="font-weight: 600; color: #0ea5e9; margin-bottom: 5px; display: flex; align-items: center;">
-                  <span style="margin-left: 8px; font-size: 18px;">📧</span>
-                  البريد الإلكتروني
-                </div>
-                <div style="font-size: 16px; color: #334155;">
-                  <a href="mailto:${contactData.email}" style="color: #0ea5e9; text-decoration: none;">${contactData.email}</a>
-                </div>
-              </div>
-              
-              ${contactData.phone ? `
-              <div style="background: #f8fafc; padding: 18px; border-radius: 8px; border-right: 4px solid #10b981;">
-                <div style="font-weight: 600; color: #10b981; margin-bottom: 5px; display: flex; align-items: center;">
-                  <span style="margin-left: 8px; font-size: 18px;">📱</span>
-                  رقم الهاتف
-                </div>
-                <div style="font-size: 16px; color: #334155;">
-                  <a href="tel:${contactData.phone}" style="color: #10b981; text-decoration: none;">${contactData.phone}</a>
-                </div>
-              </div>
-              ` : ''}
-              
-              ${contactData.category ? `
-              <div style="background: #f8fafc; padding: 18px; border-radius: 8px; border-right: 4px solid #8b5cf6;">
-                <div style="font-weight: 600; color: #8b5cf6; margin-bottom: 5px; display: flex; align-items: center;">
-                  <span style="margin-left: 8px; font-size: 18px;">🏷️</span>
-                  نوع الاستفسار
-                </div>
-                <div style="font-size: 16px; color: #334155;">${contactData.category}</div>
-              </div>
-              ` : ''}
-              
-              ${contactData.subject ? `
-              <div style="background: #f8fafc; padding: 18px; border-radius: 8px; border-right: 4px solid #f59e0b;">
-                <div style="font-weight: 600; color: #f59e0b; margin-bottom: 5px; display: flex; align-items: center;">
-                  <span style="margin-left: 8px; font-size: 18px;">📝</span>
-                  الموضوع
-                </div>
-                <div style="font-size: 16px; color: #334155;">${contactData.subject}</div>
-              </div>
-              ` : ''}
-            </div>
-            
-            <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #f1f5f9;">
-              <div style="font-weight: 600; color: #1e293b; margin-bottom: 15px; display: flex; align-items: center; font-size: 18px;">
-                <span style="margin-left: 10px; font-size: 24px;">💬</span>
-                نص الرسالة
-              </div>
-              <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 20px; border-radius: 10px; border-right: 4px solid #0ea5e9; line-height: 1.6; font-size: 16px; color: #334155;">
-                ${contactData.message}
-              </div>
-            </div>
-            
-            <div style="margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 10px; border-right: 4px solid #f59e0b;">
-              <div style="display: flex; align-items: center; color: #92400e;">
-                <span style="margin-left: 10px; font-size: 20px;">⏰</span>
-                <strong>تاريخ ووقت الإرسال:</strong>
-                <span style="margin-right: 10px;">${new Date().toLocaleDateString('ar-SA')} - ${new Date().toLocaleTimeString('ar-SA')}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div style="background: white; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-            <div style="color: #64748b; font-size: 14px; margin-bottom: 15px;">
-              <span style="font-size: 20px; margin-left: 5px;">🤖</span>
-              تم إرسال هذا الإيميل تلقائياً من نظام إدارة المراسلات
-            </div>
-            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; color: #059669; font-weight: 600;">
-              شركة علي صالح الشهري القابضة - نظام التواصل الذكي
-            </div>
-          </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 

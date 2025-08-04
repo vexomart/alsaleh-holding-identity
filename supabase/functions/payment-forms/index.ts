@@ -54,86 +54,135 @@ const handler = async (req: Request): Promise<Response> => {
         to: ["finance@emkandigital.com", "admin@emkandigital.com"],
         subject: "🏦 إيصال تحويل بنكي جديد - يتطلب مراجعة",
         html: `
-          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 0;">
-            <div style="background: white; margin: 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
-              
-              <!-- Header -->
-              <div style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 40px; text-align: center; color: white;">
-                <h1 style="margin: 0; font-size: 28px; font-weight: bold;">📋 إيصال تحويل بنكي جديد</h1>
-                <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">تم استلام إيصال تحويل بنكي يتطلب المراجعة والتأكيد</p>
+          <!DOCTYPE html>
+          <html dir="rtl" lang="ar">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>إيصال تحويل بنكي جديد</title>
+              <style>
+                  body {
+                      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                      line-height: 1.6;
+                      color: #333;
+                      background-color: #f8f9fa;
+                      margin: 0;
+                      padding: 20px;
+                      direction: rtl;
+                      text-align: right;
+                  }
+                  .container {
+                      max-width: 800px;
+                      margin: 0 auto;
+                      background: white;
+                      border-radius: 20px;
+                      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                      overflow: hidden;
+                  }
+                  .header {
+                      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                      color: white;
+                      padding: 40px;
+                      text-align: center;
+                  }
+                  .content {
+                      padding: 40px;
+                  }
+                  .info-box {
+                      background: #f8fafc;
+                      padding: 20px;
+                      border-radius: 12px;
+                      border-right: 4px solid #3b82f6;
+                      margin: 20px 0;
+                  }
+                  .amount-box {
+                      background: #ecfdf5;
+                      padding: 20px;
+                      border-radius: 12px;
+                      border-right: 4px solid #22c55e;
+                      margin: 20px 0;
+                      text-align: center;
+                  }
+                  .footer {
+                      background: #1f2937;
+                      color: white;
+                      text-align: center;
+                      padding: 30px;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h1 style="margin: 0; font-size: 28px; font-weight: bold;">📋 إيصال تحويل بنكي جديد</h1>
+                      <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">تم استلام إيصال تحويل بنكي يتطلب المراجعة والتأكيد</p>
+                  </div>
+
+                  <div class="content">
+                      <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
+                          <h2 style="color: white; margin: 0; font-size: 24px;">🔍 تفاصيل العميل</h2>
+                      </div>
+
+                      <div class="info-box">
+                          <h3 style="color: #1e40af; margin: 0 0 10px 0; font-size: 16px;">👤 الاسم الكامل</h3>
+                          <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1f2937;">${receiptData.fullName}</p>
+                      </div>
+
+                      <div class="info-box">
+                          <h3 style="color: #059669; margin: 0 0 10px 0; font-size: 16px;">📧 البريد الإلكتروني</h3>
+                          <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1f2937;">${receiptData.email}</p>
+                      </div>
+
+                      <div class="info-box">
+                          <h3 style="color: #7c3aed; margin: 0 0 10px 0; font-size: 16px;">📱 رقم الهاتف</h3>
+                          <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1f2937;">${receiptData.phone}</p>
+                      </div>
+
+                      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 15px; margin: 30px 0; text-align: center;">
+                          <h2 style="color: white; margin: 0; font-size: 24px;">💰 تفاصيل التحويل</h2>
+                      </div>
+
+                      <div class="amount-box">
+                          <h3 style="color: #16a34a; margin: 0 0 10px 0; font-size: 16px;">💵 مبلغ التحويل</h3>
+                          <p style="margin: 0; font-size: 24px; font-weight: bold; color: #15803d;">${receiptData.transferAmount} ريال سعودي</p>
+                      </div>
+
+                      <div style="background: #fef3c7; padding: 20px; border-radius: 12px; border-right: 4px solid #f59e0b; margin: 20px 0;">
+                          <h3 style="color: #d97706; margin: 0 0 10px 0; font-size: 16px;">📅 تاريخ التحويل</h3>
+                          <p style="margin: 0; font-size: 18px; font-weight: bold; color: #92400e;">${receiptData.transferDate}</p>
+                      </div>
+
+                      <div style="background: #e0f2fe; padding: 20px; border-radius: 12px; border-right: 4px solid #0ea5e9; margin: 20px 0;">
+                          <h3 style="color: #0284c7; margin: 0 0 10px 0; font-size: 16px;">🏦 آخر 4 أرقام من الحساب</h3>
+                          <p style="margin: 0; font-size: 18px; font-weight: bold; color: #0c4a6e;">***${receiptData.accountLastFour}</p>
+                      </div>
+
+                      ${receiptData.notes ? `
+                      <div style="background: #f1f5f9; padding: 20px; border-radius: 12px; border-right: 4px solid #64748b; margin: 20px 0;">
+                          <h3 style="color: #475569; margin: 0 0 10px 0; font-size: 16px;">📝 ملاحظات إضافية</h3>
+                          <p style="margin: 0; font-size: 16px; color: #334155; line-height: 1.6;">${receiptData.notes}</p>
+                      </div>
+                      ` : ''}
+
+                      <div style="text-align: center; margin-top: 40px;">
+                          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 20px; border-radius: 15px; color: white;">
+                              <p style="margin: 0; font-size: 18px; font-weight: bold;">⚡ إجراء مطلوب</p>
+                              <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">يرجى مراجعة الإيصال والتأكيد خلال 2-4 ساعات عمل</p>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="footer">
+                      <p style="color: #d1d5db; font-size: 14px; margin: 0;">
+                          🏢 شركة علي صالح الشهري القابضة | نظام إدارة المدفوعات الآلي
+                      </p>
+                      <p style="color: #9ca3af; font-size: 12px; margin: 5px 0 0 0;">
+                          تم إرسال هذا الإيميل تلقائياً من نظام إدارة المدفوعات
+                      </p>
+                  </div>
               </div>
-
-              <!-- Content -->
-              <div style="padding: 40px;">
-                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
-                  <h2 style="color: white; margin: 0; font-size: 24px;">🔍 تفاصيل العميل</h2>
-                </div>
-
-                <div style="display: grid; gap: 20px; margin-bottom: 30px;">
-                  <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border-left: 4px solid #3b82f6;">
-                    <h3 style="color: #1e40af; margin: 0 0 10px 0; font-size: 16px;">👤 الاسم الكامل</h3>
-                    <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1f2937;">${receiptData.fullName}</p>
-                  </div>
-
-                  <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border-left: 4px solid #10b981;">
-                    <h3 style="color: #059669; margin: 0 0 10px 0; font-size: 16px;">📧 البريد الإلكتروني</h3>
-                    <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1f2937;">${receiptData.email}</p>
-                  </div>
-
-                  <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border-left: 4px solid #8b5cf6;">
-                    <h3 style="color: #7c3aed; margin: 0 0 10px 0; font-size: 16px;">📱 رقم الهاتف</h3>
-                    <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1f2937;">${receiptData.phone}</p>
-                  </div>
-                </div>
-
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
-                  <h2 style="color: white; margin: 0; font-size: 24px;">💰 تفاصيل التحويل</h2>
-                </div>
-
-                <div style="display: grid; gap: 20px; margin-bottom: 30px;">
-                  <div style="background: #ecfdf5; padding: 20px; border-radius: 12px; border-left: 4px solid #22c55e;">
-                    <h3 style="color: #16a34a; margin: 0 0 10px 0; font-size: 16px;">💵 مبلغ التحويل</h3>
-                    <p style="margin: 0; font-size: 24px; font-weight: bold; color: #15803d;">${receiptData.transferAmount} ريال سعودي</p>
-                  </div>
-
-                  <div style="background: #fef3c7; padding: 20px; border-radius: 12px; border-left: 4px solid #f59e0b;">
-                    <h3 style="color: #d97706; margin: 0 0 10px 0; font-size: 16px;">📅 تاريخ التحويل</h3>
-                    <p style="margin: 0; font-size: 18px; font-weight: bold; color: #92400e;">${receiptData.transferDate}</p>
-                  </div>
-
-                  <div style="background: #e0f2fe; padding: 20px; border-radius: 12px; border-left: 4px solid #0ea5e9;">
-                    <h3 style="color: #0284c7; margin: 0 0 10px 0; font-size: 16px;">🏦 آخر 4 أرقام من الحساب</h3>
-                    <p style="margin: 0; font-size: 18px; font-weight: bold; color: #0c4a6e;">***${receiptData.accountLastFour}</p>
-                  </div>
-                </div>
-
-                ${receiptData.notes ? `
-                <div style="background: #f1f5f9; padding: 20px; border-radius: 12px; border-left: 4px solid #64748b; margin-bottom: 30px;">
-                  <h3 style="color: #475569; margin: 0 0 10px 0; font-size: 16px;">📝 ملاحظات إضافية</h3>
-                  <p style="margin: 0; font-size: 16px; color: #334155; line-height: 1.6;">${receiptData.notes}</p>
-                </div>
-                ` : ''}
-
-                <!-- Action Buttons -->
-                <div style="text-align: center; margin-top: 40px;">
-                  <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 20px; border-radius: 15px; color: white;">
-                    <p style="margin: 0; font-size: 18px; font-weight: bold;">⚡ إجراء مطلوب</p>
-                    <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">يرجى مراجعة الإيصال والتأكيد خلال 2-4 ساعات عمل</p>
-                  </div>
-                </div>
-
-                <!-- Footer -->
-                <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
-                  <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    🏢 إمكان للحلول الرقمية | نظام إدارة المدفوعات الآلي
-                  </p>
-                  <p style="color: #9ca3af; font-size: 12px; margin: 5px 0 0 0;">
-                    تم إرسال هذا الإيميل تلقائياً من نظام إدارة المدفوعات
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          </body>
+          </html>
         `,
       });
 

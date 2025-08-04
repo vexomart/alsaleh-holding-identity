@@ -101,48 +101,108 @@ const handler = async (req: Request): Promise<Response> => {
       to: [subscriptionData.email],
       subject: "مرحباً بك في النشرة الإخبارية",
       html: `
-        <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">
-          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h1 style="color: #2563eb; text-align: center; margin-bottom: 30px;">مرحباً بك معنا!</h1>
-            
-            <div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-              <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-                ${subscriptionData.name ? `عزيزي/عزيزتي ${subscriptionData.name}،` : 'عزيزي المشترك،'}
-              </p>
-              <p style="font-size: 16px; line-height: 1.6;">
-                شكراً لك على الاشتراك في النشرة الإخبارية لشركة علي صالح الشهري القابضة.
-              </p>
-              <p style="font-size: 16px; line-height: 1.6;">
-                ستصلك أحدث الأخبار والتطورات في عالم التقنية والاستثمار.
-              </p>
-            </div>
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>مرحباً بك في النشرة الإخبارية</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background-color: #f5f5f5;
+                    margin: 0;
+                    padding: 20px;
+                    direction: rtl;
+                    text-align: right;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background: white;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    overflow: hidden;
+                }
+                .header {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                }
+                .content {
+                    padding: 30px;
+                }
+                .welcome-box {
+                    background-color: #f0f9ff;
+                    padding: 20px;
+                    border-radius: 8px;
+                    margin: 20px 0;
+                    border-right: 4px solid #2563eb;
+                }
+                .benefits-box {
+                    background-color: #f8fafc;
+                    padding: 20px;
+                    border-radius: 8px;
+                    margin: 20px 0;
+                    border-right: 4px solid #1e40af;
+                }
+                .footer {
+                    background: #1f2937;
+                    color: white;
+                    text-align: center;
+                    padding: 25px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1 style="margin: 0; font-size: 28px; font-weight: bold;">🎉 مرحباً بك معنا!</h1>
+                    <p style="margin: 10px 0 0 0; opacity: 0.9;">شكراً لاشتراكك في النشرة الإخبارية</p>
+                </div>
+                
+                <div class="content">
+                    <div class="welcome-box">
+                        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+                            ${subscriptionData.name ? `عزيزي/عزيزتي ${subscriptionData.name}،` : 'عزيزي المشترك،'}
+                        </p>
+                        <p style="font-size: 16px; line-height: 1.6; margin: 0;">
+                            شكراً لك على الاشتراك في النشرة الإخبارية لشركة علي صالح الشهري القابضة.
+                            ستصلك أحدث الأخبار والتطورات في عالم التقنية والاستثمار.
+                        </p>
+                    </div>
 
-            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-              <h2 style="color: #1e40af; margin-bottom: 15px;">ماذا ستحصل عليه؟</h2>
-              <ul style="color: #6b7280; line-height: 1.8;">
-                <li>أحدث أخبار الشركة ومشاريعها</li>
-                <li>نصائح وأفكار في مجال الاستثمار التقني</li>
-                <li>دعوات حصرية للفعاليات والمؤتمرات</li>
-                <li>تحديثات عن الشركات التابعة والاستثمارات الجديدة</li>
-              </ul>
-            </div>
+                    <div class="benefits-box">
+                        <h2 style="color: #1e40af; margin: 0 0 15px 0;">ماذا ستحصل عليه؟</h2>
+                        <ul style="color: #6b7280; line-height: 1.8; margin: 0; padding-right: 20px;">
+                            <li>أحدث أخبار الشركة ومشاريعها</li>
+                            <li>نصائح وأفكار في مجال الاستثمار التقني</li>
+                            <li>دعوات حصرية للفعاليات والمؤتمرات</li>
+                            <li>تحديثات عن الشركات التابعة والاستثمارات الجديدة</li>
+                        </ul>
+                    </div>
 
-            <div style="text-align: center; margin-top: 30px;">
-              <p style="color: #6b7280; font-size: 14px;">
-                يمكنك إلغاء الاشتراك في أي وقت من خلال الرابط في أسفل أي رسالة إخبارية
-              </p>
-              <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">
-                للتواصل: info@ash.holdings
-              </p>
+                    <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f0f9ff; border-radius: 8px;">
+                        <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
+                            يمكنك إلغاء الاشتراك في أي وقت من خلال الرابط في أسفل أي رسالة إخبارية
+                        </p>
+                        <p style="color: #6b7280; font-size: 14px; margin: 0;">
+                            للتواصل: info@alialshehriholding.com
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <p style="margin: 0; font-size: 12px;">
+                        شركة علي صالح الشهري القابضة - شريكك في التحول الرقمي
+                    </p>
+                </div>
             </div>
-
-            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-              <p style="color: #6b7280; font-size: 12px;">
-                شركة علي صالح الشهري القابضة - شريكك في التحول الرقمي
-              </p>
-            </div>
-          </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 

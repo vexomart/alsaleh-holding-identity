@@ -37,52 +37,97 @@ const handler = async (req: Request): Promise<Response> => {
       to: ["info@alialshehriholding.com"],
       subject: `طلب جديد لخدمة ${requestData.serviceName}`,
       html: `
-        <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2px; border-radius: 10px;">
-          <div style="background: white; border-radius: 8px; padding: 30px; text-align: right;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #667eea; margin: 0; font-size: 28px; font-weight: bold;">طلب خدمة محتوى جديد</h1>
-              <h2 style="color: #4a5568; margin: 10px 0; font-size: 20px;">شركة علي صالح الشهري القابضة</h2>
-              <div style="background: linear-gradient(135deg, #667eea, #764ba2); height: 3px; width: 100px; margin: 15px auto; border-radius: 2px;"></div>
-            </div>
-            
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: right;">
-              <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">تفاصيل الخدمة المطلوبة</h2>
-              <div style="display: grid; gap: 10px; text-align: right;">
-                <div><strong style="color: #667eea;">اسم الخدمة:</strong> ${requestData.serviceName}</div>
-                <div><strong style="color: #667eea;">وصف الخدمة:</strong> ${requestData.serviceDescription}</div>
-              </div>
-            </div>
-
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: right;">
-              <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">معلومات العميل</h2>
-              <div style="display: grid; gap: 10px; text-align: right;">
-                <div><strong style="color: #667eea;">الاسم:</strong> ${requestData.name}</div>
-                <div><strong style="color: #667eea;">البريد الإلكتروني:</strong> ${requestData.email}</div>
-                <div><strong style="color: #667eea;">رقم الهاتف:</strong> ${requestData.phone}</div>
-                ${requestData.company ? `<div><strong style="color: #667eea;">الشركة:</strong> ${requestData.company}</div>` : ''}
-              </div>
-            </div>
-
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: right;">
-              <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">تفاصيل المشروع</h2>
-              <div style="display: grid; gap: 10px; text-align: right;">
-                ${requestData.budget ? `<div><strong style="color: #667eea;">الميزانية:</strong> ${requestData.budget}</div>` : ''}
-                ${requestData.timeline ? `<div><strong style="color: #667eea;">الجدول الزمني:</strong> ${requestData.timeline}</div>` : ''}
-                <div><strong style="color: #667eea;">وصف المشروع:</strong></div>
-                <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 5px; border-right: 4px solid #667eea; text-align: right;">
-                  ${requestData.description}
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>طلب خدمة محتوى جديد</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background-color: #f8f9fa;
+                    margin: 0;
+                    padding: 20px;
+                    direction: rtl;
+                    text-align: right;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background: white;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    overflow: hidden;
+                }
+                .header {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                }
+                .content {
+                    padding: 30px;
+                }
+                .info-box {
+                    background: #f8f9ff;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin: 20px 0;
+                    border-right: 4px solid #667eea;
+                }
+                .footer {
+                    background: #1f2937;
+                    color: white;
+                    text-align: center;
+                    padding: 25px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1 style="margin: 0; font-size: 28px; font-weight: bold;">طلب خدمة محتوى جديد</h1>
+                    <h2 style="margin: 10px 0; font-size: 20px;">شركة علي صالح الشهري القابضة</h2>
                 </div>
-              </div>
-            </div>
+                
+                <div class="content">
+                    <div class="info-box">
+                        <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">تفاصيل الخدمة المطلوبة</h2>
+                        <p><strong style="color: #667eea;">اسم الخدمة:</strong> ${requestData.serviceName}</p>
+                        <p><strong style="color: #667eea;">وصف الخدمة:</strong> ${requestData.serviceDescription}</p>
+                    </div>
 
-            <div style="text-align: center; margin-top: 30px;">
-              <p style="color: #718096; font-size: 14px; margin: 0;">
-                تم إرسال هذا الطلب من موقع شركة علي صالح الشهري القابضة<br>
-                ${new Date().toLocaleString('ar-SA', { timeZone: 'Asia/Riyadh' })}
-              </p>
+                    <div class="info-box">
+                        <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">معلومات العميل</h2>
+                        <p><strong style="color: #667eea;">الاسم:</strong> ${requestData.name}</p>
+                        <p><strong style="color: #667eea;">البريد الإلكتروني:</strong> ${requestData.email}</p>
+                        <p><strong style="color: #667eea;">رقم الهاتف:</strong> ${requestData.phone}</p>
+                        ${requestData.company ? `<p><strong style="color: #667eea;">الشركة:</strong> ${requestData.company}</p>` : ''}
+                    </div>
+
+                    <div class="info-box">
+                        <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">تفاصيل المشروع</h2>
+                        ${requestData.budget ? `<p><strong style="color: #667eea;">الميزانية:</strong> ${requestData.budget}</p>` : ''}
+                        ${requestData.timeline ? `<p><strong style="color: #667eea;">الجدول الزمني:</strong> ${requestData.timeline}</p>` : ''}
+                        <p><strong style="color: #667eea;">وصف المشروع:</strong></p>
+                        <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 5px; border-right: 4px solid #667eea;">
+                            ${requestData.description}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <p style="margin: 0; font-size: 14px;">
+                        تم إرسال هذا الطلب من موقع شركة علي صالح الشهري القابضة<br>
+                        ${new Date().toLocaleString('ar-SA', { timeZone: 'Asia/Riyadh' })}
+                    </p>
+                </div>
             </div>
-          </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 
@@ -92,48 +137,113 @@ const handler = async (req: Request): Promise<Response> => {
       to: [requestData.email],
       subject: `شكراً لك - تم استلام طلبك لخدمة ${requestData.serviceName}`,
       html: `
-        <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2px; border-radius: 10px;">
-          <div style="background: white; border-radius: 8px; padding: 30px; text-align: right;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #667eea; margin: 0; font-size: 28px; font-weight: bold;">شكراً لثقتك في شركة علي صالح الشهري القابضة</h1>
-              <div style="background: linear-gradient(135deg, #667eea, #764ba2); height: 3px; width: 100px; margin: 15px auto; border-radius: 2px;"></div>
-            </div>
-            
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 25px; margin-bottom: 25px; text-align: center;">
-              <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 22px;">مرحباً ${requestData.name}</h2>
-              <p style="color: #718096; line-height: 1.8; font-size: 16px; margin: 0; text-align: center;">
-                تم استلام طلبك لخدمة <strong style="color: #667eea;">${requestData.serviceName}</strong> بنجاح!<br>
-                فريقنا المتخصص سيراجع طلبك ويتواصل معك خلال 24 ساعة.
-              </p>
-            </div>
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>تأكيد استلام طلب الخدمة</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background-color: #f8f9fa;
+                    margin: 0;
+                    padding: 20px;
+                    direction: rtl;
+                    text-align: right;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background: white;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    overflow: hidden;
+                }
+                .header {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                }
+                .content {
+                    padding: 30px;
+                }
+                .success-box {
+                    background: #f8f9ff;
+                    border-radius: 8px;
+                    padding: 25px;
+                    margin: 20px 0;
+                    text-align: center;
+                    border-right: 4px solid #667eea;
+                }
+                .summary-box {
+                    background: #f8f9ff;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin: 20px 0;
+                    border-right: 4px solid #667eea;
+                }
+                .steps-box {
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    border-radius: 8px;
+                    padding: 20px;
+                    color: white;
+                    text-align: center;
+                    margin: 20px 0;
+                }
+                .footer {
+                    background: #1f2937;
+                    color: white;
+                    text-align: center;
+                    padding: 25px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1 style="margin: 0; font-size: 28px; font-weight: bold;">شكراً لثقتك في شركة علي صالح الشهري القابضة</h1>
+                </div>
+                
+                <div class="content">
+                    <div class="success-box">
+                        <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 22px;">مرحباً ${requestData.name}</h2>
+                        <p style="color: #718096; line-height: 1.8; font-size: 16px; margin: 0;">
+                            تم استلام طلبك لخدمة <strong style="color: #667eea;">${requestData.serviceName}</strong> بنجاح!<br>
+                            فريقنا المتخصص سيراجع طلبك ويتواصل معك خلال 24 ساعة.
+                        </p>
+                    </div>
 
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: right;">
-              <h3 style="color: #4a5568; margin: 0 0 15px 0; font-size: 18px;">ملخص طلبك:</h3>
-              <div style="display: grid; gap: 8px; text-align: right;">
-                <div><strong style="color: #667eea;">الخدمة:</strong> ${requestData.serviceName}</div>
-                ${requestData.budget ? `<div><strong style="color: #667eea;">الميزانية:</strong> ${requestData.budget}</div>` : ''}
-                ${requestData.timeline ? `<div><strong style="color: #667eea;">الجدول الزمني:</strong> ${requestData.timeline}</div>` : ''}
-              </div>
-            </div>
+                    <div class="summary-box">
+                        <h3 style="color: #4a5568; margin: 0 0 15px 0; font-size: 18px;">ملخص طلبك:</h3>
+                        <p><strong style="color: #667eea;">الخدمة:</strong> ${requestData.serviceName}</p>
+                        ${requestData.budget ? `<p><strong style="color: #667eea;">الميزانية:</strong> ${requestData.budget}</p>` : ''}
+                        ${requestData.timeline ? `<p><strong style="color: #667eea;">الجدول الزمني:</strong> ${requestData.timeline}</p>` : ''}
+                    </div>
 
-            <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; padding: 20px; color: white; text-align: center; margin-bottom: 25px;">
-              <h3 style="margin: 0 0 10px 0; font-size: 18px;">الخطوات القادمة</h3>
-              <p style="margin: 0; line-height: 1.6;">
-                ✅ مراجعة طلبك والتواصل معك<br>
-                ✅ تحضير عرض سعر مخصص<br>
-                ✅ بدء العمل على مشروعك
-              </p>
-            </div>
+                    <div class="steps-box">
+                        <h3 style="margin: 0 0 10px 0; font-size: 18px;">الخطوات القادمة</h3>
+                        <p style="margin: 0; line-height: 1.6;">
+                            ✅ مراجعة طلبك والتواصل معك<br>
+                            ✅ تحضير عرض سعر مخصص<br>
+                            ✅ بدء العمل على مشروعك
+                        </p>
+                    </div>
+                </div>
 
-            <div style="text-align: center;">
-              <p style="color: #718096; font-size: 14px; margin: 0;">
-                شركة علي صالح الشهري القابضة - شريكك في التحول الرقمي<br>
-                للتواصل: 0555812567<br>
-                البريد الإلكتروني: info@alialshehriholding.com
-              </p>
+                <div class="footer">
+                    <p style="margin: 0; font-size: 14px;">
+                        شركة علي صالح الشهري القابضة - شريكك في التحول الرقمي<br>
+                        للتواصل: 0555812567<br>
+                        البريد الإلكتروني: info@alialshehriholding.com
+                    </p>
+                </div>
             </div>
-          </div>
-        </div>
+        </body>
+        </html>
       `,
     });
 
