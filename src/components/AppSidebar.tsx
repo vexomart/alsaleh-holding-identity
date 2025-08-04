@@ -83,17 +83,18 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      className={`${collapsed ? "w-16" : "w-72"} bg-white border-r border-slate-200 transition-all duration-200 
-                  h-[calc(100vh-4rem)] lg:h-screen flex flex-col
-                  fixed lg:relative top-16 lg:top-0 left-0 z-40 lg:z-auto
-                  ${collapsed ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'}
-                  overflow-hidden`}
+      className={`bg-white border-r border-slate-200 transition-all duration-300 ease-in-out
+                  lg:static lg:translate-x-0 lg:w-72
+                  fixed inset-y-0 left-0 z-50 w-80
+                  ${collapsed ? '-translate-x-full' : 'translate-x-0'}
+                  lg:${collapsed ? 'w-16' : 'w-72'}
+                  flex flex-col h-full shadow-lg lg:shadow-none`}
       collapsible="icon"
     >
       {/* Header */}
-      <SidebarHeader className="p-6 border-b border-slate-100">
+      <SidebarHeader className="p-4 lg:p-6 border-b border-slate-100 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <img 
               src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
               alt="ASH Holdings" 
@@ -101,8 +102,8 @@ export function AppSidebar() {
             />
           </div>
           {!collapsed && (
-            <div className="flex-1">
-              <h1 className="text-slate-900 font-semibold text-base leading-tight">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-slate-900 font-semibold text-base leading-tight truncate">
                 شركة علي صالح الشهري القابضة
               </h1>
               <span className="text-slate-500 text-sm">شركة رائدة منذ 2016</span>
@@ -111,7 +112,11 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="flex-1 overflow-y-auto overscroll-y-contain px-4 py-6" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <SidebarContent className="flex-1 overflow-y-auto px-3 lg:px-4 py-4" 
+                       style={{ 
+                         WebkitOverflowScrolling: 'touch',
+                         scrollbarWidth: 'thin'
+                       }}>
         {/* التنقل الرئيسي */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-slate-500 font-medium text-xs uppercase tracking-wide mb-4 px-2">
@@ -198,7 +203,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="p-6 border-t border-slate-100 flex-shrink-0">
+      <SidebarFooter className="p-4 lg:p-6 border-t border-slate-100 flex-shrink-0">
         {!collapsed && (
           <div className="space-y-4">
             {/* Contact Info */}

@@ -9,38 +9,42 @@ interface SidebarLayoutProps {
 export function SidebarLayout({ children }: SidebarLayoutProps) {
   return (
     <SidebarProvider defaultOpen={false}>
-      <div className="min-h-screen w-full bg-gray-50 overflow-x-hidden">
-        {/* Mobile Header - visible only on mobile */}
-        <header className="lg:hidden h-16 bg-white border-b border-gray-200 flex items-center px-4 sticky top-0 z-50 shadow-sm">
-          <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-            <Menu className="w-5 h-5 text-gray-600" />
+      <div className="h-screen flex flex-col lg:flex-row bg-gray-50 overflow-hidden">
+        {/* Mobile Header */}
+        <header className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between z-50 flex-shrink-0">
+          <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <Menu className="w-6 h-6 text-gray-700" />
           </SidebarTrigger>
           
-          <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-lg font-bold text-gray-800">لوحة التحكم</h1>
-          </div>
+          <h1 className="text-lg font-bold text-gray-800">لوحة التحكم</h1>
+          
+          <div className="w-10" />
         </header>
 
-        <div className="flex min-h-[calc(100vh-4rem)] lg:min-h-screen">
-          {/* Sidebar */}
-          <AppSidebar />
+        {/* Desktop: Sidebar + Content */}
+        <div className="flex flex-1 min-h-0">
+          {/* Sidebar - Desktop: Normal, Mobile: Overlay */}
+          <div className="lg:block">
+            <AppSidebar />
+          </div>
           
           {/* Main Content Area */}
-          <div className="flex-1 flex flex-col min-w-0 lg:ml-0">
-            {/* Desktop Header - visible only on desktop */}
-            <header className="hidden lg:flex h-16 bg-white border-b border-gray-200 items-center px-6 shadow-sm">
-              <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-                <Menu className="w-5 h-5 text-gray-600" />
-              </SidebarTrigger>
-              
-              <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex flex-col min-w-0 bg-gray-50">
+            {/* Desktop Header */}
+            <header className="hidden lg:flex bg-white border-b border-gray-200 px-6 py-4 items-center justify-between flex-shrink-0">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                  <Menu className="w-5 h-5 text-gray-600" />
+                </SidebarTrigger>
                 <h1 className="text-xl font-bold text-gray-800">لوحة التحكم</h1>
               </div>
             </header>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-auto p-4 lg:p-6">
-              {children}
+            <main className="flex-1 overflow-auto">
+              <div className="p-4 lg:p-6 h-full">
+                {children}
+              </div>
             </main>
           </div>
         </div>
