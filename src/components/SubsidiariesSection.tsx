@@ -28,7 +28,11 @@ import {
   HeartHandshake,
   BookOpen,
   Lightbulb,
-  Sparkles
+  Sparkles,
+  Microscope,
+  FileText,
+  Stethoscope,
+  FlaskConical
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
@@ -54,6 +58,17 @@ const SubsidiariesSection = () => {
       color: "from-blue-600 to-indigo-600",
       website: "https://fekrah-holding.com",
       isEducation: true
+    },
+    {
+      name: "فكرة أكاديمي",
+      nameEn: "Fekrah Academy", 
+      description: "أكاديمية متخصصة في الطب والنشر والأبحاث العلمية مع برامج تدريبية متقدمة",
+      category: "التعليم الأكاديمي والأبحاث",
+      established: "2025",
+      icon: Brain,
+      color: "from-emerald-600 to-teal-600",
+      website: "https://fekrah-academy.com",
+      isAcademic: true
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -239,6 +254,109 @@ const SubsidiariesSection = () => {
     );
   };
 
+  const renderAcademicCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative h-[600px]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 rounded-3xl border-2 border-emerald-200/60 hover:border-emerald-400/80 transition-all duration-700 group h-full">
+          {/* Medical/Research Pattern Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2250%22%20height%3D%2250%22%20viewBox%3D%220%200%2050%2050%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%2310b981%22%20fill-opacity%3D%220.06%22%3E%3Cpath%20d%3D%22M25%2015l8%208-8%208-8-8z%22/%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2225%22%20r%3D%223%22/%3E%3C/g%3E%3C/svg%3E')] opacity-50 group-hover:opacity-70 transition-opacity duration-700"></div>
+          
+          {/* Interactive Medical/Research Elements */}
+          <div className="absolute top-4 right-4 w-8 h-8 bg-emerald-400/20 rounded-full animate-bounce delay-75 group-hover:bg-emerald-500/30 transition-colors duration-300">
+            <Stethoscope className="w-4 h-4 text-emerald-600 m-2" />
+          </div>
+          <div className="absolute top-8 left-6 w-6 h-6 bg-teal-400/20 rounded-full animate-bounce delay-150 group-hover:bg-teal-500/30 transition-colors duration-300">
+            <Microscope className="w-3 h-3 text-teal-600 m-1.5" />
+          </div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-green-500/20 rounded-full animate-bounce delay-300 group-hover:bg-green-600/30 transition-colors duration-300">
+            <FlaskConical className="w-2 h-2 text-green-700 m-1" />
+          </div>
+          <div className="absolute bottom-8 left-4 w-5 h-5 bg-emerald-400/20 rounded-full animate-bounce delay-500 group-hover:bg-emerald-500/30 transition-colors duration-300">
+            <FileText className="w-2.5 h-2.5 text-emerald-600 m-1.25" />
+          </div>
+          
+          <CardContent className="relative z-10 p-8 h-full flex flex-col justify-between">
+            {/* Header Section */}
+            <div className="text-center mb-6">
+              <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                  <IconComponent className="w-8 h-8 text-emerald-600 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                {/* Interactive Academic Symbols */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-400 rounded-full flex items-center justify-center text-xs group-hover:animate-spin">🩺</div>
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-blue-400 rounded-full flex items-center justify-center text-xs group-hover:animate-pulse">🔬</div>
+              </div>
+              
+              <Badge className="bg-emerald-500/20 text-emerald-700 border-emerald-300/50 px-3 py-1 text-sm group-hover:bg-emerald-600/30 transition-colors duration-300">
+                {company.category}
+              </Badge>
+            </div>
+
+            {/* Company Info */}
+            <div className="text-center mb-6 flex-grow">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-emerald-800 transition-colors duration-300 mb-2">
+                {company.name}
+              </h3>
+              {company.nameEn && (
+                <p className="text-lg font-medium text-emerald-600 mb-3">
+                  {company.nameEn}
+                </p>
+              )}
+              <p className="text-slate-600 leading-relaxed text-sm">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Interactive Academic Features */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Stethoscope className="w-6 h-6 text-emerald-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-400 rounded-full animate-ping"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">الطب</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <FileText className="w-6 h-6 text-teal-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full animate-ping delay-100"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">النشر</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Microscope className="w-6 h-6 text-green-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-ping delay-200"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">الأبحاث</p>
+              </div>
+            </div>
+
+            {/* Established Badge */}
+            <div className="text-center mb-4">
+              <Badge variant="outline" className="bg-white/80 text-slate-600 border-slate-300 px-3 py-1 text-sm">
+                تأسست {company.established}
+              </Badge>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button asChild className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 group/btn">
+                <a href={company.website} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                  استكشف البرامج الأكاديمية
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
     
@@ -306,7 +424,9 @@ const SubsidiariesSection = () => {
                 ? renderPortalCard(company) 
                 : company.isEducation 
                   ? renderEducationCard(company)
-                  : renderCompanyCard(company, index)
+                  : company.isAcademic 
+                    ? renderAcademicCard(company)
+                    : renderCompanyCard(company, index)
               }
             </div>
           ))}
