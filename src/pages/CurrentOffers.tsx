@@ -167,18 +167,8 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
         // Close dialog first
         setIsOpen(false);
         
-        // Open payment page immediately
-        const paymentWindow = window.open(data.payment_url, '_blank', 'noopener,noreferrer');
-        
-        if (!paymentWindow) {
-          toast({
-            title: "تحذير",
-            description: "يرجى السماح للنوافذ المنبثقة لفتح صفحة الدفع",
-            variant: "destructive",
-          });
-          // Fallback: redirect in same window
-          window.location.href = data.payment_url;
-        }
+        // Redirect to payment page in same window to avoid popup blockers
+        window.location.href = data.payment_url;
         
       } else {
         console.error('Invalid response:', data);
