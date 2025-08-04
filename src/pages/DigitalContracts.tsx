@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // Current offers data (matching CurrentOffers.tsx)
 const currentOffers = [
@@ -242,275 +243,230 @@ const DigitalContracts = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // إنشاء PDF احترافي مع توقيع العميل
-  const generateContractPDF = async (): Promise<jsPDF> => {
-    return new Promise(async (resolve) => {
-      const contractDate = new Date().toLocaleDateString('ar-SA', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+  // إنشاء عنصر HTML للعقد مع دعم كامل للغة العربية
+  const createContractHTML = () => {
+    const contractDate = new Date().toLocaleDateString('ar-SA', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 
-      const hijriDate = new Date().toLocaleDateString('ar-SA-u-ca-islamic', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+    const hijriDate = new Date().toLocaleDateString('ar-SA-u-ca-islamic', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 
-      const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
+    // إنشاء div مؤقت للعقد
+    const contractElement = document.createElement('div');
+    contractElement.style.cssText = `
+      width: 794px;
+      min-height: 1123px;
+      padding: 40px;
+      background: white;
+      font-family: 'Arial', 'Tahoma', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      direction: rtl;
+      text-align: right;
+      color: #000;
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    `;
 
-      // إضافة خط عربي
-      doc.setFont('helvetica');
-      
-      // خلفية بيضاء نظيفة
-      doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, 210, 297, 'F');
-      
-      // حدود خارجية زرقاء
-      doc.setDrawColor(0, 102, 204);
-      doc.setLineWidth(1.5);
-      doc.rect(10, 10, 190, 277);
-      
-      // حدود داخلية رفيعة
-      doc.setDrawColor(220, 220, 220);
-      doc.setLineWidth(0.5);
-      doc.rect(15, 15, 180, 267);
-
-      // الهيدر مع التاريخ
-      let yPos = 25;
-      doc.setFontSize(12);
-      doc.setTextColor(100, 100, 100);
-      doc.text(`التاريخ: ${hijriDate}`, 190, yPos, { align: 'right' });
-
-      yPos += 15;
-      
-      // العنوان الرئيسي مع حد أزرق
-      doc.setDrawColor(0, 102, 204);
-      doc.setLineWidth(2);
-      doc.line(20, yPos + 5, 190, yPos + 5);
-      
-      doc.setFontSize(18);
-      doc.setTextColor(0, 102, 204);
-      doc.text('عقد تقديم خدمات تقنية', 105, yPos, { align: 'center' });
-      
-      yPos += 20;
-
-      // الطرف الأول مع خلفية زرقاء فاتحة
-      doc.setFillColor(240, 248, 255);
-      doc.rect(20, yPos - 3, 170, 42, 'F');
-      doc.setDrawColor(0, 102, 204);
-      doc.setLineWidth(1);
-      doc.rect(20, yPos - 3, 170, 42);
-
-      doc.setFontSize(14);
-      doc.setTextColor(0, 102, 204);
-      doc.text('الطرف الأول - مقدم الخدمة', 185, yPos + 3, { align: 'right' });
-      
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      yPos += 10;
-      doc.text('اسم الشركة: شركة علي صالح الشهري القابضة', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('العنوان: الرياض، المملكة العربية السعودية', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('البريد الإلكتروني: info@alialshehriholding.com', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('الهاتف: +966 567 812 555', 185, yPos, { align: 'right' });
-
-      yPos += 25;
-
-      // الطرف الثاني مع خلفية زرقاء فاتحة
-      doc.setFillColor(240, 248, 255);
-      doc.rect(20, yPos - 3, 170, 35, 'F');
-      doc.setDrawColor(0, 102, 204);
-      doc.rect(20, yPos - 3, 170, 35);
-      
-      doc.setFontSize(14);
-      doc.setTextColor(0, 102, 204);
-      doc.text('الطرف الثاني - العميل', 185, yPos + 3, { align: 'right' });
-      
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      yPos += 10;
-      doc.text(`الاسم: ${formData.clientName || 'علي صالح الشهري'}`, 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text(`البريد الإلكتروني: ${formData.clientEmail || 'ali6c205@gmail.com'}`, 185, yPos, { align: 'right' });
-      
-      if (formData.clientIdNumber) {
-        yPos += 6;
-        doc.text(`رقم الهوية: ${formData.clientIdNumber}`, 185, yPos, { align: 'right' });
-      }
-
-      yPos += 25;
-
-      // تفاصيل الخدمة مع خلفية خضراء فاتحة
-      doc.setFillColor(240, 255, 240);
-      doc.rect(20, yPos - 3, 170, 42, 'F');
-      doc.setDrawColor(0, 150, 0);
-      doc.rect(20, yPos - 3, 170, 42);
-      
-      doc.setFontSize(14);
-      doc.setTextColor(0, 150, 0);
-      doc.text('تفاصيل الخدمة المطلوبة', 185, yPos + 3, { align: 'right' });
-      
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      yPos += 10;
-      
-      if (selectedOfferDetails) {
-        doc.text(`نوع الخدمة: ${selectedOfferDetails.title}`, 185, yPos, { align: 'right' });
-        yPos += 6;
-        doc.text(`وصف الخدمة: ${selectedOfferDetails.title}`, 185, yPos, { align: 'right' });
-        yPos += 6;
-        doc.text(`قيمة الخدمة: ${selectedOfferDetails.price} ريال سعودي`, 185, yPos, { align: 'right' });
-        yPos += 6;
-        doc.text(`مدة التنفيذ: ${selectedOfferDetails.duration}`, 185, yPos, { align: 'right' });
-      } else {
-        doc.text('نوع الخدمة: عرض الموقع الاحترافي الكامل', 185, yPos, { align: 'right' });
-        yPos += 6;
-        doc.text('وصف الخدمة: عرض الموقع الاحترافي الكامل', 185, yPos, { align: 'right' });
-        yPos += 6;
-        doc.text('قيمة الخدمة: 8500 ريال سعودي', 185, yPos, { align: 'right' });
-        yPos += 6;
-        doc.text('مدة التنفيذ: 3-4 أسابيع', 185, yPos, { align: 'right' });
-      }
-
-      yPos += 30;
-
-      // الشروط والأحكام مع خلفية صفراء فاتحة
-      doc.setFillColor(255, 252, 220);
-      doc.rect(20, yPos - 3, 170, 50, 'F');
-      doc.setDrawColor(255, 180, 0);
-      doc.rect(20, yPos - 3, 170, 50);
-      
-      doc.setFontSize(14);
-      doc.setTextColor(255, 140, 0);
-      doc.text('الشروط والأحكام', 185, yPos + 3, { align: 'right' });
-      
-      doc.setFontSize(9);
-      doc.setTextColor(0, 0, 0);
-      yPos += 10;
-      doc.text('• تم الاتفاق بين الطرفين على تنفيذ الخدمة المذكورة أعلاه', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('• إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('• يتم اعتماد العقد نهائياً بعد الدفع عن طريق التحويل البنكي لحساب الشركة', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('• الشركة ملتزمة بتقديم الخدمة وفقاً للمواصفات المتفق عليها', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('• العميل ملتزم بدفع المبلغ المتفق عليه في المواعيد المحددة', 185, yPos, { align: 'right' });
-
-      yPos += 25;
-
-      // معلومات الحساب البنكي مع خلفية خضراء فاتحة
-      doc.setFillColor(240, 255, 240);
-      doc.rect(20, yPos - 3, 170, 42, 'F');
-      doc.setDrawColor(0, 150, 0);
-      doc.rect(20, yPos - 3, 170, 42);
-      
-      // شعار البنك الراجحي
-      doc.setFillColor(0, 102, 204);
-      doc.roundedRect(25, yPos + 2, 20, 15, 2, 2, 'F');
-      doc.setFontSize(8);
-      doc.setTextColor(255, 255, 255);
-      doc.text('مصرف', 35, yPos + 8, { align: 'center' });
-      doc.text('الراجحي', 35, yPos + 12, { align: 'center' });
-      
-      doc.setFontSize(14);
-      doc.setTextColor(0, 150, 0);
-      doc.text('معلومات الحساب البنكي للدفع', 185, yPos + 3, { align: 'right' });
-      
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      yPos += 10;
-      doc.text('اسم البنك: مصرف الراجحي', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('اسم الحساب: شركة علي صالح الشهري القابضة', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('رقم الحساب: 161000010006086071040', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('رقم الآيبان: SA1980000161608016071040', 185, yPos, { align: 'right' });
-
-      yPos += 30;
-      
-      // منطقة التوقيعات
-      doc.setFillColor(248, 250, 252);
-      doc.rect(20, yPos, 170, 40, 'F');
-      doc.setDrawColor(100, 100, 100);
-      doc.rect(20, yPos, 170, 40);
-      
-      // توقيع الطرف الأول
-      doc.setDrawColor(0, 102, 204);
-      doc.setLineWidth(1);
-      doc.rect(25, yPos + 5, 70, 30);
-      
-      doc.setFontSize(12);
-      doc.setTextColor(0, 102, 204);
-      doc.text('الطرف الأول - مقدم الخدمة', 60, yPos + 12, { align: 'center' });
-      doc.setFontSize(10);
-      doc.setTextColor(0, 0, 0);
-      doc.text('شركة علي صالح الشهري القابضة', 60, yPos + 18, { align: 'center' });
-      doc.text('التوقيع: ________________', 60, yPos + 27, { align: 'center' });
-      
-      // توقيع الطرف الثاني مع التوقيع الرقمي
-      doc.setDrawColor(0, 102, 204);
-      doc.rect(105, yPos + 5, 70, 30);
-      
-      doc.setFontSize(12);
-      doc.setTextColor(0, 102, 204);
-      doc.text('الطرف الثاني - العميل', 140, yPos + 12, { align: 'center' });
-      doc.setFontSize(10);
-      doc.setTextColor(0, 0, 0);
-      doc.text(formData.clientName || 'علي صالح الشهري', 140, yPos + 18, { align: 'center' });
-      
-      // إضافة التوقيع الرقمي للعميل
-      const canvas = signatureCanvasRef.current;
-      if (canvas) {
-        try {
-          const signatureData = canvas.toDataURL('image/png');
-          // فحص ما إذا كان هناك توقيع حقيقي
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const hasSignature = imageData.data.some((channel, index) => {
-              // تجاهل قناة الشفافية (alpha channel)
-              if (index % 4 === 3) return false;
-              return channel !== 255; // أي لون غير الأبيض
-            });
+    contractElement.innerHTML = `
+      <div style="border: 3px solid #0066cc; min-height: 1043px; padding: 30px; position: relative;">
+        <!-- إطار داخلي -->
+        <div style="border: 1px solid #ddd; min-height: 983px; padding: 20px; position: relative;">
+          
+          <!-- التاريخ -->
+          <div style="text-align: right; margin-bottom: 20px; color: #666; font-size: 12px;">
+            التاريخ: ${hijriDate}
+          </div>
+          
+          <!-- خط أزرق -->
+          <div style="height: 3px; background: #0066cc; margin-bottom: 20px;"></div>
+          
+          <!-- العنوان الرئيسي -->
+          <h1 style="text-align: center; color: #0066cc; font-size: 24px; margin: 20px 0; font-weight: bold;">
+            عقد تقديم خدمات تقنية
+          </h1>
+          
+          <!-- الطرف الأول -->
+          <div style="background: #f0f8ff; border: 2px solid #0066cc; padding: 20px; margin: 20px 0;">
+            <h2 style="color: #0066cc; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
+              الطرف الأول - مقدم الخدمة
+            </h2>
+            <div style="font-size: 13px; line-height: 1.8;">
+              <div><strong>اسم الشركة:</strong> شركة علي صالح الشهري القابضة</div>
+              <div><strong>العنوان:</strong> الرياض، المملكة العربية السعودية</div>
+              <div><strong>البريد الإلكتروني:</strong> info@alialshehriholding.com</div>
+              <div><strong>الهاتف:</strong> +966 567 812 555</div>
+            </div>
+          </div>
+          
+          <!-- الطرف الثاني -->
+          <div style="background: #f0f8ff; border: 2px solid #0066cc; padding: 20px; margin: 20px 0;">
+            <h2 style="color: #0066cc; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
+              الطرف الثاني - العميل
+            </h2>
+            <div style="font-size: 13px; line-height: 1.8;">
+              <div><strong>الاسم:</strong> ${formData.clientName || 'علي صالح الشهري'}</div>
+              <div><strong>البريد الإلكتروني:</strong> ${formData.clientEmail || 'ali6c205@gmail.com'}</div>
+              ${formData.clientPhone ? `<div><strong>الهاتف:</strong> ${formData.clientPhone}</div>` : ''}
+              ${formData.clientIdNumber ? `<div><strong>رقم الهوية:</strong> ${formData.clientIdNumber}</div>` : ''}
+            </div>
+          </div>
+          
+          <!-- تفاصيل الخدمة -->
+          <div style="background: #f0fff0; border: 2px solid #009600; padding: 20px; margin: 20px 0;">
+            <h2 style="color: #009600; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
+              تفاصيل الخدمة المطلوبة
+            </h2>
+            <div style="font-size: 13px; line-height: 1.8;">
+              <div><strong>نوع الخدمة:</strong> ${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</div>
+              <div><strong>وصف الخدمة:</strong> ${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</div>
+              <div><strong>قيمة الخدمة:</strong> ${selectedOfferDetails?.price || '8500'} ريال سعودي</div>
+              <div><strong>مدة التنفيذ:</strong> ${selectedOfferDetails?.duration || '3-4 أسابيع'}</div>
+            </div>
+          </div>
+          
+          <!-- الشروط والأحكام -->
+          <div style="background: #fffcdc; border: 2px solid #ffb400; padding: 20px; margin: 20px 0;">
+            <h2 style="color: #cc8c00; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
+              الشروط والأحكام
+            </h2>
+            <div style="font-size: 12px; line-height: 1.8;">
+              <div>• تم الاتفاق بين الطرفين على تنفيذ الخدمة المذكورة أعلاه</div>
+              <div>• إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين</div>
+              <div>• يتم اعتماد العقد نهائياً بعد الدفع عن طريق التحويل البنكي لحساب الشركة</div>
+              <div>• الشركة ملتزمة بتقديم الخدمة وفقاً للمواصفات المتفق عليها</div>
+              <div>• العميل ملتزم بدفع المبلغ المتفق عليه في المواعيد المحددة</div>
+            </div>
+          </div>
+          
+          <!-- معلومات الحساب البنكي -->
+          <div style="background: #f0fff0; border: 2px solid #009600; padding: 20px; margin: 20px 0; position: relative;">
+            <!-- شعار البنك -->
+            <div style="position: absolute; left: 20px; top: 20px; background: #0066cc; color: white; padding: 8px 12px; border-radius: 4px; font-size: 10px; text-align: center;">
+              <div>مصرف</div>
+              <div>الراجحي</div>
+            </div>
             
-            if (hasSignature && signatureData && signatureData !== 'data:,') {
-              // تحويل التوقيع إلى صورة وإضافتها للـ PDF
-              doc.addImage(signatureData, 'PNG', 110, yPos + 22, 60, 12);
-            } else {
-              doc.text('التوقيع: ________________', 140, yPos + 27, { align: 'center' });
-            }
-          } else {
-            doc.text('التوقيع: ________________', 140, yPos + 27, { align: 'center' });
-          }
-        } catch (error) {
-          console.error('خطأ في إضافة التوقيع:', error);
-          doc.text('التوقيع: ________________', 140, yPos + 27, { align: 'center' });
-        }
-      } else {
-        doc.text('التوقيع: ________________', 140, yPos + 27, { align: 'center' });
+            <h2 style="color: #009600; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
+              معلومات الحساب البنكي للدفع
+            </h2>
+            <div style="font-size: 13px; line-height: 1.8;">
+              <div><strong>اسم البنك:</strong> مصرف الراجحي</div>
+              <div><strong>اسم الحساب:</strong> شركة علي صالح الشهري القابضة</div>
+              <div><strong>رقم الحساب:</strong> 161000010006086071040</div>
+              <div><strong>رقم الآيبان:</strong> SA1980000161608016071040</div>
+            </div>
+          </div>
+          
+          <!-- منطقة التوقيعات -->
+          <div style="background: #f8fafc; border: 2px solid #666; padding: 20px; margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; gap: 20px;">
+              <!-- توقيع الطرف الأول -->
+              <div style="border: 2px solid #0066cc; padding: 15px; flex: 1; text-align: center; min-height: 120px;">
+                <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px;">الطرف الأول - مقدم الخدمة</div>
+                <div style="font-size: 12px; margin-bottom: 5px;">شركة علي صالح الشهري القابضة</div>
+                <div style="margin-top: 30px; border-bottom: 1px solid #000; width: 150px; margin-left: auto; margin-right: auto;"></div>
+                <div style="font-size: 10px; margin-top: 5px;">التوقيع والختم</div>
+              </div>
+              
+              <!-- توقيع الطرف الثاني -->
+              <div style="border: 2px solid #0066cc; padding: 15px; flex: 1; text-align: center; min-height: 120px; position: relative;">
+                <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px;">الطرف الثاني - العميل</div>
+                <div style="font-size: 12px; margin-bottom: 5px;">${formData.clientName || 'علي صالح الشهري'}</div>
+                <div id="signature-area" style="margin-top: 20px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                  ${(() => {
+                    const canvas = signatureCanvasRef.current;
+                    if (canvas) {
+                      try {
+                        const ctx = canvas.getContext('2d');
+                        if (ctx) {
+                          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                          const hasSignature = imageData.data.some((channel, index) => {
+                            if (index % 4 === 3) return false;
+                            return channel !== 255;
+                          });
+                          
+                          if (hasSignature) {
+                            const signatureData = canvas.toDataURL('image/png');
+                            return `<img src="${signatureData}" style="max-width: 100%; max-height: 60px;" alt="توقيع العميل" />`;
+                          }
+                        }
+                      } catch (error) {
+                        console.error('خطأ في إضافة التوقيع:', error);
+                      }
+                    }
+                    return '<div style="border-bottom: 1px solid #000; width: 150px; margin: 0 auto;"></div><div style="font-size: 10px; margin-top: 5px;">التوقيع</div>';
+                  })()}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- التذييل -->
+          <div style="margin-top: 30px; border-top: 2px solid #0066cc; padding-top: 15px; text-align: center;">
+            <div style="color: #666; font-size: 12px;">
+              تم إنشاء هذا العقد بتاريخ: ${contractDate}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    return contractElement;
+  };
+
+  // إنشاء PDF من HTML باستخدام html2canvas
+  const generateContractPDF = async (): Promise<jsPDF> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // إنشاء عنصر HTML للعقد
+        const contractElement = createContractHTML();
+        
+        // إضافة العنصر مؤقتاً للدوم
+        document.body.appendChild(contractElement);
+        
+        // انتظار قصير للتأكد من تحميل كامل للعنصر
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // تحويل HTML إلى canvas
+        const canvas = await html2canvas(contractElement, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: 794,
+          height: 1123,
+          scrollX: 0,
+          scrollY: 0
+        });
+        
+        // إزالة العنصر المؤقت
+        document.body.removeChild(contractElement);
+        
+        // إنشاء PDF
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'px',
+          format: [794, 1123]
+        });
+        
+        // إضافة الصورة للـ PDF
+        const imgData = canvas.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 0, 0, 794, 1123);
+        
+        resolve(pdf);
+      } catch (error) {
+        console.error('خطأ في إنشاء PDF:', error);
+        reject(error);
       }
-
-      yPos += 50;
-      
-      // التذييل
-      doc.setDrawColor(0, 102, 204);
-      doc.setLineWidth(1);
-      doc.line(20, yPos, 190, yPos);
-      
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text(`تم إنشاء هذا العقد بتاريخ: ${contractDate}`, 105, yPos + 8, { align: 'center' });
-
-      resolve(doc);
     });
   };
 
