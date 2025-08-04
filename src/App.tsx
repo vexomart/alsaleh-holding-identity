@@ -51,6 +51,8 @@ import ContentCreation from "./pages/ContentCreation";
 import DesignSolutions from "./pages/DesignSolutions";
 import Subsidiaries from "./pages/Subsidiaries";
 import PaymentMethods from "./pages/PaymentMethods";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel";
 import Dashboard from "./pages/Dashboard";
 import Partnerships from "./pages/Partnerships";
 import AffiliateMarketing from "./pages/AffiliateMarketing";
@@ -126,7 +128,9 @@ const App = () => {
           <Route path="/content-creation" element={<ContentCreation />} />
           <Route path="/design-solutions" element={<DesignSolutions />} />
           <Route path="/subsidiaries" element={<Subsidiaries />} />
-          <Route path="/payment-methods" element={<PaymentMethods />} />
+        <Route path="/payment-methods" element={<PaymentMethods />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/partnerships" element={<Partnerships />} />
           <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
           <Route path="/business-services" element={<BusinessServices />} />

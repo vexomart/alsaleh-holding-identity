@@ -1,7 +1,13 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, Star, Zap, Gift, ArrowRight, Timer, CheckCircle, Phone, Send } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { Clock, Star, Zap, Gift, ArrowRight, Timer, CheckCircle, Phone, Send, CreditCard, Loader2 } from "lucide-react";
 import OfferRequestForm from "./OfferRequestForm";
 
 const currentOffers = [
@@ -69,6 +75,169 @@ const currentOffers = [
     bgGradient: "from-green-50 to-teal-50"
   }
 ];
+
+const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNode }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const { toast } = useToast();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handlePayment = async () => {
+    if (!formData.name || !formData.email) {
+      toast({
+        title: "خطأ",
+        description: "يرجى ملء جميع الحقول المطلوبة",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
+      
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
+        body: {
+          amount: amount,
+          currency: 'SAR',
+          customer_name: formData.name,
+          customer_email: formData.email,
+          customer_phone: formData.phone,
+          offer_title: offer.title,
+          description: `دفع عرض: ${offer.title}`,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data?.payment_url) {
+        // Open payment page in new tab
+        window.open(data.payment_url, '_blank');
+        setIsOpen(false);
+        toast({
+          title: "تم إنشاء عملية الدفع",
+          description: "سيتم فتح صفحة الدفع في نافذة جديدة",
+        });
+      }
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      toast({
+        title: "خطأ في عملية الدفع",
+        description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        {trigger}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md" dir="rtl">
+        <DialogHeader>
+          <DialogTitle className="text-center text-2xl">
+            الدفع عبر تاب 💳
+          </DialogTitle>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          {/* Offer Summary */}
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 p-4 rounded-lg">
+            <h3 className="font-bold text-lg mb-2">{offer.title}</h3>
+            <div className="flex justify-between items-center">
+              <span className="text-2xl font-bold text-green-600">
+                {offer.currentPrice} ر.س
+              </span>
+              <Badge variant="destructive">خصم {offer.discount}</Badge>
+            </div>
+          </div>
+
+          {/* Payment Form */}
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">الاسم الكامل *</Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="أدخل اسمك الكامل"
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="email">البريد الإلكتروني *</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="example@email.com"
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="phone">رقم الجوال</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="05xxxxxxxx"
+                dir="ltr"
+              />
+            </div>
+          </div>
+
+          {/* Payment Button */}
+          <Button
+            onClick={handlePayment}
+            disabled={isLoading}
+            className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white py-3 text-lg font-bold"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 ml-2 animate-spin" />
+                جاري المعالجة...
+              </>
+            ) : (
+              <>
+                <CreditCard className="w-5 h-5 ml-2" />
+                ادفع {offer.currentPrice} ر.س
+              </>
+            )}
+          </Button>
+
+          {/* Security Notice */}
+          <div className="text-center text-sm text-muted-foreground">
+            🔒 جميع المدفوعات آمنة ومحمية بتقنية التشفير
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const CurrentOffersSection = () => {
   const whatsappNumber = "966555812567";
@@ -207,17 +376,34 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
                     ))}
                   </div>
 
-                  {/* CTA Button */}
-                  <div className="pt-4">
+                  {/* CTA Buttons */}
+                  <div className="pt-4 space-y-3">
+                    {/* Tap Payment Button */}
+                    <TapPaymentDialog
+                      offer={offer}
+                      trigger={
+                        <Button 
+                          className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg py-6 font-bold text-white"
+                          size="lg"
+                        >
+                          <CreditCard className="w-5 h-5 ml-2" />
+                          ادفع الآن - {offer.currentPrice} ر.س
+                          <ArrowRight className="w-5 h-5 mr-2" />
+                        </Button>
+                      }
+                    />
+                    
+                    {/* Request Form Button */}
                     <OfferRequestForm
                       offer={offer}
                       trigger={
                         <Button 
-                          className={`w-full group/btn bg-gradient-to-r ${offer.color} hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg py-6 font-bold`}
+                          variant="outline"
+                          className={`w-full group/btn hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg py-6 font-bold border-2`}
                           size="lg"
                         >
                           <Send className="w-5 h-5 ml-2" />
-                          اطلب الآن
+                          طلب معلومات أكثر
                           <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
                       }
