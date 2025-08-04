@@ -32,7 +32,12 @@ import {
   Microscope,
   FileText,
   Stethoscope,
-  FlaskConical
+  FlaskConical,
+  Megaphone,
+  Presentation,
+  Camera,
+  Play,
+  Hash
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
@@ -69,6 +74,18 @@ const SubsidiariesSection = () => {
       color: "from-emerald-600 to-teal-600",
       website: "https://fekrah-academy.com",
       isAcademic: true
+    },
+    {
+      name: "Advixo Media",
+      nameEn: "", 
+      description: "وكالة إبداعية متخصصة في التسويق الرقمي والإعلان مع حلول مبتكرة للعلامات التجارية",
+      category: "التسويق والإعلان",
+      established: "2023",
+      icon: Megaphone,
+      color: "from-pink-600 to-rose-600",
+      website: "http://advixo.media/",
+      isMarketing: true,
+      inDevelopment: true
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -357,6 +374,116 @@ const SubsidiariesSection = () => {
     );
   };
 
+  const renderMarketingCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative h-[600px]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-pink-50 via-rose-50 to-red-50 rounded-3xl border-2 border-pink-200/60 hover:border-pink-400/80 transition-all duration-700 group h-full">
+          {/* Development Banner */}
+          {company.inDevelopment && (
+            <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-2 text-sm font-bold animate-pulse">
+              🚧 قيد التطوير - Coming Soon 🚧
+            </div>
+          )}
+          
+          {/* Marketing Pattern Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2245%22%20height%3D%2245%22%20viewBox%3D%220%200%2045%2045%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%23ec4899%22%20fill-opacity%3D%220.08%22%3E%3Cpath%20d%3D%22M22.5%2010l7%207-7%207-7-7z%22/%3E%3Ccircle%20cx%3D%2222.5%22%20cy%3D%2222.5%22%20r%3D%222%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
+          
+          {/* Interactive Marketing Elements */}
+          <div className="absolute top-12 right-4 w-8 h-8 bg-pink-400/20 rounded-full animate-bounce delay-75 group-hover:bg-pink-500/30 transition-colors duration-300">
+            <Megaphone className="w-4 h-4 text-pink-600 m-2" />
+          </div>
+          <div className="absolute top-16 left-6 w-6 h-6 bg-rose-400/20 rounded-full animate-bounce delay-150 group-hover:bg-rose-500/30 transition-colors duration-300">
+            <Camera className="w-3 h-3 text-rose-600 m-1.5" />
+          </div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-red-500/20 rounded-full animate-bounce delay-300 group-hover:bg-red-600/30 transition-colors duration-300">
+            <Play className="w-2 h-2 text-red-700 m-1" />
+          </div>
+          <div className="absolute bottom-8 left-4 w-5 h-5 bg-pink-400/20 rounded-full animate-bounce delay-500 group-hover:bg-pink-500/30 transition-colors duration-300">
+            <Hash className="w-2.5 h-2.5 text-pink-600 m-1.25" />
+          </div>
+          
+          <CardContent className={`relative z-10 p-8 h-full flex flex-col justify-between ${company.inDevelopment ? 'pt-12' : 'pt-8'}`}>
+            {/* Header Section */}
+            <div className="text-center mb-6">
+              <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                  <IconComponent className="w-8 h-8 text-pink-600 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                {/* Interactive Marketing Symbols */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-400 rounded-full flex items-center justify-center text-xs group-hover:animate-spin">📱</div>
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-green-400 rounded-full flex items-center justify-center text-xs group-hover:animate-pulse">📈</div>
+              </div>
+              
+              <Badge className="bg-pink-500/20 text-pink-700 border-pink-300/50 px-3 py-1 text-sm group-hover:bg-pink-600/30 transition-colors duration-300">
+                {company.category}
+              </Badge>
+            </div>
+
+            {/* Company Info */}
+            <div className="text-center mb-6 flex-grow">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-pink-800 transition-colors duration-300 mb-2">
+                {company.name}
+              </h3>
+              {company.nameEn && (
+                <p className="text-lg font-medium text-pink-600 mb-3">
+                  {company.nameEn}
+                </p>
+              )}
+              <p className="text-slate-600 leading-relaxed text-sm">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Interactive Marketing Features */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Megaphone className="w-6 h-6 text-pink-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-pink-400 rounded-full animate-ping"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">التسويق</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Camera className="w-6 h-6 text-rose-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-400 rounded-full animate-ping delay-100"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">الإعلان</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Presentation className="w-6 h-6 text-red-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-400 rounded-full animate-ping delay-200"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">الحملات</p>
+              </div>
+            </div>
+
+            {/* Established Badge */}
+            <div className="text-center mb-4">
+              <Badge variant="outline" className="bg-white/80 text-slate-600 border-slate-300 px-3 py-1 text-sm">
+                تأسست {company.established}
+              </Badge>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button asChild className={`w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-pink-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`}>
+                <a href={company.website} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                  {company.inDevelopment ? 'قريباً - Soon' : 'استكشف خدماتنا التسويقية'}
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
     
@@ -426,7 +553,9 @@ const SubsidiariesSection = () => {
                   ? renderEducationCard(company)
                   : company.isAcademic 
                     ? renderAcademicCard(company)
-                    : renderCompanyCard(company, index)
+                    : company.isMarketing 
+                      ? renderMarketingCard(company)
+                      : renderCompanyCard(company, index)
               }
             </div>
           ))}
