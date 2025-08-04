@@ -135,7 +135,7 @@ const SubsidiariesSection = () => {
       website: "https://vexomart.com",
       isRental: true,
       inDevelopment: true,
-      launchDate: "10-10-2025"
+      launchDate: "01-10-2025"
     }
   ];  // سيتم إضافة المزيد من الشركات
 
