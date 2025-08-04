@@ -122,15 +122,15 @@ const App = () => {
               <Route path="/global-presence" element={<GlobalPresence />} />
               <Route path="/tech-projects" element={<TechProjects />} />
               <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
-          <Route path="/technologies" element={<Technologies />} />
-          <Route path="/current-offers" element={<CurrentOffers />} />
-          <Route path="/professional-services" element={<ProfessionalServices />} />
-          <Route path="/content-creation" element={<ContentCreation />} />
-          <Route path="/design-solutions" element={<DesignSolutions />} />
-          <Route path="/subsidiaries" element={<Subsidiaries />} />
-        <Route path="/payment-methods" element={<PaymentMethods />} />
-        <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/payment-cancel" element={<PaymentCancel />} />
+              <Route path="/technologies" element={<Technologies />} />
+              <Route path="/current-offers" element={<CurrentOffers />} />
+              <Route path="/professional-services" element={<ProfessionalServices />} />
+              <Route path="/content-creation" element={<ContentCreation />} />
+              <Route path="/design-solutions" element={<DesignSolutions />} />
+              <Route path="/subsidiaries" element={<Subsidiaries />} />
+              <Route path="/payment-methods" element={<PaymentMethods />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/partnerships" element={<Partnerships />} />
           <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
           <Route path="/business-services" element={<BusinessServices />} />
