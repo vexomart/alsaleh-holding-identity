@@ -122,10 +122,10 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
               عروض محدودة الوقت ⏰
             </Badge>
           </div>
-          <h2 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-8 tracking-tight">
+          <h2 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-8 tracking-tight text-center">
             العروض الحالية
           </h2>
-          <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-5xl mx-auto leading-relaxed font-medium">
+          <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-5xl mx-auto leading-relaxed font-medium text-center">
             استفد من عروضنا الحصرية المحدودة واحصل على أفضل الخدمات التقنية بأسعار استثنائية مع ضمان الجودة العالمية
           </p>
         </div>
@@ -231,8 +231,8 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
 
         {/* Premium CTA Section */}
         <div className="text-center bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-12 text-white shadow-2xl border border-slate-700">
-          <h3 className="text-4xl font-black mb-6 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">⚡ العروض تنتهي قريباً!</h3>
-          <p className="text-2xl mb-8 text-slate-300 font-medium">
+          <h3 className="text-4xl font-black mb-6 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent text-center">⚡ العروض تنتهي قريباً!</h3>
+          <p className="text-2xl mb-8 text-slate-300 font-medium text-center">
             لا تفوت الفرصة - احجز عرضك الآن واحصل على خصومات حصرية تصل إلى 35%
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
