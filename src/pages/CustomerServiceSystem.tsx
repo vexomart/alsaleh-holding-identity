@@ -5,6 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
+  ResponsiveLayout, 
+  ResponsiveSection, 
+  ResponsiveGrid, 
+  ResponsiveCard, 
+  ResponsiveFlex,
+  ResponsiveText 
+} from "@/components/ResponsiveLayout";
+import { 
   Users, 
   Shield, 
   BarChart3,
@@ -200,33 +208,48 @@ const CustomerServiceSystem = () => {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <ResponsiveGrid columns="4" gap="md" className="max-w-4xl mx-auto">
           {quickStats.map((stat, index) => (
-            <Card key={index} className="text-center border-0 bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover-scale">
-              <CardContent className="p-4">
-                <stat.icon className={`w-8 h-8 mx-auto mb-2 ${stat.color}`} />
-                <div className="text-xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </CardContent>
-            </Card>
+            <ResponsiveCard 
+              key={index} 
+              size="sm"
+              className="text-center border-0 bg-white/70 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover-scale"
+            >
+              <stat.icon className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 ${stat.color}`} />
+              <ResponsiveText size="lg" weight="bold" className="text-gray-900 mb-1">
+                {stat.value}
+              </ResponsiveText>
+              <ResponsiveText size="xs" color="muted">
+                {stat.label}
+              </ResponsiveText>
+            </ResponsiveCard>
           ))}
-        </div>
+        </ResponsiveGrid>
       </PageHeader>
 
-      <div className="max-w-7xl mx-auto px-6 py-16 space-y-32">
+      <ResponsiveLayout containerSize="xl" spacing="xl">
         {/* Primary Services Section */}
-        <section className="animate-fade-in delay-200">
-          <div className="text-center mb-16">
+        <ResponsiveSection className="animate-fade-in delay-200">
+          <div className="text-center mb-12 sm:mb-16">
             <Badge className="mb-4 px-4 py-2 text-sm">خدماتنا الأساسية</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-6">
+            <ResponsiveText 
+              as="h2" 
+              size="4xl" 
+              weight="bold" 
+              className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-4 sm:mb-6"
+            >
               خدمات النظام المتكاملة
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            </ResponsiveText>
+            <ResponsiveText 
+              size="lg" 
+              color="muted" 
+              className="max-w-3xl mx-auto"
+            >
               منصة شاملة مصممة خصيصاً لتلبية جميع احتياجات عملائنا مع ضمان أعلى مستويات الجودة والكفاءة
-            </p>
+            </ResponsiveText>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <ResponsiveGrid columns="2" gap="lg">
             {primaryServices.map((service, index) => (
               <ServiceCard
                 key={index}
@@ -239,8 +262,8 @@ const CustomerServiceSystem = () => {
                 onClick={() => navigate('/services')}
               />
             ))}
-          </div>
-        </section>
+          </ResponsiveGrid>
+        </ResponsiveSection>
 
         {/* Support Channels Section */}
         <section className="animate-fade-in delay-300">
@@ -414,7 +437,7 @@ const CustomerServiceSystem = () => {
             </div>
           </div>
         </section>
-      </div>
+      </ResponsiveLayout>
     </PageLayout>
   );
 };

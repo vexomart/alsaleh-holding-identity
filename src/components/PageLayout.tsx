@@ -12,8 +12,10 @@ export function PageLayout({ children }: PageLayoutProps) {
   return (
     <PageContainer>
       <Navigation />
-      <main className="animate-fade-in">
-        {children}
+      <main className="animate-fade-in w-full overflow-x-hidden">
+        <div className="min-h-screen">
+          {children}
+        </div>
       </main>
       <Footer />
       <WhatsAppButton />
