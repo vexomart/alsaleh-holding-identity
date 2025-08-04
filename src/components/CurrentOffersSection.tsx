@@ -207,61 +207,21 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
                     ))}
                   </div>
 
-                  {/* CTA Buttons */}
-                  <div className="space-y-3 pt-4">
+                  {/* CTA Button */}
+                  <div className="pt-4">
                     <OfferRequestForm
                       offer={offer}
                       trigger={
                         <Button 
-                          className={`w-full group/btn bg-gradient-to-r ${offer.color} hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg py-6`}
+                          className={`w-full group/btn bg-gradient-to-r ${offer.color} hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg py-6 font-bold`}
                           size="lg"
                         >
                           <Send className="w-5 h-5 ml-2" />
-                          طلب العرض الآن
+                          اطلب الآن
                           <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
                       }
                     />
-                    
-                    <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🌟 مرحبا بك في شركة علي صالح الشهري القابضة
-
-🎯 طلب عرض خاص
-═══════════════════
-
-📌 تفاصيل العرض:
-🏷️ العرض: ${offer.title}
-💰 السعر الحالي: ${offer.currentPrice} ريال
-🔥 السعر الاصلي: ${offer.originalPrice} ريال  
-🎁 الخصم: ${offer.discount}
-⏰ متبقي: ${offer.timeLeft}
-
-✅ مميزات العرض:
-${offer.features.map((feature: string, index: number) => `${index + 1}. ${feature}`).join('\n')}
-
-🎊 مميزات اضافية:
-• ادارة ومتابعة 6 شهور
-• دعم فني 24/7
-• استشارة مجانية
-• بداية سريعة
-
-💡 اريد التواصل السريع عبر الواتساب!
-
-شكرا لكم 🙏`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full inline-block"
-                    >
-                      <Button 
-                        variant="outline" 
-                        className="w-full hover:bg-gray-50 transition-all duration-300 group/btn"
-                        size="lg"
-                      >
-                        <Phone className="w-5 h-5 ml-2" />
-                        تواصل واتساب سريع
-                        <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
-                      </Button>
-                    </a>
                   </div>
                 </CardContent>
               </Card>
