@@ -23,6 +23,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // Current offers data (matching CurrentOffers.tsx)
 const currentOffers = [
@@ -158,9 +160,112 @@ const DigitalContracts = () => {
   };
 
   const generateContractPDF = async () => {
-    // This would typically generate a PDF using a library like jsPDF
-    // For now, we'll simulate the PDF generation
-    return new Blob(['Contract PDF content would be here'], { type: 'application/pdf' });
+    try {
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      // إعداد الخط للنص العربي
+      pdf.setFont('Arial');
+      pdf.setFontSize(12);
+      
+      // عنوان العقد
+      pdf.setFontSize(16);
+      pdf.setFont('Arial', 'bold');
+      pdf.text('عقد تقديم خدمات تقنية', 105, 20, { align: 'center' });
+      
+      // معلومات الطرف الأول
+      pdf.setFontSize(12);
+      pdf.setFont('Arial', 'bold');
+      pdf.text('الطرف الأول:', 20, 40);
+      pdf.setFont('Arial', 'normal');
+      pdf.text('شركة علي صالح الشهري القابضة', 20, 50);
+      pdf.text('رقم السجل التجاري: 4030394026', 20, 58);
+      pdf.text('الرقم الضريبي: 311234567890003', 20, 66);
+      pdf.text('العنوان: المملكة العربية السعودية', 20, 74);
+      pdf.text('البريد الإلكتروني: info@alialshehriholding.com', 20, 82);
+      
+      // معلومات الطرف الثاني
+      pdf.setFont('Arial', 'bold');
+      pdf.text('الطرف الثاني:', 20, 100);
+      pdf.setFont('Arial', 'normal');
+      pdf.text(`الاسم: ${formData.clientName}`, 20, 110);
+      pdf.text(`البريد الإلكتروني: ${formData.clientEmail}`, 20, 118);
+      pdf.text(`رقم الهاتف: ${formData.clientPhone}`, 20, 126);
+      
+      if (formData.clientType === 'individual' && formData.clientIdNumber) {
+        pdf.text(`رقم الهوية: ${formData.clientIdNumber}`, 20, 134);
+      }
+      
+      if (formData.clientType !== 'individual') {
+        if (formData.commercialRegister) {
+          pdf.text(`السجل التجاري: ${formData.commercialRegister}`, 20, 134);
+        }
+        if (formData.taxNumber) {
+          pdf.text(`الرقم الضريبي: ${formData.taxNumber}`, 20, 142);
+        }
+        if (formData.authorizedPerson) {
+          pdf.text(`المفوض بالتوقيع: ${formData.authorizedPerson}`, 20, 150);
+        }
+      }
+      
+      if (formData.clientAddress) {
+        pdf.text(`العنوان: ${formData.clientAddress}`, 20, 158);
+      }
+      
+      // تفاصيل الخدمة
+      pdf.setFont('Arial', 'bold');
+      pdf.text('تفاصيل الخدمة:', 20, 180);
+      pdf.setFont('Arial', 'normal');
+      
+      if (selectedOfferDetails) {
+        pdf.text(`الخدمة: ${selectedOfferDetails.title}`, 20, 190);
+        pdf.text(`السعر: ${selectedOfferDetails.price} ريال سعودي`, 20, 198);
+        pdf.text(`مدة التنفيذ: ${selectedOfferDetails.duration}`, 20, 206);
+      }
+      
+      if (formData.serviceDescription) {
+        pdf.text('وصف الخدمة:', 20, 220);
+        const splitDescription = pdf.splitTextToSize(formData.serviceDescription, 170);
+        pdf.text(splitDescription, 20, 230);
+      }
+      
+      // شروط العقد
+      pdf.setFont('Arial', 'bold');
+      pdf.text('شروط وأحكام العقد:', 20, 260);
+      pdf.setFont('Arial', 'normal');
+      
+      const terms = [
+        '1. مدة تنفيذ الطلب: 15 يوم عمل من تاريخ التوقيع على العقد واستلام الدفعة المقدمة',
+        '2. إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين',
+        '3. يتم اعتماد العقد نهائياً بعد دفع المبلغ المتفق عليه عن طريق التحويل البنكي',
+        '4. ترسل الشركة اعتماد العقد رسمياً بعد استلام الدفعة',
+        '5. جميع التعديلات والتغييرات تتم بموافقة خطية من الطرفين',
+        '6. هذا العقد خاضع للأنظمة السعودية النافذة'
+      ];
+      
+      let yPosition = 270;
+      terms.forEach(term => {
+        const splitTerm = pdf.splitTextToSize(term, 170);
+        pdf.text(splitTerm, 20, yPosition);
+        yPosition += splitTerm.length * 6 + 4;
+      });
+      
+      // تاريخ العقد
+      pdf.setFont('Arial', 'bold');
+      pdf.text(`تاريخ العقد: ${new Date().toLocaleDateString('ar-SA')}`, 20, yPosition + 10);
+      
+      // توقيع العميل (إذا كان متوفراً)
+      if (signatureCanvasRef.current) {
+        const canvas = signatureCanvasRef.current;
+        const signatureDataURL = canvas.toDataURL();
+        // يمكن إضافة التوقيع كصورة هنا
+        pdf.text('توقيع العميل:', 120, yPosition + 30);
+      }
+      
+      return pdf.output('blob');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      throw new Error('فشل في إنشاء ملف PDF');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -219,51 +324,42 @@ const DigitalContracts = () => {
       };
 
       // Submit to contract-form edge function
-      const response = await fetch(
-        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/contract-form",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            formType: formData.clientType,
-            ...contractData
-          }),
+      const { data, error } = await supabase.functions.invoke('contract-form', {
+        body: {
+          formType: formData.clientType,
+          ...contractData
         }
-      );
+      });
 
-      const result = await response.json();
-
-      if (result.success) {
-        toast({
-          title: "تم إرسال العقد بنجاح!",
-          description: "سنتواصل معك قريباً لتأكيد تفاصيل العقد",
-        });
-
-        // Reset form
-        setFormData({
-          clientType: "",
-          clientName: "",
-          clientEmail: "",
-          clientPhone: "",
-          clientIdNumber: "",
-          clientAddress: "",
-          commercialRegister: "",
-          taxNumber: "",
-          authorizedPerson: "",
-          selectedOffer: "",
-          serviceDescription: "",
-          customRequirements: "",
-          agreeToTerms: false,
-          agreeToPrivacy: false
-        });
-        setSelectedOfferDetails(null);
-        clearSignature();
-
-      } else {
-        throw new Error(result.error || "حدث خطأ أثناء إرسال العقد");
+      if (error) {
+        throw new Error(error.message || "فشل في إرسال العقد");
       }
+
+      // Success response
+      toast({
+        title: "تم إرسال العقد بنجاح!",
+        description: "سنتواصل معك قريباً لتأكيد تفاصيل العقد. إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين.",
+      });
+
+      // Reset form
+      setFormData({
+        clientType: "",
+        clientName: "",
+        clientEmail: "",
+        clientPhone: "",
+        clientIdNumber: "",
+        clientAddress: "",
+        commercialRegister: "",
+        taxNumber: "",
+        authorizedPerson: "",
+        selectedOffer: "",
+        serviceDescription: "",
+        customRequirements: "",
+        agreeToTerms: false,
+        agreeToPrivacy: false
+      });
+      setSelectedOfferDetails(null);
+      clearSignature();
     } catch (error) {
       console.error("Contract submission error:", error);
       toast({
