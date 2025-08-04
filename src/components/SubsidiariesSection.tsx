@@ -884,11 +884,9 @@ const SubsidiariesSection = () => {
             
             {/* CTA Button */}
             <div className="text-center">
-              <Button asChild className={`w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-green-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`}>
-                <a href={company.website} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
-                  {company.inDevelopment ? `قريباً - ${company.launchDate}` : 'استكشف منصة التأجير'}
-                </a>
+              <Button className={`w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-green-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`} disabled={company.inDevelopment}>
+                <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                {company.inDevelopment ? `قريباً - ${company.launchDate}` : 'استكشف منصة التأجير'}
               </Button>
             </div>
           </CardContent>
