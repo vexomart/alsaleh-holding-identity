@@ -45,13 +45,14 @@ const SubsidiariesSection = () => {
       isPortal: true
     },
     {
-      name: "فكرة هولدينغ",
-      nameEn: "Feklah Holding", 
+      name: "Feklah Holding",
+      nameEn: "", 
       description: "شركة متخصصة في تقديم الخدمات التعليمية المبتكرة والحلول التقنية للتعليم",
       category: "الخدمات التعليمية",
       established: "2018",
       icon: GraduationCap,
-      website: "https://feklah-holding.com",
+      color: "from-blue-600 to-indigo-600",
+      website: "https://fekrah-holding.com",
       isEducation: true
     }
   ];  // سيتم إضافة المزيد من الشركات
@@ -151,10 +152,19 @@ const SubsidiariesSection = () => {
           {/* Educational Pattern Background */}
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%234f46e5%22%20fill-opacity%3D%220.08%22%3E%3Cpath%20d%3D%22M20%2010l10%2010-10%2010-10-10z%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
           
-          {/* Floating Elements Animation */}
-          <div className="absolute top-4 right-4 w-8 h-8 bg-blue-400/20 rounded-full animate-bounce delay-75"></div>
-          <div className="absolute top-8 left-6 w-6 h-6 bg-indigo-400/20 rounded-full animate-bounce delay-150"></div>
-          <div className="absolute bottom-6 right-8 w-4 h-4 bg-blue-500/20 rounded-full animate-bounce delay-300"></div>
+          {/* Interactive Floating Elements */}
+          <div className="absolute top-4 right-4 w-8 h-8 bg-blue-400/20 rounded-full animate-bounce delay-75 group-hover:bg-blue-500/30 transition-colors duration-300">
+            <Brain className="w-4 h-4 text-blue-600 m-2" />
+          </div>
+          <div className="absolute top-8 left-6 w-6 h-6 bg-indigo-400/20 rounded-full animate-bounce delay-150 group-hover:bg-indigo-500/30 transition-colors duration-300">
+            <Sparkles className="w-3 h-3 text-indigo-600 m-1.5" />
+          </div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-blue-500/20 rounded-full animate-bounce delay-300 group-hover:bg-blue-600/30 transition-colors duration-300">
+            <Target className="w-2 h-2 text-blue-700 m-1" />
+          </div>
+          <div className="absolute bottom-8 left-4 w-5 h-5 bg-purple-400/20 rounded-full animate-bounce delay-500 group-hover:bg-purple-500/30 transition-colors duration-300">
+            <Rocket className="w-2.5 h-2.5 text-purple-600 m-1.25" />
+          </div>
           
           <CardContent className="relative z-10 p-10">
             {/* Header Section */}
@@ -164,11 +174,12 @@ const SubsidiariesSection = () => {
                 <div className="relative w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-xl">
                   <IconComponent className="w-10 h-10 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                {/* Academic Symbols */}
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs">📚</div>
+                {/* Interactive Academic Symbols */}
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs group-hover:animate-spin">📚</div>
+                <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center text-xs group-hover:animate-pulse">🎓</div>
               </div>
               
-              <Badge className="bg-blue-500/20 text-blue-700 border-blue-300/50 px-4 py-2 mb-4">
+              <Badge className="bg-blue-500/20 text-blue-700 border-blue-300/50 px-4 py-2 mb-4 group-hover:bg-blue-600/30 transition-colors duration-300">
                 {company.category}
               </Badge>
             </div>
@@ -178,22 +189,30 @@ const SubsidiariesSection = () => {
               <h3 className="text-2xl font-bold text-slate-800 group-hover:text-blue-800 transition-colors duration-300">
                 {company.name}
               </h3>
-              <p className="text-xl font-medium text-blue-600">
-                {company.nameEn}
-              </p>
+              {company.nameEn && (
+                <p className="text-xl font-medium text-blue-600">
+                  {company.nameEn}
+                </p>
+              )}
               <p className="text-slate-600 leading-relaxed">
                 {company.description}
               </p>
             </div>
 
-            {/* Educational Features */}
+            {/* Interactive Educational Features */}
             <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="text-center p-4 bg-white/60 rounded-2xl">
-                <BookOpen className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+              <div className="text-center p-4 bg-white/60 rounded-2xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <BookOpen className="w-8 h-8 text-blue-500 mx-auto mb-2 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-2 w-3 h-3 bg-blue-400 rounded-full animate-ping"></div>
+                </div>
                 <p className="text-sm font-medium text-slate-700">مناهج تفاعلية</p>
               </div>
-              <div className="text-center p-4 bg-white/60 rounded-2xl">
-                <Lightbulb className="w-8 h-8 text-indigo-500 mx-auto mb-2" />
+              <div className="text-center p-4 bg-white/60 rounded-2xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Lightbulb className="w-8 h-8 text-indigo-500 mx-auto mb-2 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-2 w-3 h-3 bg-yellow-400 rounded-full animate-ping delay-200"></div>
+                </div>
                 <p className="text-sm font-medium text-slate-700">تقنيات حديثة</p>
               </div>
             </div>
