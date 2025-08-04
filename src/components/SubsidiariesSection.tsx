@@ -32,68 +32,7 @@ import {
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
-  const subsidiaries = [
-    {
-      name: "أمكان للتطوير العقاري",
-      nameEn: "Emkan Real Estate Development", 
-      description: "شركة رائدة في التطوير العقاري تركز على المشاريع السكنية والتجارية المبتكرة في المملكة العربية السعودية",
-      category: "التطوير العقاري",
-      established: "2018",
-      icon: Building2,
-      color: "from-blue-600 to-purple-600",
-      website: "https://emkan.com.sa"
-    },
-    {
-      name: "مدفوع للمدفوعات الرقمية",
-      nameEn: "Madfu Digital Payments",
-      description: "منصة مدفوعات رقمية متطورة تقدم حلول دفع آمنة ومبتكرة للشركات والأفراد",
-      category: "التقنية المالية",
-      established: "2020",
-      icon: Monitor,
-      color: "from-emerald-500 to-blue-500",
-      website: "https://madfu.com"
-    },
-    {
-      name: "تسهيل للخدمات المالية",
-      nameEn: "Tasaheel Financial Services",
-      description: "شركة خدمات مالية متخصصة في التمويل والاستثمار وإدارة الأصول",
-      category: "الخدمات المالية",
-      established: "2019",
-      icon: TrendingUp,
-      color: "from-orange-500 to-red-500",
-      website: "https://tasaheel.com"
-    },
-    {
-      name: "الراجحي كابيتال",
-      nameEn: "AlRajhi Capital",
-      description: "شركة استثمار رائدة تقدم خدمات الوساطة والاستثمار وإدارة الأصول",
-      category: "الاستثمار",
-      established: "2005",
-      icon: BarChart3,
-      color: "from-green-600 to-teal-600",
-      website: "https://alrajhicapital.com"
-    },
-    {
-      name: "تابي للتمويل",
-      nameEn: "Tabby Financing",
-      description: "منصة تمويل مبتكرة تقدم حلول الدفع الآجل والتقسيط للمستهلكين",
-      category: "التقنية المالية",
-      established: "2019",
-      icon: Users,
-      color: "from-purple-600 to-pink-600",
-      website: "https://tabby.ai"
-    },
-    {
-      name: "تمارا للمدفوعات",
-      nameEn: "Tamara Payments",
-      description: "شركة مدفوعات رقمية تركز على حلول الدفع الآجل والتقسيط في منطقة الشرق الأوسط",
-      category: "المدفوعات الرقمية",
-      established: "2020",
-      icon: ShoppingCart,
-      color: "from-indigo-600 to-purple-600",
-      website: "https://tamara.co"
-    }
-  ];
+  const subsidiaries = [];  // سيتم إضافة الشركات هنا
 
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
