@@ -295,18 +295,8 @@ const ReadyProjects = () => {
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <Card className="h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:border-primary/30 overflow-hidden">
-                    {/* Duration Banner */}
-                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${project.gradient}`}></div>
+                    {/* Duration Banner - moved to bottom */}
                     
-                    <div className="absolute top-4 right-4 z-10">
-                      <div className="flex items-center gap-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-gray-200/50 dark:border-gray-700/50">
-                        <Timer className="w-3 h-3 text-primary" />
-                        <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                          {project.duration}
-                        </span>
-                      </div>
-                    </div>
-
                     <CardHeader className="pb-4 pt-6">
                       <div className="flex items-start gap-4">
                         <div className={`p-3 rounded-xl bg-gradient-to-r ${project.gradient} shadow-lg`}>
@@ -347,21 +337,38 @@ const ReadyProjects = () => {
                         </div>
                       </div>
 
-                      {/* Stats */}
+                      {/* Technologies Used */}
+                      <div className="mb-6">
+                        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">التقنيات المستخدمة:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {project.technologies.slice(0, 3).map((tech, i) => (
+                            <Badge key={i} variant="secondary" className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700">
+                              {tech}
+                            </Badge>
+                          ))}
+                          {project.technologies.length > 3 && (
+                            <Badge variant="secondary" className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                              +{project.technologies.length - 3} تقنية
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Project Info */}
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                           <div className="flex items-center justify-center gap-1 mb-1">
-                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                            <span className="text-sm font-bold text-gray-900 dark:text-white">{project.rating}</span>
+                            <Timer className="w-4 h-4 text-primary" />
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">{project.duration.split(' ')[0]}</span>
                           </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">التقييم</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">مدة التنفيذ</p>
                         </div>
                         <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                           <div className="flex items-center justify-center gap-1 mb-1">
-                            <Users className="w-4 h-4 text-blue-500" />
-                            <span className="text-sm font-bold text-gray-900 dark:text-white">{project.clients}</span>
+                            <Shield className="w-4 h-4 text-green-500" />
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">{project.updates.split(' ')[0]}</span>
                           </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">عميل</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">تحديثات مجانية</p>
                         </div>
                       </div>
 
