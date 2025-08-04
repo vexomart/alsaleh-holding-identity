@@ -157,6 +157,8 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
       console.log('Payment response:', data);
 
       if (data?.success && data?.payment_url) {
+        console.log('Opening payment URL:', data.payment_url);
+        
         toast({
           title: "تم إنشاء رابط الدفع بنجاح",
           description: "سيتم فتح صفحة الدفع الآن",
@@ -165,13 +167,22 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
         // Close dialog first
         setIsOpen(false);
         
-        // Small delay then open payment page
-        setTimeout(() => {
-          window.open(data.payment_url, '_blank');
-        }, 500);
+        // Open payment page immediately
+        const paymentWindow = window.open(data.payment_url, '_blank', 'noopener,noreferrer');
+        
+        if (!paymentWindow) {
+          toast({
+            title: "تحذير",
+            description: "يرجى السماح للنوافذ المنبثقة لفتح صفحة الدفع",
+            variant: "destructive",
+          });
+          // Fallback: redirect in same window
+          window.location.href = data.payment_url;
+        }
         
       } else {
-        throw new Error(data?.error || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
+        console.error('Invalid response:', data);
+        throw new Error('لم يتم إنشاء رابط الدفع بشكل صحيح');
       }
     } catch (error: any) {
       console.error('Payment error:', error);
