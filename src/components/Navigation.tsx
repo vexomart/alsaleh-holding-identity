@@ -98,11 +98,7 @@ const Navigation = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/98 backdrop-blur-lg border-b border-gray-200/30 shadow-sm' 
-          : 'bg-slate-900/95 backdrop-blur-md'
-      }`}>
+      <nav className="fixed top-0 w-full z-50 bg-slate-900/95 backdrop-blur-md transition-all duration-300">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="flex items-center justify-between h-16 lg:h-18">
             {/* Logo & Company Name */}
@@ -114,12 +110,12 @@ const Navigation = () => {
                   className="h-10 lg:h-12 w-auto object-contain transition-transform duration-300 hover:scale-105"
                 />
                 <div className="hidden lg:block">
-                  <div className={`font-bold text-base ${isScrolled ? 'text-gray-800' : 'text-white'}`}>
+                  <div className="font-bold text-base text-white">
                     شركة علي صالح الشهري القابضة
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
                     <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                    <span className={`text-xs ${isScrolled ? 'text-gray-500' : 'text-white/80'}`}>
+                    <span className="text-xs text-white/80">
                       شركة رائدة منذ 2016
                     </span>
                   </div>
@@ -131,17 +127,13 @@ const Navigation = () => {
             <div className="hidden lg:flex items-center gap-8">
               <a 
                 href="/" 
-                className={`font-medium transition-colors hover:text-primary ${
-                  isScrolled ? 'text-gray-700' : 'text-white'
-                }`}
+                className="font-medium transition-colors hover:text-primary text-white"
               >
                 الرئيسية
               </a>
               <a 
                 href="/about" 
-                className={`font-medium transition-colors hover:text-primary ${
-                  isScrolled ? 'text-gray-700' : 'text-white'
-                }`}
+                className="font-medium transition-colors hover:text-primary text-white"
               >
                 من نحن
               </a>
@@ -153,9 +145,7 @@ const Navigation = () => {
                 onMouseLeave={() => setShowServices(false)}
               >
                 <button 
-                  className={`flex items-center gap-1 font-medium transition-colors hover:text-primary ${
-                    isScrolled ? 'text-gray-700' : 'text-white'
-                  }`}
+                  className="flex items-center gap-1 font-medium transition-colors hover:text-primary text-white"
                 >
                   خدماتنا
                   <ChevronDown className="w-4 h-4" />
@@ -193,33 +183,25 @@ const Navigation = () => {
 
               <a 
                 href="/vision" 
-                className={`font-medium transition-colors hover:text-primary ${
-                  isScrolled ? 'text-gray-700' : 'text-white'
-                }`}
+                className="font-medium transition-colors hover:text-primary text-white"
               >
                 رؤيتنا
               </a>
               <a 
                 href="/subsidiaries"
-                className={`font-medium transition-colors hover:text-primary ${
-                  isScrolled ? 'text-gray-700' : 'text-white'
-                }`}
+                className="font-medium transition-colors hover:text-primary text-white"
               >
                 شركاتنا
               </a>
               <a 
                 href="/ready-projects" 
-                className={`font-medium transition-colors hover:text-primary ${
-                  isScrolled ? 'text-gray-700' : 'text-white'
-                }`}
+                className="font-medium transition-colors hover:text-primary text-white"
               >
                 منتجاتنا
               </a>
               <a 
                 href="/contact"
-                className={`font-medium transition-colors hover:text-primary ${
-                  isScrolled ? 'text-gray-700' : 'text-white'
-                }`}
+                className="font-medium transition-colors hover:text-primary text-white"
               >
                 تواصل معنا
               </a>
@@ -231,9 +213,7 @@ const Navigation = () => {
                 onMouseLeave={() => setShowOthers(false)}
               >
                 <button 
-                  className={`flex items-center gap-1 font-medium transition-colors hover:text-primary ${
-                    isScrolled ? 'text-gray-700' : 'text-white'
-                  }`}
+                  className="flex items-center gap-1 font-medium transition-colors hover:text-primary text-white"
                 >
                   أخرى
                   <ChevronDown className="w-4 h-4" />
@@ -270,7 +250,7 @@ const Navigation = () => {
                 <Button 
                   size="sm" 
                   variant="ghost"
-                  className={`flex items-center gap-2 ${isScrolled ? 'text-gray-600 hover:text-green-600' : 'text-white hover:text-green-400'}`}
+                  className="flex items-center gap-2 text-white hover:text-green-400"
                   asChild
                 >
                   <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
@@ -281,7 +261,7 @@ const Navigation = () => {
                 <Button 
                   size="sm" 
                   variant="ghost"
-                  className={`flex items-center gap-2 ${isScrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-400'}`}
+                  className="flex items-center gap-2 text-white hover:text-blue-400"
                   asChild
                 >
                   <a href="tel:+966555812567">
@@ -292,7 +272,7 @@ const Navigation = () => {
               </div>
               
               <Button 
-                variant={isScrolled ? "default" : "secondary"}
+                variant="secondary"
                 size="sm"
                 className="hidden lg:flex font-semibold"
                 asChild
@@ -304,9 +284,7 @@ const Navigation = () => {
               
               {/* Mobile Menu Button */}
               <button
-                className={`lg:hidden p-2 rounded-lg transition-colors ${
-                  isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
-                }`}
+                className="lg:hidden p-2 rounded-lg transition-colors text-white hover:bg-white/10"
                 onClick={() => setIsOpen(!isOpen)}
               >
                 {isOpen ? <X size={20} /> : <Menu size={20} />}
