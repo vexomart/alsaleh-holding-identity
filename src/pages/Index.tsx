@@ -10,7 +10,6 @@ import StatsSection from "@/components/StatsSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 
 import CommitmentsSection from "@/components/CommitmentsSection";
-import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import ContactSection from "@/components/ContactSection";
 import RemoteWorkSection from "@/components/RemoteWorkSection";
 import Footer from "@/components/Footer";
@@ -93,17 +92,6 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Payment Methods Section */}
-          <section id="payment-methods" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-50/80 via-emerald-50/60 to-teal-50/80 dark:from-green-950/20 dark:via-emerald-950/10 dark:to-teal-950/20"></div>
-            <div className="absolute inset-0 bg-[conic-gradient(from_180deg_at_50%_50%,_var(--tw-gradient-stops))] from-green-100/15 via-emerald-100/20 via-teal-100/15 to-green-100/15"></div>
-            <div className="absolute top-5 right-5 sm:top-14 sm:right-14 w-32 h-32 sm:w-84 sm:h-84 bg-gradient-to-br from-green-200/40 to-emerald-200/40 rounded-full blur-xl sm:blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-5 left-5 sm:bottom-14 sm:left-14 w-24 h-24 sm:w-72 sm:h-72 bg-gradient-to-br from-teal-200/40 to-cyan-200/40 rounded-full blur-lg sm:blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-48 sm:h-48 bg-gradient-to-r from-emerald-200/30 to-green-200/30 rounded-full blur-sm sm:blur-xl animate-float"></div>
-            <div className="relative z-10">
-              <PaymentMethodsSection />
-            </div>
-          </section>
 
           {/* Contact Section */}
           <section id="contact" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
