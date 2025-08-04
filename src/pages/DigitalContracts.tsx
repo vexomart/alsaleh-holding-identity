@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,6 +88,7 @@ const DigitalContracts = () => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  
   const [formData, setFormData] = useState({
     clientType: "",
     clientName: "",
@@ -119,7 +120,7 @@ const DigitalContracts = () => {
     }
   };
 
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     setIsDrawing(true);
     const canvas = signatureCanvasRef.current;
     if (!canvas) return;
@@ -128,11 +129,26 @@ const DigitalContracts = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Setup drawing style
+    ctx.strokeStyle = '#1e40af';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    let clientX, clientY;
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
     ctx.beginPath();
-    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.moveTo(clientX - rect.left, clientY - rect.top);
   };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return;
     
     const canvas = signatureCanvasRef.current;
@@ -142,7 +158,16 @@ const DigitalContracts = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    let clientX, clientY;
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    ctx.lineTo(clientX - rect.left, clientY - rect.top);
     ctx.stroke();
   };
 
@@ -158,7 +183,58 @@ const DigitalContracts = () => {
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // إضافة خط مساعد للتوقيع
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(50, canvas.height - 30);
+    ctx.lineTo(canvas.width - 50, canvas.height - 30);
+    ctx.stroke();
+    ctx.setLineDash([]);
   };
+
+  // إضافة خط مساعد عند تحميل الصفحة
+  const initializeSignatureCanvas = () => {
+    const canvas = signatureCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // مسح المحتوى أولاً
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // إضافة خلفية بيضاء
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // إضافة خط مساعد للتوقيع
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(50, canvas.height - 30);
+    ctx.lineTo(canvas.width - 50, canvas.height - 30);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // إضافة نص مساعد
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('وقع هنا', canvas.width / 2, canvas.height - 10);
+  };
+
+  // تهيئة مربع التوقيع عند التحميل
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      initializeSignatureCanvas();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // تحديث contract form edge function بإرسال البيانات الصحيحة
   const generateContractPDF = (): Promise<jsPDF> => {
@@ -954,27 +1030,79 @@ const DigitalContracts = () => {
                 {/* Digital Signature */}
                 <div className="space-y-4">
                   <Label className="text-lg font-semibold flex items-center gap-2">
-                    <Signature className="w-5 h-5" />
+                    <Signature className="w-5 h-5 text-primary" />
                     التوقيع الرقمي *
                   </Label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                    <canvas
-                      ref={signatureCanvasRef}
-                      width={400}
-                      height={200}
-                      className="border border-gray-200 rounded bg-white w-full cursor-crosshair"
-                      onMouseDown={startDrawing}
-                      onMouseMove={draw}
-                      onMouseUp={stopDrawing}
-                      onMouseLeave={stopDrawing}
-                    />
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-sm text-gray-600">ارسم توقيعك في المنطقة أعلاه</p>
-                      <Button type="button" variant="outline" size="sm" onClick={clearSignature}>
-                        مسح التوقيع
-                      </Button>
-                    </div>
-                  </div>
+                  
+                  <Card className="bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-dashed border-blue-300">
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        <div className="text-center text-sm text-gray-600 mb-4">
+                          <Shield className="w-5 h-5 mx-auto mb-2 text-green-600" />
+                          <p>التوقيع الرقمي معتمد قانونياً ومشفر بأعلى معايير الأمان</p>
+                        </div>
+                        
+                        <div className="relative bg-white rounded-lg border-2 border-gray-200 shadow-sm">
+                          <canvas
+                            ref={signatureCanvasRef}
+                            width={500}
+                            height={250}
+                            className="w-full h-auto max-w-full cursor-crosshair rounded-lg"
+                            onMouseDown={startDrawing}
+                            onMouseMove={draw}
+                            onMouseUp={stopDrawing}
+                            onMouseLeave={stopDrawing}
+                            onTouchStart={startDrawing}
+                            onTouchMove={draw}
+                            onTouchEnd={stopDrawing}
+                            style={{ touchAction: 'none' }}
+                          />
+                          
+                          {/* زر المسح داخل المربع */}
+                          <Button 
+                            type="button" 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={clearSignature}
+                            className="absolute top-2 right-2 bg-white/80 hover:bg-white border border-gray-200 text-gray-600 hover:text-gray-800"
+                          >
+                            <div className="flex items-center gap-1">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                              مسح
+                            </div>
+                          </Button>
+                        </div>
+                        
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span>استخدم الماوس أو اللمس للتوقيع</span>
+                          </div>
+                          
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              clearSignature();
+                              setTimeout(initializeSignatureCanvas, 100);
+                            }}
+                            className="border-blue-200 text-blue-600 hover:bg-blue-50"
+                          >
+                            إعادة تعيين
+                          </Button>
+                        </div>
+                        
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                          <p className="text-xs text-blue-800 text-center">
+                            💡 نصيحة: استخدم خط واضح ومقروء. يمكنك مسح التوقيع وإعادة كتابته حتى تحصل على النتيجة المطلوبة
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
                 {/* Terms and Conditions */}
