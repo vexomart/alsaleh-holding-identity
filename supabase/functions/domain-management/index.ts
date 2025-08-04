@@ -84,14 +84,21 @@ async function checkDomainAvailability(domain: string, extension: string) {
       const isSandbox = false; // Set to true for testing
       const baseUrl = isSandbox ? 'api.sandbox.namecheap.com' : 'api.namecheap.com';
       
-      // Get real client IP from headers or use a whitelisted IP
-      const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-                      req.headers.get('x-real-ip') || 
-                      '13.235.247.105'; // Fallback to one of your whitelisted IPs
+      // Use whitelisted IP addresses that work with Namecheap
+      const whitelistedIPs = [
+        '13.235.247.105',
+        '43.205.146.72', 
+        '13.203.46.193',
+        '65.1.128.135',
+        '43.204.24.190'
+      ];
+      
+      // Get a random whitelisted IP for load balancing
+      const clientIp = whitelistedIPs[Math.floor(Math.random() * whitelistedIPs.length)];
       
       const apiUrl = `https://${baseUrl}/xml.response?ApiUser=${namecheapApiUser}&ApiKey=${namecheapApiKey}&UserName=${namecheapUsername}&Command=namecheap.domains.check&ClientIp=${clientIp}&DomainList=${fullDomain}`;
       
-      console.log(`Making Namecheap API call for: ${fullDomain}`);
+      console.log(`Making Namecheap API call for: ${fullDomain} using IP: ${clientIp}`);
       
       const response = await fetch(apiUrl, {
         method: 'GET',
@@ -349,14 +356,21 @@ async function getNamecheapExtensions() {
 
     // Real Namecheap API call to get TLD list
     try {
-      // Get real client IP from headers or use a whitelisted IP
-      const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-                      req.headers.get('x-real-ip') || 
-                      '13.235.247.105'; // Fallback to one of your whitelisted IPs
+      // Use whitelisted IP addresses that work with Namecheap
+      const whitelistedIPs = [
+        '13.235.247.105',
+        '43.205.146.72', 
+        '13.203.46.193',
+        '65.1.128.135',
+        '43.204.24.190'
+      ];
+      
+      // Get a random whitelisted IP for load balancing
+      const clientIp = whitelistedIPs[Math.floor(Math.random() * whitelistedIPs.length)];
       
       const apiUrl = `https://api.namecheap.com/xml.response?ApiUser=${namecheapApiUser}&ApiKey=${namecheapApiKey}&UserName=${namecheapUsername}&Command=namecheap.domains.gettldlist&ClientIp=${clientIp}`;
       
-      console.log('Making Namecheap TLD API call...');
+      console.log('Making Namecheap TLD API call using IP:', clientIp);
       
       const response = await fetch(apiUrl, {
         method: 'GET',
