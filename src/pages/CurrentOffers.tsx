@@ -150,23 +150,34 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
       });
 
       if (error) {
-        throw error;
+        console.error('Supabase error:', error);
+        throw new Error(error.message || 'فشل في الاتصال بالخدمة');
       }
 
-      if (data?.payment_url) {
-        // Open payment page in new tab
-        window.open(data.payment_url, '_blank');
-        setIsOpen(false);
+      console.log('Payment response:', data);
+
+      if (data?.success && data?.payment_url) {
         toast({
-          title: "تم إنشاء عملية الدفع",
-          description: "سيتم فتح صفحة الدفع في نافذة جديدة",
+          title: "تم إنشاء رابط الدفع بنجاح",
+          description: "سيتم فتح صفحة الدفع الآن",
         });
+        
+        // Close dialog first
+        setIsOpen(false);
+        
+        // Small delay then open payment page
+        setTimeout(() => {
+          window.open(data.payment_url, '_blank');
+        }, 500);
+        
+      } else {
+        throw new Error(data?.error || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
       }
     } catch (error: any) {
       console.error('Payment error:', error);
       toast({
         title: "خطأ في عملية الدفع",
-        description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع",
+        description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع. يرجى المحاولة مرة أخرى",
         variant: "destructive",
       });
     } finally {
