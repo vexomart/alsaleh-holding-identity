@@ -33,8 +33,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "إمكان الرقمية <onboarding@resend.dev>",
-      to: ["content@emkandigital.com", "admin@emkandigital.com"],
+      from: "نظام طلبات المحتوى <noreply@alialshehriholding.com>",
+      to: ["content@alialshehriholding.com", "admin@alialshehriholding.com"],
       subject: `طلب جديد لخدمة ${requestData.serviceName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2px; border-radius: 10px;">
@@ -87,7 +87,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "إمكان الرقمية <onboarding@resend.dev>",
+      from: "إمكان الرقمية <noreply@alialshehriholding.com>",
       to: [requestData.email],
       subject: `شكراً لك - تم استلام طلبك لخدمة ${requestData.serviceName}`,
       html: `
@@ -128,7 +128,7 @@ const handler = async (req: Request): Promise<Response> => {
               <p style="color: #718096; font-size: 14px; margin: 0;">
                 إمكان الرقمية - شريكك في التحول الرقمي<br>
                 للتواصل: +966 55 581 2567<br>
-                البريد الإلكتروني: info@emkandigital.com
+                البريد الإلكتروني: info@alialshehriholding.com
               </p>
             </div>
           </div>
