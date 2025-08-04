@@ -12,6 +12,7 @@ import DepartmentsSection from "@/components/DepartmentsSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
 import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import ContactSection from "@/components/ContactSection";
+import RemoteWorkSection from "@/components/RemoteWorkSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
@@ -78,6 +79,17 @@ const Index = () => {
             <div className="absolute top-1/3 right-1/3 w-16 h-16 sm:w-40 sm:h-40 bg-gradient-to-br from-purple-300/25 to-indigo-300/25 rounded-full blur-sm sm:blur-xl animate-pulse" style={{ animationDelay: '3s' }}></div>
             <div className="relative z-10">
               <CommitmentsSection />
+            </div>
+          </section>
+
+          {/* Remote Work Section */}
+          <section id="remote-work" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-50/80 via-blue-50/60 to-indigo-50/80 dark:from-slate-950/20 dark:via-blue-950/10 dark:to-indigo-950/20"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-100/20 via-transparent to-indigo-100/20"></div>
+            <div className="absolute top-5 right-5 sm:top-16 sm:right-16 w-32 h-32 sm:w-80 sm:h-80 bg-gradient-to-br from-blue-200/40 to-indigo-200/40 rounded-full blur-xl sm:blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-5 left-5 sm:bottom-16 sm:left-16 w-24 h-24 sm:w-64 sm:h-64 bg-gradient-to-br from-slate-200/40 to-blue-200/40 rounded-full blur-lg sm:blur-2xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+            <div className="relative z-10">
+              <RemoteWorkSection />
             </div>
           </section>
 
