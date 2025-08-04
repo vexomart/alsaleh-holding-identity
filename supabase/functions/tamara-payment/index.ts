@@ -133,6 +133,11 @@ serve(async (req) => {
     console.log("Tamara payload:", JSON.stringify(tamaraPayload, null, 2));
 
     console.log("Sending request to Tamara API...");
+    console.log("Request URL: https://api-sandbox.tamara.co/checkout");
+    console.log("Request headers:", {
+      "Authorization": `Bearer ${tamaraApiKey.substring(0, 10)}...`,
+      "Content-Type": "application/json",
+    });
 
     const tamaraResponse = await fetch("https://api-sandbox.tamara.co/checkout", {
       method: "POST",
@@ -143,7 +148,15 @@ serve(async (req) => {
       body: JSON.stringify(tamaraPayload),
     });
 
-    const tamaraResult = await tamaraResponse.json();
+    let tamaraResult;
+    try {
+      tamaraResult = await tamaraResponse.json();
+    } catch (jsonError) {
+      console.error("Failed to parse Tamara response as JSON:", jsonError);
+      const responseText = await tamaraResponse.text();
+      console.error("Raw response:", responseText);
+      throw new Error(`Invalid JSON response from Tamara: ${responseText.substring(0, 200)}`);
+    }
     
     console.log("Tamara API response status:", tamaraResponse.status);
     console.log("Tamara API response headers:", Object.fromEntries(tamaraResponse.headers.entries()));
@@ -155,7 +168,17 @@ serve(async (req) => {
         statusText: tamaraResponse.statusText,
         body: tamaraResult
       });
-      throw new Error(`Tamara API Error (${tamaraResponse.status}): ${tamaraResult.message || JSON.stringify(tamaraResult)}`);
+      
+      // Handle specific error cases
+      if (tamaraResponse.status === 401) {
+        throw new Error("Tamara API: Invalid API key or unauthorized access");
+      } else if (tamaraResponse.status === 400) {
+        throw new Error(`Tamara API: Bad request - ${tamaraResult.message || JSON.stringify(tamaraResult)}`);
+      } else if (tamaraResponse.status === 422) {
+        throw new Error(`Tamara API: Validation error - ${tamaraResult.message || JSON.stringify(tamaraResult)}`);
+      } else {
+        throw new Error(`Tamara API Error (${tamaraResponse.status}): ${tamaraResult.message || JSON.stringify(tamaraResult)}`);
+      }
     }
 
     // Store transaction in database
