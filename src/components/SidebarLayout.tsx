@@ -1,12 +1,34 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Menu } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
 }
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
+  const location = useLocation();
+  
+  const getPageTitle = (pathname: string) => {
+    const routes: Record<string, string> = {
+      '/': 'الرئيسية',
+      '/dashboard': 'لوحة التحكم',
+      '/about': 'من نحن',
+      '/vision': 'رؤيتنا',
+      '/story': 'قصتنا',
+      '/contact': 'تواصل معنا',
+      '/subsidiaries': 'شركاتنا',
+      '/ready-projects': 'منتجاتنا',
+      '/current-offers': 'العروض الحالية',
+      '/professional-services': 'خدماتنا الاحترافية',
+      '/content-creation': 'صناعة المحتوى',
+      '/design-solutions': 'حلول التصميم',
+      '/payment-methods': 'طرق الدفع'
+    };
+    return routes[pathname] || 'شركة علي صالح الشهري القابضة';
+  };
+
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-gray-900">
@@ -20,7 +42,7 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
             </SidebarTrigger>
             
             <div className="flex-1 flex items-center justify-center">
-              <h1 className="text-xl font-bold text-white">لوحة التحكم</h1>
+              <h1 className="text-xl font-bold text-white">{getPageTitle(location.pathname)}</h1>
             </div>
             
             <div className="w-10"></div> {/* Spacer for centering */}
