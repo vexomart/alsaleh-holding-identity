@@ -100,6 +100,27 @@ export default function Auth() {
       setError(error.message);
     } else {
       setError(null);
+      
+      // Send custom welcome email via Edge Function
+      if (data.user) {
+        try {
+          await supabase.functions.invoke('auth-emails', {
+            body: {
+              to: email,
+              subject: 'مرحباً بك في شركة آل الشهري القابضة',
+              type: 'welcome',
+              data: {
+                name: `${firstName} ${lastName}`,
+                email: email,
+                dashboardUrl: `${window.location.origin}/dashboard`
+              }
+            }
+          });
+        } catch (emailError) {
+          console.error('Error sending welcome email:', emailError);
+        }
+      }
+      
       alert('تم إرسال رقم التحقق إلى بريدك الإلكتروني. يرجى التحقق من بريدك الإلكتروني وإدخال الرقم.');
     }
 
@@ -122,6 +143,20 @@ export default function Auth() {
     if (error) {
       setError(error.message);
     } else {
+      // Send custom password reset email via Edge Function
+      try {
+        await supabase.functions.invoke('auth-emails', {
+          body: {
+            to: email,
+            subject: 'إعادة تعيين كلمة المرور - شركة آل الشهري القابضة',
+            type: 'password_reset',
+            redirectUrl: `${window.location.origin}/auth?type=recovery`
+          }
+        });
+      } catch (emailError) {
+        console.error('Error sending password reset email:', emailError);
+      }
+      
       setResetMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني');
     }
 
