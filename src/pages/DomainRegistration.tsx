@@ -80,15 +80,29 @@ const DomainRegistration = () => {
       return;
     }
 
+    // Validate domain name format
+    const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$|^[a-zA-Z0-9]$/;
+    if (!domainRegex.test(searchDomain)) {
+      toast.error("يرجى إدخال اسم نطاق صحيح (أحرف وأرقام فقط)");
+      return;
+    }
+
     setIsSearching(true);
+    setSearchResults([]); // Clear previous results
     
     try {
       const results: DomainResult[] = [];
+      const errors: string[] = [];
       
-      // Check each extension
-      for (const priceData of domainPrices) {
+      console.log(`Starting domain search for: ${searchDomain}`);
+      console.log(`Will check ${domainPrices.length} extensions:`, domainPrices.map(p => p.extension));
+      
+      // Check each extension sequentially to avoid rate limiting
+      for (let i = 0; i < domainPrices.length; i++) {
+        const priceData = domainPrices[i];
+        
         try {
-          console.log(`Checking domain: ${searchDomain}${priceData.extension}`);
+          console.log(`[${i + 1}/${domainPrices.length}] Checking: ${searchDomain}${priceData.extension}`);
           
           const response = await fetch(`https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/domain-management`, {
             method: 'POST',
@@ -103,17 +117,26 @@ const DomainRegistration = () => {
           });
 
           if (!response.ok) {
-            console.error(`Failed to check ${priceData.extension}:`, response.status);
+            console.error(`HTTP error for ${priceData.extension}: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            errors.push(`${priceData.extension}: HTTP ${response.status}`);
             continue;
           }
 
           const data = await response.json();
-          console.log(`Result for ${priceData.extension}:`, data);
           
           if (data.error) {
-            console.error(`Error checking ${priceData.extension}:`, data.error);
+            console.error(`API error for ${priceData.extension}:`, data.error);
+            errors.push(`${priceData.extension}: ${data.error}`);
             continue;
           }
+
+          console.log(`✓ ${priceData.extension} result:`, {
+            domain: data.domain,
+            available: data.available,
+            price: data.price
+          });
 
           results.push({
             domain: data.domain,
@@ -121,27 +144,40 @@ const DomainRegistration = () => {
             price: data.price,
             extension: priceData.extension
           });
+
+          // Small delay to prevent rate limiting
+          if (i < domainPrices.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+          
         } catch (extensionError) {
-          console.error(`Error checking ${priceData.extension}:`, extensionError);
-          // Add with unknown status if individual check fails
-          results.push({
-            domain: searchDomain + priceData.extension,
-            available: false, // Safe default
-            price: priceData.price,
-            extension: priceData.extension
-          });
+          console.error(`Exception for ${priceData.extension}:`, extensionError);
+          errors.push(`${priceData.extension}: ${extensionError.message}`);
         }
       }
       
-      console.log('All results:', results);
-      setSearchResults(results);
+      console.log(`Search completed. Found ${results.length} results, ${errors.length} errors`);
+      
+      if (errors.length > 0) {
+        console.warn('Errors encountered:', errors);
+      }
       
       if (results.length === 0) {
-        toast.error("فشل في فحص النطاقات. يرجى المحاولة مرة أخرى.");
+        toast.error("فشل في فحص جميع النطاقات. يرجى المحاولة مرة أخرى.");
+        console.error('No results returned. All checks failed.');
+      } else {
+        const availableCount = results.filter(r => r.available).length;
+        console.log(`Found ${availableCount} available domains out of ${results.length} checked`);
+        setSearchResults(results);
+        
+        if (availableCount === 0) {
+          toast.info("جميع النطاقات المفحوصة غير متاحة. جرب اسم نطاق آخر.");
+        }
       }
+      
     } catch (error) {
-      console.error('Error searching domains:', error);
-      toast.error("حدث خطأ أثناء البحث");
+      console.error('Critical error in domain search:', error);
+      toast.error("حدث خطأ في البحث. يرجى المحاولة مرة أخرى.");
     } finally {
       setIsSearching(false);
     }
