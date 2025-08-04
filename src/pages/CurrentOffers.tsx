@@ -106,9 +106,10 @@ const currentOffers = [
   }
 ];
 
-const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNode }) => {
+const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<'tap' | 'paylink'>('tap');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -137,7 +138,10 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
     try {
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
       
-      const { data, error } = await supabase.functions.invoke('tap-payment', {
+      // Choose payment function based on selected gateway
+      const paymentFunction = selectedPaymentGateway === 'tap' ? 'tap-payment' : 'paylink-payment';
+      
+      const { data, error } = await supabase.functions.invoke(paymentFunction, {
         body: {
           amount: amount,
           currency: 'SAR',
@@ -161,7 +165,7 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
         
         toast({
           title: "تم إنشاء رابط الدفع بنجاح",
-          description: "سيتم فتح صفحة الدفع الآن",
+          description: `سيتم فتح صفحة الدفع الآن عبر ${selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'}`,
         });
         
         // Close dialog first
@@ -194,11 +198,51 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
       <DialogContent className="sm:max-w-md" dir="rtl">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
-            الدفع عبر تاب 💳
+            الدفع الآمن 💳
           </DialogTitle>
         </DialogHeader>
-        
-        <div className="space-y-4">
+        <div className="space-y-6">
+          {/* Payment Gateway Selection */}
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-foreground">
+              اختر بوابة الدفع
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setSelectedPaymentGateway('tap')}
+                className={`p-4 border-2 rounded-lg transition-all ${
+                  selectedPaymentGateway === 'tap'
+                    ? 'border-primary bg-primary/10'
+                    : 'border-border hover:border-primary/50'
+                }`}
+              >
+                <div className="text-center">
+                  <div className="font-semibold text-sm">Tap</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    دفع آمن وسريع
+                  </div>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedPaymentGateway('paylink')}
+                className={`p-4 border-2 rounded-lg transition-all ${
+                  selectedPaymentGateway === 'paylink'
+                    ? 'border-primary bg-primary/10'
+                    : 'border-border hover:border-primary/50'
+                }`}
+              >
+                <div className="text-center">
+                  <div className="font-semibold text-sm">Paylink</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    دفع محلي سعودي
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+
           {/* Offer Summary */}
           <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 p-4 rounded-lg">
             <h3 className="font-bold text-lg mb-2">{offer.title}</h3>
@@ -266,7 +310,7 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
             ) : (
               <>
                 <CreditCard className="w-5 h-5 ml-2" />
-                ادفع {offer.currentPrice} ر.س
+                ادفع عبر {selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'} - {offer.currentPrice} ر.س
               </>
             )}
           </Button>
@@ -443,8 +487,8 @@ const CurrentOffers = () => {
 
                     {/* Enhanced CTA */}
                     <div className="pt-6 space-y-4">
-                      {/* Tap Payment Button */}
-                      <TapPaymentDialog
+                      {/* Payment Button */}
+                      <PaymentDialog
                         offer={offer}
                         trigger={
                           <Button 

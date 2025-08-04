@@ -201,6 +201,7 @@ export type Database = {
           customer_phone: string | null
           id: string
           offer_title: string
+          paylink_transaction_no: string | null
           payment_method: string | null
           status: string
           tap_charge_id: string | null
@@ -217,6 +218,7 @@ export type Database = {
           customer_phone?: string | null
           id?: string
           offer_title: string
+          paylink_transaction_no?: string | null
           payment_method?: string | null
           status?: string
           tap_charge_id?: string | null
@@ -233,6 +235,7 @@ export type Database = {
           customer_phone?: string | null
           id?: string
           offer_title?: string
+          paylink_transaction_no?: string | null
           payment_method?: string | null
           status?: string
           tap_charge_id?: string | null
