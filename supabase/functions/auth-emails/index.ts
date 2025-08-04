@@ -11,11 +11,8 @@ const corsHeaders = {
 interface EmailRequest {
   to: string;
   subject: string;
-  type: 'welcome' | 'admin_notification' | 'password_reset' | 'otp_verification' | 'login_notification';
+  type: 'welcome' | 'admin_notification' | 'password_reset';
   data?: any;
-  otp?: string;
-  token?: string;
-  redirectUrl?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -24,290 +21,68 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { to, subject, type, data, otp, token, redirectUrl }: EmailRequest = await req.json();
+    const { to, subject, type, data }: EmailRequest = await req.json();
 
     let html = '';
     
     switch (type) {
       case 'welcome':
         html = `
-          <!DOCTYPE html>
-          <html dir="rtl" lang="ar">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>مرحباً بك</title>
-          </head>
-          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc;">
-            <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-              
-              <!-- Header -->
-              <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%); padding: 40px 30px; text-align: center; position: relative;">
-                <div style="background: rgba(255,255,255,0.1); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-                  <div style="background: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <span style="color: #1e40af; font-size: 24px; font-weight: bold;">✓</span>
-                  </div>
-                </div>
-                <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700;">مرحباً بك في النظام!</h1>
-                <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">شركة علي صالح الشهري القابضة</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; text-align: center;">
+              <h1 style="color: white; margin: 0;">مرحباً بك في شركة الصالح القابضة</h1>
+            </div>
+            <div style="padding: 40px; background: #f8f9fa;">
+              <h2 style="color: #333;">أهلاً وسهلاً ${data?.name || ''}!</h2>
+              <p style="color: #666; line-height: 1.6;">
+                نشكرك لانضمامك إلى منصة شركة الصالح القابضة. يمكنك الآن الوصول إلى جميع خدماتنا وحلولنا المتطورة.
+              </p>
+              <div style="margin: 30px 0; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h3 style="margin: 0 0 10px 0; color: #333;">ما يمكنك فعله الآن:</h3>
+                <ul style="color: #666; margin: 10px 0;">
+                  <li>تصفح خدماتنا المتنوعة</li>
+                  <li>طلب عروض أسعار مخصصة</li>
+                  <li>التواصل مع فريق الدعم</li>
+                  <li>متابعة آخر الأخبار والتحديثات</li>
+                </ul>
               </div>
-
-              <!-- Content -->
-              <div style="padding: 40px 30px;">
-                <h2 style="color: #1e293b; margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">أهلاً وسهلاً ${data?.name || 'عزيزي العميل'}!</h2>
-                
-                <p style="color: #64748b; line-height: 1.8; font-size: 16px; margin: 0 0 30px 0;">
-                  تم إنشاء حسابك بنجاح في نظام خدمة العملاء. يمكنك الآن الاستفادة من جميع خدماتنا المتميزة والوصول إلى لوحة التحكم الخاصة بك.
-                </p>
-
-                <!-- Features -->
-                <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border-right: 4px solid #3b82f6;">
-                  <h3 style="margin: 0 0 15px 0; color: #1e293b; font-size: 18px; font-weight: 600;">ميزات حسابك الجديد:</h3>
-                  <ul style="color: #64748b; margin: 0; padding-right: 20px; line-height: 1.8;">
-                    <li>إدارة طلباتك ومتابعة حالتها</li>
-                    <li>تواصل مباشر مع فريق الدعم</li>
-                    <li>تقارير مفصلة عن خدماتك</li>
-                    <li>إشعارات فورية للتحديثات</li>
-                  </ul>
-                </div>
-
-                <!-- CTA Button -->
-                <div style="text-align: center; margin: 35px 0;">
-                  <a href="${data?.dashboardUrl || redirectUrl || '#'}" style="
-                    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-                    color: white;
-                    padding: 16px 32px;
-                    text-decoration: none;
-                    border-radius: 8px;
-                    display: inline-block;
-                    font-weight: 600;
-                    font-size: 16px;
-                    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-                    transition: all 0.3s ease;
-                  ">
-                    دخول إلى لوحة التحكم ←
-                  </a>
-                </div>
-
-                <!-- Help Section -->
-                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border-radius: 12px; padding: 20px; margin: 30px 0; text-align: center;">
-                  <p style="color: #92400e; margin: 0; font-size: 14px;">
-                    هل تحتاج للمساعدة؟ فريق الدعم متاح على مدار الساعة
-                  </p>
-                </div>
-              </div>
-
-              <!-- Footer -->
-              <div style="background: #1e293b; padding: 25px 30px; text-align: center;">
-                <p style="color: #94a3b8; margin: 0; font-size: 14px;">
-                  © 2024 شركة علي صالح الشهري القابضة - جميع الحقوق محفوظة
-                </p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${data?.dashboardUrl || '#'}" style="background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                  دخول إلى لوحة التحكم
+                </a>
               </div>
             </div>
-          </body>
-          </html>
-        `;
-        break;
-
-      case 'otp_verification':
-        html = `
-          <!DOCTYPE html>
-          <html dir="rtl" lang="ar">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>رمز التحقق</title>
-          </head>
-          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc;">
-            <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-              
-              <!-- Header -->
-              <div style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%); padding: 40px 30px; text-align: center;">
-                <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                  <span style="color: white; font-size: 36px;">🔐</span>
-                </div>
-                <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700;">رمز التحقق</h1>
-                <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0;">تأكيد إنشاء حسابك</p>
-              </div>
-
-              <!-- Content -->
-              <div style="padding: 40px 30px; text-align: center;">
-                <p style="color: #64748b; font-size: 16px; margin: 0 0 30px 0; line-height: 1.6;">
-                  استخدم الرمز التالي لتأكيد إنشاء حسابك في نظام خدمة العملاء
-                </p>
-
-                <!-- OTP Code -->
-                <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 16px; padding: 30px; margin: 30px 0; border: 2px dashed #7c3aed;">
-                  <p style="color: #475569; margin: 0 0 15px 0; font-size: 14px; font-weight: 500;">رمز التحقق الخاص بك:</p>
-                  <div style="font-size: 32px; font-weight: 700; color: #7c3aed; letter-spacing: 8px; font-family: 'Courier New', monospace;">
-                    ${otp || '123456'}
-                  </div>
-                  <p style="color: #64748b; margin: 15px 0 0 0; font-size: 12px;">
-                    صالح لمدة 10 دقائق فقط
-                  </p>
-                </div>
-
-                <!-- Warning -->
-                <div style="background: #fef2f2; border-radius: 12px; padding: 20px; margin: 30px 0; border-right: 4px solid #ef4444;">
-                  <p style="color: #dc2626; margin: 0; font-size: 14px; font-weight: 500;">
-                    ⚠️ لا تشارك هذا الرمز مع أي شخص آخر
-                  </p>
-                </div>
-              </div>
-
-              <!-- Footer -->
-              <div style="background: #1e293b; padding: 25px 30px; text-align: center;">
-                <p style="color: #94a3b8; margin: 0; font-size: 14px;">
-                  © 2024 شركة علي صالح الشهري القابضة
-                </p>
-              </div>
+            <div style="background: #333; padding: 20px; text-align: center;">
+              <p style="color: #999; margin: 0;">شركة الصالح القابضة © 2024</p>
             </div>
-          </body>
-          </html>
-        `;
-        break;
-
-      case 'password_reset':
-        html = `
-          <!DOCTYPE html>
-          <html dir="rtl" lang="ar">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>إعادة تعيين كلمة المرور</title>
-          </head>
-          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc;">
-            <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-              
-              <!-- Header -->
-              <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%); padding: 40px 30px; text-align: center;">
-                <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                  <span style="color: white; font-size: 36px;">🔑</span>
-                </div>
-                <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700;">إعادة تعيين كلمة المرور</h1>
-              </div>
-
-              <!-- Content -->
-              <div style="padding: 40px 30px;">
-                <p style="color: #64748b; font-size: 16px; margin: 0 0 30px 0; line-height: 1.6;">
-                  تلقينا طلباً لإعادة تعيين كلمة المرور لحسابك. اضغط على الزر أدناه لإنشاء كلمة مرور جديدة.
-                </p>
-
-                <!-- CTA Button -->
-                <div style="text-align: center; margin: 35px 0;">
-                  <a href="${redirectUrl || '#'}" style="
-                    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-                    color: white;
-                    padding: 16px 32px;
-                    text-decoration: none;
-                    border-radius: 8px;
-                    display: inline-block;
-                    font-weight: 600;
-                    font-size: 16px;
-                    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
-                  ">
-                    إعادة تعيين كلمة المرور ←
-                  </a>
-                </div>
-
-                <!-- Security Note -->
-                <div style="background: #fef3c7; border-radius: 12px; padding: 20px; margin: 30px 0; border-right: 4px solid #f59e0b;">
-                  <p style="color: #92400e; margin: 0; font-size: 14px;">
-                    🛡️ إذا لم تطلب إعادة تعيين كلمة المرور، يرجى تجاهل هذا الإيميل. حسابك آمن.
-                  </p>
-                </div>
-
-                <!-- Expiry -->
-                <p style="color: #94a3b8; font-size: 12px; text-align: center; margin: 20px 0 0 0;">
-                  هذا الرابط صالح لمدة ساعة واحدة فقط
-                </p>
-              </div>
-
-              <!-- Footer -->
-              <div style="background: #1e293b; padding: 25px 30px; text-align: center;">
-                <p style="color: #94a3b8; margin: 0; font-size: 14px;">
-                  © 2024 شركة علي صالح الشهري القابضة
-                </p>
-              </div>
-            </div>
-          </body>
-          </html>
+          </div>
         `;
         break;
         
       case 'admin_notification':
         html = `
-          <!DOCTYPE html>
-          <html dir="rtl" lang="ar">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>إشعار إداري</title>
-          </head>
-          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc;">
-            <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-              
-              <!-- Header -->
-              <div style="background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%); padding: 30px; text-align: center;">
-                <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">📊 إشعار إداري جديد</h1>
-              </div>
-
-              <!-- Content -->
-              <div style="padding: 30px;">
-                <h2 style="color: #1e293b; margin: 0 0 20px 0; font-size: 20px;">مستخدم جديد انضم للنظام</h2>
-                
-                <!-- User Info Card -->
-                <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin: 20px 0; border-right: 4px solid #10b981;">
-                  <div style="display: grid; gap: 10px;">
-                    <p style="margin: 0;"><strong style="color: #374151;">الاسم:</strong> <span style="color: #6b7280;">${data?.name || 'غير محدد'}</span></p>
-                    <p style="margin: 0;"><strong style="color: #374151;">البريد الإلكتروني:</strong> <span style="color: #6b7280;">${data?.email || 'غير محدد'}</span></p>
-                    <p style="margin: 0;"><strong style="color: #374151;">تاريخ التسجيل:</strong> <span style="color: #6b7280;">${new Date().toLocaleDateString('ar-SA')}</span></p>
-                    <p style="margin: 0;"><strong style="color: #374151;">الوقت:</strong> <span style="color: #6b7280;">${new Date().toLocaleTimeString('ar-SA')}</span></p>
-                  </div>
-                </div>
-
-                <!-- Action Required -->
-                <div style="background: #fffbeb; border-radius: 12px; padding: 20px; margin: 20px 0; border-right: 4px solid #f59e0b;">
-                  <p style="color: #92400e; margin: 0; font-weight: 500;">
-                    💡 يرجى مراجعة الحساب الجديد وتحديد الصلاحيات المناسبة
-                  </p>
-                </div>
-              </div>
-
-              <!-- Footer -->
-              <div style="background: #1e293b; padding: 20px; text-align: center;">
-                <p style="color: #94a3b8; margin: 0; font-size: 14px;">
-                  نظام خدمة العملاء - شركة علي صالح الشهري القابضة
-                </p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background: #dc3545; padding: 20px; text-align: center;">
+              <h1 style="color: white; margin: 0;">إشعار إداري جديد</h1>
+            </div>
+            <div style="padding: 30px; background: #f8f9fa;">
+              <h2 style="color: #333;">مستخدم جديد سجل في المنصة</h2>
+              <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p><strong>الاسم:</strong> ${data?.name || 'غير محدد'}</p>
+                <p><strong>البريد الإلكتروني:</strong> ${data?.email || 'غير محدد'}</p>
+                <p><strong>تاريخ التسجيل:</strong> ${new Date().toLocaleDateString('ar-SA')}</p>
               </div>
             </div>
-          </body>
-          </html>
+          </div>
         `;
         break;
         
       default:
         html = `
-          <!DOCTYPE html>
-          <html dir="rtl" lang="ar">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>${subject}</title>
-          </head>
-          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc;">
-            <div style="max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-              <h2 style="color: #1e293b; margin: 0 0 20px 0;">${subject}</h2>
-              <p style="color: #64748b; line-height: 1.6;">رسالة من شركة علي صالح الشهري القابضة</p>
-              
-              <div style="background: #1e293b; padding: 20px; text-align: center; margin-top: 30px; border-radius: 8px;">
-                <p style="color: #94a3b8; margin: 0; font-size: 14px;">
-                  © 2024 شركة علي صالح الشهري القابضة
-                </p>
-              </div>
-            </div>
-          </body>
-          </html>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px;">
+            <h2 style="color: #333;">${subject}</h2>
+            <p style="color: #666;">رسالة من شركة الصالح القابضة</p>
+          </div>
         `;
     }
 
