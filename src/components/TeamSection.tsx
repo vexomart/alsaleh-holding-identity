@@ -1,34 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { 
-  Crown, 
-  Users, 
-  Code, 
-  TrendingUp, 
-  Building2, 
-  Shield, 
-  Star, 
-  Award, 
-  ChevronRight, 
-  Sparkles, 
-  Brain, 
-  Mail,
-  MapPin,
-  Calendar,
-  Briefcase,
-  Target,
-  Linkedin,
-  ExternalLink,
-  GraduationCap,
-  Zap,
-  ArrowUpRight
-} from "lucide-react";
-import { useState } from "react";
+import { Crown, Users, Code, TrendingUp, Building2, Shield, Star, Award, ChevronRight, Sparkles, Brain, Heart, Zap } from "lucide-react";
 
 const TeamSection = () => {
-  const [selectedMember, setSelectedMember] = useState<number | null>(null);
-
   const teamMembers = [
     {
       name: "أ/علي صالح الشهري",
@@ -37,17 +11,11 @@ const TeamSection = () => {
       positionEn: "Chairman & Founder",
       department: "القيادة الاستراتيجية",
       departmentEn: "Strategic Leadership",
-      specialties: ["الريادة الاستراتيجية", "الإبداع والابتكار", "التخطيط طويل المدى"],
-      achievements: "قائد أكثر من 100 مشروع عالمي",
-      experience: "15+ سنة",
-      education: "ماجستير إدارة الأعمال - هارفارد",
-      certifications: ["PMP", "Six Sigma Black Belt", "Certified CEO"],
+      specialties: ["الريادة", "الإبداع", "الاستراتيجية"],
+      achievements: "قائد 100+ مشروع عالمي",
       color: "from-purple-600 to-blue-600",
       icon: Crown,
-      bgEffect: "from-purple-500/10 to-blue-500/10",
-      location: "الرياض، المملكة العربية السعودية",
-      joinDate: "2018",
-      bio: "رائد أعمال متميز بخبرة واسعة في قيادة المؤسسات التقنية والتحول الرقمي على المستوى العالمي."
+      bgEffect: "from-purple-500/10 to-blue-500/10"
     },
     {
       name: "خالد بن محمد الحارثي",
@@ -56,393 +24,239 @@ const TeamSection = () => {
       positionEn: "Chief Operating Officer",
       department: "العمليات والتطوير",
       departmentEn: "Operations & Development",
-      specialties: ["إدارة العمليات المتقدمة", "التحسين المستمر", "الكفاءة التشغيلية"],
-      achievements: "تحقيق زيادة في الكفاءة بنسبة 300%",
-      experience: "12+ سنة",
-      education: "ماجستير الهندسة الصناعية",
-      certifications: ["Lean Six Sigma", "Operations Excellence", "Change Management"],
+      specialties: ["إدارة العمليات", "التحسين", "الكفاءة"],
+      achievements: "زيادة الكفاءة بنسبة 300%",
       color: "from-emerald-600 to-teal-600",
       icon: Building2,
-      bgEffect: "from-emerald-500/10 to-teal-500/10",
-      location: "الرياض، المملكة العربية السعودية",
-      joinDate: "2019",
-      bio: "خبير متميز في تطوير العمليات وتحقيق الكفاءة التشغيلية القصوى للمؤسسات."
+      bgEffect: "from-emerald-500/10 to-teal-500/10"
     },
     {
       name: "محمد عبدالله الأحمري",
       nameEn: "Mohammed Abdullah Al-Ahmari",
       position: "رئيس قسم الموارد البشرية",
-      positionEn: "Chief Human Resources Officer",
-      department: "تطوير المواهب والقيادة",
-      departmentEn: "Talent Development & Leadership",
-      specialties: ["تطوير المواهب", "التدريب التنفيذي", "الثقافة المؤسسية"],
-      achievements: "تطوير وتدريب أكثر من 850 موظف",
-      experience: "10+ سنة",
-      education: "ماجستير علم النفس التنظيمي",
-      certifications: ["SHRM-CP", "Certified Leadership Coach", "Talent Management"],
+      positionEn: "Head of Human Resources",
+      department: "تطوير المواهب",
+      departmentEn: "Talent Development",
+      specialties: ["تطوير المواهب", "التدريب", "الثقافة المؤسسية"],
+      achievements: "تطوير +850 موظف",
       color: "from-blue-600 to-cyan-600",
       icon: Users,
-      bgEffect: "from-blue-500/10 to-cyan-500/10",
-      location: "الرياض، المملكة العربية السعودية",
-      joinDate: "2019",
-      bio: "متخصص في بناء وتطوير المواهب البشرية وخلق بيئات عمل محفزة للإبداع والابتكار."
+      bgEffect: "from-blue-500/10 to-cyan-500/10"
     },
     {
       name: "محمود عبد الخالق السعيد",
       nameEn: "Mahmoud Abdul Khaliq Al-Saeed",
       position: "رئيس قسم التقنية والابتكار",
-      positionEn: "Chief Technology & Innovation Officer",
+      positionEn: "Chief Technology Officer",
       department: "التقنية والذكاء الاصطناعي",
-      departmentEn: "Technology & Artificial Intelligence",
-      specialties: ["الذكاء الاصطناعي", "هندسة البرمجيات", "الابتكار التقني"],
-      achievements: "تطوير أكثر من 50 منتج تقني مبتكر",
-      experience: "14+ سنة",
-      education: "دكتوراه علوم الحاسوب - MIT",
-      certifications: ["AWS Solutions Architect", "Google Cloud Professional", "Microsoft Azure Expert"],
+      departmentEn: "Technology & AI",
+      specialties: ["الذكاء الاصطناعي", "البرمجة المتقدمة", "الابتكار"],
+      achievements: "تطوير 50+ منتج تقني",
       color: "from-indigo-600 to-purple-600",
       icon: Code,
-      bgEffect: "from-indigo-500/10 to-purple-500/10",
-      location: "الرياض، المملكة العربية السعودية",
-      joinDate: "2018",
-      bio: "عالم حاسوب متميز متخصص في تطوير حلول الذكاء الاصطناعي والتقنيات المتقدمة."
+      bgEffect: "from-indigo-500/10 to-purple-500/10"
     },
     {
       name: "عبدالرحمن فهد الدوسري",
       nameEn: "Abdulrahman Fahad Al-Dosari",
       position: "مدير الاستثمارات والنمو",
-      positionEn: "Chief Investment & Growth Officer",
-      department: "الاستثمار والتطوير المالي",
-      departmentEn: "Investment & Financial Development",
-      specialties: ["الاستثمار الاستراتيجي", "التحليل المالي المتقدم", "استراتيجيات النمو"],
-      achievements: "إدارة محفظة استثمارية تزيد عن 500 مليون",
-      experience: "13+ سنة",
-      education: "ماجستير المالية - وارتون",
-      certifications: ["CFA", "FRM", "Investment Banking Certified"],
+      positionEn: "Investment & Growth Director",
+      department: "الاستثمار والتطوير",
+      departmentEn: "Investment & Development",
+      specialties: ["الاستثمار الذكي", "التحليل المالي", "النمو"],
+      achievements: "إدارة استثمارات +500 مليون",
       color: "from-orange-600 to-red-600",
       icon: TrendingUp,
-      bgEffect: "from-orange-500/10 to-red-500/10",
-      location: "الرياض، المملكة العربية السعودية",
-      joinDate: "2020",
-      bio: "محلل مالي ومستثمر خبير في تطوير استراتيجيات النمو والاستثمار طويل المدى."
+      bgEffect: "from-orange-500/10 to-red-500/10"
     },
     {
       name: "سعود فهد الشمري",
       nameEn: "Saud Fahad Al-Shamri",
       position: "مدير الجودة والامتثال",
-      positionEn: "Chief Quality & Compliance Officer",
-      department: "الجودة والحوكمة المؤسسية",
-      departmentEn: "Quality & Corporate Governance",
-      specialties: ["إدارة الجودة الشاملة", "الامتثال التنظيمي", "إدارة المخاطر"],
-      achievements: "تحقيق معدل جودة 99.8% عبر جميع المشاريع",
-      experience: "11+ سنة",
-      education: "ماجستير إدارة الجودة",
-      certifications: ["ISO 9001 Lead Auditor", "Risk Management Professional", "Compliance Officer"],
+      positionEn: "Quality & Compliance Director",
+      department: "الجودة والأمان",
+      departmentEn: "Quality & Security",
+      specialties: ["إدارة الجودة", "الامتثال", "الأمان"],
+      achievements: "تحقيق 99.8% معدل الجودة",
       color: "from-green-600 to-emerald-600",
       icon: Shield,
-      bgEffect: "from-green-500/10 to-emerald-500/10",
-      location: "الرياض، المملكة العربية السعودية",
-      joinDate: "2020",
-      bio: "خبير في أنظمة الجودة والحوكمة مع التركيز على الامتثال للمعايير الدولية."
+      bgEffect: "from-green-500/10 to-emerald-500/10"
     }
   ];
 
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-gray-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Modern Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/20 via-transparent to-purple-100/20 dark:from-blue-900/20 dark:to-purple-900/20"></div>
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
-      </div>
+    <section className="py-24 bg-gradient-subtle relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      <div className="absolute top-1/4 right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-secondary/10 rounded-full blur-3xl animate-float-delayed" />
       
       <div className="container mx-auto px-6 relative z-10">
-        {/* Professional Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-white/80 dark:bg-slate-800/80 rounded-full backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 shadow-lg">
-            <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">فريق القيادة التنفيذية</span>
-            <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
-              6 خبراء
-            </Badge>
+        <div className="text-center mb-20 animate-fade-in">
+          <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
+            <Users className="w-6 h-6 text-primary animate-pulse" />
+            <span className="text-sm font-medium text-primary">فريق الخبراء • قادة التميز</span>
           </div>
-          
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-            فريق <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">القيادة</span>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
+            فريق <span className="text-gradient-primary">النخبة</span>
           </h2>
-          
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
-            نخبة من القادة المتميزين الذين يوجهون رؤيتنا الاستراتيجية ويقودون التحول الرقمي
-            <br />
-            <span className="text-base text-gray-500 dark:text-gray-400">بخبرة جماعية تزيد عن 85 عاماً في القطاعات التقنية والمالية</span>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            نخبة من أفضل الخبراء والقادة الذين يقودون رؤيتنا نحو مستقبل التقنية والابتكار العالمي
           </p>
         </div>
 
-        {/* Executive Team Grid */}
-        <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-20">
+        <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
           {teamMembers.map((member, index) => {
             const IconComponent = member.icon;
-            const isSelected = selectedMember === index;
             
             return (
               <Card 
                 key={index} 
-                className={`group relative overflow-hidden bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 hover:border-blue-300/50 dark:hover:border-blue-600/50 transition-all duration-500 cursor-pointer hover:shadow-xl hover:shadow-blue-500/10 ${
-                  isSelected ? 'ring-2 ring-blue-500 scale-105' : 'hover:scale-102'
-                }`}
-                onClick={() => setSelectedMember(isSelected ? null : index)}
+                className="group premium-card hover:shadow-glow transition-all duration-700 border-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl overflow-hidden animate-fade-in hover:transform hover:scale-105 hover:-translate-y-2"
+                style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Premium background gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                
-                <CardContent className="p-8 relative z-10">
-                  {/* Professional Header */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-16 h-16 bg-gradient-to-br ${member.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                        <IconComponent className="w-8 h-8 text-white" />
-                      </div>
-                      
-                      <div className="flex flex-col">
-                        <Badge variant="outline" className="w-fit text-xs font-medium mb-2 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300">
-                          {member.department}
-                        </Badge>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-xs text-green-600 dark:text-green-400 font-medium">متاح</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
-                    >
-                      <Mail className="w-4 h-4" />
-                    </Button>
+                <CardContent className="p-8 relative h-full">
+                  {/* Background overlay with member color */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${member.bgEffect} opacity-0 group-hover:opacity-100 transition-all duration-700`} />
+                  
+                  {/* Floating particles effect */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute w-2 h-2 bg-primary/20 rounded-full animate-float top-4 right-4" />
+                    <div className="absolute w-1 h-1 bg-secondary/30 rounded-full animate-float-delayed top-8 right-8" />
+                    <div className="absolute w-1.5 h-1.5 bg-primary/15 rounded-full animate-float bottom-8 left-6" />
                   </div>
                   
-                  {/* Executive Information */}
-                  <div className="space-y-4 mb-6">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                        {member.name}
-                      </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        {member.nameEn}
-                      </p>
-                    </div>
-                    
-                    <div className="bg-gray-50 dark:bg-slate-700/50 rounded-lg p-4 border-l-4 border-blue-500">
-                      <p className="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                        {member.position}
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {member.positionEn}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Professional Details */}
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-center gap-3 text-sm">
-                      <GraduationCap className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                      <span className="text-gray-600 dark:text-gray-300">{member.education}</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 text-sm">
-                      <Briefcase className="w-4 h-4 text-green-600 dark:text-green-400" />
-                      <span className="text-gray-600 dark:text-gray-300">{member.experience} خبرة</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 text-sm">
-                      <Calendar className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                      <span className="text-gray-600 dark:text-gray-300">انضم في {member.joinDate}</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 text-sm">
-                      <MapPin className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-                      <span className="text-gray-600 dark:text-gray-300">{member.location}</span>
-                    </div>
-                  </div>
-
-                  {/* Key Achievement */}
-                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg p-4 mb-6 border border-yellow-200/50 dark:border-yellow-800/50">
-                    <div className="flex items-start gap-3">
-                      <Award className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
-                      <div>
-                        <div className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 mb-1">الإنجاز الرئيسي</div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                          {member.achievements}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Specialties */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                      <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                      التخصصات الرئيسية
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {member.specialties.map((specialty, specialtyIndex) => (
-                        <Badge 
-                          key={specialtyIndex} 
-                          variant="secondary"
-                          className="text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-                        >
-                          {specialty}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Expand Button */}
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="w-full group-hover:bg-blue-50 dark:group-hover:bg-blue-900/50 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedMember(isSelected ? null : index);
-                    }}
-                  >
-                    {isSelected ? 'إخفاء التفاصيل' : 'عرض التفاصيل'}
-                    <ChevronRight className={`w-4 h-4 mr-2 transition-transform ${isSelected ? 'rotate-90' : ''}`} />
-                  </Button>
-
-                  {/* Expanded Details */}
-                  {isSelected && (
-                    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700 space-y-4 animate-fade-in">
-                      <div>
-                        <h5 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">نبذة شخصية</h5>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                          {member.bio}
-                        </p>
+                  <div className="relative z-10 h-full flex flex-col">
+                    {/* Header with Enhanced Icon */}
+                    <div className="flex items-start justify-between mb-6">
+                      <div className={`relative w-24 h-24 bg-gradient-to-br ${member.color} rounded-3xl flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-700 shadow-2xl group-hover:shadow-glow`}>
+                        <div className="absolute inset-0 rounded-3xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <IconComponent className="w-12 h-12 text-white group-hover:animate-pulse relative z-10" />
+                        {/* Icon glow effect */}
+                        <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${member.color} opacity-0 group-hover:opacity-50 blur-xl transition-all duration-700`} />
                       </div>
                       
-                      <div>
-                        <h5 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">الشهادات المهنية</h5>
-                        <div className="flex flex-wrap gap-2">
-                          {member.certifications.map((cert, certIndex) => (
-                            <Badge 
-                              key={certIndex} 
-                              className={`text-xs bg-gradient-to-r ${member.color} text-white border-0`}
-                            >
-                              {cert}
-                            </Badge>
-                          ))}
+                      {/* Status indicator */}
+                      <div className="flex flex-col items-end">
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse mb-2" />
+                        <span className="text-xs text-green-400 font-medium">متاح</span>
+                      </div>
+                    </div>
+                    
+                    {/* Enhanced Member Info */}
+                    <div className="mb-6 flex-grow">
+                      <Badge variant="secondary" className="text-xs font-bold mb-4 bg-white/15 border-white/30 text-primary/90 px-3 py-1 rounded-full">
+                        {member.department}
+                      </Badge>
+                      
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-bold text-primary mb-1 group-hover:text-gradient-primary transition-all duration-500 group-hover:scale-105 transform-gpu">
+                          {member.name}
+                        </h3>
+                        <p className="text-sm text-secondary/80 font-medium mb-3 group-hover:text-secondary transition-colors duration-300">
+                          {member.nameEn}
+                        </p>
+                        <div className="border-l-4 border-gradient-primary pl-3 space-y-1">
+                          <p className="text-base font-bold text-primary/90 group-hover:text-primary transition-colors duration-300">
+                            {member.position}
+                          </p>
+                          <p className="text-sm text-muted-foreground group-hover:text-muted-foreground/80 transition-colors duration-300">
+                            {member.positionEn}
+                          </p>
                         </div>
                       </div>
-                      
-                      <div className="flex gap-2 pt-4">
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <Linkedin className="w-4 h-4 mr-2" />
-                          LinkedIn
-                        </Button>
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <Mail className="w-4 h-4 mr-2" />
-                          تواصل
-                        </Button>
+                    </div>
+
+                    {/* Enhanced Specialties */}
+                    <div className="mb-6">
+                      <h4 className="text-sm font-bold text-primary mb-3 flex items-center gap-2 group-hover:scale-105 transition-transform duration-300">
+                        <Brain className="w-4 h-4 animate-pulse" />
+                        <span>التخصصات المتقدمة</span>
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {member.specialties.map((specialty, specialtyIndex) => (
+                          <Badge 
+                            key={specialtyIndex} 
+                            className={`text-xs bg-gradient-to-r ${member.color} text-white border-0 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg font-medium px-3 py-1`}
+                            style={{ animationDelay: `${specialtyIndex * 0.1}s` }}
+                          >
+                            {specialty}
+                          </Badge>
+                        ))}
                       </div>
                     </div>
-                  )}
 
-                  {/* Progress indicator */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${member.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
+                    {/* Enhanced Achievement */}
+                    <div className="mb-4">
+                      <div className="flex items-start gap-3 text-sm bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-xl px-4 py-3 group-hover:from-white/15 group-hover:to-white/10 transition-all duration-500 shadow-inner">
+                        <Award className="w-5 h-5 text-yellow-500 mt-0.5 group-hover:rotate-12 transition-transform duration-300" />
+                        <div>
+                          <div className="text-xs text-primary/80 font-medium mb-1">الإنجاز البارز</div>
+                          <span className="text-muted-foreground group-hover:text-foreground transition-colors duration-300 leading-relaxed">
+                            {member.achievements}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Enhanced Bottom Accent with pulse effect */}
+                    <div className={`absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r ${member.color} transform scale-x-0 group-hover:scale-x-100 transition-all duration-500 rounded-b-xl`} />
+                    <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${member.color} opacity-50 animate-pulse`} />
+                  </div>
                 </CardContent>
               </Card>
             );
           })}
         </div>
 
-        {/* Executive Summary */}
-        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-3xl p-12 border border-gray-200/50 dark:border-slate-700/50 shadow-xl">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Sparkles className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                فريق القيادة التنفيذية
-              </h3>
-              <Zap className="w-8 h-8 text-purple-600 dark:text-purple-400" />
-            </div>
-            
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-              قيادة استراتيجية متميزة تجمع بين الخبرة العالمية والفهم العميق للسوق المحلي
-            </p>
+        {/* Team Stats Summary */}
+        <div className="text-center bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-3xl p-12 animate-fade-in border border-white/10 shadow-2xl">
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+            <h3 className="text-4xl font-bold text-primary">فريق النخبة المتميز</h3>
+            <Zap className="w-8 h-8 text-secondary animate-bounce" />
           </div>
           
-          {/* Leadership Statistics */}
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
-            <div className="text-center bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl p-6 border border-blue-200/50 dark:border-blue-800/50">
-              <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">85+</div>
-              <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">سنة خبرة جماعية</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Years Combined Experience</div>
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            <div className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 border border-white/10">
+              <div className="text-5xl font-bold text-gradient-primary mb-3 group-hover:scale-110 transition-transform duration-300">85+</div>
+              <div className="text-xl font-semibold text-primary mb-1">سنة خبرة مجمعة</div>
+              <div className="text-sm text-muted-foreground">Years of Combined Experience</div>
             </div>
             
-            <div className="text-center bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-2xl p-6 border border-green-200/50 dark:border-green-800/50">
-              <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">1,200+</div>
-              <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">مشروع بقيادتهم</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Projects Under Leadership</div>
+            <div className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 border border-white/10">
+              <div className="text-5xl font-bold text-gradient-primary mb-3 group-hover:scale-110 transition-transform duration-300">1,200+</div>
+              <div className="text-xl font-semibold text-primary mb-1">مشروع قادوه بنجاح</div>
+              <div className="text-sm text-muted-foreground">Successfully Led Projects</div>
             </div>
             
-            <div className="text-center bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-2xl p-6 border border-purple-200/50 dark:border-purple-800/50">
-              <div className="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">98.5%</div>
-              <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">معدل نجاح القيادة</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Leadership Success Rate</div>
-            </div>
-            
-            <div className="text-center bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-2xl p-6 border border-orange-200/50 dark:border-orange-800/50">
-              <div className="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">500M+</div>
-              <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">قيمة الاستثمارات</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Investment Portfolio Value</div>
+            <div className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 border border-white/10">
+              <div className="text-5xl font-bold text-gradient-primary mb-3 group-hover:scale-110 transition-transform duration-300">98.5%</div>
+              <div className="text-xl font-semibold text-primary mb-1">معدل نجاح المشاريع</div>
+              <div className="text-sm text-muted-foreground">Project Success Rate</div>
             </div>
           </div>
 
-          {/* Professional Recognition */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-xl p-6 text-center">
-              <Award className="w-8 h-8 mx-auto mb-3" />
-              <div className="font-bold mb-1">أفضل فريق قيادي</div>
-              <div className="text-sm opacity-90">الشرق الأوسط 2023</div>
-            </div>
-            
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl p-6 text-center">
-              <Star className="w-8 h-8 mx-auto mb-3" />
-              <div className="font-bold mb-1">قادة الابتكار التقني</div>
-              <div className="text-sm opacity-90">مجلة التكنولوجيا العربية</div>
-            </div>
-            
-            <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-xl p-6 text-center">
-              <Target className="w-8 h-8 mx-auto mb-3" />
-              <div className="font-bold mb-1">رواد التحول الرقمي</div>
-              <div className="text-sm opacity-90">رؤية 2030</div>
-            </div>
+          {/* Achievement Badges */}
+          <div className="flex flex-wrap justify-center gap-4 mb-6">
+            <Badge className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-4 py-2 text-sm font-bold hover:scale-105 transition-transform duration-200">
+              🏆 أفضل فريق في الشرق الأوسط
+            </Badge>
+            <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 text-sm font-bold hover:scale-105 transition-transform duration-200">
+              🌟 قادة الابتكار التقني
+            </Badge>
+            <Badge className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-4 py-2 text-sm font-bold hover:scale-105 transition-transform duration-200">
+              🚀 رواد التحول الرقمي
+            </Badge>
           </div>
 
-          {/* Call to Action */}
-          <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-8">
-            <h4 className="text-2xl font-bold mb-4">
-              قيادة استراتيجية • رؤية مستقبلية • تنفيذ متميز
-            </h4>
-            <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-              فريق متكامل من القادة المتميزين يعمل على تحقيق رؤية المملكة 2030 وقيادة التحول الرقمي
+          <div className="text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 border border-primary/20">
+            <p className="text-lg text-primary font-semibold mb-2">
+              فريق متعدد التخصصات يجمع بين الخبرة العالمية والفهم المحلي العميق
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                variant="outline" 
-                className="bg-white/10 border-white/30 text-white hover:bg-white hover:text-blue-600"
-              >
-                تواصل مع الفريق
-                <Mail className="w-4 h-4 mr-2" />
-              </Button>
-              <Button 
-                variant="outline" 
-                className="bg-white/10 border-white/30 text-white hover:bg-white hover:text-blue-600"
-              >
-                عرض السيرة التفصيلية
-                <ExternalLink className="w-4 h-4 mr-2" />
-              </Button>
+            <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span>نعمل معاً لتحقيق رؤية 2030 وتطوير المملكة رقمياً</span>
             </div>
           </div>
         </div>
