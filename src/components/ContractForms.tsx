@@ -96,11 +96,11 @@ export const ContractForms = () => {
   const submitForm = async (data: any, formType: string) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch('https://vhgjzmpozrxbifvgwfjw.supabase.co/functions/v1/contract-form', {
+      const response = await fetch('https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/contract-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoZ2p6bXBvenJ4Ymlmdmd3Zmp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUyNjI3OTksImV4cCI6MjA1MDgzODc5OX0.EtZmWpSSa0nOA1s6WpjZf1PZcxKHNIHIYB8xBpA6qPw'
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI'
         },
         body: JSON.stringify({ ...data, formType }),
       });
