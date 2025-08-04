@@ -54,7 +54,11 @@ import {
   Wrench,
   Layers,
   Network,
-  Cog
+  Cog,
+  MessageSquare,
+  Bot,
+  Phone,
+  Send
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
@@ -156,6 +160,19 @@ const SubsidiariesSection = () => {
       isMicroservices: true,
       inDevelopment: true,
       launchDate: "01-01-2026"
+    },
+    {
+      name: "ليجو شات",
+      nameEn: "Lego Chat", 
+      description: "منصة متطورة لواتساب بوت مع ردود تفاعلية ذكية وحلول آلية متقدمة للأعمال",
+      category: "واتساب بوت والردود التفاعلية",
+      established: "2025",
+      icon: MessageSquare,
+      color: "from-emerald-600 to-green-600",
+      website: "https://legochat.com",
+      isChatBot: true,
+      inDevelopment: true,
+      launchDate: "10-12-2025"
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -1074,6 +1091,125 @@ const SubsidiariesSection = () => {
     );
   };
 
+  const renderChatBotCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative h-[600px]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 rounded-3xl border-2 border-emerald-200/60 hover:border-emerald-400/80 transition-all duration-700 group h-full">
+          {/* Development Banner with Launch Date */}
+          {company.inDevelopment && (
+            <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-500 text-white text-center py-2 text-sm font-bold">
+              <div className="flex items-center justify-center gap-2 animate-pulse">
+                <span>💬</span>
+                <span>قيد التطوير - الإطلاق المتوقع {company.launchDate}</span>
+                <span>💬</span>
+              </div>
+            </div>
+          )}
+          
+          {/* ChatBot Pattern Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2248%22%20height%3D%2248%22%20viewBox%3D%220%200%2048%2048%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%2310b981%22%20fill-opacity%3D%220.07%22%3E%3Cpath%20d%3D%22M24%2012l6%206-6%206-6-6z%22/%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2224%22%20r%3D%223%22/%3E%3Crect%20x%3D%2220%22%20y%3D%2210%22%20width%3D%228%22%20height%3D%222%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
+          
+          {/* Interactive ChatBot Elements */}
+          <div className="absolute top-12 right-4 w-8 h-8 bg-emerald-400/20 rounded-full animate-bounce delay-75 group-hover:bg-emerald-500/30 transition-colors duration-300">
+            <MessageSquare className="w-4 h-4 text-emerald-600 m-2" />
+          </div>
+          <div className="absolute top-16 left-6 w-6 h-6 bg-green-400/20 rounded-full animate-bounce delay-150 group-hover:bg-green-500/30 transition-colors duration-300">
+            <Bot className="w-3 h-3 text-green-600 m-1.5" />
+          </div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-teal-500/20 rounded-full animate-bounce delay-300 group-hover:bg-teal-600/30 transition-colors duration-300">
+            <Send className="w-2 h-2 text-teal-700 m-1" />
+          </div>
+          <div className="absolute bottom-8 left-4 w-5 h-5 bg-emerald-400/20 rounded-full animate-bounce delay-500 group-hover:bg-emerald-500/30 transition-colors duration-300">
+            <Phone className="w-2.5 h-2.5 text-emerald-600 m-1.25" />
+          </div>
+          
+          <CardContent className={`relative z-10 p-8 h-full flex flex-col justify-between ${company.inDevelopment ? 'pt-12' : 'pt-8'}`}>
+            {/* Header Section */}
+            <div className="text-center mb-6">
+              <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                  <IconComponent className="w-8 h-8 text-emerald-600 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                {/* Interactive ChatBot Symbols */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-400 rounded-full flex items-center justify-center text-xs group-hover:animate-spin">💬</div>
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center text-xs group-hover:animate-pulse">🤖</div>
+              </div>
+              
+              <Badge className="bg-emerald-500/20 text-emerald-700 border-emerald-300/50 px-3 py-1 text-sm group-hover:bg-emerald-600/30 transition-colors duration-300">
+                {company.category}
+              </Badge>
+            </div>
+
+            {/* Company Info */}
+            <div className="text-center mb-6 flex-grow">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-emerald-800 transition-colors duration-300 mb-2">
+                {company.name}
+              </h3>
+              {company.nameEn && (
+                <p className="text-lg font-medium text-emerald-600 mb-3">
+                  {company.nameEn}
+                </p>
+              )}
+              <p className="text-slate-600 leading-relaxed text-sm">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Interactive ChatBot Features */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Bot className="w-6 h-6 text-emerald-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">بوت ذكي</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <MessageSquare className="w-6 h-6 text-green-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-ping delay-100"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">ردود تفاعلية</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Phone className="w-6 h-6 text-teal-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-teal-400 rounded-full animate-ping delay-200"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">واتساب API</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Send className="w-6 h-6 text-emerald-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping delay-300"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">رسائل آلية</p>
+              </div>
+            </div>
+
+            {/* Established Badge */}
+            <div className="text-center mb-4">
+              <Badge variant="outline" className="bg-white/80 text-slate-600 border-slate-300 px-3 py-1 text-sm">
+                تأسست {company.established}
+              </Badge>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button className={`w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`} disabled={company.inDevelopment}>
+                <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                {company.inDevelopment ? `قريباً - ${company.launchDate}` : 'استكشف منصة البوت'}
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-purple-100/40"></div>
@@ -1111,7 +1247,9 @@ const SubsidiariesSection = () => {
                             ? renderRentalCard(company)
                             : company.isMicroservices 
                               ? renderMicroservicesCard(company)
-                              : renderCompanyCard(company, index)
+                              : company.isChatBot 
+                                ? renderChatBotCard(company)
+                                : renderCompanyCard(company, index)
               }
             </div>
           ))}
