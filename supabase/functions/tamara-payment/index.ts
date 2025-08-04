@@ -24,6 +24,8 @@ serve(async (req) => {
 
   try {
     const tamaraApiKey = Deno.env.get("TAMARA_API_KEY");
+    console.log("Tamara API Key check:", tamaraApiKey ? `Key exists (length: ${tamaraApiKey.length})` : "Key not found");
+    
     if (!tamaraApiKey) {
       throw new Error("TAMARA_API_KEY not configured");
     }
