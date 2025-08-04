@@ -188,6 +188,45 @@ const Navigation = () => {
                 )}
               </div>
 
+              {/* Others Dropdown */}
+              <div 
+                className="relative group"
+                onMouseEnter={() => setShowOthers(true)}
+                onMouseLeave={() => setShowOthers(false)}
+              >
+                <button 
+                  className="relative flex items-center gap-1 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300"
+                >
+                  أخرى
+                  <ChevronDown className="w-3 h-3 group-hover:rotate-180 transition-transform" />
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
+                </button>
+                
+                {showOthers && (
+                  <div className="absolute top-full left-0 mt-2 w-60 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
+                    <div className="p-3">
+                      <div className="space-y-1">
+                        {othersItems.map((item, index) => {
+                          const IconComponent = item.icon;
+                          return (
+                            <a
+                              key={index}
+                              href={item.href}
+                              className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg group"
+                            >
+                              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                                <IconComponent className="w-4 h-4 text-blue-600 group-hover:text-white" />
+                              </div>
+                              <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600">{item.name}</span>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               
               <a 
                 href="/vision" 
