@@ -1,13 +1,8 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-
 import StatsSection from "@/components/StatsSection";
-
-
-
-
 import DepartmentsSection from "@/components/DepartmentsSection";
-
+import CurrentOffersSection from "@/components/CurrentOffersSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
 import RemoteWorkSection from "@/components/RemoteWorkSection";
@@ -57,6 +52,10 @@ const Index = () => {
             </div>
           </section>
 
+          {/* Current Offers Section */}
+          <section id="current-offers" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
+            <CurrentOffersSection />
+          </section>
 
           {/* Commitments Section */}
           <section id="commitments" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
