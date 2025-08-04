@@ -57,6 +57,11 @@ serve(async (req) => {
       console.log("No authenticated user, proceeding as guest");
     }
 
+    // Validate minimum amount (تمارا تتطلب حد أدنى)
+    if (requestData.amount < 100) {
+      throw new Error("المبلغ أقل من الحد الأدنى المطلوب لتمارا (100 ريال)");
+    }
+
     // Create checkout session with Tamara
     const tamaraPayload = {
       order_reference_id: "ord_" + Date.now(),
@@ -131,11 +136,17 @@ serve(async (req) => {
 
     const tamaraResult = await tamaraResponse.json();
     
-    console.log("Tamara API response:", tamaraResult);
+    console.log("Tamara API response status:", tamaraResponse.status);
+    console.log("Tamara API response headers:", Object.fromEntries(tamaraResponse.headers.entries()));
+    console.log("Tamara API response body:", JSON.stringify(tamaraResult, null, 2));
 
     if (!tamaraResponse.ok) {
-      console.error("Tamara API error:", tamaraResult);
-      throw new Error(tamaraResult.message || "Failed to create payment");
+      console.error("Tamara API error details:", {
+        status: tamaraResponse.status,
+        statusText: tamaraResponse.statusText,
+        body: tamaraResult
+      });
+      throw new Error(`Tamara API Error (${tamaraResponse.status}): ${tamaraResult.message || JSON.stringify(tamaraResult)}`);
     }
 
     // Store transaction in database
