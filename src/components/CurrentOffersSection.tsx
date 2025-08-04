@@ -16,8 +16,8 @@ const currentOffers = [
     title: "باقة المواقع الكاملة",
     description: "موقع إلكتروني احترافي مع لوحة تحكم ونظام إدارة محتوى متكامل",
     originalPrice: "15,000",
-    currentPrice: "9,999",
-    discount: "35%",
+    currentPrice: "10",
+    discount: "99%",
     timeLeft: "15 يوم",
     features: [
       "تصميم مخصص احترافي",
