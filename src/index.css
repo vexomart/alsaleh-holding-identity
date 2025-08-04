@@ -2,98 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-* Modern Corporate Design System - Global Standards
-* Inspired by Fortune 500 companies like Microsoft, Apple, Google
-*/
-
 @layer base {
   :root {
-    /* Modern Global Corporate Colors - Tech Companies Inspired */
-    --background: 0 0% 99%;
+    /* Corporate Colors */
+    --background: 0 0% 100%;
     --foreground: 224 15% 10%;
-    --surface: 220 14% 96%;
-    --surface-muted: 220 13% 92%;
-
-    /* Card System */
     --card: 0 0% 100%;
     --card-foreground: 224 15% 10%;
-    --card-muted: 220 14% 98%;
-
-    /* Interactive Elements - Electric Blue Theme */
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 15% 10%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 142 76% 36%;
+    --secondary-foreground: 0 0% 100%;
     --muted: 220 13% 91%;
     --muted-foreground: 220 8.9% 46.1%;
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
-
-    /* Premium Brand Identity - Inspired by Apple, Google, Microsoft */
-    --primary: 217 91% 60%; /* Electric Blue */
-    --primary-foreground: 0 0% 100%;
-    --primary-light: 217 91% 75%;
-    --primary-dark: 217 91% 45%;
-
-    --secondary: 142 76% 36%; /* Modern Green */
-    --secondary-foreground: 0 0% 100%;
-    --secondary-light: 142 76% 55%;
-    --secondary-dark: 142 76% 25%;
-
-    /* Additional Brand Colors */
-    --tertiary: 271 91% 65%; /* Premium Purple */
-    --tertiary-foreground: 0 0% 100%;
-    --quaternary: 25 95% 53%; /* Energy Orange */
-    --quaternary-foreground: 0 0% 100%;
-
-    /* Semantic Colors - Modern & Vibrant */
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
-    --warning: 48 96% 53%;
-    --warning-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-
-    /* System Elements */
     --border: 220 13% 88%;
     --input: 220 13% 91%;
     --ring: 217 91% 60%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 15% 10%;
-
-    /* Premium Gradient System */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(271 91% 65%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(217 91% 60%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(224 15% 10%) 0%, hsl(217 91% 60%) 50%, hsl(271 91% 65%) 100%);
-    --gradient-surface: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 14% 98%) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%);
-    --gradient-electric: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(195 100% 50%) 50%, hsl(271 91% 65%) 100%);
-    --gradient-sunset: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(45 93% 47%) 50%, hsl(217 91% 60%) 100%);
-    --gradient-aurora: linear-gradient(135deg, hsl(271 91% 65%) 0%, hsl(217 91% 60%) 30%, hsl(142 76% 36%) 70%, hsl(25 95% 53%) 100%);
-    --gradient-mesh: radial-gradient(at 40% 20%, hsl(217 91% 60%) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(271 91% 65%) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(142 76% 36%) 0px, transparent 50%);
-
-    /* Premium Shadow System */
-    --shadow-xs: 0 1px 2px 0 hsl(220 43% 11% / 0.05);
-    --shadow-sm: 0 1px 3px 0 hsl(220 43% 11% / 0.1), 0 1px 2px -1px hsl(220 43% 11% / 0.1);
-    --shadow-md: 0 4px 6px -1px hsl(220 43% 11% / 0.1), 0 2px 4px -2px hsl(220 43% 11% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(220 43% 11% / 0.1), 0 4px 6px -4px hsl(220 43% 11% / 0.1);
-    --shadow-xl: 0 20px 25px -5px hsl(220 43% 11% / 0.1), 0 8px 10px -6px hsl(220 43% 11% / 0.1);
-    --shadow-2xl: 0 25px 50px -12px hsl(220 43% 11% / 0.25);
-    --shadow-primary: 0 10px 30px -5px hsl(217 91% 60% / 0.3);
-    --shadow-glow: 0 0 50px hsl(217 91% 60% / 0.25);
-    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
-    --shadow-electric: 0 0 80px hsl(217 91% 60% / 0.4);
-    --shadow-neon: 0 0 5px hsl(217 91% 60%), 0 0 25px hsl(217 91% 60%), 0 0 50px hsl(217 91% 60%);
-
-    /* Enhanced Border Radius */
-    --radius-xs: 0.25rem;
-    --radius-sm: 0.375rem;
     --radius: 0.5rem;
-    --radius-md: 0.75rem;
-    --radius-lg: 1rem;
-    --radius-xl: 1.5rem;
-    --radius-2xl: 2rem;
-    --radius-3xl: 3rem;
-    --radius-full: 9999px;
-
-    /* Sidebar System */
     --sidebar-background: 220 14% 98%;
     --sidebar-foreground: 224 15% 10%;
     --sidebar-primary: 217 91% 60%;
@@ -105,66 +36,25 @@
   }
 
   .dark {
-    /* Dark Mode - Ultra Modern & Vibrant */
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;
-    --surface: 223 47% 6%;
-    --surface-muted: 223 39% 8%;
-
-    /* Card System Dark */
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
-    --card-muted: 223 47% 7%;
-
-    /* Interactive Dark - Neon Accents */
+    --popover: 224 71% 4%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 142 76% 36%;
+    --secondary-foreground: 0 0% 100%;
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
-
-    /* Brand Dark Mode - Electric & Modern */
-    --primary: 217 91% 60%; /* Electric Blue */
-    --primary-light: 217 91% 75%;
-    --primary-dark: 217 91% 45%;
-
-    --secondary: 142 76% 36%; /* Neon Green */
-    --secondary-light: 142 76% 55%;
-    --secondary-dark: 142 76% 25%;
-
-    --tertiary: 271 91% 65%; /* Cyber Purple */
-    --quaternary: 25 95% 53%; /* Electric Orange */
-
-    /* System Dark */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
     --border: 223 47% 16%;
     --input: 223 47% 16%;
-    --popover: 224 71% 4%;
-    --popover-foreground: 213 31% 91%;
-
-    /* Premium Dark Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(271 91% 65%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(217 91% 60%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(224 71% 4%) 0%, hsl(223 47% 6%) 50%, hsl(223 39% 8%) 100%);
-    --gradient-surface: linear-gradient(145deg, hsl(223 47% 5%) 0%, hsl(223 47% 3%) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
-    --gradient-electric: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(195 100% 50%) 50%, hsl(271 91% 65%) 100%);
-    --gradient-sunset: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(45 93% 47%) 50%, hsl(217 91% 60%) 100%);
-    --gradient-aurora: linear-gradient(135deg, hsl(271 91% 65%) 0%, hsl(217 91% 60%) 30%, hsl(142 76% 36%) 70%, hsl(25 95% 53%) 100%);
-    --gradient-mesh: radial-gradient(at 40% 20%, hsl(217 91% 60% / 0.3) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(271 91% 65% / 0.3) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(142 76% 36% / 0.3) 0px, transparent 50%);
-
-    /* Enhanced Dark Shadows */
-    --shadow-xs: 0 1px 2px 0 hsl(0 0% 0% / 0.2);
-    --shadow-sm: 0 1px 3px 0 hsl(0 0% 0% / 0.3), 0 1px 2px -1px hsl(0 0% 0% / 0.2);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.2);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.4), 0 4px 6px -4px hsl(0 0% 0% / 0.3);
-    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 8px 10px -6px hsl(0 0% 0% / 0.4);
-    --shadow-2xl: 0 25px 50px -12px hsl(0 0% 0% / 0.6);
-    --shadow-primary: 0 10px 30px -5px hsl(217 91% 60% / 0.4);
-    --shadow-glow: 0 0 60px hsl(217 91% 60% / 0.4);
-    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-    --shadow-electric: 0 0 100px hsl(217 91% 60% / 0.6);
-    --shadow-neon: 0 0 5px hsl(217 91% 60%), 0 0 25px hsl(217 91% 60%), 0 0 50px hsl(217 91% 60%), 0 0 100px hsl(217 91% 60%);
-
-    /* Sidebar Dark */
+    --ring: 217 91% 60%;
     --sidebar-background: 223 47% 6%;
     --sidebar-foreground: 213 31% 91%;
     --sidebar-primary: 217 91% 60%;
@@ -179,418 +69,41 @@
 @layer base {
   * {
     @apply border-border;
-    box-sizing: border-box;
   }
-
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-
-  html {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    direction: rtl;
-    scroll-behavior: smooth;
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    height: 100%;
-  }
-
   body {
     @apply bg-background text-foreground;
     direction: rtl;
-    min-height: 100vh;
-    line-height: 1.6;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
   }
-
-  .direction-ltr {
-    direction: ltr;
+  html {
+    direction: rtl;
+    scroll-behavior: smooth;
   }
 }
 
 @layer components {
-  /* Modern Layout Components */
-  .container-modern {
-    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
-  }
-
-  .section-modern {
-    @apply py-16 sm:py-20 lg:py-24;
-  }
-
-  /* Premium Glass Cards */
-  .glass-card {
-    @apply bg-white/20 backdrop-blur-2xl border border-white/30 shadow-glass rounded-2xl;
-  }
-
-  .glass-card.dark {
-    @apply bg-black/20 border-white/10;
-  }
-
-  .glass-premium {
-    @apply bg-gradient-glass backdrop-blur-3xl border border-white/40 shadow-neon rounded-3xl;
-  }
-
-  /* Electric Card System */
-  .card-modern {
-    @apply bg-card border border-border/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500;
-  }
-
-  .card-premium {
-    @apply relative overflow-hidden bg-gradient-surface border border-border/30 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-700 hover:scale-[1.02];
-  }
-
-  .card-electric {
-    @apply relative overflow-hidden bg-gradient-primary border-2 border-primary/20 rounded-3xl shadow-electric hover:shadow-neon transition-all duration-700 hover:scale-[1.05];
-  }
-
-  .card-premium::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-aurora opacity-0 hover:opacity-10 transition-opacity duration-700;
-  }
-
-  /* Modern Typography System */
-  .heading-modern {
-    @apply text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight;
-  }
-
-  .heading-hero {
-    @apply text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-none;
-  }
-
-  .heading-electric {
-    @apply text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-electric bg-clip-text text-transparent leading-none;
-  }
-
-  .text-gradient-modern {
-    @apply bg-clip-text text-transparent bg-gradient-primary;
-  }
-
-  .text-gradient-electric {
-    @apply bg-clip-text text-transparent bg-gradient-electric;
-  }
-
-  .text-gradient-aurora {
-    @apply bg-clip-text text-transparent bg-gradient-aurora;
-  }
-
-  .text-glow {
-    text-shadow: 
-      0 0 10px currentColor,
-      0 0 20px currentColor,
-      0 0 30px currentColor,
-      0 0 40px currentColor;
-  }
-
-  .text-neon {
-    text-shadow: 
-      0 0 5px hsl(var(--primary)),
-      0 0 10px hsl(var(--primary)),
-      0 0 15px hsl(var(--primary)),
-      0 0 20px hsl(var(--primary));
-  }
-
-  /* Premium Button System */
-  .btn-modern {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-sm font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transform-gpu;
-  }
-
-  .btn-primary {
-    @apply btn-modern bg-gradient-primary text-primary-foreground hover:shadow-electric shadow-primary hover:scale-105 active:scale-95;
-  }
-
-  .btn-electric {
-    @apply btn-modern bg-gradient-electric text-white hover:shadow-neon shadow-electric hover:scale-110 active:scale-95 border-2 border-primary/30;
-  }
-
-  .btn-glass {
-    @apply btn-modern bg-white/10 backdrop-blur-md border border-white/20 text-foreground hover:bg-white/20 hover:shadow-glow;
-  }
-
-  .btn-secondary {
-    @apply btn-modern bg-gradient-secondary text-secondary-foreground hover:shadow-lg shadow-md hover:scale-105 active:scale-95;
-  }
-
-  .btn-ghost {
-    @apply btn-modern hover:bg-accent hover:text-accent-foreground hover:shadow-md;
-  }
-
-  /* Enhanced Icon Animations */
-  .icon-float {
-    @apply animate-float;
-  }
-
-  .icon-glow {
-    @apply animate-pulse-glow;
-  }
-
-  .icon-electric {
-    @apply animate-pulse-glow;
-  }
-
-  .icon-morph {
-    @apply animate-bounce-gentle;
-  }
-
-  .icon-rotate {
-    @apply hover:animate-spin-slow transform-gpu;
-  }
-
-  .icon-scale {
-    @apply hover:scale-125 transition-transform duration-500 transform-gpu;
-  }
-
-  .icon-bounce {
-    @apply hover:animate-bounce-gentle transform-gpu;
-  }
-
-  .icon-magnetic {
-    @apply hover:scale-110 transition-transform duration-300 transform-gpu;
-  }
-
-  /* Modern Grid Systems */
-  .grid-modern {
-    @apply grid gap-8 sm:gap-10;
-  }
-
-  .grid-cards {
-    @apply grid-modern grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
-  }
-
-  .grid-features {
-    @apply grid-modern grid-cols-1 md:grid-cols-2 lg:grid-cols-4;
-  }
-
-  .grid-team {
-    @apply grid-modern grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
-  }
-
-  /* Responsive Text */
-  .text-responsive-lg {
-    @apply text-xl sm:text-2xl lg:text-3xl;
-  }
-
-  .text-responsive-xl {
-    @apply text-2xl sm:text-3xl lg:text-4xl;
-  }
-
-  .text-responsive-2xl {
-    @apply text-3xl sm:text-4xl lg:text-5xl;
-  }
-
-  /* Modern Background Patterns */
-  .bg-grid-modern {
-    background-image: 
-      radial-gradient(circle at 2px 2px, hsl(var(--primary) / 0.2) 1px, transparent 0);
-    background-size: 30px 30px;
-  }
-
-  .bg-dots-modern {
-    background-image: 
-      radial-gradient(circle at 1px 1px, hsl(var(--primary) / 0.3) 1px, transparent 0);
-    background-size: 25px 25px;
-  }
-
-  .bg-mesh-modern {
-    background-image: var(--gradient-mesh);
-  }
-
-  /* Premium Animations */
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
-
+  
   .animate-float-delayed {
     animation: float-delayed 6s ease-in-out infinite 2s;
   }
 
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
-  }
-
-  .animate-electric {
-    animation: pulse-color 2s ease-in-out infinite;
-  }
-
   @keyframes float {
     0%, 100% { 
-      transform: translateY(0px) rotate(0deg); 
+      transform: translateY(0px); 
     }
     50% { 
-      transform: translateY(-15px) rotate(1deg); 
+      transform: translateY(-10px); 
     }
   }
 
   @keyframes float-delayed {
     0%, 100% { 
-      transform: translateY(0px) rotate(0deg); 
+      transform: translateY(0px); 
     }
     50% { 
-      transform: translateY(-12px) rotate(-1deg); 
+      transform: translateY(-8px); 
     }
-  }
-
-  @keyframes glow {
-    from {
-      box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
-    }
-    to {
-      box-shadow: 0 0 40px hsl(var(--primary) / 0.6);
-    }
-  }
-
-  /* Interactive States */
-  .hover-lift {
-    @apply hover:translate-y-[-4px] hover:shadow-2xl transition-all duration-300;
-  }
-
-  .hover-glow {
-    @apply hover:shadow-glow transition-all duration-500;
-  }
-
-  .hover-electric {
-    @apply hover:shadow-electric transition-all duration-500;
-  }
-
-  .hover-neon {
-    @apply hover:shadow-neon transition-all duration-500;
-  }
-
-  /* Mobile Optimizations */
-  @media (max-width: 640px) {
-    .container-modern {
-      @apply px-4;
-    }
-
-    .section-modern {
-      @apply py-12;
-    }
-
-    /* Reduce blur effects on mobile for performance */
-    .backdrop-blur-2xl {
-      @apply backdrop-blur-lg;
-    }
-
-    .backdrop-blur-3xl {
-      @apply backdrop-blur-xl;
-    }
-
-    /* Hide decorative elements on mobile */
-    .mobile-hide {
-      @apply hidden;
-    }
-
-    /* Optimize touch targets */
-    .btn-modern {
-      @apply min-h-[48px] min-w-[48px];
-    }
-
-    /* Reduce motion for better performance */
-    .animate-float,
-    .animate-float-delayed,
-    .animate-bounce-gentle {
-      animation: none;
-    }
-
-    /* Better mobile spacing */
-    .grid-cards {
-      @apply grid-cols-1 gap-6;
-    }
-
-    .heading-hero,
-    .heading-electric {
-      @apply text-3xl sm:text-4xl;
-    }
-
-    .heading-modern {
-      @apply text-2xl sm:text-3xl;
-    }
-  }
-
-  /* Tablet Optimizations */
-  @media (min-width: 641px) and (max-width: 1024px) {
-    .grid-features {
-      @apply grid-cols-2;
-    }
-
-    .grid-team {
-      @apply grid-cols-3;
-    }
-  }
-
-  /* High-performance animations */
-  .transform-gpu {
-    transform: translateZ(0);
-    will-change: transform;
-  }
-
-  /* Premium glass morphism */
-  .glass-modern {
-    @apply bg-white/15 backdrop-blur-xl border border-white/25 shadow-glass;
-  }
-
-  .glass-modern.dark {
-    @apply bg-black/15 border-white/10;
-  }
-
-  .glass-electric {
-    @apply bg-gradient-glass backdrop-blur-2xl border-2 border-primary/30 shadow-electric;
-  }
-
-  /* Staggered animations */
-  .stagger-1 { animation-delay: 0.1s; }
-  .stagger-2 { animation-delay: 0.2s; }
-  .stagger-3 { animation-delay: 0.3s; }
-  .stagger-4 { animation-delay: 0.4s; }
-  .stagger-5 { animation-delay: 0.5s; }
-  .stagger-6 { animation-delay: 0.6s; }
-  .stagger-7 { animation-delay: 0.7s; }
-  .stagger-8 { animation-delay: 0.8s; }
-
-  /* Modern focus states */
-  .focus-modern {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
-  }
-
-  .focus-electric {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background focus:shadow-neon;
-  }
-
-  /* Smooth scrolling anchor */
-  .scroll-smooth {
-    scroll-behavior: smooth;
-  }
-
-  /* Premium Containers */
-  .container-electric {
-    @apply relative overflow-hidden bg-gradient-mesh border border-primary/20 rounded-3xl p-8 shadow-electric;
-  }
-
-  .container-glass {
-    @apply relative overflow-hidden bg-gradient-glass backdrop-blur-2xl border border-white/30 rounded-3xl p-8 shadow-glass;
-  }
-
-  /* Enhanced Hover Effects */
-  .card-hover {
-    @apply transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 hover:shadow-2xl;
-  }
-
-  .card-hover-electric {
-    @apply transition-all duration-700 hover:scale-[1.05] hover:-translate-y-4 hover:shadow-electric hover:shadow-neon;
-  }
-
-  /* Gradient Text Animations */
-  .text-animated {
-    @apply bg-gradient-electric bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient-x;
-  }
-
-  .text-shimmer {
-    @apply bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_100%] bg-clip-text text-transparent animate-text-shimmer;
   }
 }
