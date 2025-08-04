@@ -1,7 +1,8 @@
-import { Check, FileText, Users, Calendar, Shield, Award, Building2, Mail, Phone, MessageSquare } from "lucide-react";
+import { Check, FileText, Users, Calendar, Shield, Award, Building2, Mail, Phone, MessageSquare, User, Users2, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ContractForms } from "@/components/ContractForms";
 
 const Contracts = () => {
   const contractSteps = [
@@ -417,36 +418,45 @@ const Contracts = () => {
               </CardContent>
             </Card>
 
-            {/* Legal Terms */}
-            <Card className="p-8">
-              <CardHeader>
-                <CardTitle className="text-2xl text-center mb-6">
-                  <FileText className="w-8 h-8 mx-auto mb-4 text-orange-600" />
-                  الشروط القانونية
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-bold text-gray-900 text-lg">حقوق الملكية الفكرية</h4>
-                    <ul className="list-disc list-inside text-gray-600 space-y-2">
-                      <li>العميل يحصل على كامل حقوق الملكية للمشروع</li>
-                      <li>الكود المصدري يُسلم للعميل عند الانتهاء</li>
-                      <li>حماية براءات الاختراع إن وجدت</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="font-bold text-gray-900 text-lg">المسؤولية والضمان</h4>
-                    <ul className="list-disc list-inside text-gray-600 space-y-2">
-                      <li>ضمان ضد العيوب الفنية لمدة 12 شهر</li>
-                      <li>دعم فني مجاني لمدة 6 أشهر</li>
-                      <li>تحديثات أمنية ضرورية مجانية</li>
-                    </ul>
-                  </div>
+          {/* Contract Forms Section */}
+          <div className="mb-16">
+            <h3 className="text-2xl font-bold text-center text-gray-900 mb-12">
+              نماذج طلب التعاقد
+            </h3>
+            
+            <ContractForms />
+          </div>
+
+          {/* Legal Terms */}
+          <Card className="p-8">
+            <CardHeader>
+              <CardTitle className="text-2xl text-center mb-6">
+                <FileText className="w-8 h-8 mx-auto mb-4 text-orange-600" />
+                الشروط القانونية
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="font-bold text-gray-900 text-lg">حقوق الملكية الفكرية</h4>
+                  <ul className="list-disc list-inside text-gray-600 space-y-2">
+                    <li>العميل يحصل على كامل حقوق الملكية للمشروع</li>
+                    <li>الكود المصدري يُسلم للعميل عند الانتهاء</li>
+                    <li>حماية براءات الاختراع إن وجدت</li>
+                  </ul>
                 </div>
-              </CardContent>
-            </Card>
+                
+                <div className="space-y-4">
+                  <h4 className="font-bold text-gray-900 text-lg">المسؤولية والضمان</h4>
+                  <ul className="list-disc list-inside text-gray-600 space-y-2">
+                    <li>ضمان ضد العيوب الفنية لمدة 12 شهر</li>
+                    <li>دعم فني مجاني لمدة 6 أشهر</li>
+                    <li>تحديثات أمنية ضرورية مجانية</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           </div>
         </div>
       </section>
