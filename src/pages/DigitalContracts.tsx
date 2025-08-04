@@ -236,9 +236,9 @@ const DigitalContracts = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // تحديث contract form edge function بإرسال البيانات الصحيحة
-  const generateContractPDF = (): Promise<jsPDF> => {
-    return new Promise((resolve) => {
+  // إنشاء PDF احترافي مع توقيع العميل
+  const generateContractPDF = async (): Promise<jsPDF> => {
+    return new Promise(async (resolve) => {
       const contractDate = new Date().toLocaleDateString('ar-SA', {
         year: 'numeric',
         month: 'long',
@@ -254,233 +254,313 @@ const DigitalContracts = () => {
       // إضافة خط عربي
       doc.setFont('helvetica');
       
-      // خلفية مع حواف
-      doc.setFillColor(245, 248, 255);
-      doc.rect(10, 10, 190, 277, 'F');
+      // خلفية احترافية مع تدرج
+      doc.setFillColor(248, 250, 252);
+      doc.rect(0, 0, 210, 297, 'F');
       
-      // حواف خارجية
-      doc.setDrawColor(59, 130, 246);
-      doc.setLineWidth(1);
-      doc.rect(10, 10, 190, 277);
+      // حواف احترافية
+      doc.setDrawColor(29, 78, 216);
+      doc.setLineWidth(2);
+      doc.rect(8, 8, 194, 281);
       
-      // حواف داخلية
-      doc.setDrawColor(147, 197, 253);
-      doc.setLineWidth(0.5);
-      doc.rect(15, 15, 180, 267);
+      // حدود داخلية ذهبية
+      doc.setDrawColor(251, 191, 36);
+      doc.setLineWidth(0.8);
+      doc.rect(12, 12, 186, 273);
 
-      // هيدر الشركة مع شعار
-      doc.setFillColor(59, 130, 246);
-      doc.rect(15, 15, 180, 40, 'F');
+      // هيدر احترافي
+      doc.setFillColor(29, 78, 216);
+      doc.rect(12, 12, 186, 50, 'F');
       
-      // شعار الشركة (مربع تمثيلي)
+      // شعار الشركة الأيسر
       doc.setFillColor(255, 255, 255);
-      doc.rect(25, 22, 26, 26, 'F');
-      doc.setDrawColor(59, 130, 246);
-      doc.rect(25, 22, 26, 26);
+      doc.roundedRect(20, 20, 35, 35, 3, 3, 'F');
+      doc.setDrawColor(29, 78, 216);
+      doc.roundedRect(20, 20, 35, 35, 3, 3);
       
-      // نص الشعار
+      // نص شعار الشركة
+      doc.setFontSize(10);
+      doc.setTextColor(29, 78, 216);
+      doc.text('شركة', 37, 30, { align: 'center' });
+      doc.text('علي صالح الشهري', 37, 35, { align: 'center' });
+      doc.text('القابضة', 37, 40, { align: 'center' });
       doc.setFontSize(8);
-      doc.setTextColor(59, 130, 246);
-      doc.text('LOGO', 35, 32);
-      doc.text('شركة', 35, 36);
-      doc.text('علي الشهري', 30, 40);
-      doc.text('القابضة', 32, 44);
+      doc.text('HOLDING COMPANY', 37, 45, { align: 'center' });
+      doc.text('FOR TECH SOLUTIONS', 37, 49, { align: 'center' });
 
-      // اسم الشركة
-      doc.setFontSize(24);
+      // اسم الشركة والعنوان
+      doc.setFontSize(22);
       doc.setTextColor(255, 255, 255);
-      doc.text('شركة علي صالح الشهري القابضة', 195, 30, { align: 'right' });
-      
-      // عنوان العقد
-      doc.setFontSize(18);
-      doc.text('عقد تقديم خدمات تقنية متطورة', 195, 40, { align: 'right' });
-      
-      // رقم العقد
-      doc.setFontSize(12);
-      const contractNumber = `C${new Date().getFullYear()}${Math.random().toString().slice(2, 8)}`;
-      doc.text(`رقم العقد: ${contractNumber}`, 195, 48, { align: 'right' });
-
-      let yPos = 70;
-      
-      // الطرف الأول - مع خلفية ملونة
-      doc.setFillColor(239, 246, 255);
-      doc.rect(20, yPos - 5, 170, 35, 'F');
-      doc.setDrawColor(59, 130, 246);
-      doc.rect(20, yPos - 5, 170, 35);
+      doc.text('شركة علي صالح الشهري القابضة', 190, 35, { align: 'right' });
       
       doc.setFontSize(14);
-      doc.setTextColor(59, 130, 246);
-      doc.text('الطرف الأول (مقدم الخدمة):', 185, yPos, { align: 'right' });
+      doc.text('للحلول التقنية المتطورة', 190, 45, { align: 'right' });
       
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      yPos += 8;
-      doc.text('شركة علي صالح الشهري القابضة', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('رقم السجل التجاري: 4030394026', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('الرقم الضريبي: 311234567890003', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('العنوان: المملكة العربية السعودية - الرياض', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('البريد الإلكتروني: info@alialshehriholding.com', 185, yPos, { align: 'right' });
+      doc.setFontSize(10);
+      doc.text('المملكة العربية السعودية - الرياض', 190, 52, { align: 'right' });
 
-      yPos += 15;
+      // عنوان العقد مع إطار مميز
+      let yPos = 75;
+      doc.setFillColor(251, 191, 36);
+      doc.rect(12, yPos - 5, 186, 20, 'F');
       
-      // الطرف الثاني - مع خلفية ملونة
+      doc.setFontSize(18);
+      doc.setTextColor(0, 0, 0);
+      doc.text('عقد تقديم خدمات تقنية متطورة', 105, yPos + 5, { align: 'center' });
+      
+      const contractNumber = `C${new Date().getFullYear()}${Math.random().toString().slice(2, 8)}`;
+      doc.setFontSize(12);
+      doc.text(`رقم العقد: ${contractNumber}`, 190, yPos + 10, { align: 'right' });
+
+      yPos += 30;
+      
+      // مقدمة العقد بالمواد القانونية السعودية
+      doc.setFillColor(245, 245, 245);
+      doc.rect(15, yPos - 3, 180, 25, 'F');
+      doc.setDrawColor(107, 114, 128);
+      doc.rect(15, yPos - 3, 180, 25);
+      
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.text('إنه في يوم ' + contractDate + ' الموافق لتاريخه، تم الاتفاق بين كل من:', 190, yPos + 3, { align: 'right' });
+      doc.text('طبقاً لنظام المعاملات المدنية السعودي ونظام التجارة الإلكترونية', 190, yPos + 9, { align: 'right' });
+      doc.text('ووفقاً لأحكام الشريعة الإسلامية وما لا يخالف الأنظمة المرعية في المملكة', 190, yPos + 15, { align: 'right' });
+
+      yPos += 35;
+      
+      // الطرف الأول مع تصميم احترافي
+      doc.setFillColor(239, 246, 255);
+      doc.rect(15, yPos - 5, 180, 40, 'F');
+      doc.setDrawColor(29, 78, 216);
+      doc.setLineWidth(1.5);
+      doc.rect(15, yPos - 5, 180, 40);
+      
+      doc.setFontSize(14);
+      doc.setTextColor(29, 78, 216);
+      doc.text('الطرف الأول (مقدم الخدمة):', 190, yPos, { align: 'right' });
+      
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      yPos += 7;
+      doc.text('شركة علي صالح الشهري القابضة للحلول التقنية', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('رقم السجل التجاري: 4030394026', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('الرقم الضريبي: 311234567890003', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('العنوان: المملكة العربية السعودية - الرياض - حي النرجس', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('البريد الإلكتروني: info@alialshehriholding.com', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('الهاتف: +966 11 234 5678', 190, yPos, { align: 'right' });
+
+      yPos += 20;
+      
+      // الطرف الثاني
       doc.setFillColor(254, 249, 195);
-      doc.rect(20, yPos - 5, 170, 35, 'F');
+      doc.rect(15, yPos - 5, 180, 35, 'F');
       doc.setDrawColor(245, 158, 11);
-      doc.rect(20, yPos - 5, 170, 35);
+      doc.rect(15, yPos - 5, 180, 35);
       
       doc.setFontSize(14);
       doc.setTextColor(245, 158, 11);
-      doc.text('الطرف الثاني (العميل):', 185, yPos, { align: 'right' });
+      doc.text('الطرف الثاني (العميل):', 190, yPos, { align: 'right' });
       
-      doc.setFontSize(12);
+      doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
-      yPos += 8;
-      doc.text(formData.clientName || 'اسم العميل', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text(`البريد الإلكتروني: ${formData.clientEmail || ''}`, 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text(`الهاتف: ${formData.clientPhone || ''}`, 185, yPos, { align: 'right' });
+      yPos += 7;
+      doc.text(formData.clientName || 'اسم العميل', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text(`البريد الإلكتروني: ${formData.clientEmail || ''}`, 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text(`الهاتف: ${formData.clientPhone || ''}`, 190, yPos, { align: 'right' });
       
       if (formData.clientType === 'individual' && formData.clientIdNumber) {
-        yPos += 6;
-        doc.text(`رقم الهوية: ${formData.clientIdNumber}`, 185, yPos, { align: 'right' });
+        yPos += 5;
+        doc.text(`رقم الهوية الوطنية: ${formData.clientIdNumber}`, 190, yPos, { align: 'right' });
       }
       
       if (formData.clientType !== 'individual') {
         if (formData.commercialRegister) {
-          yPos += 6;
-          doc.text(`السجل التجاري: ${formData.commercialRegister}`, 185, yPos, { align: 'right' });
+          yPos += 5;
+          doc.text(`رقم السجل التجاري: ${formData.commercialRegister}`, 190, yPos, { align: 'right' });
         }
         if (formData.taxNumber) {
-          yPos += 6;
-          doc.text(`الرقم الضريبي: ${formData.taxNumber}`, 185, yPos, { align: 'right' });
+          yPos += 5;
+          doc.text(`الرقم الضريبي: ${formData.taxNumber}`, 190, yPos, { align: 'right' });
         }
         if (formData.authorizedPerson) {
-          yPos += 6;
-          doc.text(`المفوض بالتوقيع: ${formData.authorizedPerson}`, 185, yPos, { align: 'right' });
+          yPos += 5;
+          doc.text(`المفوض بالتوقيع: ${formData.authorizedPerson}`, 190, yPos, { align: 'right' });
         }
       }
 
-      yPos += 20;
+      yPos += 25;
       
-      // تفاصيل الخدمة
+      // موضوع العقد والخدمات
       doc.setFillColor(220, 252, 231);
-      doc.rect(20, yPos - 5, 170, 40, 'F');
+      doc.rect(15, yPos - 5, 180, 45, 'F');
       doc.setDrawColor(34, 197, 94);
-      doc.rect(20, yPos - 5, 170, 40);
+      doc.rect(15, yPos - 5, 180, 45);
       
       doc.setFontSize(14);
       doc.setTextColor(22, 163, 74);
-      doc.text('تفاصيل الخدمة المتفق عليها:', 185, yPos, { align: 'right' });
+      doc.text('موضوع العقد والخدمات المتفق عليها:', 190, yPos, { align: 'right' });
       
-      doc.setFontSize(12);
+      doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
-      yPos += 8;
+      yPos += 7;
       
       if (selectedOfferDetails) {
-        doc.text(`اسم الخدمة: ${selectedOfferDetails.title}`, 185, yPos, { align: 'right' });
-        yPos += 6;
-        doc.text(`قيمة العقد: ${selectedOfferDetails.price} ريال سعودي (شامل الضريبة)`, 185, yPos, { align: 'right' });
-        yPos += 6;
-        // استخدام مدة التنفيذ من العرض المحدد بدلاً من 15 يوم ثابت
-        doc.text(`مدة التنفيذ: ${selectedOfferDetails.duration}`, 185, yPos, { align: 'right' });
-        yPos += 6;
-        doc.text('تاريخ بداية التنفيذ: من تاريخ التوقيع واستلام الدفعة', 185, yPos, { align: 'right' });
+        doc.text(`اسم الخدمة: ${selectedOfferDetails.title}`, 190, yPos, { align: 'right' });
+        yPos += 5;
+        doc.text(`قيمة العقد الإجمالية: ${selectedOfferDetails.price} ريال سعودي (شاملة ضريبة القيمة المضافة)`, 190, yPos, { align: 'right' });
+        yPos += 5;
+        doc.text(`مدة التنفيذ المتفق عليها: ${selectedOfferDetails.duration}`, 190, yPos, { align: 'right' });
+        yPos += 5;
+        doc.text('تاريخ بداية التنفيذ: من تاريخ التوقيع النهائي واستلام الدفعة المقررة', 190, yPos, { align: 'right' });
+        yPos += 5;
+        doc.text('مكان التسليم: إلكترونياً عبر البريد الإلكتروني والمنصات المتفق عليها', 190, yPos, { align: 'right' });
       }
       
       if (formData.serviceDescription) {
-        yPos += 8;
-        doc.text(`وصف إضافي: ${formData.serviceDescription}`, 185, yPos, { align: 'right' });
+        yPos += 7;
+        doc.text(`تفاصيل إضافية: ${formData.serviceDescription}`, 190, yPos, { align: 'right' });
       }
 
-      yPos += 20;
+      yPos += 25;
       
-      // بطاقة الحساب البنكي مع أيقونة البنك
+      // بنك الراجحي مع أيقونة احترافية
       doc.setFillColor(237, 233, 254);
-      doc.rect(20, yPos - 5, 170, 45, 'F');
+      doc.rect(15, yPos - 5, 180, 50, 'F');
       doc.setDrawColor(139, 92, 246);
-      doc.rect(20, yPos - 5, 170, 45);
+      doc.rect(15, yPos - 5, 180, 50);
       
-      // أيقونة البنك (مربع تمثيلي لشعار الراجحي)
+      // شعار البنك الراجحي
       doc.setFillColor(0, 102, 204);
-      doc.rect(25, yPos, 20, 15, 'F');
-      doc.setFontSize(8);
+      doc.roundedRect(22, yPos + 2, 25, 18, 2, 2, 'F');
+      doc.setFontSize(9);
       doc.setTextColor(255, 255, 255);
-      doc.text('البنك', 30, yPos + 6);
-      doc.text('الراجحي', 28, yPos + 10);
+      doc.text('البنك', 34, yPos + 8, { align: 'center' });
+      doc.text('الراجحي', 34, yPos + 12, { align: 'center' });
+      doc.text('Al Rajhi Bank', 34, yPos + 16, { align: 'center' });
       
       doc.setFontSize(14);
       doc.setTextColor(139, 92, 246);
-      doc.text('معلومات الحساب البنكي للتحويل:', 185, yPos, { align: 'right' });
+      doc.text('الحساب البنكي المعتمد للتحويل:', 190, yPos + 5, { align: 'right' });
       
-      doc.setFontSize(12);
+      doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
-      yPos += 8;
-      doc.text('بنك الراجحي', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('اسم الحساب: شركة علي صالح الشهري القابضة', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('رقم الحساب: 161000010006086071040', 185, yPos, { align: 'right' });
-      yPos += 6;
-      doc.text('الآيبان: SA1980000161608016071040', 185, yPos, { align: 'right' });
+      yPos += 12;
+      doc.text('مصرف الراجحي (Al Rajhi Bank)', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('اسم صاحب الحساب: شركة علي صالح الشهري القابضة', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('رقم الحساب: 161000010006086071040', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('رقم الآيبان الدولي: SA1980000161608016071040', 190, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('نوع الحساب: حساب جاري تجاري', 190, yPos, { align: 'right' });
 
-      yPos += 20;
+      yPos += 25;
       
-      // الشروط والأحكام
+      // الشروط والأحكام القانونية السعودية
       doc.setFillColor(254, 242, 242);
-      doc.rect(20, yPos - 5, 170, 50, 'F');
+      doc.rect(15, yPos - 5, 180, 70, 'F');
       doc.setDrawColor(239, 68, 68);
-      doc.rect(20, yPos - 5, 170, 50);
+      doc.rect(15, yPos - 5, 180, 70);
       
       doc.setFontSize(14);
       doc.setTextColor(220, 38, 38);
-      doc.text('الشروط والأحكام الأساسية:', 185, yPos, { align: 'right' });
+      doc.text('الشروط والأحكام القانونية:', 190, yPos, { align: 'right' });
       
-      doc.setFontSize(10);
+      doc.setFontSize(9);
       doc.setTextColor(0, 0, 0);
-      yPos += 8;
-      doc.text('١. يتم تنفيذ المشروع وفقاً للمدة المحددة في تفاصيل الخدمة أعلاه', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('٢. إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('٣. يتم اعتماد العقد نهائياً بعد دفع المبلغ المتفق عليه للحساب المذكور أعلاه', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('٤. ترسل الشركة اعتماد العقد رسمياً من طرفها بعد استلام الدفعة', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('٥. جميع التعديلات تتم بموافقة خطية من الطرفين', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('٦. هذا العقد خاضع للأنظمة السعودية النافذة', 185, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('٧. أي نزاع يحل ودياً أو يحال للجهات المختصة', 185, yPos, { align: 'right' });
+      yPos += 7;
+      doc.text('المادة الأولى: يتم تنفيذ المشروع وفقاً للمدة والمواصفات المحددة أعلاه', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة الثانية: إرسال هذا العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة الثالثة: يعتبر العقد نافذاً بعد دفع المبلغ المتفق عليه للحساب المذكور', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة الرابعة: ترسل الشركة إقرار استلام رسمي بعد تأكيد الدفعة', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة الخامسة: أي تعديل يتطلب موافقة خطية من الطرفين', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة السادسة: هذا العقد خاضع للأنظمة السعودية النافذة', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة السابعة: تحل النزاعات ودياً أو تحال للمحاكم المختصة بالرياض', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة الثامنة: يقر الطرفان بأهليتهما القانونية الكاملة لإبرام هذا العقد', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة التاسعة: يسري هذا العقد اعتباراً من تاريخ توقيعه', 190, yPos, { align: 'right' });
+      yPos += 4;
+      doc.text('المادة العاشرة: يحق للطرف الأول استلام الدفعة قبل بدء التنفيذ', 190, yPos, { align: 'right' });
 
       yPos += 20;
       
-      // التوقيعات
+      // منطقة التوقيعات المحسنة
+      doc.setFillColor(248, 250, 252);
+      doc.rect(15, yPos, 180, 50, 'F');
       doc.setDrawColor(107, 114, 128);
-      doc.rect(25, yPos, 70, 25);
-      doc.rect(115, yPos, 70, 25);
+      doc.rect(15, yPos, 180, 50);
+      
+      // توقيع الطرف الأول
+      doc.setDrawColor(29, 78, 216);
+      doc.setLineWidth(1);
+      doc.rect(20, yPos + 5, 75, 35);
       
       doc.setFontSize(12);
+      doc.setTextColor(29, 78, 216);
+      doc.text('توقيع وختم الطرف الأول', 57, yPos + 12, { align: 'center' });
+      doc.setFontSize(10);
       doc.setTextColor(0, 0, 0);
-      doc.text('توقيع الطرف الأول', 90, yPos + 5, { align: 'center' });
-      doc.text('شركة علي صالح الشهري القابضة', 90, yPos + 10, { align: 'center' });
+      doc.text('شركة علي صالح الشهري القابضة', 57, yPos + 18, { align: 'center' });
+      doc.text('المدير التنفيذي', 57, yPos + 25, { align: 'center' });
+      doc.text('التوقيع: ________________', 57, yPos + 32, { align: 'center' });
       
-      doc.text('توقيع الطرف الثاني', 25, yPos + 5, { align: 'center' });
-      doc.text(formData.clientName || 'العميل', 25, yPos + 10, { align: 'center' });
-      doc.text('[توقيع رقمي مرفق]', 25, yPos + 15, { align: 'center' });
+      // توقيع الطرف الثاني مع إدراج التوقيع الرقمي
+      doc.setDrawColor(245, 158, 11);
+      doc.rect(105, yPos + 5, 75, 35);
+      
+      doc.setFontSize(12);
+      doc.setTextColor(245, 158, 11);
+      doc.text('توقيع الطرف الثاني', 142, yPos + 12, { align: 'center' });
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text(formData.clientName || 'العميل', 142, yPos + 18, { align: 'center' });
+      
+      // إضافة التوقيع الرقمي للعميل
+      const canvas = signatureCanvasRef.current;
+      if (canvas) {
+        try {
+          const signatureData = canvas.toDataURL('image/png');
+          if (signatureData && signatureData !== 'data:,') {
+            // تحويل التوقيع إلى صورة وإضافتها للـ PDF
+            doc.addImage(signatureData, 'PNG', 110, yPos + 22, 65, 15);
+          } else {
+            doc.text('[توقيع رقمي مطلوب]', 142, yPos + 30, { align: 'center' });
+          }
+        } catch (error) {
+          console.error('خطأ في إضافة التوقيع:', error);
+          doc.text('[توقيع رقمي مطلوب]', 142, yPos + 30, { align: 'center' });
+        }
+      } else {
+        doc.text('[توقيع رقمي مطلوب]', 142, yPos + 30, { align: 'center' });
+      }
 
-      // التاريخ
-      yPos += 35;
-      doc.setFillColor(59, 130, 246);
-      doc.rect(20, yPos - 3, 170, 15, 'F');
+      yPos += 60;
+      
+      // تذييل مع التاريخ
+      doc.setFillColor(29, 78, 216);
+      doc.rect(12, yPos, 186, 20, 'F');
       doc.setFontSize(14);
       doc.setTextColor(255, 255, 255);
-      doc.text(`تاريخ العقد: ${contractDate}`, 105, yPos + 5, { align: 'center' });
+      doc.text(`تم إنشاء هذا العقد بتاريخ: ${contractDate}`, 105, yPos + 10, { align: 'center' });
+      
+      // معلومات إضافية في التذييل
+      doc.setFontSize(8);
+      doc.text('هذا العقد محرر باللغة العربية ووفقاً للأنظمة السعودية النافذة', 105, yPos + 15, { align: 'center' });
 
       resolve(doc);
     });
