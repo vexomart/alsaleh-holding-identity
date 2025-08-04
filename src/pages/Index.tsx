@@ -19,9 +19,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background pt-20 sm:pt-24 md:pt-32 overflow-x-hidden">{/* Better mobile spacing */}
-      <Navigation />
-      
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <main className="relative overflow-hidden">
         {/* Hero Section */}
         <section id="home" className="relative z-10">
