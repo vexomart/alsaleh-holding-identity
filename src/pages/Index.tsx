@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
+import { Button } from "@/components/ui/button";
 import StatsSection from "@/components/StatsSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
@@ -19,6 +20,25 @@ const Index = () => {
         {/* Hero Section */}
         <section id="home" className="relative z-10">
           <HeroSection />
+          
+          {/* Quick Access Buttons */}
+          <div className="relative z-20 flex justify-center gap-4 mt-8 px-4">
+            <Button 
+              size="lg" 
+              className="bg-primary text-white hover:bg-primary/90 text-lg px-8 py-3"
+              onClick={() => window.location.href = '/auth'}
+            >
+              ابدأ رحلتك معنا
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-primary text-primary hover:bg-primary/10 text-lg px-8 py-3"
+              onClick={() => window.location.href = '/dashboard'}
+            >
+              لوحة التحكم
+            </Button>
+          </div>
         </section>
 
         {/* Content Sections with Proper Spacing */}
