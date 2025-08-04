@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Star, TrendingUp, Users, Award, ExternalLink, CheckCircle, Zap } from "lucide-react";
 import { useState } from "react";
 
-// Department data - same as in DepartmentsSection
+// Department data - complete with all sections
 const departments = [
   {
     id: "mobile-development",
@@ -63,8 +63,102 @@ const departments = [
       { name: "موقع التجارة الإلكترونية", tech: "3D Design + Interactive", conversion: "+45%" },
       { name: "هوية الشركة التقنية", tech: "Brand Identity + Motion", recognition: "عالمي" }
     ]
+  },
+  {
+    id: "ai-data-science",
+    name: "علوم البيانات والذكاء الاصطناعي",
+    description: "تحليل البيانات الضخمة وتطوير نماذج الذكاء الاصطناعي المتقدمة",
+    fullDescription: "نختص في تطوير حلول الذكاء الاصطناعي وعلوم البيانات المتقدمة، حيث نساعد الشركات على استخراج رؤى قيمة من بياناتها وأتمتة العمليات المعقدة باستخدام خوارزميات التعلم الآلي المتطورة.",
+    services: ["Machine Learning", "Big Data Analytics", "تعلم الآلة العميق", "معالجة اللغة الطبيعية", "Computer Vision", "Neural Networks"],
+    color: "from-orange-600 to-red-500",
+    globalTech: ["Python", "TensorFlow", "PyTorch", "AWS SageMaker", "Apache Spark", "Jupyter"],
+    projects: "200+",
+    rating: "5.0",
+    trend: "+60%",
+    teamSize: "30+ خبير ذكاء اصطناعي",
+    certifications: ["AWS Machine Learning", "Google Cloud AI", "Microsoft Azure AI"],
+    portfolio: [
+      { name: "نظام التنبؤ المالي", tech: "Deep Learning + Time Series", accuracy: "95%" },
+      { name: "محرك التوصيات الذكي", tech: "Collaborative Filtering + NLP", engagement: "+80%" },
+      { name: "نظام تحليل الصور الطبية", tech: "Computer Vision + CNN", precision: "98%" }
+    ]
+  },
+  {
+    id: "cybersecurity",
+    name: "الأمن السيبراني المتقدم",
+    description: "حماية متطورة بأحدث تقنيات الأمان العالمية والذكاء الاصطناعي",
+    fullDescription: "نوفر حلول الأمن السيبراني الشاملة والمتقدمة لحماية البنية التحتية الرقمية للمؤسسات. فريقنا من خبراء الأمن يعمل على تطوير وتنفيذ استراتيجيات أمنية متطورة تتضمن الذكاء الاصطناعي لمكافحة التهديدات المتقدمة.",
+    services: ["AI-Powered Security", "Zero Trust Architecture", "حماية السحابة", "تحليل التهديدات", "اختبار الاختراق", "إدارة الهوية"],
+    color: "from-gray-700 to-slate-600",
+    globalTech: ["Microsoft Sentinel", "CrowdStrike", "Splunk", "Palo Alto", "Fortinet", "Cisco"],
+    projects: "150+",
+    rating: "4.9",
+    trend: "+45%",
+    teamSize: "20+ خبير أمن",
+    certifications: ["CISSP", "CEH", "CISSP", "Security+", "CISM"],
+    portfolio: [
+      { name: "نظام الحماية المصرفية", tech: "AI Threat Detection + SIEM", incidents: "-90%" },
+      { name: "بنية الثقة الصفرية", tech: "Zero Trust + IAM", security: "99.9%" },
+      { name: "حماية التطبيقات السحابية", tech: "Cloud Security + WAF", protection: "100%" }
+    ]
+  },
+  {
+    id: "cloud-solutions",
+    name: "الحلول السحابية المتقدمة",
+    description: "تطوير وإدارة البنية التحتية السحابية بمعايير المؤسسات العالمية",
+    fullDescription: "نقدم حلول سحابية متكاملة ومتقدمة تساعد المؤسسات على الانتقال الرقمي وتحقيق الكفاءة والمرونة. فريقنا يعمل على تصميم وتنفيذ بنية تحتية سحابية قابلة للتوسع وآمنة باستخدام أحدث تقنيات DevOps والحاويات.",
+    services: ["Multi-Cloud Strategy", "Kubernetes", "Microservices", "DevOps/GitOps", "Infrastructure as Code", "Container Orchestration"],
+    color: "from-indigo-600 to-blue-600",
+    globalTech: ["AWS", "Azure", "GCP", "Docker", "Terraform", "Kubernetes"],
+    projects: "400+",
+    rating: "4.8",
+    trend: "+35%",
+    teamSize: "40+ مهندس سحابي",
+    certifications: ["AWS Solutions Architect", "Azure Expert", "Google Cloud Architect"],
+    portfolio: [
+      { name: "منصة التجارة الإلكترونية السحابية", tech: "AWS + Kubernetes", scalability: "1000x" },
+      { name: "نظام إدارة المحتوى العالمي", tech: "Multi-Cloud + CDN", availability: "99.99%" },
+      { name: "بنية تحتية للألعاب", tech: "GCP + Load Balancing", latency: "<50ms" }
+    ]
+  },
+  {
+    id: "data-management",
+    name: "إدارة البيانات المؤسسية",
+    description: "حلول قواعد البيانات المتقدمة وإدارة البيانات الضخمة عالمياً",
+    fullDescription: "نتخصص في تصميم وإدارة أنظمة البيانات المعقدة والمتقدمة للمؤسسات الكبيرة. فريقنا يعمل على تطوير حلول تخزين وتحليل البيانات الضخمة مع ضمان الأداء العالي والأمان المتقدم.",
+    services: ["Data Warehousing", "Real-time Analytics", "Data Governance", "BI Solutions", "ETL/ELT Pipelines", "Data Lake Architecture"],
+    color: "from-teal-600 to-green-500",
+    globalTech: ["MongoDB", "PostgreSQL", "Snowflake", "Power BI", "Apache Kafka", "Elasticsearch"],
+    projects: "250+",
+    rating: "4.7",
+    trend: "+28%",
+    teamSize: "25+ مهندس بيانات",
+    certifications: ["Snowflake Architect", "MongoDB Professional", "Microsoft BI"],
+    portfolio: [
+      { name: "مستودع البيانات المصرفية", tech: "Snowflake + Real-time Analytics", performance: "10x faster" },
+      { name: "منصة ذكاء الأعمال", tech: "Power BI + Data Lake", insights: "360°" },
+      { name: "نظام البيانات الضخمة", tech: "Hadoop + Spark", processing: "TB/hour" }
+    ]
+  },
+  {
+    id: "innovation-automation",
+    name: "الابتكار والأتمتة",
+    description: "تطوير حلول الأتمتة الذكية وعمليات الابتكار التقني المتقدم",
+    fullDescription: "نركز على تطوير حلول الأتمتة الذكية والابتكار التقني لتحسين كفاءة العمليات وخفض التكاليف. فريقنا يعمل على تصميم وتنفيذ أنظمة أتمتة متطورة تجمع بين الذكاء الاصطناعي وأتمتة العمليات.",
+    services: ["RPA Solutions", "Process Automation", "Innovation Labs", "Digital Transformation", "Workflow Optimization", "Smart Robotics"],
+    color: "from-yellow-500 to-orange-500",
+    globalTech: ["UiPath", "Microsoft Power Platform", "Zapier", "Custom APIs", "Python", "Node.js"],
+    projects: "350+",
+    rating: "4.8",
+    trend: "+50%",
+    teamSize: "28+ مطور أتمتة",
+    certifications: ["UiPath Advanced", "Microsoft Power Platform", "Automation Anywhere"],
+    portfolio: [
+      { name: "أتمتة العمليات المصرفية", tech: "RPA + AI", efficiency: "+75%" },
+      { name: "نظام الفاتورة الذكي", tech: "OCR + Machine Learning", accuracy: "99%" },
+      { name: "منصة الابتكار الرقمي", tech: "Low-Code + APIs", development: "5x faster" }
+    ]
   }
-  // يمكن إضافة باقي الأقسام...
 ];
 
 const DepartmentDetails = () => {
