@@ -77,7 +77,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
       from: "نظام طلبات التوظيف <careers@alialshehriholding.com>",
-      to: ["info@fekrahtech.com"],
+      to: ["info@alialshehriholding.com"],
       subject: `طلب توظيف جديد - ${applicationData.position}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 10px;">
@@ -204,11 +204,11 @@ const handler = async (req: Request): Promise<Response> => {
             </p>
           </div>
           
-          <div style="margin-top: 20px; text-align: center;">
-            <p style="color: #666; font-size: 14px;">
-              للتواصل معنا: info@fekrahtech.com | 0555812567
-            </p>
-          </div>
+            <div style="margin-top: 20px; text-align: center;">
+              <p style="color: #666; font-size: 14px;">
+                للتواصل معنا: info@alialshehriholding.com | +966 555 812 567
+              </p>
+            </div>
         </div>
       `,
     });

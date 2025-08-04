@@ -155,7 +155,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send notification to company
     const notificationEmailResponse = await resend.emails.send({
       from: "النشرة الإخبارية <newsletter@alialshehriholding.com>",
-      to: ["info@fekrahtech.com"],
+      to: ["info@alialshehriholding.com"],
       subject: "اشتراك جديد في النشرة الإخبارية",
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px;">

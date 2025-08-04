@@ -68,7 +68,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email notification to company
     const companyEmailResponse = await resend.emails.send({
       from: "وظائف فكرة للتقنية <careers@alialshehriholding.com>",
-      to: ["info@fekrahtech.com"],
+      to: ["info@alialshehriholding.com"],
       subject: `طلب توظيف جديد - ${jobData.position}`,
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">

@@ -31,7 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
       from: "نظام التواصل <contact@alialshehriholding.com>",
-      to: ["info@fekrahtech.com"],
+      to: ["info@alialshehriholding.com"],
       subject: `رسالة جديدة من موقع الشركة - ${contactData.subject || 'بدون موضوع'}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 10px;">
