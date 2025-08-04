@@ -23,8 +23,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, pdf, Font } from '@react-pdf/renderer';
 
 // Current offers data (matching CurrentOffers.tsx)
 const currentOffers = [
@@ -159,114 +158,271 @@ const DigitalContracts = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 
-  const generateContractPDF = async () => {
-    try {
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      // إعداد الخط للنص العربي
-      pdf.setFont('Arial');
-      pdf.setFontSize(12);
-      
-      // عنوان العقد
-      pdf.setFontSize(16);
-      pdf.setFont('Arial', 'bold');
-      pdf.text('عقد تقديم خدمات تقنية', 105, 20, { align: 'center' });
-      
-      // معلومات الطرف الأول
-      pdf.setFontSize(12);
-      pdf.setFont('Arial', 'bold');
-      pdf.text('الطرف الأول:', 20, 40);
-      pdf.setFont('Arial', 'normal');
-      pdf.text('شركة علي صالح الشهري القابضة', 20, 50);
-      pdf.text('رقم السجل التجاري: 4030394026', 20, 58);
-      pdf.text('الرقم الضريبي: 311234567890003', 20, 66);
-      pdf.text('العنوان: المملكة العربية السعودية', 20, 74);
-      pdf.text('البريد الإلكتروني: info@alialshehriholding.com', 20, 82);
-      
-      // معلومات الطرف الثاني
-      pdf.setFont('Arial', 'bold');
-      pdf.text('الطرف الثاني:', 20, 100);
-      pdf.setFont('Arial', 'normal');
-      pdf.text(`الاسم: ${formData.clientName}`, 20, 110);
-      pdf.text(`البريد الإلكتروني: ${formData.clientEmail}`, 20, 118);
-      pdf.text(`رقم الهاتف: ${formData.clientPhone}`, 20, 126);
-      
-      if (formData.clientType === 'individual' && formData.clientIdNumber) {
-        pdf.text(`رقم الهوية: ${formData.clientIdNumber}`, 20, 134);
-      }
-      
-      if (formData.clientType !== 'individual') {
-        if (formData.commercialRegister) {
-          pdf.text(`السجل التجاري: ${formData.commercialRegister}`, 20, 134);
-        }
-        if (formData.taxNumber) {
-          pdf.text(`الرقم الضريبي: ${formData.taxNumber}`, 20, 142);
-        }
-        if (formData.authorizedPerson) {
-          pdf.text(`المفوض بالتوقيع: ${formData.authorizedPerson}`, 20, 150);
-        }
-      }
-      
-      if (formData.clientAddress) {
-        pdf.text(`العنوان: ${formData.clientAddress}`, 20, 158);
-      }
-      
-      // تفاصيل الخدمة
-      pdf.setFont('Arial', 'bold');
-      pdf.text('تفاصيل الخدمة:', 20, 180);
-      pdf.setFont('Arial', 'normal');
-      
-      if (selectedOfferDetails) {
-        pdf.text(`الخدمة: ${selectedOfferDetails.title}`, 20, 190);
-        pdf.text(`السعر: ${selectedOfferDetails.price} ريال سعودي`, 20, 198);
-        pdf.text(`مدة التنفيذ: ${selectedOfferDetails.duration}`, 20, 206);
-      }
-      
-      if (formData.serviceDescription) {
-        pdf.text('وصف الخدمة:', 20, 220);
-        const splitDescription = pdf.splitTextToSize(formData.serviceDescription, 170);
-        pdf.text(splitDescription, 20, 230);
-      }
-      
-      // شروط العقد
-      pdf.setFont('Arial', 'bold');
-      pdf.text('شروط وأحكام العقد:', 20, 260);
-      pdf.setFont('Arial', 'normal');
-      
-      const terms = [
-        '1. مدة تنفيذ الطلب: 15 يوم عمل من تاريخ التوقيع على العقد واستلام الدفعة المقدمة',
-        '2. إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين',
-        '3. يتم اعتماد العقد نهائياً بعد دفع المبلغ المتفق عليه عن طريق التحويل البنكي',
-        '4. ترسل الشركة اعتماد العقد رسمياً بعد استلام الدفعة',
-        '5. جميع التعديلات والتغييرات تتم بموافقة خطية من الطرفين',
-        '6. هذا العقد خاضع للأنظمة السعودية النافذة'
-      ];
-      
-      let yPosition = 270;
-      terms.forEach(term => {
-        const splitTerm = pdf.splitTextToSize(term, 170);
-        pdf.text(splitTerm, 20, yPosition);
-        yPosition += splitTerm.length * 6 + 4;
-      });
-      
-      // تاريخ العقد
-      pdf.setFont('Arial', 'bold');
-      pdf.text(`تاريخ العقد: ${new Date().toLocaleDateString('ar-SA')}`, 20, yPosition + 10);
-      
-      // توقيع العميل (إذا كان متوفراً)
-      if (signatureCanvasRef.current) {
-        const canvas = signatureCanvasRef.current;
-        const signatureDataURL = canvas.toDataURL();
-        // يمكن إضافة التوقيع كصورة هنا
-        pdf.text('توقيع العميل:', 120, yPosition + 30);
-      }
-      
-      return pdf.output('blob');
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      throw new Error('فشل في إنشاء ملف PDF');
-    }
+  // تحديث contract form edge function بإرسال البيانات الصحيحة
+  const generateContractPDF = () => {
+    const contractDate = new Date().toLocaleDateString('ar-SA', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    // إنشاء PDF Document مع دعم النص العربي
+    const ContractDocument = () => (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          {/* هيدر الشركة */}
+          <View style={styles.header}>
+            <Text style={styles.companyName}>شركة علي صالح الشهري القابضة</Text>
+            <Text style={styles.contractTitle}>عقد تقديم خدمات تقنية</Text>
+            <Text style={styles.contractNumber}>رقم العقد: {Math.random().toString().slice(2, 8)}</Text>
+          </View>
+
+          {/* معلومات الطرفين */}
+          <View style={styles.partiesSection}>
+            <View style={styles.party}>
+              <Text style={styles.partyTitle}>الطرف الأول:</Text>
+              <Text style={styles.partyInfo}>شركة علي صالح الشهري القابضة</Text>
+              <Text style={styles.partyDetails}>رقم السجل التجاري: 4030394026</Text>
+              <Text style={styles.partyDetails}>الرقم الضريبي: 311234567890003</Text>
+              <Text style={styles.partyDetails}>العنوان: المملكة العربية السعودية - الرياض</Text>
+              <Text style={styles.partyDetails}>البريد الإلكتروني: info@alialshehriholding.com</Text>
+              <Text style={styles.partyDetails}>الهاتف: +966 11 123 4567</Text>
+            </View>
+
+            <View style={styles.party}>
+              <Text style={styles.partyTitle}>الطرف الثاني:</Text>
+              <Text style={styles.partyInfo}>{formData.clientName}</Text>
+              <Text style={styles.partyDetails}>البريد الإلكتروني: {formData.clientEmail}</Text>
+              <Text style={styles.partyDetails}>الهاتف: {formData.clientPhone}</Text>
+              {formData.clientType === 'individual' && formData.clientIdNumber && (
+                <Text style={styles.partyDetails}>رقم الهوية: {formData.clientIdNumber}</Text>
+              )}
+              {formData.clientType !== 'individual' && (
+                <>
+                  {formData.commercialRegister && (
+                    <Text style={styles.partyDetails}>السجل التجاري: {formData.commercialRegister}</Text>
+                  )}
+                  {formData.taxNumber && (
+                    <Text style={styles.partyDetails}>الرقم الضريبي: {formData.taxNumber}</Text>
+                  )}
+                  {formData.authorizedPerson && (
+                    <Text style={styles.partyDetails}>المفوض بالتوقيع: {formData.authorizedPerson}</Text>
+                  )}
+                </>
+              )}
+              {formData.clientAddress && (
+                <Text style={styles.partyDetails}>العنوان: {formData.clientAddress}</Text>
+              )}
+            </View>
+          </View>
+
+          {/* تفاصيل الخدمة */}
+          <View style={styles.serviceSection}>
+            <Text style={styles.sectionTitle}>تفاصيل الخدمة المتفق عليها:</Text>
+            {selectedOfferDetails && (
+              <>
+                <Text style={styles.serviceInfo}>اسم الخدمة: {selectedOfferDetails.title}</Text>
+                <Text style={styles.serviceInfo}>قيمة العقد: {selectedOfferDetails.price} ريال سعودي</Text>
+                <Text style={styles.serviceInfo}>مدة التنفيذ: {selectedOfferDetails.duration}</Text>
+                <Text style={styles.serviceInfo}>مدة تنفيذ الطلب: 15 يوم عمل من تاريخ التوقيع واستلام الدفعة</Text>
+              </>
+            )}
+            {formData.serviceDescription && (
+              <Text style={styles.serviceDescription}>
+                وصف الخدمة: {formData.serviceDescription}
+              </Text>
+            )}
+          </View>
+
+          {/* شروط وأحكام العقد */}
+          <View style={styles.termsSection}>
+            <Text style={styles.sectionTitle}>شروط وأحكام العقد:</Text>
+            <Text style={styles.term}>
+              ١. مدة تنفيذ المشروع: 15 يوم عمل من تاريخ التوقيع على العقد واستلام الدفعة المقدمة.
+            </Text>
+            <Text style={styles.term}>
+              ٢. إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين.
+            </Text>
+            <Text style={styles.term}>
+              ٣. يتم اعتماد العقد نهائياً بعد دفع المبلغ المتفق عليه عن طريق التحويل البنكي لحساب الشركة.
+            </Text>
+            <Text style={styles.term}>
+              ٤. ترسل الشركة اعتماد العقد رسمياً من طرفها بعد استلام الدفعة.
+            </Text>
+            <Text style={styles.term}>
+              ٥. جميع التعديلات والتغييرات على هذا العقد تتم بموافقة خطية من الطرفين.
+            </Text>
+            <Text style={styles.term}>
+              ٦. هذا العقد خاضع للأنظمة السعودية النافذة.
+            </Text>
+            <Text style={styles.term}>
+              ٧. أي نزاع ينشأ عن هذا العقد يحل ودياً، وفي حالة تعذر ذلك يحال للجهات المختصة.
+            </Text>
+          </View>
+
+          {/* معلومات الدفع والحساب البنكي */}
+          <View style={styles.paymentSection}>
+            <Text style={styles.sectionTitle}>معلومات الحساب البنكي للتحويل:</Text>
+            <Text style={styles.paymentInfo}>بنك الراجحي</Text>
+            <Text style={styles.paymentInfo}>رقم الحساب: SA0380000000608010167519</Text>
+            <Text style={styles.paymentInfo}>اسم الحساب: شركة علي صالح الشهري القابضة</Text>
+          </View>
+
+          {/* التوقيعات */}
+          <View style={styles.signatureSection}>
+            <View style={styles.signatureBox}>
+              <Text style={styles.signatureLabel}>الطرف الأول</Text>
+              <Text style={styles.signatureName}>شركة علي صالح الشهري القابضة</Text>
+              <Text style={styles.signatureLine}>التوقيع: ________________</Text>
+            </View>
+            
+            <View style={styles.signatureBox}>
+              <Text style={styles.signatureLabel}>الطرف الثاني</Text>
+              <Text style={styles.signatureName}>{formData.clientName}</Text>
+              <Text style={styles.signatureLine}>التوقيع: [توقيع رقمي]</Text>
+            </View>
+          </View>
+
+          {/* التاريخ */}
+          <View style={styles.dateSection}>
+            <Text style={styles.contractDate}>تاريخ العقد: {contractDate}</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+
+    return ContractDocument;
   };
+
+  // الأنماط للـ PDF
+  const styles = StyleSheet.create({
+    page: {
+      flexDirection: 'column',
+      backgroundColor: '#ffffff',
+      padding: 30,
+      fontFamily: 'Helvetica',
+      fontSize: 11,
+      lineHeight: 1.4,
+    },
+    header: {
+      textAlign: 'center',
+      marginBottom: 30,
+      paddingBottom: 20,
+      borderBottom: '2pt solid #1e40af',
+    },
+    companyName: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#1e40af',
+      marginBottom: 10,
+    },
+    contractTitle: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginBottom: 5,
+    },
+    contractNumber: {
+      fontSize: 12,
+      color: '#666666',
+    },
+    partiesSection: {
+      marginBottom: 25,
+    },
+    party: {
+      marginBottom: 20,
+      padding: 15,
+      backgroundColor: '#f8fafc',
+      border: '1pt solid #e2e8f0',
+    },
+    partyTitle: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      marginBottom: 8,
+      color: '#1e40af',
+    },
+    partyInfo: {
+      fontSize: 12,
+      fontWeight: 'bold',
+      marginBottom: 5,
+    },
+    partyDetails: {
+      fontSize: 10,
+      marginBottom: 3,
+      color: '#374151',
+    },
+    serviceSection: {
+      marginBottom: 25,
+      padding: 15,
+      backgroundColor: '#fef3c7',
+      border: '1pt solid #fbbf24',
+    },
+    sectionTitle: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      color: '#1e40af',
+    },
+    serviceInfo: {
+      fontSize: 11,
+      marginBottom: 5,
+    },
+    serviceDescription: {
+      fontSize: 10,
+      marginTop: 8,
+      color: '#374151',
+    },
+    termsSection: {
+      marginBottom: 25,
+    },
+    term: {
+      fontSize: 10,
+      marginBottom: 8,
+      paddingLeft: 10,
+      textAlign: 'justify',
+    },
+    paymentSection: {
+      marginBottom: 25,
+      padding: 15,
+      backgroundColor: '#dcfce7',
+      border: '1pt solid #22c55e',
+    },
+    paymentInfo: {
+      fontSize: 11,
+      marginBottom: 3,
+      fontWeight: 'bold',
+    },
+    signatureSection: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+    },
+    signatureBox: {
+      width: '45%',
+      padding: 10,
+      border: '1pt solid #d1d5db',
+    },
+    signatureLabel: {
+      fontSize: 12,
+      fontWeight: 'bold',
+      marginBottom: 5,
+    },
+    signatureName: {
+      fontSize: 10,
+      marginBottom: 15,
+    },
+    signatureLine: {
+      fontSize: 10,
+      color: '#6b7280',
+    },
+    dateSection: {
+      textAlign: 'center',
+      marginTop: 20,
+    },
+    contractDate: {
+      fontSize: 12,
+      fontWeight: 'bold',
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -327,7 +483,20 @@ const DigitalContracts = () => {
       const { data, error } = await supabase.functions.invoke('contract-form', {
         body: {
           formType: formData.clientType,
-          ...contractData
+          clientName: formData.clientName,
+          clientEmail: formData.clientEmail,
+          clientPhone: formData.clientPhone,
+          clientIdNumber: formData.clientIdNumber,
+          clientAddress: formData.clientAddress,
+          commercialRegister: formData.commercialRegister,
+          taxNumber: formData.taxNumber,
+          authorizedPerson: formData.authorizedPerson,
+          selectedOffer: selectedOfferDetails?.title || formData.selectedOffer,
+          servicePrice: selectedOfferDetails?.price || "0",
+          contractDuration: selectedOfferDetails?.duration || "حسب الاتفاق",
+          serviceDescription: formData.serviceDescription,
+          customRequirements: formData.customRequirements,
+          signature: signatureDataURL
         }
       });
 
@@ -374,19 +543,26 @@ const DigitalContracts = () => {
 
   const downloadContract = async () => {
     try {
-      const pdfBlob = await generateContractPDF();
+      const ContractDoc = generateContractPDF();
+      const pdfBlob = await pdf(<ContractDoc />).toBlob();
       const url = URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `contract_${Date.now()}.pdf`;
+      a.download = `عقد_${formData.clientName || 'العميل'}_${Date.now()}.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      
+      toast({
+        title: "تم تحميل العقد بنجاح",
+        description: "تم إنشاء وتحميل ملف العقد بصيغة PDF",
+      });
     } catch (error) {
+      console.error("PDF generation error:", error);
       toast({
         title: "خطأ في تحميل العقد",
-        description: "حدث خطأ أثناء تحميل العقد",
+        description: "حدث خطأ أثناء إنشاء ملف PDF. يرجى المحاولة مرة أخرى.",
         variant: "destructive"
       });
     }
