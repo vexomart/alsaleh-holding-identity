@@ -98,7 +98,8 @@ const SubsidiariesSection = () => {
       color: "from-pink-600 to-rose-600",
       website: "http://advixo.media/",
       isMarketing: true,
-      inDevelopment: true
+      inDevelopment: true,
+      launchDate: "30-08-2025"
     },
     {
       name: "نيوماكسيو",
@@ -432,10 +433,14 @@ const SubsidiariesSection = () => {
     return (
       <div className="relative h-[600px]">
         <div className="relative overflow-hidden bg-gradient-to-br from-pink-50 via-rose-50 to-red-50 rounded-3xl border-2 border-pink-200/60 hover:border-pink-400/80 transition-all duration-700 group h-full">
-          {/* Development Banner */}
+          {/* Development Banner with Launch Date */}
           {company.inDevelopment && (
             <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-2 text-sm font-bold animate-pulse">
-              🚧 قيد التطوير - Coming Soon 🚧
+              <div className="flex items-center justify-center gap-2">
+                <span>🚧</span>
+                <span>قيد التطوير - الإطلاق المتوقع {company.launchDate}</span>
+                <span>🚧</span>
+              </div>
             </div>
           )}
           
@@ -523,11 +528,9 @@ const SubsidiariesSection = () => {
             
             {/* CTA Button */}
             <div className="text-center">
-              <Button asChild className={`w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-pink-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`}>
-                <a href={company.website} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
-                  {company.inDevelopment ? 'قريباً - Soon' : 'استكشف خدماتنا التسويقية'}
-                </a>
+              <Button className={`w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-pink-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`} disabled={company.inDevelopment}>
+                <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                {company.inDevelopment ? `قريباً - ${company.launchDate}` : 'استكشف خدماتنا التسويقية'}
               </Button>
             </div>
           </CardContent>
