@@ -33,6 +33,8 @@ const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -329,25 +331,33 @@ const Navigation = () => {
                 
                 {/* خدماتنا في الموبايل */}
                 <div className="border-b border-gray-200 pb-3">
-                  <h3 className="text-gray-900 font-semibold mb-2">خدماتنا</h3>
-                  <div className="grid grid-cols-1 gap-2 pr-4">
-                    {services.map((service, index) => {
-                      const IconComponent = service.icon;
-                      return (
-                        <a
-                          key={index}
-                          href={service.href}
-                          className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <IconComponent className="w-4 h-4 text-blue-600" />
-                          </div>
-                          <span className="text-sm text-gray-700">{service.name}</span>
-                        </a>
-                      );
-                    })}
-                  </div>
+                  <button 
+                    className="flex items-center justify-between w-full py-2 text-gray-900 font-semibold hover:text-blue-600 transition-colors"
+                    onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                  >
+                    <span>خدماتنا</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${mobileServicesOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {mobileServicesOpen && (
+                    <div className="grid grid-cols-1 gap-2 pr-4 mt-2">
+                      {services.map((service, index) => {
+                        const IconComponent = service.icon;
+                        return (
+                          <a
+                            key={index}
+                            href={service.href}
+                            className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                              <IconComponent className="w-4 h-4 text-blue-600" />
+                            </div>
+                            <span className="text-sm text-gray-700">{service.name}</span>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
                 
                 <a 
@@ -374,25 +384,33 @@ const Navigation = () => {
                 
                 {/* أخرى في الموبايل */}
                 <div className="border-b border-gray-200 pb-3">
-                  <h3 className="text-gray-900 font-semibold mb-2">أخرى</h3>
-                  <div className="grid grid-cols-1 gap-2 pr-4">
-                    {othersItems.map((item, index) => {
-                      const IconComponent = item.icon;
-                      return (
-                        <a
-                          key={index}
-                          href={item.href}
-                          className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <IconComponent className="w-4 h-4 text-blue-600" />
-                          </div>
-                          <span className="text-sm text-gray-700">{item.name}</span>
-                        </a>
-                      );
-                    })}
-                  </div>
+                  <button 
+                    className="flex items-center justify-between w-full py-2 text-gray-900 font-semibold hover:text-blue-600 transition-colors"
+                    onClick={() => setMobileOthersOpen(!mobileOthersOpen)}
+                  >
+                    <span>أخرى</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${mobileOthersOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {mobileOthersOpen && (
+                    <div className="grid grid-cols-1 gap-2 pr-4 mt-2">
+                      {othersItems.map((item, index) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <a
+                            key={index}
+                            href={item.href}
+                            className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                              <IconComponent className="w-4 h-4 text-blue-600" />
+                            </div>
+                            <span className="text-sm text-gray-700">{item.name}</span>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
                 
                 <a 
