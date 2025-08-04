@@ -194,9 +194,9 @@ export default function ContractSystem() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <FileText className="h-6 w-6" />
+            <CardTitle className="flex items-center gap-3 flex-row-reverse">
               إنشاء عقد جديد
+              <FileText className="h-6 w-6" />
             </CardTitle>
             <CardDescription>
               املأ البيانات المطلوبة وسيتم إنشاء العقد فوراً
@@ -398,12 +398,12 @@ export default function ContractSystem() {
                             <SelectContent>
                               {services.map((service) => (
                                 <SelectItem key={service.value} value={service.value}>
-                                  <div className="flex justify-between items-center w-full">
-                                    <span>{service.label}</span>
-                                    <span className="text-primary font-semibold mr-4">
-                                      {Number(service.price).toLocaleString()} ر.س
-                                    </span>
-                                  </div>
+                                   <div className="flex justify-between items-center w-full">
+                                     <span className="text-primary font-semibold ml-4">
+                                       {Number(service.price).toLocaleString()} ر.س
+                                     </span>
+                                     <span>{service.label}</span>
+                                   </div>
                                 </SelectItem>
                               ))}
                             </SelectContent>
