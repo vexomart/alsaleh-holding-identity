@@ -275,6 +275,11 @@ const DepartmentsSection = () => {
                         variant="outline" 
                         size="sm" 
                         className="w-full bg-white/10 border-white/20 text-white hover:bg-purple-500 hover:border-purple-500"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const departmentIds = ["mobile-development", "digital-marketing", "design-solutions", "ai-data-science", "cybersecurity", "cloud-solutions", "data-management", "innovation-automation"];
+                          window.location.href = `/department/${departmentIds[index]}`;
+                        }}
                       >
                         عرض التفاصيل
                         <ChevronRight className="w-4 h-4 mr-2" />
@@ -301,22 +306,41 @@ const DepartmentsSection = () => {
           
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
             {[
-              { name: "Microsoft", color: "from-blue-500 to-blue-600" },
-              { name: "AWS", color: "from-orange-500 to-orange-600" },
-              { name: "Google Cloud", color: "from-green-500 to-green-600" },
-              { name: "Adobe", color: "from-red-500 to-red-600" },
-              { name: "Figma", color: "from-purple-500 to-purple-600" },
-              { name: "MongoDB", color: "from-green-600 to-green-700" },
-              { name: "Docker", color: "from-blue-600 to-blue-700" },
-              { name: "Kubernetes", color: "from-indigo-500 to-indigo-600" }
+              { name: "Microsoft", logo: "/src/assets/partners/microsoft-logo.png", site: "microsoft.com" },
+              { name: "AWS", logo: "/src/assets/partners/aws-logo.png", site: "aws.amazon.com" },
+              { name: "Google Cloud", logo: "/src/assets/partners/google-cloud-logo.png", site: "cloud.google.com" },
+              { name: "MongoDB", logo: "/src/assets/partners/mongodb-logo.png", site: "mongodb.com" },
+              { name: "Figma", logo: "/src/assets/partners/figma-logo.png", site: "figma.com" },
+              { name: "Docker", logo: "/src/assets/partners/docker-logo.png", site: "docker.com" },
+              { name: "Kubernetes", logo: "/src/assets/partners/kubernetes-logo.svg", site: "kubernetes.io" },
+              { name: "Oracle", logo: "https://logos-world.net/wp-content/uploads/2020/09/Oracle-Logo.png", site: "oracle.com" }
             ].map((partner, index) => (
               <div 
                 key={index} 
-                className="group p-4 bg-white/5 rounded-lg backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-purple-400/30 transition-all duration-300 cursor-pointer"
+                className="group p-4 bg-white/5 rounded-lg backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-purple-400/30 transition-all duration-300 cursor-pointer hover:scale-105"
+                onClick={() => window.open(`https://${partner.site}`, '_blank')}
               >
-                <div className={`w-8 h-8 bg-gradient-to-br ${partner.color} rounded-lg mx-auto mb-2 group-hover:scale-110 transition-transform duration-300`}></div>
-                <span className="text-xs font-medium text-gray-300 group-hover:text-white transition-colors">
+                <div className="w-12 h-12 bg-white/90 rounded-lg mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <img 
+                    src={partner.logo} 
+                    alt={`${partner.name} logo`}
+                    className="w-8 h-8 object-contain"
+                    onError={(e) => {
+                      const target = e.currentTarget as HTMLImageElement;
+                      const sibling = target.nextElementSibling as HTMLElement;
+                      target.style.display = 'none';
+                      if (sibling) sibling.style.display = 'block';
+                    }}
+                  />
+                  <div className="text-lg font-bold text-gray-700 hidden">
+                    {partner.name.charAt(0)}
+                  </div>
+                </div>
+                <span className="text-xs font-medium text-gray-300 group-hover:text-white transition-colors block">
                   {partner.name}
+                </span>
+                <span className="text-xs text-gray-500 group-hover:text-purple-300 transition-colors block mt-1">
+                  {partner.site}
                 </span>
               </div>
             ))}

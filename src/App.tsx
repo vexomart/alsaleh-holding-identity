@@ -52,6 +52,7 @@ import PaymentMethods from "./pages/PaymentMethods";
 import Dashboard from "./pages/Dashboard";
 import Partnerships from "./pages/Partnerships";
 import AffiliateMarketing from "./pages/AffiliateMarketing";
+import DepartmentDetails from "./pages/DepartmentDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -119,6 +120,7 @@ const App = () => {
           <Route path="/payment-methods" element={<PaymentMethods />} />
           <Route path="/partnerships" element={<Partnerships />} />
           <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
+          <Route path="/department/:id" element={<DepartmentDetails />} />
           <Route path="/dashboard" element={<Dashboard />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
