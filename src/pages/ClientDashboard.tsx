@@ -164,8 +164,8 @@ export default function ClientDashboard() {
           {[
             { 
               title: "الطلبات النشطة", 
-              value: "3", 
-              change: "+2", 
+              value: "0", 
+              change: "لا توجد بيانات", 
               icon: FileText, 
               color: "from-blue-500 to-blue-600",
               bgColor: "bg-blue-50",
@@ -173,8 +173,8 @@ export default function ClientDashboard() {
             },
             { 
               title: "المشاريع المكتملة", 
-              value: "12", 
-              change: "+4", 
+              value: "0", 
+              change: "لا توجد بيانات", 
               icon: CheckCircle, 
               color: "from-green-500 to-green-600",
               bgColor: "bg-green-50",
@@ -182,8 +182,8 @@ export default function ClientDashboard() {
             },
             { 
               title: "إجمالي الإنفاق", 
-              value: "45,200 ر.س", 
-              change: "+15%", 
+              value: "0 ر.س", 
+              change: "لا توجد بيانات", 
               icon: TrendingUp, 
               color: "from-purple-500 to-purple-600",
               bgColor: "bg-purple-50",
@@ -191,8 +191,8 @@ export default function ClientDashboard() {
             },
             { 
               title: "النقاط المكتسبة", 
-              value: "1,250", 
-              change: "+50", 
+              value: "0", 
+              change: "لا توجد بيانات", 
               icon: Star, 
               color: "from-amber-500 to-amber-600",
               bgColor: "bg-amber-50",
@@ -211,9 +211,7 @@ export default function ClientDashboard() {
               <CardContent>
                 <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
                 <div className="flex items-center text-sm">
-                  <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
-                  <span className="text-green-600 font-medium">{stat.change}</span>
-                  <span className="text-gray-500 mr-1">من الفترة السابقة</span>
+                  <span className="text-gray-500">{stat.change}</span>
                 </div>
               </CardContent>
             </Card>
@@ -303,25 +301,10 @@ export default function ClientDashboard() {
                   <CardDescription>تتبع آخر التحديثات على مشاريعك</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {[
-                      { action: "تم الانتهاء من تصميم الصفحة الرئيسية", time: "منذ ساعتين", status: "completed" },
-                      { action: "تم رفع النسخة التجريبية للمراجعة", time: "منذ 4 ساعات", status: "pending" },
-                      { action: "تم تأكيد متطلبات المشروع", time: "أمس", status: "completed" },
-                    ].map((activity, index) => (
-                      <div key={index} className="flex items-start gap-3 p-3 rounded-xl bg-white/60 hover:bg-white/80 transition-colors">
-                        <div className={`p-2 rounded-full ${activity.status === 'completed' ? 'bg-green-100' : 'bg-yellow-100'}`}>
-                          {activity.status === 'completed' ? 
-                            <CheckCircle className="w-4 h-4 text-green-600" /> : 
-                            <Clock className="w-4 h-4 text-yellow-600" />
-                          }
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-900">{activity.action}</p>
-                          <p className="text-xs text-gray-500">{activity.time}</p>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="text-center py-8">
+                    <Clock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">لا توجد أنشطة حتى الآن</p>
+                    <p className="text-sm text-gray-400 mt-2">ستظهر أنشطتك هنا عند بدء استخدام المنصة</p>
                   </div>
                 </CardContent>
               </Card>
@@ -340,69 +323,14 @@ export default function ClientDashboard() {
               </Button>
             </div>
             
-            <div className="grid gap-6">
-              {[1, 2, 3].map((order, index) => (
-                <Card key={order} className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in delay-${index * 100}`}>
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-blue-600"></div>
-                  <CardHeader className="pb-4">
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-2">
-                        <CardTitle className="text-xl">طلب تصميم موقع إلكتروني متقدم</CardTitle>
-                        <CardDescription className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4" />
-                          تم الإنشاء في {new Date().toLocaleDateString('ar-SA')}
-                        </CardDescription>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs">
-                            رقم الطلب: #ORD-{2024}0{order}
-                          </Badge>
-                        </div>
-                      </div>
-                      <Badge 
-                        variant={order === 1 ? 'default' : order === 2 ? 'secondary' : 'outline'}
-                        className={`px-3 py-1 ${
-                          order === 1 ? 'bg-gradient-to-r from-blue-500 to-blue-600' : 
-                          order === 2 ? 'bg-gradient-to-r from-green-500 to-green-600' : 
-                          'bg-gradient-to-r from-gray-400 to-gray-500'
-                        }`}
-                      >
-                        {order === 1 ? '🔄 قيد التنفيذ' : order === 2 ? '✅ مكتمل' : '⏳ في الانتظار'}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center">
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <CreditCard className="w-4 h-4 text-green-600" />
-                          <span className="text-lg font-bold text-green-600">
-                            {(order * 5000).toLocaleString()} ر.س
-                          </span>
-                        </div>
-                        {order === 1 && (
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span>تقدم المشروع</span>
-                              <span>65%</span>
-                            </div>
-                            <Progress value={65} className="h-2" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="hover-scale">
-                          <Eye className="mr-2 h-4 w-4" />
-                          عرض التفاصيل
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Download className="mr-2 h-4 w-4" />
-                          تحميل
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="text-center py-12">
+              <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">لا توجد طلبات حتى الآن</h3>
+              <p className="text-gray-500 mb-6">ابدأ رحلتك معنا بإنشاء طلبك الأول</p>
+              <Button className="hover-scale group bg-gradient-to-r from-primary to-blue-600">
+                <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
+                إنشاء طلب جديد
+              </Button>
             </div>
           </TabsContent>
 
@@ -418,48 +346,14 @@ export default function ClientDashboard() {
               </Button>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-6">
-              {[1, 2].map((project, index) => (
-                <Card key={project} className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in delay-${index * 100}`}>
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-purple-600"></div>
-                  <CardHeader>
-                    <CardTitle className="text-xl">مشروع تطوير تطبيق الجوال</CardTitle>
-                    <CardDescription className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      بدء المشروع: {new Date().toLocaleDateString('ar-SA')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>التقدم الإجمالي</span>
-                          <span className="font-bold">{project * 30}%</span>
-                        </div>
-                        <Progress 
-                          value={project * 30} 
-                          className="h-3 bg-gray-100"
-                        />
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <div className="flex gap-2">
-                          <Badge variant="secondary" className="bg-gradient-to-r from-green-100 to-green-200 text-green-700">
-                            ✅ نشط
-                          </Badge>
-                          <Badge variant="outline">
-                            🔥 أولوية عالية
-                          </Badge>
-                        </div>
-                        <Button variant="outline" size="sm" className="hover-scale">
-                          <Eye className="mr-2 h-4 w-4" />
-                          عرض المشروع
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="text-center py-12">
+              <Settings className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">لا توجد مشاريع حتى الآن</h3>
+              <p className="text-gray-500 mb-6">ابدأ مشروعك الأول معنا اليوم</p>
+              <Button className="hover-scale group bg-gradient-to-r from-primary to-blue-600">
+                <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
+                إنشاء مشروع جديد
+              </Button>
             </div>
           </TabsContent>
 
@@ -477,35 +371,11 @@ export default function ClientDashboard() {
                 </CardTitle>
                 <CardDescription>آخر 6 أشهر من الفواتير والمدفوعات</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {[1, 2, 3].map((invoice, index) => (
-                    <div key={invoice} className={`flex justify-between items-center p-6 border-0 rounded-xl bg-white/80 hover:bg-white transition-colors shadow-sm hover:shadow-md animate-fade-in delay-${index * 100}`}>
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-full bg-gradient-to-br from-blue-100 to-blue-200">
-                          <FileText className="w-5 h-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <p className="font-bold text-lg">فاتورة #{`INV-${2024}0${invoice}`}</p>
-                          <p className="text-sm text-gray-500 flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            {new Date().toLocaleDateString('ar-SA')}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right space-y-2">
-                        <p className="text-2xl font-bold text-green-600">
-                          {(invoice * 2500).toLocaleString()} ر.س
-                        </p>
-                        <Badge 
-                          variant={invoice === 1 ? 'default' : 'secondary'}
-                          className={invoice === 1 ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-yellow-500 to-yellow-600'}
-                        >
-                          {invoice === 1 ? '✅ مدفوعة' : '⏳ معلقة'}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
+               <CardContent>
+                <div className="text-center py-8">
+                  <CreditCard className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-600 mb-2">لا توجد فواتير حتى الآن</h3>
+                  <p className="text-gray-500">ستظهر فواتيرك هنا عند إتمام أول عملية شراء</p>
                 </div>
               </CardContent>
             </Card>
