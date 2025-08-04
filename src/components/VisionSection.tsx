@@ -138,13 +138,13 @@ const VisionSection = () => {
             <span className="text-blue-700 font-medium">Global Vision 2030+ • شركة عالمية</span>
           </div>
           
-          <h2 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
+          <h2 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight text-center">
             <span className="bg-gradient-to-r from-slate-800 via-blue-700 to-indigo-700 bg-clip-text text-transparent">
               رؤيتنا العالمية
             </span>
           </h2>
           
-          <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed mb-8">
+          <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed mb-8 text-center">
             نقود مستقبل التقنية عالمياً من خلال الابتكار المستمر والشراكات الاستراتيجية، 
             نحو عالم رقمي متصل ومستدام يخدم التنمية الاقتصادية والاجتماعية
           </p>
@@ -169,12 +169,12 @@ const VisionSection = () => {
                   <Target className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-2">رؤيتنا</h3>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-2 text-center">رؤيتنا</h3>
                   <Badge className="bg-blue-100 text-blue-700 border-0">Vision 2030+</Badge>
                 </div>
               </div>
               
-              <p className="text-slate-600 leading-relaxed mb-6 text-lg">
+              <p className="text-slate-600 leading-relaxed mb-6 text-lg text-center">
                 أن نكون الشركة القابضة الرائدة عالمياً في تقديم الحلول التقنية المبتكرة، 
                 نقود التحول الرقمي ونساهم في بناء مستقبل تقني مستدام يخدم المجتمعات
               </p>
@@ -201,12 +201,12 @@ const VisionSection = () => {
                   <Heart className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-2">رسالتنا</h3>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-2 text-center">رسالتنا</h3>
                   <Badge className="bg-emerald-100 text-emerald-700 border-0">Global Mission</Badge>
                 </div>
               </div>
               
-              <p className="text-slate-600 leading-relaxed mb-6 text-lg">
+              <p className="text-slate-600 leading-relaxed mb-6 text-lg text-center">
                 تطوير وتقديم حلول تقنية مبتكرة تحسن جودة الحياة وتدعم التنمية المستدامة، 
                 من خلال الاستثمار الذكي وبناء شراكات عالمية تساهم في تقدم المجتمع
               </p>
@@ -228,10 +228,10 @@ const VisionSection = () => {
         {/* Vision Pillars */}
         <div className="mb-20">
           <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-slate-800 mb-6">
+            <h3 className="text-4xl font-bold text-slate-800 mb-6 text-center">
               أركان رؤيتنا <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">الاستراتيجية</span>
             </h3>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto text-center">
               أربعة أركان أساسية تحدد مسارنا نحو المستقبل الرقمي والتميز العالمي
             </p>
           </div>
@@ -260,11 +260,11 @@ const VisionSection = () => {
                     <div className="text-sm text-slate-500">{pillar.metric}</div>
                   </div>
 
-                  <h4 className="text-lg font-bold text-slate-800 mb-4 group-hover:text-blue-600 transition-colors duration-300">
+                  <h4 className="text-lg font-bold text-slate-800 mb-4 group-hover:text-blue-600 transition-colors duration-300 text-center">
                     {pillar.title}
                   </h4>
                   
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <p className="text-slate-600 text-sm leading-relaxed text-center">
                     {pillar.description}
                   </p>
 
@@ -278,7 +278,7 @@ const VisionSection = () => {
         {/* Strategic Goals */}
         <div className="mb-20">
           <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-slate-800 mb-6">
+            <h3 className="text-4xl font-bold text-slate-800 mb-6 text-center">
               أهدافنا <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">الاستراتيجية</span>
             </h3>
           </div>
@@ -294,11 +294,11 @@ const VisionSection = () => {
                     <goal.icon className="w-8 h-8 text-white" />
                   </div>
                   
-                  <h4 className="text-lg font-semibold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors duration-300">
+                  <h4 className="text-lg font-semibold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors duration-300 text-center">
                     {goal.title}
                   </h4>
                   
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <p className="text-slate-600 text-sm leading-relaxed text-center">
                     {goal.description}
                   </p>
 
@@ -312,8 +312,8 @@ const VisionSection = () => {
         {/* Global Impact Stats */}
         <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-12 text-center">
           <div className="mb-12">
-            <h3 className="text-4xl font-bold text-white mb-4">تأثيرنا العالمي</h3>
-            <p className="text-slate-300 text-xl max-w-2xl mx-auto">
+            <h3 className="text-4xl font-bold text-white mb-4 text-center">تأثيرنا العالمي</h3>
+            <p className="text-slate-300 text-xl max-w-2xl mx-auto text-center">
               أرقام تتحدث عن مسيرتنا نحو التميز والريادة العالمية
             </p>
           </div>

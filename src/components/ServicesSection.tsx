@@ -232,10 +232,10 @@ ${technologies.slice(0, 3).map((tech, index) => `${index + 1}. ${tech}`).join('\
               خدماتنا المتنوعة 🚀
             </Badge>
           </div>
-          <h2 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-8 tracking-tight">
+          <h2 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-emerald-600 to-teal-600 bg-clip-text text-transparent mb-8 tracking-tight text-center">
             خدماتنا الاحترافية
           </h2>
-          <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-5xl mx-auto leading-relaxed font-medium">
+          <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-5xl mx-auto leading-relaxed font-medium text-center">
             نقدم مجموعة شاملة ومتكاملة من الخدمات التقنية والتسويقية المتطورة بمعايير عالمية لتحقيق أهدافك التجارية بأعلى مستويات الاحترافية
           </p>
         </div>
