@@ -85,7 +85,7 @@ const SubsidiariesSection = () => {
       nameEn: "", 
       description: "وكالة إبداعية متخصصة في التسويق الرقمي والإعلان مع حلول مبتكرة للعلامات التجارية",
       category: "التسويق والإعلان",
-      established: "2023",
+      established: "2025",
       icon: Megaphone,
       color: "from-pink-600 to-rose-600",
       website: "http://advixo.media/",
