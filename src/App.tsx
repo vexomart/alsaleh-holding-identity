@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import Support from "./pages/Support";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Contracts from "./pages/Contracts";
 import JobApplication from "./pages/JobApplication";
 import TechInvestment from "./pages/TechInvestment";
 import Development from "./pages/Development";
@@ -85,6 +86,7 @@ const App = () => {
               <Route path="/training" element={<Training />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/job-application" element={<Careers />} />
+              <Route path="/contracts" element={<Contracts />} />
               <Route path="/development-program" element={<DevelopmentProgram />} />
               <Route path="/company-news" element={<CompanyNews />} />
               <Route path="/press-releases" element={<PressReleases />} />

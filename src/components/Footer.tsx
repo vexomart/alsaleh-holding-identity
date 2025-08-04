@@ -255,6 +255,13 @@ const Footer = () => {
     { name: "التقنيات والأنظمة الأساسية", href: "/technologies", icon: Code }
   ];
 
+  const contracts = [
+    { name: "طريقة التعاقد", href: "/contracts", icon: FileText },
+    { name: "شروط التعاقد", href: "/contracts#requirements", icon: Shield },
+    { name: "أنواع العقود", href: "/contracts#types", icon: Building2 },
+    { name: "خطوات التعاقد", href: "/contracts#process", icon: Clock }
+  ];
+
   const contactInfo = [
     { label: "البريد الإلكتروني", value: "info@ash.holdings", icon: Mail },
     { label: "الهاتف", value: "0555812567", icon: Phone },
@@ -605,8 +612,34 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 4: Careers & Opportunities */}
+            {/* Column 4: Contracts */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              {/* Contracts */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-indigo-400 animate-pulse" />
+                  العقود
+                </h4>
+                <ul className="space-y-2">
+                  {contracts.map((contract, index) => {
+                    const IconComponent = contract.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={contract.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-indigo-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="group-hover:font-medium transition-all duration-300">
+                            {contract.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
               {/* Careers */}
               <div>
                 <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
