@@ -8,7 +8,7 @@ import StatsSection from "@/components/StatsSection";
 
 
 import DepartmentsSection from "@/components/DepartmentsSection";
-import SubsidiariesSection from "@/components/SubsidiariesSection";
+
 import CommitmentsSection from "@/components/CommitmentsSection";
 import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import ContactSection from "@/components/ContactSection";
@@ -68,16 +68,6 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Subsidiaries Section */}
-          <section id="companies" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-50/80 via-gray-50/60 to-zinc-50/80 dark:from-slate-950/30 dark:via-gray-950/20 dark:to-zinc-950/30"></div>
-            <div className="absolute inset-0 bg-[linear-gradient(45deg,_transparent_25%,_rgba(0,0,0,0.02)_25%,_rgba(0,0,0,0.02)_50%,_transparent_50%,_transparent_75%,_rgba(0,0,0,0.02)_75%)] bg-[length:20px_20px]"></div>
-            <div className="absolute top-5 right-5 sm:top-12 sm:right-12 w-32 h-32 sm:w-88 sm:h-88 bg-gradient-to-br from-slate-200/40 to-gray-200/40 rounded-full blur-xl sm:blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-5 left-5 sm:bottom-12 sm:left-12 w-28 h-28 sm:w-76 sm:h-76 bg-gradient-to-br from-zinc-200/40 to-slate-200/40 rounded-full blur-lg sm:blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-            <div className="relative z-10">
-              <SubsidiariesSection />
-            </div>
-          </section>
 
           {/* Commitments Section */}
           <section id="commitments" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">

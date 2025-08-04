@@ -45,6 +45,7 @@ import CurrentOffers from "./pages/CurrentOffers";
 import ProfessionalServices from "./pages/ProfessionalServices";
 import ContentCreation from "./pages/ContentCreation";
 import DesignSolutions from "./pages/DesignSolutions";
+import Subsidiaries from "./pages/Subsidiaries";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -106,6 +107,7 @@ const App = () => {
           <Route path="/professional-services" element={<ProfessionalServices />} />
           <Route path="/content-creation" element={<ContentCreation />} />
           <Route path="/design-solutions" element={<DesignSolutions />} />
+          <Route path="/subsidiaries" element={<Subsidiaries />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

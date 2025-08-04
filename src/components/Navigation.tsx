@@ -190,7 +190,7 @@ const Navigation = () => {
                 رؤيتنا
               </a>
               <a 
-                href="#companies" 
+                href="/subsidiaries"
                 className={`font-medium transition-colors hover:text-primary ${
                   isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
@@ -340,7 +340,7 @@ const Navigation = () => {
                   رؤيتنا
                 </a>
                 <a 
-                  href="#companies" 
+                  href="/subsidiaries" 
                   className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200 rounded-md"
                   onClick={() => setIsOpen(false)}
                 >
