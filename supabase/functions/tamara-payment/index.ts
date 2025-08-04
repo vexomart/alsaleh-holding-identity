@@ -1,0 +1,184 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+interface TamaraPaymentRequest {
+  amount: number;
+  currency: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone?: string;
+  offer_title: string;
+  description: string;
+}
+
+serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const tamaraApiKey = Deno.env.get("TAMARA_API_KEY");
+    if (!tamaraApiKey) {
+      throw new Error("TAMARA_API_KEY not configured");
+    }
+
+    // Create Supabase client for database operations
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
+    const requestData: TamaraPaymentRequest = await req.json();
+    
+    console.log("Creating Tamara payment for:", requestData);
+
+    // Get user if authenticated
+    let userId = null;
+    try {
+      const authHeader = req.headers.get("Authorization");
+      if (authHeader) {
+        const token = authHeader.replace("Bearer ", "");
+        const { data } = await supabaseClient.auth.getUser(token);
+        userId = data.user?.id || null;
+      }
+    } catch (error) {
+      console.log("No authenticated user, proceeding as guest");
+    }
+
+    // Create checkout session with Tamara
+    const tamaraPayload = {
+      order_reference_id: "ord_" + Date.now(),
+      total_amount: {
+        amount: requestData.amount,
+        currency: requestData.currency,
+      },
+      description: requestData.description,
+      country_code: "SA",
+      payment_type: "PAY_BY_INSTALMENTS", // Tamara's installment payment
+      instalments: 3, // 3 installments
+      locale: "ar_SA",
+      items: [
+        {
+          reference_id: "item_" + Date.now(),
+          type: "Digital",
+          name: requestData.offer_title,
+          sku: "SERVICE-" + Date.now(),
+          quantity: 1,
+          unit_price: {
+            amount: requestData.amount,
+            currency: requestData.currency,
+          },
+          total_amount: {
+            amount: requestData.amount,
+            currency: requestData.currency,
+          },
+        },
+      ],
+      consumer: {
+        first_name: requestData.customer_name.split(' ')[0] || requestData.customer_name,
+        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || '',
+        phone_number: requestData.customer_phone?.replace(/[^\d]/g, '') || "500000000",
+        email: requestData.customer_email,
+      },
+      merchant_url: {
+        success: `${req.headers.get("origin")}/payment-success`,
+        failure: `${req.headers.get("origin")}/payment-cancel`,
+        cancel: `${req.headers.get("origin")}/payment-cancel`,
+        notification: `${req.headers.get("origin")}/api/tamara-webhook`,
+      },
+      shipping_address: {
+        first_name: requestData.customer_name.split(' ')[0] || requestData.customer_name,
+        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || '',
+        line1: "الرياض",
+        city: "الرياض",
+        country_code: "SA",
+        phone_number: requestData.customer_phone?.replace(/[^\d]/g, '') || "500000000",
+      },
+      billing_address: {
+        first_name: requestData.customer_name.split(' ')[0] || requestData.customer_name,
+        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || '',
+        line1: "الرياض",
+        city: "الرياض",
+        country_code: "SA",
+        phone_number: requestData.customer_phone?.replace(/[^\d]/g, '') || "500000000",
+      },
+    };
+
+    console.log("Sending request to Tamara API...");
+
+    const tamaraResponse = await fetch("https://api.tamara.co/checkout", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${tamaraApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tamaraPayload),
+    });
+
+    const tamaraResult = await tamaraResponse.json();
+    
+    console.log("Tamara API response:", tamaraResult);
+
+    if (!tamaraResponse.ok) {
+      console.error("Tamara API error:", tamaraResult);
+      throw new Error(tamaraResult.message || "Failed to create payment");
+    }
+
+    // Store transaction in database
+    const { data: transaction, error: dbError } = await supabaseClient
+      .from("payment_transactions")
+      .insert({
+        user_id: userId,
+        offer_title: requestData.offer_title,
+        amount: requestData.amount,
+        currency: requestData.currency,
+        customer_name: requestData.customer_name,
+        customer_email: requestData.customer_email,
+        customer_phone: requestData.customer_phone,
+        tamara_order_id: tamaraResult.order_id,
+        status: "INITIATED",
+        payment_method: "tamara",
+      })
+      .select()
+      .single();
+
+    if (dbError) {
+      console.error("Database error:", dbError);
+      throw new Error("Failed to record transaction");
+    }
+
+    console.log("Transaction recorded:", transaction);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        order_id: tamaraResult.order_id,
+        payment_url: tamaraResult.checkout_url,
+        transaction_id: transaction.id,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      }
+    );
+
+  } catch (error) {
+    console.error("Error in tamara-payment function:", error);
+    return new Response(
+      JSON.stringify({ 
+        success: false, 
+        error: error.message 
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      }
+    );
+  }
+});
