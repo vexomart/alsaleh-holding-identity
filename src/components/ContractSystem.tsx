@@ -6,13 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { FileText, Shield, Clock, CheckCircle } from 'lucide-react';
+import { FileText, Shield, Clock, CheckCircle, Smartphone } from 'lucide-react';
 
 const contractSchema = z.object({
   client_type: z.enum(['individual', 'company', 'institution']),
@@ -58,6 +59,13 @@ const saudiCities = [
 export default function ContractSystem() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nafathVerified, setNafathVerified] = useState(false);
+  const [nationalId, setNationalId] = useState('');
+  const [nafathRequestId, setNafathRequestId] = useState('');
+  const [clientInfo, setClientInfo] = useState({
+    name: '',
+    phone: '',
+    birthDate: ''
+  });
   const { toast } = useToast();
 
   const form = useForm<ContractFormData>({
@@ -71,10 +79,10 @@ export default function ContractSystem() {
   const selectedService = services.find(s => s.value === form.watch('service_type'));
 
   const handleNafathVerification = async () => {
-    if (!form.watch('client_id_number') && !form.watch('commercial_register')) {
+    if (!nationalId || nationalId.length !== 10) {
       toast({
         title: "بيانات ناقصة",
-        description: "يرجى إدخال رقم الهوية أو السجل التجاري أولاً",
+        description: "يرجى إدخال رقم الهوية الوطنية (10 أرقام)",
         variant: "destructive",
       });
       return;
@@ -83,33 +91,85 @@ export default function ContractSystem() {
     setIsSubmitting(true);
     
     try {
-      // تكامل حقيقي مع نفاذ - استدعاء API الفعلي
-      const nafathData = {
-        idNumber: form.watch('client_id_number') || form.watch('commercial_register'),
-        clientType: form.watch('client_type'),
-        clientName: form.watch('client_name'),
-        requestId: `NAF-${Date.now()}`,
-      };
+      // إنشاء طلب تحقق جديد
+      const requestId = `NAF-${Date.now()}`;
+      setNafathRequestId(requestId);
 
-      console.log('إرسال طلب التحقق لنفاذ:', nafathData);
+      console.log('إرسال طلب التحقق لنفاذ:', { nationalId, requestId });
       
-      // محاكاة استجابة نفاذ مع بيانات حقيقية
-      await new Promise(resolve => setTimeout(resolve, 4000));
+      toast({
+        title: "تم إرسال طلب التحقق",
+        description: "تم إرسال إشعار إلى تطبيق نفاذ، يرجى المتابعة من التطبيق",
+      });
       
-      // تحديث حالة التحقق مع معرف الطلب
+      // محاكاة انتظار استجابة نفاذ
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // محاكاة استلام بيانات العميل من نفاذ
+      const mockClientData = {
+        name: 'أحمد محمد العلي',
+        phone: '0501234567',
+        birthDate: '1990/05/15'
+      };
+      
+      setClientInfo(mockClientData);
       setNafathVerified(true);
+      
+      // تحديث بيانات الفورم تلقائياً
+      form.setValue('client_name', mockClientData.name);
+      form.setValue('client_phone', mockClientData.phone);
+      form.setValue('client_id_number', nationalId);
       
       toast({
         title: "تم التحقق بنجاح",
-        description: `تم التحقق من الهوية عبر نفاذ - معرف الطلب: ${nafathData.requestId}`,
+        description: "تم التحقق من الهوية وتحديث البيانات تلقائياً",
       });
       
-      console.log('تم التحقق بنجاح من نفاذ');
     } catch (error) {
       console.error('خطأ في التحقق من نفاذ:', error);
       toast({
         title: "خطأ في التحقق",
         description: "حدث خطأ أثناء التحقق من الهوية عبر نفاذ، يرجى المحاولة مرة أخرى",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const checkNafathStatus = async () => {
+    if (!nafathRequestId) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      // محاكاة التحقق من حالة الطلب
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // محاكاة نجاح التحقق
+      const mockClientData = {
+        name: 'أحمد محمد العلي',
+        phone: '0501234567',
+        birthDate: '1990/05/15'
+      };
+      
+      setClientInfo(mockClientData);
+      setNafathVerified(true);
+      
+      // تحديث بيانات الفورم تلقائياً
+      form.setValue('client_name', mockClientData.name);
+      form.setValue('client_phone', mockClientData.phone);
+      form.setValue('client_id_number', nationalId);
+      
+      toast({
+        title: "تم التحقق بنجاح",
+        description: "تم التحقق من الهوية وتحديث البيانات تلقائياً",
+      });
+      
+    } catch (error) {
+      toast({
+        title: "خطأ في التحقق",
+        description: "يرجى المحاولة مرة أخرى",
         variant: "destructive",
       });
     } finally {
@@ -222,31 +282,80 @@ export default function ContractSystem() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 contract-form" style={{ direction: 'rtl' }}>
                 {/* NAFATH Verification */}
                 <Card className="border-primary/20">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-semibold mb-2">التحقق من الهوية - نفاذ</h3>
-                        <p className="text-sm text-muted-foreground">
-                          يرجى التحقق من هويتك عبر نفاذ قبل المتابعة
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        {nafathVerified ? (
-                          <Badge variant="default" className="bg-green-500 text-white">
-                            <CheckCircle className="w-4 h-4 ml-2" />
-                            تم التحقق
-                          </Badge>
-                        ) : (
-                          <Button 
-                            type="button" 
-                            onClick={handleNafathVerification}
-                            disabled={isSubmitting}
-                          >
-                            {isSubmitting ? 'جاري التحقق...' : 'التحقق عبر نفاذ'}
-                          </Button>
+                  <CardContent className="p-6" style={{ direction: 'rtl' }}>
+                    <h3 className="font-semibold mb-4 text-right">التحقق من الهوية - نفاذ</h3>
+                    
+                    {!nafathVerified ? (
+                      <div className="space-y-4">
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="text-right">
+                            <Label htmlFor="national_id" className="text-right">رقم الهوية الوطنية</Label>
+                            <Input
+                              id="national_id"
+                              value={nationalId}
+                              onChange={(e) => setNationalId(e.target.value)}
+                              placeholder="أدخل رقم الهوية الوطنية"
+                              className="text-right"
+                              style={{ direction: 'rtl' }}
+                              maxLength={10}
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button 
+                              type="button" 
+                              onClick={handleNafathVerification}
+                              disabled={isSubmitting || !nationalId || nationalId.length !== 10}
+                              className="w-full"
+                            >
+                              {isSubmitting ? 'جاري إرسال طلب التحقق...' : 'التحقق عبر نفاذ'}
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        {nafathRequestId && !nafathVerified && (
+                          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                            <div className="flex items-center gap-2 text-blue-800 mb-2">
+                              <Smartphone className="w-5 h-5" />
+                              <span className="font-semibold">تم إرسال طلب التحقق</span>
+                            </div>
+                            <p className="text-sm text-blue-700 mb-2">
+                              تم إرسال إشعار إلى تطبيق نفاذ على جهازك المحمول
+                            </p>
+                            <p className="text-xs text-blue-600">
+                              رقم الطلب: {nafathRequestId}
+                            </p>
+                            <Button 
+                              type="button" 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={checkNafathStatus}
+                              className="mt-3"
+                            >
+                              التحقق من حالة الطلب
+                            </Button>
+                          </div>
                         )}
                       </div>
-                    </div>
+                    ) : (
+                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center gap-2 text-green-800 mb-2">
+                              <CheckCircle className="w-5 h-5" />
+                              <span className="font-semibold">تم التحقق بنجاح</span>
+                            </div>
+                            <div className="text-sm text-green-700 space-y-1">
+                              <p><strong>الاسم:</strong> {clientInfo.name}</p>
+                              <p><strong>رقم الجوال:</strong> {clientInfo.phone}</p>
+                              <p><strong>تاريخ الميلاد:</strong> {clientInfo.birthDate}</p>
+                            </div>
+                          </div>
+                          <Badge variant="default" className="bg-green-500 text-white">
+                            موثق
+                          </Badge>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
 
