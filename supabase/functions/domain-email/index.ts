@@ -61,7 +61,7 @@ serve(async (req) => {
       );
 
       const emailResponse = await resend.emails.send({
-        from: "شركة علي الشهري القابضة <domains@ash.holdings>",
+        from: "شركة علي الشهري القابضة <domains@alialshehriholding.com>",
         to: [customerEmail],
         subject: getEmailSubject(status, domainName),
         html: emailHtml,
@@ -119,7 +119,7 @@ serve(async (req) => {
             </div>
             
             <div style="text-align: center; margin: 20px 0;">
-              <a href="https://ash.holdings/domain-management" 
+              <a href="https://alialshehriholding.com/domain-management" 
                  style="background: #1e40af; color: white; padding: 12px 24px; 
                         text-decoration: none; border-radius: 6px; display: inline-block;">
                 مراجعة الطلب
@@ -134,8 +134,8 @@ serve(async (req) => {
       `;
 
       const adminEmailResponse = await resend.emails.send({
-        from: "نظام النطاقات <system@ash.holdings>",
-        to: ["info@ash.holdings"],
+        from: "نظام النطاقات <system@alialshehriholding.com>",
+        to: ["info@alialshehriholding.com"],
         subject: `طلب نطاق جديد: ${domainName}`,
         html: adminEmailHtml,
       });

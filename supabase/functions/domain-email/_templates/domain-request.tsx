@@ -133,9 +133,9 @@ export const DomainRequestEmail = ({
 
           <Section style={contactSection}>
             <Text style={contactText}>
-              📧 البريد الإلكتروني: info@ash.holdings<br/>
+              📧 البريد الإلكتروني: info@alialshehriholding.com<br/>
               📱 الهاتف: +966 555 812 567<br/>
-              🌐 الموقع الإلكتروني: ash.holdings<br/>
+              🌐 الموقع الإلكتروني: alialshehriholding.com<br/>
               ⏰ أوقات العمل: الأحد - الخميس (8:00 ص - 6:00 م)
             </Text>
           </Section>

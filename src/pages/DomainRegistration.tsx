@@ -448,7 +448,7 @@ const DomainRegistration = () => {
               </a>
             </Button>
             <Button asChild>
-              <a href="/contact">
+              <a href="mailto:info@alialshehriholding.com">
                 تواصل معنا
               </a>
             </Button>

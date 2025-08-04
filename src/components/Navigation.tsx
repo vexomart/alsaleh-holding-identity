@@ -84,7 +84,7 @@ const Navigation = () => {
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors">
                 <Mail className="w-4 h-4" />
-                <a href="mailto:info@ash.holdings">info@ash.holdings</a>
+                <a href="mailto:info@alialshehriholding.com">info@alialshehriholding.com</a>
               </div>
               <div className="flex items-center gap-2 text-gray-300 hover:text-green-400 transition-colors">
                 <Phone className="w-4 h-4" />
@@ -311,7 +311,7 @@ const Navigation = () => {
                 className="h-8 px-2 sm:px-4 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 asChild
               >
-                <a href="https://ash.holdings" target="_blank" rel="noopener noreferrer">
+                <a href="https://alialshehriholding.com" target="_blank" rel="noopener noreferrer">
                   <span className="hidden sm:block">ابدأ معنا</span>
                   <span className="sm:hidden">ابدأ</span>
                   <Zap className="w-3 h-3 mr-1 sm:mr-1.5" />
