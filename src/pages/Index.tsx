@@ -1,6 +1,5 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
 
 import StatsSection from "@/components/StatsSection";
 
@@ -30,16 +29,6 @@ const Index = () => {
 
         {/* Content Sections with Proper Spacing */}
         <div className="space-y-0">
-          {/* About Section */}
-          <section id="about" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-indigo-50/60 to-purple-50/80 dark:from-blue-950/20 dark:via-indigo-950/10 dark:to-purple-950/20"></div>
-            <div className="absolute top-5 right-5 sm:top-10 sm:right-10 w-32 h-32 sm:w-72 sm:h-72 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-5 left-5 sm:bottom-10 sm:left-10 w-24 h-24 sm:w-64 sm:h-64 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-xl sm:blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]"></div>
-            <div className="relative z-10">
-              <AboutSection />
-            </div>
-          </section>
 
 
           {/* Stats Section */}
