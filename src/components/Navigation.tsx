@@ -32,7 +32,6 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showServices, setShowServices] = useState(false);
-  const [showStory, setShowStory] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
 
   useEffect(() => {
@@ -54,14 +53,10 @@ const Navigation = () => {
     { name: "الحلول المتكاملة", href: "/integrated-solutions", icon: Award }
   ];
 
-  const storyItems = [
-    { name: "رحلة الإبداع والتميز", href: "/story", icon: Heart },
-    { name: "رؤيتنا ومهمتنا", href: "/vision", icon: BookOpen },
-    { name: "قيمنا وثقافتنا", href: "/about", icon: TrendingUp },
-  ];
-
   const othersItems = [
     { name: "طرق الدفع", href: "/payment-methods", icon: Phone },
+    { name: "رحلة الإبداع والتميز", href: "/story", icon: Heart },
+    { name: "قيمنا وثقافتنا", href: "/about", icon: TrendingUp },
   ];
 
   return (
@@ -188,44 +183,6 @@ const Navigation = () => {
                               <IconComponent className="w-4 h-4 text-primary" />
                             </div>
                             <span className="text-gray-700 font-medium text-sm">{service.name}</span>
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Story Dropdown */}
-              <div 
-                className="relative"
-                onMouseEnter={() => setShowStory(true)}
-                onMouseLeave={() => setShowStory(false)}
-              >
-                <button 
-                  className={`flex items-center gap-1 font-medium transition-colors hover:text-primary ${
-                    isScrolled ? 'text-gray-700' : 'text-white'
-                  }`}
-                >
-                  قصتنا
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-                
-                {showStory && (
-                  <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50">
-                    <div className="p-2">
-                      {storyItems.map((item, index) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <a
-                            key={index}
-                            href={item.href}
-                            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors rounded-lg"
-                          >
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                              <IconComponent className="w-4 h-4 text-primary" />
-                            </div>
-                            <span className="text-gray-700 font-medium text-sm">{item.name}</span>
                           </a>
                         );
                       })}
@@ -417,27 +374,6 @@ const Navigation = () => {
                         >
                           <IconComponent className="w-4 h-4" />
                           <span className="text-sm">{service.name}</span>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-                
-                {/* Story in Mobile */}
-                <div className="px-3 py-2">
-                  <div className="text-gray-700 font-medium mb-2">قصتنا</div>
-                  <div className="space-y-1 mr-4">
-                    {storyItems.map((item, index) => {
-                      const IconComponent = item.icon;
-                      return (
-                        <a
-                          key={index}
-                          href={item.href}
-                          className="flex items-center gap-3 px-2 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors duration-200 rounded-md"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <IconComponent className="w-4 h-4" />
-                          <span className="text-sm">{item.name}</span>
                         </a>
                       );
                     })}
