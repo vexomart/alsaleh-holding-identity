@@ -23,9 +23,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, pdf, Font } from '@react-pdf/renderer';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 // Current offers data (matching CurrentOffers.tsx)
 const currentOffers = [
@@ -87,7 +85,6 @@ const DigitalContracts = () => {
   const signatureCanvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
   
   const [formData, setFormData] = useState({
     clientType: "",
@@ -184,6 +181,10 @@ const DigitalContracts = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    // إضافة خلفية بيضاء
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
     // إضافة خط مساعد للتوقيع
     ctx.strokeStyle = '#e5e7eb';
     ctx.lineWidth = 1;
@@ -193,9 +194,15 @@ const DigitalContracts = () => {
     ctx.lineTo(canvas.width - 50, canvas.height - 30);
     ctx.stroke();
     ctx.setLineDash([]);
+    
+    // إضافة نص مساعد
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('وقع هنا', canvas.width / 2, canvas.height - 10);
   };
 
-  // إضافة خط مساعد عند تحميل الصفحة
+  // تهيئة مربع التوقيع عند التحميل
   const initializeSignatureCanvas = () => {
     const canvas = signatureCanvasRef.current;
     if (!canvas) return;
@@ -227,7 +234,6 @@ const DigitalContracts = () => {
     ctx.fillText('وقع هنا', canvas.width / 2, canvas.height - 10);
   };
 
-  // تهيئة مربع التوقيع عند التحميل
   useEffect(() => {
     const timer = setTimeout(() => {
       initializeSignatureCanvas();
@@ -245,6 +251,12 @@ const DigitalContracts = () => {
         day: 'numeric'
       });
 
+      const hijriDate = new Date().toLocaleDateString('ar-SA-u-ca-islamic', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
       const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -254,313 +266,249 @@ const DigitalContracts = () => {
       // إضافة خط عربي
       doc.setFont('helvetica');
       
-      // خلفية احترافية مع تدرج
-      doc.setFillColor(248, 250, 252);
+      // خلفية بيضاء نظيفة
+      doc.setFillColor(255, 255, 255);
       doc.rect(0, 0, 210, 297, 'F');
       
-      // حواف احترافية
-      doc.setDrawColor(29, 78, 216);
+      // حدود خارجية زرقاء
+      doc.setDrawColor(0, 102, 204);
+      doc.setLineWidth(1.5);
+      doc.rect(10, 10, 190, 277);
+      
+      // حدود داخلية رفيعة
+      doc.setDrawColor(220, 220, 220);
+      doc.setLineWidth(0.5);
+      doc.rect(15, 15, 180, 267);
+
+      // الهيدر مع التاريخ
+      let yPos = 25;
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`التاريخ: ${hijriDate}`, 190, yPos, { align: 'right' });
+
+      yPos += 15;
+      
+      // العنوان الرئيسي مع حد أزرق
+      doc.setDrawColor(0, 102, 204);
       doc.setLineWidth(2);
-      doc.rect(8, 8, 194, 281);
-      
-      // حدود داخلية ذهبية
-      doc.setDrawColor(251, 191, 36);
-      doc.setLineWidth(0.8);
-      doc.rect(12, 12, 186, 273);
-
-      // هيدر احترافي
-      doc.setFillColor(29, 78, 216);
-      doc.rect(12, 12, 186, 50, 'F');
-      
-      // شعار الشركة الأيسر
-      doc.setFillColor(255, 255, 255);
-      doc.roundedRect(20, 20, 35, 35, 3, 3, 'F');
-      doc.setDrawColor(29, 78, 216);
-      doc.roundedRect(20, 20, 35, 35, 3, 3);
-      
-      // نص شعار الشركة
-      doc.setFontSize(10);
-      doc.setTextColor(29, 78, 216);
-      doc.text('شركة', 37, 30, { align: 'center' });
-      doc.text('علي صالح الشهري', 37, 35, { align: 'center' });
-      doc.text('القابضة', 37, 40, { align: 'center' });
-      doc.setFontSize(8);
-      doc.text('HOLDING COMPANY', 37, 45, { align: 'center' });
-      doc.text('FOR TECH SOLUTIONS', 37, 49, { align: 'center' });
-
-      // اسم الشركة والعنوان
-      doc.setFontSize(22);
-      doc.setTextColor(255, 255, 255);
-      doc.text('شركة علي صالح الشهري القابضة', 190, 35, { align: 'right' });
-      
-      doc.setFontSize(14);
-      doc.text('للحلول التقنية المتطورة', 190, 45, { align: 'right' });
-      
-      doc.setFontSize(10);
-      doc.text('المملكة العربية السعودية - الرياض', 190, 52, { align: 'right' });
-
-      // عنوان العقد مع إطار مميز
-      let yPos = 75;
-      doc.setFillColor(251, 191, 36);
-      doc.rect(12, yPos - 5, 186, 20, 'F');
+      doc.line(20, yPos + 5, 190, yPos + 5);
       
       doc.setFontSize(18);
-      doc.setTextColor(0, 0, 0);
-      doc.text('عقد تقديم خدمات تقنية متطورة', 105, yPos + 5, { align: 'center' });
+      doc.setTextColor(0, 102, 204);
+      doc.text('عقد تقديم خدمات تقنية', 105, yPos, { align: 'center' });
       
-      const contractNumber = `C${new Date().getFullYear()}${Math.random().toString().slice(2, 8)}`;
-      doc.setFontSize(12);
-      doc.text(`رقم العقد: ${contractNumber}`, 190, yPos + 10, { align: 'right' });
-
-      yPos += 30;
-      
-      // مقدمة العقد بالمواد القانونية السعودية
-      doc.setFillColor(245, 245, 245);
-      doc.rect(15, yPos - 3, 180, 25, 'F');
-      doc.setDrawColor(107, 114, 128);
-      doc.rect(15, yPos - 3, 180, 25);
-      
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      doc.text('إنه في يوم ' + contractDate + ' الموافق لتاريخه، تم الاتفاق بين كل من:', 190, yPos + 3, { align: 'right' });
-      doc.text('طبقاً لنظام المعاملات المدنية السعودي ونظام التجارة الإلكترونية', 190, yPos + 9, { align: 'right' });
-      doc.text('ووفقاً لأحكام الشريعة الإسلامية وما لا يخالف الأنظمة المرعية في المملكة', 190, yPos + 15, { align: 'right' });
-
-      yPos += 35;
-      
-      // الطرف الأول مع تصميم احترافي
-      doc.setFillColor(239, 246, 255);
-      doc.rect(15, yPos - 5, 180, 40, 'F');
-      doc.setDrawColor(29, 78, 216);
-      doc.setLineWidth(1.5);
-      doc.rect(15, yPos - 5, 180, 40);
-      
-      doc.setFontSize(14);
-      doc.setTextColor(29, 78, 216);
-      doc.text('الطرف الأول (مقدم الخدمة):', 190, yPos, { align: 'right' });
-      
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      yPos += 7;
-      doc.text('شركة علي صالح الشهري القابضة للحلول التقنية', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('رقم السجل التجاري: 4030394026', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('الرقم الضريبي: 311234567890003', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('العنوان: المملكة العربية السعودية - الرياض - حي النرجس', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('البريد الإلكتروني: info@alialshehriholding.com', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('الهاتف: +966 11 234 5678', 190, yPos, { align: 'right' });
-
       yPos += 20;
-      
-      // الطرف الثاني
-      doc.setFillColor(254, 249, 195);
-      doc.rect(15, yPos - 5, 180, 35, 'F');
-      doc.setDrawColor(245, 158, 11);
-      doc.rect(15, yPos - 5, 180, 35);
-      
+
+      // الطرف الأول مع خلفية زرقاء فاتحة
+      doc.setFillColor(240, 248, 255);
+      doc.rect(20, yPos - 3, 170, 42, 'F');
+      doc.setDrawColor(0, 102, 204);
+      doc.setLineWidth(1);
+      doc.rect(20, yPos - 3, 170, 42);
+
       doc.setFontSize(14);
-      doc.setTextColor(245, 158, 11);
-      doc.text('الطرف الثاني (العميل):', 190, yPos, { align: 'right' });
+      doc.setTextColor(0, 102, 204);
+      doc.text('الطرف الأول - مقدم الخدمة', 185, yPos + 3, { align: 'right' });
       
       doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
-      yPos += 7;
-      doc.text(formData.clientName || 'اسم العميل', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text(`البريد الإلكتروني: ${formData.clientEmail || ''}`, 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text(`الهاتف: ${formData.clientPhone || ''}`, 190, yPos, { align: 'right' });
+      yPos += 10;
+      doc.text('اسم الشركة: شركة علي صالح الشهري القابضة', 185, yPos, { align: 'right' });
+      yPos += 6;
+      doc.text('العنوان: الرياض، المملكة العربية السعودية', 185, yPos, { align: 'right' });
+      yPos += 6;
+      doc.text('البريد الإلكتروني: info@alialshehriholding.com', 185, yPos, { align: 'right' });
+      yPos += 6;
+      doc.text('الهاتف: +966 567 812 555', 185, yPos, { align: 'right' });
+
+      yPos += 25;
+
+      // الطرف الثاني مع خلفية زرقاء فاتحة
+      doc.setFillColor(240, 248, 255);
+      doc.rect(20, yPos - 3, 170, 35, 'F');
+      doc.setDrawColor(0, 102, 204);
+      doc.rect(20, yPos - 3, 170, 35);
       
-      if (formData.clientType === 'individual' && formData.clientIdNumber) {
-        yPos += 5;
-        doc.text(`رقم الهوية الوطنية: ${formData.clientIdNumber}`, 190, yPos, { align: 'right' });
-      }
+      doc.setFontSize(14);
+      doc.setTextColor(0, 102, 204);
+      doc.text('الطرف الثاني - العميل', 185, yPos + 3, { align: 'right' });
       
-      if (formData.clientType !== 'individual') {
-        if (formData.commercialRegister) {
-          yPos += 5;
-          doc.text(`رقم السجل التجاري: ${formData.commercialRegister}`, 190, yPos, { align: 'right' });
-        }
-        if (formData.taxNumber) {
-          yPos += 5;
-          doc.text(`الرقم الضريبي: ${formData.taxNumber}`, 190, yPos, { align: 'right' });
-        }
-        if (formData.authorizedPerson) {
-          yPos += 5;
-          doc.text(`المفوض بالتوقيع: ${formData.authorizedPerson}`, 190, yPos, { align: 'right' });
-        }
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      yPos += 10;
+      doc.text(`الاسم: ${formData.clientName || 'علي صالح الشهري'}`, 185, yPos, { align: 'right' });
+      yPos += 6;
+      doc.text(`البريد الإلكتروني: ${formData.clientEmail || 'ali6c205@gmail.com'}`, 185, yPos, { align: 'right' });
+      
+      if (formData.clientIdNumber) {
+        yPos += 6;
+        doc.text(`رقم الهوية: ${formData.clientIdNumber}`, 185, yPos, { align: 'right' });
       }
 
       yPos += 25;
-      
-      // موضوع العقد والخدمات
-      doc.setFillColor(220, 252, 231);
-      doc.rect(15, yPos - 5, 180, 45, 'F');
-      doc.setDrawColor(34, 197, 94);
-      doc.rect(15, yPos - 5, 180, 45);
+
+      // تفاصيل الخدمة مع خلفية خضراء فاتحة
+      doc.setFillColor(240, 255, 240);
+      doc.rect(20, yPos - 3, 170, 42, 'F');
+      doc.setDrawColor(0, 150, 0);
+      doc.rect(20, yPos - 3, 170, 42);
       
       doc.setFontSize(14);
-      doc.setTextColor(22, 163, 74);
-      doc.text('موضوع العقد والخدمات المتفق عليها:', 190, yPos, { align: 'right' });
+      doc.setTextColor(0, 150, 0);
+      doc.text('تفاصيل الخدمة المطلوبة', 185, yPos + 3, { align: 'right' });
       
       doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
-      yPos += 7;
+      yPos += 10;
       
       if (selectedOfferDetails) {
-        doc.text(`اسم الخدمة: ${selectedOfferDetails.title}`, 190, yPos, { align: 'right' });
-        yPos += 5;
-        doc.text(`قيمة العقد الإجمالية: ${selectedOfferDetails.price} ريال سعودي (شاملة ضريبة القيمة المضافة)`, 190, yPos, { align: 'right' });
-        yPos += 5;
-        doc.text(`مدة التنفيذ المتفق عليها: ${selectedOfferDetails.duration}`, 190, yPos, { align: 'right' });
-        yPos += 5;
-        doc.text('تاريخ بداية التنفيذ: من تاريخ التوقيع النهائي واستلام الدفعة المقررة', 190, yPos, { align: 'right' });
-        yPos += 5;
-        doc.text('مكان التسليم: إلكترونياً عبر البريد الإلكتروني والمنصات المتفق عليها', 190, yPos, { align: 'right' });
-      }
-      
-      if (formData.serviceDescription) {
-        yPos += 7;
-        doc.text(`تفاصيل إضافية: ${formData.serviceDescription}`, 190, yPos, { align: 'right' });
+        doc.text(`نوع الخدمة: ${selectedOfferDetails.title}`, 185, yPos, { align: 'right' });
+        yPos += 6;
+        doc.text(`وصف الخدمة: ${selectedOfferDetails.title}`, 185, yPos, { align: 'right' });
+        yPos += 6;
+        doc.text(`قيمة الخدمة: ${selectedOfferDetails.price} ريال سعودي`, 185, yPos, { align: 'right' });
+        yPos += 6;
+        doc.text(`مدة التنفيذ: ${selectedOfferDetails.duration}`, 185, yPos, { align: 'right' });
+      } else {
+        doc.text('نوع الخدمة: عرض الموقع الاحترافي الكامل', 185, yPos, { align: 'right' });
+        yPos += 6;
+        doc.text('وصف الخدمة: عرض الموقع الاحترافي الكامل', 185, yPos, { align: 'right' });
+        yPos += 6;
+        doc.text('قيمة الخدمة: 8500 ريال سعودي', 185, yPos, { align: 'right' });
+        yPos += 6;
+        doc.text('مدة التنفيذ: 3-4 أسابيع', 185, yPos, { align: 'right' });
       }
 
-      yPos += 25;
+      yPos += 30;
+
+      // الشروط والأحكام مع خلفية صفراء فاتحة
+      doc.setFillColor(255, 252, 220);
+      doc.rect(20, yPos - 3, 170, 50, 'F');
+      doc.setDrawColor(255, 180, 0);
+      doc.rect(20, yPos - 3, 170, 50);
       
-      // بنك الراجحي مع أيقونة احترافية
-      doc.setFillColor(237, 233, 254);
-      doc.rect(15, yPos - 5, 180, 50, 'F');
-      doc.setDrawColor(139, 92, 246);
-      doc.rect(15, yPos - 5, 180, 50);
+      doc.setFontSize(14);
+      doc.setTextColor(255, 140, 0);
+      doc.text('الشروط والأحكام', 185, yPos + 3, { align: 'right' });
+      
+      doc.setFontSize(9);
+      doc.setTextColor(0, 0, 0);
+      yPos += 10;
+      doc.text('• تم الاتفاق بين الطرفين على تنفيذ الخدمة المذكورة أعلاه', 185, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('• إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين', 185, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('• يتم اعتماد العقد نهائياً بعد الدفع عن طريق التحويل البنكي لحساب الشركة', 185, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('• الشركة ملتزمة بتقديم الخدمة وفقاً للمواصفات المتفق عليها', 185, yPos, { align: 'right' });
+      yPos += 5;
+      doc.text('• العميل ملتزم بدفع المبلغ المتفق عليه في المواعيد المحددة', 185, yPos, { align: 'right' });
+
+      yPos += 25;
+
+      // معلومات الحساب البنكي مع خلفية خضراء فاتحة
+      doc.setFillColor(240, 255, 240);
+      doc.rect(20, yPos - 3, 170, 42, 'F');
+      doc.setDrawColor(0, 150, 0);
+      doc.rect(20, yPos - 3, 170, 42);
       
       // شعار البنك الراجحي
       doc.setFillColor(0, 102, 204);
-      doc.roundedRect(22, yPos + 2, 25, 18, 2, 2, 'F');
-      doc.setFontSize(9);
+      doc.roundedRect(25, yPos + 2, 20, 15, 2, 2, 'F');
+      doc.setFontSize(8);
       doc.setTextColor(255, 255, 255);
-      doc.text('البنك', 34, yPos + 8, { align: 'center' });
-      doc.text('الراجحي', 34, yPos + 12, { align: 'center' });
-      doc.text('Al Rajhi Bank', 34, yPos + 16, { align: 'center' });
+      doc.text('مصرف', 35, yPos + 8, { align: 'center' });
+      doc.text('الراجحي', 35, yPos + 12, { align: 'center' });
       
       doc.setFontSize(14);
-      doc.setTextColor(139, 92, 246);
-      doc.text('الحساب البنكي المعتمد للتحويل:', 190, yPos + 5, { align: 'right' });
+      doc.setTextColor(0, 150, 0);
+      doc.text('معلومات الحساب البنكي للدفع', 185, yPos + 3, { align: 'right' });
       
       doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
-      yPos += 12;
-      doc.text('مصرف الراجحي (Al Rajhi Bank)', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('اسم صاحب الحساب: شركة علي صالح الشهري القابضة', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('رقم الحساب: 161000010006086071040', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('رقم الآيبان الدولي: SA1980000161608016071040', 190, yPos, { align: 'right' });
-      yPos += 5;
-      doc.text('نوع الحساب: حساب جاري تجاري', 190, yPos, { align: 'right' });
+      yPos += 10;
+      doc.text('اسم البنك: مصرف الراجحي', 185, yPos, { align: 'right' });
+      yPos += 6;
+      doc.text('اسم الحساب: شركة علي صالح الشهري القابضة', 185, yPos, { align: 'right' });
+      yPos += 6;
+      doc.text('رقم الحساب: 161000010006086071040', 185, yPos, { align: 'right' });
+      yPos += 6;
+      doc.text('رقم الآيبان: SA1980000161608016071040', 185, yPos, { align: 'right' });
 
-      yPos += 25;
+      yPos += 30;
       
-      // الشروط والأحكام القانونية السعودية
-      doc.setFillColor(254, 242, 242);
-      doc.rect(15, yPos - 5, 180, 70, 'F');
-      doc.setDrawColor(239, 68, 68);
-      doc.rect(15, yPos - 5, 180, 70);
-      
-      doc.setFontSize(14);
-      doc.setTextColor(220, 38, 38);
-      doc.text('الشروط والأحكام القانونية:', 190, yPos, { align: 'right' });
-      
-      doc.setFontSize(9);
-      doc.setTextColor(0, 0, 0);
-      yPos += 7;
-      doc.text('المادة الأولى: يتم تنفيذ المشروع وفقاً للمدة والمواصفات المحددة أعلاه', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة الثانية: إرسال هذا العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة الثالثة: يعتبر العقد نافذاً بعد دفع المبلغ المتفق عليه للحساب المذكور', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة الرابعة: ترسل الشركة إقرار استلام رسمي بعد تأكيد الدفعة', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة الخامسة: أي تعديل يتطلب موافقة خطية من الطرفين', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة السادسة: هذا العقد خاضع للأنظمة السعودية النافذة', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة السابعة: تحل النزاعات ودياً أو تحال للمحاكم المختصة بالرياض', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة الثامنة: يقر الطرفان بأهليتهما القانونية الكاملة لإبرام هذا العقد', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة التاسعة: يسري هذا العقد اعتباراً من تاريخ توقيعه', 190, yPos, { align: 'right' });
-      yPos += 4;
-      doc.text('المادة العاشرة: يحق للطرف الأول استلام الدفعة قبل بدء التنفيذ', 190, yPos, { align: 'right' });
-
-      yPos += 20;
-      
-      // منطقة التوقيعات المحسنة
+      // منطقة التوقيعات
       doc.setFillColor(248, 250, 252);
-      doc.rect(15, yPos, 180, 50, 'F');
-      doc.setDrawColor(107, 114, 128);
-      doc.rect(15, yPos, 180, 50);
+      doc.rect(20, yPos, 170, 40, 'F');
+      doc.setDrawColor(100, 100, 100);
+      doc.rect(20, yPos, 170, 40);
       
       // توقيع الطرف الأول
-      doc.setDrawColor(29, 78, 216);
+      doc.setDrawColor(0, 102, 204);
       doc.setLineWidth(1);
-      doc.rect(20, yPos + 5, 75, 35);
+      doc.rect(25, yPos + 5, 70, 30);
       
       doc.setFontSize(12);
-      doc.setTextColor(29, 78, 216);
-      doc.text('توقيع وختم الطرف الأول', 57, yPos + 12, { align: 'center' });
+      doc.setTextColor(0, 102, 204);
+      doc.text('الطرف الأول - مقدم الخدمة', 60, yPos + 12, { align: 'center' });
       doc.setFontSize(10);
       doc.setTextColor(0, 0, 0);
-      doc.text('شركة علي صالح الشهري القابضة', 57, yPos + 18, { align: 'center' });
-      doc.text('المدير التنفيذي', 57, yPos + 25, { align: 'center' });
-      doc.text('التوقيع: ________________', 57, yPos + 32, { align: 'center' });
+      doc.text('شركة علي صالح الشهري القابضة', 60, yPos + 18, { align: 'center' });
+      doc.text('التوقيع: ________________', 60, yPos + 27, { align: 'center' });
       
-      // توقيع الطرف الثاني مع إدراج التوقيع الرقمي
-      doc.setDrawColor(245, 158, 11);
-      doc.rect(105, yPos + 5, 75, 35);
+      // توقيع الطرف الثاني مع التوقيع الرقمي
+      doc.setDrawColor(0, 102, 204);
+      doc.rect(105, yPos + 5, 70, 30);
       
       doc.setFontSize(12);
-      doc.setTextColor(245, 158, 11);
-      doc.text('توقيع الطرف الثاني', 142, yPos + 12, { align: 'center' });
+      doc.setTextColor(0, 102, 204);
+      doc.text('الطرف الثاني - العميل', 140, yPos + 12, { align: 'center' });
       doc.setFontSize(10);
       doc.setTextColor(0, 0, 0);
-      doc.text(formData.clientName || 'العميل', 142, yPos + 18, { align: 'center' });
+      doc.text(formData.clientName || 'علي صالح الشهري', 140, yPos + 18, { align: 'center' });
       
       // إضافة التوقيع الرقمي للعميل
       const canvas = signatureCanvasRef.current;
       if (canvas) {
         try {
           const signatureData = canvas.toDataURL('image/png');
-          if (signatureData && signatureData !== 'data:,') {
-            // تحويل التوقيع إلى صورة وإضافتها للـ PDF
-            doc.addImage(signatureData, 'PNG', 110, yPos + 22, 65, 15);
+          // فحص ما إذا كان هناك توقيع حقيقي
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const hasSignature = imageData.data.some((channel, index) => {
+              // تجاهل قناة الشفافية (alpha channel)
+              if (index % 4 === 3) return false;
+              return channel !== 255; // أي لون غير الأبيض
+            });
+            
+            if (hasSignature && signatureData && signatureData !== 'data:,') {
+              // تحويل التوقيع إلى صورة وإضافتها للـ PDF
+              doc.addImage(signatureData, 'PNG', 110, yPos + 22, 60, 12);
+            } else {
+              doc.text('التوقيع: ________________', 140, yPos + 27, { align: 'center' });
+            }
           } else {
-            doc.text('[توقيع رقمي مطلوب]', 142, yPos + 30, { align: 'center' });
+            doc.text('التوقيع: ________________', 140, yPos + 27, { align: 'center' });
           }
         } catch (error) {
           console.error('خطأ في إضافة التوقيع:', error);
-          doc.text('[توقيع رقمي مطلوب]', 142, yPos + 30, { align: 'center' });
+          doc.text('التوقيع: ________________', 140, yPos + 27, { align: 'center' });
         }
       } else {
-        doc.text('[توقيع رقمي مطلوب]', 142, yPos + 30, { align: 'center' });
+        doc.text('التوقيع: ________________', 140, yPos + 27, { align: 'center' });
       }
 
-      yPos += 60;
+      yPos += 50;
       
-      // تذييل مع التاريخ
-      doc.setFillColor(29, 78, 216);
-      doc.rect(12, yPos, 186, 20, 'F');
-      doc.setFontSize(14);
-      doc.setTextColor(255, 255, 255);
-      doc.text(`تم إنشاء هذا العقد بتاريخ: ${contractDate}`, 105, yPos + 10, { align: 'center' });
+      // التذييل
+      doc.setDrawColor(0, 102, 204);
+      doc.setLineWidth(1);
+      doc.line(20, yPos, 190, yPos);
       
-      // معلومات إضافية في التذييل
-      doc.setFontSize(8);
-      doc.text('هذا العقد محرر باللغة العربية ووفقاً للأنظمة السعودية النافذة', 105, yPos + 15, { align: 'center' });
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`تم إنشاء هذا العقد بتاريخ: ${contractDate}`, 105, yPos + 8, { align: 'center' });
 
       resolve(doc);
     });
@@ -717,220 +665,64 @@ const DigitalContracts = () => {
     }
   };
 
-  const downloadContract = async () => {
-    try {
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'pt',
-        format: 'a4'
-      });
-
-      // Create a temporary div with RTL content
-      const tempDiv = document.createElement('div');
-      tempDiv.style.position = 'absolute';
-      tempDiv.style.top = '-9999px';
-      tempDiv.style.left = '-9999px';
-      tempDiv.style.width = '595px';
-      tempDiv.style.fontFamily = 'Arial, "Segoe UI", sans-serif';
-      tempDiv.style.fontSize = '14px';
-      tempDiv.style.lineHeight = '1.6';
-      tempDiv.style.direction = 'rtl';
-      tempDiv.style.textAlign = 'right';
-      tempDiv.style.padding = '40px';
-      tempDiv.style.background = 'white';
-
-      const contractNumber = `C${Math.floor(Math.random() * 1000) + 1}`;
-      const contractDate = new Date().toLocaleDateString('ar-SA', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-
-      tempDiv.innerHTML = `
-        <div style="direction: rtl; text-align: right; font-family: Arial, sans-serif;">
-          <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1e40af; padding-bottom: 20px;">
-            <h1 style="color: #1e40af; font-size: 24px; margin: 0;">عقد تقديم خدمات تقنية</h1>
-            <h2 style="color: #374151; font-size: 18px; margin: 10px 0;">رقم العقد: ${contractNumber}</h2>
-            <p style="color: #6b7280; margin: 5px 0;">التاريخ: ${contractDate}</p>
-          </div>
-
-          <div style="margin-bottom: 25px; background: #f8fafc; padding: 20px; border-right: 4px solid #1e40af;">
-            <h3 style="color: #1e40af; margin-top: 0; font-size: 16px;">الطرف الأول - مقدم الخدمة</h3>
-            <p style="margin: 8px 0;"><strong>اسم الشركة:</strong> شركة علي صالح الشهري القابضة</p>
-            <p style="margin: 8px 0;"><strong>العنوان:</strong> الرياض، المملكة العربية السعودية</p>
-            <p style="margin: 8px 0;"><strong>البريد الإلكتروني:</strong> info@alialshehriholding.com</p>
-            <p style="margin: 8px 0;"><strong>الهاتف:</strong> +966 555 812 567</p>
-          </div>
-
-          <div style="margin-bottom: 25px; background: #f0f9ff; padding: 20px; border-right: 4px solid #3b82f6;">
-            <h3 style="color: #1e40af; margin-top: 0; font-size: 16px;">الطرف الثاني - العميل</h3>
-            <p style="margin: 8px 0;"><strong>الاسم:</strong> ${formData.clientName}</p>
-            <p style="margin: 8px 0;"><strong>البريد الإلكتروني:</strong> ${formData.clientEmail}</p>
-            <p style="margin: 8px 0;"><strong>رقم الهاتف:</strong> ${formData.clientPhone}</p>
-            ${formData.clientAddress ? `<p style="margin: 8px 0;"><strong>العنوان:</strong> ${formData.clientAddress}</p>` : ''}
-            ${formData.clientIdNumber ? `<p style="margin: 8px 0;"><strong>رقم الهوية:</strong> ${formData.clientIdNumber}</p>` : ''}
-            ${formData.commercialRegister ? `<p style="margin: 8px 0;"><strong>السجل التجاري:</strong> ${formData.commercialRegister}</p>` : ''}
-            ${formData.taxNumber ? `<p style="margin: 8px 0;"><strong>الرقم الضريبي:</strong> ${formData.taxNumber}</p>` : ''}
-            ${formData.authorizedPerson ? `<p style="margin: 8px 0;"><strong>المفوض بالتوقيع:</strong> ${formData.authorizedPerson}</p>` : ''}
-          </div>
-
-          <div style="margin-bottom: 25px; background: #f0fdf4; padding: 20px; border-right: 4px solid #10b981;">
-            <h3 style="color: #065f46; margin-top: 0; font-size: 16px;">تفاصيل الخدمة المطلوبة</h3>
-            <p style="margin: 8px 0;"><strong>نوع الخدمة:</strong> ${selectedOfferDetails?.title || formData.selectedOffer}</p>
-            <p style="margin: 8px 0;"><strong>وصف الخدمة:</strong> ${selectedOfferDetails?.description || formData.serviceDescription}</p>
-            <p style="margin: 8px 0;"><strong>قيمة الخدمة:</strong> ${selectedOfferDetails?.price || "0"} ريال سعودي</p>
-            <p style="margin: 8px 0;"><strong>مدة التنفيذ:</strong> ${selectedOfferDetails?.duration || "حسب الاتفاق"}</p>
-            <p style="margin: 8px 0;"><strong>مدة تنفيذ الطلب:</strong> 15 يوم عمل من تاريخ التوقيع</p>
-            ${formData.customRequirements ? `<p style="margin: 8px 0;"><strong>متطلبات إضافية:</strong> ${formData.customRequirements}</p>` : ''}
-          </div>
-
-          <div style="margin-bottom: 25px; background: #fef3c7; padding: 20px; border-right: 4px solid #f59e0b;">
-            <h3 style="color: #92400e; margin-top: 0; font-size: 16px;">الشروط والأحكام</h3>
-            <p style="margin: 8px 0; line-height: 1.6;">
-              • تم الاتفاق بين الطرفين على تنفيذ الخدمة المذكورة أعلاه<br>
-              • مدة تنفيذ الطلب: 15 يوم عمل من تاريخ التوقيع على العقد<br>
-              • إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين<br>
-              • يتم اعتماد العقد نهائياً بعد الدفع عن طريق التحويل البنكي لحساب الشركة<br>
-              • الشركة ملتزمة بتقديم الخدمة وفقاً للمواصفات المتفق عليها<br>
-              • العميل ملتزم بدفع المبلغ المتفق عليه في المواعيد المحددة
-            </p>
-          </div>
-
-          <div style="margin-bottom: 25px; background: #ecfdf5; padding: 20px; border-right: 4px solid #10b981;">
-            <h3 style="color: #065f46; margin-top: 0; font-size: 16px;">معلومات الحساب البنكي للدفع</h3>
-            <p style="margin: 8px 0;"><strong>اسم البنك:</strong> مصرف الراجحي</p>
-            <p style="margin: 8px 0;"><strong>اسم الحساب:</strong> شركة علي صالح الشهري القابضة</p>
-            <p style="margin: 8px 0;"><strong>رقم الحساب:</strong> 161000010006086071040</p>
-            <p style="margin: 8px 0;"><strong>رقم الآيبان:</strong> SA1980000161608016071040</p>
-          </div>
-
-          <div style="margin-top: 40px; border-top: 2px solid #e5e7eb; padding-top: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="text-align: right; width: 45%;">
-                <p style="margin: 0; font-weight: bold;">الطرف الأول (الشركة)</p>
-                <p style="margin: 5px 0 0 0;">شركة علي صالح الشهري القابضة</p>
-                <div style="margin-top: 40px; border-bottom: 1px solid #000; width: 200px;"></div>
-                <p style="margin: 5px 0 0 0; font-size: 12px;">التوقيع والختم</p>
-              </div>
-              <div style="text-align: right; width: 45%;">
-                <p style="margin: 0; font-weight: bold;">الطرف الثاني (العميل)</p>
-                <p style="margin: 5px 0 0 0;">${formData.clientName}</p>
-                <div style="margin-top: 40px; border-bottom: 1px solid #000; width: 200px;"></div>
-                <p style="margin: 5px 0 0 0; font-size: 12px;">التوقيع</p>
-              </div>
-            </div>
-          </div>
-
-          <div style="text-align: center; margin-top: 30px; font-size: 12px; color: #6b7280;">
-            <p>هذا العقد صادر من شركة علي صالح الشهري القابضة - ${contractDate}</p>
-          </div>
-        </div>
-      `;
-
-      document.body.appendChild(tempDiv);
-
-      const canvas = await html2canvas(tempDiv, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff'
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 595.28; // A4 width in points
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= 841.89; // A4 height in points
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= 841.89;
-      }
-
-      document.body.removeChild(tempDiv);
-      pdf.save(`عقد-${contractNumber}-${formData.clientName}.pdf`);
-      
-      toast({
-        title: "تم تحميل العقد بنجاح",
-        description: "تم إنشاء وتحميل ملف العقد بصيغة PDF مع النص العربي بشكل صحيح",
-      });
-    } catch (error) {
-      console.error("PDF generation error:", error);
-      toast({
-        title: "خطأ في تحميل العقد",
-        description: "حدث خطأ أثناء إنشاء ملف PDF. يرجى المحاولة مرة أخرى.",
-        variant: "destructive"
-      });
-    }
-  };
-
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
       <Navigation />
-      <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          {/* Header */}
+      
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Header Section */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-blue-500/10 rounded-full mb-4">
-              <FileText className="w-5 h-5 text-primary" />
-              <span className="text-primary font-medium">نظام التعاقد الإلكتروني</span>
+            <div className="flex items-center justify-center mb-6">
+              <div className="p-4 bg-primary/10 rounded-full">
+                <FileText className="h-12 w-12 text-primary" />
+              </div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              إنشاء عقد إلكتروني موثق
+            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              العقود الرقمية المتطورة
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              قم بإنشاء عقد رسمي موثق مع التوقيع الرقمي لضمان حقوق جميع الأطراف
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              أنشئ عقدك الرقمي بطريقة احترافية وآمنة مع التوقيع الإلكتروني المعتمد
             </p>
           </div>
 
-          {/* Benefits */}
-          <div className="grid md:grid-cols-4 gap-6 mb-12">
-            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-              <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">آمن وموثق</h3>
-              <p className="text-gray-600 text-sm">عقود مشفرة وموثقة قانونياً</p>
-            </div>
-            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-              <Signature className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">توقيع رقمي</h3>
-              <p className="text-gray-600 text-sm">توقيع إلكتروني معتمد</p>
-            </div>
-            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-              <Clock className="w-12 h-12 text-orange-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">سريع ومباشر</h3>
-              <p className="text-gray-600 text-sm">إنجاز فوري للعقود</p>
-            </div>
-            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-              <Download className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-gray-900 mb-2">تحميل فوري</h3>
-              <p className="text-gray-600 text-sm">احصل على نسختك الآن</p>
-            </div>
+          {/* Features Banner */}
+          <div className="grid md:grid-cols-4 gap-4 mb-8">
+            {[
+              { icon: Shield, title: "آمن ومحمي", desc: "تشفير متقدم" },
+              { icon: Zap, title: "سريع ومرن", desc: "إنشاء فوري" },
+              { icon: Award, title: "معتمد قانونياً", desc: "وفق الأنظمة السعودية" },
+              { icon: Star, title: "توقيع رقمي", desc: "معتمد إلكترونياً" }
+            ].map((feature, index) => (
+              <Card key={index} className="text-center p-4 border-2 border-primary/20 hover:border-primary/40 transition-colors">
+                <feature.icon className="h-8 w-8 text-primary mx-auto mb-2" />
+                <h3 className="font-semibold text-sm">{feature.title}</h3>
+                <p className="text-xs text-muted-foreground">{feature.desc}</p>
+              </Card>
+            ))}
           </div>
 
-          {/* Contract Form */}
-          <Card className="max-w-4xl mx-auto">
-            <CardHeader>
-              <CardTitle className="text-2xl text-center">بيانات التعاقد</CardTitle>
+          {/* Main Form */}
+          <Card className="shadow-xl border-2 border-primary/20">
+            <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10">
+              <CardTitle className="text-2xl text-center flex items-center justify-center gap-2">
+                <FileText className="h-6 w-6" />
+                إنشاء عقد جديد
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Client Type */}
+                {/* Client Type Selection */}
                 <div className="space-y-4">
                   <Label className="text-lg font-semibold">نوع العميل</Label>
                   <Select value={formData.clientType} onValueChange={(value) => handleInputChange("clientType", value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-2 border-primary/20 focus:border-primary">
                       <SelectValue placeholder="اختر نوع العميل" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="individual">فرد</SelectItem>
                       <SelectItem value="company">شركة</SelectItem>
-                      <SelectItem value="institution">مؤسسة</SelectItem>
+                      <SelectItem value="government">جهة حكومية</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -938,15 +730,13 @@ const DigitalContracts = () => {
                 {/* Basic Information */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="clientName">
-                      {formData.clientType === "individual" ? "الاسم الكامل" : "اسم الشركة/المؤسسة"} *
-                    </Label>
+                    <Label htmlFor="clientName">الاسم الكامل *</Label>
                     <Input
                       id="clientName"
                       value={formData.clientName}
                       onChange={(e) => handleInputChange("clientName", e.target.value)}
-                      placeholder="أدخل الاسم"
-                      required
+                      className="border-2 border-primary/20 focus:border-primary"
+                      placeholder="أدخل الاسم الكامل"
                     />
                   </div>
                   
@@ -957,42 +747,51 @@ const DigitalContracts = () => {
                       type="email"
                       value={formData.clientEmail}
                       onChange={(e) => handleInputChange("clientEmail", e.target.value)}
-                      placeholder="example@email.com"
-                      required
+                      className="border-2 border-primary/20 focus:border-primary"
+                      placeholder="example@domain.com"
                     />
                   </div>
+                </div>
 
+                <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="clientPhone">رقم الهاتف *</Label>
                     <Input
                       id="clientPhone"
                       value={formData.clientPhone}
                       onChange={(e) => handleInputChange("clientPhone", e.target.value)}
+                      className="border-2 border-primary/20 focus:border-primary"
                       placeholder="+966 5X XXX XXXX"
-                      required
                     />
                   </div>
 
                   {formData.clientType === "individual" && (
                     <div className="space-y-2">
-                      <Label htmlFor="clientIdNumber">رقم الهوية</Label>
+                      <Label htmlFor="clientIdNumber">رقم الهوية الوطنية</Label>
                       <Input
                         id="clientIdNumber"
                         value={formData.clientIdNumber}
                         onChange={(e) => handleInputChange("clientIdNumber", e.target.value)}
-                        placeholder="رقم الهوية الوطنية"
+                        className="border-2 border-primary/20 focus:border-primary"
+                        placeholder="10 أرقام"
                       />
                     </div>
                   )}
+                </div>
 
-                  {(formData.clientType === "company" || formData.clientType === "institution") && (
-                    <>
+                {/* Company Information */}
+                {formData.clientType !== "individual" && (
+                  <div className="space-y-6 p-6 bg-secondary/10 rounded-lg border-2 border-secondary/20">
+                    <h3 className="text-lg font-semibold text-secondary">معلومات الشركة/الجهة</h3>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="commercialRegister">السجل التجاري</Label>
+                        <Label htmlFor="commercialRegister">رقم السجل التجاري</Label>
                         <Input
                           id="commercialRegister"
                           value={formData.commercialRegister}
                           onChange={(e) => handleInputChange("commercialRegister", e.target.value)}
+                          className="border-2 border-secondary/20 focus:border-secondary"
                           placeholder="رقم السجل التجاري"
                         />
                       </div>
@@ -1003,265 +802,253 @@ const DigitalContracts = () => {
                           id="taxNumber"
                           value={formData.taxNumber}
                           onChange={(e) => handleInputChange("taxNumber", e.target.value)}
+                          className="border-2 border-secondary/20 focus:border-secondary"
                           placeholder="الرقم الضريبي"
                         />
                       </div>
+                    </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="authorizedPerson">المفوض بالتوقيع</Label>
-                        <Input
-                          id="authorizedPerson"
-                          value={formData.authorizedPerson}
-                          onChange={(e) => handleInputChange("authorizedPerson", e.target.value)}
-                          placeholder="اسم المفوض بالتوقيع"
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="authorizedPerson">اسم المفوض بالتوقيع</Label>
+                      <Input
+                        id="authorizedPerson"
+                        value={formData.authorizedPerson}
+                        onChange={(e) => handleInputChange("authorizedPerson", e.target.value)}
+                        className="border-2 border-secondary/20 focus:border-secondary"
+                        placeholder="اسم الشخص المفوض بالتوقيع"
+                      />
+                    </div>
+                  </div>
+                )}
 
+                {/* Address */}
                 <div className="space-y-2">
                   <Label htmlFor="clientAddress">العنوان</Label>
                   <Textarea
                     id="clientAddress"
                     value={formData.clientAddress}
                     onChange={(e) => handleInputChange("clientAddress", e.target.value)}
-                    placeholder="العنوان الكامل"
+                    className="border-2 border-primary/20 focus:border-primary"
+                    placeholder="العنوان التفصيلي"
                     rows={3}
                   />
                 </div>
 
                 {/* Service Selection */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-semibold">اختيار الخدمة *</Label>
-                  <Select value={formData.selectedOffer} onValueChange={(value) => handleInputChange("selectedOffer", value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="اختر من العروض الحالية" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {currentOffers.map((offer) => (
-                        <SelectItem key={offer.id} value={offer.id.toString()}>
-                          {offer.title} - {offer.price} ريال
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="space-y-6 p-6 bg-accent/10 rounded-lg border-2 border-accent/20">
+                  <h3 className="text-lg font-semibold text-accent">تفاصيل الخدمة المطلوبة</h3>
+                  
+                  <div className="space-y-4">
+                    <Label className="text-base font-medium">اختر العرض المطلوب *</Label>
+                    <Select value={formData.selectedOffer} onValueChange={(value) => handleInputChange("selectedOffer", value)}>
+                      <SelectTrigger className="border-2 border-accent/20 focus:border-accent">
+                        <SelectValue placeholder="اختر العرض المناسب" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {currentOffers.map((offer) => (
+                          <SelectItem key={offer.id} value={offer.id.toString()}>
+                            {offer.title} - {offer.price} ريال
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
+                  {/* Selected Offer Details */}
                   {selectedOfferDetails && (
-                    <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-                      <CardHeader>
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <Star className="w-5 h-5 text-yellow-500" />
-                          {selectedOfferDetails.title}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid md:grid-cols-2 gap-6">
+                    <Card className="border-2 border-accent/30 bg-accent/5">
+                      <CardContent className="p-4">
+                        <h4 className="font-semibold mb-2">{selectedOfferDetails.title}</h4>
+                        <div className="grid md:grid-cols-2 gap-4 mb-4">
                           <div>
-                            <p className="text-sm text-gray-600 mb-2">السعر:</p>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xl font-bold text-green-600">{selectedOfferDetails.price} ريال</span>
-                              <span className="text-sm text-gray-500 line-through">{selectedOfferDetails.originalPrice} ريال</span>
-                            </div>
-                            <p className="text-sm text-gray-600 mt-2">مدة التنفيذ: {selectedOfferDetails.duration}</p>
+                            <span className="text-sm text-muted-foreground">السعر: </span>
+                            <span className="font-semibold text-lg">{selectedOfferDetails.price} ريال</span>
+                            {selectedOfferDetails.originalPrice && (
+                              <span className="text-sm text-muted-foreground line-through mr-2">
+                                {selectedOfferDetails.originalPrice} ريال
+                              </span>
+                            )}
                           </div>
                           <div>
-                            <p className="text-sm text-gray-600 mb-2">ما يشمله العرض:</p>
-                            <div className="max-h-32 overflow-y-auto space-y-1">
-                              {selectedOfferDetails.features.slice(0, 4).map((feature: string, idx: number) => (
-                                <div key={idx} className="flex items-start gap-2">
-                                  <CheckCircle className="w-3 h-3 text-green-500 mt-1 flex-shrink-0" />
-                                  <span className="text-sm text-gray-700">{feature}</span>
-                                </div>
-                              ))}
-                              {selectedOfferDetails.features.length > 4 && (
-                                <p className="text-sm text-gray-500">... و {selectedOfferDetails.features.length - 4} مميزات أخرى</p>
-                              )}
-                            </div>
+                            <span className="text-sm text-muted-foreground">مدة التنفيذ: </span>
+                            <span className="font-medium">{selectedOfferDetails.duration}</span>
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium">المميزات المشمولة:</p>
+                          <div className="grid md:grid-cols-2 gap-1">
+                            {selectedOfferDetails.features.map((feature: string, index: number) => (
+                              <div key={index} className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                <span className="text-sm">{feature}</span>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </CardContent>
                     </Card>
                   )}
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="serviceDescription">وصف الخدمة التفصيلي</Label>
-                  <Textarea
-                    id="serviceDescription"
-                    value={formData.serviceDescription}
-                    onChange={(e) => handleInputChange("serviceDescription", e.target.value)}
-                    placeholder="اكتب وصف تفصيلي للخدمة المطلوبة"
-                    rows={4}
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="serviceDescription">وصف تفصيلي للخدمة</Label>
+                    <Textarea
+                      id="serviceDescription"
+                      value={formData.serviceDescription}
+                      onChange={(e) => handleInputChange("serviceDescription", e.target.value)}
+                      className="border-2 border-accent/20 focus:border-accent"
+                      placeholder="أضف تفاصيل إضافية عن الخدمة المطلوبة"
+                      rows={4}
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="customRequirements">متطلبات إضافية</Label>
-                  <Textarea
-                    id="customRequirements"
-                    value={formData.customRequirements}
-                    onChange={(e) => handleInputChange("customRequirements", e.target.value)}
-                    placeholder="أي متطلبات أو ملاحظات إضافية"
-                    rows={3}
-                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="customRequirements">متطلبات خاصة</Label>
+                    <Textarea
+                      id="customRequirements"
+                      value={formData.customRequirements}
+                      onChange={(e) => handleInputChange("customRequirements", e.target.value)}
+                      className="border-2 border-accent/20 focus:border-accent"
+                      placeholder="أي متطلبات خاصة أو تعديلات مطلوبة"
+                      rows={3}
+                    />
+                  </div>
                 </div>
 
                 {/* Digital Signature */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-semibold flex items-center gap-2">
-                    <Signature className="w-5 h-5 text-primary" />
-                    التوقيع الرقمي *
-                  </Label>
-                  
-                  <Card className="bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-dashed border-blue-300">
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <div className="text-center text-sm text-gray-600 mb-4">
-                          <Shield className="w-5 h-5 mx-auto mb-2 text-green-600" />
-                          <p>التوقيع الرقمي معتمد قانونياً ومشفر بأعلى معايير الأمان</p>
-                        </div>
-                        
-                        <div className="relative bg-white rounded-lg border-2 border-gray-200 shadow-sm">
-                          <canvas
-                            ref={signatureCanvasRef}
-                            width={500}
-                            height={250}
-                            className="w-full h-auto max-w-full cursor-crosshair rounded-lg"
-                            onMouseDown={startDrawing}
-                            onMouseMove={draw}
-                            onMouseUp={stopDrawing}
-                            onMouseLeave={stopDrawing}
-                            onTouchStart={startDrawing}
-                            onTouchMove={draw}
-                            onTouchEnd={stopDrawing}
-                            style={{ touchAction: 'none' }}
-                          />
-                          
-                          {/* زر المسح داخل المربع */}
-                          <Button 
-                            type="button" 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={clearSignature}
-                            className="absolute top-2 right-2 bg-white/80 hover:bg-white border border-gray-200 text-gray-600 hover:text-gray-800"
-                          >
-                            <div className="flex items-center gap-1">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                              مسح
-                            </div>
-                          </Button>
-                        </div>
-                        
-                        <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span>استخدم الماوس أو اللمس للتوقيع</span>
-                          </div>
-                          
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => {
-                              clearSignature();
-                              setTimeout(initializeSignatureCanvas, 100);
-                            }}
-                            className="border-blue-200 text-blue-600 hover:bg-blue-50"
-                          >
-                            إعادة تعيين
-                          </Button>
-                        </div>
-                        
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                          <p className="text-xs text-blue-800 text-center">
-                            💡 نصيحة: استخدم خط واضح ومقروء. يمكنك مسح التوقيع وإعادة كتابته حتى تحصل على النتيجة المطلوبة
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                <div className="space-y-6 p-6 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border-2 border-primary/20">
+                  <div className="text-center">
+                    <h3 className="text-lg font-semibold mb-2 flex items-center justify-center gap-2">
+                      <Signature className="h-5 w-5" />
+                      التوقيع الرقمي المعتمد
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      يرجى التوقيع في المربع أدناه باستخدام الماوس أو اللمس
+                    </p>
+                  </div>
+
+                  <div className="relative">
+                    <canvas
+                      ref={signatureCanvasRef}
+                      width={600}
+                      height={200}
+                      className="border-2 border-dashed border-primary/40 rounded-lg cursor-crosshair w-full bg-white shadow-inner"
+                      style={{ 
+                        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                        touchAction: 'none'
+                      }}
+                      onMouseDown={startDrawing}
+                      onMouseMove={draw}
+                      onMouseUp={stopDrawing}
+                      onMouseLeave={stopDrawing}
+                      onTouchStart={startDrawing}
+                      onTouchMove={draw}
+                      onTouchEnd={stopDrawing}
+                    />
+                    
+                    <div className="absolute top-2 left-2 flex items-center gap-2 text-xs text-muted-foreground">
+                      <Shield className="h-3 w-3" />
+                      <span>مشفر وآمن</span>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={clearSignature}
+                      className="border-2 border-destructive/30 text-destructive hover:bg-destructive/10"
+                    >
+                      مسح التوقيع
+                    </Button>
+                  </div>
+
+                  <div className="text-center text-xs text-muted-foreground space-y-1">
+                    <p>💡 نصائح للتوقيع:</p>
+                    <p>• استخدم خطاً واضحاً ومقروءاً</p>
+                    <p>• تأكد من اكتمال التوقيع قبل الإرسال</p>
+                    <p>• التوقيع مشفر ومحمي قانونياً</p>
+                  </div>
                 </div>
 
                 {/* Terms and Conditions */}
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-2 rtl:space-x-reverse">
-                    <Checkbox 
-                      id="agreeToTerms"
-                      checked={formData.agreeToTerms}
-                      onCheckedChange={(checked) => handleInputChange("agreeToTerms", checked as boolean)}
-                    />
-                    <Label htmlFor="agreeToTerms" className="text-sm leading-6">
-                      أوافق على <a href="/terms" className="text-primary hover:underline">الشروط والأحكام</a> وأتعهد بتنفيذ جميع بنود العقد *
-                    </Label>
-                  </div>
+                <div className="space-y-4 p-6 bg-muted/50 rounded-lg border-2 border-muted-foreground/20">
+                  <h3 className="text-lg font-semibold">الموافقة على الشروط والأحكام</h3>
                   
-                  <div className="flex items-start space-x-2 rtl:space-x-reverse">
-                    <Checkbox 
-                      id="agreeToPrivacy"
-                      checked={formData.agreeToPrivacy}
-                      onCheckedChange={(checked) => handleInputChange("agreeToPrivacy", checked as boolean)}
-                    />
-                    <Label htmlFor="agreeToPrivacy" className="text-sm leading-6">
-                      أوافق على <a href="/privacy" className="text-primary hover:underline">سياسة الخصوصية</a> وأسمح بمعالجة بياناتي لأغراض التعاقد *
-                    </Label>
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-2 space-x-reverse">
+                      <Checkbox
+                        id="agreeToTerms"
+                        checked={formData.agreeToTerms}
+                        onCheckedChange={(checked) => handleInputChange("agreeToTerms", checked as boolean)}
+                        className="mt-1"
+                      />
+                      <Label htmlFor="agreeToTerms" className="text-sm leading-relaxed">
+                        أوافق على الشروط والأحكام الخاصة بالعقد وأقر بأن إرسال هذا العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين، 
+                        ويعتبر العقد نافذاً بعد دفع المبلغ المتفق عليه للحساب البنكي المحدد.
+                      </Label>
+                    </div>
+                    
+                    <div className="flex items-start space-x-2 space-x-reverse">
+                      <Checkbox
+                        id="agreeToPrivacy"
+                        checked={formData.agreeToPrivacy}
+                        onCheckedChange={(checked) => handleInputChange("agreeToPrivacy", checked as boolean)}
+                        className="mt-1"
+                      />
+                      <Label htmlFor="agreeToPrivacy" className="text-sm leading-relaxed">
+                        أوافق على سياسة الخصوصية وعلى استخدام بياناتي لأغراض تنفيذ العقد والتواصل المهني.
+                      </Label>
+                    </div>
                   </div>
                 </div>
 
-                {/* Submit Buttons */}
+                {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                  <Button 
-                    type="submit" 
-                    size="lg" 
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleDownloadPDF}
+                    className="flex-1 border-2 border-primary/30 text-primary hover:bg-primary/10"
+                    disabled={!formData.clientName || !formData.selectedOffer}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    تحميل معاينة العقد
+                  </Button>
+                  
+                  <Button
+                    type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90"
+                    className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-semibold py-3 shadow-lg"
                   >
                     {isSubmitting ? (
-                      <>جاري الإرسال...</>
+                      <>
+                        <Clock className="h-4 w-4 mr-2 animate-spin" />
+                        جاري الإرسال...
+                      </>
                     ) : (
                       <>
-                        <Send className="w-5 h-5 ml-2" />
+                        <Send className="h-4 w-4 mr-2" />
                         إرسال العقد للمراجعة
                       </>
                     )}
                   </Button>
-                  
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    size="lg"
-                    onClick={downloadContract}
-                    className="flex-1"
-                  >
-                    <Download className="w-5 h-5 ml-2" />
-                    تحميل نموذج العقد
-                  </Button>
+                </div>
+
+                {/* Important Notice */}
+                <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 text-center">
+                  <p className="text-sm text-yellow-800 font-medium">
+                    ⚠️ ملاحظة مهمة: إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين
+                  </p>
+                  <p className="text-xs text-yellow-700 mt-1">
+                    سيتم التواصل معك لتأكيد التفاصيل واعتماد العقد نهائياً
+                  </p>
                 </div>
               </form>
             </CardContent>
           </Card>
-
-          {/* Legal Notice */}
-          <div className="max-w-4xl mx-auto mt-8">
-            <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-3">
-                  <Award className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-amber-900">إشعار قانوني مهم</h3>
-                    <p className="text-sm text-amber-800 leading-relaxed">
-                      هذا العقد مُصاغ وفقاً للأنظمة السعودية والقوانين النافذة. التوقيع الرقمي معتمد قانونياً ويحمل نفس القوة القانونية للتوقيع التقليدي. 
-                      جميع البيانات محمية ومشفرة وفقاً لأعلى معايير الأمان. سيتم التواصل معكم خلال 24 ساعة لتأكيد تفاصيل العقد وإجراءات التنفيذ.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </div>
+      
       <Footer />
     </div>
   );
