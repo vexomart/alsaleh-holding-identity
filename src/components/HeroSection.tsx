@@ -90,24 +90,29 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Enhanced Dynamic Background Slider */}
+      {/* Enhanced Dynamic Background Slider with Modern Transitions */}
       <div className="absolute inset-0">
         {businessImages.map((image, index) => (
           <div
             key={index}
-            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-2000 transform ${
+            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-[3000ms] ease-in-out transform ${
               index === currentSlide 
-                ? 'opacity-100 scale-105' 
-                : 'opacity-0 scale-100'
+                ? 'opacity-100 scale-110 blur-0' 
+                : 'opacity-0 scale-100 blur-sm'
             }`}
             style={{ backgroundImage: `url(${image})` }}
           />
         ))}
+        
+        {/* Modern Parallax Effect Overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.15),transparent_50%)] animate-pulse" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.15),transparent_50%)] animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
       
-      {/* Modern Overlay with professional gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 via-blue-800/70 to-purple-900/80" />
-      <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/50 via-transparent to-blue-800/30" />
+      {/* Professional Corporate Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-indigo-900/75 to-blue-900/85" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-indigo-800/40" />
+      <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,0.02)_50%,transparent_75%)] bg-[length:60px_60px]" />
       
       {/* Enhanced Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -273,23 +278,34 @@ const HeroSection = () => {
         </div>
       </div>
       
-      {/* Enhanced Slide Indicators - More Visible */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4 z-30 bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">
+      {/* Modern Slide Indicators */}
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex gap-3 z-30 bg-white/10 backdrop-blur-xl rounded-2xl px-6 py-4 border border-white/20 shadow-2xl">
         {businessImages.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`relative overflow-hidden transition-all duration-500 rounded-full border-2 ${
+            className={`relative overflow-hidden transition-all duration-700 rounded-xl border-2 group ${
               index === currentSlide 
-                ? 'w-12 h-4 bg-secondary border-secondary shadow-2xl shadow-secondary/50' 
-                : 'w-4 h-4 bg-white/60 border-white/40 hover:bg-white/80 hover:scale-125 hover:border-secondary'
+                ? 'w-16 h-6 bg-gradient-to-r from-blue-500 to-indigo-600 border-blue-400 shadow-xl shadow-blue-500/30' 
+                : 'w-6 h-6 bg-white/40 border-white/30 hover:bg-white/60 hover:scale-110 hover:border-blue-400/70'
             }`}
           >
             {index === currentSlide && (
-              <div className="absolute inset-0 bg-gradient-to-r from-secondary/70 to-secondary animate-pulse rounded-full" />
+              <>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/50 to-indigo-500/50 animate-pulse rounded-xl" />
+                <div className="absolute inset-1 bg-white/20 rounded-lg animate-pulse" />
+              </>
             )}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 group-hover:from-blue-500/20 to-indigo-600/0 group-hover:to-indigo-600/20 rounded-xl transition-all duration-300" />
           </button>
         ))}
+        
+        {/* Slide Counter */}
+        <div className="flex items-center ml-4 px-3 py-1 bg-white/20 rounded-lg border border-white/30">
+          <span className="text-white text-sm font-bold">
+            {currentSlide + 1} / {businessImages.length}
+          </span>
+        </div>
       </div>
       
       {/* Enhanced Scroll Indicator */}

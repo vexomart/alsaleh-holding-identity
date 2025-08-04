@@ -61,121 +61,152 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="hidden sm:block bg-slate-900 text-white py-2 text-xs">
-        <div className="container mx-auto px-4">
+      {/* Top Bar - Enhanced */}
+      <div className="hidden lg:block bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white py-3 border-b border-indigo-800/30">
+        <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <Clock className="w-3 h-3" />
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-3 text-sm font-medium">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                  <Clock className="w-4 h-4" />
+                </div>
                 <span>ساعات العمل: الأحد - الخميس 8:00 ص - 6:00 م</span>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-3 h-3" />
-                <span>المملكة العربية السعودية</span>
+              <div className="flex items-center gap-3 text-sm font-medium">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <span>المملكة العربية السعودية - الرياض</span>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Mail className="w-3 h-3" />
-                <a href="mailto:info@ash.holdings" className="hover:text-gray-300 transition-colors">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3 text-sm font-medium hover:text-blue-300 transition-colors group">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <a href="mailto:info@ash.holdings" className="hover:underline">
                   info@ash.holdings
                 </a>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-3 h-3" />
-                <a href="tel:+966555812567" className="hover:text-gray-300 transition-colors">
-                  0555812567
+              <div className="flex items-center gap-3 text-sm font-medium hover:text-green-300 transition-colors group">
+                <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <a href="tel:+966555812567" className="hover:underline">
+                  +966 555 812 567
                 </a>
               </div>
-              <Badge variant="secondary" className="bg-green-500 text-white text-xs">
-                متاح الآن
-              </Badge>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-4 py-1.5 rounded-full border-0">
+                  متاح الآن للدعم
+                </Badge>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-slate-900/95 backdrop-blur-md transition-all duration-300">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="flex items-center justify-between h-16 lg:h-18">
-            {/* Logo & Company Name */}
-            <div className="flex items-center gap-4">
-              <a href="/" className="flex items-center gap-3">
-                <img 
-                  src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
-                  alt="ASH Holdings" 
-                  className="h-10 lg:h-12 w-auto object-contain transition-transform duration-300 hover:scale-105"
-                />
-                <div className="hidden lg:block">
-                  <div className="font-bold text-base text-white">
+      {/* Main Navigation - Enhanced */}
+      <nav className="fixed top-0 lg:top-[52px] w-full z-50 bg-gradient-to-r from-slate-900/98 via-indigo-900/98 to-slate-900/98 backdrop-blur-xl transition-all duration-500 border-b border-indigo-800/20 shadow-2xl">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="flex items-center justify-between h-20 lg:h-24">
+            {/* Logo & Company Name - Enhanced */}
+            <div className="flex items-center gap-6">
+              <a href="/" className="flex items-center gap-4 group">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                  <img 
+                    src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+                    alt="ASH Holdings" 
+                    className="relative h-12 lg:h-16 w-auto object-contain transition-all duration-500 group-hover:scale-110 filter group-hover:brightness-110"
+                  />
+                </div>
+                <div className="hidden xl:block">
+                  <div className="font-bold text-lg lg:text-xl text-white group-hover:text-blue-300 transition-colors duration-300">
                     شركة علي صالح الشهري القابضة
                   </div>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                    <span className="text-xs text-white/80">
-                      شركة رائدة منذ 2016
+                  <div className="flex items-center gap-3 mt-1">
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3 h-3 text-yellow-400 fill-current animate-pulse" style={{ animationDelay: `${i * 0.1}s` }} />
+                      ))}
+                    </div>
+                    <span className="text-sm text-blue-200 font-medium">
+                      رائدة منذ 2016 • مستوى عالمي
                     </span>
                   </div>
+                </div>
+                <div className="block xl:hidden">
+                  <div className="font-bold text-base text-white">ASH Holdings</div>
+                  <div className="text-xs text-blue-200">شركة عالمية</div>
                 </div>
               </a>
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
+            {/* Desktop Navigation - Enhanced */}
+            <div className="hidden lg:flex items-center gap-10">
               <a 
                 href="/" 
-                className="font-medium transition-colors hover:text-primary text-white"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
               >
                 الرئيسية
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               <a 
                 href="/about" 
-                className="font-medium transition-colors hover:text-primary text-white"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
               >
                 من نحن
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               
-              {/* Services Dropdown */}
+              {/* Services Dropdown - Enhanced */}
               <div 
-                className="relative"
+                className="relative group"
                 onMouseEnter={() => setShowServices(true)}
                 onMouseLeave={() => setShowServices(false)}
               >
                 <button 
-                  className="flex items-center gap-1 font-medium transition-colors hover:text-primary text-white"
+                  className="relative flex items-center gap-2 font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white py-2"
                 >
                   خدماتنا
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" />
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
                 </button>
                 
                 {showServices && (
-                  <div className="absolute top-full right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50">
-                    <div className="p-2">
-                      {services.map((service, index) => {
-                        const IconComponent = service.icon;
-                        return (
-                          <a
-                            key={index}
-                            href={service.href}
-                            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors rounded-lg"
-                            onClick={(e) => {
-                              if (service.href.startsWith('#')) {
-                                e.preventDefault();
-                                const element = document.getElementById(service.href.substring(1));
-                                element?.scrollIntoView({ behavior: 'smooth' });
-                              }
-                            }}
-                          >
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                              <IconComponent className="w-4 h-4 text-primary" />
-                            </div>
-                            <span className="text-gray-700 font-medium text-sm">{service.name}</span>
-                          </a>
-                        );
-                      })}
+                  <div className="absolute top-full right-0 mt-4 w-96 bg-gradient-to-br from-white via-blue-50/50 to-indigo-50/30 rounded-2xl shadow-2xl border border-blue-200/50 overflow-hidden z-50 backdrop-blur-sm animate-fade-in">
+                    <div className="p-4">
+                      <div className="grid grid-cols-1 gap-2">
+                        {services.map((service, index) => {
+                          const IconComponent = service.icon;
+                          return (
+                            <a
+                              key={index}
+                              href={service.href}
+                              className="flex items-center gap-4 px-4 py-4 hover:bg-gradient-to-r hover:from-blue-100/80 hover:to-indigo-100/60 transition-all duration-300 rounded-xl group border border-transparent hover:border-blue-200/50"
+                              onClick={(e) => {
+                                if (service.href.startsWith('#')) {
+                                  e.preventDefault();
+                                  const element = document.getElementById(service.href.substring(1));
+                                  element?.scrollIntoView({ behavior: 'smooth' });
+                                }
+                              }}
+                            >
+                              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
+                                <IconComponent className="w-6 h-6 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="text-slate-700 font-bold text-base group-hover:text-blue-700 transition-colors duration-300">{service.name}</span>
+                                <div className="text-xs text-slate-500 mt-0.5">خدمة احترافية متميزة</div>
+                              </div>
+                              <ChevronDown className="w-4 h-4 text-slate-400 -rotate-90 group-hover:translate-x-1 transition-transform duration-300" />
+                            </a>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -183,57 +214,66 @@ const Navigation = () => {
 
               <a 
                 href="/vision" 
-                className="font-medium transition-colors hover:text-primary text-white"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
               >
                 رؤيتنا
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               <a 
                 href="/subsidiaries"
-                className="font-medium transition-colors hover:text-primary text-white"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
               >
                 شركاتنا
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               <a 
                 href="/ready-projects" 
-                className="font-medium transition-colors hover:text-primary text-white"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
               >
                 منتجاتنا
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               <a 
                 href="/contact"
-                className="font-medium transition-colors hover:text-primary text-white"
+                className="relative font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white group py-2"
               >
                 تواصل معنا
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
               </a>
               
-              {/* Others Dropdown */}
+              {/* Others Dropdown - Enhanced */}
               <div 
-                className="relative"
+                className="relative group"
                 onMouseEnter={() => setShowOthers(true)}
                 onMouseLeave={() => setShowOthers(false)}
               >
                 <button 
-                  className="flex items-center gap-1 font-medium transition-colors hover:text-primary text-white"
+                  className="relative flex items-center gap-2 font-semibold text-lg transition-all duration-300 hover:text-blue-300 text-white py-2"
                 >
                   أخرى
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="w-5 h-5 group-hover:rotate-180 transition-transform duration-300" />
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 group-hover:w-full transition-all duration-300 rounded-full"></div>
                 </button>
                 
                 {showOthers && (
-                  <div className="absolute top-full right-0 mt-2 w-60 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50">
-                    <div className="p-2">
+                  <div className="absolute top-full right-0 mt-4 w-80 bg-gradient-to-br from-white via-purple-50/50 to-pink-50/30 rounded-2xl shadow-2xl border border-purple-200/50 overflow-hidden z-50 backdrop-blur-sm animate-fade-in">
+                    <div className="p-4">
                       {othersItems.map((item, index) => {
                         const IconComponent = item.icon;
                         return (
                           <a
                             key={index}
                             href={item.href}
-                            className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors rounded-lg"
+                            className="flex items-center gap-4 px-4 py-4 hover:bg-gradient-to-r hover:from-purple-100/80 hover:to-pink-100/60 transition-all duration-300 rounded-xl group border border-transparent hover:border-purple-200/50"
                           >
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                              <IconComponent className="w-4 h-4 text-primary" />
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
+                              <IconComponent className="w-6 h-6 text-white" />
                             </div>
-                            <span className="text-gray-700 font-medium text-sm">{item.name}</span>
+                            <div className="flex-1">
+                              <span className="text-slate-700 font-bold text-base group-hover:text-purple-700 transition-colors duration-300">{item.name}</span>
+                              <div className="text-xs text-slate-500 mt-0.5">معلومات مهمة</div>
+                            </div>
+                            <ChevronDown className="w-4 h-4 text-slate-400 -rotate-90 group-hover:translate-x-1 transition-transform duration-300" />
                           </a>
                         );
                       })}
@@ -243,42 +283,46 @@ const Navigation = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3">
+            {/* Action Buttons - Enhanced */}
+            <div className="flex items-center gap-4">
               {/* Contact Buttons - Desktop Only */}
-              <div className="hidden xl:flex items-center gap-2">
+              <div className="hidden xl:flex items-center gap-3">
                 <Button 
-                  size="sm" 
+                  size="lg" 
                   variant="ghost"
-                  className="flex items-center gap-2 text-white hover:text-green-400"
+                  className="flex items-center gap-3 text-white hover:text-green-300 bg-white/5 hover:bg-green-500/20 border border-white/20 hover:border-green-400/50 px-6 py-3 rounded-xl transition-all duration-300 group backdrop-blur-sm"
                   asChild
                 >
                   <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-4 h-4 text-green-500" />
-                    <span>واتساب</span>
+                    <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <MessageCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="font-bold">واتساب</span>
                   </a>
                 </Button>
                 <Button 
-                  size="sm" 
+                  size="lg" 
                   variant="ghost"
-                  className="flex items-center gap-2 text-white hover:text-blue-400"
+                  className="flex items-center gap-3 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 border border-white/20 hover:border-blue-400/50 px-6 py-3 rounded-xl transition-all duration-300 group backdrop-blur-sm"
                   asChild
                 >
                   <a href="tel:+966555812567">
-                    <Phone className="w-4 h-4 text-blue-500" />
-                    <span>اتصال فوري</span>
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <Phone className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="font-bold">اتصال فوري</span>
                   </a>
                 </Button>
               </div>
               
               <Button 
-                variant="secondary"
-                size="sm"
-                className="hidden lg:flex font-semibold"
+                size="lg"
+                className="hidden lg:flex font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white px-8 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0"
                 asChild
               >
                 <a href="https://ash.holdings" target="_blank" rel="noopener noreferrer">
-                  ابدأ معنا
+                  <span>ابدأ معنا الآن</span>
+                  <Zap className="w-5 h-5 mr-2" />
                 </a>
               </Button>
               
