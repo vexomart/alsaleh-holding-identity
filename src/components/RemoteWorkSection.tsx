@@ -76,10 +76,10 @@ const RemoteWorkSection = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mb-6 shadow-lg">
             <Wifi className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight text-center">
             نعمل عن <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">بُعد بثقة</span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed text-center">
             نحن رواد في العمل عن بُعد، نقدم خدماتنا بأعلى جودة من خلال فرق متخصصة تعمل بمرونة وكفاءة عالية
           </p>
         </div>
@@ -97,10 +97,10 @@ const RemoteWorkSection = () => {
               <div className={`text-3xl font-bold mb-2 ${stat.color} dark:text-white`}>
                 {stat.number}
               </div>
-              <div className="text-gray-900 dark:text-white font-semibold text-sm mb-1">
+              <div className="text-gray-900 dark:text-white font-semibold text-sm mb-1 text-center">
                 {stat.label}
               </div>
-              <div className="text-gray-600 dark:text-gray-400 text-xs">
+              <div className="text-gray-600 dark:text-gray-400 text-xs text-center">
                 {stat.sublabel}
               </div>
             </div>
@@ -109,7 +109,7 @@ const RemoteWorkSection = () => {
 
         {/* Trusted Companies */}
         <div className="text-center mb-16">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
             الشركات العالمية التي تثق في العمل عن بُعد
           </h3>
           <div className="flex flex-wrap justify-center items-center gap-8">
@@ -137,7 +137,7 @@ const RemoteWorkSection = () => {
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md">
                 <advantage.icon className="w-6 h-6 text-white" />
               </div>
-              <div>
+              <div className="text-center">
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                   {advantage.title}
                 </h4>
@@ -152,10 +152,10 @@ const RemoteWorkSection = () => {
         {/* Trust Building Section */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-center text-white shadow-2xl">
           <Building className="w-16 h-16 mx-auto mb-6 text-blue-100" />
-          <h3 className="text-2xl md:text-3xl font-bold mb-4">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4 text-center">
             ثقة مبنية على النجاح والشفافية
           </h3>
-          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed text-center">
             نؤمن بأن العمل عن بُعد ليس مجرد اتجاه، بل مستقبل الأعمال. نقدم لعملائنا تجربة موثوقة وشفافة مع إمكانية تتبع التقدم والتواصل المستمر
           </p>
           
