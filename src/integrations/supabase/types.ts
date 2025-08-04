@@ -14,6 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
+      contracts: {
+        Row: {
+          authorized_person: string | null
+          client_address: string | null
+          client_approved: boolean | null
+          client_approved_at: string | null
+          client_email: string
+          client_id_number: string | null
+          client_name: string
+          client_phone: string
+          client_type: string
+          commercial_register: string | null
+          company_approved: boolean | null
+          company_approved_at: string | null
+          contract_duration: string | null
+          contract_number: string
+          contract_pdf_url: string | null
+          created_at: string
+          currency: string
+          end_date: string | null
+          id: string
+          nafath_request_id: string | null
+          nafath_verified: boolean | null
+          nafath_verified_at: string | null
+          payment_terms: string | null
+          service_description: string | null
+          service_price: number
+          service_type: string
+          start_date: string | null
+          status: string
+          tax_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          authorized_person?: string | null
+          client_address?: string | null
+          client_approved?: boolean | null
+          client_approved_at?: string | null
+          client_email: string
+          client_id_number?: string | null
+          client_name: string
+          client_phone: string
+          client_type: string
+          commercial_register?: string | null
+          company_approved?: boolean | null
+          company_approved_at?: string | null
+          contract_duration?: string | null
+          contract_number: string
+          contract_pdf_url?: string | null
+          created_at?: string
+          currency?: string
+          end_date?: string | null
+          id?: string
+          nafath_request_id?: string | null
+          nafath_verified?: boolean | null
+          nafath_verified_at?: string | null
+          payment_terms?: string | null
+          service_description?: string | null
+          service_price: number
+          service_type: string
+          start_date?: string | null
+          status?: string
+          tax_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          authorized_person?: string | null
+          client_address?: string | null
+          client_approved?: boolean | null
+          client_approved_at?: string | null
+          client_email?: string
+          client_id_number?: string | null
+          client_name?: string
+          client_phone?: string
+          client_type?: string
+          commercial_register?: string | null
+          company_approved?: boolean | null
+          company_approved_at?: string | null
+          contract_duration?: string | null
+          contract_number?: string
+          contract_pdf_url?: string | null
+          created_at?: string
+          currency?: string
+          end_date?: string | null
+          id?: string
+          nafath_request_id?: string | null
+          nafath_verified?: boolean | null
+          nafath_verified_at?: string | null
+          payment_terms?: string | null
+          service_description?: string | null
+          service_price?: number
+          service_type?: string
+          start_date?: string | null
+          status?: string
+          tax_number?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       job_applications: {
         Row: {
           city: string | null
@@ -92,15 +191,76 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_contract_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -227,6 +387,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
