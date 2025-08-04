@@ -142,6 +142,25 @@
     text-align: right;
   }
   
+  /* تحسين محاذاة النصوص العربية */
+  h1, h2, h3, h4, h5, h6 {
+    text-align: right;
+    direction: rtl;
+  }
+  
+  p, span, div {
+    text-align: right;
+    direction: rtl;
+  }
+  
+  .text-center {
+    text-align: center !important;
+  }
+  
+  .text-left {
+    text-align: left !important;
+  }
+  
   /* Responsive font sizes for better mobile experience */
   html {
     font-size: 14px;

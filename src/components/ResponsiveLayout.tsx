@@ -253,7 +253,7 @@ export function ResponsiveText({
 
   const alignClasses = {
     right: "text-right",
-    center: "text-center",
+    center: "text-center", 
     left: "text-left"
   };
 
@@ -263,7 +263,7 @@ export function ResponsiveText({
       weightClasses[weight],
       colorClasses[color],
       alignClasses[align],
-      "leading-relaxed",
+      "leading-relaxed rtl:text-right",
       className
     )}>
       {children}
