@@ -9,6 +9,3 @@ verify_jwt = false
 
 [functions.job-application]
 verify_jwt = false
-
-[functions.auth-emails]
-verify_jwt = false
