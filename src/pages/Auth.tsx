@@ -130,9 +130,9 @@ export default function Auth() {
               <Building2 className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-              شركة الصالح القابضة
+              نظام خدمة العملاء
             </h1>
-            <p className="text-blue-200/80 mt-2">منصة الحلول التقنية المتطورة</p>
+            <p className="text-blue-200/80 mt-2">شركة علي صالح الشهري القابضة</p>
           </div>
 
           {/* Auth Card */}
