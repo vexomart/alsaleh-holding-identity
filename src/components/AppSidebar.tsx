@@ -83,7 +83,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      className={`${collapsed ? "w-16" : "w-72"} bg-white border-r border-slate-200 transition-all duration-200`}
+      className={`${collapsed ? "w-16" : "w-72"} bg-white border-r border-slate-200 transition-all duration-200 flex flex-col max-h-screen`}
       collapsible="icon"
     >
       {/* Header */}
@@ -107,7 +107,7 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-4 py-6">
+      <SidebarContent className="flex-1 overflow-y-auto px-4 py-6">
         {/* التنقل الرئيسي */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-slate-500 font-medium text-xs uppercase tracking-wide mb-4 px-2">
@@ -194,7 +194,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="p-6 border-t border-slate-100 mt-auto">
+      <SidebarFooter className="p-6 border-t border-slate-100 flex-shrink-0">
         {!collapsed && (
           <div className="space-y-4">
             {/* Contact Info */}
