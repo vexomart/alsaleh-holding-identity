@@ -12,7 +12,6 @@ import DepartmentsSection from "@/components/DepartmentsSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
 import RemoteWorkSection from "@/components/RemoteWorkSection";
-import InspirationSection from "@/components/InspirationSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
@@ -91,11 +90,6 @@ const Index = () => {
             <div className="relative z-10">
               <RemoteWorkSection />
             </div>
-          </section>
-
-          {/* Inspiration Section */}
-          <section id="inspiration" className="relative">
-            <InspirationSection />
           </section>
 
           {/* Contact Section */}
