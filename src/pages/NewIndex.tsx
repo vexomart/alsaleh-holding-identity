@@ -28,32 +28,32 @@ const Index = () => {
 
   const services = [
     {
-      title: "إدارة طلبات العملاء",
-      description: "نظام متطور لإدارة ومتابعة جميع طلبات العملاء بكفاءة عالية",
-      icon: Users,
-      features: ["تتبع الطلبات", "ردود سريعة", "تقارير مفصلة"],
-      badge: "الأساسي"
+      title: "تطوير المواقع والتطبيقات",
+      description: "حلول تقنية متقدمة لتطوير المواقع وتطبيقات الجوال",
+      icon: Code,
+      features: ["مواقع متجاوبة", "تطبيقات الجوال", "واجهات حديثة"],
+      badge: "الأكثر طلباً"
     },
     {
-      title: "الدعم الفني",
-      description: "فريق دعم فني متخصص متاح على مدار الساعة لحل مشاكلك",
+      title: "خدمات التصميم",
+      description: "تصميم هوية بصرية متميزة لعلامتك التجارية",
+      icon: Palette,
+      features: ["تصميم الشعارات", "الهوية البصرية", "مواد تسويقية"],
+      badge: "إبداعي"
+    },
+    {
+      title: "الحلول السحابية",
+      description: "خدمات استضافة وحلول سحابية آمنة وموثوقة",
+      icon: Cloud,
+      features: ["استضافة آمنة", "نسخ احتياطية", "دعم فني 24/7"],
+      badge: "موثوق"
+    },
+    {
+      title: "الأمن السيبراني",
+      description: "حماية شاملة لأنظمتك وبياناتك الرقمية",
       icon: Shield,
-      features: ["دعم 24/7", "حلول سريعة", "خبراء متخصصون"],
-      badge: "متميز"
-    },
-    {
-      title: "إدارة المشاريع",
-      description: "متابعة شاملة لجميع مراحل المشاريع من البداية حتى التسليم",
-      icon: BarChart3,
-      features: ["تتبع التقدم", "تقارير دورية", "جدولة زمنية"],
-      badge: "احترافي"
-    },
-    {
-      title: "خدمات استشارية",
-      description: "استشارات تقنية وإدارية لتطوير أعمالك وتحسين أدائك",
-      icon: TrendingUp,
-      features: ["تحليل الأداء", "خطط تطوير", "استراتيجيات نمو"],
-      badge: "متقدم"
+      features: ["حماية من التهديدات", "مراقبة مستمرة", "تقييم أمني"],
+      badge: "حماية متقدمة"
     }
   ];
 
@@ -66,23 +66,23 @@ const Index = () => {
 
   const features = [
     {
-      title: "فريق دعم متخصص",
-      description: "فريق من خبراء خدمة العملاء متاح على مدار الساعة",
+      title: "فريق خبير",
+      description: "فريق من المطورين والمصممين ذوي الخبرة العالية",
       icon: Users
     },
     {
-      title: "نظام إدارة متقدم",
-      description: "نظام CRM متطور لإدارة جميع تفاعلات العملاء",
+      title: "تقنيات حديثة",
+      description: "نستخدم أحدث التقنيات والأدوات في السوق",
       icon: Code
     },
     {
-      title: "أمان وموثوقية",
-      description: "حماية عالية لبيانات العملاء ومعلوماتهم الحساسة",
+      title: "دعم مستمر",
+      description: "دعم فني متواصل ومتابعة دورية لمشاريعك",
       icon: Shield
     },
     {
-      title: "تقارير تفصيلية",
-      description: "تقارير شاملة ومفصلة عن أداء الخدمات ورضا العملاء",
+      title: "جودة عالية",
+      description: "نلتزم بأعلى معايير الجودة في جميع خدماتنا",
       icon: Award
     }
   ];
@@ -91,8 +91,8 @@ const Index = () => {
     <PageLayout>
       {/* Hero Section */}
       <PageHeader
-        title="نظام خدمة العملاء"
-        description="شركة علي صالح الشهري القابضة - منصة شاملة لإدارة طلبات العملاء وتقديم الدعم المتكامل"
+        title="شركة الصالح القابضة"
+        description="شريكك الموثوق في الحلول التقنية والخدمات الرقمية المتقدمة"
       >
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
@@ -101,7 +101,7 @@ const Index = () => {
             onClick={() => navigate('/auth')}
           >
             <Play className="mr-2 h-5 w-5" />
-            دخول النظام
+            ابدأ رحلتك معنا
           </Button>
           <Button 
             size="lg" 
@@ -142,9 +142,9 @@ const Index = () => {
         <section className="animate-fade-in delay-300">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-4">
-              خدمات النظام
+              خدماتنا المتميزة
             </h2>
-            <p className="text-xl text-muted-foreground">منصة شاملة لإدارة جميع احتياجات العملاء</p>
+            <p className="text-xl text-muted-foreground">نقدم مجموعة شاملة من الحلول التقنية المتطورة</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -193,10 +193,10 @@ const Index = () => {
         <section className="text-center bg-gradient-to-r from-primary/5 to-blue-600/5 rounded-3xl p-12 animate-fade-in delay-500">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-4">
-              هل تحتاج لدعم فوري؟
+              جاهز لبدء مشروعك؟
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              فريقنا جاهز لمساعدتك على مدار الساعة - تواصل معنا الآن للحصول على أفضل خدمة
+              انضم إلى أكثر من 500 عميل راضي واكتشف كيف يمكننا مساعدتك في تحقيق أهدافك الرقمية
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 

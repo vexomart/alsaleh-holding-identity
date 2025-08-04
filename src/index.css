@@ -126,25 +126,6 @@
   body {
     @apply bg-background text-foreground;
     direction: rtl;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  * {
-    direction: rtl;
-    text-align: right;
-  }
-  
-  input[type="email"], 
-  input[type="password"], 
-  input[type="tel"], 
-  input[dir="ltr"] {
-    direction: ltr;
-    text-align: left;
-  }
-  
-  .rtl-flex {
-    display: flex;
-    flex-direction: row-reverse;
   }
 }
 
