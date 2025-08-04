@@ -33,11 +33,22 @@ import {
   BarChart3,
   Cloud,
   Lock,
-  Layers
+  Layers,
+  Timer,
+  Calendar,
+  Sparkles,
+  Eye,
+  Heart,
+  ArrowRight,
+  Info
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const ReadyProjects = () => {
+  const [selectedCategory, setSelectedCategory] = useState("الكل");
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+
   const projects = [
     {
       id: 2,
@@ -171,348 +182,6 @@ const ReadyProjects = () => {
       clients: "12+",
       updates: "تحديثات مجانية لسنتين",
       support: "دعم طبي متخصص 24/7"
-    },
-    {
-      id: 9,
-      title: "نظام تأجير السيارات الذكي",
-      description: "منصة شاملة لإدارة تأجير السيارات مع نظام حجز متقدم وإدارة الأسطول والدفع الإلكتروني",
-      detailedDescription: "نظام متكامل لإدارة شركات تأجير السيارات يشمل إدارة الأسطول، نظام الحجز الذكي، تتبع GPS للمركبات، إدارة العملاء والسائقين، والدفع الإلكتروني. مع واجهة ويب للإدارة وتطبيق موبايل للعملاء ونظام تقارير شامل.",
-      features: ["إدارة الأسطول", "نظام الحجز الذكي", "تتبع GPS", "الدفع الإلكتروني", "إدارة العملاء", "تطبيق موبايل"],
-      technologies: ["React", "Node.js", "MongoDB", "GPS Tracking", "Payment Gateway", "Mobile App"],
-      price: "35,000 ريال",
-      duration: "6-8 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "إدارة الأعمال",
-      icon: Building2,
-      color: "blue",
-      gradient: "from-blue-500 to-indigo-600",
-      rating: "4.7",
-      clients: "20+",
-      updates: "تحديثات مجانية لسنة ونصف",
-      support: "دعم فني متخصص 24/7"
-    },
-    {
-      id: 10,
-      title: "منصة الخدمات المصغرة المتكاملة",
-      description: "منصة شاملة للخدمات المصغرة مثل خمسات وفايفر مع نظام مدفوعات آمن وإدارة المشاريع",
-      detailedDescription: "منصة متكاملة تربط مقدمي الخدمات المصغرة بالعملاء، تشمل نظام عرض الخدمات، إدارة الطلبات، المدفوعات الآمنة، تقييم الخدمات، ونظام رسائل متقدم. مع لوحات تحكم منفصلة للبائعين والمشترين والإدارة.",
-      features: ["عرض الخدمات", "نظام الطلبات", "المدفوعات الآمنة", "تقييم الخدمات", "نظام الرسائل", "لوحة تحكم شاملة"],
-      technologies: ["React", "Laravel", "MySQL", "Payment Gateway", "Real-time Chat", "File Upload"],
-      price: "15,000 ريال",
-      duration: "5-7 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "منصات الخدمات",
-      icon: Users,
-      color: "green",
-      gradient: "from-green-500 to-emerald-600",
-      rating: "4.8",
-      clients: "35+",
-      updates: "تحديثات مجانية لسنة",
-      support: "دعم فني وتجاري متخصص"
-    },
-    {
-      id: 11,
-      title: "نظام إدارة العقارات المتكامل",
-      description: "منصة شاملة لإدارة العقارات مع نظام المبيعات والإيجارات وإدارة المطورين والوسطاء",
-      detailedDescription: "نظام عقاري متطور يجمع المطورين والوسطاء والعملاء في منصة واحدة. يشمل إدارة العقارات، المبيعات، الإيجارات، المدفوعات، نظام الجولات الافتراضية، وتحليلات السوق المتقدمة. مع تطبيق موبايل متكامل ونظام إدارة شامل.",
-      features: ["إدارة العقارات", "المبيعات والإيجارات", "نظام الجولات الافتراضية", "إدارة المطورين", "تحليلات السوق", "تطبيق موبايل"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Maps API", "Virtual Tours", "Mobile App"],
-      price: "30,000 ريال",
-      duration: "7-9 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "الأنظمة العقارية",
-      icon: Building2,
-      color: "amber",
-      gradient: "from-amber-500 to-orange-600",
-      rating: "4.8",
-      clients: "18+",
-      updates: "تحديثات مجانية لسنة ونصف",
-      support: "دعم فني وتجاري متخصص 24/7"
-    },
-    {
-      id: 12,
-      title: "موقع تعريفي للشركات",
-      description: "موقع إلكتروني احترافي وأنيق للشركات مع تصميم متجاوب وإدارة محتوى سهلة",
-      detailedDescription: "موقع إلكتروني تعريفي متكامل للشركات والمؤسسات يتضمن صفحات رئيسية، خدمات، عن الشركة، فريق العمل، معرض الأعمال، ونموذج تواصل. مصمم ليكون سريع التحميل ومتوافق مع محركات البحث ومتجاوب مع جميع الأجهزة.",
-      features: ["تصميم متجاوب", "صفحات متعددة", "إدارة محتوى", "تحسين SEO", "سرعة تحميل", "نموذج تواصل"],
-      technologies: ["React", "Next.js", "Tailwind CSS", "Framer Motion", "Contact Forms", "SEO"],
-      price: "5,000 ريال",
-      duration: "1-2 أسبوع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "المواقع التعريفية",
-      icon: Globe,
-      color: "sky",
-      gradient: "from-sky-500 to-blue-600",
-      rating: "4.9",
-      clients: "50+",
-      updates: "تحديثات مجانية لسنة",
-      support: "دعم فني شامل"
-    },
-    {
-      id: 13,
-      title: "الحل الكامل لإدارة المطاعم",
-      description: "نظام شامل لإدارة المطاعم مع نقاط البيع وإدارة الطلبات والمخزون وتطبيق توصيل",
-      detailedDescription: "نظام متكامل لإدارة المطاعم والمقاهي يشمل نظام نقاط البيع (POS)، إدارة الطلبات والقوائم، إدارة المخزون والموردين، نظام التوصيل، إدارة الموظفين، والتقارير المالية. مع تطبيق موبايل للعملاء ولوحة تحكم شاملة للإدارة.",
-      features: ["نظام POS", "إدارة الطلبات", "إدارة المخزون", "تطبيق توصيل", "تقارير مالية", "إدارة الموظفين"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Mobile App", "Real-time"],
-      price: "12,000 ريال",
-      duration: "4-5 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "إدارة المطاعم",
-      icon: Building2,
-      color: "orange",
-      gradient: "from-orange-500 to-red-600",
-      rating: "4.8",
-      clients: "45+",
-      updates: "تحديثات مجانية لسنة ونصف",
-      support: "دعم فني وتجاري متخصص"
-    },
-    {
-      id: 14,
-      title: "نظام إدارة المشاريع",
-      description: "نظام شامل لإدارة المشاريع وفرق العمل مع تتبع المهام والجدولة الزمنية وإدارة الموارد",
-      detailedDescription: "نظام متقدم لإدارة المشاريع يساعد الشركات على تنظيم وتتبع مشاريعها بكفاءة. يشمل إدارة المهام، الجدولة الزمنية، تخصيص الموارد، التعاون بين الفرق، تتبع التقدم، وتقارير الأداء التفصيلية.",
-      features: ["إدارة المهام", "الجدولة الزمنية", "إدارة الفرق", "تتبع التقدم", "تقارير الأداء", "إدارة الموارد"],
-      technologies: ["React", "Express.js", "MongoDB", "Real-time Chat", "Gantt Charts", "Notifications"],
-      price: "7,500 ريال",
-      duration: "3-4 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "إدارة المشاريع",
-      icon: Target,
-      color: "violet",
-      gradient: "from-violet-500 to-purple-600",
-      rating: "4.7",
-      clients: "35+",
-      updates: "تحديثات مجانية لسنة",
-      support: "دعم فني شامل"
-    },
-    {
-      id: 15,
-      title: "منصة الحجوزات والسفر",
-      description: "منصة شاملة لحجز الرحلات والفنادق والسيارات مع نظام دفع آمن وإدارة الحجوزات",
-      detailedDescription: "منصة سفر متكاملة تجمع حجز الطيران، الفنادق، السيارات، والرحلات السياحية في مكان واحد. تشمل مقارنة الأسعار، نظام دفع آمن، إدارة الحجوزات، برنامج الولاء، وتطبيق موبايل للمسافرين مع خدمات ما بعد الحجز.",
-      features: ["حجز الطيران", "حجز الفنادق", "حجز السيارات", "الدفع الآمن", "إدارة الحجوزات", "تطبيق موبايل"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Payment APIs", "Travel APIs", "Mobile App"],
-      price: "15,000 ريال",
-      duration: "6-7 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "السفر والسياحة",
-      icon: Globe,
-      color: "cyan",
-      gradient: "from-cyan-500 to-blue-600",
-      rating: "4.8",
-      clients: "25+",
-      updates: "تحديثات مجانية لسنة ونصف",
-      support: "دعم فني وتجاري متخصص"
-    },
-    {
-      id: 16,
-      title: "منصة التأمين الرقمية",
-      description: "منصة متكاملة لإدارة التأمين الرقمي مع إصدار وإدارة البوالص ومعالجة المطالبات",
-      detailedDescription: "منصة تأمين رقمية شاملة تغطي جميع أنواع التأمين (السيارات، الصحي، العقاري، التجاري). تشمل إصدار البوالص الفوري، معالجة المطالبات الذكية، تقييم المخاطر بالذكاء الاصطناعي، ونظام إدارة العملاء المتقدم مع تكامل مع الجهات الحكومية والطبية.",
-      features: ["إصدار البوالص", "معالجة المطالبات", "تقييم المخاطر", "إدارة العملاء", "التكامل الحكومي", "الذكاء الاصطناعي"],
-      technologies: ["React", "Node.js", "PostgreSQL", "AI/ML", "Blockchain", "API Integration"],
-      price: "45,000 ريال",
-      duration: "10-12 أسبوع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "التأمين الرقمي",
-      icon: Shield,
-      color: "emerald",
-      gradient: "from-emerald-500 to-green-600",
-      rating: "4.9",
-      clients: "15+",
-      updates: "تحديثات مجانية لسنتين",
-      support: "دعم فني ومالي متخصص 24/7"
-    },
-    {
-      id: 17,
-      title: "نظام إدارة الخدمات اللوجستية",
-      description: "نظام متكامل لإدارة سلسلة التوريد والخدمات اللوجستية مع تتبع الشحنات وإدارة المخازن",
-      detailedDescription: "نظام لوجستي شامل لإدارة سلسلة التوريد من المورد إلى العميل النهائي. يشمل إدارة المخازن، تتبع الشحنات، تخطيط الطرق، إدارة الأسطول، تكامل مع شركات الشحن، ونظام تحليلات متقدم لتحسين العمليات وخفض التكاليف.",
-      features: ["إدارة المخازن", "تتبع الشحنات", "تخطيط الطرق", "إدارة الأسطول", "تكامل الشحن", "تحليلات متقدمة"],
-      technologies: ["React", "Node.js", "PostgreSQL", "GPS Tracking", "IoT Integration", "AI Analytics"],
-      price: "65,000 ريال",
-      duration: "12-14 أسبوع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "الخدمات اللوجستية",
-      icon: Layers,
-      color: "indigo",
-      gradient: "from-indigo-500 to-purple-600",
-      rating: "4.8",
-      clients: "12+",
-      updates: "تحديثات مجانية لسنتين",
-      support: "دعم فني ولوجستي متخصص 24/7"
-    },
-    {
-      id: 18,
-      title: "نظام إدارة الصالة الرياضية والنادي",
-      description: "نظام شامل لإدارة الصالات الرياضية والأندية مع إدارة العضويات والحجوزات والمدربين",
-      detailedDescription: "نظام متكامل لإدارة الصالات الرياضية والأندية الصحية يشمل إدارة العضويات والاشتراكات، حجز الحصص والمرافق، إدارة المدربين والموظفين، نظام نقاط البيع، تتبع التمارين والتقدم، وتطبيق موبايل للأعضاء مع تحليلات شاملة للأداء والعمليات.",
-      features: ["إدارة العضويات", "حجز الحصص", "إدارة المدربين", "نقاط البيع", "تتبع التمارين", "تطبيق موبايل"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Mobile App", "IoT Integration"],
-      price: "43,000 ريال",
-      duration: "9-11 أسبوع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "الرياضة واللياقة",
-      icon: Activity,
-      color: "rose",
-      gradient: "from-rose-500 to-pink-600",
-      rating: "4.7",
-      clients: "18+",
-      updates: "تحديثات مجانية لسنة ونصف",
-      support: "دعم فني ورياضي متخصص 24/7"
-    },
-    {
-      id: 19,
-      title: "منصة حجز الأحداث والمؤتمرات",
-      description: "منصة شاملة لحجز وإدارة الأحداث والمؤتمرات مع نظام التذاكر والدفع الإلكتروني",
-      detailedDescription: "منصة متطورة لإدارة وحجز الأحداث والمؤتمرات والمعارض تشمل إنشاء الأحداث، إدارة التذاكر، نظام الحجز الإلكتروني، إدارة المتحدثين والجداول، نظام الدفع الآمن، تطبيق موبايل للحضور، وتحليلات شاملة للفعاليات مع تكامل البث المباشر.",
-      features: ["إدارة الأحداث", "نظام التذاكر", "الحجز الإلكتروني", "إدارة المتحدثين", "البث المباشر", "تحليلات الحضور"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Video Streaming", "Mobile App"],
-      price: "50,000 ريال",
-      duration: "10-12 أسبوع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "الأحداث والمؤتمرات",
-      icon: Users,
-      color: "purple",
-      gradient: "from-purple-500 to-indigo-600",
-      rating: "4.8",
-      clients: "20+",
-      updates: "تحديثات مجانية لسنتين",
-      support: "دعم فني وتقني متخصص 24/7"
-    },
-    {
-      id: 20,
-      title: "نظام بوابة دفع متطور",
-      description: "بوابة دفع متقدمة وآمنة مع دعم طرق الدفع المتعددة ونظام مكافحة الاحتيال",
-      detailedDescription: "نظام بوابة دفع إلكتروني متطور يدعم جميع طرق الدفع المحلية والعالمية مع نظام أمان متقدم ومكافحة الاحتيال بالذكاء الاصطناعي. يشمل معالجة المدفوعات الفورية، إدارة العملات المتعددة، تحليلات المعاملات، وامتثال كامل للمعايير الدولية PCI DSS.",
-      features: ["طرق دفع متعددة", "مكافحة الاحتيال", "العملات المتعددة", "الأمان المتقدم", "التحليلات", "الامتثال الدولي"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Blockchain", "AI/ML", "Encryption"],
-      price: "75,000 ريال",
-      duration: "14-16 أسبوع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "بوابات الدفع",
-      icon: DollarSign,
-      color: "yellow",
-      gradient: "from-yellow-500 to-orange-600",
-      rating: "4.9",
-      clients: "8+",
-      updates: "تحديثات مجانية لثلاث سنوات",
-      support: "دعم فني ومالي متخصص 24/7"
-    },
-    {
-      id: 21,
-      title: "نظام إدارة الصالونات والحجوزات",
-      description: "نظام شامل لإدارة صالونات التجميل والحلاقة مع نظام الحجوزات والموظفين والخدمات",
-      detailedDescription: "نظام متكامل لإدارة صالونات التجميل ومراكز العناية بالجمال يشمل إدارة الحجوزات، جدولة الموظفين والمتخصصين، إدارة الخدمات والباقات، نظام نقاط البيع، إدارة العملاء وتاريخهم، تطبيق موبايل للعملاء، وتحليلات الأداء والمبيعات.",
-      features: ["إدارة الحجوزات", "جدولة الموظفين", "إدارة الخدمات", "نقاط البيع", "إدارة العملاء", "تطبيق موبايل"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Mobile App", "Calendar API"],
-      price: "25,000 ريال",
-      duration: "6-8 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "الجمال والعناية",
-      icon: Smartphone,
-      color: "pink",
-      gradient: "from-pink-500 to-rose-600",
-      rating: "4.8",
-      clients: "30+",
-      updates: "تحديثات مجانية لسنة ونصف",
-      support: "دعم فني وتجاري متخصص"
-    },
-    {
-      id: 22,
-      title: "منصة الإعلانات المبوبة وحراج متطورة",
-      description: "منصة شاملة للإعلانات المبوبة والحراج مع نظام تحقق ودفع آمن وتقييمات",
-      detailedDescription: "منصة إعلانات مبوبة وحراج متطورة تجمع البائعين والمشترين في بيئة آمنة وموثوقة. تشمل تصنيفات شاملة للمنتجات، نظام التحقق من الهوية، المراسلة الآمنة، نظام التقييمات والمراجعات، الدفع الآمن، خرائط المواقع، وتطبيق موبايل مع ميزات البحث المتقدم والتصفية.",
-      features: ["تصنيفات شاملة", "التحقق الآمن", "المراسلة المؤمنة", "نظام التقييمات", "البحث المتقدم", "تطبيق موبايل"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Maps API", "Payment Gateway", "Mobile App"],
-      price: "35,000 ريال",
-      duration: "8-10 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "الإعلانات المبوبة",
-      icon: MessageCircle,
-      color: "teal",
-      gradient: "from-teal-500 to-cyan-600",
-      rating: "4.7",
-      clients: "25+",
-      updates: "تحديثات مجانية لسنة ونصف",
-      support: "دعم فني ومجتمعي متخصص"
-    },
-    {
-      id: 23,
-      title: "منصة حجز القوارب واليخوت متعدد البائعين",
-      description: "منصة شاملة لحجز القوارب واليخوت مع دعم متعدد البائعين ونظام دفع آمن",
-      detailedDescription: "منصة متطورة لحجز القوارب واليخوت تجمع مالكي القوارب والعملاء في منصة واحدة. تشمل عرض القوارب بالصور والمواصفات، نظام الحجز المباشر، إدارة التواريخ المتاحة، نظام الدفع الآمن، تقييمات العملاء، خرائط المراسي، تأمين الرحلات، وتطبيق موبايل للعملاء والمالكين.",
-      features: ["متعدد البائعين", "حجز مباشر", "إدارة التواريخ", "الدفع الآمن", "تقييمات العملاء", "خرائط المراسي"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Maps API", "Payment Gateway", "Mobile App"],
-      price: "28,000 ريال",
-      duration: "7-9 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "النقل البحري",
-      icon: Globe,
-      color: "blue",
-      gradient: "from-blue-500 to-cyan-600",
-      rating: "4.8",
-      clients: "22+",
-      updates: "تحديثات مجانية لسنة ونصف",
-      support: "دعم فني وبحري متخصص"
-    },
-    {
-      id: 24,
-      title: "نظام إدارة الفنادق",
-      description: "نظام شامل لإدارة الفنادق والمنتجعات مع نظام الحجوزات وإدارة الغرف والخدمات",
-      detailedDescription: "نظام إدارة فنادق متكامل يغطي جميع احتياجات الفنادق والمنتجعات السياحية. يشمل نظام الحجوزات المباشر، إدارة الغرف والأجنحة، خدمات النزلاء، نقاط البيع، إدارة المطاعم، الحسابات والفواتير، إدارة الموظفين، تطبيق موبايل للنزلاء، وتحليلات شاملة للأداء والإشغال.",
-      features: ["نظام الحجوزات", "إدارة الغرف", "خدمات النزلاء", "نقاط البيع", "إدارة المطاعم", "تحليلات الأداء"],
-      technologies: ["React", "Node.js", "PostgreSQL", "Payment Gateway", "Mobile App", "PMS Integration"],
-      price: "45,000 ريال",
-      duration: "10-12 أسبوع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "إدارة الفنادق",
-      icon: Building2,
-      color: "emerald",
-      gradient: "from-emerald-500 to-teal-600",
-      rating: "4.9",
-      clients: "15+",
-      updates: "تحديثات مجانية لسنتين",
-      support: "دعم فني وفندقي متخصص 24/7"
-    },
-    {
-      id: 25,
-      title: "نظام إدارة مدرسة ذكية",
-      description: "نظام شامل لإدارة المدارس الذكية مع منصة تعليمية ونظام إدارة متكامل",
-      detailedDescription: "نظام إدارة مدرسة ذكية متطور يجمع بين الإدارة التعليمية والتكنولوجيا الحديثة. يشمل نظام إدارة الطلاب والمعلمين، منصة التعلم الإلكتروني، إدارة المناهج والدرجات، نظام الحضور الذكي، التواصل مع أولياء الأمور، إدارة الموارد والمرافق، تطبيقات موبايل، وتحليلات تعليمية متقدمة بالذكاء الاصطناعي.",
-      features: ["إدارة الطلاب", "منصة تعليمية", "نظام الدرجات", "الحضور الذكي", "تواصل الأهالي", "تحليلات AI"],
-      technologies: ["React", "Node.js", "PostgreSQL", "AI/ML", "Mobile Apps", "IoT Integration"],
-      price: "95,000 ريال",
-      duration: "16-20 أسبوع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "التعليم الذكي",
-      icon: GraduationCap,
-      color: "indigo",
-      gradient: "from-indigo-500 to-purple-600",
-      rating: "4.9",
-      clients: "8+",
-      updates: "تحديثات مجانية لثلاث سنوات",
-      support: "دعم فني وتعليمي متخصص 24/7"
-    },
-    {
-      id: 26,
-      title: "نظام دعم التذاكر وخدمة العملاء المطور",
-      description: "نظام متقدم لإدارة تذاكر الدعم وخدمة العملاء مع الذكاء الاصطناعي والأتمتة",
-      detailedDescription: "نظام دعم عملاء متطور يجمع بين إدارة التذاكر التقليدية والتقنيات الحديثة. يشمل نظام تذاكر ذكي، دردشة مباشرة، روبوت محادثة بالذكاء الاصطناعي، قاعدة معرفة تفاعلية، تصنيف تلقائي للمشاكل، تقارير الأداء، تطبيق موبايل للفريق، وتحليلات رضا العملاء المتقدمة.",
-      features: ["نظام التذاكر", "دردشة مباشرة", "روبوت ذكي", "قاعدة المعرفة", "تصنيف تلقائي", "تحليلات الرضا"],
-      technologies: ["React", "Node.js", "PostgreSQL", "AI Chatbot", "Real-time Chat", "Analytics"],
-      price: "4,500 ريال",
-      duration: "2-3 أسابيع للتنفيذ",
-      status: "جاهز للنشر",
-      category: "خدمة العملاء",
-      icon: MessageCircle,
-      color: "green",
-      gradient: "from-green-500 to-emerald-600",
-      rating: "4.8",
-      clients: "40+",
-      updates: "تحديثات مجانية لسنة",
-      support: "دعم فني ومجتمعي متخصص"
     }
   ];
 
@@ -524,376 +193,242 @@ const ReadyProjects = () => {
 
   const categories = [
     { name: "الكل", count: projects.length },
-    { name: "منصات إدارية", count: projects.filter(p => p.category.includes("إدارية")).length },
+    { name: "أنظمة المحتوى", count: projects.filter(p => p.category.includes("أنظمة المحتوى")).length },
     { name: "التجارة الإلكترونية", count: projects.filter(p => p.category.includes("التجارة")).length },
     { name: "التعليم التقني", count: projects.filter(p => p.category.includes("التعليم")).length },
-    { name: "الأنظمة الطبية", count: projects.filter(p => p.category.includes("الطبية")).length },
-    { name: "إدارة الأعمال", count: projects.filter(p => p.category.includes("إدارة الأعمال")).length },
-    { name: "منصات الخدمات", count: projects.filter(p => p.category.includes("منصات الخدمات")).length },
-    { name: "الأنظمة العقارية", count: projects.filter(p => p.category.includes("العقارية")).length },
-    { name: "المواقع التعريفية", count: projects.filter(p => p.category.includes("التعريفية")).length },
-    { name: "إدارة المطاعم", count: projects.filter(p => p.category.includes("المطاعم")).length },
-    { name: "إدارة المشاريع", count: projects.filter(p => p.category.includes("إدارة المشاريع")).length },
-    { name: "السفر والسياحة", count: projects.filter(p => p.category.includes("السفر")).length },
-    { name: "التأمين الرقمي", count: projects.filter(p => p.category.includes("التأمين")).length },
-    { name: "الخدمات اللوجستية", count: projects.filter(p => p.category.includes("اللوجستية")).length },
-    { name: "الرياضة واللياقة", count: projects.filter(p => p.category.includes("الرياضة")).length },
-    { name: "الأحداث والمؤتمرات", count: projects.filter(p => p.category.includes("الأحداث")).length },
-    { name: "بوابات الدفع", count: projects.filter(p => p.category.includes("بوابات الدفع")).length },
-    { name: "الجمال والعناية", count: projects.filter(p => p.category.includes("الجمال")).length },
-    { name: "الإعلانات المبوبة", count: projects.filter(p => p.category.includes("الإعلانات")).length },
-    { name: "النقل البحري", count: projects.filter(p => p.category.includes("النقل البحري")).length },
-    { name: "إدارة الفنادق", count: projects.filter(p => p.category.includes("إدارة الفنادق")).length },
-    { name: "التعليم الذكي", count: projects.filter(p => p.category.includes("التعليم الذكي")).length },
-    { name: "خدمة العملاء", count: projects.filter(p => p.category.includes("خدمة العملاء")).length }
+    { name: "أنظمة إدارية", count: projects.filter(p => p.category.includes("إدارية")).length },
+    { name: "الموارد البشرية", count: projects.filter(p => p.category.includes("البشرية")).length },
+    { name: "التسويق الرقمي", count: projects.filter(p => p.category.includes("التسويق")).length },
+    { name: "الأنظمة الطبية", count: projects.filter(p => p.category.includes("الطبية")).length }
   ];
 
+  const filteredProjects = selectedCategory === "الكل" 
+    ? projects 
+    : projects.filter(project => 
+        project.category === selectedCategory || 
+        project.category.includes(selectedCategory)
+      );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <Navigation />
       
-      {/* Hero Section */}
+      {/* Hero Section with Modern Design */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-emerald-600/10" />
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full border border-blue-500/20 mb-8">
-              <Code className="w-6 h-6 text-blue-600" />
-              <span className="text-lg font-bold text-slate-800">مشاريعنا الجاهزة</span>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-pink-600/10"></div>
+        <div className="absolute top-10 right-10 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 left-10 w-64 h-64 bg-gradient-to-br from-pink-400/20 to-red-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6 animate-fade-in">
+              <Sparkles className="w-4 h-4" />
+              <span className="text-sm font-medium">منتجاتنا الرقمية المبتكرة</span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">حلول تقنية</span>
-              <br />
-              <span className="text-slate-800">جاهزة للتنفيذ</span>
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in">
+              منتجاتنا <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">المتطورة</span>
             </h1>
             
-            <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-3xl mx-auto">
-              مجموعة من المشاريع التقنية المتقدمة والجاهزة للنشر، مصممة لتلبية احتياجات الأعمال الحديثة
-              مع أحدث التقنيات والمعايير العالمية
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              اكتشف مجموعتنا المتنوعة من الحلول الرقمية الجاهزة، مصممة بأحدث التقنيات لتلبي احتياجات عملك وتساعدك على النمو
             </p>
+            
+            <div className="flex flex-wrap items-center justify-center gap-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span>جاهزة للنشر فوراً</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                <Zap className="w-5 h-5 text-yellow-500" />
+                <span>تقنيات متطورة</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                <Shield className="w-5 h-5 text-blue-500" />
+                <span>دعم فني شامل</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Categories Filter */}
-      <section className="py-10">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-wrap justify-center gap-4 mb-16">
-            {categories.map((category, index) => (
-              <Badge 
-                key={index}
-                className="px-6 py-3 text-sm font-medium bg-white/70 text-slate-700 border border-slate-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
+      {/* Category Filter */}
+      <section className="py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {categories.map((category) => (
+              <button
+                key={category.name}
+                onClick={() => setSelectedCategory(category.name)}
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
+                  selectedCategory === category.name
+                    ? 'bg-primary text-white shadow-lg'
+                    : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-primary/10 border border-gray-200 dark:border-gray-700'
+                }`}
               >
-                {category.name} ({category.count})
-              </Badge>
+                {category.name}
+                <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                  selectedCategory === category.name
+                    ? 'bg-white/20 text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                }`}>
+                  {category.count}
+                </span>
+              </button>
             ))}
           </div>
         </div>
       </section>
 
       {/* Projects Grid */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
+      <section className="py-12">
+        <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project) => {
+            {filteredProjects.map((project, index) => {
               const IconComponent = project.icon;
               return (
-                <Card key={project.id} className="group bg-white/70 border-slate-200/50 hover:border-blue-300/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 backdrop-blur-sm overflow-hidden">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`w-12 h-12 bg-gradient-to-r ${project.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className="w-6 h-6 text-white" />
-                      </div>
-                      <Badge className={`${getStatusColor(project.status)} border`}>
-                        {project.status}
-                      </Badge>
-                    </div>
+                <div
+                  key={project.id}
+                  className="group relative"
+                  onMouseEnter={() => setHoveredProject(project.id)}
+                  onMouseLeave={() => setHoveredProject(null)}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <Card className="h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:border-primary/30 overflow-hidden">
+                    {/* Duration Banner */}
+                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${project.gradient}`}></div>
                     
-                    <CardTitle className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors duration-300">
-                      {project.title}
-                    </CardTitle>
-                    
-                    <div className="flex items-center justify-between">
-                      <Badge variant="outline" className="w-fit text-slate-600 border-slate-300">
-                        {project.category}
-                      </Badge>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-slate-600">{project.rating}</span>
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="flex items-center gap-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-gray-200/50 dark:border-gray-700/50">
+                        <Timer className="w-3 h-3 text-primary" />
+                        <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                          {project.duration}
+                        </span>
                       </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-6">
-                    <CardDescription className="text-slate-600 leading-relaxed">
-                      {project.description}
-                    </CardDescription>
-                    
-                    {/* Price and Duration */}
-                    <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50/50 rounded-lg">
-                      <div className="text-center">
-                        <DollarSign className="w-5 h-5 text-green-600 mx-auto mb-1" />
-                        <div className="text-lg font-bold text-slate-900">{project.price}</div>
-                        <div className="text-xs text-slate-600">السعر الشامل</div>
-                      </div>
-                      <div className="text-center">
-                        <Clock className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-                        <div className="text-lg font-bold text-slate-900">{project.duration}</div>
-                        <div className="text-xs text-slate-600">مدة التنفيذ</div>
-                      </div>
-                    </div>
-                    
-                    {/* Key Info */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-600">العملاء:</span>
-                        <span className="font-medium text-slate-900">{project.clients}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-600">التحديثات:</span>
-                        <span className="font-medium text-slate-900">{project.updates}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-600">الدعم:</span>
-                        <span className="font-medium text-slate-900">{project.support}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        المميزات الرئيسية:
-                      </h4>
-                      <div className="grid grid-cols-2 gap-2">
-                        {project.features.slice(0, 4).map((feature, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                            <span className="text-xs text-slate-600">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                      {project.features.length > 4 && (
-                        <div className="text-xs text-center text-slate-500">
-                          +{project.features.length - 4} مميزات أخرى
-                        </div>
-                      )}
                     </div>
 
-                    {/* Technologies */}
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
-                        <Code className="w-4 h-4 text-purple-500" />
-                        التقنيات المستخدمة:
-                      </h4>
-                      <div className="flex flex-wrap gap-1">
-                        {project.technologies.slice(0, 3).map((tech, index) => (
-                          <Badge key={index} className="text-xs bg-slate-100 text-slate-700 border-slate-300">
-                            {tech}
+                    <CardHeader className="pb-4 pt-6">
+                      <div className="flex items-start gap-4">
+                        <div className={`p-3 rounded-xl bg-gradient-to-r ${project.gradient} shadow-lg`}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <Badge 
+                            variant="outline" 
+                            className={`mb-2 ${getStatusColor(project.status)}`}
+                          >
+                            {project.status}
                           </Badge>
-                        ))}
-                        {project.technologies.length > 3 && (
-                          <Badge className="text-xs bg-slate-100 text-slate-700 border-slate-300">
-                            +{project.technologies.length - 3}
-                          </Badge>
-                        )}
+                          <CardTitle className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                            {project.title}
+                          </CardTitle>
+                          <CardDescription className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                            {project.description}
+                          </CardDescription>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <Button 
-                        size="sm" 
-                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0"
-                        asChild
-                      >
-                        <Link to={`/project/${project.id}`}>
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          عرض التفاصيل
-                        </Link>
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        className="border-slate-300 hover:border-blue-400 hover:text-blue-600"
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        className="border-slate-300 hover:border-yellow-400 hover:text-yellow-600"
-                      >
-                        <Star className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardHeader>
+
+                    <CardContent className="pt-0">
+                      {/* Features */}
+                      <div className="mb-6">
+                        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">المميزات الرئيسية:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {project.features.slice(0, 4).map((feature, i) => (
+                            <Badge key={i} variant="secondary" className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                              {feature}
+                            </Badge>
+                          ))}
+                          {project.features.length > 4 && (
+                            <Badge variant="secondary" className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                              +{project.features.length - 4} المزيد
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Stats */}
+                      <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                          <div className="flex items-center justify-center gap-1 mb-1">
+                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">{project.rating}</span>
+                          </div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">التقييم</p>
+                        </div>
+                        <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                          <div className="flex items-center justify-center gap-1 mb-1">
+                            <Users className="w-4 h-4 text-blue-500" />
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">{project.clients}</span>
+                          </div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">عميل</p>
+                        </div>
+                      </div>
+
+                      {/* Price and Action */}
+                      <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center justify-between mb-4">
+                          <div>
+                            <span className="text-2xl font-bold text-primary">{project.price}</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">يشمل التركيب والتدريب</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {hoveredProject === project.id && (
+                              <Button size="sm" variant="outline" className="animate-fade-in">
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                            )}
+                            <Button 
+                              size="sm" 
+                              className={`bg-gradient-to-r ${project.gradient} hover:opacity-90 transition-all duration-300 group`}
+                              asChild
+                            >
+                              <Link to={`/project/${project.id}`}>
+                                <span>عرض التفاصيل</span>
+                                <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                              </Link>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Hover Effect Background */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${project.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-lg -z-10`}></div>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gradient-to-r from-slate-100/50 to-blue-50/30">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              لماذا تختار مشاريعنا الجاهزة؟
-            </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              مشاريع مطورة بعناية وخبرة واسعة لضمان أفضل النتائج
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <Rocket className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-slate-900 mb-2">إطلاق سريع</h3>
-              <p className="text-slate-600 text-sm">جاهز للنشر خلال أسابيع قليلة</p>
-            </div>
-            <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <Shield className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-slate-900 mb-2">أمان عالي</h3>
-              <p className="text-slate-600 text-sm">حماية متقدمة وتشفير البيانات</p>
-            </div>
-            <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <Globe className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-slate-900 mb-2">دعم متعدد اللغات</h3>
-              <p className="text-slate-600 text-sm">واجهات عربية وإنجليزية</p>
-            </div>
-            <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <MessageCircle className="w-12 h-12 text-orange-600 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-slate-900 mb-2">دعم فني شامل</h3>
-              <p className="text-slate-600 text-sm">دعم 24/7 لضمان استمرارية العمل</p>
-            </div>
-          </div>
-
-          {/* Stats Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-blue-600 mb-2">230+</div>
-              <div className="text-slate-600">مشروع مكتمل</div>
-            </div>
-            <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">1150+</div>
-              <div className="text-slate-600">عميل راضي</div>
-            </div>
-            <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-purple-600 mb-2">99%</div>
-              <div className="text-slate-600">معدل النجاح</div>
-            </div>
-            <div className="text-center p-6 bg-white/70 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
-              <div className="text-3xl font-bold text-orange-600 mb-2">24/7</div>
-              <div className="text-slate-600">دعم فني</div>
-            </div>
+      {/* Call to Action */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+            لم تجد ما تبحث عنه؟
+          </h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+            نحن نطور حلولاً مخصصة تناسب احتياجاتك الفريدة
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90" asChild>
+              <Link to="/contact">
+                <MessageCircle className="w-5 h-5 ml-2" />
+                طلب حل مخصص
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/about">
+                <Info className="w-5 h-5 ml-2" />
+                تعرف على خدماتنا
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
-
-      {/* Process Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              كيف نعمل معك؟
-            </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              عملية بسيطة وواضحة لضمان حصولك على المشروع المناسب
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8 mb-16">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">1. استشارة مجانية</h3>
-              <p className="text-slate-600 text-sm">نحلل احتياجاتك ونساعدك في اختيار المشروع المناسب</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Settings className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">2. تخصيص المشروع</h3>
-              <p className="text-slate-600 text-sm">نخصص المشروع حسب متطلباتك وهويتك التجارية</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Rocket className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">3. التنفيذ والإطلاق</h3>
-              <p className="text-slate-600 text-sm">ننفذ المشروع ونطلقه بشكل احترافي</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">4. الدعم والصيانة</h3>
-              <p className="text-slate-600 text-sm">نقدم دعماً فنياً شاملاً وتحديثات دورية</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 text-center text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90" />
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                هل لديك مشروع في الذهن؟
-              </h2>
-              <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-                تواصل معنا لمناقشة مشروعك وكيف يمكننا مساعدتك في تحويل فكرتك إلى واقع رقمي
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  size="lg"
-                  className="bg-white text-blue-600 hover:bg-slate-100 border-0"
-                  asChild
-                >
-                  <Link to="/contact">
-                    <Users className="w-5 h-5 mr-2" />
-                    تواصل معنا
-                  </Link>
-                </Button>
-                <Button 
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white/10 border-2"
-                  asChild
-                >
-                  <a href="https://wa.me/966555812567?text=مرحباً، أريد الاستفسار عن المشاريع الجاهزة" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    واتساب مباشر
-                  </a>
-                </Button>
-                <Button 
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white/10 border-2"
-                  asChild
-                >
-                  <Link to="/services">
-                    <TrendingUp className="w-5 h-5 mr-2" />
-                    خدماتنا
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Back to Home */}
-      <div className="container mx-auto px-6 py-8">
-        <Link to="/" className="inline-flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors">
-          <ArrowLeft className="w-4 h-4" />
-          العودة إلى الصفحة الرئيسية
-        </Link>
-      </div>
 
       <Footer />
     </div>
