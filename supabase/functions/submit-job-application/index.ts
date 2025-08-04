@@ -67,7 +67,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email notification to company
     const companyEmailResponse = await resend.emails.send({
-      from: "وظائف فكرة للتقنية <onboarding@resend.dev>",
+      from: "وظائف فكرة للتقنية <careers@alialshehriholding.com>",
       to: ["info@fekrahtech.com"],
       subject: `طلب توظيف جديد - ${jobData.position}`,
       html: `
@@ -122,7 +122,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to applicant
     const applicantEmailResponse = await resend.emails.send({
-      from: "فكرة للتقنية <onboarding@resend.dev>",
+      from: "فكرة للتقنية <no-reply@alialshehriholding.com>",
       to: [jobData.email],
       subject: "تم استلام طلب التوظيف بنجاح",
       html: `

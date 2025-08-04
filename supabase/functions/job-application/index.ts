@@ -76,7 +76,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "نظام طلبات التوظيف <onboarding@resend.dev>",
+      from: "نظام طلبات التوظيف <careers@alialshehriholding.com>",
       to: ["info@fekrahtech.com"],
       subject: `طلب توظيف جديد - ${applicationData.position}`,
       html: `
@@ -166,7 +166,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to applicant
     const applicantEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <onboarding@resend.dev>",
+      from: "شركة علي صالح الشهري القابضة <no-reply@alialshehriholding.com>",
       to: [applicationData.email],
       subject: "تم استلام طلب التوظيف بنجاح",
       html: `

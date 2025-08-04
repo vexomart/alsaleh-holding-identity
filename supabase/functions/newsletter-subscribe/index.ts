@@ -97,7 +97,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send welcome email to subscriber
     const welcomeEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <onboarding@resend.dev>",
+      from: "شركة علي صالح الشهري القابضة <newsletter@alialshehriholding.com>",
       to: [subscriptionData.email],
       subject: "مرحباً بك في النشرة الإخبارية",
       html: `
@@ -154,8 +154,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to company
     const notificationEmailResponse = await resend.emails.send({
-      from: "النشرة الإخبارية <onboarding@resend.dev>",
-      to: ["info@ash.holdings"],
+      from: "النشرة الإخبارية <newsletter@alialshehriholding.com>",
+      to: ["info@fekrahtech.com"],
       subject: "اشتراك جديد في النشرة الإخبارية",
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px;">

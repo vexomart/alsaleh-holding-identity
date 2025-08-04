@@ -143,7 +143,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "طلبات التعاقد <onboarding@resend.dev>",
+      from: "طلبات التعاقد <contracts@alialshehriholding.com>",
       to: ["info@fekrahtech.com"],
       subject: subject,
       html: emailHtml,
@@ -151,7 +151,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <onboarding@resend.dev>",
+      from: "شركة علي صالح الشهري القابضة <no-reply@alialshehriholding.com>",
       to: [data.email],
       subject: "تأكيد استلام طلب التعاقد",
       html: `
