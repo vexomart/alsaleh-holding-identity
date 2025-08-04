@@ -42,7 +42,11 @@ import {
   Receipt,
   DollarSign,
   CreditCard,
-  PieChart
+  PieChart,
+  Package,
+  ShoppingBag,
+  Server,
+  Laptop
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
@@ -103,6 +107,17 @@ const SubsidiariesSection = () => {
       website: "http://numaxio.com",
       isAccounting: true,
       inDevelopment: true
+    },
+    {
+      name: "Plutecode",
+      nameEn: "", 
+      description: "منصة متخصصة في بيع وتأجير المتاجر الإلكترونية والمواقع والأنظمة الجاهزة للشركات",
+      category: "المتاجر والأنظمة الجاهزة",
+      established: "2024",
+      icon: Package,
+      color: "from-cyan-600 to-blue-600",
+      website: "https://plutecode.com",
+      isEcommerce: true
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -622,6 +637,116 @@ const SubsidiariesSection = () => {
     );
   };
 
+  const renderEcommerceCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative h-[600px]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 rounded-3xl border-2 border-cyan-200/60 hover:border-cyan-400/80 transition-all duration-700 group h-full">
+          {/* E-commerce Pattern Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2242%22%20height%3D%2242%22%20viewBox%3D%220%200%2042%2042%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%230891b2%22%20fill-opacity%3D%220.08%22%3E%3Cpath%20d%3D%22M21%208l6%206-6%206-6-6z%22/%3E%3Ccircle%20cx%3D%2221%22%20cy%3D%2221%22%20r%3D%223%22/%3E%3Crect%20x%3D%2217%22%20y%3D%2217%22%20width%3D%228%22%20height%3D%222%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
+          
+          {/* Interactive E-commerce Elements */}
+          <div className="absolute top-4 right-4 w-8 h-8 bg-cyan-400/20 rounded-full animate-bounce delay-75 group-hover:bg-cyan-500/30 transition-colors duration-300">
+            <Package className="w-4 h-4 text-cyan-600 m-2" />
+          </div>
+          <div className="absolute top-8 left-6 w-6 h-6 bg-blue-400/20 rounded-full animate-bounce delay-150 group-hover:bg-blue-500/30 transition-colors duration-300">
+            <ShoppingBag className="w-3 h-3 text-blue-600 m-1.5" />
+          </div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-indigo-500/20 rounded-full animate-bounce delay-300 group-hover:bg-indigo-600/30 transition-colors duration-300">
+            <Server className="w-2 h-2 text-indigo-700 m-1" />
+          </div>
+          <div className="absolute bottom-8 left-4 w-5 h-5 bg-cyan-400/20 rounded-full animate-bounce delay-500 group-hover:bg-cyan-500/30 transition-colors duration-300">
+            <Laptop className="w-2.5 h-2.5 text-cyan-600 m-1.25" />
+          </div>
+          
+          <CardContent className="relative z-10 p-8 h-full flex flex-col justify-between">
+            {/* Header Section */}
+            <div className="text-center mb-6">
+              <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                  <IconComponent className="w-8 h-8 text-cyan-600 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                {/* Interactive E-commerce Symbols */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-orange-400 rounded-full flex items-center justify-center text-xs group-hover:animate-spin">🛒</div>
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-green-400 rounded-full flex items-center justify-center text-xs group-hover:animate-pulse">💻</div>
+              </div>
+              
+              <Badge className="bg-cyan-500/20 text-cyan-700 border-cyan-300/50 px-3 py-1 text-sm group-hover:bg-cyan-600/30 transition-colors duration-300">
+                {company.category}
+              </Badge>
+            </div>
+
+            {/* Company Info */}
+            <div className="text-center mb-6 flex-grow">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-cyan-800 transition-colors duration-300 mb-2">
+                {company.name}
+              </h3>
+              {company.nameEn && (
+                <p className="text-lg font-medium text-cyan-600 mb-3">
+                  {company.nameEn}
+                </p>
+              )}
+              <p className="text-slate-600 leading-relaxed text-sm">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Interactive E-commerce Features */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <ShoppingBag className="w-6 h-6 text-cyan-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">بيع المتاجر</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Clock className="w-6 h-6 text-blue-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full animate-ping delay-100"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">تأجير المواقع</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Server className="w-6 h-6 text-indigo-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-400 rounded-full animate-ping delay-200"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">أنظمة جاهزة</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Package className="w-6 h-6 text-cyan-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full animate-ping delay-300"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">حلول متكاملة</p>
+              </div>
+            </div>
+
+            {/* Established Badge */}
+            <div className="text-center mb-4">
+              <Badge variant="outline" className="bg-white/80 text-slate-600 border-slate-300 px-3 py-1 text-sm">
+                تأسست {company.established}
+              </Badge>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button asChild className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 group/btn">
+                <a href={company.website} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                  استكشف المتاجر والأنظمة
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
     
@@ -695,7 +820,9 @@ const SubsidiariesSection = () => {
                       ? renderMarketingCard(company)
                       : company.isAccounting 
                         ? renderAccountingCard(company)
-                        : renderCompanyCard(company, index)
+                        : company.isEcommerce 
+                          ? renderEcommerceCard(company)
+                          : renderCompanyCard(company, index)
               }
             </div>
           ))}
