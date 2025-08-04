@@ -43,6 +43,16 @@ const SubsidiariesSection = () => {
       color: "from-amber-600 to-orange-600",
       website: "https://ash.holdings",
       isPortal: true
+    },
+    {
+      name: "فكرة هولدينغ",
+      nameEn: "Feklah Holding", 
+      description: "شركة متخصصة في تقديم الخدمات التعليمية المبتكرة والحلول التقنية للتعليم",
+      category: "الخدمات التعليمية",
+      established: "2018",
+      icon: GraduationCap,
+      color: "from-blue-600 to-indigo-600",
+      website: "https://feklah-holding.com"
     }
   ];  // سيتم إضافة المزيد من الشركات
 
