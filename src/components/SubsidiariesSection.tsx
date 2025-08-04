@@ -50,7 +50,11 @@ import {
   Store,
   Calendar,
   Settings,
-  Wallet
+  Wallet,
+  Wrench,
+  Layers,
+  Network,
+  Cog
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
@@ -139,6 +143,19 @@ const SubsidiariesSection = () => {
       isRental: true,
       inDevelopment: true,
       launchDate: "01-10-2025"
+    },
+    {
+      name: "Khadmat Work",
+      nameEn: "", 
+      description: "منصة متخصصة في الخدمات المصغرة والحلول التقنية المتقدمة للشركات والأفراد",
+      category: "الخدمات المصغرة",
+      established: "2025",
+      icon: Layers,
+      color: "from-orange-600 to-amber-600",
+      website: "https://khadmat-work.com",
+      isMicroservices: true,
+      inDevelopment: true,
+      launchDate: "01-01-2026"
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -938,6 +955,125 @@ const SubsidiariesSection = () => {
     );
   };
 
+  const renderMicroservicesCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative h-[600px]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-3xl border-2 border-orange-200/60 hover:border-orange-400/80 transition-all duration-700 group h-full">
+          {/* Development Banner with Launch Date */}
+          {company.inDevelopment && (
+            <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-500 text-white text-center py-2 text-sm font-bold">
+              <div className="flex items-center justify-center gap-2 animate-pulse">
+                <span>⚙️</span>
+                <span>قيد التطوير - الإطلاق المتوقع {company.launchDate}</span>
+                <span>⚙️</span>
+              </div>
+            </div>
+          )}
+          
+          {/* Microservices Pattern Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2246%22%20height%3D%2246%22%20viewBox%3D%220%200%2046%2046%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%23ea580c%22%20fill-opacity%3D%220.08%22%3E%3Cpath%20d%3D%22M23%2011l6%206-6%206-6-6z%22/%3E%3Ccircle%20cx%3D%2223%22%20cy%3D%2223%22%20r%3D%222%22/%3E%3Crect%20x%3D%2219%22%20y%3D%229%22%20width%3D%228%22%20height%3D%222%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
+          
+          {/* Interactive Microservices Elements */}
+          <div className="absolute top-12 right-4 w-8 h-8 bg-orange-400/20 rounded-full animate-bounce delay-75 group-hover:bg-orange-500/30 transition-colors duration-300">
+            <Layers className="w-4 h-4 text-orange-600 m-2" />
+          </div>
+          <div className="absolute top-16 left-6 w-6 h-6 bg-amber-400/20 rounded-full animate-bounce delay-150 group-hover:bg-amber-500/30 transition-colors duration-300">
+            <Network className="w-3 h-3 text-amber-600 m-1.5" />
+          </div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-yellow-500/20 rounded-full animate-bounce delay-300 group-hover:bg-yellow-600/30 transition-colors duration-300">
+            <Cog className="w-2 h-2 text-yellow-700 m-1" />
+          </div>
+          <div className="absolute bottom-8 left-4 w-5 h-5 bg-orange-400/20 rounded-full animate-bounce delay-500 group-hover:bg-orange-500/30 transition-colors duration-300">
+            <Wrench className="w-2.5 h-2.5 text-orange-600 m-1.25" />
+          </div>
+          
+          <CardContent className={`relative z-10 p-8 h-full flex flex-col justify-between ${company.inDevelopment ? 'pt-12' : 'pt-8'}`}>
+            {/* Header Section */}
+            <div className="text-center mb-6">
+              <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                  <IconComponent className="w-8 h-8 text-orange-600 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                {/* Interactive Microservices Symbols */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-400 rounded-full flex items-center justify-center text-xs group-hover:animate-spin">🔧</div>
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-green-400 rounded-full flex items-center justify-center text-xs group-hover:animate-pulse">⚡</div>
+              </div>
+              
+              <Badge className="bg-orange-500/20 text-orange-700 border-orange-300/50 px-3 py-1 text-sm group-hover:bg-orange-600/30 transition-colors duration-300">
+                {company.category}
+              </Badge>
+            </div>
+
+            {/* Company Info */}
+            <div className="text-center mb-6 flex-grow">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-orange-800 transition-colors duration-300 mb-2">
+                {company.name}
+              </h3>
+              {company.nameEn && (
+                <p className="text-lg font-medium text-orange-600 mb-3">
+                  {company.nameEn}
+                </p>
+              )}
+              <p className="text-slate-600 leading-relaxed text-sm">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Interactive Microservices Features */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Layers className="w-6 h-6 text-orange-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-orange-400 rounded-full animate-ping"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">خدمات مصغرة</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Network className="w-6 h-6 text-amber-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-ping delay-100"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">ربط الشبكات</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Cog className="w-6 h-6 text-yellow-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-ping delay-200"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">حلول تقنية</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Wrench className="w-6 h-6 text-orange-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-orange-400 rounded-full animate-ping delay-300"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">صيانة وتطوير</p>
+              </div>
+            </div>
+
+            {/* Established Badge */}
+            <div className="text-center mb-4">
+              <Badge variant="outline" className="bg-white/80 text-slate-600 border-slate-300 px-3 py-1 text-sm">
+                تأسست {company.established}
+              </Badge>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button className={`w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-orange-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`} disabled={company.inDevelopment}>
+                <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                {company.inDevelopment ? `قريباً - ${company.launchDate}` : 'استكشف الخدمات المصغرة'}
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-purple-100/40"></div>
@@ -973,7 +1109,9 @@ const SubsidiariesSection = () => {
                           ? renderEcommerceCard(company)
                           : company.isRental 
                             ? renderRentalCard(company)
-                            : renderCompanyCard(company, index)
+                            : company.isMicroservices 
+                              ? renderMicroservicesCard(company)
+                              : renderCompanyCard(company, index)
               }
             </div>
           ))}
