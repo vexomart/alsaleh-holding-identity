@@ -37,24 +37,25 @@ const handler = async (req: Request): Promise<Response> => {
       to: ["info@alialshehriholding.com"],
       subject: `طلب جديد لخدمة ${requestData.serviceName}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2px; border-radius: 10px;">
-          <div style="background: white; border-radius: 8px; padding: 30px;">
+        <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2px; border-radius: 10px;">
+          <div style="background: white; border-radius: 8px; padding: 30px; text-align: right;">
             <div style="text-align: center; margin-bottom: 30px;">
               <h1 style="color: #667eea; margin: 0; font-size: 28px; font-weight: bold;">طلب خدمة محتوى جديد</h1>
+              <h2 style="color: #4a5568; margin: 10px 0; font-size: 20px;">شركة علي صالح الشهري القابضة</h2>
               <div style="background: linear-gradient(135deg, #667eea, #764ba2); height: 3px; width: 100px; margin: 15px auto; border-radius: 2px;"></div>
             </div>
             
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: right;">
               <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">تفاصيل الخدمة المطلوبة</h2>
-              <div style="display: grid; gap: 10px;">
+              <div style="display: grid; gap: 10px; text-align: right;">
                 <div><strong style="color: #667eea;">اسم الخدمة:</strong> ${requestData.serviceName}</div>
                 <div><strong style="color: #667eea;">وصف الخدمة:</strong> ${requestData.serviceDescription}</div>
               </div>
             </div>
 
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: right;">
               <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">معلومات العميل</h2>
-              <div style="display: grid; gap: 10px;">
+              <div style="display: grid; gap: 10px; text-align: right;">
                 <div><strong style="color: #667eea;">الاسم:</strong> ${requestData.name}</div>
                 <div><strong style="color: #667eea;">البريد الإلكتروني:</strong> ${requestData.email}</div>
                 <div><strong style="color: #667eea;">رقم الهاتف:</strong> ${requestData.phone}</div>
@@ -62,13 +63,13 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
             </div>
 
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: right;">
               <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 20px;">تفاصيل المشروع</h2>
-              <div style="display: grid; gap: 10px;">
+              <div style="display: grid; gap: 10px; text-align: right;">
                 ${requestData.budget ? `<div><strong style="color: #667eea;">الميزانية:</strong> ${requestData.budget}</div>` : ''}
                 ${requestData.timeline ? `<div><strong style="color: #667eea;">الجدول الزمني:</strong> ${requestData.timeline}</div>` : ''}
                 <div><strong style="color: #667eea;">وصف المشروع:</strong></div>
-                <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 5px; border-right: 4px solid #667eea;">
+                <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 5px; border-right: 4px solid #667eea; text-align: right;">
                   ${requestData.description}
                 </div>
               </div>
@@ -76,7 +77,7 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div style="text-align: center; margin-top: 30px;">
               <p style="color: #718096; font-size: 14px; margin: 0;">
-                تم إرسال هذا الطلب من موقع إمكان الرقمية<br>
+                تم إرسال هذا الطلب من موقع شركة علي صالح الشهري القابضة<br>
                 ${new Date().toLocaleString('ar-SA', { timeZone: 'Asia/Riyadh' })}
               </p>
             </div>
@@ -87,28 +88,28 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "إمكان الرقمية <noreply@alialshehriholding.com>",
+      from: "شركة علي صالح الشهري القابضة <noreply@alialshehriholding.com>",
       to: [requestData.email],
       subject: `شكراً لك - تم استلام طلبك لخدمة ${requestData.serviceName}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2px; border-radius: 10px;">
-          <div style="background: white; border-radius: 8px; padding: 30px;">
+        <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2px; border-radius: 10px;">
+          <div style="background: white; border-radius: 8px; padding: 30px; text-align: right;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #667eea; margin: 0; font-size: 28px; font-weight: bold;">شكراً لثقتك في إمكان الرقمية</h1>
+              <h1 style="color: #667eea; margin: 0; font-size: 28px; font-weight: bold;">شكراً لثقتك في شركة علي صالح الشهري القابضة</h1>
               <div style="background: linear-gradient(135deg, #667eea, #764ba2); height: 3px; width: 100px; margin: 15px auto; border-radius: 2px;"></div>
             </div>
             
             <div style="background: #f8f9ff; border-radius: 8px; padding: 25px; margin-bottom: 25px; text-align: center;">
               <h2 style="color: #4a5568; margin: 0 0 15px 0; font-size: 22px;">مرحباً ${requestData.name}</h2>
-              <p style="color: #718096; line-height: 1.8; font-size: 16px; margin: 0;">
+              <p style="color: #718096; line-height: 1.8; font-size: 16px; margin: 0; text-align: center;">
                 تم استلام طلبك لخدمة <strong style="color: #667eea;">${requestData.serviceName}</strong> بنجاح!<br>
                 فريقنا المتخصص سيراجع طلبك ويتواصل معك خلال 24 ساعة.
               </p>
             </div>
 
-            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+            <div style="background: #f8f9ff; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: right;">
               <h3 style="color: #4a5568; margin: 0 0 15px 0; font-size: 18px;">ملخص طلبك:</h3>
-              <div style="display: grid; gap: 8px;">
+              <div style="display: grid; gap: 8px; text-align: right;">
                 <div><strong style="color: #667eea;">الخدمة:</strong> ${requestData.serviceName}</div>
                 ${requestData.budget ? `<div><strong style="color: #667eea;">الميزانية:</strong> ${requestData.budget}</div>` : ''}
                 ${requestData.timeline ? `<div><strong style="color: #667eea;">الجدول الزمني:</strong> ${requestData.timeline}</div>` : ''}
@@ -126,8 +127,8 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div style="text-align: center;">
               <p style="color: #718096; font-size: 14px; margin: 0;">
-                إمكان الرقمية - شريكك في التحول الرقمي<br>
-                للتواصل: +966 55 581 2567<br>
+                شركة علي صالح الشهري القابضة - شريكك في التحول الرقمي<br>
+                للتواصل: 0555812567<br>
                 البريد الإلكتروني: info@alialshehriholding.com
               </p>
             </div>
