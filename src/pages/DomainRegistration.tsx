@@ -87,28 +87,58 @@ const DomainRegistration = () => {
       
       // Check each extension
       for (const priceData of domainPrices) {
-        const response = await fetch(`https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/domain-management`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            action: 'check_availability',
-            domain: searchDomain,
-            extension: priceData.extension
-          })
-        });
+        try {
+          console.log(`Checking domain: ${searchDomain}${priceData.extension}`);
+          
+          const response = await fetch(`https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/domain-management`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              action: 'check_availability',
+              domain: searchDomain,
+              extension: priceData.extension
+            })
+          });
 
-        const data = await response.json();
-        results.push({
-          domain: data.domain,
-          available: data.available,
-          price: data.price,
-          extension: priceData.extension
-        });
+          if (!response.ok) {
+            console.error(`Failed to check ${priceData.extension}:`, response.status);
+            continue;
+          }
+
+          const data = await response.json();
+          console.log(`Result for ${priceData.extension}:`, data);
+          
+          if (data.error) {
+            console.error(`Error checking ${priceData.extension}:`, data.error);
+            continue;
+          }
+
+          results.push({
+            domain: data.domain,
+            available: data.available,
+            price: data.price,
+            extension: priceData.extension
+          });
+        } catch (extensionError) {
+          console.error(`Error checking ${priceData.extension}:`, extensionError);
+          // Add with unknown status if individual check fails
+          results.push({
+            domain: searchDomain + priceData.extension,
+            available: false, // Safe default
+            price: priceData.price,
+            extension: priceData.extension
+          });
+        }
       }
       
+      console.log('All results:', results);
       setSearchResults(results);
+      
+      if (results.length === 0) {
+        toast.error("فشل في فحص النطاقات. يرجى المحاولة مرة أخرى.");
+      }
     } catch (error) {
       console.error('Error searching domains:', error);
       toast.error("حدث خطأ أثناء البحث");
