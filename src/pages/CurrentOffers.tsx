@@ -6,13 +6,15 @@ import {
   Clock, 
   CheckCircle, 
   ArrowRight, 
-  MessageCircle, 
   Star,
   Gift,
   Sparkles,
   Target,
+  Send,
+  MessageCircle,
   Phone
 } from "lucide-react";
+import OfferRequestForm from "@/components/OfferRequestForm";
 
 const currentOffers = [
   {
@@ -192,24 +194,20 @@ const CurrentOffers = () => {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="space-y-3 pt-4">
-                    <Button 
-                      className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white font-semibold py-3 text-sm"
-                      onClick={() => openWhatsApp(offer.title, offer.currentPrice, offer.originalPrice, offer.discount, offer.timeLeft, offer.features)}
-                    >
-                      <Gift className="w-4 h-4 ml-2" />
-                      احصل على العرض الآن
-                      <ArrowRight className="w-4 h-4 mr-2" />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full border-gray-300 hover:bg-gray-50 text-gray-700 py-2.5 text-sm"
-                      onClick={() => openWhatsApp(offer.title, offer.currentPrice, offer.originalPrice, offer.discount, offer.timeLeft, offer.features)}
-                    >
-                      <MessageCircle className="w-4 h-4 ml-2" />
-                      استفسار سريع
-                    </Button>
+                  {/* Action Button */}
+                  <div className="pt-4">
+                    <OfferRequestForm
+                      offer={offer}
+                      trigger={
+                        <Button 
+                          className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white font-bold py-4 text-lg hover:scale-105 transition-all duration-300"
+                        >
+                          <Send className="w-4 h-4 ml-2" />
+                          اطلب الآن
+                          <ArrowRight className="w-4 h-4 mr-2" />
+                        </Button>
+                      }
+                    />
                   </div>
                 </CardContent>
               </Card>
