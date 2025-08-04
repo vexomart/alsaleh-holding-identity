@@ -188,17 +188,17 @@ export default function Auth() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary to-blue-600 mb-4 shadow-glow">
               <Building2 className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent text-center">
               نظام خدمة العملاء
             </h1>
-            <p className="text-blue-200/80 mt-2">شركة علي صالح الشهري القابضة</p>
+            <p className="text-blue-200/80 mt-2 text-center">شركة علي صالح الشهري القابضة</p>
           </div>
 
           {/* Auth Card */}
           <Card className="backdrop-blur-xl bg-white/10 border-white/20 shadow-2xl animate-fade-in delay-200">
             <CardHeader className="text-center pb-4">
-              <CardTitle className="text-2xl font-bold text-white">أهلاً وسهلاً</CardTitle>
-              <CardDescription className="text-blue-200/80">
+              <CardTitle className="text-2xl font-bold text-white text-center">أهلاً وسهلاً</CardTitle>
+              <CardDescription className="text-blue-200/80 text-center">
                 سجل دخولك أو أنشئ حساب جديد للمتابعة
               </CardDescription>
             </CardHeader>
