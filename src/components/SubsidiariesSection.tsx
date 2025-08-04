@@ -46,7 +46,11 @@ import {
   Package,
   ShoppingBag,
   Server,
-  Laptop
+  Laptop,
+  Store,
+  Calendar,
+  Settings,
+  Wallet
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
@@ -119,6 +123,17 @@ const SubsidiariesSection = () => {
       website: "https://plutecode.com",
       isEcommerce: true,
       inDevelopment: true
+    },
+    {
+      name: "Vexomart",
+      nameEn: "", 
+      description: "منصة متكاملة لتأجير المتاجر الإلكترونية مع قوالب احترافية وجميع طرق الدفع",
+      category: "تأجير المتاجر الإلكترونية",
+      established: "2025",
+      icon: Store,
+      color: "from-green-600 to-emerald-600",
+      website: "https://vexomart.com",
+      isRental: true
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -759,6 +774,116 @@ const SubsidiariesSection = () => {
     );
   };
 
+  const renderRentalCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative h-[600px]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-3xl border-2 border-green-200/60 hover:border-green-400/80 transition-all duration-700 group h-full">
+          {/* Rental Pattern Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2244%22%20height%3D%2244%22%20viewBox%3D%220%200%2044%2044%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%2316a34a%22%20fill-opacity%3D%220.08%22%3E%3Cpath%20d%3D%22M22%209l7%207-7%207-7-7z%22/%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%222%22/%3E%3Crect%20x%3D%2218%22%20y%3D%2218%22%20width%3D%228%22%20height%3D%222%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
+          
+          {/* Interactive Rental Elements */}
+          <div className="absolute top-4 right-4 w-8 h-8 bg-green-400/20 rounded-full animate-bounce delay-75 group-hover:bg-green-500/30 transition-colors duration-300">
+            <Store className="w-4 h-4 text-green-600 m-2" />
+          </div>
+          <div className="absolute top-8 left-6 w-6 h-6 bg-emerald-400/20 rounded-full animate-bounce delay-150 group-hover:bg-emerald-500/30 transition-colors duration-300">
+            <Calendar className="w-3 h-3 text-emerald-600 m-1.5" />
+          </div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-teal-500/20 rounded-full animate-bounce delay-300 group-hover:bg-teal-600/30 transition-colors duration-300">
+            <Wallet className="w-2 h-2 text-teal-700 m-1" />
+          </div>
+          <div className="absolute bottom-8 left-4 w-5 h-5 bg-green-400/20 rounded-full animate-bounce delay-500 group-hover:bg-green-500/30 transition-colors duration-300">
+            <Settings className="w-2.5 h-2.5 text-green-600 m-1.25" />
+          </div>
+          
+          <CardContent className="relative z-10 p-8 h-full flex flex-col justify-between">
+            {/* Header Section */}
+            <div className="text-center mb-6">
+              <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                  <IconComponent className="w-8 h-8 text-green-600 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                {/* Interactive Rental Symbols */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-400 rounded-full flex items-center justify-center text-xs group-hover:animate-spin">🏪</div>
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center text-xs group-hover:animate-pulse">⏰</div>
+              </div>
+              
+              <Badge className="bg-green-500/20 text-green-700 border-green-300/50 px-3 py-1 text-sm group-hover:bg-green-600/30 transition-colors duration-300">
+                {company.category}
+              </Badge>
+            </div>
+
+            {/* Company Info */}
+            <div className="text-center mb-6 flex-grow">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-green-800 transition-colors duration-300 mb-2">
+                {company.name}
+              </h3>
+              {company.nameEn && (
+                <p className="text-lg font-medium text-green-600 mb-3">
+                  {company.nameEn}
+                </p>
+              )}
+              <p className="text-slate-600 leading-relaxed text-sm">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Interactive Rental Features */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Store className="w-6 h-6 text-green-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">متاجر جاهزة</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Palette className="w-6 h-6 text-emerald-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping delay-100"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">قوالب احترافية</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Wallet className="w-6 h-6 text-teal-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-teal-400 rounded-full animate-ping delay-200"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">طرق الدفع</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Calendar className="w-6 h-6 text-green-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-ping delay-300"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">تأجير مرن</p>
+              </div>
+            </div>
+
+            {/* Established Badge */}
+            <div className="text-center mb-4">
+              <Badge variant="outline" className="bg-white/80 text-slate-600 border-slate-300 px-3 py-1 text-sm">
+                تأسست {company.established}
+              </Badge>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button asChild className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-green-500/30 transition-all duration-300 group/btn">
+                <a href={company.website} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                  استكشف منصة التأجير
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
     
@@ -834,7 +959,9 @@ const SubsidiariesSection = () => {
                         ? renderAccountingCard(company)
                         : company.isEcommerce 
                           ? renderEcommerceCard(company)
-                          : renderCompanyCard(company, index)
+                          : company.isRental 
+                            ? renderRentalCard(company)
+                            : renderCompanyCard(company, index)
               }
             </div>
           ))}
