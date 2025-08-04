@@ -139,7 +139,7 @@ export default function ContractSystem() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background py-12">
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background py-12" dir="rtl">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-4">نظام العقود الموحد</h1>
@@ -202,8 +202,8 @@ export default function ContractSystem() {
                       </div>
                       <div className="text-right">
                         {nafathVerified ? (
-                          <Badge variant="default" className="bg-green-500">
-                            <CheckCircle className="w-4 h-4 mr-2" />
+                          <Badge variant="default" className="bg-green-500 text-white">
+                            <CheckCircle className="w-4 h-4 ml-2" />
                             تم التحقق
                           </Badge>
                         ) : (
