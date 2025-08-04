@@ -37,7 +37,12 @@ import {
   Presentation,
   Camera,
   Play,
-  Hash
+  Hash,
+  Calculator,
+  Receipt,
+  DollarSign,
+  CreditCard,
+  PieChart
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
@@ -85,6 +90,18 @@ const SubsidiariesSection = () => {
       color: "from-pink-600 to-rose-600",
       website: "http://advixo.media/",
       isMarketing: true,
+      inDevelopment: true
+    },
+    {
+      name: "نيوماكسيو",
+      nameEn: "Numaxio", 
+      description: "نظام حسابي متكامل لإدارة الحسابات والفواتير والموارد البشرية ونقاط البيع للشركات",
+      category: "الأنظمة المحاسبية",
+      established: "2024",
+      icon: Calculator,
+      color: "from-purple-600 to-violet-600",
+      website: "http://numaxio.com",
+      isAccounting: true,
       inDevelopment: true
     }
   ];  // سيتم إضافة المزيد من الشركات
@@ -484,6 +501,127 @@ const SubsidiariesSection = () => {
     );
   };
 
+  const renderAccountingCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative h-[600px]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50 rounded-3xl border-2 border-purple-200/60 hover:border-purple-400/80 transition-all duration-700 group h-full">
+          {/* Development Banner with Animation */}
+          {company.inDevelopment && (
+            <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-purple-500 via-violet-500 to-purple-500 text-white text-center py-2 text-sm font-bold">
+              <div className="flex items-center justify-center gap-2 animate-pulse">
+                <span>🔧</span>
+                <span>قيد التطوير - Under Development</span>
+                <span>🔧</span>
+              </div>
+            </div>
+          )}
+          
+          {/* Accounting Pattern Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2248%22%20height%3D%2248%22%20viewBox%3D%220%200%2048%2048%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%238b5cf6%22%20fill-opacity%3D%220.07%22%3E%3Cpath%20d%3D%22M24%2012l6%206-6%206-6-6z%22/%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2224%22%20r%3D%222%22/%3E%3Crect%20x%3D%2220%22%20y%3D%228%22%20width%3D%228%22%20height%3D%222%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
+          
+          {/* Interactive Accounting Elements */}
+          <div className="absolute top-12 right-4 w-8 h-8 bg-purple-400/20 rounded-full animate-bounce delay-75 group-hover:bg-purple-500/30 transition-colors duration-300">
+            <Calculator className="w-4 h-4 text-purple-600 m-2" />
+          </div>
+          <div className="absolute top-16 left-6 w-6 h-6 bg-violet-400/20 rounded-full animate-bounce delay-150 group-hover:bg-violet-500/30 transition-colors duration-300">
+            <Receipt className="w-3 h-3 text-violet-600 m-1.5" />
+          </div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-indigo-500/20 rounded-full animate-bounce delay-300 group-hover:bg-indigo-600/30 transition-colors duration-300">
+            <DollarSign className="w-2 h-2 text-indigo-700 m-1" />
+          </div>
+          <div className="absolute bottom-8 left-4 w-5 h-5 bg-purple-400/20 rounded-full animate-bounce delay-500 group-hover:bg-purple-500/30 transition-colors duration-300">
+            <PieChart className="w-2.5 h-2.5 text-purple-600 m-1.25" />
+          </div>
+          
+          <CardContent className={`relative z-10 p-8 h-full flex flex-col justify-between ${company.inDevelopment ? 'pt-12' : 'pt-8'}`}>
+            {/* Header Section */}
+            <div className="text-center mb-6">
+              <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                  <IconComponent className="w-8 h-8 text-purple-600 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                {/* Interactive Accounting Symbols */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center text-xs group-hover:animate-spin">💰</div>
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-blue-400 rounded-full flex items-center justify-center text-xs group-hover:animate-pulse">📊</div>
+              </div>
+              
+              <Badge className="bg-purple-500/20 text-purple-700 border-purple-300/50 px-3 py-1 text-sm group-hover:bg-purple-600/30 transition-colors duration-300">
+                {company.category}
+              </Badge>
+            </div>
+
+            {/* Company Info */}
+            <div className="text-center mb-6 flex-grow">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-purple-800 transition-colors duration-300 mb-2">
+                {company.name}
+              </h3>
+              {company.nameEn && (
+                <p className="text-lg font-medium text-purple-600 mb-3">
+                  {company.nameEn}
+                </p>
+              )}
+              <p className="text-slate-600 leading-relaxed text-sm">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Interactive Accounting Features */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Calculator className="w-6 h-6 text-purple-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">الحسابات</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Receipt className="w-6 h-6 text-violet-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-violet-400 rounded-full animate-ping delay-100"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">الفواتير</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <Users className="w-6 h-6 text-indigo-500 mx-auto mb-1 group-hover:animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-400 rounded-full animate-ping delay-200"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">الموارد البشرية</p>
+              </div>
+              <div className="text-center p-3 bg-white/60 rounded-xl group-hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <CreditCard className="w-6 h-6 text-purple-500 mx-auto mb-1 group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-400 rounded-full animate-ping delay-300"></div>
+                </div>
+                <p className="text-xs font-medium text-slate-700">نقاط البيع</p>
+              </div>
+            </div>
+
+            {/* Established Badge */}
+            <div className="text-center mb-4">
+              <Badge variant="outline" className="bg-white/80 text-slate-600 border-slate-300 px-3 py-1 text-sm">
+                تأسست {company.established}
+              </Badge>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button asChild className={`w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-purple-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`}>
+                <a href={company.website} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                  {company.inDevelopment ? 'قريباً - Coming Soon' : 'استكشف النظام المحاسبي'}
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
     
@@ -555,7 +693,9 @@ const SubsidiariesSection = () => {
                     ? renderAcademicCard(company)
                     : company.isMarketing 
                       ? renderMarketingCard(company)
-                      : renderCompanyCard(company, index)
+                      : company.isAccounting 
+                        ? renderAccountingCard(company)
+                        : renderCompanyCard(company, index)
               }
             </div>
           ))}
