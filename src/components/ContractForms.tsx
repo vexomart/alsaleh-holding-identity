@@ -201,7 +201,7 @@ export const ContractForms = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto" dir="rtl">
+    <div className="max-w-7xl mx-auto" dir="rtl" style={{ fontFamily: 'Tahoma, Arial, sans-serif' }}>
       <div className="text-center mb-12">
         <Badge className="mb-4 bg-blue-100 text-blue-800 border-blue-200">
           <FileText className="w-4 h-4 ml-2" />
@@ -217,27 +217,27 @@ export const ContractForms = () => {
       </div>
 
       <Tabs defaultValue="individual" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-8 h-16">
-          <TabsTrigger value="individual" className="flex items-center gap-3 h-full text-lg">
-            <User className="w-5 h-5" />
+        <TabsList className="grid w-full grid-cols-3 mb-8 h-16" dir="rtl">
+          <TabsTrigger value="individual" className="flex items-center gap-3 h-full text-lg text-right">
             <div className="text-right">
               <div className="font-bold">الأفراد</div>
               <div className="text-xs text-gray-500">للمشاريع الشخصية</div>
             </div>
+            <User className="w-5 h-5" />
           </TabsTrigger>
-          <TabsTrigger value="institution" className="flex items-center gap-3 h-full text-lg">
-            <Users2 className="w-5 h-5" />
+          <TabsTrigger value="institution" className="flex items-center gap-3 h-full text-lg text-right">
             <div className="text-right">
               <div className="font-bold">المؤسسات</div>
               <div className="text-xs text-gray-500">الحكومية وغير الربحية</div>
             </div>
+            <Users2 className="w-5 h-5" />
           </TabsTrigger>
-          <TabsTrigger value="company" className="flex items-center gap-3 h-full text-lg">
-            <Building className="w-5 h-5" />
+          <TabsTrigger value="company" className="flex items-center gap-3 h-full text-lg text-right">
             <div className="text-right">
               <div className="font-bold">الشركات</div>
               <div className="text-xs text-gray-500">التجارية والخاصة</div>
             </div>
+            <Building className="w-5 h-5" />
           </TabsTrigger>
         </TabsList>
 
@@ -250,15 +250,15 @@ export const ContractForms = () => {
               description="مخصص للمشاريع الشخصية والمبادرات الفردية. يرجى تعبئة جميع الحقول المطلوبة بدقة."
               color="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800"
             />
-            <CardContent className="p-8">
+            <CardContent className="p-8" dir="rtl">
               <Form {...individualForm}>
                 <form onSubmit={individualForm.handleSubmit((data) => submitForm(data, 'individual'))} className="space-y-8">
                   
                   {/* Personal Information Section */}
-                  <div className="border-r-4 border-blue-500 pr-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                  <div className="border-l-4 border-blue-500 pl-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2 text-right">
+                      <span>البيانات الشخصية</span>
                       <User className="w-5 h-5 text-blue-600" />
-                      البيانات الشخصية
                     </h3>
                     <div className="grid md:grid-cols-2 gap-6">
                       <FormField
@@ -266,12 +266,13 @@ export const ContractForms = () => {
                         name="fullName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">الاسم الكامل *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">الاسم الكامل *</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="الاسم الأول والثاني والعائلة" 
-                                className="h-12 text-lg"
-                                {...field} 
+                                className="h-12 text-lg text-right"
+                                dir="rtl"
+                                {...field}
                               />
                             </FormControl>
                             <FormMessage />
