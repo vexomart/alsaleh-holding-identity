@@ -32,7 +32,19 @@ import {
 } from "lucide-react";
 
 const SubsidiariesSection = () => {
-  const subsidiaries = [];  // سيتم إضافة الشركات هنا
+  const subsidiaries = [
+    {
+      name: "علي صالح الشهري القابضة",
+      nameEn: "Ali Saleh AlShahri Holdings", 
+      description: "بورتال شركة علي صالح الشهري القابضة - مجموعة متنوعة من الاستثمارات والمشاريع الرائدة",
+      category: "الشركة القابضة",
+      established: "2016",
+      icon: Building2,
+      color: "from-amber-600 to-orange-600",
+      website: "https://ash.holdings",
+      isPortal: true
+    }
+  ];  // سيتم إضافة المزيد من الشركات
 
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
