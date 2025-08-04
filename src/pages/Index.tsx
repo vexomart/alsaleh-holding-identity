@@ -12,6 +12,7 @@ import DepartmentsSection from "@/components/DepartmentsSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
 import RemoteWorkSection from "@/components/RemoteWorkSection";
+import InspirationSection from "@/components/InspirationSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
@@ -92,6 +93,10 @@ const Index = () => {
             </div>
           </section>
 
+          {/* Inspiration Section */}
+          <section id="inspiration" className="relative">
+            <InspirationSection />
+          </section>
 
           {/* Contact Section */}
           <section id="contact" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
