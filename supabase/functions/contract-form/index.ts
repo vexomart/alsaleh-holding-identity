@@ -144,7 +144,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
       from: "طلبات التعاقد <contracts@alsheharitechholding.com>",
-      to: [],
+      to: ["info@fekrahtech.com"],
       subject: subject,
       html: emailHtml,
     });
