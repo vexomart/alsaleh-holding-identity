@@ -97,7 +97,7 @@ const SubsidiariesSection = () => {
       nameEn: "Numaxio", 
       description: "نظام حسابي متكامل لإدارة الحسابات والفواتير والموارد البشرية ونقاط البيع للشركات",
       category: "الأنظمة المحاسبية",
-      established: "2024",
+      established: "2025",
       icon: Calculator,
       color: "from-purple-600 to-violet-600",
       website: "http://numaxio.com",
