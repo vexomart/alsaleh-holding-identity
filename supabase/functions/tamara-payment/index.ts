@@ -60,8 +60,8 @@ serve(async (req) => {
       },
       description: requestData.description,
       country_code: "SA",
-      payment_type: "PAY_BY_INSTALMENTS", // Tamara's installment payment
-      instalments: 3, // 3 installments
+      payment_type: "PAY_BY_INSTALMENTS",
+      instalments: 3,
       locale: "ar_SA",
       items: [
         {
@@ -82,9 +82,25 @@ serve(async (req) => {
       ],
       consumer: {
         first_name: requestData.customer_name.split(' ')[0] || requestData.customer_name,
-        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || '',
+        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || 'User',
         phone_number: requestData.customer_phone?.replace(/[^\d]/g, '') || "500000000",
         email: requestData.customer_email,
+      },
+      billing_address: {
+        first_name: requestData.customer_name.split(' ')[0] || requestData.customer_name,
+        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || 'User',
+        line1: "الرياض",
+        city: "الرياض",
+        country_code: "SA",
+        phone_number: requestData.customer_phone?.replace(/[^\d]/g, '') || "500000000",
+      },
+      shipping_address: {
+        first_name: requestData.customer_name.split(' ')[0] || requestData.customer_name,
+        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || 'User',
+        line1: "الرياض",
+        city: "الرياض",
+        country_code: "SA",
+        phone_number: requestData.customer_phone?.replace(/[^\d]/g, '') || "500000000",
       },
       merchant_url: {
         success: `${req.headers.get("origin")}/payment-success`,
@@ -92,27 +108,11 @@ serve(async (req) => {
         cancel: `${req.headers.get("origin")}/payment-cancel`,
         notification: `${req.headers.get("origin")}/api/tamara-webhook`,
       },
-      shipping_address: {
-        first_name: requestData.customer_name.split(' ')[0] || requestData.customer_name,
-        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || '',
-        line1: "الرياض",
-        city: "الرياض",
-        country_code: "SA",
-        phone_number: requestData.customer_phone?.replace(/[^\d]/g, '') || "500000000",
-      },
-      billing_address: {
-        first_name: requestData.customer_name.split(' ')[0] || requestData.customer_name,
-        last_name: requestData.customer_name.split(' ').slice(1).join(' ') || '',
-        line1: "الرياض",
-        city: "الرياض",
-        country_code: "SA",
-        phone_number: requestData.customer_phone?.replace(/[^\d]/g, '') || "500000000",
-      },
     };
 
     console.log("Sending request to Tamara API...");
 
-    const tamaraResponse = await fetch("https://api.tamara.co/checkout", {
+    const tamaraResponse = await fetch("https://api-sandbox.tamara.co/checkout", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${tamaraApiKey}`,
