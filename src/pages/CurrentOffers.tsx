@@ -109,7 +109,7 @@ const currentOffers = [
 const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<'tap' | 'paylink'>('tap');
+  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<'tap' | 'paylink' | 'stc_pay'>('tap');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -139,7 +139,9 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
       
       // Choose payment function based on selected gateway
-      const paymentFunction = selectedPaymentGateway === 'tap' ? 'tap-payment' : 'paylink-payment';
+      const paymentFunction = selectedPaymentGateway === 'tap' ? 'tap-payment' : 
+                             selectedPaymentGateway === 'paylink' ? 'paylink-payment' : 
+                             'stc-pay';
       
       const { data, error } = await supabase.functions.invoke(paymentFunction, {
         body: {
@@ -160,20 +162,37 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
 
       console.log('Payment response:', data);
 
-      if (data?.success && data?.payment_url) {
-        console.log('Opening payment URL:', data.payment_url);
-        
-        toast({
-          title: "تم إنشاء رابط الدفع بنجاح",
-          description: `سيتم فتح صفحة الدفع الآن عبر ${selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'}`,
-        });
-        
-        // Close dialog first
-        setIsOpen(false);
-        
-        // Redirect to payment page in same window to avoid popup blockers
-        window.location.href = data.payment_url;
-        
+      if (data?.success) {
+        // Handle STC Pay differently (show instructions)
+        if (selectedPaymentGateway === 'stc_pay') {
+          toast({
+            title: "تعليمات الدفع عبر STC Pay",
+            description: data.instructions?.ar || `ارسل ${data.amount} ${data.currency} للرقم ${data.merchant_number}`,
+            duration: 10000,
+          });
+          
+          // Show STC Pay instructions modal
+          alert(`📱 لإتمام الدفع:\n\n1. افتح تطبيق STC Pay\n2. اختر إرسال أموال\n3. أرسل ${data.amount} ريال للرقم: ${data.merchant_number}\n4. استخدم المرجع: ${data.reference}\n\nسيتم تأكيد الدفع خلال دقائق قليلة.`);
+          
+          setIsOpen(false);
+        } else if (data?.payment_url) {
+          console.log('Opening payment URL:', data.payment_url);
+          
+          toast({
+            title: "تم إنشاء رابط الدفع بنجاح",
+            description: `سيتم فتح صفحة الدفع الآن عبر ${
+              selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'
+            }`,
+          });
+          
+          // Close dialog first
+          setIsOpen(false);
+          
+          // Redirect to payment page in same window to avoid popup blockers
+          window.location.href = data.payment_url;
+        } else {
+          throw new Error('لم يتم إنشاء رابط الدفع بشكل صحيح');
+        }
       } else {
         console.error('Invalid response:', data);
         throw new Error('لم يتم إنشاء رابط الدفع بشكل صحيح');
@@ -207,36 +226,52 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
             <label className="text-sm font-medium text-foreground">
               اختر بوابة الدفع
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => setSelectedPaymentGateway('tap')}
-                className={`p-4 border-2 rounded-lg transition-all ${
+                className={`p-3 border-2 rounded-lg transition-all ${
                   selectedPaymentGateway === 'tap'
                     ? 'border-primary bg-primary/10'
                     : 'border-border hover:border-primary/50'
                 }`}
               >
                 <div className="text-center">
-                  <div className="font-semibold text-sm">Tap</div>
+                  <div className="font-semibold text-xs">Tap</div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    دفع آمن وسريع
+                    دفع آمن
                   </div>
                 </div>
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedPaymentGateway('paylink')}
-                className={`p-4 border-2 rounded-lg transition-all ${
+                className={`p-3 border-2 rounded-lg transition-all ${
                   selectedPaymentGateway === 'paylink'
                     ? 'border-primary bg-primary/10'
                     : 'border-border hover:border-primary/50'
                 }`}
               >
                 <div className="text-center">
-                  <div className="font-semibold text-sm">Paylink</div>
+                  <div className="font-semibold text-xs">Paylink</div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    دفع محلي سعودي
+                    دفع محلي
+                  </div>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedPaymentGateway('stc_pay')}
+                className={`p-3 border-2 rounded-lg transition-all ${
+                  selectedPaymentGateway === 'stc_pay'
+                    ? 'border-primary bg-primary/10'
+                    : 'border-border hover:border-primary/50'
+                }`}
+              >
+                <div className="text-center">
+                  <div className="font-semibold text-xs">STC Pay</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    محفظة رقمية
                   </div>
                 </div>
               </button>
@@ -320,7 +355,10 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
             ) : (
               <>
                 <CreditCard className="w-5 h-5 ml-2" />
-                ادفع عبر {selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'} - {offer.currentPrice} ر.س
+                {selectedPaymentGateway === 'stc_pay' ? 
+                  `ادفع عبر STC Pay - ${offer.currentPrice} ر.س` :
+                  `ادفع عبر ${selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'} - ${offer.currentPrice} ر.س`
+                }
               </>
             )}
           </Button>

@@ -204,6 +204,7 @@ export type Database = {
           paylink_transaction_no: string | null
           payment_method: string | null
           status: string
+          stc_pay_reference: string | null
           tamara_order_id: string | null
           tap_charge_id: string | null
           tap_payment_id: string | null
@@ -222,6 +223,7 @@ export type Database = {
           paylink_transaction_no?: string | null
           payment_method?: string | null
           status?: string
+          stc_pay_reference?: string | null
           tamara_order_id?: string | null
           tap_charge_id?: string | null
           tap_payment_id?: string | null
@@ -240,6 +242,7 @@ export type Database = {
           paylink_transaction_no?: string | null
           payment_method?: string | null
           status?: string
+          stc_pay_reference?: string | null
           tamara_order_id?: string | null
           tap_charge_id?: string | null
           tap_payment_id?: string | null
