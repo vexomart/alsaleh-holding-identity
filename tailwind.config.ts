@@ -304,12 +304,6 @@ export default {
         'icon-hover': 'icon-hover 0.3s ease-out forwards',
         'typing': 'typing 3.5s steps(40, end)',
         'blink': 'blink 1s infinite',
-        'magnetic': 'magnetic 0.3s ease-out',
-        'levitate': 'levitate 8s ease-in-out infinite',
-        'morph': 'morph 8s ease-in-out infinite',
-        'pulse-color': 'pulse-color 2s ease-in-out infinite',
-        'slide-infinite': 'slide-infinite 20s linear infinite',
-        'matrix-rain': 'matrix-rain 3s linear infinite',
       },
       transitionTimingFunction: {
         'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',

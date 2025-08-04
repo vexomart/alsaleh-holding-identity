@@ -323,7 +323,7 @@
 
   /* Enhanced Icon Animations */
   .icon-float {
-    @apply animate-levitate;
+    @apply animate-float;
   }
 
   .icon-glow {
@@ -331,11 +331,11 @@
   }
 
   .icon-electric {
-    @apply animate-pulse-color;
+    @apply animate-pulse-glow;
   }
 
   .icon-morph {
-    @apply animate-morph;
+    @apply animate-bounce-gentle;
   }
 
   .icon-rotate {
@@ -351,7 +351,7 @@
   }
 
   .icon-magnetic {
-    @apply hover:animate-magnetic transform-gpu;
+    @apply hover:scale-110 transition-transform duration-300 transform-gpu;
   }
 
   /* Modern Grid Systems */
@@ -494,8 +494,7 @@
     /* Reduce motion for better performance */
     .animate-float,
     .animate-float-delayed,
-    .animate-levitate,
-    .animate-morph {
+    .animate-bounce-gentle {
       animation: none;
     }
 
@@ -575,26 +574,6 @@
 
   .container-glass {
     @apply relative overflow-hidden bg-gradient-glass backdrop-blur-2xl border border-white/30 rounded-3xl p-8 shadow-glass;
-  }
-
-  /* Matrix Effect Background */
-  .matrix-bg::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-mesh opacity-10 animate-slide-infinite;
-  }
-
-  /* Neon Border Effect */
-  .neon-border {
-    @apply relative;
-  }
-
-  .neon-border::before {
-    content: '';
-    @apply absolute -inset-1 bg-gradient-electric rounded-3xl blur-sm opacity-60 animate-pulse-glow;
-  }
-
-  .neon-border > * {
-    @apply relative;
   }
 
   /* Enhanced Hover Effects */
