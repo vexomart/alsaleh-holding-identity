@@ -41,7 +41,7 @@ const Navigation = () => {
   const services = [
     { name: "العروض الحالية", href: "/current-offers", icon: Gift },
     { name: "خدماتنا الاحترافية", href: "/professional-services", icon: Settings },
-    { name: "صناعة المحتوى", href: "#content-creation", icon: PenTool },
+    { name: "صناعة المحتوى", href: "/content-creation", icon: PenTool },
     { name: "حلول التصميم", href: "#design-solutions", icon: Palette },
     { name: "الاستثمار التقني", href: "/tech-investment", icon: Zap },
     { name: "التطوير والابتكار", href: "/development", icon: Building2 },

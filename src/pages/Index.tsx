@@ -5,7 +5,7 @@ import AboutSection from "@/components/AboutSection";
 import StatsSection from "@/components/StatsSection";
 
 
-import ContentCreationSection from "@/components/ContentCreationSection";
+
 import DesignSolutionsSection from "@/components/DesignSolutionsSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import SubsidiariesSection from "@/components/SubsidiariesSection";
@@ -55,8 +55,6 @@ const Index = () => {
 
 
 
-          {/* Content Creation Section */}
-          <ContentCreationSection />
 
           {/* Design Solutions Section */}
           <DesignSolutionsSection />
