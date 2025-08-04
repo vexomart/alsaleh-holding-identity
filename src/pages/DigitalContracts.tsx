@@ -261,7 +261,7 @@ const DigitalContracts = () => {
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
       width: 794px;
-      min-height: 1123px;
+      min-height: 1400px;
       padding: 40px;
       background: white;
       font-family: 'Arial', 'Tahoma', sans-serif;
@@ -273,6 +273,7 @@ const DigitalContracts = () => {
       position: absolute;
       top: -9999px;
       left: -9999px;
+      overflow: visible;
     `;
 
     contractElement.innerHTML = `
@@ -435,32 +436,49 @@ const DigitalContracts = () => {
         // انتظار قصير للتأكد من تحميل كامل للعنصر
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // تحويل HTML إلى canvas
+        // تحويل HTML إلى canvas بضبط الارتفاع تلقائياً
         const canvas = await html2canvas(contractElement, {
           scale: 2,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
           logging: false,
-          width: 794,
-          height: 1123,
           scrollX: 0,
-          scrollY: 0
+          scrollY: 0,
+          windowWidth: contractElement.scrollWidth,
+          windowHeight: contractElement.scrollHeight
         });
         
         // إزالة العنصر المؤقت
         document.body.removeChild(contractElement);
         
-        // إنشاء PDF
+        // حساب النسبة الصحيحة لـ PDF
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        
+        // إنشاء PDF بأبعاد A4
         const pdf = new jsPDF({
           orientation: 'portrait',
-          unit: 'px',
-          format: [794, 1123]
+          unit: 'mm',
+          format: 'a4'
         });
         
+        // أبعاد A4 بالملليمتر
+        const pdfWidth = 210;
+        const pdfHeight = 297;
+        
+        // حساب النسبة للحفاظ على التناسب
+        const ratio = Math.min(pdfWidth / (canvasWidth / 3.779), pdfHeight / (canvasHeight / 3.779));
+        const imgWidth = (canvasWidth / 3.779) * ratio;
+        const imgHeight = (canvasHeight / 3.779) * ratio;
+        
+        // توسيط الصورة في الصفحة
+        const x = (pdfWidth - imgWidth) / 2;
+        const y = 0;
+        
         // إضافة الصورة للـ PDF
-        const imgData = canvas.toDataURL('image/png');
-        pdf.addImage(imgData, 'PNG', 0, 0, 794, 1123);
+        const imgData = canvas.toDataURL('image/png', 1.0);
+        pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
         
         resolve(pdf);
       } catch (error) {
