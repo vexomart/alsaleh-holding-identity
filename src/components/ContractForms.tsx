@@ -285,11 +285,12 @@ export const ContractForms = () => {
                         name="nationalId"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">رقم الهوية الوطنية *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">رقم الهوية الوطنية *</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="1XXXXXXXXX (10 أرقام)" 
-                                className="h-12 text-lg" 
+                                className="h-12 text-lg text-right" 
+                                dir="rtl"
                                 maxLength={10}
                                 {...field} 
                               />
@@ -304,12 +305,13 @@ export const ContractForms = () => {
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">البريد الإلكتروني *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">البريد الإلكتروني *</FormLabel>
                             <FormControl>
                               <Input 
                                 type="email" 
                                 placeholder="example@email.com" 
-                                className="h-12 text-lg"
+                                className="h-12 text-lg text-left"
+                                dir="ltr"
                                 {...field} 
                               />
                             </FormControl>
@@ -323,11 +325,12 @@ export const ContractForms = () => {
                         name="phone"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">رقم الهاتف *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">رقم الهاتف *</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="05XXXXXXXX" 
-                                className="h-12 text-lg" 
+                                className="h-12 text-lg text-right" 
+                                dir="rtl"
                                 maxLength={10}
                                 {...field} 
                               />
@@ -342,10 +345,10 @@ export const ContractForms = () => {
                         name="city"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">المدينة *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">المدينة *</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="h-12 text-lg">
+                                <SelectTrigger className="h-12 text-lg text-right" dir="rtl">
                                   <SelectValue placeholder="اختر المدينة" />
                                 </SelectTrigger>
                               </FormControl>
@@ -376,14 +379,14 @@ export const ContractForms = () => {
                         name="serviceType"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">نوع الخدمة المطلوبة *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">نوع الخدمة المطلوبة *</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="h-12 text-lg">
+                                <SelectTrigger className="h-12 text-lg text-right" dir="rtl">
                                   <SelectValue placeholder="اختر نوع الخدمة" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent dir="rtl">
                                 {serviceTypes.map((service) => (
                                   <SelectItem key={service} value={service}>
                                     {service}
@@ -401,14 +404,14 @@ export const ContractForms = () => {
                         name="urgency"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">أولوية المشروع *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">أولوية المشروع *</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="h-12 text-lg">
+                                <SelectTrigger className="h-12 text-lg text-right" dir="rtl">
                                   <SelectValue placeholder="اختر الأولوية" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent dir="rtl">
                                 {urgencyOptions.map((urgency) => (
                                   <SelectItem key={urgency} value={urgency}>
                                     {urgency}
@@ -426,14 +429,14 @@ export const ContractForms = () => {
                         name="budget"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">الميزانية المتوقعة *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">الميزانية المتوقعة *</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="h-12 text-lg">
+                                <SelectTrigger className="h-12 text-lg text-right" dir="rtl">
                                   <SelectValue placeholder="اختر الميزانية" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent dir="rtl">
                                 {budgetRanges.map((budget) => (
                                   <SelectItem key={budget} value={budget}>
                                     {budget}
@@ -451,14 +454,14 @@ export const ContractForms = () => {
                         name="timeline"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">الجدول الزمني المطلوب *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">الجدول الزمني المطلوب *</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="h-12 text-lg">
+                                <SelectTrigger className="h-12 text-lg text-right" dir="rtl">
                                   <SelectValue placeholder="اختر المدة الزمنية" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent dir="rtl">
                                 {timelineOptions.map((timeline) => (
                                   <SelectItem key={timeline} value={timeline}>
                                     {timeline}
@@ -478,12 +481,13 @@ export const ContractForms = () => {
                         name="projectDescription"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">وصف المشروع بالتفصيل *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">وصف المشروع بالتفصيل *</FormLabel>
                             <FormControl>
                               <Textarea 
                                 placeholder="يرجى تقديم وصف شامل ومفصل للمشروع المطلوب، يشمل الأهداف المطلوب تحقيقها، والميزات المطلوبة، والجمهور المستهدف، وأي متطلبات خاصة..."
-                                className="min-h-[150px] text-lg leading-relaxed"
-                                {...field} 
+                                className="min-h-[150px] text-lg leading-relaxed text-right"
+                                dir="rtl"
+                                {...field}
                               />
                             </FormControl>
                             <FormMessage />
@@ -496,12 +500,13 @@ export const ContractForms = () => {
                         name="experience"
                         render={({ field }) => (
                           <FormItem className="mt-6">
-                            <FormLabel className="text-lg font-semibold">خبرتك السابقة في المجال (اختياري)</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">خبرتك السابقة في المجال (اختياري)</FormLabel>
                             <FormControl>
                               <Textarea 
                                 placeholder="إذا كان لديك خبرة سابقة في مشاريع مشابهة أو في المجال التقني، يرجى مشاركتها معنا..."
-                                className="min-h-[100px] text-lg"
-                                {...field} 
+                                className="min-h-[100px] text-lg text-right"
+                                dir="rtl"
+                                {...field}
                               />
                             </FormControl>
                             <FormMessage />
@@ -516,15 +521,16 @@ export const ContractForms = () => {
                       type="submit" 
                       className="w-full h-14 text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
                       disabled={isSubmitting}
+                      dir="rtl"
                     >
                       {isSubmitting ? (
                         <>
-                          <Loader2 className="w-6 h-6 ml-3 animate-spin" />
+                          <Loader2 className="w-6 h-6 mr-3 animate-spin" />
                           جاري الإرسال...
                         </>
                       ) : (
                         <>
-                          <Send className="w-6 h-6 ml-3" />
+                          <Send className="w-6 h-6 mr-3" />
                           إرسال طلب التعاقد الرسمي
                         </>
                       )}
@@ -545,15 +551,15 @@ export const ContractForms = () => {
               description="مخصص للمؤسسات الحكومية والتعليمية والصحية وغير الربحية. نموذج رسمي معتمد للعقود المؤسسية."
               color="bg-gradient-to-r from-green-600 via-green-700 to-green-800"
             />
-            <CardContent className="p-8">
+            <CardContent className="p-8" dir="rtl">
               <Form {...institutionForm}>
                 <form onSubmit={institutionForm.handleSubmit((data) => submitForm(data, 'institution'))} className="space-y-8">
                   
                   {/* Institution Information */}
-                  <div className="border-r-4 border-green-500 pr-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                  <div className="border-l-4 border-green-500 pl-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2 text-right">
+                      <span>بيانات المؤسسة</span>
                       <Building className="w-5 h-5 text-green-600" />
-                      بيانات المؤسسة
                     </h3>
                     <div className="grid md:grid-cols-2 gap-6">
                       <FormField
@@ -561,11 +567,12 @@ export const ContractForms = () => {
                         name="institutionName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold">اسم المؤسسة الرسمي *</FormLabel>
+                            <FormLabel className="text-lg font-semibold text-right">اسم المؤسسة الرسمي *</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="الاسم الكامل للمؤسسة كما هو مسجل رسمياً" 
-                                className="h-12 text-lg"
+                                className="h-12 text-lg text-right"
+                                dir="rtl"
                                 {...field} 
                               />
                             </FormControl>
