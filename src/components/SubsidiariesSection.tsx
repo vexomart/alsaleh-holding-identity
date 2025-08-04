@@ -133,7 +133,9 @@ const SubsidiariesSection = () => {
       icon: Store,
       color: "from-green-600 to-emerald-600",
       website: "https://vexomart.com",
-      isRental: true
+      isRental: true,
+      inDevelopment: true,
+      launchDate: "10-10-2025"
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -780,6 +782,17 @@ const SubsidiariesSection = () => {
     return (
       <div className="relative h-[600px]">
         <div className="relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-3xl border-2 border-green-200/60 hover:border-green-400/80 transition-all duration-700 group h-full">
+          {/* Development Banner with Launch Date */}
+          {company.inDevelopment && (
+            <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 text-white text-center py-2 text-sm font-bold">
+              <div className="flex items-center justify-center gap-2 animate-pulse">
+                <span>🚀</span>
+                <span>قيد التطوير - الإطلاق المتوقع {company.launchDate}</span>
+                <span>🚀</span>
+              </div>
+            </div>
+          )}
+          
           {/* Rental Pattern Background */}
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2244%22%20height%3D%2244%22%20viewBox%3D%220%200%2044%2044%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%2316a34a%22%20fill-opacity%3D%220.08%22%3E%3Cpath%20d%3D%22M22%209l7%207-7%207-7-7z%22/%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%222%22/%3E%3Crect%20x%3D%2218%22%20y%3D%2218%22%20width%3D%228%22%20height%3D%222%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
           
@@ -797,7 +810,7 @@ const SubsidiariesSection = () => {
             <Settings className="w-2.5 h-2.5 text-green-600 m-1.25" />
           </div>
           
-          <CardContent className="relative z-10 p-8 h-full flex flex-col justify-between">
+          <CardContent className={`relative z-10 p-8 h-full flex flex-col justify-between ${company.inDevelopment ? 'pt-12' : 'pt-8'}`}>
             {/* Header Section */}
             <div className="text-center mb-6">
               <div className="relative inline-flex items-center justify-center w-20 h-20 mb-4">
@@ -871,10 +884,10 @@ const SubsidiariesSection = () => {
             
             {/* CTA Button */}
             <div className="text-center">
-              <Button asChild className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-green-500/30 transition-all duration-300 group/btn">
+              <Button asChild className={`w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-green-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`}>
                 <a href={company.website} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
-                  استكشف منصة التأجير
+                  {company.inDevelopment ? `قريباً - ${company.launchDate}` : 'استكشف منصة التأجير'}
                 </a>
               </Button>
             </div>
