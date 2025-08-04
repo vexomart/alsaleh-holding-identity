@@ -46,13 +46,99 @@ const SubsidiariesSection = () => {
     }
   ];  // سيتم إضافة المزيد من الشركات
 
+  const renderPortalCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative col-span-full lg:col-span-2 xl:col-span-3">
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl border border-amber-500/20 hover:border-amber-400/40 transition-all duration-700 group">
+          {/* Animated Background Pattern */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23f59e0b%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
+          
+          {/* Glowing Border Animation */}
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 rounded-3xl opacity-0 group-hover:opacity-100 blur-xl transition-all duration-700 group-hover:blur-2xl"></div>
+          
+          <CardContent className="relative z-10 p-12 text-center">
+            {/* Logo Section */}
+            <div className="mb-8">
+              <div className="relative inline-flex items-center justify-center w-32 h-32 mb-6">
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full animate-pulse"></div>
+                <div className="relative w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-2xl">
+                  <IconComponent className="w-16 h-16 text-amber-600" />
+                </div>
+                {/* Floating Particles */}
+                <div className="absolute -top-2 -right-2 w-4 h-4 bg-amber-400 rounded-full animate-bounce delay-100"></div>
+                <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-orange-500 rounded-full animate-bounce delay-300"></div>
+              </div>
+            </div>
+
+            {/* Company Info */}
+            <div className="space-y-6 mb-10">
+              <div>
+                <h2 className="text-4xl font-bold text-white mb-3 group-hover:text-amber-100 transition-colors duration-300">
+                  {company.name}
+                </h2>
+                <h3 className="text-2xl font-medium text-amber-400 mb-4">
+                  {company.nameEn}
+                </h3>
+              </div>
+              
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <Badge className="bg-amber-500/20 text-amber-300 border-amber-400/30 px-4 py-2">
+                  {company.category}
+                </Badge>
+                <Badge className="bg-white/10 text-white border-white/20 px-4 py-2">
+                  تأسست {company.established}
+                </Badge>
+              </div>
+              
+              <p className="text-slate-300 text-lg leading-relaxed max-w-2xl mx-auto">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Portal Features */}
+            <div className="grid grid-cols-3 gap-6 mb-10">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl mx-auto mb-3 flex items-center justify-center">
+                  <Globe className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-white text-sm font-medium">الشركات التابعة</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-500 rounded-2xl mx-auto mb-3 flex items-center justify-center">
+                  <BarChart3 className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-white text-sm font-medium">التقارير المالية</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mx-auto mb-3 flex items-center justify-center">
+                  <Users className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-white text-sm font-medium">فريق الإدارة</p>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <Button asChild className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-8 py-4 text-lg font-semibold rounded-2xl border-0 shadow-2xl hover:shadow-amber-500/30 transition-all duration-300 group/btn">
+              <a href={company.website} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-5 h-5 ml-3 group-hover/btn:rotate-45 transition-transform duration-300" />
+                دخول البورتال الرئيسي
+              </a>
+            </Button>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
     
     return (
-      <Card className="group relative overflow-hidden bg-white/90 backdrop-blur-sm border-0 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-700 transform hover:scale-[1.02] animate-fade-in">
+      <Card className="group relative overflow-hidden bg-white/95 backdrop-blur-sm border-0 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-700 transform hover:scale-[1.02] animate-fade-in">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${company.color}"></div>
+        <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${company.color}`}></div>
         
         <CardContent className="p-8 relative z-10">
           <div className="flex items-start justify-between mb-6">
@@ -106,7 +192,7 @@ const SubsidiariesSection = () => {
         <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
           {subsidiaries.map((company, index) => (
             <div key={index} style={{ animationDelay: `${index * 0.15}s` }}>
-              {renderCompanyCard(company, index)}
+              {company.isPortal ? renderPortalCard(company) : renderCompanyCard(company, index)}
             </div>
           ))}
         </div>
