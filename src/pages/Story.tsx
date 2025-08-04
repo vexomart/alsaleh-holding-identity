@@ -152,21 +152,21 @@ const Story = () => {
             {[
               { 
                 icon: Clock, 
-                number: "5+", 
+                number: "10+", 
                 label: "سنوات من الإبداع المتواصل", 
                 gradient: "from-blue-400 to-cyan-500",
                 bgGradient: "from-blue-500/10 to-cyan-500/10"
               },
               { 
                 icon: Users, 
-                number: "150+", 
+                number: "14,883+", 
                 label: "عميل سعيد بخدماتنا المميزة", 
                 gradient: "from-purple-400 to-pink-500",
                 bgGradient: "from-purple-500/10 to-pink-500/10"
               },
               { 
                 icon: Award, 
-                number: "80+", 
+                number: "9,472+", 
                 label: "مشروع ناجح يفخر به فريقنا", 
                 gradient: "from-emerald-400 to-teal-500",
                 bgGradient: "from-emerald-500/10 to-teal-500/10"
