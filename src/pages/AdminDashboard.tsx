@@ -61,9 +61,18 @@ export default function AdminDashboard() {
 
   const checkUserRole = async (userId: string) => {
     try {
-      // For now, we'll allow admin access for demo purposes
-      // In production, this should check the user_roles table
-      setUserRole('admin');
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .maybeSingle();
+      
+      if (roleData?.role === 'admin') {
+        setUserRole('admin');
+      } else {
+        navigate('/dashboard', { replace: true });
+        return;
+      }
     } catch (error) {
       console.error('Error checking user role:', error);
       navigate('/dashboard', { replace: true });

@@ -78,17 +78,20 @@ export default function Auth() {
     const password = formData.get('password') as string;
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
+    const phone = formData.get('phone') as string;
+    const company = formData.get('company') as string;
 
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = `${window.location.origin}/dashboard`;
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: redirectUrl,
         data: {
-          first_name: firstName,
-          last_name: lastName,
+          full_name: `${firstName} ${lastName}`,
+          phone,
+          company,
         }
       }
     });
@@ -97,7 +100,42 @@ export default function Auth() {
       setError(error.message);
     } else {
       setError(null);
-      alert('تم إرسال رابط التأكيد إلى بريدك الإلكتروني');
+      
+      // Send welcome email
+      try {
+        await supabase.functions.invoke('auth-emails', {
+          body: {
+            to: email,
+            subject: "مرحباً بك في شركة الصالح القابضة",
+            type: 'welcome',
+            data: {
+              name: `${firstName} ${lastName}`,
+              dashboardUrl: `${window.location.origin}/dashboard`
+            }
+          }
+        });
+      } catch (emailError) {
+        console.error("Failed to send welcome email:", emailError);
+      }
+
+      // Send admin notification
+      try {
+        await supabase.functions.invoke('auth-emails', {
+          body: {
+            to: "admin@alsalehholding.com",
+            subject: "مستخدم جديد سجل في المنصة",
+            type: 'admin_notification',
+            data: {
+              name: `${firstName} ${lastName}`,
+              email: email
+            }
+          }
+        });
+      } catch (emailError) {
+        console.error("Failed to send admin notification:", emailError);
+      }
+      
+      alert('تم إنشاء الحساب بنجاح! يرجى تفعيل حسابك من خلال الرابط المرسل إلى بريدك الإلكتروني');
     }
 
     setLoading(false);
@@ -195,6 +233,25 @@ export default function Auth() {
                     type="email"
                     required
                     placeholder="أدخل بريدك الإلكتروني"
+                    className="text-right"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">رقم الهاتف</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="رقم الهاتف"
+                    className="text-right"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="company">الشركة (اختياري)</Label>
+                  <Input
+                    id="company"
+                    name="company"
+                    placeholder="اسم الشركة"
                     className="text-right"
                   />
                 </div>

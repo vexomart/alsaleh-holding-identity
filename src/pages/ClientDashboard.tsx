@@ -58,17 +58,23 @@ export default function ClientDashboard() {
 
   const fetchProfile = async (userId: string) => {
     try {
-      // For now, we'll create a mock profile since the table doesn't exist yet
-      const mockProfile: UserProfile = {
-        id: userId,
-        first_name: 'أحمد',
-        last_name: 'محمد',
-        avatar_url: null,
-        phone: '+966501234567',
-        company: 'شركة التقنية',
-        created_at: new Date().toISOString()
-      };
-      setProfile(mockProfile);
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+      
+      if (profileData) {
+        setProfile({
+          id: profileData.id,
+          first_name: profileData.full_name?.split(' ')[0] || null,
+          last_name: profileData.full_name?.split(' ').slice(1).join(' ') || null,
+          avatar_url: null,
+          phone: profileData.phone,
+          company: profileData.company,
+          created_at: profileData.created_at
+        });
+      }
     } catch (error) {
       console.error('Error fetching profile:', error);
     } finally {
