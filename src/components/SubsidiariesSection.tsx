@@ -122,7 +122,8 @@ const SubsidiariesSection = () => {
       color: "from-cyan-600 to-blue-600",
       website: "https://plutecode.com",
       isEcommerce: true,
-      inDevelopment: true
+      inDevelopment: true,
+      launchDate: "20-10-2025"
     },
     {
       name: "Vexomart",
@@ -661,12 +662,12 @@ const SubsidiariesSection = () => {
     return (
       <div className="relative h-[600px]">
         <div className="relative overflow-hidden bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 rounded-3xl border-2 border-cyan-200/60 hover:border-cyan-400/80 transition-all duration-700 group h-full">
-          {/* Development Banner */}
+          {/* Development Banner with Launch Date */}
           {company.inDevelopment && (
             <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 text-white text-center py-2 text-sm font-bold">
               <div className="flex items-center justify-center gap-2 animate-pulse">
                 <span>⚡</span>
-                <span>قيد التطوير - Coming Soon</span>
+                <span>قيد التطوير - الإطلاق المتوقع {company.launchDate}</span>
                 <span>⚡</span>
               </div>
             </div>
@@ -763,11 +764,9 @@ const SubsidiariesSection = () => {
             
             {/* CTA Button */}
             <div className="text-center">
-              <Button asChild className={`w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`}>
-                <a href={company.website} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
-                  {company.inDevelopment ? 'قريباً - Coming Soon' : 'استكشف المتاجر والأنظمة'}
-                </a>
+              <Button className={`w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 group/btn ${company.inDevelopment ? 'opacity-75 cursor-not-allowed' : ''}`} disabled={company.inDevelopment}>
+                <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                {company.inDevelopment ? `قريباً - ${company.launchDate}` : 'استكشف المتاجر والأنظمة'}
               </Button>
             </div>
           </CardContent>
