@@ -73,7 +73,36 @@ const DomainManagement = () => {
         return;
       }
 
-      toast.success("تم تحديث الحالة بنجاح");
+      // Send status update email to customer
+      const request = requests.find(r => r.id === requestId);
+      if (request) {
+        try {
+          const response = await fetch(`https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/domain-email`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              customerName: request.customer_name,
+              customerEmail: request.customer_email,
+              domainName: request.full_domain,
+              price: request.price,
+              registrationPeriod: request.registration_period,
+              requestId: request.id,
+              status: newStatus,
+              emailType: 'customer'
+            })
+          });
+
+          if (!response.ok) {
+            console.error('Failed to send status update email');
+          }
+        } catch (emailError) {
+          console.error('Email sending failed:', emailError);
+        }
+      }
+
+      toast.success("تم تحديث الحالة وإرسال إشعار للعميل");
       fetchDomainRequests();
     } catch (error) {
       console.error('Error:', error);

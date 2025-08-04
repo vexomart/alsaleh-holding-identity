@@ -122,6 +122,57 @@ async function submitDomainRequest(domain: string, extension: string, customerDa
 
     console.log('Domain request submitted:', data);
     
+    // Send customer confirmation email
+    try {
+      const customerEmailResponse = await fetch(`${supabaseUrl}/functions/v1/domain-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseServiceKey}`,
+        },
+        body: JSON.stringify({
+          customerName: customerData.name,
+          customerEmail: customerData.email,
+          domainName: fullDomain,
+          price: price,
+          registrationPeriod: customerData.period || 1,
+          requestId: data.id,
+          status: 'pending',
+          emailType: 'customer'
+        })
+      });
+
+      if (!customerEmailResponse.ok) {
+        console.error('Failed to send customer email');
+      }
+
+      // Send admin notification email
+      const adminEmailResponse = await fetch(`${supabaseUrl}/functions/v1/domain-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseServiceKey}`,
+        },
+        body: JSON.stringify({
+          customerName: customerData.name,
+          customerEmail: customerData.email,
+          domainName: fullDomain,
+          price: price,
+          registrationPeriod: customerData.period || 1,
+          requestId: data.id,
+          status: 'pending',
+          emailType: 'admin'
+        })
+      });
+
+      if (!adminEmailResponse.ok) {
+        console.error('Failed to send admin email');
+      }
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      // Don't fail the request if email fails
+    }
+    
     return new Response(
       JSON.stringify({ 
         success: true, 
@@ -161,17 +212,17 @@ async function getDomainPrices() {
 
 function getExtensionPrice(extension: string): number {
   const prices: { [key: string]: number } = {
-    '.com': 50.00,
-    '.net': 45.00,
-    '.org': 40.00,
-    '.info': 35.00,
-    '.sa': 150.00,
-    '.com.sa': 120.00,
-    '.biz': 30.00,
-    '.me': 55.00,
-    '.co': 60.00,
-    '.io': 80.00
+    '.com': 87.50,      // Updated with markup
+    '.net': 82.50,      // Updated with markup
+    '.org': 77.50,      // Updated with markup
+    '.info': 72.50,     // Updated with markup
+    '.sa': 187.50,      // Updated with markup
+    '.com.sa': 157.50,  // Updated with markup
+    '.biz': 67.50,      // Updated with markup
+    '.me': 92.50,       // Updated with markup
+    '.co': 97.50,       // Updated with markup
+    '.io': 117.50       // Updated with markup
   };
   
-  return prices[extension] || 50.00;
+  return prices[extension] || 87.50; // Default with markup
 }
