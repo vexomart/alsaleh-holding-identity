@@ -148,9 +148,9 @@ const HeroSection = () => {
         
         {/* Enhanced Main Title - Responsive */}
         <div className="mb-6 sm:mb-8 space-y-4 sm:space-y-6">
-          <div className="relative text-center">
+          <div className="relative">
             {/* Main Title with Better Visibility - Responsive Sizes */}
-            <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl px-4 sm:px-0 text-center">
+            <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl px-4 sm:px-0">
               شركة علي صالح الشهري القابضة
               
               {/* Animated Underline */}
@@ -158,7 +158,7 @@ const HeroSection = () => {
             </h1>
             
             {/* Text Glow Effect for Better Visibility - Responsive */}
-            <div className="absolute inset-0 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/20 blur-sm px-4 sm:px-0 text-center">
+            <div className="absolute inset-0 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/20 blur-sm px-4 sm:px-0">
               شركة علي صالح الشهري القابضة
             </div>
           </div>
@@ -166,7 +166,7 @@ const HeroSection = () => {
           {/* Enhanced Subtitle - Responsive */}
           <div className="flex justify-center items-center gap-2 sm:gap-3 animate-fade-in px-4 sm:px-0" style={{ animationDelay: '0.3s' }}>
             <Target className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-secondary animate-pulse" />
-            <p className="text-lg sm:text-xl md:text-2xl font-bold text-secondary drop-shadow-lg text-center">
+            <p className="text-lg sm:text-xl md:text-2xl font-bold text-secondary drop-shadow-lg">
               رؤية • ابتكار • تميز
             </p>
             <Rocket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-secondary animate-bounce" />
@@ -174,7 +174,7 @@ const HeroSection = () => {
         </div>
         
         {/* Enhanced Description - Responsive */}
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-primary-foreground/95 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed animate-fade-in font-medium px-4 sm:px-6 text-center" style={{ animationDelay: '0.9s' }}>
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-primary-foreground/95 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed animate-fade-in font-medium px-4 sm:px-6" style={{ animationDelay: '0.9s' }}>
           رؤية مستقبلية في عالم التقنية والإعلام، نبني جسوراً نحو الابتكار والتميز العالمي
           <br />
           <span className="text-sm sm:text-base md:text-lg lg:text-xl text-primary-foreground/80 mt-1 sm:mt-2 block">

@@ -73,11 +73,11 @@ const Navigation = () => {
             <div className="flex items-center gap-6 text-sm text-gray-300">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-blue-400" />
-                <span className="text-right">ساعات العمل: الأحد - الخميس 8:00 ص - 6:00 م</span>
+                <span>ساعات العمل: الأحد - الخميس 8:00 ص - 6:00 م</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-green-400" />
-                <span className="text-right">جدة، المملكة العربية السعودية</span>
+                <span>جدة، المملكة العربية السعودية</span>
               </div>
             </div>
             

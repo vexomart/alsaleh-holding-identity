@@ -80,10 +80,10 @@ const CommitmentsSection = () => {
             <Sparkles className="w-6 h-6 text-primary animate-pulse" />
             <span className="text-sm font-medium text-primary">التزاماتنا • رؤيتنا للمستقبل</span>
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight text-center">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
             التزاماتنا <span className="text-gradient-primary">الراسخة</span>
           </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed text-center">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
             مجموعة من القيم والمبادئ الأساسية التي توجه مسيرتنا وتحدد علاقتنا مع عملائنا وشركائنا حول العالم
           </p>
         </div>
@@ -126,14 +126,14 @@ const CommitmentsSection = () => {
                     </div>
                     
                     {/* Enhanced Content */}
-                    <div className="mb-6 flex-grow text-center">
+                    <div className="mb-6 flex-grow">
                       <h3 className="text-xl font-bold text-primary mb-2 group-hover:text-gradient-primary transition-all duration-500 group-hover:scale-105 transform-gpu leading-tight">
                         {commitment.title}
                       </h3>
                       <p className="text-sm text-secondary/80 font-medium mb-4 group-hover:text-secondary transition-colors duration-300">
                         {commitment.titleEn}
                       </p>
-                      <p className="text-sm text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-500 text-right">
+                      <p className="text-sm text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-500">
                         {commitment.description}
                       </p>
                     </div>
@@ -185,7 +185,7 @@ const CommitmentsSection = () => {
         <div className="text-center bg-gradient-to-br from-white/15 to-white/10 backdrop-blur-md rounded-3xl p-12 animate-fade-in border border-white/10 shadow-2xl">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Zap className="w-8 h-8 text-primary animate-pulse" />
-            <h3 className="text-4xl font-bold text-primary text-center">التزام شامل • نتائج استثنائية</h3>
+            <h3 className="text-4xl font-bold text-primary">التزام شامل • نتائج استثنائية</h3>
             <Award className="w-8 h-8 text-secondary animate-bounce" />
           </div>
           

@@ -193,7 +193,7 @@ const DesignSolutionsSection = () => {
             <span className="text-white font-medium">حلول التصميم الإبداعية</span>
           </div>
           
-          <h2 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight text-center">
+          <h2 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
             <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
               حلول التصميم
             </span>
@@ -203,7 +203,7 @@ const DesignSolutionsSection = () => {
             </span>
           </h2>
           
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium text-center">
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium">
             نحول أفكارك إلى تصاميم بصرية مذهلة تحكي قصة علامتك التجارية وتترك أثراً لا يُنسى في أذهان جمهورك المستهدف
           </p>
         </div>
@@ -250,12 +250,12 @@ const DesignSolutionsSection = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-emerald-300 transition-colors duration-300 text-center">
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-emerald-300 transition-colors duration-300">
                     {service.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-slate-300 mb-6 leading-relaxed text-center">
+                  <p className="text-slate-300 mb-6 leading-relaxed">
                     {service.description}
                   </p>
 
@@ -291,7 +291,7 @@ const DesignSolutionsSection = () => {
 
         {/* Portfolio Highlights */}
         <div className="text-center mb-16 animate-fade-in" style={{ animationDelay: "0.6s" }}>
-          <h3 className="text-3xl font-bold text-white mb-8 text-center">إنجازاتنا في عالم التصميم</h3>
+          <h3 className="text-3xl font-bold text-white mb-8">إنجازاتنا في عالم التصميم</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {portfolioHighlights.map((highlight, index) => (
@@ -299,7 +299,7 @@ const DesignSolutionsSection = () => {
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
-                <p className="text-white text-sm leading-relaxed text-center">{highlight}</p>
+                <p className="text-white text-sm leading-relaxed">{highlight}</p>
               </div>
             ))}
           </div>
@@ -307,7 +307,7 @@ const DesignSolutionsSection = () => {
 
         {/* Process Section */}
         <div className="text-center mb-16 animate-fade-in" style={{ animationDelay: "0.8s" }}>
-          <h3 className="text-3xl font-bold text-white mb-12 text-center">عملية التصميم الإبداعية</h3>
+          <h3 className="text-3xl font-bold text-white mb-12">عملية التصميم الإبداعية</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[

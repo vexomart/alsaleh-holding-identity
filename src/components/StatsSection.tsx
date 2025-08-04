@@ -106,10 +106,10 @@ const StatsSection = () => {
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tr from-gray-400/10 to-zinc-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
             إنجازاتنا بالأرقام
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-center">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             نفخر بما حققناه من إنجازات وثقة عملائنا حول العالم
           </p>
         </div>
@@ -138,10 +138,10 @@ const StatsSection = () => {
                     {index === 0 && "+"}
                     {index === 1 && "+"}
                   </div>
-                  <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-2 text-center">
+                  <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-2">
                     {stat.label}
                   </h3>
-                  <p className="text-sm text-muted-foreground text-center">
+                  <p className="text-sm text-muted-foreground">
                     {stat.description}
                   </p>
                 </div>

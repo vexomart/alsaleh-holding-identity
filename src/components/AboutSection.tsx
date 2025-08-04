@@ -95,10 +95,10 @@ const AboutSection = () => {
             <Building2 className="w-6 h-6 text-primary animate-pulse" />
             <span className="text-sm font-medium text-primary">شركة قابضة • رؤية عالمية</span>
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight text-center">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
             من <span className="text-gradient-primary">نحن</span>
           </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed text-center">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
             شركة علي صالح الشهري القابضة - كيان استثماري رائد يضم مجموعة من الشركات المتخصصة في التقنية والإعلام والتعليم
           </p>
         </div>
@@ -131,16 +131,16 @@ const AboutSection = () => {
                     
                     {/* Title */}
                     <div className="mb-4">
-                      <h3 className="text-2xl font-bold text-primary mb-2 group-hover:text-gradient-primary transition-all duration-300 text-center">
+                      <h3 className="text-2xl font-bold text-primary mb-2 group-hover:text-gradient-primary transition-all duration-300">
                         {info.title}
                       </h3>
-                      <p className="text-lg text-secondary font-medium mb-3 text-center">
+                      <p className="text-lg text-secondary font-medium mb-3">
                         {info.titleEn}
                       </p>
                     </div>
 
                     {/* Description */}
-                    <p className="text-muted-foreground leading-relaxed text-sm mb-6 text-center">
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-6">
                       {info.description}
                     </p>
 
@@ -167,10 +167,10 @@ const AboutSection = () => {
               <Heart className="w-6 h-6 text-primary animate-pulse" />
               <span className="text-sm font-medium text-primary">قيمنا الأساسية</span>
             </div>
-            <h3 className="text-4xl md:text-5xl font-bold text-primary mb-4 text-center">
+            <h3 className="text-4xl md:text-5xl font-bold text-primary mb-4">
               ما <span className="text-gradient-primary">نؤمن</span> به
             </h3>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto text-center">
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               نؤسس أعمالنا على قيم راسخة تضمن تحقيق التميز والنجاح المستدام
             </p>
           </div>
@@ -193,11 +193,11 @@ const AboutSection = () => {
                         <IconComponent className="w-8 h-8 text-white" />
                       </div>
                       
-                      <h4 className="text-lg font-bold text-primary mb-3 group-hover:text-gradient-primary transition-all duration-300 text-center">
+                      <h4 className="text-lg font-bold text-primary mb-3 group-hover:text-gradient-primary transition-all duration-300">
                         {value.title}
                       </h4>
                       
-                      <p className="text-sm text-muted-foreground leading-relaxed text-center">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         {value.description}
                       </p>
                     </div>

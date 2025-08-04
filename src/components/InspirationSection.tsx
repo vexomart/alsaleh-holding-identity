@@ -25,7 +25,7 @@ const InspirationSection = () => {
               </div>
             </div>
             
-            <h2 className="text-6xl md:text-8xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-8 animate-scale-in leading-tight text-center">
+            <h2 className="text-6xl md:text-8xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-8 animate-scale-in leading-tight">
               من الحلم... إلى الواقع
             </h2>
             
@@ -35,7 +35,7 @@ const InspirationSection = () => {
               <div className="w-20 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full animate-glow" style={{ animationDelay: '1s' }}></div>
             </div>
             
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light text-center">
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light">
               كل قصة نجاح عظيمة تبدأ بلحظة قرار... قررنا أن نحول الأحلام إلى إنجازات ملموسة
             </p>
           </div>
@@ -55,7 +55,7 @@ const InspirationSection = () => {
               </div>
               
               <div className="space-y-8">
-                <p className="text-3xl md:text-4xl text-white leading-relaxed font-medium text-center">
+                <p className="text-3xl md:text-4xl text-white leading-relaxed font-medium">
                   <span className="text-cyan-400 font-bold animate-fade-in">بدأنا بأحلام كبيرة</span> وعزيمة لا تنكسر...
                   <br className="hidden md:block" />
                   واجهنا التحديات بـ<span className="text-purple-400 font-bold animate-fade-in" style={{ animationDelay: '0.5s' }}>الصبر والإبداع</span>
@@ -65,7 +65,7 @@ const InspirationSection = () => {
               </div>
               
               <div className="bg-gradient-to-r from-slate-800/50 to-purple-900/50 backdrop-blur-sm rounded-2xl p-10 border border-purple-400/30">
-                <blockquote className="text-2xl md:text-3xl italic text-purple-300 font-medium mb-6 text-center">
+                <blockquote className="text-2xl md:text-3xl italic text-purple-300 font-medium mb-6">
                   "الإبداع لا يحدث بالصدفة، بل هو نتيجة العمل الجاد والرؤية الواضحة والإيمان بالمستحيل"
                 </blockquote>
                 <div className="flex justify-center space-x-1 rtl:space-x-reverse">
@@ -80,7 +80,7 @@ const InspirationSection = () => {
           {/* Journey phases with modern cards */}
           <div className="mb-20">
             <div className="text-center mb-16">
-              <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-6 text-center">
+              <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-6">
                 مراحل رحلتنا المذهلة
               </h3>
               <div className="w-32 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto rounded-full"></div>

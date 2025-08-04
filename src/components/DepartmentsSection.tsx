@@ -150,11 +150,11 @@ const DepartmentsSection = () => {
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
           </div>
           
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight text-center">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
             أقسامنا <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">التقنية</span>
           </h2>
           
-          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 text-center">
+          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
             نقدم خدمات متكاملة عبر أقسام متخصصة تعمل بأحدث التقنيات العالمية والذكاء الاصطناعي المتقدم
           </p>
           
@@ -299,7 +299,7 @@ const DepartmentsSection = () => {
 
         {/* Technology Partners */}
         <div className="text-center mb-16">
-          <h3 className="text-2xl font-bold text-white mb-8 flex items-center justify-center gap-3 text-center">
+          <h3 className="text-2xl font-bold text-white mb-8 flex items-center justify-center gap-3">
             <ExternalLink className="w-6 h-6 text-purple-400" />
             شركاؤنا التقنيون العالميون
           </h3>

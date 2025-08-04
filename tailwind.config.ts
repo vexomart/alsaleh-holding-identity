@@ -12,23 +12,12 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: {
-        DEFAULT: "1rem",
-        sm: "2rem",
-        lg: "4rem",
-        xl: "5rem",
-        "2xl": "6rem",
-      },
+      padding: "2rem",
       screens: {
         "2xl": "1400px",
       },
     },
     extend: {
-      screens: {
-        'xs': '475px',
-        '3xl': '1600px',
-        '4xl': '1920px',
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -160,54 +149,6 @@ export default {
         '.shadow-glow': {
           'box-shadow': '0 0 30px rgba(59, 130, 246, 0.3)',
         },
-        '.responsive-padding': {
-          '@apply px-4 sm:px-6 lg:px-8 xl:px-12': {},
-        },
-        '.responsive-margin': {
-          '@apply mx-4 sm:mx-6 lg:mx-8 xl:mx-12': {},
-        },
-        '.responsive-text-xs': {
-          '@apply text-xs sm:text-sm': {},
-        },
-        '.responsive-text-sm': {
-          '@apply text-sm sm:text-base': {},
-        },
-        '.responsive-text-base': {
-          '@apply text-base sm:text-lg': {},
-        },
-        '.responsive-text-lg': {
-          '@apply text-lg sm:text-xl lg:text-2xl': {},
-        },
-        '.responsive-text-xl': {
-          '@apply text-xl sm:text-2xl lg:text-3xl': {},
-        },
-        '.responsive-text-2xl': {
-          '@apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl': {},
-        },
-        '.responsive-text-3xl': {
-          '@apply text-3xl sm:text-4xl lg:text-5xl xl:text-6xl': {},
-        },
-        '.responsive-space-y': {
-          '@apply space-y-4 sm:space-y-6 lg:space-y-8': {},
-        },
-        '.responsive-space-x': {
-          '@apply space-x-4 sm:space-x-6 lg:space-x-8': {},
-        },
-        '.responsive-gap': {
-          '@apply gap-4 sm:gap-6 lg:gap-8': {},
-        },
-        '.responsive-p': {
-          '@apply p-4 sm:p-6 lg:p-8': {},
-        },
-        '.responsive-py': {
-          '@apply py-8 sm:py-12 lg:py-16 xl:py-20': {},
-        },
-        '.responsive-grid-cols': {
-          '@apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': {},
-        },
-        '.responsive-grid-cols-2': {
-          '@apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3': {},
-        },
         '.delay-100': {
           'animation-delay': '100ms',
         },
@@ -222,15 +163,6 @@ export default {
         },
         '.delay-500': {
           'animation-delay': '500ms',
-        },
-        '.delay-600': {
-          'animation-delay': '600ms',
-        },
-        '.delay-700': {
-          'animation-delay': '700ms',
-        },
-        '.delay-800': {
-          'animation-delay': '800ms',
         },
       });
     }

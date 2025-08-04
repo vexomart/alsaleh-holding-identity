@@ -263,11 +263,11 @@ const PaymentMethodsSection = () => {
             <Gem className="w-5 h-5 text-white" />
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8 leading-tight text-center">
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
             منصة <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">الدفع</span> الذكية
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed text-center">
+          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
             تجربة دفع استثنائية مع أحدث التقنيات المالية وخيارات تقسيط مرنة ومبتكرة
             <br />
             <span className="text-lg text-gray-500 dark:text-gray-400">مدعومة بأعلى معايير الأمان والحماية العالمية</span>
@@ -328,7 +328,7 @@ const PaymentMethodsSection = () => {
                   <CreditCard className="w-8 h-8 text-blue-600" />
                   طرق الدفع الفورية
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-center">
+                <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                   خيارات دفع سريعة وآمنة للحصول على خدماتك فوراً
                 </p>
               </div>
@@ -375,7 +375,7 @@ const PaymentMethodsSection = () => {
                   <Clock className="w-8 h-8 text-purple-600" />
                   برامج التقسيط المتطورة
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-center">
+                <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                   اشتر الآن وادفع لاحقاً مع أفضل منصات التمويل في المنطقة
                 </p>
               </div>

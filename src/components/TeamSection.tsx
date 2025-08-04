@@ -97,10 +97,10 @@ const TeamSection = () => {
             <Users className="w-6 h-6 text-primary animate-pulse" />
             <span className="text-sm font-medium text-primary">فريق الخبراء • قادة التميز</span>
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight text-center">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
             فريق <span className="text-gradient-primary">النخبة</span>
           </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed text-center">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
             نخبة من أفضل الخبراء والقادة الذين يقودون رؤيتنا نحو مستقبل التقنية والابتكار العالمي
           </p>
         </div>
@@ -149,14 +149,14 @@ const TeamSection = () => {
                         {member.department}
                       </Badge>
                       
-                      <div className="space-y-2 text-center">
+                      <div className="space-y-2">
                         <h3 className="text-xl font-bold text-primary mb-1 group-hover:text-gradient-primary transition-all duration-500 group-hover:scale-105 transform-gpu">
                           {member.name}
                         </h3>
                         <p className="text-sm text-secondary/80 font-medium mb-3 group-hover:text-secondary transition-colors duration-300">
                           {member.nameEn}
                         </p>
-                        <div className="border-l-4 border-gradient-primary pl-3 space-y-1 text-right">
+                        <div className="border-l-4 border-gradient-primary pl-3 space-y-1">
                           <p className="text-base font-bold text-primary/90 group-hover:text-primary transition-colors duration-300">
                             {member.position}
                           </p>
@@ -213,7 +213,7 @@ const TeamSection = () => {
         <div className="text-center bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-3xl p-12 animate-fade-in border border-white/10 shadow-2xl">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Sparkles className="w-8 h-8 text-primary animate-pulse" />
-            <h3 className="text-4xl font-bold text-primary text-center">فريق النخبة المتميز</h3>
+            <h3 className="text-4xl font-bold text-primary">فريق النخبة المتميز</h3>
             <Zap className="w-8 h-8 text-secondary animate-bounce" />
           </div>
           

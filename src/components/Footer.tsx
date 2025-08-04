@@ -287,7 +287,7 @@ const Footer = () => {
                 <Globe className="w-5 h-5 text-blue-400 animate-pulse" />
                 <span className="text-xl font-bold text-white">تواجدنا العالمي</span>
               </div>
-              <p className="text-slate-300 max-w-2xl mx-auto text-center">
+              <p className="text-slate-300 max-w-2xl mx-auto">
                 نخدم عملائنا من خلال شبكة مكاتبنا المنتشرة عبر ثلاث قارات
               </p>
             </div>

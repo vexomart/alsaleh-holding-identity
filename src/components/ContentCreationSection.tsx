@@ -187,7 +187,7 @@ const ContentCreationSection = () => {
             <span className="text-white font-medium">صناعة المحتوى</span>
           </div>
           
-          <h2 className="text-4xl lg:text-6xl font-bold mb-6 text-center">
+          <h2 className="text-4xl lg:text-6xl font-bold mb-6">
             <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
               نصنع الكلمات
             </span>
@@ -197,7 +197,7 @@ const ContentCreationSection = () => {
             </span>
           </h2>
           
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed text-center">
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             فريقنا المتخصص في صناعة المحتوى يقدم نصوصاً احترافية تلهم وتؤثر وتحقق أهدافك التسويقية والإعلامية
           </p>
         </div>
@@ -238,12 +238,12 @@ const ContentCreationSection = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-violet-300 transition-colors duration-300 text-center">
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-violet-300 transition-colors duration-300">
                     {service.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-slate-300 mb-6 leading-relaxed text-center">
+                  <p className="text-slate-300 mb-6 leading-relaxed">
                     {service.description}
                   </p>
 
