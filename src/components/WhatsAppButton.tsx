@@ -2,8 +2,30 @@ import { MessageCircle } from "lucide-react";
 
 const WhatsAppButton = () => {
   const handleWhatsAppClick = () => {
-    const phoneNumber = "966555812567"; // رقم الواتساب بدون الصفر والمع رمز البلد
-    const message = encodeURIComponent("السلام عليكم، أرغب في الاستفسار عن خدماتكم");
+    const phoneNumber = "966555812567";
+    const message = encodeURIComponent(`🌟 مرحبا بك في شركة علي صالح الشهري القابضة
+
+👋 السلام عليكم ورحمة الله وبركاته
+
+📞 تواصل سريع
+═══════════════════
+
+📌 نوع الاستفسار:
+🎯 استفسار عام عن الخدمات
+💡 طلب استشارة مجانية
+📋 معرفة العروض الحالية
+🚀 بدء مشروع جديد
+
+🤔 ما يهمني معرفته:
+• تفاصيل الخدمات المتاحة
+• الأسعار والعروض الحالية
+• مدة التنفيذ
+• نماذج من الأعمال السابقة
+
+💬 أريد التحدث مع أحد الخبراء
+
+للرد على: info@alialshehriholding.com
+شكرا لكم 🙏`);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };

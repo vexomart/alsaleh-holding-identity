@@ -1,7 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, Star, Zap, Gift, ArrowRight, Timer, CheckCircle, Phone } from "lucide-react";
+import { Clock, Star, Zap, Gift, ArrowRight, Timer, CheckCircle, Phone, Send } from "lucide-react";
+import OfferRequestForm from "./OfferRequestForm";
 
 const currentOffers = [
   {
@@ -208,6 +209,20 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
 
                   {/* CTA Buttons */}
                   <div className="space-y-3 pt-4">
+                    <OfferRequestForm
+                      offer={offer}
+                      trigger={
+                        <Button 
+                          className={`w-full group/btn bg-gradient-to-r ${offer.color} hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg py-6`}
+                          size="lg"
+                        >
+                          <Send className="w-5 h-5 ml-2" />
+                          طلب العرض الآن
+                          <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
+                        </Button>
+                      }
+                    />
+                    
                     <a 
                       href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`🌟 مرحبا بك في شركة علي صالح الشهري القابضة
 
@@ -230,35 +245,7 @@ ${offer.features.map((feature: string, index: number) => `${index + 1}. ${featur
 • استشارة مجانية
 • بداية سريعة
 
-💡 اريد الحصول على هذا العرض!
-
-شكرا لكم 🙏`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full inline-block"
-                    >
-                      <Button 
-                        className={`w-full group/btn bg-gradient-to-r ${offer.color} hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg py-6`}
-                        size="lg"
-                      >
-                        <Phone className="w-5 h-5 ml-2" />
-                        احصل على العرض الآن
-                        <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
-                      </Button>
-                    </a>
-                    
-                    <a 
-                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`💭 استفسار سريع
-
-📌 تفاصيل الاستفسار:
-🏷️ العرض: ${offer.title}
-💰 السعر: ${offer.currentPrice} ريال
-❓ اريد تفاصيل اكثر
-
-🤔 اسئلتي:
-• كم مدة التنفيذ؟
-• هل يمكن التعديل؟
-• ما طريقة الدفع؟
+💡 اريد التواصل السريع عبر الواتساب!
 
 شكرا لكم 🙏`)}`}
                       target="_blank"
@@ -267,10 +254,12 @@ ${offer.features.map((feature: string, index: number) => `${index + 1}. ${featur
                     >
                       <Button 
                         variant="outline" 
-                        className="w-full hover:bg-gray-50 transition-all duration-300"
+                        className="w-full hover:bg-gray-50 transition-all duration-300 group/btn"
                         size="lg"
                       >
-                        استفسار سريع
+                        <Phone className="w-5 h-5 ml-2" />
+                        تواصل واتساب سريع
+                        <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>
                     </a>
                   </div>
