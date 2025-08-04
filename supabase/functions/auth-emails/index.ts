@@ -24,7 +24,68 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { to, subject, type, data, otp, token, redirectUrl }: EmailRequest = await req.json();
+    const body = await req.json();
+    console.log("Received webhook payload:", body);
+    
+    // Handle Supabase auth webhook format
+    if (body.user && body.user.email) {
+      // This is a Supabase auth webhook
+      const user = body.user;
+      const emailData = body.email_data || {};
+      
+      // Determine email type based on webhook data
+      let type = 'welcome';
+      let subject = 'مرحباً بك في النظام';
+      
+      if (emailData.email_action_type === 'signup') {
+        type = 'welcome';
+        subject = 'مرحباً بك في شركة آل الشهري القابضة';
+      } else if (emailData.email_action_type === 'recovery') {
+        type = 'password_reset';
+        subject = 'إعادة تعيين كلمة المرور';
+      } else if (emailData.email_action_type === 'invite') {
+        type = 'welcome';
+        subject = 'دعوة للانضمام إلى النظام';
+      }
+      
+      const { to, subject: customSubject, type: customType, data, otp, token, redirectUrl } = {
+        to: user.email,
+        subject,
+        type,
+        data: {
+          name: user.user_metadata?.full_name || user.email?.split('@')[0],
+          email: user.email,
+          dashboardUrl: emailData.redirect_to || `${req.url.split('/functions')[0]}/dashboard`
+        },
+        otp: emailData.token,
+        token: emailData.token_hash,
+        redirectUrl: emailData.redirect_to
+      };
+      
+      // Continue with normal email processing
+      await sendEmail({ to, subject, type, data, otp, token, redirectUrl });
+      
+    } else {
+      // Handle direct API calls
+      const { to, subject, type, data, otp, token, redirectUrl }: EmailRequest = body;
+      await sendEmail({ to, subject, type, data, otp, token, redirectUrl });
+    }
+    
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+    
+  } catch (error: any) {
+    console.error("Error in auth-emails function:", error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+  }
+};
+
+async function sendEmail({ to, subject, type, data, otp, token, redirectUrl }: EmailRequest) {
 
     let html = '';
     
@@ -316,21 +377,13 @@ const handler = async (req: Request): Promise<Response> => {
       to: [to],
       subject,
       html,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8'
+      }
     });
 
     console.log("Email sent successfully:", emailResponse);
-
-    return new Response(JSON.stringify(emailResponse), {
-      status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders },
-    });
-  } catch (error: any) {
-    console.error("Error sending email:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
-  }
-};
+    return emailResponse;
+}
 
 serve(handler);
