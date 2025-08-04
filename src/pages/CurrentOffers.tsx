@@ -1,3 +1,6 @@
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +15,11 @@ import {
   Target,
   Send,
   MessageCircle,
-  Phone
+  Phone,
+  Timer,
+  Rocket,
+  Crown,
+  Award
 } from "lucide-react";
 import OfferRequestForm from "@/components/OfferRequestForm";
 
@@ -20,244 +27,331 @@ const currentOffers = [
   {
     id: 1,
     title: "عرض الموقع الاحترافي الكامل",
-    description: "تصميم وتطوير موقع إلكتروني احترافي متكامل مع لوحة تحكم إدارية",
+    description: "تصميم وتطوير موقع إلكتروني احترافي متكامل مع لوحة تحكم إدارية وتحسين محركات البحث",
     originalPrice: "15000",
     currentPrice: "8500",
     discount: "43%",
     timeLeft: "14 يوم",
     features: [
-      "تصميم مخصص وفريد",
+      "تصميم مخصص وفريد احترافي",
       "استضافة مجانية لسنة كاملة",
-      "شهادة SSL مجانية",
-      "دعم فني 24/7",
+      "شهادة SSL مجانية للحماية",
+      "دعم فني 24/7 متواصل",
       "تحسين محركات البحث SEO",
-      "نظام إدارة المحتوى",
-      "تصميم متجاوب للجوال",
+      "نظام إدارة المحتوى المتقدم",
+      "تصميم متجاوب للجوال والتابلت",
       "ربط وسائل التواصل الاجتماعي"
     ],
     badge: "الأكثر طلباً",
     icon: Zap,
-    color: "text-blue-600",
-    bgGradient: "from-blue-50 to-indigo-50"
+    color: "from-blue-500 to-indigo-600",
+    bgGradient: "from-blue-50 to-indigo-100",
+    glowColor: "blue-500/30"
   },
   {
     id: 2,
     title: "باقة التسويق الرقمي المتكاملة",
-    description: "خطة تسويق رقمي شاملة لزيادة المبيعات والوصول للعملاء المستهدفين",
+    description: "خطة تسويق رقمي شاملة لزيادة المبيعات والوصول للعملاء المستهدفين مع حملات إعلانية فعالة",
     originalPrice: "12000",
     currentPrice: "7200",
     discount: "40%",
     timeLeft: "21 يوم",
     features: [
-      "استراتيجية تسويق مخصصة",
+      "استراتيجية تسويق مخصصة لعملك",
       "إدارة حسابات التواصل الاجتماعي",
-      "حملات إعلانية مدفوعة",
-      "تحليل وتقارير مفصلة",
-      "تصميم محتوى إبداعي",
-      "استهداف دقيق للجمهور",
-      "تحسين معدل التحويل",
-      "دعم واستشارة مستمرة"
+      "حملات إعلانية مدفوعة احترافية",
+      "تحليل وتقارير مفصلة شهرية",
+      "تصميم محتوى إبداعي جذاب",
+      "استهداف دقيق للجمهور المهتم",
+      "تحسين معدل التحويل ROI",
+      "دعم واستشارة تسويقية مستمرة"
     ],
     badge: "عرض محدود",
     icon: Target,
-    color: "text-green-600",
-    bgGradient: "from-green-50 to-emerald-50"
+    color: "from-green-500 to-emerald-600",
+    bgGradient: "from-green-50 to-emerald-100",
+    glowColor: "green-500/30"
   },
   {
     id: 3,
     title: "حزمة الهوية البصرية الشاملة",
-    description: "تصميم هوية بصرية متكاملة تعكس قيم وشخصية علامتك التجارية",
+    description: "تصميم هوية بصرية متكاملة تعكس قيم وشخصية علامتك التجارية مع جميع المطبوعات",
     originalPrice: "8000",
     currentPrice: "4800",
     discount: "40%",
     timeLeft: "10 أيام",
     features: [
-      "تصميم الشعار الاحترافي",
-      "دليل الهوية البصرية",
-      "تصميم البطاقات التجارية",
+      "تصميم الشعار الاحترافي المميز",
+      "دليل الهوية البصرية الكامل",
+      "تصميم البطاقات التجارية الأنيقة",
       "تصميم الخطابات الرسمية",
-      "قوالب وسائل التواصل",
+      "قوالب وسائل التواصل الاجتماعي",
       "تصميم اللافتات والإعلانات",
-      "ملفات بجودة عالية",
-      "حقوق الملكية الكاملة"
+      "ملفات بجودة عالية للطباعة",
+      "حقوق الملكية الكاملة لك"
     ],
     badge: "توفير 40%",
     icon: Sparkles,
-    color: "text-purple-600",
-    bgGradient: "from-purple-50 to-violet-50"
+    color: "from-purple-500 to-violet-600",
+    bgGradient: "from-purple-50 to-violet-100",
+    glowColor: "purple-500/30"
   }
 ];
 
 const CurrentOffers = () => {
-  const whatsappNumber = "966555812567";
-
-  const openWhatsApp = (offerTitle: string, price: string, originalPrice: string, discount: string, timeLeft: string, features: string[]) => {
-    const featuresList = features.join('\n• ');
-    const message = `🎯 مرحباً، أريد الاستفسار عن العرض التالي:
-
-📋 العرض: ${offerTitle}
-💰 السعر الحالي: ${price} ريال (بدلاً من ${originalPrice} ريال)
-🏷️ نسبة الخصم: ${discount}
-⏰ الوقت المتبقي: ${timeLeft}
-
-✅ المميزات المشمولة:
-• ${featuresList}
-
-🤝 أرغب في معرفة المزيد من التفاصيل والبدء في هذا العرض.
-
-شكراً لكم! 🌟`;
-
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 pt-24 pb-16">
-      {/* Header Section */}
-      <div className="container mx-auto px-4 mb-16">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-blue-500/10 rounded-full mb-4">
-            <Gift className="w-5 h-5 text-primary" />
-            <span className="text-primary font-medium">عروض لفترة محدودة</span>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+      <Navigation />
+      
+      {/* Floating Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-40 right-40 w-80 h-80 bg-gradient-to-r from-purple-400/15 to-pink-400/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-40 left-40 w-96 h-96 bg-gradient-to-r from-green-400/10 to-blue-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-20 right-20 w-72 h-72 bg-gradient-to-r from-orange-400/20 to-red-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s' }}></div>
+      </div>
+
+      <main className="relative z-10 pt-24 pb-16">
+        <div className="container mx-auto px-4">
+          
+          {/* Hero Header */}
+          <div className="text-center mb-16 animate-fade-in">
+            <div className="relative inline-block mb-8">
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
+              <div className="relative bg-gradient-to-r from-red-500 to-orange-500 text-white px-8 py-4 rounded-full shadow-xl">
+                <div className="flex items-center gap-3">
+                  <Timer className="w-6 h-6 animate-spin" />
+                  <span className="text-xl font-bold">عروض محدودة الوقت</span>
+                  <Crown className="w-6 h-6 animate-bounce" />
+                </div>
+              </div>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-slate-800 via-blue-600 to-indigo-600 bg-clip-text text-transparent animate-fade-in">
+              العروض الحالية المميزة
+            </h1>
+            
+            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              استفد من عروضنا الحصرية واحصل على أفضل الخدمات التقنية بأسعار استثنائية مع ضمان الجودة العالمية
+            </p>
+
+            {/* Stats Counter */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/50">
+                <div className="text-3xl font-black text-blue-600 mb-2">+500</div>
+                <div className="text-gray-600 font-medium">عميل سعيد</div>
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/50">
+                <div className="text-3xl font-black text-green-600 mb-2">+1000</div>
+                <div className="text-gray-600 font-medium">مشروع مكتمل</div>
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/50">
+                <div className="text-3xl font-black text-purple-600 mb-2">%99</div>
+                <div className="text-gray-600 font-medium">نسبة الرضا</div>
+              </div>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            العروض الحالية
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            اغتنم الفرصة واحصل على أفضل خدماتنا بأسعار مميزة لفترة محدودة
-          </p>
-        </div>
 
-        {/* Offers Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {currentOffers.map((offer, index) => {
-            const IconComponent = offer.icon;
-            return (
-              <Card 
-                key={offer.id} 
-                className={`relative overflow-hidden bg-gradient-to-br ${offer.bgGradient} border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group`}
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                {/* Floating Badge */}
-                <div className="absolute top-4 left-4 z-10">
-                  <Badge className="bg-red-500 text-white px-3 py-1 text-xs font-bold">
-                    {offer.badge}
-                  </Badge>
-                </div>
-
-                {/* Time Left Indicator */}
-                <div className="absolute top-4 right-4 z-10">
-                  <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-gray-700">
-                    <Clock className="w-3 h-3 text-red-500" />
-                    <span>متبقي {offer.timeLeft}</span>
+          {/* Offers Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+            {currentOffers.map((offer, index) => {
+              const IconComponent = offer.icon;
+              return (
+                <Card 
+                  key={offer.id} 
+                  className={`relative overflow-hidden group hover:scale-105 transition-all duration-700 border-0 shadow-2xl hover:shadow-3xl bg-white/90 backdrop-blur-lg animate-fade-in hover-scale`}
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                  {/* Glow Effect */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${offer.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-3xl blur-xl`}></div>
+                  
+                  {/* Floating Particles */}
+                  <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                    <div className="absolute top-4 right-4 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
+                    <div className="absolute top-8 left-6 w-1 h-1 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+                    <div className="absolute bottom-8 right-8 w-1.5 h-1.5 bg-green-400 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
                   </div>
-                </div>
 
-                <CardHeader className="text-center pt-16 pb-4">
-                  <div className={`w-16 h-16 mx-auto rounded-2xl bg-white/80 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <IconComponent className={`w-8 h-8 ${offer.color}`} />
-                  </div>
-                  <CardTitle className="text-xl font-bold text-gray-900 mb-2">
-                    {offer.title}
-                  </CardTitle>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {offer.description}
-                  </p>
-                </CardHeader>
-
-                <CardContent className="space-y-6">
-                  {/* Pricing */}
-                  <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-4">
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="text-2xl font-bold text-gray-900">{offer.currentPrice} ريال</span>
-                      <Badge variant="destructive" className="text-xs">
-                        خصم {offer.discount}
+                  {/* Gradient Background */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${offer.bgGradient} opacity-30 group-hover:opacity-50 transition-opacity duration-500`}></div>
+                  
+                  {/* Premium Badge */}
+                  <div className="absolute -top-3 -right-3 z-20">
+                    <div className="relative">
+                      <Badge className={`bg-gradient-to-r ${offer.color} text-white px-6 py-3 text-sm font-bold shadow-2xl transform rotate-12 group-hover:rotate-6 transition-transform duration-300 animate-bounce`}>
+                        <Award className="w-4 h-4 mr-2" />
+                        {offer.badge}
                       </Badge>
                     </div>
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="text-lg text-gray-500 line-through">{offer.originalPrice} ريال</span>
-                      <span className="text-green-600 font-semibold text-sm">
-                        وفر {parseInt(offer.originalPrice) - parseInt(offer.currentPrice)} ريال
-                      </span>
+                  </div>
+
+                  {/* Time Countdown */}
+                  <div className="absolute top-6 left-6 z-20">
+                    <div className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      <span>متبقي {offer.timeLeft}</span>
                     </div>
                   </div>
 
-                  {/* Features */}
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-gray-900 text-sm mb-3">ما يشمله العرض:</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {offer.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700 text-sm">{feature}</span>
+                  <CardHeader className="pt-20 pb-6 relative z-10">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div 
+                        className={`p-4 rounded-2xl bg-gradient-to-br ${offer.color} shadow-xl hover:scale-110 transition-transform duration-300 group-hover:shadow-2xl relative`}
+                      >
+                        <div className={`absolute inset-0 bg-gradient-to-r ${offer.color} rounded-2xl blur-md opacity-50 animate-pulse`}></div>
+                        <IconComponent className="w-8 h-8 text-white relative z-10" />
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="text-2xl mb-3 text-right group-hover:text-blue-600 transition-colors duration-300">
+                          {offer.title}
+                        </CardTitle>
+                        <p className="text-base leading-relaxed text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                          {offer.description}
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="space-y-6 relative z-10">
+                    {/* Enhanced Pricing */}
+                    <div className="bg-gradient-to-r from-white via-gray-50 to-white rounded-3xl p-8 relative overflow-hidden border-2 border-gray-100 group-hover:border-blue-200 transition-colors duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 animate-pulse"></div>
+                      <div className="relative z-10 text-center">
+                        <div className="flex items-center justify-center gap-4 mb-4">
+                          <span className={`text-4xl font-black bg-gradient-to-r ${offer.color} bg-clip-text text-transparent`}>
+                            {offer.currentPrice} ر.س
+                          </span>
+                          <Badge className="bg-red-500 text-white px-4 py-2 text-lg font-bold animate-bounce shadow-xl">
+                            خصم {offer.discount}
+                          </Badge>
                         </div>
-                      ))}
+                        <div className="flex items-center justify-center gap-3 mb-3">
+                          <span className="text-2xl text-gray-400 line-through font-medium">
+                            {offer.originalPrice} ر.س
+                          </span>
+                          <div className="text-green-600 font-bold text-lg bg-green-50 px-3 py-1 rounded-full">
+                            وفر {parseInt(offer.originalPrice) - parseInt(offer.currentPrice)} ريال
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Action Button */}
-                  <div className="pt-4">
-                    <OfferRequestForm
-                      offer={offer}
-                      trigger={
-                        <Button 
-                          className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white font-bold py-4 text-lg hover:scale-105 transition-all duration-300"
-                        >
-                          <Send className="w-4 h-4 ml-2" />
-                          اطلب الآن
-                          <ArrowRight className="w-4 h-4 mr-2" />
-                        </Button>
-                      }
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                    {/* Enhanced Features */}
+                    <div className="space-y-3">
+                      <h4 className="font-bold text-xl text-center mb-6 flex items-center justify-center gap-2">
+                        <Sparkles className="w-6 h-6 text-yellow-500 animate-spin" />
+                        <span className="bg-gradient-to-r from-gray-700 to-blue-600 bg-clip-text text-transparent">مميزات العرض</span>
+                        <Star className="w-6 h-6 text-yellow-500 animate-pulse" />
+                      </h4>
+                      <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto">
+                        {offer.features.map((feature, idx) => (
+                          <div 
+                            key={idx} 
+                            className="flex items-start gap-3 p-3 rounded-xl hover:bg-blue-50 transition-all duration-200 group/feature hover:scale-105"
+                          >
+                            <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0 group-hover/feature:animate-bounce" />
+                            <span className="text-sm leading-relaxed group-hover/feature:text-blue-700 transition-colors duration-200">
+                              {feature}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
-        {/* Premium CTA Section */}
-        <div className="bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 rounded-3xl p-8 md:p-12 text-center text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,_rgba(255,255,255,0.1)_0%,_transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Star className="w-6 h-6 text-yellow-400 fill-current" />
-              <span className="text-yellow-400 font-semibold">عرض مخصص لك</span>
-              <Star className="w-6 h-6 text-yellow-400 fill-current" />
-            </div>
+                    {/* Enhanced CTA */}
+                    <div className="pt-6">
+                      <OfferRequestForm
+                        offer={offer}
+                        trigger={
+                          <Button 
+                            className={`w-full bg-gradient-to-r ${offer.color} hover:scale-105 transition-all duration-300 text-white font-bold py-6 text-lg rounded-2xl shadow-2xl hover:shadow-3xl relative overflow-hidden group/btn`}
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                            <div className="relative z-10 flex items-center justify-center gap-3">
+                              <Rocket className="w-5 h-5 animate-bounce" />
+                              <Send className="w-5 h-5" />
+                              اطلب الآن
+                              <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-2 transition-transform duration-300" />
+                              <Sparkles className="w-5 h-5 animate-spin" />
+                            </div>
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Enhanced Premium CTA */}
+          <div className="relative bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 rounded-3xl p-12 text-center text-white overflow-hidden shadow-2xl">
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,_rgba(255,255,255,0.1)_0%,_transparent_50%)]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,_rgba(59,130,246,0.1)_0%,_transparent_50%)]"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-indigo-600/10 animate-pulse"></div>
             
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              هل تحتاج عرض مخصص لمشروعك؟
-            </h2>
-            <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
-              تواصل معنا الآن واحصل على استشارة مجانية وعرض سعر مخصص يناسب احتياجاتك
-            </p>
+            {/* Floating Elements */}
+            <div className="absolute top-8 left-8 w-4 h-4 bg-yellow-400 rounded-full animate-ping"></div>
+            <div className="absolute top-16 right-16 w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
+            <div className="absolute bottom-8 left-16 w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
+            <div className="absolute bottom-16 right-8 w-3 h-3 bg-purple-400 rounded-full animate-ping"></div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-white text-gray-900 hover:bg-gray-100 font-semibold px-8 py-3"
-                onClick={() => window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('مرحباً، أريد الحصول على عرض مخصص لمشروعي')}`, '_blank')}
-              >
-                <MessageCircle className="w-5 h-5 ml-2" />
-                احصل على عرض مخصص
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-gray-900 font-semibold px-8 py-3"
-                asChild
-              >
-                <a href={`tel:+${whatsappNumber}`}>
-                  <Phone className="w-5 h-5 ml-2" />
-                  اتصل بنا الآن
-                </a>
-              </Button>
+            <div className="relative z-10">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <Crown className="w-8 h-8 text-yellow-400 animate-bounce" />
+                <span className="text-2xl font-bold text-yellow-400">عرض مخصص لك</span>
+                <Star className="w-8 h-8 text-yellow-400 animate-spin" />
+              </div>
+              
+              <h2 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-white via-blue-200 to-indigo-200 bg-clip-text text-transparent">
+                هل تحتاج عرض مخصص لمشروعك؟
+              </h2>
+              
+              <p className="text-xl mb-10 text-blue-100 max-w-3xl mx-auto leading-relaxed">
+                تواصل معنا الآن واحصل على استشارة مجانية وعرض سعر مخصص يناسب احتياجاتك مع خصومات حصرية تصل إلى 50%
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold px-10 py-6 text-xl rounded-2xl shadow-2xl hover:scale-105 transition-all duration-300 hover:shadow-blue-500/25 relative overflow-hidden group"
+                  onClick={() => window.open('https://wa.me/966555812567?text=' + encodeURIComponent('مرحباً، أريد الحصول على عرض مخصص لمشروعي 🚀'), '_blank')}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative z-10 flex items-center gap-3">
+                    <MessageCircle className="w-6 h-6 animate-bounce" />
+                    احصل على عرض مخصص
+                    <Rocket className="w-6 h-6 animate-pulse" />
+                  </div>
+                </Button>
+                
+                <Button 
+                  size="lg" 
+                  className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 font-bold px-10 py-6 text-xl rounded-2xl shadow-xl hover:scale-105 transition-all duration-300 relative overflow-hidden group"
+                  asChild
+                >
+                  <a href="tel:+966555812567">
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative z-10 flex items-center gap-3">
+                      <Phone className="w-6 h-6 animate-pulse" />
+                      اتصل بنا الآن
+                      <Award className="w-6 h-6 animate-bounce" />
+                    </div>
+                  </a>
+                </Button>
+              </div>
+              
+              <div className="mt-8 text-blue-200 text-lg">
+                📞 <span className="font-bold">0555812567</span> | 📧 <span className="font-bold">info@alialshehriholding.com</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
+
+      <Footer />
+      <WhatsAppButton />
     </div>
   );
 };
