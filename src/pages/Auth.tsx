@@ -81,13 +81,11 @@ export default function Auth() {
     const phone = formData.get('phone') as string;
     const company = formData.get('company') as string;
 
-    const redirectUrl = `${window.location.origin}/dashboard`;
-
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl,
+        emailRedirectTo: `${window.location.origin}/dashboard`,
         data: {
           full_name: `${firstName} ${lastName}`,
           phone,
@@ -100,42 +98,7 @@ export default function Auth() {
       setError(error.message);
     } else {
       setError(null);
-      
-      // Send welcome email
-      try {
-        await supabase.functions.invoke('auth-emails', {
-          body: {
-            to: email,
-            subject: "مرحباً بك في شركة الصالح القابضة",
-            type: 'welcome',
-            data: {
-              name: `${firstName} ${lastName}`,
-              dashboardUrl: `${window.location.origin}/dashboard`
-            }
-          }
-        });
-      } catch (emailError) {
-        console.error("Failed to send welcome email:", emailError);
-      }
-
-      // Send admin notification
-      try {
-        await supabase.functions.invoke('auth-emails', {
-          body: {
-            to: "admin@alsalehholding.com",
-            subject: "مستخدم جديد سجل في المنصة",
-            type: 'admin_notification',
-            data: {
-              name: `${firstName} ${lastName}`,
-              email: email
-            }
-          }
-        });
-      } catch (emailError) {
-        console.error("Failed to send admin notification:", emailError);
-      }
-      
-      alert('تم إنشاء الحساب بنجاح! يرجى تفعيل حسابك من خلال الرابط المرسل إلى بريدك الإلكتروني');
+      alert('تم إرسال رقم التحقق إلى بريدك الإلكتروني. يرجى التحقق من بريدك الإلكتروني وإدخال الرقم.');
     }
 
     setLoading(false);
