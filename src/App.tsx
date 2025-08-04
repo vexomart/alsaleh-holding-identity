@@ -48,6 +48,7 @@ import ContentCreation from "./pages/ContentCreation";
 import DesignSolutions from "./pages/DesignSolutions";
 import Subsidiaries from "./pages/Subsidiaries";
 import PaymentMethods from "./pages/PaymentMethods";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -112,6 +113,7 @@ const App = () => {
           <Route path="/design-solutions" element={<DesignSolutions />} />
           <Route path="/subsidiaries" element={<Subsidiaries />} />
           <Route path="/payment-methods" element={<PaymentMethods />} />
+          <Route path="/dashboard" element={<Dashboard />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
