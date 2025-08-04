@@ -57,6 +57,7 @@ const Navigation = () => {
 
   const othersItems = [
     { name: "الشراكات", href: "/partnerships", icon: Users },
+    { name: "التسويق بالعمولة", href: "/affiliate-marketing", icon: TrendingUp },
     { name: "طرق الدفع", href: "/payment-methods", icon: Phone },
     { name: "رحلة الإبداع والتميز", href: "/story", icon: Heart },
     { name: "قيمنا وثقافتنا", href: "/about", icon: TrendingUp },
