@@ -84,7 +84,12 @@ async function checkDomainAvailability(domain: string, extension: string) {
       const isSandbox = false; // Set to true for testing
       const baseUrl = isSandbox ? 'api.sandbox.namecheap.com' : 'api.namecheap.com';
       
-      const apiUrl = `https://${baseUrl}/xml.response?ApiUser=${namecheapApiUser}&ApiKey=${namecheapApiKey}&UserName=${namecheapUsername}&Command=namecheap.domains.check&ClientIp=127.0.0.1&DomainList=${fullDomain}`;
+      // Get real client IP from headers or use a whitelisted IP
+      const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+                      req.headers.get('x-real-ip') || 
+                      '13.235.247.105'; // Fallback to one of your whitelisted IPs
+      
+      const apiUrl = `https://${baseUrl}/xml.response?ApiUser=${namecheapApiUser}&ApiKey=${namecheapApiKey}&UserName=${namecheapUsername}&Command=namecheap.domains.check&ClientIp=${clientIp}&DomainList=${fullDomain}`;
       
       console.log(`Making Namecheap API call for: ${fullDomain}`);
       
@@ -344,7 +349,12 @@ async function getNamecheapExtensions() {
 
     // Real Namecheap API call to get TLD list
     try {
-      const apiUrl = `https://api.namecheap.com/xml.response?ApiUser=${namecheapApiUser}&ApiKey=${namecheapApiKey}&UserName=${namecheapUsername}&Command=namecheap.domains.gettldlist&ClientIp=127.0.0.1`;
+      // Get real client IP from headers or use a whitelisted IP
+      const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+                      req.headers.get('x-real-ip') || 
+                      '13.235.247.105'; // Fallback to one of your whitelisted IPs
+      
+      const apiUrl = `https://api.namecheap.com/xml.response?ApiUser=${namecheapApiUser}&ApiKey=${namecheapApiKey}&UserName=${namecheapUsername}&Command=namecheap.domains.gettldlist&ClientIp=${clientIp}`;
       
       console.log('Making Namecheap TLD API call...');
       
