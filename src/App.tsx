@@ -26,6 +26,7 @@ import PressReleases from "./pages/PressReleases";
 import UpcomingEvents from "./pages/UpcomingEvents";
 import AnnualReports from "./pages/AnnualReports";
 import FAQ from "./pages/FAQ";
+import DigitalContracts from "./pages/DigitalContracts";
 import ReadyProjects from "./pages/ReadyProjects";
 import ProjectDetails from "./pages/ProjectDetails";
 import AISolutions from "./pages/AISolutions";
@@ -96,6 +97,7 @@ const App = () => {
               <Route path="/upcoming-events" element={<UpcomingEvents />} />
               <Route path="/annual-reports" element={<AnnualReports />} />
               <Route path="/faq" element={<FAQ />} />
+              <Route path="/digital-contracts" element={<DigitalContracts />} />
               <Route path="/ready-projects" element={<ReadyProjects />} />
               <Route path="/project/:projectId" element={<ProjectDetails />} />
               <Route path="/ai-solutions" element={<AISolutions />} />

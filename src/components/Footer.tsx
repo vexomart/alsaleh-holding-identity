@@ -259,7 +259,8 @@ const Footer = () => {
     { name: "طريقة التعاقد", href: "/contracts", icon: FileText },
     { name: "شروط التعاقد", href: "/contracts#requirements", icon: Shield },
     { name: "أنواع العقود", href: "/contracts#types", icon: Building2 },
-    { name: "خطوات التعاقد", href: "/contracts#process", icon: Clock }
+    { name: "خطوات التعاقد", href: "/contracts#process", icon: Clock },
+    { name: "نظام التعاقد الإلكتروني", href: "/digital-contracts", icon: Zap }
   ];
 
   const contactInfo = [
