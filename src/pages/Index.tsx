@@ -92,17 +92,6 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Contact Section */}
-          <section id="contact" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-red-50/80 via-orange-50/60 to-amber-50/80 dark:from-red-950/20 dark:via-orange-950/10 dark:to-amber-950/20"></div>
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,_transparent_25%,_rgba(255,0,0,0.02)_25%,_rgba(255,0,0,0.02)_50%,_transparent_50%,_transparent_75%,_rgba(255,0,0,0.02)_75%)] bg-[length:30px_30px]"></div>
-            <div className="absolute top-5 left-5 sm:top-18 sm:left-18 w-28 h-28 sm:w-76 sm:h-76 bg-gradient-to-br from-red-200/40 to-orange-200/40 rounded-full blur-lg sm:blur-3xl animate-float"></div>
-            <div className="absolute bottom-5 right-5 sm:bottom-18 sm:right-18 w-32 h-32 sm:w-88 sm:h-88 bg-gradient-to-br from-amber-200/35 to-yellow-200/35 rounded-full blur-xl sm:blur-2xl animate-float-delayed"></div>
-            <div className="absolute top-2/3 left-1/3 w-16 h-16 sm:w-44 sm:h-44 bg-gradient-to-br from-orange-300/30 to-red-300/30 rounded-full blur-sm sm:blur-xl animate-pulse" style={{ animationDelay: '2.5s' }}></div>
-            <div className="relative z-10">
-              <ContactSection />
-            </div>
-          </section>
         </div>
       </main>
 
