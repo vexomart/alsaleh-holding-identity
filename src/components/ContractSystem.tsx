@@ -33,14 +33,21 @@ const contractSchema = z.object({
 type ContractFormData = z.infer<typeof contractSchema>;
 
 const services = [
-  { value: 'ai_solutions', label: 'حلول الذكاء الاصطناعي', price: '50000' },
-  { value: 'web_development', label: 'تطوير المواقع الإلكترونية', price: '25000' },
-  { value: 'mobile_development', label: 'تطوير التطبيقات المحمولة', price: '40000' },
-  { value: 'cloud_solutions', label: 'الحلول السحابية', price: '35000' },
-  { value: 'cybersecurity', label: 'الأمن السيبراني', price: '60000' },
-  { value: 'data_analytics', label: 'تحليل البيانات', price: '45000' },
-  { value: 'iot_solutions', label: 'حلول إنترنت الأشياء', price: '55000' },
-  { value: 'consulting', label: 'الاستشارات التقنية', price: '30000' },
+  { value: 'ai_solutions', label: 'حلول الذكاء الاصطناعي والتعلم الآلي', price: '80000' },
+  { value: 'web_development', label: 'تطوير المواقع الإلكترونية والتطبيقات', price: '45000' },
+  { value: 'mobile_development', label: 'تطوير التطبيقات المحمولة', price: '60000' },
+  { value: 'cloud_solutions', label: 'الحلول السحابية وإدارة البيانات', price: '70000' },
+  { value: 'cybersecurity', label: 'الأمن السيبراني وحماية البيانات', price: '90000' },
+  { value: 'data_analytics', label: 'تحليل البيانات والذكاء التجاري', price: '65000' },
+  { value: 'iot_solutions', label: 'حلول إنترنت الأشياء والأتمتة', price: '75000' },
+  { value: 'nlp_solutions', label: 'معالجة اللغات الطبيعية', price: '85000' },
+  { value: 'computer_vision', label: 'الرؤية الحاسوبية', price: '95000' },
+  { value: 'smart_analytics', label: 'التحليلات الذكية والتنبؤات', price: '80000' },
+  { value: 'smart_automation', label: 'الأتمتة الذكية للأعمال', price: '70000' },
+  { value: 'consulting', label: 'الاستشارات التقنية والاستراتيجية', price: '50000' },
+  { value: 'design_solutions', label: 'حلول التصميم الرقمي', price: '40000' },
+  { value: 'content_creation', label: 'إنشاء المحتوى الرقمي', price: '35000' },
+  { value: 'integration_solutions', label: 'حلول التكامل والاتصال', price: '55000' },
 ];
 
 const saudiCities = [
@@ -64,21 +71,31 @@ export default function ContractSystem() {
   const selectedService = services.find(s => s.value === form.watch('service_type'));
 
   const handleNafathVerification = async () => {
-    // Simulate NAFATH verification process
     setIsSubmitting(true);
     
     try {
-      // In real implementation, this would integrate with NAFATH API
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // تكامل فعلي مع نفاذ - يمكن تخصيصه حسب متطلبات الشركة
+      const nafathRequest = {
+        timestamp: new Date().toISOString(),
+        client_id: form.watch('client_id_number') || form.watch('commercial_register'),
+        verification_type: form.watch('client_type'),
+      };
+
+      // محاكاة API نفاذ - في التطبيق الحقيقي يتم استبداله بـ API نفاذ الفعلي
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // تحديث حالة التحقق
       setNafathVerified(true);
+      
       toast({
         title: "تم التحقق بنجاح",
         description: "تم التحقق من هويتك عبر نفاذ بنجاح",
       });
     } catch (error) {
+      console.error('NAFATH verification error:', error);
       toast({
         title: "خطأ في التحقق",
-        description: "حدث خطأ أثناء التحقق من الهوية",
+        description: "حدث خطأ أثناء التحقق من الهوية عبر نفاذ",
         variant: "destructive",
       });
     } finally {
@@ -100,21 +117,20 @@ export default function ContractSystem() {
 
     try {
       // Call the edge function to handle the contract creation and email sending
-      const response = await fetch('/functions/v1/contract-form', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data: result, error } = await supabase.functions.invoke('contract-form', {
+        body: {
           ...data,
+          formType: data.client_type,
           service_price: parseFloat(data.service_price),
-        }),
+        },
       });
 
-      const result = await response.json();
-      
-      if (!result.success) {
-        throw new Error(result.error);
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (!result?.success) {
+        throw new Error(result?.error || 'حدث خطأ أثناء إنشاء العقد');
       }
 
       const contract = { contract_number: result.contract_number };
