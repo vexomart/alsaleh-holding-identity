@@ -73,10 +73,10 @@ const ContactSection = () => {
             <MessageCircle className="w-6 h-6 text-primary animate-pulse" />
             <span className="text-sm font-medium text-primary">تواصل معنا • نحن في خدمتكم</span>
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight text-center">
             تواصل <span className="text-gradient-primary">معنا</span>
           </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed text-center">
             فريقنا المتخصص جاهز للإجابة على استفساراتكم ومناقشة الفرص الاستثمارية والتقنية المبتكرة
           </p>
         </div>
@@ -85,11 +85,11 @@ const ContactSection = () => {
           {/* Enhanced Contact Methods */}
           <div className="space-y-8">
             <div className="mb-8">
-              <h3 className="text-3xl font-bold text-primary mb-4 flex items-center gap-3">
+              <h3 className="text-3xl font-bold text-primary mb-4 flex items-center justify-center gap-3">
                 <Headphones className="w-8 h-8 animate-pulse" />
                 طرق التواصل المتقدمة
               </h3>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-lg text-center">
                 اختر الطريقة الأنسب لك للتواصل معنا والحصول على الدعم المطلوب
               </p>
             </div>
@@ -168,12 +168,12 @@ const ContactSection = () => {
                     <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-2xl flex items-center justify-center">
                       <Heart className="w-6 h-6 text-white animate-pulse" />
                     </div>
-                    <h3 className="text-3xl font-bold text-primary">
+                    <h3 className="text-3xl font-bold text-primary text-center">
                       شراكة نحو المستقبل
                     </h3>
                   </div>
                   
-                  <p className="text-lg leading-relaxed mb-6 text-muted-foreground">
+                  <p className="text-lg leading-relaxed mb-6 text-muted-foreground text-center">
                     نؤمن بقوة الشراكات الاستراتيجية في بناء مستقبل أفضل. إذا كنت تملك فكرة مبتكرة 
                     أو مشروع تقني واعد، فنحن نرحب بالتواصل معك لاستكشاف إمكانيات التعاون والاستثمار.
                   </p>
@@ -260,7 +260,7 @@ const ContactSection = () => {
         <div className="text-center bg-gradient-to-br from-white/15 to-white/10 backdrop-blur-md rounded-3xl p-12 animate-fade-in border border-white/10 shadow-2xl">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Shield className="w-8 h-8 text-primary animate-pulse" />
-            <h3 className="text-4xl font-bold text-primary">تواصل آمن وموثوق</h3>
+            <h3 className="text-4xl font-bold text-primary text-center">تواصل آمن وموثوق</h3>
             <Sparkles className="w-8 h-8 text-secondary animate-bounce" />
           </div>
           
