@@ -49,7 +49,6 @@ import DesignSolutions from "./pages/DesignSolutions";
 import Subsidiaries from "./pages/Subsidiaries";
 import PaymentMethods from "./pages/PaymentMethods";
 import Dashboard from "./pages/Dashboard";
-import { SidebarLayout } from "./components/SidebarLayout";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,58 +67,56 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <SidebarLayout>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/story" element={<Story />} />
-                <Route path="/team" element={<Team />} />
-                <Route path="/vision" element={<Vision />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/support" element={<Support />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/jobs" element={<JobApplication />} />
-                <Route path="/tech-investment" element={<TechInvestment />} />
-                <Route path="/development" element={<Development />} />
-                <Route path="/strategic-consulting" element={<StrategicConsulting />} />
-                <Route path="/integrated-solutions" element={<IntegratedSolutions />} />
-                <Route path="/training" element={<Training />} />
-                <Route path="/careers" element={<Careers />} />
-                <Route path="/job-application" element={<Careers />} />
-                <Route path="/development-program" element={<DevelopmentProgram />} />
-                <Route path="/company-news" element={<CompanyNews />} />
-                <Route path="/press-releases" element={<PressReleases />} />
-                <Route path="/upcoming-events" element={<UpcomingEvents />} />
-                <Route path="/annual-reports" element={<AnnualReports />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/ready-projects" element={<ReadyProjects />} />
-                <Route path="/project/:projectId" element={<ProjectDetails />} />
-                <Route path="/ai-solutions" element={<AISolutions />} />
-                <Route path="/iot-solutions" element={<IoTSolutions />} />
-                <Route path="/cloud-solutions" element={<CloudSolutions />} />
-                <Route path="/security-solutions" element={<SecuritySolutions />} />
-                <Route path="/nlp-solutions" element={<NLPSolutions />} />
-                <Route path="/computer-vision" element={<ComputerVision />} />
-                <Route path="/machine-learning" element={<MachineLearning />} />
-                <Route path="/smart-assistants" element={<SmartAssistants />} />
-                <Route path="/smart-analytics" element={<SmartAnalytics />} />
-                <Route path="/smart-automation" element={<SmartAutomation />} />
-                <Route path="/global-presence" element={<GlobalPresence />} />
-                <Route path="/tech-projects" element={<TechProjects />} />
-                <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
-                <Route path="/technologies" element={<Technologies />} />
-                <Route path="/current-offers" element={<CurrentOffers />} />
-                <Route path="/professional-services" element={<ProfessionalServices />} />
-                <Route path="/content-creation" element={<ContentCreation />} />
-                <Route path="/design-solutions" element={<DesignSolutions />} />
-                <Route path="/subsidiaries" element={<Subsidiaries />} />
-                <Route path="/payment-methods" element={<PaymentMethods />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </SidebarLayout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/story" element={<Story />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="/vision" element={<Vision />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/jobs" element={<JobApplication />} />
+              <Route path="/tech-investment" element={<TechInvestment />} />
+              <Route path="/development" element={<Development />} />
+              <Route path="/strategic-consulting" element={<StrategicConsulting />} />
+              <Route path="/integrated-solutions" element={<IntegratedSolutions />} />
+              <Route path="/training" element={<Training />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/job-application" element={<Careers />} />
+              <Route path="/development-program" element={<DevelopmentProgram />} />
+              <Route path="/company-news" element={<CompanyNews />} />
+              <Route path="/press-releases" element={<PressReleases />} />
+              <Route path="/upcoming-events" element={<UpcomingEvents />} />
+              <Route path="/annual-reports" element={<AnnualReports />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/ready-projects" element={<ReadyProjects />} />
+              <Route path="/project/:projectId" element={<ProjectDetails />} />
+              <Route path="/ai-solutions" element={<AISolutions />} />
+              <Route path="/iot-solutions" element={<IoTSolutions />} />
+              <Route path="/cloud-solutions" element={<CloudSolutions />} />
+              <Route path="/security-solutions" element={<SecuritySolutions />} />
+              <Route path="/nlp-solutions" element={<NLPSolutions />} />
+              <Route path="/computer-vision" element={<ComputerVision />} />
+              <Route path="/machine-learning" element={<MachineLearning />} />
+              <Route path="/smart-assistants" element={<SmartAssistants />} />
+              <Route path="/smart-analytics" element={<SmartAnalytics />} />
+              <Route path="/smart-automation" element={<SmartAutomation />} />
+              <Route path="/global-presence" element={<GlobalPresence />} />
+              <Route path="/tech-projects" element={<TechProjects />} />
+              <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
+          <Route path="/technologies" element={<Technologies />} />
+          <Route path="/current-offers" element={<CurrentOffers />} />
+          <Route path="/professional-services" element={<ProfessionalServices />} />
+          <Route path="/content-creation" element={<ContentCreation />} />
+          <Route path="/design-solutions" element={<DesignSolutions />} />
+          <Route path="/subsidiaries" element={<Subsidiaries />} />
+          <Route path="/payment-methods" element={<PaymentMethods />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </BrowserRouter>
         </div>
       </div>
