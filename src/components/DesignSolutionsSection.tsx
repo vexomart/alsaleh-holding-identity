@@ -12,11 +12,13 @@ import {
   Eye,
   Brush,
   Zap,
-  Target
+  Target,
+  Send
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import DesignServiceRequestForm from "./DesignServiceRequestForm";
 
 const DesignSolutionsSection = () => {
   const whatsappNumber = "966555812567";
@@ -268,20 +270,19 @@ const DesignSolutionsSection = () => {
                   </div>
 
                   {/* CTA */}
-                  <a 
-                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(service.whatsappMessage)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="w-full border-white/20 text-white hover:bg-white/10 hover:border-emerald-400 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-teal-500 group-hover:border-transparent"
-                    >
-                      <span>اطلب الخدمة</span>
-                      <ChevronRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-                    </Button>
-                  </a>
+                  <DesignServiceRequestForm
+                    trigger={
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="w-full border-white/20 text-white hover:bg-white/10 hover:border-emerald-400 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-teal-500 group-hover:border-transparent"
+                      >
+                        <Send className="w-4 h-4 ml-2" />
+                        <span>اطلب الخدمة</span>
+                        <ChevronRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                      </Button>
+                    }
+                  />
                 </div>
               </div>
             );
@@ -359,56 +360,45 @@ const DesignSolutionsSection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <DesignServiceRequestForm
+                trigger={
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold px-8 py-4 text-lg rounded-2xl shadow-xl border-0 hover:scale-105 transition-all duration-300"
+                  >
+                    <Send className="w-5 h-5 ml-2" />
+                    احجز استشارة مجانية
+                    <Sparkles className="w-5 h-5 mr-2" />
+                  </Button>
+                }
+              />
+              
               <a 
                 href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`السلام عليكم ورحمة الله وبركاته 👋
 
-🎨 أود حجز استشارة مجانية حول خدمات التصميم
+🎨 أود التواصل السريع حول خدمات التصميم
 
 📋 أود معرفة المزيد عن:
 • خدمات التصميم المتاحة
 • الأسعار والعروض الحالية  
 • أمثلة من أعمالكم السابقة
-• مدة تنفيذ المشاريع
+• الاستشارة المجانية
 
-متى يمكنني الحصول على الاستشارة؟
-
-شكراً لكم 🙏`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button 
-                  size="lg"
-                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 px-8 py-3 text-lg font-medium"
-                >
-                  احجز استشارة مجانية
-                  <ChevronRight className="w-5 h-5 mr-2" />
-                </Button>
-              </a>
-              
-              <a 
-                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`السلام عليكم ورحمة الله وبركاته 👋
-
-🖼️ أود الاطلاع على معرض أعمالكم في التصميم
-
-📋 أهتم برؤية:
-• أمثلة من الهويات التجارية المصممة
-• نماذج من الملفات التعريفية
-• أعمال الموشن جرافيك
-• صور من جلسات التصوير
-• فيديوهات ترويجية منتجة
-
-يرجى مشاركة المعرض أو الرابط للأعمال السابقة.
+💡 يمكنكم التواصل معي عبر:
+📞 الهاتف لمناقشة سريعة
+📧 الإيميل لإرسال التفاصيل
 
 شكراً لكم 🙏`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Button 
+                  size="lg" 
                   variant="outline" 
-                  size="lg"
-                  className="border-white/20 text-white hover:bg-white/10 px-8 py-3 text-lg"
+                  className="border-white/30 text-white hover:bg-white/10 hover:border-emerald-400 font-bold px-8 py-4 text-lg rounded-2xl transition-all duration-300 hover:scale-105"
                 >
-                  شاهد معرض الأعمال
+                  تواصل واتساب سريع
+                  <ChevronRight className="w-5 h-5 mr-2" />
                 </Button>
               </a>
             </div>
