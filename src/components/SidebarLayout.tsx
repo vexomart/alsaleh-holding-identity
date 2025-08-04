@@ -9,7 +9,7 @@ interface SidebarLayoutProps {
 export function SidebarLayout({ children }: SidebarLayoutProps) {
   return (
     <SidebarProvider defaultOpen={false}>
-      <div className="min-h-screen w-full bg-gray-50">
+      <div className="min-h-screen w-full bg-gray-50 overflow-x-hidden">
         {/* Mobile Header - visible only on mobile */}
         <header className="lg:hidden h-16 bg-white border-b border-gray-200 flex items-center px-4 sticky top-0 z-50 shadow-sm">
           <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
@@ -21,12 +21,12 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
           </div>
         </header>
 
-        <div className="flex h-screen lg:h-auto">
+        <div className="flex min-h-[calc(100vh-4rem)] lg:min-h-screen">
           {/* Sidebar */}
           <AppSidebar />
           
           {/* Main Content Area */}
-          <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 flex flex-col min-w-0 lg:ml-0">
             {/* Desktop Header - visible only on desktop */}
             <header className="hidden lg:flex h-16 bg-white border-b border-gray-200 items-center px-6 shadow-sm">
               <SidebarTrigger className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">

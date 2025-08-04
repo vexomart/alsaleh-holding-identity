@@ -84,9 +84,10 @@ export function AppSidebar() {
   return (
     <Sidebar
       className={`${collapsed ? "w-16" : "w-72"} bg-white border-r border-slate-200 transition-all duration-200 
-                  h-full lg:h-screen flex flex-col
+                  h-[calc(100vh-4rem)] lg:h-screen flex flex-col
                   fixed lg:relative top-16 lg:top-0 left-0 z-40 lg:z-auto
-                  lg:translate-x-0 ${collapsed ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'}`}
+                  ${collapsed ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'}
+                  overflow-hidden`}
       collapsible="icon"
     >
       {/* Header */}
@@ -110,7 +111,7 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="flex-1 overflow-y-auto px-4 py-6">
+      <SidebarContent className="flex-1 overflow-y-auto overscroll-y-contain px-4 py-6" style={{ WebkitOverflowScrolling: 'touch' }}>
         {/* التنقل الرئيسي */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-slate-500 font-medium text-xs uppercase tracking-wide mb-4 px-2">
