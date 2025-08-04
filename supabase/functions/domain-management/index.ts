@@ -56,13 +56,12 @@ async function checkDomainAvailability(domain: string, extension: string) {
     
     if (!namecheapApiUser || !namecheapApiKey || !namecheapUsername) {
       console.log('Namecheap credentials not configured, using realistic mock data');
+      console.log(`API User: ${namecheapApiUser ? 'Set' : 'Not Set'}`);
+      console.log(`API Key: ${namecheapApiKey ? 'Set' : 'Not Set'}`);
+      console.log(`Username: ${namecheapUsername ? 'Set' : 'Not Set'}`);
       
-      // Realistic availability simulation based on common patterns
-      const commonDomains = ['google', 'facebook', 'amazon', 'microsoft', 'apple', 'test', 'demo', 'example', 'sample'];
-      const isCommonDomain = commonDomains.some(common => domain.toLowerCase().includes(common));
-      
-      // Common domains are likely taken, others are more likely available
-      const available = !isCommonDomain && Math.random() > 0.4; // 60% chance for uncommon domains
+      // For testing - make most domains available
+      const available = Math.random() > 0.3; // 70% chance of being available
       
       console.log(`Mock check result for ${fullDomain}: ${available ? 'AVAILABLE' : 'TAKEN'}`);
       
