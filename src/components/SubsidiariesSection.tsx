@@ -51,8 +51,8 @@ const SubsidiariesSection = () => {
       category: "الخدمات التعليمية",
       established: "2018",
       icon: GraduationCap,
-      color: "from-blue-600 to-indigo-600",
-      website: "https://feklah-holding.com"
+      website: "https://feklah-holding.com",
+      isEducation: true
     }
   ];  // سيتم إضافة المزيد من الشركات
 
@@ -142,42 +142,121 @@ const SubsidiariesSection = () => {
     );
   };
 
+  const renderEducationCard = (company) => {
+    const IconComponent = company.icon;
+    
+    return (
+      <div className="relative">
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 rounded-3xl border-2 border-blue-200/60 hover:border-blue-400/80 transition-all duration-700 group">
+          {/* Educational Pattern Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%234f46e5%22%20fill-opacity%3D%220.08%22%3E%3Cpath%20d%3D%22M20%2010l10%2010-10%2010-10-10z%22/%3E%3C/g%3E%3C/svg%3E')] opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
+          
+          {/* Floating Elements Animation */}
+          <div className="absolute top-4 right-4 w-8 h-8 bg-blue-400/20 rounded-full animate-bounce delay-75"></div>
+          <div className="absolute top-8 left-6 w-6 h-6 bg-indigo-400/20 rounded-full animate-bounce delay-150"></div>
+          <div className="absolute bottom-6 right-8 w-4 h-4 bg-blue-500/20 rounded-full animate-bounce delay-300"></div>
+          
+          <CardContent className="relative z-10 p-10">
+            {/* Header Section */}
+            <div className="text-center mb-8">
+              <div className="relative inline-flex items-center justify-center w-24 h-24 mb-6">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-500"></div>
+                <div className="relative w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                  <IconComponent className="w-10 h-10 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                {/* Academic Symbols */}
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs">📚</div>
+              </div>
+              
+              <Badge className="bg-blue-500/20 text-blue-700 border-blue-300/50 px-4 py-2 mb-4">
+                {company.category}
+              </Badge>
+            </div>
+
+            {/* Company Info */}
+            <div className="space-y-4 mb-8 text-center">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-blue-800 transition-colors duration-300">
+                {company.name}
+              </h3>
+              <p className="text-xl font-medium text-blue-600">
+                {company.nameEn}
+              </p>
+              <p className="text-slate-600 leading-relaxed">
+                {company.description}
+              </p>
+            </div>
+
+            {/* Educational Features */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="text-center p-4 bg-white/60 rounded-2xl">
+                <BookOpen className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+                <p className="text-sm font-medium text-slate-700">مناهج تفاعلية</p>
+              </div>
+              <div className="text-center p-4 bg-white/60 rounded-2xl">
+                <Lightbulb className="w-8 h-8 text-indigo-500 mx-auto mb-2" />
+                <p className="text-sm font-medium text-slate-700">تقنيات حديثة</p>
+              </div>
+            </div>
+
+            {/* Established Badge */}
+            <div className="text-center mb-6">
+              <Badge variant="outline" className="bg-white/80 text-slate-600 border-slate-300 px-3 py-1">
+                تأسست {company.established}
+              </Badge>
+            </div>
+            
+            {/* CTA Button */}
+            <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 py-3 rounded-2xl shadow-lg hover:shadow-blue-500/30 transition-all duration-300 group/btn">
+              <a href={company.website} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:rotate-45 transition-transform duration-300" />
+                اكتشف الحلول التعليمية
+              </a>
+            </Button>
+          </CardContent>
+        </div>
+      </div>
+    );
+  };
+
   const renderCompanyCard = (company, index) => {
     const IconComponent = company.icon;
     
     return (
-      <Card className="group relative overflow-hidden bg-white/95 backdrop-blur-sm border-0 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-700 transform hover:scale-[1.02] animate-fade-in">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${company.color}`}></div>
-        
-        <CardContent className="p-8 relative z-10">
-          <div className="flex items-start justify-between mb-6">
-            <div className={`w-16 h-16 bg-gradient-to-br ${company.color} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-blue-500/20`}>
-              <IconComponent className="w-8 h-8 text-white" />
+      <div className="relative">
+        <div className="relative overflow-hidden bg-white/95 backdrop-blur-sm rounded-3xl border border-slate-200/60 hover:border-blue-300/60 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-700 transform hover:scale-[1.02] group">
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${company.color}`}></div>
+          
+          <CardContent className="p-8 relative z-10">
+            <div className="flex items-start justify-between mb-6">
+              <div className={`w-16 h-16 bg-gradient-to-br ${company.color} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
+                <IconComponent className="w-8 h-8 text-white" />
+              </div>
+              <Badge variant="secondary" className="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border-blue-200">
+                تأسست {company.established}
+              </Badge>
             </div>
-            <Badge variant="secondary" className="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border-blue-200">
-              تأسست {company.established}
-            </Badge>
-          </div>
-          
-          <div className="space-y-3 mb-6">
-            <h3 className="text-2xl font-bold text-slate-800 group-hover:text-blue-800 transition-colors duration-300">{company.name}</h3>
-            <p className="text-lg text-blue-600 font-medium">{company.nameEn}</p>
-            <Badge variant="outline" className="text-xs text-slate-600 border-slate-300">
-              {company.category}
-            </Badge>
-          </div>
-          
-          <p className="text-slate-600 text-sm leading-relaxed mb-8">{company.description}</p>
-          
-          <Button asChild className={`w-full bg-gradient-to-r ${company.color} text-white border-0 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300`}>
-            <a href={company.website} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="w-4 h-4 ml-2" />
-              زيارة الموقع الرسمي
-            </a>
-          </Button>
-        </CardContent>
-      </Card>
+            
+            <div className="space-y-3 mb-6">
+              <h3 className="text-2xl font-bold text-slate-800 group-hover:text-blue-800 transition-colors duration-300">{company.name}</h3>
+              <p className="text-lg text-blue-600 font-medium">{company.nameEn}</p>
+              <Badge variant="outline" className="text-xs text-slate-600 border-slate-300">
+                {company.category}
+              </Badge>
+            </div>
+            
+            <p className="text-slate-600 text-sm leading-relaxed mb-8">{company.description}</p>
+            
+            <Button asChild className={`w-full bg-gradient-to-r ${company.color} text-white border-0 hover:shadow-lg transition-all duration-300`}>
+              <a href={company.website} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-4 h-4 ml-2" />
+                زيارة الموقع الرسمي
+              </a>
+            </Button>
+          </CardContent>
+        </div>
+      </div>
     );
   };
 
@@ -202,7 +281,12 @@ const SubsidiariesSection = () => {
         <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
           {subsidiaries.map((company, index) => (
             <div key={index} style={{ animationDelay: `${index * 0.15}s` }}>
-              {company.isPortal ? renderPortalCard(company) : renderCompanyCard(company, index)}
+              {company.isPortal 
+                ? renderPortalCard(company) 
+                : company.isEducation 
+                  ? renderEducationCard(company)
+                  : renderCompanyCard(company, index)
+              }
             </div>
           ))}
         </div>
