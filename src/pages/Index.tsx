@@ -6,7 +6,7 @@ import StatsSection from "@/components/StatsSection";
 
 
 
-import DesignSolutionsSection from "@/components/DesignSolutionsSection";
+
 import DepartmentsSection from "@/components/DepartmentsSection";
 import SubsidiariesSection from "@/components/SubsidiariesSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
@@ -56,8 +56,6 @@ const Index = () => {
 
 
 
-          {/* Design Solutions Section */}
-          <DesignSolutionsSection />
 
           {/* Departments Section */}
           <section id="departments" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
