@@ -148,7 +148,7 @@ const HeroSection = () => {
         
         {/* Enhanced Main Title - Responsive */}
         <div className="mb-6 sm:mb-8 space-y-4 sm:space-y-6">
-          <div className="relative">
+          <div className="relative text-center">
             {/* Main Title with Better Visibility - Responsive Sizes */}
             <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl px-4 sm:px-0">
               شركة علي صالح الشهري القابضة
@@ -174,7 +174,7 @@ const HeroSection = () => {
         </div>
         
         {/* Enhanced Description - Responsive */}
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-primary-foreground/95 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed animate-fade-in font-medium px-4 sm:px-6" style={{ animationDelay: '0.9s' }}>
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-primary-foreground/95 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed animate-fade-in font-medium px-4 sm:px-6 text-center" style={{ animationDelay: '0.9s' }}>
           رؤية مستقبلية في عالم التقنية والإعلام، نبني جسوراً نحو الابتكار والتميز العالمي
           <br />
           <span className="text-sm sm:text-base md:text-lg lg:text-xl text-primary-foreground/80 mt-1 sm:mt-2 block">
