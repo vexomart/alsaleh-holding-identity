@@ -12,7 +12,9 @@ import { User as SupabaseUser, Session } from '@supabase/supabase-js';
 
 export default function Auth() {
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -104,6 +106,28 @@ export default function Auth() {
     setLoading(false);
   };
 
+  const handlePasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setResetLoading(true);
+    setError(null);
+    setResetMessage(null);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('reset-email') as string;
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth?type=recovery`,
+    });
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setResetMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني');
+    }
+
+    setResetLoading(false);
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900" dir="rtl">
       {/* Animated Background */}
@@ -146,7 +170,7 @@ export default function Auth() {
             
             <CardContent>
               <Tabs defaultValue="signin" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-white/10 border border-white/20">
+                <TabsList className="grid w-full grid-cols-3 bg-white/10 border border-white/20">
                   <TabsTrigger 
                     value="signin" 
                     className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white text-blue-200"
@@ -158,6 +182,12 @@ export default function Auth() {
                     className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white text-blue-200"
                   >
                     إنشاء حساب
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="reset"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-red-600 data-[state=active]:text-white text-blue-200"
+                  >
+                    نسيت كلمة المرور
                   </TabsTrigger>
                 </TabsList>
                 
@@ -348,6 +378,52 @@ export default function Auth() {
                         </>
                       )}
                     </Button>
+                  </form>
+                </TabsContent>
+                
+                {/* Password Reset Tab */}
+                <TabsContent value="reset" className="animate-fade-in">
+                  <form onSubmit={handlePasswordReset} className="space-y-6 mt-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="reset-email" className="text-white flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        البريد الإلكتروني
+                      </Label>
+                      <Input
+                        id="reset-email"
+                        name="reset-email"
+                        type="email"
+                        required
+                        placeholder="أدخل بريدك الإلكتروني"
+                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200/60 focus:border-red-500/50 focus:ring-red-500/20"
+                        dir="ltr"
+                      />
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-500/90 hover:to-red-600/90 text-white font-medium py-3 hover-scale" 
+                      disabled={resetLoading}
+                    >
+                      {resetLoading ? (
+                        <>
+                          <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                          جارٍ الإرسال...
+                        </>
+                      ) : (
+                        <>
+                          إرسال رابط إعادة التعيين
+                          <ArrowRight className="mr-2 h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                    
+                    {resetMessage && (
+                      <Alert className="bg-green-500/10 border-green-500/20 animate-fade-in">
+                        <CheckCircle className="h-4 w-4 text-green-400" />
+                        <AlertDescription className="text-green-200">{resetMessage}</AlertDescription>
+                      </Alert>
+                    )}
                   </form>
                 </TabsContent>
               </Tabs>
