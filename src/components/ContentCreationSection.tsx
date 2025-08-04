@@ -10,17 +10,93 @@ import {
   ChevronRight,
   CheckCircle,
   Clock,
-  Star
+  Star,
+  X,
+  Phone,
+  Mail,
+  Building,
+  Upload,
+  Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const ContentCreationSection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    projectType: '',
+    budget: '',
+    timeline: '',
+    description: '',
+    additionalServices: []
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const whatsappNumber = "966555812567";
-  
-  const getWhatsAppLink = (serviceName: string) => {
-    const message = `السلام عليكم، أود الاستفسار عن خدمة ${serviceName} وطلب عرض سعر مخصص.`;
-    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+  const handleServiceRequest = (service) => {
+    setSelectedService(service);
+    setFormData(prev => ({ ...prev, projectType: service.title }));
+    setIsModalOpen(true);
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.functions.invoke('content-creation-request', {
+        body: {
+          ...formData,
+          serviceName: selectedService?.title,
+          serviceDescription: selectedService?.description
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "تم إرسال طلبك بنجاح",
+        description: "سنتواصل معك خلال 24 ساعة",
+      });
+
+      setIsModalOpen(false);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        projectType: '',
+        budget: '',
+        timeline: '',
+        description: '',
+        additionalServices: []
+      });
+    } catch (error) {
+      toast({
+        title: "حدث خطأ",
+        description: "يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contentServices = [
@@ -182,20 +258,172 @@ const ContentCreationSection = () => {
                   </div>
 
                   {/* CTA */}
-                  <a 
-                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(service.whatsappMessage)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="w-full border-white/20 text-white hover:bg-white/10 hover:border-violet-400 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-violet-500 group-hover:to-purple-500 group-hover:border-transparent"
-                    >
-                      <span>اطلب الخدمة</span>
-                      <ChevronRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-                    </Button>
-                  </a>
+                  <Dialog open={isModalOpen && selectedService?.title === service.title} onOpenChange={(open) => !open && setIsModalOpen(false)}>
+                    <DialogTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="w-full border-white/20 text-white hover:bg-white/10 hover:border-violet-400 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-violet-500 group-hover:to-purple-500 group-hover:border-transparent"
+                        onClick={() => handleServiceRequest(service)}
+                      >
+                        <span>اطلب الخدمة</span>
+                        <ChevronRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                      </Button>
+                    </DialogTrigger>
+                    
+                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 text-white">
+                      <DialogHeader className="space-y-4 pb-6 border-b border-slate-700">
+                        <div className="flex items-center justify-center">
+                          <div className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center`}>
+                            <service.icon className="w-8 h-8 text-white" />
+                          </div>
+                        </div>
+                        <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
+                          طلب خدمة {service.title}
+                        </DialogTitle>
+                        <p className="text-slate-300 text-center">{service.description}</p>
+                        
+                        {/* Service Features */}
+                        <div className="grid grid-cols-2 gap-3 mt-4">
+                          {service.features.map((feature, idx) => (
+                            <div key={idx} className="flex items-center gap-2 text-sm">
+                              <CheckCircle className="w-4 h-4 text-emerald-400" />
+                              <span className="text-slate-300">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </DialogHeader>
+
+                      <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <Label htmlFor="name" className="text-slate-300 flex items-center gap-2">
+                              <Users className="w-4 h-4" />
+                              الاسم الكامل *
+                            </Label>
+                            <Input
+                              id="name"
+                              required
+                              value={formData.name}
+                              onChange={(e) => handleInputChange('name', e.target.value)}
+                              className="bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-violet-500"
+                              placeholder="أدخل اسمك الكامل"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="email" className="text-slate-300 flex items-center gap-2">
+                              <Mail className="w-4 h-4" />
+                              البريد الإلكتروني *
+                            </Label>
+                            <Input
+                              id="email"
+                              type="email"
+                              required
+                              value={formData.email}
+                              onChange={(e) => handleInputChange('email', e.target.value)}
+                              className="bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-violet-500"
+                              placeholder="example@email.com"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="phone" className="text-slate-300 flex items-center gap-2">
+                              <Phone className="w-4 h-4" />
+                              رقم الهاتف *
+                            </Label>
+                            <Input
+                              id="phone"
+                              required
+                              value={formData.phone}
+                              onChange={(e) => handleInputChange('phone', e.target.value)}
+                              className="bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-violet-500"
+                              placeholder="+966 5XX XXX XXX"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="company" className="text-slate-300 flex items-center gap-2">
+                              <Building className="w-4 h-4" />
+                              اسم الشركة/المؤسسة
+                            </Label>
+                            <Input
+                              id="company"
+                              value={formData.company}
+                              onChange={(e) => handleInputChange('company', e.target.value)}
+                              className="bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-violet-500"
+                              placeholder="اسم الشركة (اختياري)"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="budget" className="text-slate-300">الميزانية المتوقعة</Label>
+                            <select
+                              id="budget"
+                              value={formData.budget}
+                              onChange={(e) => handleInputChange('budget', e.target.value)}
+                              className="w-full p-3 bg-slate-800/50 border border-slate-600 rounded-md text-white focus:border-violet-500 focus:outline-none"
+                            >
+                              <option value="">اختر الميزانية</option>
+                              <option value="أقل من 5,000 ريال">أقل من 5,000 ريال</option>
+                              <option value="5,000 - 15,000 ريال">5,000 - 15,000 ريال</option>
+                              <option value="15,000 - 30,000 ريال">15,000 - 30,000 ريال</option>
+                              <option value="أكثر من 30,000 ريال">أكثر من 30,000 ريال</option>
+                            </select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="timeline" className="text-slate-300 flex items-center gap-2">
+                              <Calendar className="w-4 h-4" />
+                              الجدول الزمني المطلوب
+                            </Label>
+                            <select
+                              id="timeline"
+                              value={formData.timeline}
+                              onChange={(e) => handleInputChange('timeline', e.target.value)}
+                              className="w-full p-3 bg-slate-800/50 border border-slate-600 rounded-md text-white focus:border-violet-500 focus:outline-none"
+                            >
+                              <option value="">اختر المدة</option>
+                              <option value="أسبوع واحد">أسبوع واحد</option>
+                              <option value="أسبوعين">أسبوعين</option>
+                              <option value="شهر واحد">شهر واحد</option>
+                              <option value="أكثر من شهر">أكثر من شهر</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="description" className="text-slate-300">تفاصيل المشروع *</Label>
+                          <Textarea
+                            id="description"
+                            required
+                            value={formData.description}
+                            onChange={(e) => handleInputChange('description', e.target.value)}
+                            className="bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-violet-500 min-h-[120px]"
+                            placeholder="اكتب تفاصيل مشروعك، الأهداف المطلوبة، والجمهور المستهدف..."
+                          />
+                        </div>
+
+                        <div className="flex gap-4 pt-4">
+                          <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="flex-1 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white border-0"
+                          >
+                            {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsModalOpen(false)}
+                            className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                          >
+                            إلغاء
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             );
