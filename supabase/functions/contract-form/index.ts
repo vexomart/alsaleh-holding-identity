@@ -75,10 +75,11 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; margin: 20px 0; border-right: 4px solid #10b981;">
-                <h3 style="color: #065f46; margin-top: 0; font-size: 18px;">معلومات الحساب البنكي</h3>
-                <p style="margin: 8px 0; color: #065f46;"><strong>البنك:</strong> بنك الراجحي</p>
-                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الحساب:</strong> SA0380000000608010167519</p>
+                <h3 style="color: #065f46; margin-top: 0; font-size: 18px;">معلومات الحساب البنكي للدفع</h3>
+                <p style="margin: 8px 0; color: #065f46;"><strong>اسم البنك:</strong> مصرف الراجحي</p>
                 <p style="margin: 8px 0; color: #065f46;"><strong>اسم الحساب:</strong> شركة علي صالح الشهري القابضة</p>
+                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الحساب:</strong> 161000010006086071040</p>
+                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الآيبان:</strong> SA1980000161608016071040</p>
               </div>
             </div>
 
@@ -134,10 +135,11 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; margin: 20px 0; border-right: 4px solid #10b981;">
-                <h3 style="color: #065f46; margin-top: 0; font-size: 18px;">معلومات الحساب البنكي</h3>
-                <p style="margin: 8px 0; color: #065f46;"><strong>البنك:</strong> بنك الراجحي</p>
-                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الحساب:</strong> SA0380000000608010167519</p>
+                <h3 style="color: #065f46; margin-top: 0; font-size: 18px;">معلومات الحساب البنكي للدفع</h3>
+                <p style="margin: 8px 0; color: #065f46;"><strong>اسم البنك:</strong> مصرف الراجحي</p>
                 <p style="margin: 8px 0; color: #065f46;"><strong>اسم الحساب:</strong> شركة علي صالح الشهري القابضة</p>
+                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الحساب:</strong> 161000010006086071040</p>
+                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الآيبان:</strong> SA1980000161608016071040</p>
               </div>
             </div>
 
@@ -193,10 +195,11 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
 
               <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; margin: 20px 0; border-right: 4px solid #10b981;">
-                <h3 style="color: #065f46; margin-top: 0; font-size: 18px;">معلومات الحساب البنكي</h3>
-                <p style="margin: 8px 0; color: #065f46;"><strong>البنك:</strong> بنك الراجحي</p>
-                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الحساب:</strong> SA0380000000608010167519</p>
+                <h3 style="color: #065f46; margin-top: 0; font-size: 18px;">معلومات الحساب البنكي للدفع</h3>
+                <p style="margin: 8px 0; color: #065f46;"><strong>اسم البنك:</strong> مصرف الراجحي</p>
                 <p style="margin: 8px 0; color: #065f46;"><strong>اسم الحساب:</strong> شركة علي صالح الشهري القابضة</p>
+                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الحساب:</strong> 161000010006086071040</p>
+                <p style="margin: 8px 0; color: #065f46;"><strong>رقم الآيبان:</strong> SA1980000161608016071040</p>
               </div>
             </div>
 

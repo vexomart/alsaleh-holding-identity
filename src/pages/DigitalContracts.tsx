@@ -24,6 +24,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, pdf, Font } from '@react-pdf/renderer';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // Current offers data (matching CurrentOffers.tsx)
 const currentOffers = [
@@ -543,20 +545,146 @@ const DigitalContracts = () => {
 
   const downloadContract = async () => {
     try {
-      const ContractDoc = generateContractPDF();
-      const pdfBlob = await pdf(<ContractDoc />).toBlob();
-      const url = URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `عقد_${formData.clientName || 'العميل'}_${Date.now()}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4'
+      });
+
+      // Create a temporary div with RTL content
+      const tempDiv = document.createElement('div');
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.top = '-9999px';
+      tempDiv.style.left = '-9999px';
+      tempDiv.style.width = '595px';
+      tempDiv.style.fontFamily = 'Arial, "Segoe UI", sans-serif';
+      tempDiv.style.fontSize = '14px';
+      tempDiv.style.lineHeight = '1.6';
+      tempDiv.style.direction = 'rtl';
+      tempDiv.style.textAlign = 'right';
+      tempDiv.style.padding = '40px';
+      tempDiv.style.background = 'white';
+
+      const contractNumber = `C${Math.floor(Math.random() * 1000) + 1}`;
+      const contractDate = new Date().toLocaleDateString('ar-SA', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      tempDiv.innerHTML = `
+        <div style="direction: rtl; text-align: right; font-family: Arial, sans-serif;">
+          <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1e40af; padding-bottom: 20px;">
+            <h1 style="color: #1e40af; font-size: 24px; margin: 0;">عقد تقديم خدمات تقنية</h1>
+            <h2 style="color: #374151; font-size: 18px; margin: 10px 0;">رقم العقد: ${contractNumber}</h2>
+            <p style="color: #6b7280; margin: 5px 0;">التاريخ: ${contractDate}</p>
+          </div>
+
+          <div style="margin-bottom: 25px; background: #f8fafc; padding: 20px; border-right: 4px solid #1e40af;">
+            <h3 style="color: #1e40af; margin-top: 0; font-size: 16px;">الطرف الأول - مقدم الخدمة</h3>
+            <p style="margin: 8px 0;"><strong>اسم الشركة:</strong> شركة علي صالح الشهري القابضة</p>
+            <p style="margin: 8px 0;"><strong>العنوان:</strong> الرياض، المملكة العربية السعودية</p>
+            <p style="margin: 8px 0;"><strong>البريد الإلكتروني:</strong> info@alialshehriholding.com</p>
+            <p style="margin: 8px 0;"><strong>الهاتف:</strong> +966 555 812 567</p>
+          </div>
+
+          <div style="margin-bottom: 25px; background: #f0f9ff; padding: 20px; border-right: 4px solid #3b82f6;">
+            <h3 style="color: #1e40af; margin-top: 0; font-size: 16px;">الطرف الثاني - العميل</h3>
+            <p style="margin: 8px 0;"><strong>الاسم:</strong> ${formData.clientName}</p>
+            <p style="margin: 8px 0;"><strong>البريد الإلكتروني:</strong> ${formData.clientEmail}</p>
+            <p style="margin: 8px 0;"><strong>رقم الهاتف:</strong> ${formData.clientPhone}</p>
+            ${formData.clientAddress ? `<p style="margin: 8px 0;"><strong>العنوان:</strong> ${formData.clientAddress}</p>` : ''}
+            ${formData.clientIdNumber ? `<p style="margin: 8px 0;"><strong>رقم الهوية:</strong> ${formData.clientIdNumber}</p>` : ''}
+            ${formData.commercialRegister ? `<p style="margin: 8px 0;"><strong>السجل التجاري:</strong> ${formData.commercialRegister}</p>` : ''}
+            ${formData.taxNumber ? `<p style="margin: 8px 0;"><strong>الرقم الضريبي:</strong> ${formData.taxNumber}</p>` : ''}
+            ${formData.authorizedPerson ? `<p style="margin: 8px 0;"><strong>المفوض بالتوقيع:</strong> ${formData.authorizedPerson}</p>` : ''}
+          </div>
+
+          <div style="margin-bottom: 25px; background: #f0fdf4; padding: 20px; border-right: 4px solid #10b981;">
+            <h3 style="color: #065f46; margin-top: 0; font-size: 16px;">تفاصيل الخدمة المطلوبة</h3>
+            <p style="margin: 8px 0;"><strong>نوع الخدمة:</strong> ${selectedOfferDetails?.title || formData.selectedOffer}</p>
+            <p style="margin: 8px 0;"><strong>وصف الخدمة:</strong> ${selectedOfferDetails?.description || formData.serviceDescription}</p>
+            <p style="margin: 8px 0;"><strong>قيمة الخدمة:</strong> ${selectedOfferDetails?.price || "0"} ريال سعودي</p>
+            <p style="margin: 8px 0;"><strong>مدة التنفيذ:</strong> ${selectedOfferDetails?.duration || "حسب الاتفاق"}</p>
+            <p style="margin: 8px 0;"><strong>مدة تنفيذ الطلب:</strong> 15 يوم عمل من تاريخ التوقيع</p>
+            ${formData.customRequirements ? `<p style="margin: 8px 0;"><strong>متطلبات إضافية:</strong> ${formData.customRequirements}</p>` : ''}
+          </div>
+
+          <div style="margin-bottom: 25px; background: #fef3c7; padding: 20px; border-right: 4px solid #f59e0b;">
+            <h3 style="color: #92400e; margin-top: 0; font-size: 16px;">الشروط والأحكام</h3>
+            <p style="margin: 8px 0; line-height: 1.6;">
+              • تم الاتفاق بين الطرفين على تنفيذ الخدمة المذكورة أعلاه<br>
+              • مدة تنفيذ الطلب: 15 يوم عمل من تاريخ التوقيع على العقد<br>
+              • إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين<br>
+              • يتم اعتماد العقد نهائياً بعد الدفع عن طريق التحويل البنكي لحساب الشركة<br>
+              • الشركة ملتزمة بتقديم الخدمة وفقاً للمواصفات المتفق عليها<br>
+              • العميل ملتزم بدفع المبلغ المتفق عليه في المواعيد المحددة
+            </p>
+          </div>
+
+          <div style="margin-bottom: 25px; background: #ecfdf5; padding: 20px; border-right: 4px solid #10b981;">
+            <h3 style="color: #065f46; margin-top: 0; font-size: 16px;">معلومات الحساب البنكي للدفع</h3>
+            <p style="margin: 8px 0;"><strong>اسم البنك:</strong> مصرف الراجحي</p>
+            <p style="margin: 8px 0;"><strong>اسم الحساب:</strong> شركة علي صالح الشهري القابضة</p>
+            <p style="margin: 8px 0;"><strong>رقم الحساب:</strong> 161000010006086071040</p>
+            <p style="margin: 8px 0;"><strong>رقم الآيبان:</strong> SA1980000161608016071040</p>
+          </div>
+
+          <div style="margin-top: 40px; border-top: 2px solid #e5e7eb; padding-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="text-align: right; width: 45%;">
+                <p style="margin: 0; font-weight: bold;">الطرف الأول (الشركة)</p>
+                <p style="margin: 5px 0 0 0;">شركة علي صالح الشهري القابضة</p>
+                <div style="margin-top: 40px; border-bottom: 1px solid #000; width: 200px;"></div>
+                <p style="margin: 5px 0 0 0; font-size: 12px;">التوقيع والختم</p>
+              </div>
+              <div style="text-align: right; width: 45%;">
+                <p style="margin: 0; font-weight: bold;">الطرف الثاني (العميل)</p>
+                <p style="margin: 5px 0 0 0;">${formData.clientName}</p>
+                <div style="margin-top: 40px; border-bottom: 1px solid #000; width: 200px;"></div>
+                <p style="margin: 5px 0 0 0; font-size: 12px;">التوقيع</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 30px; font-size: 12px; color: #6b7280;">
+            <p>هذا العقد صادر من شركة علي صالح الشهري القابضة - ${contractDate}</p>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(tempDiv);
+
+      const canvas = await html2canvas(tempDiv, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 595.28; // A4 width in points
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= 841.89; // A4 height in points
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= 841.89;
+      }
+
+      document.body.removeChild(tempDiv);
+      pdf.save(`عقد-${contractNumber}-${formData.clientName}.pdf`);
       
       toast({
         title: "تم تحميل العقد بنجاح",
-        description: "تم إنشاء وتحميل ملف العقد بصيغة PDF",
+        description: "تم إنشاء وتحميل ملف العقد بصيغة PDF مع النص العربي بشكل صحيح",
       });
     } catch (error) {
       console.error("PDF generation error:", error);
