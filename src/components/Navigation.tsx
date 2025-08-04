@@ -208,10 +208,10 @@ const Navigation = () => {
                   isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
               >
-                مشاريعنا الجاهزة
+                منتجاتنا
               </a>
               <a 
-                href="/contact" 
+                href="/contact"
                 className={`font-medium transition-colors hover:text-primary ${
                   isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
@@ -394,10 +394,10 @@ const Navigation = () => {
                   className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200 rounded-md"
                   onClick={() => setIsOpen(false)}
                 >
-                  مشاريعنا الجاهزة
+                  منتجاتنا
                 </a>
                 <a 
-                  href="/contact" 
+                  href="/contact"
                   className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200 rounded-md"
                   onClick={() => setIsOpen(false)}
                 >
