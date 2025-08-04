@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   CreditCard, 
   Building2, 
@@ -157,32 +158,92 @@ const PaymentMethodsSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    toast({
-      title: "تم استلام الإيصال بنجاح",
-      description: "سيتم مراجعة إيصال التحويل والتأكيد خلال 2-4 ساعات عمل",
-    });
-    
-    setIsSubmitting(false);
-    setActiveForm('payment');
+    try {
+      const formData = new FormData(e.target as HTMLFormElement);
+      
+      const receiptData = {
+        type: 'bank_receipt' as const,
+        fullName: formData.get('fullName') as string,
+        email: formData.get('email') as string,
+        phone: formData.get('phone') as string,
+        transferAmount: formData.get('transferAmount') as string,
+        transferDate: formData.get('transferDate') as string,
+        accountLastFour: formData.get('accountLastFour') as string,
+        notes: formData.get('notes') as string,
+      };
+
+      const { data, error } = await supabase.functions.invoke('payment-forms', {
+        body: receiptData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "تم استلام الإيصال بنجاح",
+        description: "سيتم مراجعة إيصال التحويل والتأكيد خلال 2-4 ساعات عمل",
+      });
+
+      (e.target as HTMLFormElement).reset();
+      setActiveForm('payment');
+    } catch (error) {
+      console.error('Error submitting receipt:', error);
+      toast({
+        title: "خطأ في الإرسال",
+        description: "حدث خطأ أثناء إرسال الإيصال. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleRefundSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    toast({
-      title: "تم استلام طلب الاسترداد",
-      description: "سيتم مراجعة طلبك ومعالجته خلال 3-5 أيام عمل",
-    });
-    
-    setIsSubmitting(false);
-    setActiveForm('payment');
+    try {
+      const formData = new FormData(e.target as HTMLFormElement);
+      
+      const refundData = {
+        type: 'refund' as const,
+        fullName: formData.get('fullName') as string,
+        email: formData.get('email') as string,
+        phone: formData.get('phone') as string,
+        originalAmount: formData.get('originalAmount') as string,
+        refundReason: formData.get('refundReason') as string,
+        refundAmount: formData.get('refundAmount') as string,
+        orderNumber: formData.get('orderNumber') as string,
+        bankAccount: formData.get('bankAccount') as string,
+        notes: formData.get('notes') as string,
+      };
+
+      const { data, error } = await supabase.functions.invoke('payment-forms', {
+        body: refundData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "تم استلام طلب الاسترداد",
+        description: "سيتم مراجعة طلبك ومعالجته خلال 3-5 أيام عمل",
+      });
+
+      (e.target as HTMLFormElement).reset();
+      setActiveForm('payment');
+    } catch (error) {
+      console.error('Error submitting refund request:', error);
+      toast({
+        title: "خطأ في الإرسال",
+        description: "حدث خطأ أثناء إرسال طلب الاسترداد. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
