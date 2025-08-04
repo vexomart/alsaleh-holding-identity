@@ -60,6 +60,7 @@ import UserGuide from "./pages/UserGuide";
 import Auth from "./pages/Auth";
 import ClientDashboard from "./pages/ClientDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import DomainRegistration from "./pages/DomainRegistration";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -136,6 +137,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/client-dashboard" element={<ClientDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/domain-registration" element={<DomainRegistration />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
