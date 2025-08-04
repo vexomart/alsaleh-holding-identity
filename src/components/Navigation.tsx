@@ -326,6 +326,30 @@ const Navigation = () => {
                 >
                   من نحن
                 </a>
+                
+                {/* خدماتنا في الموبايل */}
+                <div className="border-b border-gray-200 pb-3">
+                  <h3 className="text-gray-900 font-semibold mb-2">خدماتنا</h3>
+                  <div className="grid grid-cols-1 gap-2 pr-4">
+                    {services.map((service, index) => {
+                      const IconComponent = service.icon;
+                      return (
+                        <a
+                          key={index}
+                          href={service.href}
+                          className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <IconComponent className="w-4 h-4 text-blue-600" />
+                          </div>
+                          <span className="text-sm text-gray-700">{service.name}</span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+                
                 <a 
                   href="/vision" 
                   className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
@@ -347,6 +371,30 @@ const Navigation = () => {
                 >
                   منتجاتنا
                 </a>
+                
+                {/* أخرى في الموبايل */}
+                <div className="border-b border-gray-200 pb-3">
+                  <h3 className="text-gray-900 font-semibold mb-2">أخرى</h3>
+                  <div className="grid grid-cols-1 gap-2 pr-4">
+                    {othersItems.map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <a
+                          key={index}
+                          href={item.href}
+                          className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <IconComponent className="w-4 h-4 text-blue-600" />
+                          </div>
+                          <span className="text-sm text-gray-700">{item.name}</span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+                
                 <a 
                   href="/contact"
                   className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
