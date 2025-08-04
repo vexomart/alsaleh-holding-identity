@@ -1,6 +1,35 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Globe, TrendingUp, Users, Award, Rocket, Zap, Star, ExternalLink, GraduationCap, Monitor, ShoppingCart, BarChart3, MapPin, Clock, Trophy, Target, Shield, Briefcase } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { 
+  Building2, 
+  Globe, 
+  TrendingUp, 
+  Users, 
+  Award, 
+  Rocket, 
+  Zap, 
+  Star, 
+  ExternalLink, 
+  GraduationCap, 
+  Monitor, 
+  ShoppingCart, 
+  BarChart3, 
+  MapPin, 
+  Clock, 
+  Trophy, 
+  Target, 
+  Shield, 
+  Briefcase,
+  Brain,
+  Database,
+  Code,
+  Palette,
+  HeartHandshake,
+  BookOpen,
+  Lightbulb,
+  Sparkles
+} from "lucide-react";
 
 const SubsidiariesSection = () => {
   const subsidiaries = [
@@ -10,15 +39,13 @@ const SubsidiariesSection = () => {
       description: "متخصصة بخدمات التعليم المتطورة من أبحاث للطلاب والموظفين والترجمة الأكاديمية والتحليل الإحصائي المتقدم والنشر بالمجلات المعتمدة دولياً",
       category: "الخدمات التعليمية والأكاديمية",
       established: "2019",
-      services: ["أبحاث الطلاب والموظفين", "خدمات الترجمة المتخصصة", "التحليل الإحصائي المتقدم", "النشر الأكاديمي الدولي", "استشارات تعليمية", "برامج التدريب المهني"],
       icon: GraduationCap,
       stats: { projects: "2,850+", clients: "1,420+", countries: "28" },
-      color: "from-blue-600 to-cyan-500",
+      color: "from-blue-500 to-indigo-600",
       website: "https://fekrah-holding.com/",
-      websiteName: "fekrah-holding.com",
       growth: "+185%",
       rating: "4.9/5",
-      specialties: ["AI في التعليم", "البحث العلمي", "التعليم الرقمي"]
+      template: "premium"
     },
     {
       name: "فكرة تيك",
@@ -26,15 +53,13 @@ const SubsidiariesSection = () => {
       description: "شركة تقنية عالمية رائدة متخصصة في تطوير الحلول التقنية المبتكرة والذكية، وتطبيقات الذكاء الاصطناعي، والحلول السحابية المتقدمة",
       category: "التقنية والذكاء الاصطناعي",
       established: "2020",
-      services: ["تطوير التطبيقات الذكية", "حلول الذكاء الاصطناعي", "الحوسبة السحابية", "أمن المعلومات", "تطوير المواقع المتقدمة", "استشارات تقنية متخصصة"],
-      icon: Monitor,
+      icon: Brain,
       stats: { projects: "1,950+", clients: "890+", countries: "35" },
-      color: "from-emerald-600 to-teal-500",
+      color: "from-emerald-500 to-teal-600",
       website: "https://fekrahtech.com",
-      websiteName: "fekrahtech.com",
       growth: "+220%",
       rating: "4.8/5",
-      specialties: ["الذكاء الاصطناعي", "البلوك تشين", "الواقع المعزز"]
+      template: "tech"
     },
     {
       name: "شركة علي صالح الشهري القابضة",
@@ -42,362 +67,224 @@ const SubsidiariesSection = () => {
       description: "الشركة القابضة الرائدة في المنطقة، متخصصة في إدارة الاستثمارات المتنوعة وتقديم خدمات الدعم الإستراتيجي والمشاريع الضخمة والحلول الإدارية المتطورة",
       category: "الاستثمارات والإدارة الإستراتيجية",
       established: "2016",
-      services: ["إدارة الاستثمارات", "الاستشارات الإستراتيجية", "تطوير المشاريع الكبرى", "خدمات الدعم المؤسسي", "إدارة الطلبات المتقدمة", "التخطيط الإستراتيجي"],
       icon: Building2,
       stats: { projects: "3,200+", clients: "1,650+", countries: "42" },
-      color: "from-purple-600 to-pink-500",
+      color: "from-purple-500 to-violet-600",
       website: "http://ash.holdings/",
-      websiteName: "ash.holdings",
       growth: "+156%",
       rating: "4.9/5",
-      specialties: ["الاستثمار العقاري", "التطوير العمراني", "الشراكات الإستراتيجية"]
+      template: "corporate"
     },
     {
-      name: "أدفيكسو ميديا",
-      nameEn: "Advixo Media Agency",
-      description: "وكالة تسويق رقمي عالمية متطورة متخصصة في الحملات الإعلانية المبتكرة، وإدارة وسائل التواصل الاجتماعي، والتسويق بالذكاء الاصطناعي",
+      name: "فكرة للتسويق الرقمي",
+      nameEn: "Fekrah Digital Marketing",
+      description: "شركة رائدة في مجال التسويق الرقمي والإعلان الإلكتروني، متخصصة في إدارة الحملات الإعلانية وتحسين محركات البحث والتسويق عبر وسائل التواصل الاجتماعي",
       category: "التسويق الرقمي والإعلان",
-      established: "2021",
-      services: ["التسويق الرقمي المتقدم", "إدارة الحملات الإعلانية", "تحليل البيانات التسويقية", "التسويق بالمؤثرين", "تطوير العلامات التجارية", "التسويق بالذكاء الاصطناعي"],
+      established: "2018",
       icon: TrendingUp,
-      stats: { projects: "1,780+", clients: "920+", countries: "31" },
-      color: "from-orange-600 to-red-500",
-      website: "https://advixo.media/",
-      websiteName: "advixo.media",
-      growth: "+275%",
+      stats: { projects: "1,200+", clients: "650+", countries: "22" },
+      color: "from-orange-500 to-red-600",
+      website: "https://fekrah-digital.com",
+      growth: "+195%",
       rating: "4.7/5",
-      specialties: ["التسويق التفاعلي", "الإعلانات الذكية", "تحليل السلوك"]
+      template: "premium"
     },
     {
-      name: "نوماكسيو",
-      nameEn: "Numaxio Financial Solutions",
-      description: "منصة محاسبية وإدارية متطورة تقدم حلول ERP شاملة مع أنظمة إدارة المخزون الذكية والتقارير المالية المتقدمة باستخدام الذكاء الاصطناعي",
-      category: "الحلول المالية والمحاسبية",
-      established: "2022",
-      services: ["أنظمة ERP المتطورة", "إدارة الفواتير الذكية", "التقارير المالية التفاعلية", "إدارة المخزون بالـ AI", "التحليل المالي المتقدم", "الامتثال الضريبي"],
-      icon: BarChart3,
-      stats: { projects: "قريباً", clients: "قريباً", countries: "قريباً" },
-      color: "from-yellow-500 to-orange-500",
-      website: "https://numaxio.com/",
-      websiteName: "numaxio.com",
-      growth: "قيد التطوير",
-      rating: "قريباً",
-      specialties: ["التحليل المالي", "الذكاء التجاري", "الأتمتة المحاسبية"],
-      inDevelopment: true
-    },
-    {
-      name: "فيكسو مارت",
-      nameEn: "Vexo Mart",
-      description: "شركة رائدة في مجال التجارة الإلكترونية وحلول الدفع الرقمي، متخصصة في تطوير المتاجر الإلكترونية المتقدمة وأنظمة الدفع الآمنة",
-      category: "التجارة الإلكترونية والدفع الرقمي",
-      established: "2021",
-      services: ["تطوير المتاجر الإلكترونية", "حلول الدفع الرقمي", "إدارة المخزون الذكية", "التسويق الإلكتروني", "خدمات الشحن والتوصيل", "تحليل سلوك المستهلكين"],
-      icon: ShoppingCart,
-      stats: { projects: "قريباً", clients: "قريباً", countries: "قريباً" },
-      color: "from-green-600 to-emerald-500",
-      website: "https://vexomart.com/",
-      websiteName: "vexomart.com",
-      growth: "قيد التطوير",
-      rating: "قريباً",
-      specialties: ["التجارة الذكية", "الدفع الآمن", "تجربة المستخدم"],
-      inDevelopment: true
-    },
-    {
-      name: "فكرة أكاديمي",
-      nameEn: "Fekrah Academy",
-      description: "أكاديمية متخصصة في التعليم الأكاديمي والتدريب المهني، تقدم برامج تعليمية متطورة وورش عمل متخصصة لتطوير المهارات والقدرات الأكاديمية والمهنية",
-      category: "التعليم الأكاديمي والتدريب",
-      established: "2025",
-      services: ["برامج التدريب الأكاديمي", "ورش العمل المتخصصة", "التطوير المهني", "الاستشارات التعليمية", "البرامج التأهيلية", "التعليم المستمر"],
-      icon: GraduationCap,
-      stats: { projects: "1,200+", clients: "850+", countries: "15" },
-      color: "from-indigo-600 to-blue-500",
-      website: "https://fekrah-academy.com",
-      websiteName: "fekrah-academy.com",
+      name: "فكرة للاستشارات الإدارية",
+      nameEn: "Fekrah Management Consulting",
+      description: "شركة استشارات إدارية متخصصة في تطوير الأعمال والتخطيط الاستراتيجي وإدارة المشاريع وتحسين العمليات التشغيلية للشركات والمؤسسات",
+      category: "الاستشارات الإدارية",
+      established: "2017",
+      icon: Briefcase,
+      stats: { projects: "890+", clients: "420+", countries: "18" },
+      color: "from-cyan-500 to-blue-600",
+      website: "https://fekrah-consulting.com",
       growth: "+165%",
       rating: "4.8/5",
-      specialties: ["التعليم التفاعلي", "التدريب المهني", "التطوير الأكاديمي"],
-      isNewLaunch: true
+      template: "corporate"
     },
     {
-      name: "أكاديمية نيست",
-      nameEn: "Nest Academy",
-      description: "منصة تعليمية متطورة ومبتكرة تقدم برامج تدريبية متخصصة في التقنية والذكاء الاصطناعي والتطوير المهني مع أحدث المناهج العالمية",
-      category: "التعليم والتدريب المتخصص",
-      established: "2024",
-      services: ["برامج تدريبية متقدمة", "شهادات معتمدة دولياً", "تعليم الذكاء الاصطناعي", "ورش عمل تفاعلية", "استشارات مهنية", "التعلم الرقمي"],
-      icon: GraduationCap,
-      stats: { projects: "قريباً", clients: "قريباً", countries: "قريباً" },
-      color: "from-indigo-600 to-purple-500",
-      website: "https://nest.academy/",
-      websiteName: "nest.academy",
-      growth: "قيد التطوير",
-      rating: "قريباً",
-      specialties: ["الذكاء الاصطناعي", "التعلم التفاعلي", "الشهادات المهنية"],
-      inDevelopment: true
+      name: "فكرة للتصميم والإبداع",
+      nameEn: "Fekrah Design & Creativity",
+      description: "استوديو تصميم إبداعي متخصص في تصميم الهوية البصرية والتصميم الجرافيكي وتصميم المواقع الإلكترونية والتطبيقات مع التركيز على الابتكار والجودة",
+      category: "التصميم والإبداع",
+      established: "2019",
+      icon: Palette,
+      stats: { projects: "1,500+", clients: "780+", countries: "25" },
+      color: "from-pink-500 to-rose-600",
+      website: "https://fekrah-design.com",
+      growth: "+210%",
+      rating: "4.9/5",
+      template: "tech"
     },
     {
-      name: "بلوت كود",
-      nameEn: "Plute Code",
-      description: "شركة تطوير برمجيات متخصصة في حلول البرمجة المتقدمة وتطوير التطبيقات المبتكرة والحلول التقنية المخصصة للشركات والمؤسسات",
-      category: "تطوير البرمجيات والحلول التقنية",
-      established: "2024",
-      services: ["تطوير التطبيقات المخصصة", "حلول البرمجة المتقدمة", "استشارات تقنية", "تطوير المواقع الديناميكية", "أنظمة إدارة المحتوى", "الحلول السحابية"],
-      icon: Monitor,
-      stats: { projects: "قريباً", clients: "قريباً", countries: "قريباً" },
-      color: "from-cyan-600 to-blue-500",
-      website: "https://plutecode.com/",
-      websiteName: "plutecode.com",
-      growth: "قيد التطوير",
-      rating: "قريباً",
-      specialties: ["البرمجة المتقدمة", "التطوير المخصص", "الحلول التقنية"],
-      inDevelopment: true
+      name: "فكرة للتدريب والتطوير",
+      nameEn: "Fekrah Training & Development",
+      description: "مركز تدريب متخصص في تطوير المهارات المهنية والشخصية، يقدم برامج تدريبية متنوعة في مجالات الإدارة والقيادة والتقنية والتطوير الذاتي",
+      category: "التدريب والتطوير",
+      established: "2020",
+      icon: BookOpen,
+      stats: { projects: "950+", clients: "1,200+", countries: "15" },
+      color: "from-green-500 to-emerald-600",
+      website: "https://fekrah-training.com",
+      growth: "+175%",
+      rating: "4.8/5",
+      template: "premium"
+    },
+    {
+      name: "فكرة للحلول المالية",
+      nameEn: "Fekrah Financial Solutions",
+      description: "شركة متخصصة في تقديم الحلول المالية والاستشارات المحاسبية وإدارة الاستثمارات والتخطيط المالي للشركات والأفراد بأحدث الأساليب والتقنيات",
+      category: "الحلول المالية",
+      established: "2018",
+      icon: BarChart3,
+      stats: { projects: "1,100+", clients: "560+", countries: "20" },
+      color: "from-yellow-500 to-orange-600",
+      website: "https://fekrah-finance.com",
+      growth: "+145%",
+      rating: "4.7/5",
+      template: "corporate"
+    },
+    {
+      name: "فكرة للخدمات اللوجستية",
+      nameEn: "Fekrah Logistics Services",
+      description: "شركة خدمات لوجستية متكاملة متخصصة في إدارة سلاسل التوريد والشحن والتخزين والتوزيع مع شبكة عالمية واسعة وحلول تقنية متطورة",
+      category: "الخدمات اللوجستية",
+      established: "2019",
+      icon: Globe,
+      stats: { projects: "2,200+", clients: "980+", countries: "35" },
+      color: "from-indigo-500 to-purple-600",
+      website: "https://fekrah-logistics.com",
+      growth: "+190%",
+      rating: "4.8/5",
+      template: "tech"
     }
   ];
 
+  const renderCompanyCard = (company, index) => {
+    const IconComponent = company.icon;
+    
+    const templates = {
+      premium: () => (
+        <Card className="group relative overflow-hidden bg-gradient-to-br from-slate-50 to-white border-2 border-transparent hover:border-blue-200 transition-all duration-700 hover:shadow-2xl hover:shadow-blue-500/25 transform hover:scale-[1.02] animate-fade-in">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <CardContent className="p-8 relative z-10">
+            <div className="flex items-start justify-between mb-6">
+              <div className={`w-16 h-16 bg-gradient-to-br ${company.color} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg`}>
+                <IconComponent className="w-8 h-8 text-white" />
+              </div>
+              <Badge className={`bg-gradient-to-r ${company.color} text-white border-0 shadow-md`}>
+                {company.growth}
+              </Badge>
+            </div>
+            <h3 className="text-2xl font-bold text-slate-800 mb-2">{company.name}</h3>
+            <p className="text-lg text-slate-600 font-medium mb-4">{company.nameEn}</p>
+            <p className="text-slate-600 text-sm leading-relaxed mb-6">{company.description}</p>
+            <Button asChild className={`w-full bg-gradient-to-r ${company.color} text-white border-0`}>
+              <a href={company.website} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-4 h-4 ml-2" />
+                زيارة الموقع
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      ),
+
+      tech: () => (
+        <Card className="group relative overflow-hidden bg-slate-900 border-2 border-emerald-500/20 hover:border-emerald-400 transition-all duration-700">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+          <CardContent className="p-8 relative z-10">
+            <div className="flex items-center gap-4 mb-6">
+              <div className={`w-16 h-16 bg-gradient-to-br ${company.color} rounded-2xl flex items-center justify-center group-hover:rotate-180 transition-all duration-700`}>
+                <IconComponent className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-1">{company.name}</h3>
+                <p className="text-emerald-400 font-mono text-sm">{company.nameEn}</p>
+              </div>
+            </div>
+            <p className="text-slate-300 text-sm leading-relaxed mb-6">{company.description}</p>
+            <Button asChild variant="outline" className="w-full border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-white">
+              <a href={company.website} target="_blank" rel="noopener noreferrer">
+                <Globe className="w-4 h-4 ml-2" />
+                زيارة الموقع
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      ),
+
+      corporate: () => (
+        <Card className="group relative overflow-hidden bg-gradient-to-br from-purple-50 to-violet-100 border-2 border-purple-200 hover:border-purple-400 transition-all duration-700">
+          <CardContent className="p-8 relative z-10">
+            <div className="text-center mb-6">
+              <div className={`w-20 h-20 bg-gradient-to-br ${company.color} rounded-3xl flex items-center justify-center mx-auto mb-4`}>
+                <IconComponent className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-purple-800 mb-2">{company.name}</h3>
+              <p className="text-purple-600 font-semibold">{company.nameEn}</p>
+            </div>
+            <p className="text-purple-700 text-sm leading-relaxed mb-6 text-center">{company.description}</p>
+            <Button asChild className={`w-full bg-gradient-to-r ${company.color} text-white border-0`}>
+              <a href={company.website} target="_blank" rel="noopener noreferrer">
+                <Building2 className="w-4 h-4 ml-2" />
+                موقع الشركة
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )
+    };
+
+    return templates[company.template] ? templates[company.template]() : templates.premium();
+  };
+
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-amber-900 dark:via-yellow-900 dark:to-orange-900">
-      {/* Modern Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-100/40 via-transparent to-yellow-100/40"></div>
-      <div className="absolute top-1/4 right-10 w-40 h-40 bg-amber-400/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-yellow-400/10 rounded-full blur-3xl animate-float-delayed" />
-      <div className="absolute top-1/3 left-1/2 w-56 h-56 bg-orange-400/5 rounded-full blur-2xl animate-pulse"></div>
+    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-purple-100/40"></div>
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-20 animate-fade-in">
-          <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-            <Building2 className="w-6 h-6 text-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">شركات تابعة • نمو عالمي</span>
+          <div className="inline-flex items-center gap-3 mb-6 p-4 bg-white/20 rounded-full backdrop-blur-sm border border-white/30">
+            <Building2 className="w-6 h-6 text-blue-600 animate-pulse" />
+            <span className="text-sm font-medium text-blue-700">شركات تابعة • نمو عالمي</span>
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
-            شركاتنا <span className="text-gradient-primary">التابعة</span>
-          </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            نضم مجموعة متنوعة من الشركات المتخصصة عالمياً التي تعمل في مجالات مختلفة لتقديم حلول شاملة ومتكاملة
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-800 mb-8 leading-tight">
+            شركاتنا <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">التابعة</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+            مجموعة متنوعة من الشركات المتخصصة عالمياً التي تعمل في مجالات مختلفة لتقديم حلول شاملة ومتكاملة
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 mb-16">
-          {subsidiaries.map((company, index) => {
-            const IconComponent = company.icon;
-            
-            return (
-              <Card 
-                key={index} 
-                className="group premium-card hover:shadow-glow transition-all duration-500 border-0 bg-white/5 backdrop-blur-md overflow-hidden animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <CardContent className="p-8 relative">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${company.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                  
-                  {/* New Launch Banner */}
-                  {company.isNewLaunch && (
-                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-center py-2 px-4 text-sm font-bold animate-pulse">
-                      🎉 تم الإطلاق حديثاً • جديد 2025 🚀
-                    </div>
-                  )}
-                  
-                  <div className={`relative z-10 ${company.isNewLaunch ? 'mt-8' : ''}`}>
-                    {/* Header Section */}
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-16 h-16 bg-gradient-to-br ${company.color} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg`}>
-                          <IconComponent className="w-8 h-8 text-white" />
-                        </div>
-                        <div>
-                          <Badge variant="secondary" className="text-sm font-medium mb-2 bg-white/10 border-white/20">
-                            {company.category}
-                          </Badge>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Clock className="w-4 h-4" />
-                            <span>تأسست {company.established}</span>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Rating & Growth Badge */}
-                      <div className="text-right">
-                        <div className="flex items-center gap-1 mb-2">
-                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                          <span className="text-sm font-medium text-primary">{company.rating}</span>
-                        </div>
-                        <Badge className={`bg-gradient-to-r ${company.color} text-white border-0 font-bold`}>
-                          {company.growth}
-                        </Badge>
-                      </div>
-                    </div>
-                    
-                    {/* Company Info */}
-                    <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-primary mb-2 group-hover:text-gradient-primary transition-all duration-300">
-                        {company.name}
-                      </h3>
-                      <p className="text-lg text-secondary font-medium mb-3">
-                        {company.nameEn}
-                      </p>
-                      <p className="text-muted-foreground leading-relaxed text-sm">
-                        {company.description}
-                      </p>
-                    </div>
-
-                    {/* Enhanced Stats Grid */}
-                    <div className="grid grid-cols-3 gap-3 mb-6 p-4 bg-white/5 rounded-xl backdrop-blur-sm border border-white/10">
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-gradient-primary">{company.stats.projects}</div>
-                        <div className="text-xs text-muted-foreground">مشروع</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-gradient-primary">{company.stats.clients}</div>
-                        <div className="text-xs text-muted-foreground">عميل</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-lg font-bold text-gradient-primary">{company.stats.countries}</div>
-                        <div className="text-xs text-muted-foreground">دولة</div>
-                      </div>
-                    </div>
-
-                    {/* Specialties */}
-                    <div className="mb-4">
-                      <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
-                        <Target className="w-4 h-4" />
-                        التخصصات الرئيسية:
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {company.specialties.map((specialty, specialtyIndex) => (
-                          <Badge 
-                            key={specialtyIndex} 
-                            className={`text-xs bg-gradient-to-r ${company.color} text-white border-0 hover:scale-105 transition-transform duration-200`}
-                          >
-                            {specialty}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Services */}
-                    <div className="mb-6">
-                      <h4 className="text-sm font-semibold text-primary mb-3 flex items-center gap-2">
-                        <Briefcase className="w-4 h-4" />
-                        الخدمات المتخصصة:
-                      </h4>
-                      <div className="grid grid-cols-2 gap-2">
-                        {company.services.slice(0, 4).map((service, serviceIndex) => (
-                          <div 
-                            key={serviceIndex} 
-                            className="text-xs bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-muted-foreground hover:bg-white/10 transition-colors duration-200"
-                          >
-                            {service}
-                          </div>
-                        ))}
-                      </div>
-                      {company.services.length > 4 && (
-                        <div className="text-xs text-center mt-2 text-muted-foreground">
-                          +{company.services.length - 4} خدمات أخرى
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Website Link */}
-                    <div className="mt-4">
-                      {company.inDevelopment ? (
-                        <div className="inline-flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 border-2 border-yellow-400 text-white rounded-lg text-sm w-full justify-center relative overflow-hidden shadow-lg">
-                          <div className="absolute inset-0 bg-yellow-400/20 animate-pulse" />
-                          <Zap className="w-5 h-5 animate-bounce relative z-10 text-white" />
-                          <div className="text-center relative z-10">
-                            <div className="font-bold text-white">🚧 قيد التطوير</div>
-                            <div className="text-xs text-yellow-100 font-medium">{company.websiteName} • قريباً جداً</div>
-                          </div>
-                          <Clock className="w-5 h-5 animate-spin relative z-10 text-white" />
-                        </div>
-                      ) : (
-                        <a 
-                          href={company.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-primary to-secondary text-primary-foreground rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-105 group/link text-sm w-full justify-center"
-                        >
-                          <Globe className="w-4 h-4 group-hover/link:rotate-12 transition-transform duration-300" />
-                          <div className="text-center">
-                            <div className="font-medium">زيارة الموقع</div>
-                            <div className="text-xs opacity-90">{company.websiteName}</div>
-                          </div>
-                          <ExternalLink className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
-                        </a>
-                      )}
-                    </div>
-
-                    {/* Bottom Accent */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
+          {subsidiaries.map((company, index) => (
+            <div key={index} style={{ animationDelay: `${index * 0.15}s` }}>
+              {renderCompanyCard(company, index)}
+            </div>
+          ))}
         </div>
 
-        {/* Enhanced Global Presence Summary */}
-        <div className="text-center bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-3xl p-12 animate-fade-in border border-white/10 shadow-2xl">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <Globe className="w-8 h-8 text-primary animate-pulse" />
-            <h3 className="text-4xl font-bold text-primary">حضورنا العالمي المتطور</h3>
-            <Trophy className="w-8 h-8 text-secondary animate-bounce" />
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <div className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 border border-white/10">
-              <div className="absolute top-4 right-4">
-                <Briefcase className="w-6 h-6 text-blue-400 opacity-50" />
+        <div className="text-center animate-fade-in">
+          <div className="bg-gradient-to-r from-white/10 to-slate-100/10 rounded-3xl p-12 backdrop-blur-sm border border-white/20">
+            <h3 className="text-3xl font-bold text-slate-800 mb-8">إنجازاتنا الجماعية</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-blue-600 mb-2">9</div>
+                <div className="text-slate-600">شركات متخصصة</div>
               </div>
-              <div className="text-5xl font-bold text-gradient-primary mb-3 group-hover:scale-110 transition-transform duration-300">12,800+</div>
-              <div className="text-xl font-semibold text-primary mb-1">مشروع منجز</div>
-              <div className="text-sm text-muted-foreground">Total Completed Projects</div>
-              <div className="text-xs text-green-500 font-medium mt-2">+95% هذا العام</div>
-            </div>
-            
-            <div className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 border border-white/10">
-              <div className="absolute top-4 right-4">
-                <Users className="w-6 h-6 text-green-400 opacity-50" />
+              <div className="text-center">
+                <div className="text-4xl font-bold text-purple-600 mb-2">15K+</div>
+                <div className="text-slate-600">مشروع منجز</div>
               </div>
-              <div className="text-5xl font-bold text-gradient-primary mb-3 group-hover:scale-110 transition-transform duration-300">6,505+</div>
-              <div className="text-xl font-semibold text-primary mb-1">عميل راضٍ</div>
-              <div className="text-sm text-muted-foreground">Satisfied Global Clients</div>
-              <div className="text-xs text-green-500 font-medium mt-2">+78% هذا العام</div>
-            </div>
-            
-            <div className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 border border-white/10">
-              <div className="absolute top-4 right-4">
-                <MapPin className="w-6 h-6 text-purple-400 opacity-50" />
+              <div className="text-center">
+                <div className="text-4xl font-bold text-indigo-600 mb-2">8K+</div>
+                <div className="text-slate-600">عميل راضي</div>
               </div>
-              <div className="text-5xl font-bold text-gradient-primary mb-3 group-hover:scale-110 transition-transform duration-300">185+</div>
-              <div className="text-xl font-semibold text-primary mb-1">دولة حول العالم</div>
-              <div className="text-sm text-muted-foreground">Countries Worldwide</div>
-              <div className="text-xs text-green-500 font-medium mt-2">+65 دولة جديدة</div>
-            </div>
-          </div>
-
-          {/* Achievement Badges */}
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 text-sm font-bold hover:scale-105 transition-transform duration-200">
-              🏆 أفضل شركة تقنية 2024
-            </Badge>
-            <Badge className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-4 py-2 text-sm font-bold hover:scale-105 transition-transform duration-200">
-              🌟 99.8% معدل رضا العملاء
-            </Badge>
-            <Badge className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-4 py-2 text-sm font-bold hover:scale-105 transition-transform duration-200">
-              🚀 نمو +250% في 2024
-            </Badge>
-            <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 text-sm font-bold hover:scale-105 transition-transform duration-200">
-              🌍 قائد السوق العالمي
-            </Badge>
-          </div>
-
-          {/* Bottom Stats */}
-          <div className="text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 border border-primary/20">
-            <p className="text-lg text-primary font-semibold mb-2">
-              نواصل ريادتنا العالمية بفضل فريقنا المتميز المكون من +850 خبير متخصص
-            </p>
-            <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>نعمل على مدار الساعة لخدمة عملائنا في جميع أنحاء العالم</span>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-emerald-600 mb-2">42</div>
+                <div className="text-slate-600">دولة حول العالم</div>
+              </div>
             </div>
           </div>
         </div>
