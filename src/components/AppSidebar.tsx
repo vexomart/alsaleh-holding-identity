@@ -83,7 +83,10 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      className={`${collapsed ? "w-16" : "w-72"} bg-white border-r border-slate-200 transition-all duration-200 flex flex-col max-h-screen`}
+      className={`${collapsed ? "w-16" : "w-72"} bg-white border-r border-slate-200 transition-all duration-200 
+                  h-full lg:h-screen flex flex-col
+                  fixed lg:relative top-16 lg:top-0 left-0 z-40 lg:z-auto
+                  lg:translate-x-0 ${collapsed ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'}`}
       collapsible="icon"
     >
       {/* Header */}
