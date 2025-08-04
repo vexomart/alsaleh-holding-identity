@@ -102,18 +102,18 @@ const Contracts = () => {
       </section>
 
       {/* Contract Process */}
-      <section className="py-20">
+      <section id="process" className="py-20">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               خطوات التعاقد
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              عملية بسيطة وواضحة للتعاقد معنا
+              عملية بسيطة وواضحة للتعاقد معنا في 4 خطوات أساسية
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {contractSteps.map((step, index) => (
               <Card key={step.id} className="relative group hover:shadow-lg transition-all duration-300">
                 <CardHeader>
@@ -135,22 +135,89 @@ const Contracts = () => {
               </Card>
             ))}
           </div>
+
+          {/* Detailed Contract Process */}
+          <div className="max-w-4xl mx-auto">
+            <Card className="p-8">
+              <CardHeader className="text-center mb-8">
+                <CardTitle className="text-2xl mb-4">تفاصيل عملية التعاقد</CardTitle>
+                <CardDescription className="text-lg">
+                  إليك التفاصيل الكاملة لكل خطوة في عملية التعاقد معنا
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-8">
+                  <div className="border-l-4 border-blue-500 pl-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">1. التقييم الأولي والاستشارة</h3>
+                    <p className="text-gray-700 mb-4">
+                      نبدأ بجلسة استشارية مجانية لفهم احتياجاتكم ومتطلباتكم بشكل كامل. خلال هذه المرحلة:
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-2">
+                      <li>تحليل الوضع الحالي لشركتكم</li>
+                      <li>تحديد الأهداف المطلوب تحقيقها</li>
+                      <li>دراسة الميزانية المتاحة</li>
+                      <li>تقييم الجدول الزمني المقترح</li>
+                    </ul>
+                  </div>
+
+                  <div className="border-l-4 border-green-500 pl-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">2. وضع الخطة الإستراتيجية</h3>
+                    <p className="text-gray-700 mb-4">
+                      بناءً على التقييم الأولي، نضع خطة شاملة ومفصلة تشمل:
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-2">
+                      <li>تحديد نطاق العمل بدقة</li>
+                      <li>وضع الجدول الزمني التفصيلي</li>
+                      <li>تحديد الموارد المطلوبة</li>
+                      <li>تحديد معايير النجاح والقياس</li>
+                    </ul>
+                  </div>
+
+                  <div className="border-l-4 border-purple-500 pl-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">3. العرض الفني والمالي</h3>
+                    <p className="text-gray-700 mb-4">
+                      نقدم عرضاً تقنياً ومالياً شاملاً يتضمن:
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-2">
+                      <li>الحلول التقنية المقترحة</li>
+                      <li>التكلفة التفصيلية للمشروع</li>
+                      <li>مراحل التسليم والدفع</li>
+                      <li>الضمانات وخدمات ما بعد البيع</li>
+                    </ul>
+                  </div>
+
+                  <div className="border-l-4 border-orange-500 pl-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">4. التوقيع وبدء التنفيذ</h3>
+                    <p className="text-gray-700 mb-4">
+                      بعد الموافقة على العرض، نقوم بـ:
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-2">
+                      <li>توقيع العقد النهائي</li>
+                      <li>تشكيل فريق العمل المختص</li>
+                      <li>بدء تنفيذ المشروع حسب الخطة</li>
+                      <li>تقديم تقارير دورية عن التقدم</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
       {/* Contract Types */}
-      <section className="py-20 bg-white">
+      <section id="types" className="py-20 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               أنواع العقود
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              اختر نوع العقد المناسب لاحتياجاتك
+              نوفر مجموعة شاملة من أنواع العقود لتلبية جميع احتياجاتكم
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {contractTypes.map((contract, index) => (
               <Card key={index} className="relative group hover:shadow-xl transition-all duration-300 border-2 hover:border-blue-200">
                 <CardHeader>
@@ -178,37 +245,205 @@ const Contracts = () => {
               </Card>
             ))}
           </div>
+
+          {/* Detailed Contract Types */}
+          <div className="max-w-6xl mx-auto">
+            <h3 className="text-2xl font-bold text-center text-gray-900 mb-12">
+              تفاصيل أنواع العقود
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Contract Methods */}
+              <Card className="p-6">
+                <CardHeader>
+                  <CardTitle className="text-xl text-blue-600">طرق التعاقد</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="border-l-4 border-blue-500 pl-4">
+                      <h4 className="font-bold text-gray-900">العقود الثابتة</h4>
+                      <p className="text-gray-600 text-sm">سعر محدد مسبقاً لكامل المشروع</p>
+                    </div>
+                    <div className="border-l-4 border-green-500 pl-4">
+                      <h4 className="font-bold text-gray-900">العقود بالساعة</h4>
+                      <p className="text-gray-600 text-sm">تسعير بناءً على ساعات العمل الفعلية</p>
+                    </div>
+                    <div className="border-l-4 border-purple-500 pl-4">
+                      <h4 className="font-bold text-gray-900">العقود المختلطة</h4>
+                      <p className="text-gray-600 text-sm">مزيج من التسعير الثابت والمتغير</p>
+                    </div>
+                    <div className="border-l-4 border-orange-500 pl-4">
+                      <h4 className="font-bold text-gray-900">عقود الشراكة</h4>
+                      <p className="text-gray-600 text-sm">شراكة طويلة المدى في المشاريع</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Contract Durations */}
+              <Card className="p-6">
+                <CardHeader>
+                  <CardTitle className="text-xl text-green-600">مدد العقود</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="border-l-4 border-red-500 pl-4">
+                      <h4 className="font-bold text-gray-900">عقود قصيرة المدى</h4>
+                      <p className="text-gray-600 text-sm">من أسبوع إلى 3 أشهر</p>
+                    </div>
+                    <div className="border-l-4 border-yellow-500 pl-4">
+                      <h4 className="font-bold text-gray-900">عقود متوسطة المدى</h4>
+                      <p className="text-gray-600 text-sm">من 3 أشهر إلى سنة</p>
+                    </div>
+                    <div className="border-l-4 border-blue-500 pl-4">
+                      <h4 className="font-bold text-gray-900">عقود طويلة المدى</h4>
+                      <p className="text-gray-600 text-sm">أكثر من سنة</p>
+                    </div>
+                    <div className="border-l-4 border-indigo-500 pl-4">
+                      <h4 className="font-bold text-gray-900">عقود الصيانة</h4>
+                      <p className="text-gray-600 text-sm">دعم مستمر وصيانة دورية</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Requirements */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Requirements & Terms */}
+      <section id="requirements" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                المتطلبات للتعاقد
+                شروط ومتطلبات التعاقد
               </h2>
               <p className="text-xl text-gray-600">
-                الوثائق والمتطلبات المطلوبة لبدء عملية التعاقد
+                كل ما تحتاج معرفته حول شروط ومتطلبات التعاقد معنا
               </p>
             </div>
 
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {/* Requirements */}
+              <Card className="p-8">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-center mb-6">
+                    <Building2 className="w-8 h-8 mx-auto mb-4 text-blue-600" />
+                    المستندات المطلوبة
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {requirements.map((requirement, index) => (
+                      <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                        <Check className="w-6 h-6 text-green-500 flex-shrink-0" />
+                        <span className="text-gray-800 font-medium">{requirement}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Contract Terms */}
+              <Card className="p-8">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-center mb-6">
+                    <Shield className="w-8 h-8 mx-auto mb-4 text-green-600" />
+                    شروط التعاقد الأساسية
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="border-l-4 border-blue-500 pl-4">
+                      <h4 className="font-bold text-gray-900 mb-2">الالتزام بالجودة</h4>
+                      <p className="text-gray-600 text-sm">ضمان تسليم المشروع وفقاً لأعلى معايير الجودة</p>
+                    </div>
+                    <div className="border-l-4 border-green-500 pl-4">
+                      <h4 className="font-bold text-gray-900 mb-2">الالتزام بالوقت</h4>
+                      <p className="text-gray-600 text-sm">تسليم المشروع في المواعيد المحددة</p>
+                    </div>
+                    <div className="border-l-4 border-purple-500 pl-4">
+                      <h4 className="font-bold text-gray-900 mb-2">السرية التامة</h4>
+                      <p className="text-gray-600 text-sm">حماية بيانات العميل وعدم إفشائها</p>
+                    </div>
+                    <div className="border-l-4 border-orange-500 pl-4">
+                      <h4 className="font-bold text-gray-900 mb-2">الدعم الفني</h4>
+                      <p className="text-gray-600 text-sm">تقديم دعم فني شامل لفترة محددة</p>
+                    </div>
+                    <div className="border-l-4 border-red-500 pl-4">
+                      <h4 className="font-bold text-gray-900 mb-2">ضمان المشروع</h4>
+                      <p className="text-gray-600 text-sm">ضمان ضد العيوب الفنية لمدة عام</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Payment Terms */}
+            <Card className="p-8 mb-12">
+              <CardHeader>
+                <CardTitle className="text-2xl text-center mb-6">
+                  <Award className="w-8 h-8 mx-auto mb-4 text-purple-600" />
+                  شروط الدفع والتسليم
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
+                    <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-white font-bold text-xl">30%</span>
+                    </div>
+                    <h4 className="font-bold text-gray-900 mb-2">دفعة البداية</h4>
+                    <p className="text-gray-600 text-sm">عند توقيع العقد وبدء المشروع</p>
+                  </div>
+                  
+                  <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
+                    <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-white font-bold text-xl">40%</span>
+                    </div>
+                    <h4 className="font-bold text-gray-900 mb-2">دفعة المتابعة</h4>
+                    <p className="text-gray-600 text-sm">عند اكتمال 50% من المشروع</p>
+                  </div>
+                  
+                  <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
+                    <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-white font-bold text-xl">30%</span>
+                    </div>
+                    <h4 className="font-bold text-gray-900 mb-2">دفعة الإنجاز</h4>
+                    <p className="text-gray-600 text-sm">عند التسليم النهائي للمشروع</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Legal Terms */}
             <Card className="p-8">
               <CardHeader>
                 <CardTitle className="text-2xl text-center mb-6">
-                  <Building2 className="w-8 h-8 mx-auto mb-4 text-blue-600" />
-                  المستندات المطلوبة
+                  <FileText className="w-8 h-8 mx-auto mb-4 text-orange-600" />
+                  الشروط القانونية
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {requirements.map((requirement, index) => (
-                    <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                      <Check className="w-6 h-6 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-800 font-medium">{requirement}</span>
-                    </div>
-                  ))}
+                  <div className="space-y-4">
+                    <h4 className="font-bold text-gray-900 text-lg">حقوق الملكية الفكرية</h4>
+                    <ul className="list-disc list-inside text-gray-600 space-y-2">
+                      <li>العميل يحصل على كامل حقوق الملكية للمشروع</li>
+                      <li>الكود المصدري يُسلم للعميل عند الانتهاء</li>
+                      <li>حماية براءات الاختراع إن وجدت</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-bold text-gray-900 text-lg">المسؤولية والضمان</h4>
+                    <ul className="list-disc list-inside text-gray-600 space-y-2">
+                      <li>ضمان ضد العيوب الفنية لمدة 12 شهر</li>
+                      <li>دعم فني مجاني لمدة 6 أشهر</li>
+                      <li>تحديثات أمنية ضرورية مجانية</li>
+                    </ul>
+                  </div>
                 </div>
               </CardContent>
             </Card>
