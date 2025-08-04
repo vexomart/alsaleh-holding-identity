@@ -59,6 +59,7 @@ import UserGuide from "./pages/UserGuide";
 import Auth from "./pages/Auth";
 import ClientDashboard from "./pages/ClientDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import CustomerServiceSystem from "./pages/CustomerServiceSystem";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -130,10 +131,11 @@ const App = () => {
           <Route path="/business-services" element={<BusinessServices />} />
           <Route path="/department/:id" element={<DepartmentDetails />} />
           <Route path="/user-guide" element={<UserGuide />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/client-dashboard" element={<ClientDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/client-dashboard" element={<ClientDashboard />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/customer-service" element={<CustomerServiceSystem />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
