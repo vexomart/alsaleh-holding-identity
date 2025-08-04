@@ -150,7 +150,7 @@ const HeroSection = () => {
         <div className="mb-6 sm:mb-8 space-y-4 sm:space-y-6">
           <div className="relative text-center">
             {/* Main Title with Better Visibility - Responsive Sizes */}
-            <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl px-4 sm:px-0">
+            <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl px-4 sm:px-0 text-center">
               شركة علي صالح الشهري القابضة
               
               {/* Animated Underline */}
@@ -158,7 +158,7 @@ const HeroSection = () => {
             </h1>
             
             {/* Text Glow Effect for Better Visibility - Responsive */}
-            <div className="absolute inset-0 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/20 blur-sm px-4 sm:px-0">
+            <div className="absolute inset-0 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/20 blur-sm px-4 sm:px-0 text-center">
               شركة علي صالح الشهري القابضة
             </div>
           </div>
@@ -166,7 +166,7 @@ const HeroSection = () => {
           {/* Enhanced Subtitle - Responsive */}
           <div className="flex justify-center items-center gap-2 sm:gap-3 animate-fade-in px-4 sm:px-0" style={{ animationDelay: '0.3s' }}>
             <Target className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-secondary animate-pulse" />
-            <p className="text-lg sm:text-xl md:text-2xl font-bold text-secondary drop-shadow-lg">
+            <p className="text-lg sm:text-xl md:text-2xl font-bold text-secondary drop-shadow-lg text-center">
               رؤية • ابتكار • تميز
             </p>
             <Rocket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-secondary animate-bounce" />
