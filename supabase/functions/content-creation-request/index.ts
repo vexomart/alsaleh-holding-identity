@@ -33,7 +33,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "نظام طلبات المحتوى <noreply@emkandigital.com>",
+      from: "إمكان الرقمية <onboarding@resend.dev>",
       to: ["content@emkandigital.com", "admin@emkandigital.com"],
       subject: `طلب جديد لخدمة ${requestData.serviceName}`,
       html: `
@@ -87,7 +87,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "إمكان الرقمية <noreply@emkandigital.com>",
+      from: "إمكان الرقمية <onboarding@resend.dev>",
       to: [requestData.email],
       subject: `شكراً لك - تم استلام طلبك لخدمة ${requestData.serviceName}`,
       html: `
