@@ -219,22 +219,24 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
         </DialogHeader>
         <div className="space-y-6">
           {/* Payment Gateway Selection */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <label className="text-sm font-medium text-foreground">
               اختر بوابة الدفع
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            
+            {/* Active Payment Methods */}
+            <div className="grid grid-cols-3 gap-3">
               <button
                 type="button"
                 onClick={() => setSelectedPaymentGateway('tap')}
-                className={`p-3 border-2 rounded-lg transition-all hover-scale ${
+                className={`p-4 border-2 rounded-lg transition-all hover-scale ${
                   selectedPaymentGateway === 'tap'
                     ? 'border-primary bg-primary/10 shadow-glow'
                     : 'border-border hover:border-primary/50'
                 }`}
               >
                 <div className="text-center">
-                  <div className="font-semibold text-xs">Tap</div>
+                  <div className="font-semibold text-sm">Tap</div>
                   <div className="text-xs text-muted-foreground mt-1">
                     دفع آمن
                   </div>
@@ -243,14 +245,14 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
               <button
                 type="button"
                 onClick={() => setSelectedPaymentGateway('paylink')}
-                className={`p-3 border-2 rounded-lg transition-all hover-scale ${
+                className={`p-4 border-2 rounded-lg transition-all hover-scale ${
                   selectedPaymentGateway === 'paylink'
                     ? 'border-primary bg-primary/10 shadow-glow'
                     : 'border-border hover:border-primary/50'
                 }`}
               >
                 <div className="text-center">
-                  <div className="font-semibold text-xs">Paylink</div>
+                  <div className="font-semibold text-sm">Paylink</div>
                   <div className="text-xs text-muted-foreground mt-1">
                     دفع محلي
                   </div>
@@ -259,28 +261,63 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
               <button
                 type="button"
                 onClick={() => setSelectedPaymentGateway('stc_pay')}
-                className={`p-3 border-2 rounded-lg transition-all hover-scale ${
+                className={`p-4 border-2 rounded-lg transition-all hover-scale ${
                   selectedPaymentGateway === 'stc_pay'
                     ? 'border-primary bg-primary/10 shadow-glow'
                     : 'border-border hover:border-primary/50'
                 }`}
               >
                 <div className="text-center">
-                  <div className="font-semibold text-xs">STC Pay</div>
+                  <div className="font-semibold text-sm">STC Pay</div>
                   <div className="text-xs text-muted-foreground mt-1">
                     محفظة رقمية
                   </div>
                 </div>
               </button>
             </div>
-            {/* Tamara Coming Soon */}
-            <div className="text-xs text-muted-foreground text-center p-3 glass-effect rounded-lg border">
-              <div className="flex items-center justify-center gap-2">
-                <span>🔮</span>
-                <span className="font-medium">تمارا - الدفع بالأقساط</span>
-                <Badge variant="secondary" className="text-xs">
-                  قريباً
-                </Badge>
+            
+            {/* Coming Soon Section */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-muted-foreground text-center">قريباً</h4>
+              
+              {/* Row 1: Installments & Tamara */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-4 bg-gradient-to-r from-secondary/10 to-accent/10 border border-secondary/20 rounded-lg text-center relative overflow-hidden">
+                  <div className="absolute top-2 right-2">
+                    <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
+                  </div>
+                  <img src="/src/assets/tamara-logo.png" alt="تمارا" className="w-8 h-8 mx-auto mb-2 opacity-60" />
+                  <div className="font-semibold text-sm text-muted-foreground">تمارا</div>
+                  <div className="text-xs text-muted-foreground mt-1">الدفع بالأقساط</div>
+                </div>
+                <div className="p-4 bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/20 rounded-lg text-center relative overflow-hidden">
+                  <div className="absolute top-2 right-2">
+                    <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
+                  </div>
+                  <img src="/src/assets/tabby-logo.png" alt="تابي" className="w-8 h-8 mx-auto mb-2 opacity-60" />
+                  <div className="font-semibold text-sm text-muted-foreground">تابي</div>
+                  <div className="text-xs text-muted-foreground mt-1">أقساط بدون فوائد</div>
+                </div>
+              </div>
+              
+              {/* Row 2: Banking Solutions */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-4 bg-gradient-to-r from-primary/10 to-success/10 border border-primary/20 rounded-lg text-center relative overflow-hidden">
+                  <div className="absolute top-2 right-2">
+                    <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
+                  </div>
+                  <img src="/src/assets/alrajhi-bank-logo.png" alt="البنك الراجحي" className="w-8 h-8 mx-auto mb-2 opacity-60" />
+                  <div className="font-semibold text-sm text-muted-foreground">البنك الراجحي</div>
+                  <div className="text-xs text-muted-foreground mt-1">حلول مصرفية</div>
+                </div>
+                <div className="p-4 bg-gradient-to-r from-warning/10 to-destructive/10 border border-warning/20 rounded-lg text-center relative overflow-hidden">
+                  <div className="absolute top-2 right-2">
+                    <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
+                  </div>
+                  <img src="/src/assets/tasaheel-logo.png" alt="تساهيل" className="w-8 h-8 mx-auto mb-2 opacity-60" />
+                  <div className="font-semibold text-sm text-muted-foreground">تساهيل</div>
+                  <div className="text-xs text-muted-foreground mt-1">تمويل مرن</div>
+                </div>
               </div>
             </div>
           </div>
