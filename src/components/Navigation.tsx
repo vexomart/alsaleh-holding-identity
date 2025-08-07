@@ -93,9 +93,9 @@ const Navigation = () => {
                 <Mail className="w-4 h-4" />
                 <a href="mailto:info@alialshehriholding.com">info@alialshehriholding.com</a>
               </div>
-              <div className="flex items-center gap-2 text-gray-300 hover:text-green-400 transition-colors">
+              <div className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors">
                 <Phone className="w-4 h-4" />
-                <a href="tel:+966555812567">+966 555 812 567</a>
+                <a href="tel:0555812567">٠٥٥٥٨١٢٥٦٧</a>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -310,7 +310,7 @@ const Navigation = () => {
                   className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-blue-500 text-blue-600 hover:bg-blue-50"
                   asChild
                 >
-                  <a href="tel:+966555812567">
+                  <a href="tel:0555812567">
                     <Phone className="w-3 h-3" />
                     <span className="hidden xl:block">اتصال</span>
                   </a>
@@ -348,9 +348,9 @@ const Navigation = () => {
                 {/* Mobile Contact Info */}
                 <div className="bg-gray-50 rounded-lg p-3 mb-3">
                   <div className="flex flex-col gap-2 text-sm">
-                    <a href="tel:+966555812567" className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
+                    <a href="tel:0555812567" className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
                       <Phone className="w-4 h-4" />
-                      <span>+966 555 812 567</span>
+                      <span>٠٥٥٥٨١٢٥٦٧</span>
                     </a>
                     <a href="https://wa.me/966555812567" className="flex items-center gap-2 text-green-600 hover:text-green-800">
                       <MessageCircle className="w-4 h-4" />
