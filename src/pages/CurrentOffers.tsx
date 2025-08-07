@@ -27,7 +27,11 @@ import {
   Crown,
   Award,
   CreditCard,
-  Loader2
+  Loader2,
+  ShoppingBag,
+  Palette,
+  TrendingUp,
+  Globe
 } from "lucide-react";
 import OfferRequestForm from "@/components/OfferRequestForm";
 
@@ -51,9 +55,12 @@ const currentOffers = [
       "ربط وسائل التواصل الاجتماعي"
     ],
     badge: "الأكثر طلباً",
-    icon: Zap,
-    gradientFrom: "from-primary",
-    gradientTo: "to-primary-glow"
+    icon: Globe,
+    gradientFrom: "from-blue-500",
+    gradientTo: "to-indigo-600",
+    accentColor: "text-blue-500",
+    bgPattern: "bg-blue-50",
+    category: "تطوير الويب"
   },
   {
     id: 2,
@@ -76,9 +83,12 @@ const currentOffers = [
       "تدريب مجاني على النظام"
     ],
     badge: "عرض محدود",
-    icon: Crown,
+    icon: ShoppingBag,
     gradientFrom: "from-orange-500",
-    gradientTo: "to-red-500"
+    gradientTo: "to-red-500",
+    accentColor: "text-orange-500",
+    bgPattern: "bg-orange-50",
+    category: "التجارة الإلكترونية"
   },
   {
     id: 3,
@@ -99,9 +109,12 @@ const currentOffers = [
       "دعم واستشارة تسويقية مستمرة"
     ],
     badge: "عرض محدود",
-    icon: Target,
-    gradientFrom: "from-success",
-    gradientTo: "to-accent"
+    icon: TrendingUp,
+    gradientFrom: "from-green-500",
+    gradientTo: "to-emerald-500",
+    accentColor: "text-green-500",
+    bgPattern: "bg-green-50",
+    category: "التسويق الرقمي"
   },
   {
     id: 4,
@@ -122,9 +135,12 @@ const currentOffers = [
       "حقوق الملكية الكاملة لك"
     ],
     badge: "توفير 40%",
-    icon: Sparkles,
-    gradientFrom: "from-secondary",
-    gradientTo: "to-warning"
+    icon: Palette,
+    gradientFrom: "from-purple-500",
+    gradientTo: "to-pink-500",
+    accentColor: "text-purple-500",
+    bgPattern: "bg-purple-50",
+    category: "التصميم والهوية"
   }
 ];
 
@@ -670,276 +686,274 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
 
 const CurrentOffers = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-primary/5 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5 relative overflow-hidden">
       <Navigation />
       
       {/* Enhanced Floating Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-80 h-80 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute top-40 right-40 w-96 h-96 bg-gradient-to-r from-secondary/15 to-accent/15 rounded-full blur-3xl animate-float-delayed"></div>
-        <div className="absolute bottom-40 left-40 w-[28rem] h-[28rem] bg-gradient-to-r from-accent/10 to-primary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
-        <div className="absolute bottom-20 right-20 w-72 h-72 bg-gradient-to-r from-warning/20 to-destructive/20 rounded-full blur-3xl animate-float-delayed" style={{ animationDelay: '6s' }}></div>
+        <div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-r from-primary/15 to-accent/15 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-40 right-40 w-[28rem] h-[28rem] bg-gradient-to-r from-secondary/10 to-accent/10 rounded-full blur-3xl animate-float-delayed"></div>
+        <div className="absolute bottom-40 left-40 w-80 h-80 bg-gradient-to-r from-accent/10 to-primary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute bottom-20 right-20 w-72 h-72 bg-gradient-to-r from-warning/15 to-destructive/15 rounded-full blur-3xl animate-float-delayed" style={{ animationDelay: '6s' }}></div>
         
         {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-40"></div>
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        
+        {/* Floating Icons */}
+        <div className="absolute top-32 right-1/4 text-primary/20 animate-float" style={{ animationDelay: '2s' }}>
+          <Sparkles className="w-8 h-8" />
+        </div>
+        <div className="absolute bottom-32 left-1/4 text-accent/20 animate-float-delayed" style={{ animationDelay: '3s' }}>
+          <Star className="w-6 h-6" />
+        </div>
+        <div className="absolute top-1/2 left-16 text-secondary/20 animate-float" style={{ animationDelay: '5s' }}>
+          <Crown className="w-7 h-7" />
+        </div>
       </div>
 
-      <main className="relative z-10 pt-24 pb-16">
-        <div className="container mx-auto px-4">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full px-6 py-3 mb-8 border border-primary/20 animate-fade-in">
+            <Gift className="w-5 h-5 text-primary animate-bounce-gentle" />
+            <span className="text-primary font-semibold">عروض حصرية ومحدودة</span>
+            <Sparkles className="w-5 h-5 text-accent animate-pulse" />
+          </div>
           
-          {/* Enhanced Hero Header */}
-          <div className="text-center mb-20 space-y-8">
-            {/* Limited Time Badge */}
-            <div className="relative inline-block animate-fade-in">
-              <div className="absolute inset-0 bg-gradient-to-r from-destructive to-warning rounded-full blur-xl opacity-40 animate-glow"></div>
-              <div className="relative glass-effect bg-gradient-to-r from-destructive to-warning text-white px-10 py-5 rounded-full shadow-corporate">
-                <div className="flex items-center gap-4 text-lg font-bold">
-                  <Timer className="w-7 h-7 animate-bounce-gentle" />
-                  <span className="text-xl">عروض محدودة الوقت</span>
-                  <Crown className="w-7 h-7 animate-bounce-gentle" style={{ animationDelay: '0.5s' }} />
-                </div>
-              </div>
-            </div>
-            
-            {/* Main Title */}
-            <div className="animate-fade-in delay-100">
-              <h1 className="text-6xl md:text-8xl font-black mb-6 text-gradient-primary leading-tight">
-                العروض الحالية المميزة
-              </h1>
-              <div className="w-32 h-2 bg-gradient-to-r from-primary to-accent mx-auto rounded-full shadow-glow"></div>
-            </div>
-            
-            {/* Description */}
-            <p className="text-2xl md:text-3xl text-muted-foreground max-w-5xl mx-auto leading-relaxed animate-fade-in delay-200 font-medium">
-              استفد من عروضنا الحصرية واحصل على أفضل الخدمات التقنية بأسعار استثنائية مع ضمان الجودة العالمية
-            </p>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent mb-6 animate-scale-in">
+            العروض الحالية
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            استفد من عروضنا الاستثنائية واحصل على أفضل الخدمات التقنية بأسعار لا تُقاوم
+          </p>
 
-            {/* Enhanced Stats Counter */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto animate-fade-in delay-300">
-              <div className="glass-effect bg-card/80 backdrop-blur-lg rounded-3xl p-8 shadow-corporate border hover:shadow-glow transition-all duration-500 hover-scale group">
-                <div className="text-4xl font-black text-primary mb-3 group-hover:scale-110 transition-transform duration-300">+500</div>
-                <div className="text-muted-foreground font-semibold text-lg">عميل سعيد</div>
-                <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent mt-3 rounded-full"></div>
-              </div>
-              <div className="glass-effect bg-card/80 backdrop-blur-lg rounded-3xl p-8 shadow-corporate border hover:shadow-glow transition-all duration-500 hover-scale group">
-                <div className="text-4xl font-black text-success mb-3 group-hover:scale-110 transition-transform duration-300">+1000</div>
-                <div className="text-muted-foreground font-semibold text-lg">مشروع مكتمل</div>
-                <div className="w-16 h-1 bg-gradient-to-r from-success to-accent mt-3 rounded-full"></div>
-              </div>
-              <div className="glass-effect bg-card/80 backdrop-blur-lg rounded-3xl p-8 shadow-corporate border hover:shadow-glow transition-all duration-500 hover-scale group">
-                <div className="text-4xl font-black text-secondary mb-3 group-hover:scale-110 transition-transform duration-300">%99</div>
-                <div className="text-muted-foreground font-semibold text-lg">معدل الرضا</div>
-                <div className="w-16 h-1 bg-gradient-to-r from-secondary to-accent mt-3 rounded-full"></div>
-              </div>
+          {/* Stats Counter */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto mb-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">99%</div>
+              <div className="text-muted-foreground">رضا العملاء</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-accent mb-2">500+</div>
+              <div className="text-muted-foreground">مشروع مكتمل</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-secondary mb-2">24/7</div>
+              <div className="text-muted-foreground">دعم فني</div>
             </div>
           </div>
 
-          {/* Enhanced Offers Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-            {currentOffers.map((offer, index) => {
-              const IconComponent = offer.icon;
-              return (
-                <Card 
-                  key={offer.id} 
-                  className={`relative overflow-hidden group hover-scale transition-all duration-700 border-0 shadow-corporate hover:shadow-glow glass-effect bg-card/90 backdrop-blur-xl animate-fade-in delay-${index * 100}`}
-                >
-                  {/* Enhanced Glow Effect */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-3xl blur-xl`}></div>
-                  
-                  {/* Floating Particles */}
-                  <div className="absolute inset-0 overflow-hidden rounded-3xl">
-                    <div className="absolute top-4 right-4 w-2 h-2 bg-primary rounded-full animate-bounce-gentle"></div>
-                    <div className="absolute top-8 left-6 w-1 h-1 bg-accent rounded-full animate-float" style={{ animationDelay: '1s' }}></div>
-                    <div className="absolute bottom-8 right-8 w-1.5 h-1.5 bg-success rounded-full animate-bounce-gentle" style={{ animationDelay: '2s' }}></div>
-                  </div>
+          {/* Quick CTA */}
+          <div className="inline-flex items-center gap-4 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Timer className="w-5 h-5 text-destructive animate-pulse" />
+              <span>العروض محدودة الوقت</span>
+            </div>
+            <div className="h-6 w-px bg-border"></div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <CheckCircle className="w-5 h-5 text-success" />
+              <span>ضمان الجودة</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                  {/* Premium Badge */}
-                  <div className="absolute -top-3 -right-3 z-20">
-                    <div className="relative">
-                      <Badge className={`bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} text-white px-6 py-3 text-sm font-bold shadow-corporate transform rotate-12 group-hover:rotate-6 transition-transform duration-300 animate-bounce-gentle`}>
-                        <Award className="w-4 h-4 mr-2" />
+      {/* Enhanced Offers Grid */}
+      <section className="relative px-6 pb-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {currentOffers.map((offer, index) => (
+              <Card 
+                key={offer.id} 
+                className={`group relative overflow-hidden border-0 shadow-2xl bg-gradient-to-br ${offer.bgPattern} backdrop-blur-sm transition-all duration-500 hover:shadow-3xl hover:-translate-y-2 animate-fade-in hover-scale`}
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
+                {/* Background Effects */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${offer.gradientFrom}/20 ${offer.gradientTo}/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/10 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-white/5 to-transparent rounded-full translate-y-12 -translate-x-12"></div>
+                
+                {/* Service-specific floating elements */}
+                <div className="absolute top-4 left-4 opacity-30 animate-float">
+                  <offer.icon className={`w-6 h-6 ${offer.accentColor}`} />
+                </div>
+                <div className="absolute bottom-4 right-4 opacity-20 animate-float-delayed">
+                  <Sparkles className={`w-4 h-4 ${offer.accentColor}`} />
+                </div>
+
+                <CardHeader className="relative z-10 pb-4">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="space-y-2">
+                      <Badge 
+                        className={`bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} text-white shadow-lg animate-bounce-gentle text-sm px-4 py-2`}
+                      >
                         {offer.badge}
+                      </Badge>
+                      <div className="text-xs text-muted-foreground bg-white/50 rounded-full px-2 py-1 inline-block">
+                        {offer.category}
+                      </div>
+                    </div>
+                    
+                    <div className="text-left">
+                      <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                        <Timer className="w-4 h-4 text-destructive animate-pulse" />
+                        <span className="text-sm font-medium">باقي {offer.timeLeft}</span>
+                      </div>
+                      <Badge variant="destructive" className="text-xs animate-pulse">
+                        خصم {offer.discount}
                       </Badge>
                     </div>
                   </div>
 
-                  {/* Time Countdown */}
-                  <div className="absolute top-6 left-6 z-20">
-                    <div className="bg-destructive text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-glow flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>متبقي {offer.timeLeft}</span>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className={`p-4 rounded-2xl bg-gradient-to-br ${offer.gradientFrom}/20 ${offer.gradientTo}/20 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-white/20`}>
+                      <offer.icon className={`w-8 h-8 ${offer.accentColor}`} />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                        {offer.title}
+                      </CardTitle>
                     </div>
                   </div>
 
-                  <CardHeader className="pt-20 pb-6 relative z-10">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div 
-                        className={`p-4 rounded-2xl bg-gradient-to-br ${offer.gradientFrom} ${offer.gradientTo} shadow-xl hover-scale transition-all duration-300 group-hover:shadow-glow relative`}
-                      >
-                        <div className={`absolute inset-0 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} rounded-2xl blur-md opacity-50 animate-glow`}></div>
-                        <IconComponent className="w-8 h-8 text-white relative z-10" />
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-2xl mb-3 text-right group-hover:text-primary transition-colors duration-300">
-                          {offer.title}
-                        </CardTitle>
-                        <p className="text-base leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors duration-300">
-                          {offer.description}
-                        </p>
-                      </div>
-                    </div>
-                  </CardHeader>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {offer.description}
+                  </p>
+                </CardHeader>
 
-                  <CardContent className="space-y-6 relative z-10">
-                    {/* Enhanced Pricing */}
-                    <div className="glass-effect bg-card/50 rounded-3xl p-8 relative overflow-hidden border hover:border-primary/30 transition-colors duration-300">
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 animate-glow"></div>
-                      <div className="relative z-10 text-center">
-                        <div className="flex items-center justify-center gap-4 mb-4">
-                          <span className={`text-4xl font-black bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} bg-clip-text text-transparent`}>
-                            {offer.currentPrice} ر.س
+                <CardContent className="relative z-10 pt-0">
+                  {/* Enhanced Pricing Section */}
+                  <div className={`bg-gradient-to-r ${offer.gradientFrom}/10 ${offer.gradientTo}/10 rounded-2xl p-6 mb-6 border border-white/20 shadow-inner backdrop-blur-sm`}>
+                    <div className="flex items-end justify-between mb-4">
+                      <div>
+                        <div className="flex items-baseline gap-3">
+                          <span className={`text-4xl font-bold ${offer.accentColor}`}>
+                            {offer.currentPrice}
                           </span>
-                          <Badge className="bg-destructive text-white px-4 py-2 text-lg font-bold animate-bounce-gentle shadow-xl">
-                            خصم {offer.discount}
-                          </Badge>
+                          <span className="text-lg text-muted-foreground">ر.س</span>
                         </div>
-                        <div className="flex items-center justify-center gap-3 mb-3">
-                          <span className="text-2xl text-muted-foreground line-through font-medium">
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-lg text-muted-foreground line-through">
                             {offer.originalPrice} ر.س
                           </span>
-                          <div className="text-success font-bold text-lg bg-success/10 px-3 py-1 rounded-full border border-success/20">
-                            وفر {parseInt(offer.originalPrice) - parseInt(offer.currentPrice)} ريال
-                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm text-muted-foreground">وفر</div>
+                        <div className="text-xl font-bold text-success">
+                          {(parseFloat(offer.originalPrice.replace(/,/g, '')) - parseFloat(offer.currentPrice.replace(/,/g, ''))).toLocaleString()} ر.س
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Enhanced Features */}
-                    <div className="space-y-3">
-                      <h4 className="font-bold text-xl text-center mb-6 flex items-center justify-center gap-2">
-                        <Sparkles className="w-6 h-6 text-secondary animate-float" />
-                        <span className="text-gradient-primary">مميزات العرض</span>
-                        <Star className="w-6 h-6 text-secondary animate-float" style={{ animationDelay: '1s' }} />
-                      </h4>
-                      <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto">
-                        {offer.features.map((feature, idx) => (
-                          <div 
-                            key={idx} 
-                            className="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 transition-all duration-200 group/feature hover-scale"
-                          >
-                            <CheckCircle className="w-5 h-5 text-success mt-0.5 flex-shrink-0 group-hover/feature:animate-bounce-gentle" />
-                            <span className="text-sm leading-relaxed group-hover/feature:text-primary transition-colors duration-200">
-                              {feature}
-                            </span>
+                  {/* Enhanced Features List */}
+                  <div className="space-y-3 mb-8">
+                    <h4 className="font-semibold text-foreground flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-success" />
+                      ما يشمله العرض:
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      {offer.features.map((feature, featureIndex) => (
+                        <div 
+                          key={featureIndex} 
+                          className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/20 transition-colors animate-fade-in bg-white/10 backdrop-blur-sm"
+                          style={{ animationDelay: `${(index * 0.2) + (featureIndex * 0.1)}s` }}
+                        >
+                          <div className={`w-2 h-2 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} rounded-full flex-shrink-0`}></div>
+                          <span className="text-sm text-muted-foreground">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Enhanced Action Buttons */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <PaymentDialog 
+                      offer={offer}
+                      trigger={
+                        <Button 
+                          className={`w-full h-14 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group border border-white/20`}
+                        >
+                          <div className="flex items-center justify-center gap-2">
+                            <CreditCard className="w-5 h-5 group-hover:animate-bounce" />
+                            <span>ادفع الآن</span>
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Enhanced CTA */}
-                    <div className="pt-6 space-y-4">
-                      {/* Payment Button */}
-                      <PaymentDialog
-                        offer={offer}
-                        trigger={
-                          <Button 
-                            className="w-full bg-gradient-to-r from-success to-accent hover:shadow-glow hover-scale transition-all duration-300 text-lg py-6 font-bold text-white"
-                            size="lg"
-                          >
-                            <CreditCard className="w-5 h-5 ml-2" />
-                            ادفع الآن - {offer.currentPrice} ر.س
-                            <ArrowRight className="w-5 h-5 mr-2" />
-                          </Button>
-                        }
-                      />
-                      
-                      {/* Request Form Button */}
-                      <OfferRequestForm
-                        offer={offer}
-                        trigger={
-                          <Button 
-                            variant="outline"
-                            className={`w-full group/btn hover:shadow-glow hover-scale transition-all duration-300 text-lg py-6 font-bold border-2`}
-                            size="lg"
-                          >
-                            <Send className="w-5 h-5 ml-2" />
-                            طلب معلومات أكثر
-                            <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
-                          </Button>
-                        }
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                        </Button>
+                      }
+                    />
+                    
+                    <OfferRequestForm 
+                      offer={offer}
+                      trigger={
+                        <Button 
+                          variant="outline" 
+                          className="w-full h-14 border-2 border-border hover:border-primary bg-background/50 hover:bg-primary/5 text-foreground font-medium text-lg rounded-xl transition-all duration-300 hover-scale group backdrop-blur-sm"
+                        >
+                          <div className="flex items-center justify-center gap-2">
+                            <MessageCircle className="w-5 h-5 group-hover:animate-bounce" />
+                            <span>اطلب المزيد</span>
+                          </div>
+                        </Button>
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        </div>
+      </section>
 
-          {/* Enhanced Premium CTA */}
-          <div className="relative corporate-gradient rounded-3xl p-12 text-center text-white overflow-hidden shadow-corporate">
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,_rgba(255,255,255,0.1)_0%,_transparent_50%)]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,_rgba(59,130,246,0.1)_0%,_transparent_50%)]"></div>
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 animate-glow"></div>
+      {/* Custom Offer Section */}
+      <section className="relative px-6 pb-20">
+        <div className="max-w-4xl mx-auto">
+          <Card className="relative overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-muted/50 to-background/80 backdrop-blur-sm animate-fade-in">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-accent/20 to-transparent rounded-full -translate-y-20 translate-x-20"></div>
             
-            {/* Floating Elements */}
-            <div className="absolute top-8 left-8 w-4 h-4 bg-secondary rounded-full animate-bounce-gentle"></div>
-            <div className="absolute top-16 right-16 w-3 h-3 bg-accent rounded-full animate-float"></div>
-            <div className="absolute bottom-8 left-16 w-2 h-2 bg-success rounded-full animate-bounce-gentle" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute bottom-16 right-8 w-3 h-3 bg-warning rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
-            
-            <div className="relative z-10">
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <Crown className="w-8 h-8 text-secondary animate-bounce-gentle" />
-                <span className="text-2xl font-bold text-secondary">عرض مخصص لك</span>
-                <Star className="w-8 h-8 text-secondary animate-float" />
+            <CardContent className="relative z-10 p-12 text-center">
+              <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full px-6 py-3 mb-6 border border-primary/20">
+                <Crown className="w-6 h-6 text-primary animate-bounce-gentle" />
+                <span className="text-primary font-semibold">عرض مخصص</span>
               </div>
               
-              <h2 className="text-4xl md:text-6xl font-black mb-6 text-gradient-secondary">
-                هل تحتاج عرض مخصص لمشروعك؟
-              </h2>
+              <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+                هل تحتاج عرض مخصص؟
+              </h3>
               
-              <p className="text-xl mb-10 text-primary-foreground/80 max-w-3xl mx-auto leading-relaxed">
-                تواصل معنا الآن واحصل على استشارة مجانية وعرض سعر مخصص يناسب احتياجاتك مع خصومات حصرية تصل إلى 50%
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                احصل على عرض مخصص يناسب احتياجاتك الخاصة مع أفضل الأسعار والخدمات المتميزة
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-primary to-accent hover:shadow-glow text-white font-bold px-10 py-6 text-xl rounded-2xl shadow-corporate hover-scale transition-all duration-300 relative overflow-hidden group"
-                  onClick={() => window.open('https://wa.me/966555812567?text=' + encodeURIComponent('مرحباً، أريد الحصول على عرض مخصص لمشروعي 🚀'), '_blank')}
+                  className="h-14 px-8 bg-gradient-to-r from-primary to-accent hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group"
+                  onClick={() => window.open('https://wa.me/966502463367?text=أحتاج عرض مخصص', '_blank')}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative z-10 flex items-center gap-3">
-                    <MessageCircle className="w-6 h-6 animate-bounce-gentle" />
-                    احصل على عرض مخصص
-                    <Rocket className="w-6 h-6 animate-float" />
+                  <div className="flex items-center gap-2">
+                    <MessageCircle className="w-5 h-5 group-hover:animate-bounce" />
+                    <span>تواصل عبر الواتساب</span>
                   </div>
                 </Button>
                 
                 <Button 
-                  size="lg" 
-                  className="glass-effect border-2 border-white/30 text-white hover:bg-white hover:text-primary font-bold px-10 py-6 text-xl rounded-2xl shadow-xl hover-scale transition-all duration-300 relative overflow-hidden group"
-                  asChild
+                  variant="outline"
+                  className="h-14 px-8 border-2 border-primary hover:bg-primary/5 text-primary font-medium text-lg rounded-xl transition-all duration-300 hover-scale group"
+                  onClick={() => window.open('tel:+966502463367', '_self')}
                 >
-                  <a href="tel:+966555812567">
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="relative z-10 flex items-center gap-3">
-                      <Phone className="w-6 h-6 animate-float" />
-                      اتصل بنا الآن
-                      <Award className="w-6 h-6 animate-bounce-gentle" />
-                    </div>
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-5 h-5 group-hover:animate-bounce" />
+                    <span>اتصل الآن</span>
+                  </div>
                 </Button>
               </div>
-              
-              <div className="mt-8 text-primary-foreground/70 text-lg">
-                📞 <span className="font-bold">0555812567</span> | 📧 <span className="font-bold">info@alialshehriholding.com</span>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
-      </main>
+      </section>
 
       <Footer />
       <WhatsAppButton />
