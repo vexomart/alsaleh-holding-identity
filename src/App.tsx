@@ -80,10 +80,10 @@ const App = () => {
         {/* Main content */}
         <div className="relative z-10">
           <ContentProtection />
-          <MobileSearchBar />
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <MobileSearchBar />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
