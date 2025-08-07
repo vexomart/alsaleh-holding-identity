@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import BackButton from "@/components/ui/back-button";
 import { 
   Car,
   MapPin,
@@ -172,6 +173,8 @@ const CarRentalLanding = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <BackButton />
+      
       {/* شريط التحذير */}
       <div className="bg-yellow-400 text-black py-2 text-center text-sm font-medium relative z-50">
         <div className="container mx-auto px-4">
