@@ -759,14 +759,14 @@ const CurrentOffers = () => {
         </div>
       </section>
 
-      {/* Enhanced Offers Grid */}
-      <section className="relative px-6 pb-20">
+      {/* Enhanced Offers Grid - Mobile Responsive */}
+      <section className="relative px-3 sm:px-6 pb-20">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-6 lg:gap-8">
             {currentOffers.map((offer, index) => (
               <Card 
                 key={offer.id} 
-                className={`group relative overflow-hidden border-0 shadow-2xl bg-gradient-to-br ${offer.bgPattern} backdrop-blur-sm transition-all duration-500 hover:shadow-3xl hover:-translate-y-2 animate-fade-in hover-scale`}
+                className={`group relative overflow-hidden border-2 border-white/20 shadow-xl bg-gradient-to-br ${offer.bgPattern} backdrop-blur-sm transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 animate-fade-in hover-scale rounded-2xl`}
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
                 {/* Background Effects */}
@@ -782,11 +782,11 @@ const CurrentOffers = () => {
                   <Sparkles className={`w-4 h-4 ${offer.accentColor}`} />
                 </div>
 
-                <CardHeader className="relative z-10 pb-4">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="space-y-2">
+                <CardHeader className="relative z-10 pb-2 sm:pb-4 p-3 sm:p-6">
+                  <div className="flex items-start justify-between mb-2 sm:mb-4">
+                    <div className="space-y-1 sm:space-y-2">
                       <Badge 
-                        className={`bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} text-white shadow-lg animate-bounce-gentle text-sm px-4 py-2`}
+                        className={`bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} text-white shadow-lg animate-bounce-gentle text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2`}
                       >
                         {offer.badge}
                       </Badge>
@@ -796,9 +796,9 @@ const CurrentOffers = () => {
                     </div>
                     
                     <div className="text-left">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                        <Timer className="w-4 h-4 text-destructive animate-pulse" />
-                        <span className="text-sm font-medium">باقي {offer.timeLeft}</span>
+                      <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground mb-1">
+                        <Timer className="w-3 sm:w-4 h-3 sm:h-4 text-destructive animate-pulse" />
+                        <span className="text-xs sm:text-sm font-medium">باقي {offer.timeLeft}</span>
                       </div>
                       <Badge variant="destructive" className="text-xs animate-pulse">
                         خصم {offer.discount}
@@ -806,80 +806,86 @@ const CurrentOffers = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className={`p-4 rounded-2xl bg-gradient-to-br ${offer.gradientFrom}/20 ${offer.gradientTo}/20 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-white/20`}>
-                      <offer.icon className={`w-8 h-8 ${offer.accentColor}`} />
+                  <div className="flex items-center gap-2 sm:gap-4 mb-2 sm:mb-4">
+                    <div className={`p-2 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${offer.gradientFrom}/20 ${offer.gradientTo}/20 shadow-lg group-hover:scale-110 transition-transform duration-300 border border-white/20`}>
+                      <offer.icon className={`w-5 sm:w-8 h-5 sm:h-8 ${offer.accentColor}`} />
                     </div>
                     <div>
-                      <CardTitle className="text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                      <CardTitle className="text-base sm:text-2xl font-bold text-foreground mb-1 sm:mb-2 group-hover:text-primary transition-colors leading-tight">
                         {offer.title}
                       </CardTitle>
                     </div>
                   </div>
 
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-base text-muted-foreground leading-relaxed">
                     {offer.description}
                   </p>
                 </CardHeader>
 
-                <CardContent className="relative z-10 pt-0">
-                  {/* Enhanced Pricing Section */}
-                  <div className={`bg-gradient-to-r ${offer.gradientFrom}/10 ${offer.gradientTo}/10 rounded-2xl p-6 mb-6 border border-white/20 shadow-inner backdrop-blur-sm`}>
-                    <div className="flex items-end justify-between mb-4">
+                <CardContent className="relative z-10 pt-0 p-3 sm:p-6">
+                  {/* Enhanced Pricing Section - Mobile Responsive */}
+                  <div className={`bg-gradient-to-r ${offer.gradientFrom}/10 ${offer.gradientTo}/10 rounded-xl sm:rounded-2xl p-3 sm:p-6 mb-3 sm:mb-6 border border-white/20 shadow-inner backdrop-blur-sm`}>
+                    <div className="flex items-end justify-between mb-2 sm:mb-4">
                       <div>
-                        <div className="flex items-baseline gap-3">
-                          <span className={`text-4xl font-bold ${offer.accentColor}`}>
+                        <div className="flex items-baseline gap-1 sm:gap-3">
+                          <span className={`text-xl sm:text-4xl font-bold ${offer.accentColor}`}>
                             {offer.currentPrice}
                           </span>
-                          <span className="text-lg text-muted-foreground">ر.س</span>
+                          <span className="text-sm sm:text-lg text-muted-foreground">ر.س</span>
                         </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-lg text-muted-foreground line-through">
+                        <div className="flex items-center gap-1 sm:gap-2 mt-1">
+                          <span className="text-sm sm:text-lg text-muted-foreground line-through">
                             {offer.originalPrice} ر.س
                           </span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm text-muted-foreground">وفر</div>
-                        <div className="text-xl font-bold text-success">
+                        <div className="text-xs sm:text-sm text-muted-foreground">وفر</div>
+                        <div className="text-sm sm:text-xl font-bold text-success">
                           {(parseFloat(offer.originalPrice.replace(/,/g, '')) - parseFloat(offer.currentPrice.replace(/,/g, ''))).toLocaleString()} ر.س
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Enhanced Features List */}
-                  <div className="space-y-3 mb-8">
-                    <h4 className="font-semibold text-foreground flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-success" />
+                  {/* Enhanced Features List - Mobile Responsive */}
+                  <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-8">
+                    <h4 className="font-semibold text-foreground flex items-center gap-1 sm:gap-2 text-sm sm:text-base">
+                      <CheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-success" />
                       ما يشمله العرض:
                     </h4>
-                    <div className="grid grid-cols-1 gap-2">
-                      {offer.features.map((feature, featureIndex) => (
+                    <div className="grid grid-cols-1 gap-1 sm:gap-2">
+                      {offer.features.slice(0, 4).map((feature, featureIndex) => (
                         <div 
                           key={featureIndex} 
-                          className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/20 transition-colors animate-fade-in bg-white/10 backdrop-blur-sm"
+                          className="flex items-center gap-2 sm:gap-3 p-1 sm:p-2 rounded-lg hover:bg-white/20 transition-colors animate-fade-in bg-white/10 backdrop-blur-sm"
                           style={{ animationDelay: `${(index * 0.2) + (featureIndex * 0.1)}s` }}
                         >
-                          <div className={`w-2 h-2 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} rounded-full flex-shrink-0`}></div>
-                          <span className="text-sm text-muted-foreground">{feature}</span>
+                          <div className={`w-1.5 sm:w-2 h-1.5 sm:h-2 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} rounded-full flex-shrink-0`}></div>
+                          <span className="text-xs sm:text-sm text-muted-foreground">{feature}</span>
                         </div>
                       ))}
+                      {offer.features.length > 4 && (
+                        <div className="text-xs sm:text-sm text-muted-foreground text-center mt-1 opacity-70">
+                          +{offer.features.length - 4} مميزة أخرى
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* Enhanced Action Buttons */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Enhanced Action Buttons - Mobile Responsive */}
+                  <div className="grid grid-cols-1 gap-2 sm:gap-4">
                     <PaymentDialog 
                       offer={offer}
                       trigger={
                         <Button 
-                          className={`w-full h-14 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group border border-white/20`}
+                          className={`w-full h-10 sm:h-14 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} hover:shadow-glow text-white font-bold text-sm sm:text-lg rounded-lg sm:rounded-xl transition-all duration-300 hover-scale group border border-white/20`}
                         >
-                          <div className="flex items-center justify-center gap-2">
-                            <CreditCard className="w-5 h-5 group-hover:animate-bounce" />
-                            <span>ادفع الآن</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          <div className="flex items-center justify-center gap-1 sm:gap-2">
+                            <CreditCard className="w-4 sm:w-5 h-4 sm:h-5 group-hover:animate-bounce" />
+                            <span className="hidden sm:inline">ادفع الآن</span>
+                            <span className="sm:hidden">ادفع</span>
+                            <ArrowRight className="w-3 sm:w-4 h-3 sm:h-4 group-hover:translate-x-1 transition-transform" />
                           </div>
                         </Button>
                       }
@@ -890,11 +896,12 @@ const CurrentOffers = () => {
                       trigger={
                         <Button 
                           variant="outline" 
-                          className="w-full h-14 border-2 border-border hover:border-primary bg-background/50 hover:bg-primary/5 text-foreground font-medium text-lg rounded-xl transition-all duration-300 hover-scale group backdrop-blur-sm"
+                          className="w-full h-10 sm:h-14 border-2 border-border hover:border-primary bg-background/50 hover:bg-primary/5 text-foreground font-medium text-sm sm:text-lg rounded-lg sm:rounded-xl transition-all duration-300 hover-scale group backdrop-blur-sm"
                         >
-                          <div className="flex items-center justify-center gap-2">
-                            <MessageCircle className="w-5 h-5 group-hover:animate-bounce" />
-                            <span>اطلب المزيد</span>
+                          <div className="flex items-center justify-center gap-1 sm:gap-2">
+                            <MessageCircle className="w-4 sm:w-5 h-4 sm:h-5 group-hover:animate-bounce" />
+                            <span className="hidden sm:inline">اطلب المزيد</span>
+                            <span className="sm:hidden">تفاصيل</span>
                           </div>
                         </Button>
                       }
