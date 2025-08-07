@@ -20,58 +20,64 @@
 
 @layer base {
   :root {
-    /* Corporate Professional Color Palette - Enhanced Contrast */
+    /* Modern Car Rental Premium Color Palette */
     --background: 0 0% 100%;
-    --foreground: 225 20% 10%;
+    --foreground: 215 25% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 225 20% 10%;
+    --card-foreground: 215 25% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 225 20% 10%;
+    --popover-foreground: 215 25% 12%;
     
-    /* Primary Brand Colors - Deep Blue Corporate with better contrast */
-    --primary: 220 100% 25%;
+    /* Premium Brand Colors - Luxury Car Rental */
+    --primary: 214 84% 16%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 220 100% 40%;
+    --primary-glow: 217 91% 60%;
+    --primary-hover: 214 84% 20%;
     
-    /* Secondary - Enhanced Gold/Amber */
-    --secondary: 40 100% 50%;
-    --secondary-foreground: 225 20% 10%;
-    --secondary-dark: 35 90% 40%;
+    /* Secondary - Luxury Gold */
+    --secondary: 43 96% 56%;
+    --secondary-foreground: 215 25% 12%;
+    --secondary-dark: 38 92% 50%;
+    --secondary-light: 48 100% 67%;
     
-    /* Accent - Enhanced Teal */
-    --accent: 180 100% 30%;
+    /* Accent - Premium Electric Blue */
+    --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 180 100% 50%;
+    --accent-light: 213 93% 68%;
+    --accent-dark: 217 91% 45%;
     
-    /* Neutral System with better contrast */
-    --muted: 220 20% 95%;
-    --muted-foreground: 225 20% 40%;
-    --border: 220 20% 85%;
-    --input: 220 20% 92%;
-    --ring: 220 100% 25%;
+    /* Neutral System - Premium Feel */
+    --muted: 215 20% 97%;
+    --muted-foreground: 215 16% 47%;
+    --border: 215 20% 89%;
+    --input: 215 20% 97%;
+    --ring: 217 91% 60%;
     
-    /* Status Colors */
-    --destructive: 0 75% 55%;
+    /* Status Colors - Modern */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --success: 145 75% 45%;
+    --success: 142 71% 45%;
     --success-foreground: 0 0% 98%;
-    --warning: 35 85% 55%;
-    --warning-foreground: 225 15% 15%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 215 25% 12%;
     
-    /* Corporate Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(220 90% 20%), hsl(220 90% 35%));
-    --gradient-secondary: linear-gradient(135deg, hsl(45 95% 65%), hsl(35 85% 45%));
-    --gradient-accent: linear-gradient(135deg, hsl(180 85% 35%), hsl(180 85% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 90% 15%) 0%, hsl(220 85% 25%) 50%, hsl(180 85% 35%) 100%);
+    /* Premium Gradients - Car Rental Theme */
+    --gradient-primary: linear-gradient(135deg, hsl(214 84% 16%) 0%, hsl(217 91% 35%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(43 96% 56%) 0%, hsl(38 92% 50%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(213 93% 68%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(214 84% 16%) 0%, hsl(217 91% 35%) 50%, hsl(217 91% 60%) 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(0 0% 0%) 0%, hsl(214 84% 16%) 30%, hsl(217 91% 35%) 100%);
+    --gradient-luxury: linear-gradient(135deg, hsl(43 96% 56%) 0%, hsl(217 91% 60%) 50%, hsl(214 84% 16%) 100%);
     
-    /* Professional Shadows */
-    --shadow-sm: 0 2px 4px -1px hsl(220 20% 20% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(220 20% 20% / 0.1), 0 2px 4px -1px hsl(220 20% 20% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(220 20% 20% / 0.1), 0 4px 6px -2px hsl(220 20% 20% / 0.05);
-    --shadow-xl: 0 25px 50px -12px hsl(220 20% 20% / 0.25);
-    --shadow-glow: 0 0 20px hsl(220 90% 35% / 0.4);
+    /* Premium Shadows - Car Rental */
+    --shadow-sm: 0 2px 4px -1px hsl(215 25% 12% / 0.05);
+    --shadow-md: 0 4px 8px -2px hsl(215 25% 12% / 0.1), 0 2px 4px -1px hsl(215 25% 12% / 0.06);
+    --shadow-lg: 0 12px 24px -4px hsl(215 25% 12% / 0.15), 0 4px 6px -2px hsl(215 25% 12% / 0.05);
+    --shadow-xl: 0 32px 64px -12px hsl(215 25% 12% / 0.4);
+    --shadow-glow: 0 0 32px hsl(217 91% 60% / 0.5);
+    --shadow-premium: 0 20px 40px -4px hsl(214 84% 16% / 0.3);
     
-    --radius: 0.75rem;
+    --radius: 12px;
     
     /* Sidebar Colors */
     --sidebar-background: 220 90% 15%;
