@@ -177,78 +177,78 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
           // Show professional STC Pay instructions
           const modal = document.createElement('div');
           modal.innerHTML = `
-            <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
-              <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
+            <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4" onclick="this.remove()">
+              <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-sm sm:max-w-md lg:max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
                 
-                <!-- Header Section -->
-                <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-8 text-white text-center relative overflow-hidden">
-                  <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-                  <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+                <!-- Header Section - Responsive -->
+                <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-4 sm:p-6 lg:p-8 text-white text-center relative overflow-hidden">
+                  <div class="absolute top-0 right-0 w-20 sm:w-32 h-20 sm:h-32 bg-white/10 rounded-full -translate-y-10 sm:-translate-y-16 translate-x-10 sm:translate-x-16"></div>
+                  <div class="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-white/5 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
                   <div class="relative z-10">
-                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                      <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                    <div class="w-14 sm:w-16 lg:w-20 h-14 sm:h-16 lg:h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 backdrop-blur-sm">
+                      <svg class="w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9M19 9H14V4H19V9Z"/>
                       </svg>
                     </div>
-                    <h3 class="text-3xl font-bold mb-2">تعليمات الدفع</h3>
-                    <p class="text-green-100 text-lg font-medium">STC Pay</p>
-                    <div class="mt-4 bg-white/10 rounded-full px-4 py-2 inline-block">
-                      <span class="text-sm">• معاملة آمنة ومحمية •</span>
+                    <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">تعليمات الدفع</h3>
+                    <p class="text-green-100 text-base sm:text-lg font-medium">STC Pay</p>
+                    <div class="mt-2 sm:mt-4 bg-white/10 rounded-full px-3 sm:px-4 py-1 sm:py-2 inline-block">
+                      <span class="text-xs sm:text-sm">• معاملة آمنة ومحمية •</span>
                     </div>
                   </div>
                 </div>
                 
-                <!-- Content Section -->
-                <div class="p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+                <!-- Content Section - Responsive -->
+                <div class="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 max-h-[60vh] overflow-y-auto">
                   
-                  <!-- Step 1 -->
-                  <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-100 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">1</div>
-                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-blue-200/30 rounded-full translate-y-8 -translate-x-8"></div>
-                    <div class="relative z-10 mr-12">
-                      <h4 class="font-bold text-xl text-blue-800 mb-2">افتح تطبيق STC Pay</h4>
-                      <p class="text-blue-600 text-sm">تأكد من تحديث التطبيق لآخر إصدار</p>
+                  <!-- Step 1 - Responsive -->
+                  <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-blue-100 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-6 sm:w-8 h-6 sm:h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-lg">1</div>
+                    <div class="absolute bottom-0 left-0 w-12 sm:w-16 h-12 sm:h-16 bg-blue-200/30 rounded-full translate-y-6 sm:translate-y-8 -translate-x-6 sm:-translate-x-8"></div>
+                    <div class="relative z-10 mr-8 sm:mr-12">
+                      <h4 class="font-bold text-lg sm:text-xl text-blue-800 mb-1 sm:mb-2">افتح تطبيق STC Pay</h4>
+                      <p class="text-blue-600 text-xs sm:text-sm">تأكد من تحديث التطبيق لآخر إصدار</p>
                     </div>
                   </div>
                   
-                  <!-- Step 2 -->
-                  <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-100 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">2</div>
-                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-green-200/30 rounded-full translate-y-8 -translate-x-8"></div>
-                    <div class="relative z-10 mr-12">
-                      <h4 class="font-bold text-xl text-green-800 mb-2">اختر "إرسال أموال"</h4>
-                      <p class="text-green-600 text-sm">من القائمة الرئيسية للتطبيق</p>
+                  <!-- Step 2 - Responsive -->
+                  <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-green-100 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-6 sm:w-8 h-6 sm:h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-lg">2</div>
+                    <div class="absolute bottom-0 left-0 w-12 sm:w-16 h-12 sm:h-16 bg-green-200/30 rounded-full translate-y-6 sm:translate-y-8 -translate-x-6 sm:-translate-x-8"></div>
+                    <div class="relative z-10 mr-8 sm:mr-12">
+                      <h4 class="font-bold text-lg sm:text-xl text-green-800 mb-1 sm:mb-2">اختر "إرسال أموال"</h4>
+                      <p class="text-green-600 text-xs sm:text-sm">من القائمة الرئيسية للتطبيق</p>
                     </div>
                   </div>
                   
-                  <!-- Step 3 - Amount -->
-                  <div class="bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl p-6 border-2 border-purple-100 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">3</div>
-                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-purple-200/30 rounded-full translate-y-8 -translate-x-8"></div>
-                    <div class="relative z-10 mr-12">
-                      <h4 class="font-bold text-xl text-purple-800 mb-4">أرسل المبلغ التالي:</h4>
-                      <div class="bg-white rounded-xl p-6 border-2 border-purple-200 shadow-lg">
+                  <!-- Step 3 - Amount - Responsive -->
+                  <div class="bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-purple-100 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-6 sm:w-8 h-6 sm:h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-lg">3</div>
+                    <div class="absolute bottom-0 left-0 w-12 sm:w-16 h-12 sm:h-16 bg-purple-200/30 rounded-full translate-y-6 sm:translate-y-8 -translate-x-6 sm:-translate-x-8"></div>
+                    <div class="relative z-10 mr-8 sm:mr-12">
+                      <h4 class="font-bold text-lg sm:text-xl text-purple-800 mb-3 sm:mb-4">أرسل المبلغ التالي:</h4>
+                      <div class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-purple-200 shadow-lg">
                         <div class="text-center">
-                          <div class="text-4xl font-bold text-purple-600 mb-2">${data.amount}</div>
-                          <div class="text-lg text-purple-500 font-medium">${data.currency}</div>
-                          <div class="mt-4 text-sm text-gray-600">إلى الرقم</div>
-                          <div class="text-2xl font-bold text-gray-800 mt-2 font-mono bg-gray-50 rounded-lg py-2 px-4 border">${data.merchant_number}</div>
+                          <div class="text-2xl sm:text-3xl lg:text-4xl font-bold text-purple-600 mb-1 sm:mb-2">${data.amount}</div>
+                          <div class="text-base sm:text-lg text-purple-500 font-medium">${data.currency}</div>
+                          <div class="mt-2 sm:mt-4 text-xs sm:text-sm text-gray-600">إلى الرقم</div>
+                          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mt-2 font-mono bg-gray-50 rounded-lg py-2 px-2 sm:px-4 border break-all">${data.merchant_number}</div>
                         </div>
                       </div>
                     </div>
                   </div>
                   
-                  <!-- Step 4 - Reference -->
-                  <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-6 border-2 border-orange-100 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">4</div>
-                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-orange-200/30 rounded-full translate-y-8 -translate-x-8"></div>
-                    <div class="relative z-10 mr-12">
-                      <h4 class="font-bold text-xl text-orange-800 mb-4">استخدم المرجع:</h4>
-                      <div class="bg-white rounded-xl p-4 border-2 border-orange-200 shadow-lg">
+                  <!-- Step 4 - Reference - Responsive -->
+                  <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-orange-100 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-6 sm:w-8 h-6 sm:h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-lg">4</div>
+                    <div class="absolute bottom-0 left-0 w-12 sm:w-16 h-12 sm:h-16 bg-orange-200/30 rounded-full translate-y-6 sm:translate-y-8 -translate-x-6 sm:-translate-x-8"></div>
+                    <div class="relative z-10 mr-8 sm:mr-12">
+                      <h4 class="font-bold text-lg sm:text-xl text-orange-800 mb-3 sm:mb-4">استخدم المرجع:</h4>
+                      <div class="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-orange-200 shadow-lg">
                         <div class="text-center">
-                          <div class="text-lg font-bold text-gray-800 font-mono bg-gray-50 rounded-lg py-3 px-4 border">${data.reference}</div>
+                          <div class="text-sm sm:text-base lg:text-lg font-bold text-gray-800 font-mono bg-gray-50 rounded-lg py-2 sm:py-3 px-2 sm:px-4 border break-all">${data.reference}</div>
                           <button onclick="navigator.clipboard.writeText('${data.reference}'); this.innerHTML='<span class=&quot;text-green-600&quot;>✓ تم النسخ!</span>'; setTimeout(() => this.innerHTML='نسخ المرجع', 2000)" 
-                                  class="mt-3 bg-orange-100 hover:bg-orange-200 text-orange-800 text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                                  class="mt-2 sm:mt-3 bg-orange-100 hover:bg-orange-200 text-orange-800 text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors w-full sm:w-auto">
                             نسخ المرجع
                           </button>
                         </div>
@@ -256,38 +256,38 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
                     </div>
                   </div>
 
-                  <!-- Confirmation -->
-                  <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl p-6 border-2 border-gray-200 text-center">
-                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <!-- Confirmation - Responsive -->
+                  <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-gray-200 text-center">
+                    <div class="w-10 sm:w-12 h-10 sm:h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                      <svg class="w-5 sm:w-6 h-5 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                       </svg>
                     </div>
-                    <div class="text-sm text-gray-600 mb-2">⏱️ سيتم تأكيد الدفع خلال</div>
-                    <div class="text-2xl font-bold text-gray-800 mb-4">دقائق قليلة</div>
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-                      <div class="text-sm text-green-700">ستصلك رسالة تأكيد فور إتمام العملية</div>
+                    <div class="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2">⏱️ سيتم تأكيد الدفع خلال</div>
+                    <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">دقائق قليلة</div>
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-2 sm:p-3">
+                      <div class="text-xs sm:text-sm text-green-700">ستصلك رسالة تأكيد فور إتمام العملية</div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Footer Actions -->
-                <div class="p-6 bg-gray-50 border-t">
-                  <div class="grid grid-cols-2 gap-4">
+                <!-- Footer Actions - Responsive -->
+                <div class="p-4 sm:p-6 bg-gray-50 border-t">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 transform hover:scale-105 order-2 sm:order-1">
                       إغلاق
                     </button>
                     <button onclick="navigator.clipboard.writeText('${data.merchant_number}'); this.innerHTML='<span class=&quot;text-white&quot;>✓ تم النسخ!</span>'; setTimeout(() => this.innerHTML='نسخ الرقم', 2000)" 
-                            class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg order-1 sm:order-2">
                       نسخ الرقم
                     </button>
                   </div>
                   
-                  <!-- Support Info -->
-                  <div class="mt-4 text-center">
+                  <!-- Support Info - Responsive -->
+                  <div class="mt-3 sm:mt-4 text-center">
                     <div class="text-xs text-gray-500">هل تحتاج مساعدة؟</div>
-                    <div class="text-sm text-gray-600 font-medium">اتصل بنا على: 920000000</div>
+                    <div class="text-xs sm:text-sm text-gray-600 font-medium">اتصل بنا على: 920000000</div>
                   </div>
                 </div>
               </div>
