@@ -281,16 +281,7 @@ const HeroSection = () => {
       
       {/* Modern Slide Indicators - Hidden as requested */}
       
-      {/* Enhanced Scroll Indicator - Responsive */}
-      <div className="absolute bottom-16 sm:bottom-24 left-1/2 transform -translate-x-1/2 animate-bounce z-20 group">
-        <div className="flex flex-col items-center space-y-1 sm:space-y-2">
-          <MousePointer className="w-4 h-4 sm:w-6 sm:h-6 text-primary-foreground/70 group-hover:text-secondary transition-colors duration-300" />
-          <div className="w-4 h-8 sm:w-6 sm:h-12 border-2 border-primary-foreground/70 rounded-full flex justify-center group-hover:border-secondary transition-colors duration-300">
-            <div className="w-0.5 h-2 sm:w-1 sm:h-4 bg-primary-foreground/70 rounded-full mt-1 sm:mt-2 animate-pulse group-hover:bg-secondary transition-colors duration-300" />
-          </div>
-          <span className="text-xs text-primary-foreground/60 font-medium">اكتشف المزيد</span>
-        </div>
-      </div>
+      {/* Enhanced Scroll Indicator - Hidden as requested */}
 
       {/* Floating elements for extra visual appeal - Hidden on mobile for performance */}
       <div className="hidden sm:block absolute top-20 right-20 animate-float">
