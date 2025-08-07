@@ -394,6 +394,15 @@ export default function BookConsultation() {
                 <div className="space-y-6">
                   <h3 className="text-lg font-semibold border-b pb-2">تفاصيل الاستشارة</h3>
                   
+                  {!formData.service && (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        يرجى اختيار نوع الخدمة أولاً من الكروت أعلاه
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
                   {formData.service && (
                     <Alert>
                       <CheckCircle className="h-4 w-4" />
