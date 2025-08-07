@@ -1,5 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import MobileSearchBar from "@/components/MobileSearchBar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -79,6 +80,7 @@ const App = () => {
         {/* Main content */}
         <div className="relative z-10">
           <ContentProtection />
+          <MobileSearchBar />
           <Toaster />
           <Sonner />
           <BrowserRouter>

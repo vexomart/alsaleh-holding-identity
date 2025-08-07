@@ -9,9 +9,13 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="شركة علي الشهري">
-    <meta name="msapplication-TileColor" content="#1e40af">
-    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-title" content="Alsaleh Holding">
+    <meta name="msapplication-TileColor" content="#1e293b">
+    <meta name="theme-color" content="#1e293b">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/emkan-logo.png">
     
     <!-- SEO Meta Tags -->
     <title>شركة علي صالح الشهري القابضة - الاستثمار التقني والإعلامي</title>
@@ -36,5 +40,20 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
