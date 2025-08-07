@@ -117,7 +117,7 @@ const CarBooking = () => {
     
     const startDate = new Date(bookingData.pickupDate);
     const endDate = new Date(bookingData.returnDate);
-    const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
     
     let total = selectedCar.price * days;
     
@@ -530,7 +530,7 @@ const CarBooking = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>تأجير السيارة:</span>
-                        <span>{selectedCar?.price} ر.س × {Math.ceil((new Date(bookingData.returnDate) - new Date(bookingData.pickupDate)) / (1000 * 60 * 60 * 24))} أيام</span>
+                        <span>{selectedCar?.price} ر.س × {Math.ceil((new Date(bookingData.returnDate).getTime() - new Date(bookingData.pickupDate).getTime()) / (1000 * 60 * 60 * 24))} أيام</span>
                       </div>
                       {bookingData.additionalServices.map(serviceId => {
                         const service = additionalServices.find(s => s.id === serviceId);
