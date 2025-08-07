@@ -1,8 +1,7 @@
-import React from "react";
+import { PageContainer } from "@/components/ui/page-container";
+import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/ui/page-header";
-import BackButton from "@/components/ui/back-button";
 import { useNavigate } from "react-router-dom";
 import { 
   Server, 
@@ -24,13 +23,11 @@ export default function HostingServices() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/50 to-background">
+    <PageContainer>
       <PageHeader 
         title="الاستضافات و الخوادم"
         description="خدمات الاستضافة والخوادم المتقدمة"
-      >
-        <BackButton className="absolute top-4 right-4" />
-      </PageHeader>
+      />
 
       <div className="container mx-auto px-6 py-12">
         <div className="max-w-4xl mx-auto text-center">
@@ -106,6 +103,6 @@ export default function HostingServices() {
           </Card>
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

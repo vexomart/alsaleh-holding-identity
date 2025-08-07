@@ -1,33 +1,40 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface BackButtonProps {
   className?: string;
   showText?: boolean;
   customText?: string;
+  fallbackPath?: string;
 }
 
 const BackButton = ({ 
   className = "",
   showText = true,
-  customText = "رجوع"
+  customText = "رجوع",
+  fallbackPath = "/"
 }: BackButtonProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    console.log('Back button clicked! Current path:', window.location.pathname);
-    navigate('/business-services');
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate(fallbackPath);
+    }
   };
 
   return (
-    <button
+    <Button
       onClick={handleClick}
-      className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-white/30 text-white hover:bg-white/10 transition-all duration-200 cursor-pointer z-50 relative ${className}`}
-      type="button"
+      variant="outline"
+      size="sm"
+      className={`inline-flex items-center gap-2 bg-white/90 hover:bg-white border-slate-200 text-slate-700 hover:text-slate-900 shadow-sm ${className}`}
     >
       <ArrowLeft className="w-4 h-4" />
       {showText && <span>{customText}</span>}
-    </button>
+    </Button>
   );
 };
 
