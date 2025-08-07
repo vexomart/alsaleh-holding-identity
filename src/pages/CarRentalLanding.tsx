@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -20,105 +20,135 @@ import {
   X,
   ChevronRight,
   Award,
-  Zap,
-  Heart
+  Play,
+  Search,
+  Filter,
+  ArrowLeft,
+  ArrowRight,
+  Fuel,
+  Settings,
+  Eye
 } from "lucide-react";
 
 const CarRentalLanding = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  // صور السيارات الحقيقية (ستحتاج لإضافة صور حقيقية لاحقاً)
-  const heroImages = [
-    "https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-    "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-    "https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-  ];
-
-  const carCategories = [
+  // الصور الحقيقية للسيارات مع سلايدر متطور
+  const heroSlides = [
     {
       id: 1,
-      name: "السيارات الاقتصادية",
-      description: "مثالية للاستخدام اليومي والرحلات القصيرة",
-      price: "120",
-      features: ["توفير في الوقود", "سهولة القيادة", "مواقف مريحة"],
-      image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      models: ["هيونداي إلنترا", "نيسان سنترا", "تويوتا كورولا"]
+      title: "اكتشف المملكة مع كار رنت برو",
+      subtitle: "أفضل خدمات تأجير السيارات في المملكة العربية السعودية",
+      description: "سيارات حديثة • أسعار تنافسية • خدمة استثنائية",
+      image: "https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      cta: "احجز سيارتك الآن"
     },
     {
       id: 2,
-      name: "السيارات الفاخرة",
-      description: "لتجربة قيادة استثنائية ومناسبات خاصة",
-      price: "350",
-      features: ["راحة فائقة", "تقنيات متقدمة", "تصميم أنيق"],
-      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      models: ["مرسيدس E-Class", "BMW 5 Series", "أودي A6"]
+      title: "سيارات فاخرة لكل مناسبة",
+      subtitle: "تجربة قيادة استثنائية مع أحدث السيارات الفاخرة",
+      description: "مرسيدس • BMW • أودي وأكثر",
+      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      cta: "استكشف الأسطول"
     },
     {
       id: 3,
-      name: "السيارات العائلية",
-      description: "واسعة ومريحة للعائلات والرحلات الطويلة",
-      price: "200",
-      features: ["مساحة واسعة", "أمان عالي", "راحة العائلة"],
-      image: "https://images.unsplash.com/photo-1594736797933-d0ce6979bd84?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      models: ["تويوتا هايلاندر", "هوندا بايلوت", "نيسان باثفايندر"]
-    },
-    {
-      id: 4,
-      name: "السيارات الرياضية",
-      description: "للمحبين السرعة والتميز",
-      price: "500",
-      features: ["أداء عالي", "تصميم رياضي", "تجربة مثيرة"],
-      image: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      models: ["BMW M3", "مرسيدس AMG", "أودي RS"]
+      title: "راحة العائلة هي أولويتنا",
+      subtitle: "سيارات عائلية واسعة ومريحة للرحلات الطويلة",
+      description: "أمان عالي • مساحة واسعة • راحة فائقة",
+      image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      cta: "احجز للعائلة"
     }
   ];
 
-  const features = [
+  const featuredCars = [
+    {
+      id: 1,
+      name: "مرسيدس E-Class 2024",
+      category: "فاخرة",
+      price: "350",
+      originalPrice: "450",
+      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      features: ["تلقائي", "5 مقاعد", "GPS", "تكييف"],
+      rating: 4.9,
+      reviews: 128,
+      available: true,
+      badge: "الأكثر طلباً"
+    },
+    {
+      id: 2,
+      name: "تويوتا كامري 2024",
+      category: "اقتصادية",
+      price: "180",
+      originalPrice: "220",
+      image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      features: ["تلقائي", "5 مقاعد", "بلوتوث", "تكييف"],
+      rating: 4.7,
+      reviews: 89,
+      available: true,
+      badge: "صفقة اليوم"
+    },
+    {
+      id: 3,
+      name: "BMW X5 2024",
+      category: "رياضية",
+      price: "500",
+      originalPrice: "600",
+      image: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      features: ["تلقائي", "7 مقاعد", "4WD", "جلد"],
+      rating: 4.8,
+      reviews: 156,
+      available: true,
+      badge: "جديد"
+    }
+  ];
+
+  const services = [
     {
       icon: Shield,
       title: "تأمين شامل",
-      description: "تأمين كامل على جميع السيارات لضمان راحة البال",
-      color: "from-blue-500 to-blue-600"
+      description: "تأمين كامل على جميع السيارات مع تغطية شاملة",
+      color: "bg-gradient-to-br from-blue-500 to-blue-600"
     },
     {
       icon: Clock,
       title: "خدمة 24/7",
-      description: "دعم فني ومساعدة على مدار الساعة",
-      color: "from-green-500 to-green-600"
+      description: "دعم فني ومساعدة على مدار الساعة طوال أيام الأسبوع",
+      color: "bg-gradient-to-br from-green-500 to-green-600"
     },
     {
       icon: MapPin,
-      title: "مواقع متعددة",
-      description: "فروع في جميع أنحاء المملكة لسهولة الوصول",
-      color: "from-purple-500 to-purple-600"
+      title: "التوصيل للمنزل",
+      description: "خدمة توصيل السيارة لأي مكان تريده في المملكة",
+      color: "bg-gradient-to-br from-purple-500 to-purple-600"
     },
     {
       icon: CreditCard,
       title: "دفع آمن",
-      description: "طرق دفع متعددة وآمنة لراحتك",
-      color: "from-orange-500 to-orange-600"
+      description: "طرق دفع متعددة وآمنة مع حماية كاملة للبيانات",
+      color: "bg-gradient-to-br from-orange-500 to-orange-600"
     },
     {
       icon: Smartphone,
       title: "تطبيق ذكي",
-      description: "احجز وأدير حجزك من خلال التطبيق",
-      color: "from-red-500 to-red-600"
+      description: "احجز وأدير حجزك بسهولة من خلال التطبيق الذكي",
+      color: "bg-gradient-to-br from-red-500 to-red-600"
     },
     {
       icon: Award,
       title: "جودة معتمدة",
-      description: "شهادات جودة دولية وخدمة ممتازة",
-      color: "from-teal-500 to-teal-600"
+      description: "شهادات جودة دولية وخدمة حائزة على جوائز",
+      color: "bg-gradient-to-br from-teal-500 to-teal-600"
     }
   ];
 
   const stats = [
-    { number: "10,000+", label: "عميل راضٍ", icon: Users },
-    { number: "500+", label: "سيارة متاحة", icon: Car },
-    { number: "25+", label: "مدينة نخدمها", icon: MapPin },
-    { number: "5", label: "سنوات خبرة", icon: Award }
+    { number: "15,000+", label: "عميل راضٍ", icon: Users, color: "from-blue-500 to-blue-600" },
+    { number: "800+", label: "سيارة متاحة", icon: Car, color: "from-green-500 to-green-600" },
+    { number: "35+", label: "مدينة نخدمها", icon: MapPin, color: "from-purple-500 to-purple-600" },
+    { number: "8", label: "سنوات خبرة", icon: Award, color: "from-orange-500 to-orange-600" }
   ];
 
   useEffect(() => {
@@ -129,178 +159,316 @@ const CarRentalLanding = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // تغيير الصور تلقائياً
+  // السلايدر التلقائي
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
 
   const navigation = [
-    { name: "الرئيسية", href: "#home" },
-    { name: "السيارات", href: "#cars" },
-    { name: "الحجز", href: "#booking" },
+    { name: "الرئيسية", href: "/car-rental-landing", active: true },
+    { name: "أسطول السيارات", href: "/car-fleet" },
+    { name: "احجز الآن", href: "/car-booking" },
     { name: "من نحن", href: "#about" },
     { name: "تواصل معنا", href: "#contact" }
   ];
 
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      {/* شريط علوي */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center text-sm">
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1">
+                <Phone className="w-4 h-4" />
+                +966 11 123 4567
+              </span>
+              <span className="flex items-center gap-1">
+                <Mail className="w-4 h-4" />
+                info@carrentpro.sa
+              </span>
+            </div>
+            <div className="hidden md:flex items-center gap-4">
+              <span>خصم 20% على الحجز الأول</span>
+              <span className="bg-white/20 px-2 py-1 rounded text-xs">كود: FIRST20</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* الهيدر الرئيسي */}
+      <nav className={`sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-white/95 backdrop-blur-lg shadow-xl' : 'bg-white'
       }`}>
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
+          <div className="flex items-center justify-between h-20">
+            {/* الشعار */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                <Car className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <Car className="w-7 h-7 text-white" />
               </div>
-              <h1 className={`text-2xl font-bold transition-colors ${
-                isScrolled ? 'text-slate-900' : 'text-white'
-              }`}>
-                كار رنت برو
-              </h1>
+              <div>
+                <h1 className="text-2xl font-bold text-slate-900">كار رنت برو</h1>
+                <p className="text-xs text-slate-500">Car Rent Pro</p>
+              </div>
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
+            {/* القائمة الرئيسية */}
+            <div className="hidden lg:flex items-center gap-8">
               {navigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className={`text-sm font-medium transition-colors hover:text-blue-600 ${
-                    isScrolled ? 'text-slate-700' : 'text-white'
+                  className={`text-sm font-medium transition-all duration-200 hover:text-blue-600 relative ${
+                    item.active ? 'text-blue-600' : 'text-slate-700'
                   }`}
                 >
                   {item.name}
+                  {item.active && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
+                  )}
                 </a>
               ))}
-              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-transform" asChild>
-                <a href="/car-booking">احجز الآن</a>
+            </div>
+
+            {/* أزرار الإجراء */}
+            <div className="hidden md:flex items-center gap-3">
+              <Button variant="outline" size="sm" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+                <Phone className="w-4 h-4 ml-1" />
+                اتصل بنا
+              </Button>
+              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-transform shadow-lg" asChild>
+                <a href="/car-booking">
+                  <Calendar className="w-4 h-4 ml-1" />
+                  احجز الآن
+                </a>
               </Button>
             </div>
 
-            {/* Mobile menu button */}
+            {/* زر القائمة المحمولة */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`md:hidden ${isScrolled ? 'text-slate-900' : 'text-white'}`}
+              className="lg:hidden text-slate-700 hover:text-blue-600 transition-colors"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* القائمة المحمولة */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white border-t shadow-lg">
-            <div className="container mx-auto px-4 py-4">
+          <div className="lg:hidden bg-white border-t shadow-lg animate-fade-in">
+            <div className="container mx-auto px-4 py-6">
               {navigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="block py-3 text-slate-700 hover:text-blue-600 transition-colors"
+                  className="block py-3 text-slate-700 hover:text-blue-600 transition-colors border-b border-slate-100 last:border-0"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </a>
               ))}
-              <Button className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600" asChild>
-                <a href="/car-booking">احجز الآن</a>
-              </Button>
+              <div className="flex flex-col gap-3 mt-6">
+                <Button variant="outline" className="border-blue-600 text-blue-600">
+                  اتصل بنا
+                </Button>
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600" asChild>
+                  <a href="/car-booking">احجز الآن</a>
+                </Button>
+              </div>
             </div>
           </div>
         )}
       </nav>
 
-      {/* Hero Section */}
-      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Images */}
+      {/* السلايدر الرئيسي */}
+      <section className="relative h-[90vh] overflow-hidden">
+        {/* الخلفيات */}
         <div className="absolute inset-0">
-          {heroImages.map((image, index) => (
+          {heroSlides.map((slide, index) => (
             <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              key={slide.id}
+              className={`absolute inset-0 transition-all duration-1000 ${
+                index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
               }`}
-              style={{
-                backgroundImage: `url(${image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}
-            />
+            >
+              <img 
+                src={slide.image}
+                alt={slide.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+            </div>
           ))}
-          <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center text-white px-4 max-w-6xl mx-auto">
-          <div className="animate-fade-in">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              اكتشف المملكة مع
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent block">
-                كار رنت برو
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 leading-relaxed opacity-90">
-              أفضل خدمات تأجير السيارات في المملكة العربية السعودية
-              <br />
-              سيارات حديثة • أسعار تنافسية • خدمة استثنائية
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-transform text-lg px-8 py-6 shadow-2xl"
-                asChild
-              >
-                <a href="/car-booking">
-                  <Car className="w-6 h-6 ml-2" />
-                  احجز سيارتك الآن
-                </a>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-slate-900 transition-all text-lg px-8 py-6"
-              >
-                <Phone className="w-6 h-6 ml-2" />
-                اتصل بنا
-              </Button>
+        {/* المحتوى */}
+        <div className="relative z-20 h-full flex items-center">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl animate-fade-in">
+              <div className="text-white space-y-6">
+                <Badge className="bg-blue-600/90 text-white border-0 mb-4">
+                  {heroSlides[currentSlide].id === 1 && "خدمة متميزة"}
+                  {heroSlides[currentSlide].id === 2 && "سيارات فاخرة"}
+                  {heroSlides[currentSlide].id === 3 && "للعائلات"}
+                </Badge>
+                
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
+                  {heroSlides[currentSlide].title}
+                </h1>
+                
+                <h2 className="text-xl md:text-2xl lg:text-3xl text-blue-200 font-medium">
+                  {heroSlides[currentSlide].subtitle}
+                </h2>
+                
+                <p className="text-lg md:text-xl text-gray-200 max-w-2xl">
+                  {heroSlides[currentSlide].description}
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-all text-lg px-8 py-6 shadow-2xl"
+                    asChild
+                  >
+                    <a href="/car-booking">
+                      <Car className="w-6 h-6 ml-2" />
+                      {heroSlides[currentSlide].cta}
+                    </a>
+                  </Button>
+                  
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="border-2 border-white/80 text-white hover:bg-white hover:text-slate-900 transition-all text-lg px-8 py-6 backdrop-blur-sm"
+                  >
+                    <Play className="w-6 h-6 ml-2" />
+                    شاهد الفيديو
+                  </Button>
+                </div>
+
+                {/* شريط البحث السريع */}
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mt-8 border border-white/20">
+                  <h3 className="text-lg font-semibold mb-4">ابحث عن سيارتك المثالية</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                      <label className="block text-sm mb-2">مكان الاستلام</label>
+                      <div className="relative">
+                        <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <input 
+                          type="text" 
+                          placeholder="اختر المدينة"
+                          className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white placeholder-gray-300"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-2">تاريخ الاستلام</label>
+                      <div className="relative">
+                        <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <input 
+                          type="date" 
+                          className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-2">تاريخ الإرجاع</label>
+                      <div className="relative">
+                        <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <input 
+                          type="date" 
+                          className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-end">
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3">
+                        <Search className="w-5 h-5 ml-2" />
+                        ابحث
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse" />
-          </div>
+        {/* أزرار التنقل */}
+        <button 
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </button>
+        
+        <button 
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
+        >
+          <ArrowRight className="w-6 h-6" />
+        </button>
+
+        {/* مؤشرات السلايدر */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentSlide ? 'bg-white scale-125' : 'bg-white/50'
+              }`}
+            />
+          ))}
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-        }} />
+      {/* الإحصائيات */}
+      <section className="py-20 bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%)`,
+          }} />
+        </div>
+        
         <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              أرقام تتحدث عن نفسها
+            </h2>
+            <p className="text-xl text-white/90 max-w-3xl mx-auto">
+              نفخر بثقة عملائنا وإنجازاتنا المتميزة في قطاع تأجير السيارات
+            </p>
+          </div>
+          
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
                 <div 
                   key={index} 
-                  className="text-center group hover:scale-105 transition-transform duration-300"
+                  className="text-center group hover:scale-110 transition-all duration-300"
                 >
-                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-colors">
-                    <IconComponent className="w-8 h-8 text-white" />
+                  <div className={`w-20 h-20 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl group-hover:shadow-3xl transition-all`}>
+                    <IconComponent className="w-10 h-10 text-white" />
                   </div>
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  <div className="text-4xl md:text-5xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
                     {stat.number}
                   </div>
-                  <div className="text-white/90 font-medium">
+                  <div className="text-white/90 font-medium text-lg">
                     {stat.label}
                   </div>
                 </div>
@@ -310,31 +478,130 @@ const CarRentalLanding = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-slate-50">
+      {/* السيارات المميزة */}
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
+            <Badge className="bg-blue-100 text-blue-800 mb-4">السيارات المميزة</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+              اختر من أفضل السيارات
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              مجموعة مختارة من أفضل السيارات المتاحة مع عروض خاصة وخصومات حصرية
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredCars.map((car) => (
+              <Card key={car.id} className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2">
+                <div className="relative">
+                  <img 
+                    src={car.image} 
+                    alt={car.name}
+                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 right-4">
+                    <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                      {car.badge}
+                    </Badge>
+                  </div>
+                  <div className="absolute top-4 left-4">
+                    <Badge variant={car.available ? "default" : "secondary"} className="bg-green-500 text-white">
+                      {car.available ? "متاح" : "غير متاح"}
+                    </Badge>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+                
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-1">{car.name}</h3>
+                      <p className="text-slate-500 text-sm">{car.category}</p>
+                    </div>
+                    <div className="text-left">
+                      <div className="flex items-center gap-1 mb-1">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-medium">{car.rating}</span>
+                        <span className="text-xs text-slate-500">({car.reviews})</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {car.features.map((feature, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs bg-slate-100 text-slate-700">
+                        {feature}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-slate-900">{car.price} ر.س</span>
+                      <span className="text-sm text-slate-500 line-through">{car.originalPrice} ر.س</span>
+                    </div>
+                    <span className="text-sm text-slate-500">/ يوم</span>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-transform" asChild>
+                      <a href="/car-booking">
+                        احجز الآن
+                      </a>
+                    </Button>
+                    <Button variant="outline" size="sm" className="px-3">
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button variant="outline" size="lg" className="border-blue-600 text-blue-600 hover:bg-blue-50" asChild>
+              <a href="/car-fleet">
+                عرض جميع السيارات
+                <ChevronRight className="w-5 h-5 mr-2" />
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* الخدمات */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="bg-purple-100 text-purple-800 mb-4">خدماتنا المتميزة</Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
               لماذا تختار كار رنت برو؟
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              نقدم أفضل الخدمات والمميزات لضمان تجربة تأجير استثنائية لا تُنسى
+              نقدم أفضل الخدمات والمميزات لضمان تجربة تأجير استثنائية ومريحة لجميع عملائنا
             </p>
           </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => {
-              const IconComponent = feature.icon;
+            {services.map((service, index) => {
+              const IconComponent = service.icon;
               return (
                 <Card 
                   key={index} 
-                  className="group hover:shadow-2xl transition-all duration-300 border-0 bg-white hover:-translate-y-2"
+                  className="group hover:shadow-2xl transition-all duration-300 border-0 hover:-translate-y-2 relative overflow-hidden"
                 >
-                  <CardContent className="p-8 text-center">
-                    <div className={`w-20 h-20 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                      <IconComponent className="w-10 h-10 text-white" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <CardContent className="p-8 text-center relative z-10">
+                    <div className={`w-16 h-16 ${service.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <IconComponent className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-slate-900 mb-4">{feature.title}</h3>
-                    <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+                    <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-blue-600 transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="text-slate-600 leading-relaxed">
+                      {service.description}
+                    </p>
                   </CardContent>
                 </Card>
               );
@@ -343,179 +610,188 @@ const CarRentalLanding = () => {
         </div>
       </section>
 
-      {/* Car Categories Section */}
-      <section id="cars" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-              أسطولنا من السيارات
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              اختر من مجموعة واسعة من السيارات الحديثة التي تناسب جميع احتياجاتك
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {carCategories.map((category, index) => (
-              <Card 
-                key={category.id} 
-                className="group hover:shadow-2xl transition-all duration-300 overflow-hidden border-0 hover:-translate-y-2"
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={category.image} 
-                    alt={category.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <Badge className="bg-white/90 text-slate-900">
-                      من {category.price} ر.س/يوم
-                    </Badge>
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">{category.name}</h3>
-                  <p className="text-slate-600 text-sm mb-4">{category.description}</p>
-                  
-                  <div className="space-y-2 mb-4">
-                    {category.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm text-slate-600">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        {feature}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="border-t pt-4 mb-4">
-                    <p className="text-sm font-medium text-slate-900 mb-2">نماذج متاحة:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {category.models.map((model, idx) => (
-                        <Badge key={idx} variant="secondary" className="text-xs">
-                          {model}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-transform" asChild>
-                    <a href="/car-booking">
-                      احجز الآن
-                      <ChevronRight className="w-4 h-4 mr-2" />
-                    </a>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+      {/* دعوة للعمل */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)`,
+          }} />
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-slate-900 to-slate-800 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20c0 11.046-8.954 20-20 20v20h40V20H20z'/%3E%3C/g%3E%3C/svg%3E")`
-        }} />
+        
         <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            جاهز لبدء رحلتك؟
-          </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-            احجز سيارتك الآن واستمتع بتجربة قيادة استثنائية في جميع أنحاء المملكة
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-transform text-lg px-12 py-6"
-              asChild
-            >
-              <a href="/car-booking">
-                <Calendar className="w-6 h-6 ml-2" />
-                احجز سيارتك الآن
-              </a>
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="border-2 border-white text-white hover:bg-white hover:text-slate-900 transition-all text-lg px-12 py-6"
-            >
-              <Phone className="w-6 h-6 ml-2" />
-              تواصل معنا
-            </Button>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              جاهز لبدء رحلتك؟
+            </h2>
+            <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
+              احجز سيارتك الآن واستمتع بتجربة قيادة استثنائية في جميع أنحاء المملكة العربية السعودية
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <Button 
+                size="lg" 
+                className="bg-white text-blue-600 hover:bg-gray-100 hover:scale-105 transition-all text-lg px-12 py-6 shadow-2xl font-semibold"
+                asChild
+              >
+                <a href="/car-booking">
+                  <Calendar className="w-6 h-6 ml-2" />
+                  احجز سيارتك الآن
+                </a>
+              </Button>
+              
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white hover:text-blue-600 transition-all text-lg px-12 py-6 backdrop-blur-sm"
+              >
+                <Phone className="w-6 h-6 ml-2" />
+                تواصل معنا
+              </Button>
+            </div>
+
+            <div className="text-white/80 text-sm">
+              أو اتصل بنا على <span className="font-semibold">+966 11 123 4567</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+      {/* الفوتر */}
+      <footer className="bg-slate-900 text-white">
+        <div className="container mx-auto px-4 py-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            {/* معلومات الشركة */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <Car className="w-8 h-8 text-blue-400" />
-                <h3 className="text-2xl font-bold">كار رنت برو</h3>
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <Car className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">كار رنت برو</h3>
+                  <p className="text-xs text-slate-400">Car Rent Pro</p>
+                </div>
               </div>
               <p className="text-slate-300 leading-relaxed">
-                شركة رائدة في تأجير السيارات بالمملكة العربية السعودية، نقدم خدمات متميزة وأسطول حديث لضمان راحتكم.
+                شركة رائدة في تأجير السيارات بالمملكة العربية السعودية، نقدم خدمات متميزة وأسطول حديث لضمان راحة وأمان عملائنا.
               </p>
-              <div className="flex gap-4">
-                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
+              <div className="flex gap-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
                   <Globe className="w-5 h-5" />
                 </div>
-                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
                   <Phone className="w-5 h-5" />
                 </div>
-                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
                   <Mail className="w-5 h-5" />
                 </div>
               </div>
             </div>
             
+            {/* الخدمات */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">خدماتنا</h4>
-              <ul className="space-y-2 text-slate-300">
-                <li><a href="#" className="hover:text-blue-400 transition-colors">تأجير يومي</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">تأجير شهري</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">سيارات الأعراس</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">النقل التنفيذي</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">رحلات المطار</a></li>
+              <h4 className="text-lg font-semibold mb-4 text-blue-400">خدماتنا</h4>
+              <ul className="space-y-3 text-slate-300">
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  تأجير يومي
+                </a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  تأجير شهري
+                </a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  سيارات الأعراس
+                </a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  النقل التنفيذي
+                </a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  رحلات المطار
+                </a></li>
               </ul>
             </div>
             
+            {/* معلومات مهمة */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">معلومات مهمة</h4>
-              <ul className="space-y-2 text-slate-300">
-                <li><a href="#" className="hover:text-blue-400 transition-colors">شروط الإيجار</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">سياسة التأمين</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">أسئلة شائعة</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">دليل العميل</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">سياسة الخصوصية</a></li>
+              <h4 className="text-lg font-semibold mb-4 text-blue-400">معلومات مهمة</h4>
+              <ul className="space-y-3 text-slate-300">
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  شروط الإيجار
+                </a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  سياسة التأمين
+                </a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  أسئلة شائعة
+                </a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  دليل العميل
+                </a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  سياسة الخصوصية
+                </a></li>
               </ul>
             </div>
             
+            {/* تواصل معنا */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">تواصل معنا</h4>
-              <div className="space-y-3 text-slate-300">
+              <h4 className="text-lg font-semibold mb-4 text-blue-400">تواصل معنا</h4>
+              <div className="space-y-4 text-slate-300">
                 <div className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-blue-400" />
-                  <span>+966 11 123 4567</span>
+                  <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                    <Phone className="w-4 h-4 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">اتصل بنا</p>
+                    <p className="font-medium">+966 11 123 4567</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-blue-400" />
-                  <span>info@carrentpro.sa</span>
+                  <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                    <Mail className="w-4 h-4 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">راسلنا</p>
+                    <p className="font-medium">info@carrentpro.sa</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <MapPin className="w-5 h-5 text-blue-400" />
-                  <span>الرياض، المملكة العربية السعودية</span>
+                  <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                    <MapPin className="w-4 h-4 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">العنوان</p>
+                    <p className="font-medium">الرياض، المملكة العربية السعودية</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-blue-400" />
-                  <span>متاح 24/7</span>
+                  <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                    <Clock className="w-4 h-4 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">ساعات العمل</p>
+                    <p className="font-medium">متاح 24/7</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="border-t border-slate-800 pt-8 text-center text-slate-400">
+          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm">
             <p>&copy; 2024 كار رنت برو. جميع الحقوق محفوظة.</p>
+            <div className="flex items-center gap-6 mt-4 md:mt-0">
+              <a href="#" className="hover:text-blue-400 transition-colors">الشروط والأحكام</a>
+              <a href="#" className="hover:text-blue-400 transition-colors">سياسة الخصوصية</a>
+              <a href="#" className="hover:text-blue-400 transition-colors">اتصل بنا</a>
+            </div>
           </div>
         </div>
       </footer>
