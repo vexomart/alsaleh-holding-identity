@@ -1,8 +1,7 @@
 import { PageContainer } from "@/components/ui/page-container";
 import { PageHeader } from "@/components/ui/page-header";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { 
   TrendingUp, 
   Calendar, 
@@ -11,8 +10,10 @@ import {
   Lightbulb, 
   Target,
   Clock,
-  ChevronRight,
-  Bell
+  Bell,
+  Building2,
+  Settings,
+  Globe
 } from "lucide-react";
 
 const CompanyUpdates = () => {
@@ -25,7 +26,7 @@ const CompanyUpdates = () => {
       category: "تطوير المنتجات",
       type: "إنجاز",
       icon: Lightbulb,
-      color: "bg-blue-500"
+      priority: "عالية"
     },
     {
       id: 2,
@@ -35,7 +36,7 @@ const CompanyUpdates = () => {
       category: "الموارد البشرية",
       type: "إعلان",
       icon: Users,
-      color: "bg-green-500"
+      priority: "متوسطة"
     },
     {
       id: 3,
@@ -45,7 +46,7 @@ const CompanyUpdates = () => {
       category: "جودة وأمان",
       type: "إنجاز",
       icon: Award,
-      color: "bg-purple-500"
+      priority: "عالية"
     },
     {
       id: 4,
@@ -55,7 +56,7 @@ const CompanyUpdates = () => {
       category: "التدريب والتطوير",
       type: "برنامج",
       icon: Target,
-      color: "bg-orange-500"
+      priority: "متوسطة"
     },
     {
       id: 5,
@@ -64,8 +65,8 @@ const CompanyUpdates = () => {
       date: "2023-12-20",
       category: "التوسع الجغرافي",
       type: "إعلان",
-      icon: TrendingUp,
-      color: "bg-red-500"
+      icon: Building2,
+      priority: "عالية"
     },
     {
       id: 6,
@@ -74,8 +75,28 @@ const CompanyUpdates = () => {
       date: "2023-12-15",
       category: "التطوير الداخلي",
       type: "تحديث",
-      icon: Clock,
-      color: "bg-teal-500"
+      icon: Settings,
+      priority: "منخفضة"
+    },
+    {
+      id: 7,
+      title: "شراكة جديدة مع شركات تقنية عالمية",
+      description: "تم الإعلان عن شراكة استراتيجية مع شركات تقنية رائدة لتوسيع نطاق الخدمات المقدمة",
+      date: "2023-12-10",
+      category: "الشراكات",
+      type: "إعلان", 
+      icon: Globe,
+      priority: "عالية"
+    },
+    {
+      id: 8,
+      title: "تطوير منصة التجارة الإلكترونية",
+      description: "إطلاق منصة متطورة للتجارة الإلكترونية مع ميزات الدفع الآمن والتحليلات المتقدمة",
+      date: "2023-12-05",
+      category: "تطوير المنتجات",
+      type: "إنجاز",
+      icon: TrendingUp,
+      priority: "عالية"
     }
   ];
 
@@ -94,6 +115,19 @@ const CompanyUpdates = () => {
     }
   };
 
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "عالية":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100";
+      case "متوسطة":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100";
+      case "منخفضة":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100";
+      default:
+        return "bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100";
+    }
+  };
+
   return (
     <PageContainer>
       <PageHeader 
@@ -101,7 +135,7 @@ const CompanyUpdates = () => {
         description="آخر التطورات والإنجازات والتحديثات الداخلية للشركة"
       />
 
-      <div className="space-y-8">
+      <div className="container mx-auto px-4 lg:px-6 space-y-8">
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800">
@@ -153,61 +187,74 @@ const CompanyUpdates = () => {
           </Card>
         </div>
 
-        {/* Updates List */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">آخر التحديثات</h2>
-          
-          <div className="grid gap-6">
-            {updates.map((update) => {
-              const IconComponent = update.icon;
-              return (
-                <Card key={update.id} className="group hover:shadow-lg transition-all duration-300 border-slate-200 dark:border-slate-800">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-4">
-                        <div className={`p-2 rounded-lg ${update.color} bg-opacity-10`}>
-                          <IconComponent className={`w-5 h-5 text-white`} style={{ color: update.color.replace('bg-', '').replace('-500', '') }} />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-lg text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                            {update.title}
-                          </CardTitle>
-                          <div className="flex items-center gap-2 mt-2">
-                            <Badge variant="outline" className={getTypeColor(update.type)}>
-                              {update.type}
-                            </Badge>
-                            <span className="text-sm text-slate-500 dark:text-slate-400">{update.category}</span>
+        {/* Updates Table */}
+        <Card className="shadow-lg border-slate-200 dark:border-slate-800">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                    <th className="text-right p-4 font-semibold text-slate-900 dark:text-slate-100">التحديث</th>
+                    <th className="text-center p-4 font-semibold text-slate-900 dark:text-slate-100">النوع</th>
+                    <th className="text-center p-4 font-semibold text-slate-900 dark:text-slate-100">الفئة</th>
+                    <th className="text-center p-4 font-semibold text-slate-900 dark:text-slate-100">الأولوية</th>
+                    <th className="text-center p-4 font-semibold text-slate-900 dark:text-slate-100">التاريخ</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  {updates.map((update) => {
+                    const IconComponent = update.icon;
+                    return (
+                      <tr 
+                        key={update.id} 
+                        className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-200"
+                      >
+                        <td className="p-4">
+                          <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <IconComponent className="w-5 h-5 text-primary" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                                {update.title}
+                              </h3>
+                              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                                {update.description}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                        <Calendar className="w-4 h-4" />
-                        <span className="text-sm">{new Date(update.date).toLocaleDateString('ar-SA')}</span>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                      {update.description}
-                    </CardDescription>
-                    <Button variant="ghost" className="mt-4 p-0 h-auto text-primary hover:text-primary/80">
-                      قراءة المزيد
-                      <ChevronRight className="w-4 h-4 mr-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Load More Button */}
-        <div className="text-center">
-          <Button size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
-            تحميل المزيد من التحديثات
-            <ChevronRight className="w-4 h-4 mr-2" />
-          </Button>
-        </div>
+                        </td>
+                        <td className="p-4 text-center">
+                          <Badge variant="outline" className={getTypeColor(update.type)}>
+                            {update.type}
+                          </Badge>
+                        </td>
+                        <td className="p-4 text-center">
+                          <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+                            {update.category}
+                          </span>
+                        </td>
+                        <td className="p-4 text-center">
+                          <Badge variant="outline" className={getPriorityColor(update.priority)}>
+                            {update.priority}
+                          </Badge>
+                        </td>
+                        <td className="p-4 text-center">
+                          <div className="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400">
+                            <Calendar className="w-4 h-4" />
+                            <span className="text-sm font-medium">
+                              {new Date(update.date).toLocaleDateString('ar-SA')}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </PageContainer>
   );
