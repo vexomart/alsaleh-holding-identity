@@ -76,6 +76,9 @@ import HostingServices from "./pages/HostingServices";
 import CompanyUpdates from "./pages/CompanyUpdates";
 import SoftwareProducts from "./pages/SoftwareProducts";
 import CarRentalWebsite from "./pages/CarRentalWebsite";
+import CarRentalLanding from "./pages/CarRentalLanding";
+import CarFleet from "./pages/CarFleet";
+import CarBooking from "./pages/CarBooking";
 
 const queryClient = new QueryClient();
 
@@ -167,6 +170,9 @@ const App = () => {
               <Route path="/company-updates" element={<CompanyUpdates />} />
               <Route path="/software-products" element={<SoftwareProducts />} />
               <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
+              <Route path="/car-rental-landing" element={<CarRentalLanding />} />
+              <Route path="/car-fleet" element={<CarFleet />} />
+              <Route path="/car-booking" element={<CarBooking />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

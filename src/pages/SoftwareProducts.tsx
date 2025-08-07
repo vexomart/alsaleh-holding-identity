@@ -86,7 +86,7 @@ const SoftwareProducts = () => {
       downloads: "0",
       status: "متاح الآن",
       color: "from-blue-500 to-cyan-500",
-      demoUrl: "/car-rental-preview"
+      demoUrl: "/car-rental-landing"
     }
   ];
 
