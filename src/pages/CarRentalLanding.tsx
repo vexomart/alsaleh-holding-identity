@@ -791,7 +791,7 @@ const CarRentalLanding = () => {
       {/* الفوتر */}
       <footer className="bg-slate-900 text-white">
         <div className="container mx-auto px-4 py-16">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
             {/* معلومات الشركة */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
@@ -869,6 +869,29 @@ const CarRentalLanding = () => {
                 <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   سياسة الخصوصية
+                </a></li>
+              </ul>
+            </div>
+            
+            {/* التوظيف */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-blue-400">التوظيف</h4>
+              <ul className="space-y-3 text-slate-300">
+                <li><a href="/careers" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  فرص العمل
+                </a></li>
+                <li><a href="/careers#application" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  تقدم للوظيفة
+                </a></li>
+                <li><a href="/careers#benefits" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  مزايا العمل معنا
+                </a></li>
+                <li><a href="/careers#culture" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  ثقافة الشركة
                 </a></li>
               </ul>
             </div>
