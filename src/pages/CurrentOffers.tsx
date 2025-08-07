@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Gift, Star, Clock, ArrowRight, Code, Palette, Megaphone, Smartphone, Globe, Award } from "lucide-react";
+import { Gift, Star, Clock, ArrowRight, Code, Palette, Megaphone, Smartphone, Globe, Award, CreditCard } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import PaymentDialog from "@/components/ui/payment-dialog";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -266,75 +267,73 @@ const CurrentOffers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]">
+    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]" dir="rtl">
       <Navigation />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Header Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-full px-6 py-2 mb-6">
-            <Gift className="w-5 h-5 text-orange-600" />
-            <span className="text-orange-600 font-medium">عروض محدودة الوقت</span>
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6">
+            <Gift className="w-4 sm:w-5 h-4 sm:h-5 text-orange-600" />
+            <span className="text-orange-600 font-medium text-sm sm:text-base">عروض محدودة الوقت</span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent leading-tight">
             عروضنا الحالية المميزة
           </h1>
           
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed px-4">
             اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات بأسعار استثنائية
           </p>
         </div>
 
         {/* Categories Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 mb-8 h-auto p-1">
-            <TabsTrigger value="all" className="text-sm flex items-center gap-2 py-3">
-              <Gift className="w-4 h-4" />
-              <span className="hidden sm:inline">جميع العروض</span>
-              <span className="sm:hidden">الكل</span>
-            </TabsTrigger>
-            <TabsTrigger value="development" className="text-sm flex items-center gap-2 py-3">
-              <Code className="w-4 h-4" />
-              <span className="hidden sm:inline">البرمجة</span>
-              <span className="sm:hidden">برمجة</span>
-            </TabsTrigger>
-            <TabsTrigger value="design" className="text-sm flex items-center gap-2 py-3">
-              <Palette className="w-4 h-4" />
-              <span className="hidden sm:inline">التصميم</span>
-              <span className="sm:hidden">تصميم</span>
-            </TabsTrigger>
-            <TabsTrigger value="marketing" className="text-sm flex items-center gap-2 py-3">
-              <Megaphone className="w-4 h-4" />
-              <span className="hidden sm:inline">التسويق</span>
-              <span className="sm:hidden">تسويق</span>
-            </TabsTrigger>
-            <TabsTrigger value="applications" className="text-sm flex items-center gap-2 py-3">
-              <Smartphone className="w-4 h-4" />
-              <span className="hidden sm:inline">التطبيقات</span>
-              <span className="sm:hidden">تطبيقات</span>
-            </TabsTrigger>
-            <TabsTrigger value="hosting" className="text-sm flex items-center gap-2 py-3">
-              <Globe className="w-4 h-4" />
-              <span className="hidden sm:inline">الاستضافة</span>
-              <span className="sm:hidden">استضافة</span>
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto mb-6 sm:mb-8">
+            <TabsList className="inline-flex h-auto p-1 bg-muted rounded-lg min-w-full sm:min-w-0">
+              <div className="flex gap-1 w-full sm:w-auto">
+                <TabsTrigger value="all" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2 py-2 sm:py-3 px-2 sm:px-4 whitespace-nowrap">
+                  <Gift className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span>جميع العروض</span>
+                </TabsTrigger>
+                <TabsTrigger value="development" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2 py-2 sm:py-3 px-2 sm:px-4 whitespace-nowrap">
+                  <Code className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span>البرمجة</span>
+                </TabsTrigger>
+                <TabsTrigger value="design" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2 py-2 sm:py-3 px-2 sm:px-4 whitespace-nowrap">
+                  <Palette className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span>التصميم</span>
+                </TabsTrigger>
+                <TabsTrigger value="marketing" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2 py-2 sm:py-3 px-2 sm:px-4 whitespace-nowrap">
+                  <Megaphone className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span>التسويق</span>
+                </TabsTrigger>
+                <TabsTrigger value="applications" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2 py-2 sm:py-3 px-2 sm:px-4 whitespace-nowrap">
+                  <Smartphone className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span>التطبيقات</span>
+                </TabsTrigger>
+                <TabsTrigger value="hosting" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2 py-2 sm:py-3 px-2 sm:px-4 whitespace-nowrap">
+                  <Globe className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span>الاستضافة</span>
+                </TabsTrigger>
+              </div>
+            </TabsList>
+          </div>
 
           {/* All Offers Tab */}
           <TabsContent value="all">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold mb-4 flex items-center gap-3">
-                <Gift className="w-8 h-8 text-orange-600" />
+            <div className="mb-6 sm:mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
+                <Gift className="w-6 sm:w-8 h-6 sm:h-8 text-orange-600" />
                 جميع العروض الحالية
               </h2>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-base sm:text-lg">
                 استعرض جميع عروضنا المميزة بخصومات تصل إلى 50%
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="responsive-grid">
               {allOffers.map((offer) => (
-                <OfferCard key={offer.id} offer={offer} setShowForm={setShowForm} />
+                <OfferCard key={offer.id} offer={offer} />
               ))}
             </div>
           </TabsContent>
@@ -342,53 +341,53 @@ const CurrentOffers = () => {
           {/* Category-specific Tabs */}
           {Object.entries(offers).map(([category, categoryOffers]) => (
             <TabsContent key={category} value={category}>
-              <div className="mb-8">
-                <div className="flex items-center gap-3 mb-4">
+              <div className="mb-6 sm:mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
                   {getCategoryIcon(category)}
-                  <h2 className="text-3xl font-bold">{getCategoryName(category)}</h2>
+                  <h2 className="text-2xl sm:text-3xl font-bold">{getCategoryName(category)}</h2>
                 </div>
-                <p className="text-muted-foreground text-lg mb-6">
+                <p className="text-muted-foreground text-base sm:text-lg mb-4 sm:mb-6">
                   اكتشف عروضنا المميزة في {getCategoryName(category)} بخصومات تصل إلى 50%
                 </p>
                 
                 {/* Category Overview Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
                   <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-                    <CardContent className="p-4 text-center">
-                      <Award className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                      <div className="font-bold text-blue-800">جودة عالية</div>
-                      <div className="text-sm text-blue-600">معايير احترافية</div>
+                    <CardContent className="p-3 sm:p-4 text-center">
+                      <Award className="w-6 sm:w-8 h-6 sm:h-8 mx-auto mb-2 text-blue-600" />
+                      <div className="font-bold text-blue-800 text-sm sm:text-base">جودة عالية</div>
+                      <div className="text-xs sm:text-sm text-blue-600">معايير احترافية</div>
                     </CardContent>
                   </Card>
                   <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-                    <CardContent className="p-4 text-center">
-                      <Clock className="w-8 h-8 mx-auto mb-2 text-green-600" />
-                      <div className="font-bold text-green-800">تسليم سريع</div>
-                      <div className="text-sm text-green-600">في الوقت المحدد</div>
+                    <CardContent className="p-3 sm:p-4 text-center">
+                      <Clock className="w-6 sm:w-8 h-6 sm:h-8 mx-auto mb-2 text-green-600" />
+                      <div className="font-bold text-green-800 text-sm sm:text-base">تسليم سريع</div>
+                      <div className="text-xs sm:text-sm text-green-600">في الوقت المحدد</div>
                     </CardContent>
                   </Card>
                   <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
-                    <CardContent className="p-4 text-center">
-                      <Gift className="w-8 h-8 mx-auto mb-2 text-orange-600" />
-                      <div className="font-bold text-orange-800">أسعار مميزة</div>
-                      <div className="text-sm text-orange-600">عروض حصرية</div>
+                    <CardContent className="p-3 sm:p-4 text-center">
+                      <Gift className="w-6 sm:w-8 h-6 sm:h-8 mx-auto mb-2 text-orange-600" />
+                      <div className="font-bold text-orange-800 text-sm sm:text-base">أسعار مميزة</div>
+                      <div className="text-xs sm:text-sm text-orange-600">عروض حصرية</div>
                     </CardContent>
                   </Card>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="responsive-grid">
                 {categoryOffers.map((offer) => (
-                  <OfferCard key={offer.id} offer={offer} setShowForm={setShowForm} />
+                  <OfferCard key={offer.id} offer={offer} />
                 ))}
               </div>
               
               {/* View More Button */}
-              <div className="text-center mt-12">
+              <div className="text-center mt-8 sm:mt-12">
                 <Link to="/professional-services">
-                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white">
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 sm:px-8 py-3 sm:py-4">
                     <span className="ml-2">استعرض جميع خدمات {getCategoryName(category)}</span>
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5" />
                   </Button>
                 </Link>
               </div>
@@ -397,16 +396,16 @@ const CurrentOffers = () => {
         </Tabs>
 
         {/* Call to Action */}
-        <div className="text-center mt-16 mb-8">
-          <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-8 border border-orange-200">
-            <h3 className="text-2xl font-bold mb-4 text-orange-800">لم تجد ما تبحث عنه؟</h3>
-            <p className="text-orange-600 mb-6">
+        <div className="text-center mt-12 sm:mt-16 mb-6 sm:mb-8">
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-orange-200">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-orange-800">لم تجد ما تبحث عنه؟</h3>
+            <p className="text-orange-600 mb-4 sm:mb-6 text-sm sm:text-base">
               تحدث معنا مباشرة وسنقوم بتصميم عرض خاص يناسب احتياجاتك
             </p>
             <Link to="/contact">
-              <Button size="lg" className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white">
+              <Button size="lg" className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 sm:px-8 py-3 sm:py-4">
                 تواصل معنا الآن
-                <ArrowRight className="w-5 h-5 mr-2" />
+                <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 mr-2" />
               </Button>
             </Link>
           </div>
@@ -418,8 +417,8 @@ const CurrentOffers = () => {
   );
 };
 
-const OfferCard = ({ offer, setShowForm }: { offer: any; setShowForm: (show: boolean) => void }) => (
-  <Card className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-orange-200">
+const OfferCard = ({ offer }: { offer: any }) => (
+  <Card className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-orange-200 h-full flex flex-col">
     {offer.isPopular && (
       <div className="absolute top-4 right-4 z-10">
         <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
@@ -435,23 +434,23 @@ const OfferCard = ({ offer, setShowForm }: { offer: any; setShowForm: (show: boo
       </Badge>
     </div>
 
-    <CardHeader className="relative pb-4">
+    <CardHeader className="relative pb-4 flex-shrink-0">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
       
-      <div className="relative flex items-center gap-3 mb-4">
-        <div className="text-3xl">{offer.icon}</div>
-        <div>
-          <CardTitle className="text-xl leading-tight">{offer.title}</CardTitle>
+      <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
+        <div className="text-2xl sm:text-3xl flex-shrink-0">{offer.icon}</div>
+        <div className="flex-1 min-w-0">
+          <CardTitle className="text-lg sm:text-xl leading-tight">{offer.title}</CardTitle>
           <div className="flex items-center gap-2 mt-2">
-            <Clock className="w-4 h-4 text-orange-500" />
+            <Clock className="w-4 h-4 text-orange-500 flex-shrink-0" />
             <span className="text-sm text-orange-600 font-medium">متبقي {offer.timeLeft}</span>
           </div>
         </div>
       </div>
       
       <div className="relative mb-4">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl font-bold text-green-600">{offer.discountedPrice} ريال</span>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+          <span className="text-2xl sm:text-3xl font-bold text-green-600">{offer.discountedPrice} ريال</span>
           <span className="text-lg text-gray-500 line-through">{offer.originalPrice} ريال</span>
         </div>
         <div className="text-sm text-green-600 font-medium mt-1">
@@ -462,28 +461,43 @@ const OfferCard = ({ offer, setShowForm }: { offer: any; setShowForm: (show: boo
       <p className="relative text-muted-foreground text-sm leading-relaxed">{offer.description}</p>
     </CardHeader>
 
-    <CardContent className="pt-0">
-      <div className="space-y-4">
-        <div>
+    <CardContent className="pt-0 flex-1 flex flex-col">
+      <div className="space-y-4 flex-1">
+        <div className="flex-1">
           <h4 className="font-semibold mb-3 text-gray-800">ما يشمله العرض:</h4>
           <ul className="space-y-2">
             {offer.features.map((feature: string, index: number) => (
-              <li key={index} className="flex items-center gap-2 text-sm">
-                <Star className="w-4 h-4 text-green-500 flex-shrink-0" />
-                <span>{feature}</span>
+              <li key={index} className="flex items-start gap-2 text-sm">
+                <Star className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="flex-1">{feature}</span>
               </li>
             ))}
           </ul>
         </div>
         
-        <Link to="/contact">
-          <Button 
-            className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            اطلب العرض الآن
-            <ArrowRight className="w-4 h-4 mr-2" />
-          </Button>
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link to="/contact" className="flex-1">
+            <Button 
+              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              استفسر عن العرض
+              <ArrowRight className="w-4 h-4 mr-2" />
+            </Button>
+          </Link>
+          
+          <PaymentDialog
+            offer={offer}
+            trigger={
+              <Button 
+                className="flex-1 payment-button bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <CreditCard className="w-4 h-4 ml-2" />
+                ادفع الآن - {offer.discountedPrice} ريال
+                <ArrowRight className="w-4 h-4 mr-2" />
+              </Button>
+            }
+          />
+        </div>
       </div>
     </CardContent>
   </Card>
