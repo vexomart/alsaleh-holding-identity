@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import BackButton from "@/components/ui/back-button";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -161,30 +162,34 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 dark:from-emerald-950 dark:via-teal-950 dark:to-green-950">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 relative overflow-hidden bg-gradient-to-br from-emerald-100/50 to-teal-100/50 dark:from-emerald-900/20 dark:to-teal-900/20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-200/20 via-transparent to-teal-200/20" />
-        <div className="absolute top-1/4 right-10 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-teal-400/10 rounded-full blur-3xl animate-float-delayed" />
+      <div className="pt-[48px] lg:pt-[112px]">
+        <div className="container mx-auto px-4">
+          <BackButton />
+          
+          {/* Hero Section */}
+          <section className="py-16 relative overflow-hidden bg-gradient-to-br from-primary/5 to-secondary/8">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-secondary/10" />
+            <div className="absolute top-1/4 right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-float" />
+            <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-secondary/10 rounded-full blur-3xl animate-float-delayed" />
         
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16 animate-fade-in">
-            <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-              <MessageCircle className="w-6 h-6 text-primary animate-pulse" />
-              <span className="text-sm font-medium text-primary">تواصل معنا • نحن في خدمتكم</span>
+            <div className="container mx-auto px-6 relative z-10">
+              <div className="text-center mb-16 animate-fade-in">
+                <div className="inline-flex items-center gap-3 mb-6 p-3 bg-primary/10 rounded-full backdrop-blur-sm">
+                  <MessageCircle className="w-6 h-6 text-primary animate-pulse" />
+                  <span className="text-sm font-medium text-primary">تواصل معنا • نحن في خدمتكم</span>
+                </div>
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
+                  تواصل <span className="gradient-text">معنا</span>
+                </h1>
+                <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                  فريقنا المتخصص جاهز للإجابة على استفساراتكم ومناقشة الفرص الاستثمارية والتقنية المبتكرة
+                </p>
+              </div>
             </div>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
-              تواصل <span className="text-gradient-primary">معنا</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              فريقنا المتخصص جاهز للإجابة على استفساراتكم ومناقشة الفرص الاستثمارية والتقنية المبتكرة
-            </p>
-          </div>
-        </div>
-      </section>
+          </section>
 
       {/* Main Contact Section */}
       <section className="py-16 relative">
@@ -469,10 +474,11 @@ const Contact = () => {
           </div>
         </div>
       </section>
-
+        </div>
+      </div>
+      
       <Footer />
       <WhatsAppButton />
-      
     </div>
   );
 };
