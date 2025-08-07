@@ -163,31 +163,12 @@ const StartWithUs = () => {
     { number: "٥٠+", label: "خبير متخصص", icon: Award }
   ];
 
-  const achievements = [
-    {
-      title: "ISO 9001:2015 معتمدة",
-      description: "شهادة الجودة العالمية",
-      icon: Award,
-      color: "from-yellow-500 to-orange-600"
-    },
-    {
-      title: "Microsoft Partner",
-      description: "شريك معتمد من مايكروسوفت",
-      icon: Shield,
-      color: "from-blue-500 to-indigo-600"
-    },
-    {
-      title: "AWS Solutions Partner",
-      description: "شريك حلول أمازون ويب",
-      icon: CloudLightning,
-      color: "from-orange-500 to-red-600"
-    },
-    {
-      title: "Google Cloud Partner",
-      description: "شريك جوجل كلاود",
-      icon: Globe,
-      color: "from-green-500 to-emerald-600"
-    }
+  const timeline = [
+    { year: "٢٠١٦", title: "تأسيس الشركة", description: "بداية الرحلة مع رؤية طموحة" },
+    { year: "٢٠١٨", title: "أول ١٠٠ عميل", description: "تحقيق ثقة العملاء الأوائل" },
+    { year: "٢٠٢٠", title: "التوسع الإقليمي", description: "فتح فروع في دول الخليج" },
+    { year: "٢٠٢٢", title: "شراكات عالمية", description: "شراكة مع عمالقة التقنية" },
+    { year: "٢٠٢٤", title: "الريادة المحلية", description: "الشركة الرائدة في المنطقة" }
   ];
 
   const technologies = [
@@ -197,35 +178,6 @@ const StartWithUs = () => {
     { name: "MongoDB & PostgreSQL", icon: Database, category: "Database" },
     { name: "Docker & Kubernetes", icon: Layers, category: "DevOps" },
     { name: "AI & Machine Learning", icon: Lightbulb, category: "AI/ML" }
-  ];
-
-  const testimonials = [
-    {
-      name: "أحمد المالكي",
-      company: "شركة الرياض للتقنية",
-      text: "فريق محترف جداً، تم تسليم المشروع في الوقت المحدد وبجودة عالية تفوق التوقعات",
-      rating: 5
-    },
-    {
-      name: "فاطمة العتيبي",
-      company: "مؤسسة الابتكار الرقمي",
-      text: "خدمة عملاء ممتازة ودعم مستمر، نشكرهم على الاحترافية في التعامل",
-      rating: 5
-    },
-    {
-      name: "محمد الغامدي",
-      company: "شركة الخليج للتجارة",
-      text: "استطاعوا تحويل فكرتنا إلى تطبيق ناجح، فريق يستحق الثقة",
-      rating: 5
-    }
-  ];
-
-  const timeline = [
-    { year: "٢٠١٦", title: "تأسيس الشركة", description: "بداية الرحلة مع رؤية طموحة" },
-    { year: "٢٠١٨", title: "أول ١٠٠ عميل", description: "تحقيق ثقة العملاء الأوائل" },
-    { year: "٢٠٢٠", title: "التوسع الإقليمي", description: "فتح فروع في دول الخليج" },
-    { year: "٢٠٢٢", title: "شراكات عالمية", description: "شراكة مع عمالقة التقنية" },
-    { year: "٢٠٢٤", title: "الريادة المحلية", description: "الشركة الرائدة في المنطقة" }
   ];
 
   const faqs = [
@@ -305,33 +257,6 @@ const StartWithUs = () => {
                 <div className="text-gray-600 font-medium text-sm sm:text-base">{stat.label}</div>
               </Card>
             ))}
-          </div>
-
-          {/* Achievements Section */}
-          <div className="mb-12 sm:mb-16">
-            <div className="text-center mb-8 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">
-                شهادات واعتمادات عالمية
-              </h2>
-              <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
-                نفتخر بحصولنا على أعلى الشهادات والاعتمادات من الشركات الرائدة عالمياً
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-              {achievements.map((achievement, index) => (
-                <Card key={index} className="p-4 sm:p-6 hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${achievement.color} opacity-5 group-hover:opacity-10 transition-opacity`}></div>
-                  <div className="relative text-center">
-                    <div className={`w-16 sm:w-20 h-16 sm:h-20 mx-auto rounded-full bg-gradient-to-br ${achievement.color} flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform`}>
-                      <achievement.icon className="w-8 sm:w-10 h-8 sm:h-10 text-white" />
-                    </div>
-                    <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-2">{achievement.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{achievement.description}</p>
-                  </div>
-                </Card>
-              ))}
-            </div>
           </div>
 
           {/* Features Grid */}
@@ -450,42 +375,6 @@ const StartWithUs = () => {
             </div>
           </div>
 
-          {/* Testimonials Section */}
-          <div className="mb-12 sm:mb-16">
-            <div className="text-center mb-8 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">
-                ماذا يقول عملاؤنا
-              </h2>
-              <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
-                شهادات حقيقية من شركائنا في النجاح
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {testimonials.map((testimonial, index) => (
-                <Card key={index} className="p-6 sm:p-8 hover:shadow-lg transition-all duration-300 relative">
-                  <div className="absolute top-4 right-4 text-blue-200">
-                    <Quote className="w-8 h-8" />
-                  </div>
-                  
-                  <div className="mb-4">
-                    <div className="flex gap-1 mb-3">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-yellow-500 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base italic">"{testimonial.text}"</p>
-                  </div>
-                  
-                  <div className="border-t pt-4">
-                    <h4 className="font-bold text-gray-800 text-sm sm:text-base">{testimonial.name}</h4>
-                    <p className="text-gray-500 text-xs sm:text-sm">{testimonial.company}</p>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-
           {/* FAQ Section */}
           <div className="mb-12 sm:mb-16">
             <div className="text-center mb-8 sm:mb-12">
@@ -497,7 +386,7 @@ const StartWithUs = () => {
               </p>
             </div>
 
-            <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6">
+            <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
               {faqs.map((faq, index) => (
                 <Card key={index} className="p-6 sm:p-8 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-start gap-4">
