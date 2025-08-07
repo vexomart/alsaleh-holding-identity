@@ -220,6 +220,7 @@ const OfferDetails = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('tap');
   const [paymentData, setPaymentData] = useState({
     name: "",
     email: "",
@@ -249,7 +250,7 @@ const OfferDetails = () => {
     });
   };
 
-  const handleTapPayment = async () => {
+  const handlePayment = async () => {
     if (!paymentData.name || !paymentData.email) {
       toast({
         title: "خطأ",
@@ -263,30 +264,64 @@ const OfferDetails = () => {
     try {
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
       
-      const { data, error } = await supabase.functions.invoke('tap-payment', {
-        body: {
-          amount: amount,
-          currency: 'SAR',
-          customer_name: paymentData.name,
-          customer_email: paymentData.email,
-          customer_phone: paymentData.phone,
-          offer_title: offer.title,
-          description: `دفع عرض: ${offer.title}`,
-        },
+      let functionName = '';
+      let paymentBody: any = {
+        amount: amount,
+        currency: 'SAR',
+        customer_name: paymentData.name,
+        customer_email: paymentData.email,
+        customer_phone: paymentData.phone,
+        offer_title: offer.title,
+        description: `دفع عرض: ${offer.title}`,
+      };
+
+      switch (selectedPaymentMethod) {
+        case 'tap':
+          functionName = 'tap-payment';
+          break;
+        case 'paylink':
+          functionName = 'paylink-payment';
+          break;
+        case 'tamara':
+          functionName = 'tamara-payment';
+          break;
+        case 'stc':
+          functionName = 'stc-pay';
+          break;
+        default:
+          functionName = 'tap-payment';
+      }
+      
+      const { data, error } = await supabase.functions.invoke(functionName, {
+        body: paymentBody,
       });
 
       if (error) {
         throw error;
       }
 
-      if (data?.payment_url) {
-        window.open(data.payment_url, '_blank');
-        setIsPaymentOpen(false);
-        toast({
-          title: "تم إنشاء عملية الدفع",
-          description: "سيتم فتح صفحة الدفع في نافذة جديدة",
-        });
+      if (selectedPaymentMethod === 'stc') {
+        // STC Pay returns instructions instead of a URL
+        if (data?.merchant_number) {
+          toast({
+            title: "تم إنشاء طلب الدفع",
+            description: `ارسل ${amount} ريال إلى رقم: ${data.merchant_number}`,
+            duration: 10000,
+          });
+        }
+      } else {
+        // Other payment methods return URLs
+        if (data?.payment_url || data?.url) {
+          const paymentUrl = data.payment_url || data.url;
+          window.open(paymentUrl, '_blank');
+          toast({
+            title: "تم إنشاء عملية الدفع",
+            description: "سيتم فتح صفحة الدفع في نافذة جديدة",
+          });
+        }
       }
+      
+      setIsPaymentOpen(false);
     } catch (error: any) {
       console.error('Payment error:', error);
       toast({
@@ -439,14 +474,14 @@ const OfferDetails = () => {
                       ادفع الآن
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md" dir="rtl">
+                  <DialogContent className="sm:max-w-lg" dir="rtl">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl">
-                        الدفع عبر تاب 💳
+                        اختر طريقة الدفع 💳
                       </DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {/* Offer Summary */}
                       <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 p-4 rounded-lg">
                         <h3 className="font-bold text-lg mb-2">{offer.title}</h3>
@@ -455,6 +490,72 @@ const OfferDetails = () => {
                             {offer.currentPrice} ر.س
                           </span>
                           <Badge variant="destructive">خصم {offer.discount}</Badge>
+                        </div>
+                      </div>
+
+                      {/* Payment Methods Selection */}
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-lg">طرق الدفع المتاحة:</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            onClick={() => setSelectedPaymentMethod('tap')}
+                            className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+                              selectedPaymentMethod === 'tap'
+                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div className="text-center">
+                              <CreditCard className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                              <div className="font-bold text-sm">Tap</div>
+                              <div className="text-xs text-muted-foreground">فيزا، ماستركارد</div>
+                            </div>
+                          </button>
+                          
+                          <button
+                            onClick={() => setSelectedPaymentMethod('paylink')}
+                            className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+                              selectedPaymentMethod === 'paylink'
+                                ? 'border-green-500 bg-green-50 dark:bg-green-950'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div className="text-center">
+                              <Globe className="w-8 h-8 mx-auto mb-2 text-green-600" />
+                              <div className="font-bold text-sm">Paylink</div>
+                              <div className="text-xs text-muted-foreground">دفع آمن</div>
+                            </div>
+                          </button>
+                          
+                          <button
+                            onClick={() => setSelectedPaymentMethod('tamara')}
+                            className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+                              selectedPaymentMethod === 'tamara'
+                                ? 'border-purple-500 bg-purple-50 dark:bg-purple-950'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div className="text-center">
+                              <Clock className="w-8 h-8 mx-auto mb-2 text-purple-600" />
+                              <div className="font-bold text-sm">تمارا</div>
+                              <div className="text-xs text-muted-foreground">ادفع لاحقاً</div>
+                            </div>
+                          </button>
+                          
+                          <button
+                            onClick={() => setSelectedPaymentMethod('stc')}
+                            className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+                              selectedPaymentMethod === 'stc'
+                                ? 'border-orange-500 bg-orange-50 dark:bg-orange-950'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div className="text-center">
+                              <Phone className="w-8 h-8 mx-auto mb-2 text-orange-600" />
+                              <div className="font-bold text-sm">STC Pay</div>
+                              <div className="text-xs text-muted-foreground">محفظة رقمية</div>
+                            </div>
+                          </button>
                         </div>
                       </div>
 
@@ -502,7 +603,7 @@ const OfferDetails = () => {
 
                       {/* Payment Button */}
                       <Button
-                        onClick={handleTapPayment}
+                        onClick={handlePayment}
                         disabled={isPaymentLoading}
                         className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white py-3 text-lg font-bold"
                       >
