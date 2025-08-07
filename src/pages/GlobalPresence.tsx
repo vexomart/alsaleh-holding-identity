@@ -351,11 +351,7 @@ const GlobalPresence = () => {
 
             {/* Map */}
             <div className="mb-12">
-              <InteractiveMap 
-                offices={filteredOffices}
-                selectedOffice={selectedOffice}
-                onSelectOffice={setSelectedOffice}
-              />
+              <InteractiveMap />
             </div>
           </div>
         </section>

@@ -23,7 +23,7 @@ import {
   Rocket,
   Car,
   Eye,
-  CreditCard
+  TrendingUp
 } from "lucide-react";
 
 const SoftwareProducts = () => {
@@ -144,7 +144,7 @@ const SoftwareProducts = () => {
                   <p className="text-purple-600 dark:text-purple-400 text-sm font-medium">المبيعات</p>
                   <p className="text-2xl font-bold text-purple-700 dark:text-purple-300">4999 ر.س</p>
                 </div>
-                <CreditCard className="w-8 h-8 text-purple-500" />
+                <TrendingUp className="w-8 h-8 text-purple-500" />
               </div>
             </CardContent>
           </Card>
@@ -269,7 +269,7 @@ const SoftwareProducts = () => {
                           }`}
                           disabled={product.status !== "متاح الآن"}
                         >
-                          <CreditCard className="w-4 h-4 ml-2" />
+                          <TrendingUp className="w-4 h-4 ml-2" />
                           {product.status === "متاح الآن" ? "ادفع الآن" : "قريباً"}
                         </Button>
                       </div>
