@@ -570,7 +570,7 @@ const CareersPage = () => {
           </p>
           <div className="flex justify-center gap-4">
             <Button variant="outline" size="sm" asChild>
-              <a href="/">العودة للموقع الرئيسي</a>
+              <a href="/car-rental">العودة لموقع تأجير السيارات</a>
             </Button>
             <Button variant="outline" size="sm">
               <Mail className="w-4 h-4 ml-2" />

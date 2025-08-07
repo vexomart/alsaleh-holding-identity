@@ -110,7 +110,7 @@ const App = () => {
               <Route path="/support" element={<Support />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
-              <Route path="/car-careers" element={<CareersPage />} />
+              <Route path="/careers" element={<Careers />} />
               <Route path="/jobs" element={<Careers />} />
               <Route path="/job-application" element={<JobApplication />} />
               <Route path="/tech-investment" element={<TechInvestment />} />
@@ -173,6 +173,7 @@ const App = () => {
               <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
               <Route path="/car-rental-landing" element={<CarRentalLanding />} />
               <Route path="/car-rental" element={<CarRentalLanding />} />
+              <Route path="/car-rental/careers" element={<CareersPage />} />
               
               <Route path="/car-fleet" element={<CarFleet />} />
               <Route path="/car-booking" element={<CarBooking />} />

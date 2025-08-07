@@ -877,19 +877,19 @@ const CarRentalLanding = () => {
             <div>
               <h4 className="text-lg font-semibold mb-4 text-blue-400">التوظيف</h4>
               <ul className="space-y-3 text-slate-300">
-                <li><a href="/careers" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/careers" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   فرص العمل
                 </a></li>
-                <li><a href="/careers#application" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/careers#application" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   تقدم للوظيفة
                 </a></li>
-                <li><a href="/careers#benefits" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/careers#benefits" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   مزايا العمل معنا
                 </a></li>
-                <li><a href="/careers#culture" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/careers#culture" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   ثقافة الشركة
                 </a></li>
