@@ -17,88 +17,7 @@ import {
 } from "lucide-react";
 
 const CompanyUpdates = () => {
-  const updates = [
-    {
-      id: 1,
-      title: "إطلاق منصة جديدة للذكاء الاصطناعي",
-      description: "تم إطلاق منصة تقنية جديدة تعتمد على الذكاء الاصطناعي لتحسين خدماتنا وتوفير حلول مبتكرة لعملائنا",
-      date: "2024-01-15",
-      category: "تطوير المنتجات",
-      type: "إنجاز",
-      icon: Lightbulb,
-      priority: "عالية"
-    },
-    {
-      id: 2,
-      title: "توسيع الفريق التقني",
-      description: "نرحب بانضمام 25 مطور ومهندس جديد إلى فريقنا التقني لتعزيز قدراتنا في التطوير والابتكار",
-      date: "2024-01-10",
-      category: "الموارد البشرية",
-      type: "إعلان",
-      icon: Users,
-      priority: "متوسطة"
-    },
-    {
-      id: 3,
-      title: "حصول الشركة على شهادة الجودة ISO 27001",
-      description: "حصلت الشركة على شهادة الجودة الدولية ISO 27001 في مجال أمن المعلومات وحماية البيانات",
-      date: "2024-01-05",
-      category: "جودة وأمان",
-      type: "إنجاز",
-      icon: Award,
-      priority: "عالية"
-    },
-    {
-      id: 4,
-      title: "إطلاق برنامج التدريب المهني الجديد",
-      description: "أطلقت الشركة برنامج تدريب مهني شامل للخريجين الجدد في مجال تقنية المعلومات والبرمجة",
-      date: "2023-12-28",
-      category: "التدريب والتطوير",
-      type: "برنامج",
-      icon: Target,
-      priority: "متوسطة"
-    },
-    {
-      id: 5,
-      title: "افتتاح مكتب جديد في دبي",
-      description: "تم افتتاح مكتب جديد للشركة في دبي لتوسيع نطاق خدماتنا في دولة الإمارات العربية المتحدة",
-      date: "2023-12-20",
-      category: "التوسع الجغرافي",
-      type: "إعلان",
-      icon: Building2,
-      priority: "عالية"
-    },
-    {
-      id: 6,
-      title: "تحديث نظام إدارة المشاريع الداخلي",
-      description: "تم تحديث نظام إدارة المشاريع الداخلي بميزات جديدة لتحسين الإنتاجية وتتبع سير العمل",
-      date: "2023-12-15",
-      category: "التطوير الداخلي",
-      type: "تحديث",
-      icon: Settings,
-      priority: "منخفضة"
-    },
-    {
-      id: 7,
-      title: "شراكة جديدة مع شركات تقنية عالمية",
-      description: "تم الإعلان عن شراكة استراتيجية مع شركات تقنية رائدة لتوسيع نطاق الخدمات المقدمة",
-      date: "2023-12-10",
-      category: "الشراكات",
-      type: "إعلان", 
-      icon: Globe,
-      priority: "عالية"
-    },
-    {
-      id: 8,
-      title: "تطوير منصة التجارة الإلكترونية",
-      description: "إطلاق منصة متطورة للتجارة الإلكترونية مع ميزات الدفع الآمن والتحليلات المتقدمة",
-      date: "2023-12-05",
-      category: "تطوير المنتجات",
-      type: "إنجاز",
-      icon: TrendingUp,
-      priority: "عالية"
-    }
-  ];
+  const updates: any[] = [];
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -202,54 +121,72 @@ const CompanyUpdates = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  {updates.map((update) => {
-                    const IconComponent = update.icon;
-                    return (
-                      <tr 
-                        key={update.id} 
-                        className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-200"
-                      >
-                        <td className="p-4">
-                          <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <IconComponent className="w-5 h-5 text-primary" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-                                {update.title}
-                              </h3>
-                              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                                {update.description}
-                              </p>
-                            </div>
+                  {updates.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="p-12 text-center">
+                        <div className="flex flex-col items-center justify-center space-y-4">
+                          <Bell className="w-16 h-16 text-slate-300 dark:text-slate-600" />
+                          <div>
+                            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                              لا توجد تحديثات حالياً
+                            </h3>
+                            <p className="text-slate-600 dark:text-slate-400 text-sm">
+                              سيتم عرض التحديثات الجديدة هنا عند توفرها
+                            </p>
                           </div>
-                        </td>
-                        <td className="p-4 text-center">
-                          <Badge variant="outline" className={getTypeColor(update.type)}>
-                            {update.type}
-                          </Badge>
-                        </td>
-                        <td className="p-4 text-center">
-                          <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-                            {update.category}
-                          </span>
-                        </td>
-                        <td className="p-4 text-center">
-                          <Badge variant="outline" className={getPriorityColor(update.priority)}>
-                            {update.priority}
-                          </Badge>
-                        </td>
-                        <td className="p-4 text-center">
-                          <div className="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400">
-                            <Calendar className="w-4 h-4" />
-                            <span className="text-sm font-medium">
-                              {new Date(update.date).toLocaleDateString('ar-SA')}
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    updates.map((update) => {
+                      const IconComponent = update.icon;
+                      return (
+                        <tr 
+                          key={update.id} 
+                          className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-200"
+                        >
+                          <td className="p-4">
+                            <div className="flex items-start gap-4">
+                              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <IconComponent className="w-5 h-5 text-primary" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                                  {update.title}
+                                </h3>
+                                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                                  {update.description}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-4 text-center">
+                            <Badge variant="outline" className={getTypeColor(update.type)}>
+                              {update.type}
+                            </Badge>
+                          </td>
+                          <td className="p-4 text-center">
+                            <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+                              {update.category}
                             </span>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          </td>
+                          <td className="p-4 text-center">
+                            <Badge variant="outline" className={getPriorityColor(update.priority)}>
+                              {update.priority}
+                            </Badge>
+                          </td>
+                          <td className="p-4 text-center">
+                            <div className="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400">
+                              <Calendar className="w-4 h-4" />
+                              <span className="text-sm font-medium">
+                                {new Date(update.date).toLocaleDateString('ar-SA')}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
