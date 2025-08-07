@@ -125,9 +125,7 @@ const DigitalTransformation = () => {
         <div className="absolute inset-0 bg-black/20"></div>
         
         <div className="relative container mx-auto px-6 py-20 lg:py-32">
-          <div className="mb-8">
-            <BackButton className="text-white hover:text-purple-200 bg-white/10 border-white/20 hover:bg-white/20" />
-          </div>
+          <BackButton className="mb-8" />
           
           <div className="max-w-4xl mx-auto text-center">
             <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-8 animate-scale-in">

@@ -117,8 +117,6 @@ const Navigation = () => {
               {showBackButton && (
                 <div className="mr-2">
                   <BackButton 
-                    variant="ghost" 
-                    size="sm" 
                     showText={false}
                     className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
                   />
