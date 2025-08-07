@@ -139,10 +139,10 @@ const HeroSection = () => {
       {/* Enhanced Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-7xl">
         
-        {/* Top Badge - Simplified */}
-        <div className="mb-12 animate-fade-in px-4">
-          <div className="inline-flex items-center justify-center p-4 sm:p-6 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-2xl animate-scale-in group hover:scale-105 transition-all duration-500 max-w-full">
-            <span className="text-base sm:text-lg font-bold text-primary-foreground whitespace-nowrap">شركة عالمية رائدة • منذ 2016</span>
+        {/* Top Badge - Fixed visibility */}
+        <div className="mb-12 animate-fade-in px-4 sm:px-6">
+          <div className="inline-flex items-center justify-center px-6 py-4 sm:px-8 sm:py-6 bg-white/15 rounded-full backdrop-blur-md border border-white/30 shadow-2xl animate-scale-in group hover:scale-105 transition-all duration-500 w-auto min-w-fit">
+            <span className="text-sm sm:text-base lg:text-lg font-bold text-white whitespace-nowrap text-center">شركة عالمية رائدة • منذ 2016</span>
           </div>
         </div>
         
