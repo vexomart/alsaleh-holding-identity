@@ -38,28 +38,12 @@ const CarRentalLanding = () => {
   // الصور الحقيقية للسيارات مع سلايدر متطور
   const heroSlides = [
     {
-      id: 1,
-      title: "اكتشف المملكة مع كار رنت برو",
-      subtitle: "أفضل خدمات تأجير السيارات في المملكة العربية السعودية",
-      description: "سيارات حديثة • أسعار تنافسية • خدمة استثنائية",
-      image: "https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      cta: "احجز سيارتك الآن"
-    },
-    {
       id: 2,
       title: "سيارات فاخرة لكل مناسبة",
       subtitle: "تجربة قيادة استثنائية مع أحدث السيارات الفاخرة",
       description: "مرسيدس • BMW • أودي وأكثر",
       image: "https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
       cta: "استكشف الأسطول"
-    },
-    {
-      id: 3,
-      title: "راحة العائلة هي أولويتنا",
-      subtitle: "سيارات عائلية واسعة ومريحة للرحلات الطويلة",
-      description: "أمان عالي • مساحة واسعة • راحة فائقة",
-      image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      cta: "احجز للعائلة"
     }
   ];
 
@@ -320,9 +304,7 @@ const CarRentalLanding = () => {
             <div className="max-w-4xl animate-fade-in">
               <div className="text-white space-y-6">
                 <Badge className="bg-blue-600/90 text-white border-0 mb-4">
-                  {heroSlides[currentSlide].id === 1 && "خدمة متميزة"}
-                  {heroSlides[currentSlide].id === 2 && "سيارات فاخرة"}
-                  {heroSlides[currentSlide].id === 3 && "للعائلات"}
+                  سيارات فاخرة
                 </Badge>
                 
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
