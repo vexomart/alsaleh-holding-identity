@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import BackButton from "@/components/ui/back-button";
@@ -7,231 +7,103 @@ import { useNavigate } from "react-router-dom";
 import { 
   Server, 
   Globe, 
-  Shield, 
-  Zap, 
-  CheckCircle, 
-  Monitor,
-  Database,
-  Cloud,
-  Settings,
-  Lock
+  Clock,
+  Bell,
+  CheckCircle
 } from "lucide-react";
-
-const hostingServices = [
-  {
-    id: "domain-registration",
-    title: "حجز النطاقات",
-    description: "خدمة حجز النطاقات العالمية المميزة مع أفضل الأسعار والدعم الفني المتميز",
-    icon: Globe,
-    features: [
-      "حجز النطاقات العالمية",
-      "أسعار تنافسية",
-      "دعم فني 24/7",
-      "إدارة سهلة للنطاقات"
-    ],
-    image: "https://share.net.sa/storage/uploads/services/IMG_26820_415130110_1711403076.png"
-  },
-  {
-    id: "saudi-hosting",
-    title: "استضافة المواقع السعودية",
-    description: "حلول استضافة مواقع متقدمة في المملكة العربية السعودية بأعلى معايير الأمان والسرعة",
-    icon: Server,
-    features: [
-      "خوادم محلية في السعودية",
-      "سرعة تحميل فائقة",
-      "حماية متقدمة",
-      "نسخ احتياطية يومية"
-    ],
-    image: "https://share.net.sa/storage/uploads/services/IMG_29215_569019812_1711403103.png"
-  },
-  {
-    id: "server-management",
-    title: "إدارة الخوادم",
-    description: "خدمات إدارة الخوادم الاحترافية لضمان استقرار وأمان البنية التحتية لعملك الرقمي",
-    icon: Monitor,
-    features: [
-      "مراقبة الخوادم 24/7",
-      "صيانة وتحديثات دورية",
-      "تحسين الأداء",
-      "دعم فني متخصص"
-    ],
-    image: "https://share.net.sa/storage/uploads/services/IMG_95840_439732808_1711403127.png"
-  },
-  {
-    id: "saudi-domains",
-    title: "حجز النطاقات السعودية",
-    description: "تخصص في حجز وإدارة النطاقات السعودية .SA التابعة للجهات الحكومية",
-    icon: Shield,
-    features: [
-      "نطاقات .SA رسمية",
-      "إجراءات معتمدة حكومياً",
-      "موثوقية عالية",
-      "دعم محلي متخصص"
-    ],
-    image: "https://share.net.sa/storage/uploads/services/IMG_56404_339153262_1645459138.png"
-  },
-  {
-    id: "web-hosting",
-    title: "استضافة المواقع",
-    description: "حلول استضافة شاملة للمواقع الإلكترونية مع خوادم متقدمة وأداء استثنائي",
-    icon: Cloud,
-    features: [
-      "استضافة مشتركة ومخصصة",
-      "شهادات SSL مجانية",
-      "لوحة تحكم سهلة",
-      "دعم جميع التقنيات"
-    ],
-    image: "https://share.net.sa/storage/uploads/services/IMG_75491_860598184_1645459825.png"
-  }
-];
-
-const features = [
-  {
-    icon: Zap,
-    title: "أداء سريع",
-    description: "خوادم عالية الأداء تضمن سرعة تحميل فائقة"
-  },
-  {
-    icon: Shield,
-    title: "أمان متقدم", 
-    description: "حماية شاملة ضد التهديدات الإلكترونية"
-  },
-  {
-    icon: Settings,
-    title: "إدارة سهلة",
-    description: "لوحات تحكم بديهية لإدارة الخدمات بسهولة"
-  },
-  {
-    icon: Lock,
-    title: "نسخ احتياطية",
-    description: "نسخ احتياطية يومية وأسبوعية لحماية بياناتك"
-  }
-];
 
 export default function HostingServices() {
   const navigate = useNavigate();
 
-  const handleServiceClick = (serviceId: string) => {
-    navigate(`/hosting/${serviceId}`);
-  };
-
   const handleContactUs = () => {
     navigate("/contact");
+  };
+
+  const handleBookConsultation = () => {
+    navigate("/book-consultation");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/50 to-background">
       <PageHeader 
         title="الاستضافات و الخوادم"
-        description="نقدم أحدث خدمات تكنولوجيا المعلومات لعملائنا بأعلى معايير الجودة والأمان"
+        description="خدمات الاستضافة والخوادم المتقدمة"
       >
         <BackButton className="absolute top-4 right-4" />
       </PageHeader>
 
       <div className="container mx-auto px-6 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              استمتع بخدمات استضافة المواقع وحجز النطاقات مع مجموعة علي الشهري! 
-              نحن نقدم مجموعة متنوعة من الخوادم التي تلبي احتياجات عالم الإنترنت بشكل شامل. 
-              يمكنك الاختيار بين خوادم تعمل بأنظمة التشغيل ويندوز ولينكس والتمتع بأفضل الأداء والموثوقية.
-            </p>
-          </div>
-        </div>
-
-        {/* Features Grid */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-center mb-8">لماذا تختار خدماتنا؟</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
-                  <CardHeader>
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon className="w-8 h-8 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Services Grid */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12 gradient-text">خدماتنا</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {hostingServices.map((service) => {
-              const Icon = service.icon;
-              return (
-                <Card 
-                  key={service.id} 
-                  className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
-                  onClick={() => handleServiceClick(service.id)}
-                >
-                  <div className="aspect-video bg-gradient-to-br from-primary/5 to-accent/5 rounded-t-lg flex items-center justify-center">
-                    <Icon className="w-16 h-16 text-primary group-hover:scale-110 transition-transform duration-300" />
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Coming Soon Card */}
+          <Card className="shadow-2xl border-2 border-primary/20">
+            <CardHeader className="pb-8">
+              <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Server className="w-12 h-12 text-primary" />
+              </div>
+              <CardTitle className="text-4xl font-bold gradient-text mb-4">
+                قريباً
+              </CardTitle>
+              <p className="text-xl text-muted-foreground">
+                يتم إطلاق الخدمة الرسمية
+              </p>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="mb-8">
+                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                  نحن نعمل حالياً على تطوير مجموعة شاملة من خدمات الاستضافة والخوادم المتقدمة 
+                  لتلبية احتياجاتكم بأعلى معايير الجودة والأمان.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  <div className="flex items-center justify-center space-x-3 space-x-reverse">
+                    <CheckCircle className="w-5 h-5 text-success" />
+                    <span>حجز النطاقات</span>
                   </div>
-                  <CardHeader>
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                      {service.title}
-                    </CardTitle>
-                    <CardDescription className="text-sm leading-relaxed">
-                      {service.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 mb-6">
-                      {service.features.map((feature, index) => (
-                        <li key={index} className="flex items-center text-sm">
-                          <CheckCircle className="w-4 h-4 text-success ml-2 flex-shrink-0" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    <Button 
-                      className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                      variant="outline"
-                    >
-                      اطلب الخدمة
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
+                  <div className="flex items-center justify-center space-x-3 space-x-reverse">
+                    <CheckCircle className="w-5 h-5 text-success" />
+                    <span>استضافة المواقع</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-3 space-x-reverse">
+                    <CheckCircle className="w-5 h-5 text-success" />
+                    <span>إدارة الخوادم</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-3 space-x-reverse">
+                    <CheckCircle className="w-5 h-5 text-success" />
+                    <span>الحلول السحابية</span>
+                  </div>
+                </div>
+              </div>
 
-        {/* CTA Section */}
-        <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 text-center text-white">
-          <h3 className="text-2xl font-bold mb-4">هل تحتاج استشارة مخصصة؟</h3>
-          <p className="text-lg mb-6 opacity-90">
-            فريق الخبراء لدينا جاهز لمساعدتك في اختيار الحل الأمثل لاحتياجاتك
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              onClick={handleContactUs}
-              size="lg" 
-              variant="secondary"
-              className="bg-white text-primary hover:bg-white/90"
-            >
-              تواصل معنا الآن
-            </Button>
-            <Button 
-              onClick={() => navigate("/book-consultation")}
-              size="lg" 
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-primary"
-            >
-              احجز استشارة مجانية
-            </Button>
-          </div>
+              <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg p-6 mb-8">
+                <div className="flex items-center justify-center mb-4">
+                  <Bell className="w-6 h-6 text-primary ml-2" />
+                  <h3 className="text-lg font-semibold">احصل على إشعار عند الإطلاق</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  سجل اهتمامك وسنرسل لك إشعاراً فور إطلاق الخدمة
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  onClick={handleContactUs}
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <Globe className="w-4 h-4 ml-2" />
+                  تواصل معنا
+                </Button>
+                <Button 
+                  onClick={handleBookConsultation}
+                  size="lg" 
+                  variant="outline"
+                >
+                  <Clock className="w-4 h-4 ml-2" />
+                  احجز استشارة
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
