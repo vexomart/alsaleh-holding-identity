@@ -454,7 +454,7 @@ const Terms = () => {
                     <Phone className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-lg font-bold text-primary mb-2">الهاتف</h3>
-                  <p className="text-lg font-mono text-secondary mb-2">+966 11 234 5678</p>
+                  <p className="text-lg font-mono text-secondary mb-2">0555812567</p>
                   <p className="text-sm text-muted-foreground">للدعم المباشر</p>
                 </CardContent>
               </Card>

@@ -124,7 +124,7 @@ const Support = () => {
     {
       icon: Phone,
       title: "الهاتف المباشر",
-      details: "+966 11 234 5678",
+      details: "0555812567",
       description: "للمشاكل الطارئة فقط",
       availability: "24/7",
       color: "from-green-500 to-emerald-500"
@@ -132,7 +132,7 @@ const Support = () => {
     {
       icon: MessageCircle,
       title: "واتساب",
-      details: "+966 11 234 5678",
+      details: "0555812567",
       description: "دعم سريع ومباشر",
       availability: "24/7",
       color: "from-green-600 to-green-500"

@@ -118,7 +118,7 @@ const Privacy = () => {
     {
       icon: Phone,
       title: "الهاتف",
-      value: "+966 11 234 5678",
+      value: "0555812567",
       description: "للدعم المباشر"
     },
     {
