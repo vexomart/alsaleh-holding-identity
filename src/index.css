@@ -161,16 +161,37 @@ html, body, #root {
 /* Force RTL for all elements */
 * {
   direction: rtl !important;
+  text-align: right !important;
 }
 
-/* Flex direction fix for RTL */
+/* Specific flex fixes */
 .flex {
-  flex-direction: row-reverse;
+  flex-direction: row !important;
 }
 
 /* Grid RTL support */
 .grid {
-  direction: rtl;
+  direction: rtl !important;
+}
+
+/* Button and component fixes */
+button, .button {
+  direction: rtl !important;
+  text-align: center !important;
+}
+
+/* Card content alignment */
+.card-content {
+  text-align: right !important;
+}
+
+/* Override any left text alignment */
+.text-left {
+  text-align: right !important;
+}
+
+.text-center {
+  text-align: center !important;
 }
 
 [dir="rtl"] .flex {
