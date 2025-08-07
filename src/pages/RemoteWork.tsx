@@ -1,7 +1,8 @@
+import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { Wifi, Globe, Users, Shield, Clock, Star, CheckCircle, Building, ArrowRight, Zap, Target, Award } from "lucide-react";
+import { Wifi, Globe, Users, Shield, Clock, Star, CheckCircle, Building, ArrowRight, Zap, Target, Award, Code, Palette, TrendingUp, HeadphonesIcon, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -92,6 +93,51 @@ const RemoteWork = () => {
       title: "الاستشارات التقنية",
       description: "خبراء استشاريون متاحون للمساعدة في اتخاذ القرارات التقنية المناسبة",
       features: ["تحليل الأنظمة", "تخطيط البنية التحتية", "أمن المعلومات", "التحول الرقمي"]
+    }
+  ];
+
+  const relatedPages = [
+    {
+      title: "فريق العمل",
+      description: "تعرف على فريق العمل المتخصص لدينا",
+      href: "/team",
+      icon: Users,
+      color: "from-blue-500 to-indigo-600"
+    },
+    {
+      title: "الوظائف والمهن",
+      description: "انضم لفريقنا واعمل معنا عن بُعد",
+      href: "/careers",
+      icon: Target,
+      color: "from-green-500 to-emerald-600"
+    },
+    {
+      title: "خدماتنا الاحترافية",
+      description: "اكتشف جميع خدماتنا المتاحة عن بُعد",
+      href: "/professional-services",
+      icon: Award,
+      color: "from-purple-500 to-violet-600"
+    },
+    {
+      title: "حلول التصميم",
+      description: "خدمات تصميم إبداعية عن بُعد",
+      href: "/design-solutions",
+      icon: Palette,
+      color: "from-pink-500 to-rose-600"
+    },
+    {
+      title: "التطوير والابتكار",
+      description: "حلول تطوير متقدمة عن بُعد",
+      href: "/development",
+      icon: Code,
+      color: "from-orange-500 to-red-600"
+    },
+    {
+      title: "الدعم الفني",
+      description: "دعم فني متاح 24/7 عن بُعد",
+      href: "/support",
+      icon: HeadphonesIcon,
+      color: "from-teal-500 to-cyan-600"
     }
   ];
 
@@ -293,6 +339,44 @@ const RemoteWork = () => {
                 <ArrowRight className="w-5 h-5 mr-2" />
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Related Pages Section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              اكتشف المزيد من <span className="text-primary">خدماتنا</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              تصفح صفحاتنا الأخرى لمعرفة المزيد عن خدماتنا وفرص العمل المتاحة
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {relatedPages.map((page, index) => (
+              <Link key={index} to={page.href} className="group">
+                <Card className="h-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                  <CardContent className="p-8 text-center">
+                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${page.color} rounded-full mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <page.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
+                      {page.title}
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      {page.description}
+                    </p>
+                    <div className="flex items-center justify-center gap-2 text-primary font-medium group-hover:gap-3 transition-all duration-300">
+                      <span>اكتشف المزيد</span>
+                      <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
