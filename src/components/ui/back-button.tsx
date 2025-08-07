@@ -20,7 +20,10 @@ const BackButton = ({
   const navigate = useNavigate();
 
   const handleBack = () => {
-    if (window.history.length > 1) {
+    // Always go back to business services page for these detail pages
+    if (window.location.pathname.includes('/business-services/')) {
+      navigate('/business-services');
+    } else if (window.history.length > 1) {
       navigate(-1);
     } else {
       navigate('/');
@@ -37,11 +40,12 @@ const BackButton = ({
     <Button
       variant={variant}
       onClick={handleBack}
-      className={`${sizeClasses[size]} ${className} group hover:shadow-md transition-all duration-200`}
+      className={`${sizeClasses[size]} ${className} group hover:shadow-md transition-all duration-200 cursor-pointer`}
+      type="button"
     >
-      <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
+      <ArrowLeft className="w-4 h-4 ml-2 group-hover:-translate-x-1 transition-transform duration-200" />
       {showText && (
-        <span className="mr-2 text-sm font-medium">{customText}</span>
+        <span className="text-sm font-medium">{customText}</span>
       )}
     </Button>
   );
