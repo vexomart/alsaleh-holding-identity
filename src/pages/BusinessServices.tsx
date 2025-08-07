@@ -26,7 +26,8 @@ import {
   FileText,
   PieChart,
   BrainCircuit,
-  Briefcase
+  Briefcase,
+  Calendar
 } from "lucide-react";
 import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";
 
@@ -151,9 +152,9 @@ const BusinessServices = () => {
               <Button 
                 size="lg" 
                 className="bg-white text-blue-900 hover:bg-blue-50 text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                onClick={() => handleRequestService("استشارة مجانية")}
+                onClick={() => navigate('/book-consultation')}
               >
-                <MessageCircle className="w-5 h-5 ml-2" />
+                <Calendar className="w-5 h-5 ml-2" />
                 احجز استشارة مجانية
               </Button>
               <Button 
@@ -318,9 +319,9 @@ const BusinessServices = () => {
             <Button 
               size="lg" 
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              onClick={() => handleRequestService("استشارة شاملة")}
+              onClick={() => navigate('/book-consultation')}
             >
-              <MessageCircle className="w-5 h-5 ml-2" />
+              <Calendar className="w-5 h-5 ml-2" />
               احجز استشارة مجانية
             </Button>
             <Button 

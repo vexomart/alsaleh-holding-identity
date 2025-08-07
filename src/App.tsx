@@ -71,6 +71,7 @@ import ClientDashboard from "./pages/ClientDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import StartWithUs from "./pages/StartWithUs";
+import BookConsultation from "./pages/BookConsultation";
 
 const queryClient = new QueryClient();
 
@@ -157,6 +158,7 @@ const App = () => {
           <Route path="/client-dashboard" element={<ClientDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/start-with-us" element={<StartWithUs />} />
+          <Route path="/book-consultation" element={<BookConsultation />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
