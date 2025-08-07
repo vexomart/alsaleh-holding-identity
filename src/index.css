@@ -150,10 +150,12 @@ body {
 
 html {
   scroll-behavior: smooth;
+  direction: rtl;
 }
 
-/* RTL Support */
-[dir="rtl"] {
+/* RTL Fixes */
+* {
+  direction: rtl;
   text-align: right;
 }
 
