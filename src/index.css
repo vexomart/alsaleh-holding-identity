@@ -20,35 +20,35 @@
 
 @layer base {
   :root {
-    /* Corporate Professional Color Palette */
+    /* Corporate Professional Color Palette - Enhanced Contrast */
     --background: 0 0% 100%;
-    --foreground: 225 15% 15%;
+    --foreground: 225 20% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 225 15% 15%;
+    --card-foreground: 225 20% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 225 15% 15%;
+    --popover-foreground: 225 20% 10%;
     
-    /* Primary Brand Colors - Deep Blue Corporate */
-    --primary: 220 90% 20%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 220 90% 35%;
+    /* Primary Brand Colors - Deep Blue Corporate with better contrast */
+    --primary: 220 100% 25%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 220 100% 40%;
     
-    /* Secondary - Elegant Gold/Amber */
-    --secondary: 45 95% 65%;
-    --secondary-foreground: 225 15% 15%;
-    --secondary-dark: 35 85% 45%;
+    /* Secondary - Enhanced Gold/Amber */
+    --secondary: 40 100% 50%;
+    --secondary-foreground: 225 20% 10%;
+    --secondary-dark: 35 90% 40%;
     
-    /* Accent - Modern Teal */
-    --accent: 180 85% 35%;
-    --accent-foreground: 0 0% 98%;
-    --accent-light: 180 85% 65%;
+    /* Accent - Enhanced Teal */
+    --accent: 180 100% 30%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 180 100% 50%;
     
-    /* Neutral System */
-    --muted: 220 15% 96%;
-    --muted-foreground: 225 15% 45%;
-    --border: 220 15% 92%;
-    --input: 220 15% 95%;
-    --ring: 220 90% 20%;
+    /* Neutral System with better contrast */
+    --muted: 220 20% 95%;
+    --muted-foreground: 225 20% 40%;
+    --border: 220 20% 85%;
+    --input: 220 20% 92%;
+    --ring: 220 100% 25%;
     
     /* Status Colors */
     --destructive: 0 75% 55%;
@@ -85,35 +85,35 @@
   }
 
   .dark {
-    /* Dark Mode Corporate Colors */
-    --background: 220 90% 8%;
-    --foreground: 0 0% 98%;
-    --card: 220 85% 12%;
-    --card-foreground: 0 0% 98%;
-    --popover: 220 85% 12%;
-    --popover-foreground: 0 0% 98%;
+    /* Dark Mode Corporate Colors - Enhanced Contrast */
+    --background: 220 100% 5%;
+    --foreground: 0 0% 100%;
+    --card: 220 100% 8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 100% 8%;
+    --popover-foreground: 0 0% 100%;
     
     /* Dark Primary */
-    --primary: 45 95% 65%;
-    --primary-foreground: 225 15% 15%;
-    --primary-glow: 45 95% 75%;
+    --primary: 40 100% 60%;
+    --primary-foreground: 225 20% 10%;
+    --primary-glow: 40 100% 70%;
     
     /* Dark Secondary */
-    --secondary: 220 85% 25%;
-    --secondary-foreground: 0 0% 98%;
-    --secondary-dark: 220 90% 15%;
+    --secondary: 220 100% 30%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-dark: 220 100% 15%;
     
     /* Dark Accent */
-    --accent: 180 85% 45%;
-    --accent-foreground: 0 0% 98%;
-    --accent-light: 180 85% 65%;
+    --accent: 180 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 180 100% 60%;
     
-    /* Dark Neutrals */
-    --muted: 220 85% 15%;
-    --muted-foreground: 220 15% 65%;
-    --border: 220 60% 25%;
-    --input: 220 60% 20%;
-    --ring: 45 95% 65%;
+    /* Dark Neutrals with better contrast */
+    --muted: 220 100% 12%;
+    --muted-foreground: 220 20% 70%;
+    --border: 220 80% 20%;
+    --input: 220 80% 15%;
+    --ring: 40 100% 60%;
     
     /* Dark Status Colors */
     --destructive: 0 75% 60%;
