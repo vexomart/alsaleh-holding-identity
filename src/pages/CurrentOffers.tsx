@@ -177,78 +177,117 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
           // Show professional STC Pay instructions
           const modal = document.createElement('div');
           modal.innerHTML = `
-            <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
-              <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
-                <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white text-center">
-                  <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
+            <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
+              <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
+                
+                <!-- Header Section -->
+                <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-8 text-white text-center relative overflow-hidden">
+                  <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+                  <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+                  <div class="relative z-10">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                      <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9M19 9H14V4H19V9Z"/>
+                      </svg>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2">تعليمات الدفع</h3>
+                    <p class="text-green-100 text-lg font-medium">STC Pay</p>
+                    <div class="mt-4 bg-white/10 rounded-full px-4 py-2 inline-block">
+                      <span class="text-sm">• معاملة آمنة ومحمية •</span>
+                    </div>
                   </div>
-                  <h3 class="text-2xl font-bold mb-2">تعليمات الدفع</h3>
-                  <p class="text-green-100">STC Pay</p>
                 </div>
                 
-                <div class="p-6 space-y-6">
-                  <div class="text-center">
-                    <div class="inline-flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-sm font-medium text-gray-700">
-                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      معاملة آمنة ومحمية
+                <!-- Content Section -->
+                <div class="p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+                  
+                  <!-- Step 1 -->
+                  <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-100 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">1</div>
+                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-blue-200/30 rounded-full translate-y-8 -translate-x-8"></div>
+                    <div class="relative z-10 mr-12">
+                      <h4 class="font-bold text-xl text-blue-800 mb-2">افتح تطبيق STC Pay</h4>
+                      <p class="text-blue-600 text-sm">تأكد من تحديث التطبيق لآخر إصدار</p>
                     </div>
                   </div>
-
-                  <div class="space-y-4">
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200">
-                      <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <span class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                        افتح تطبيق STC Pay
-                      </h4>
+                  
+                  <!-- Step 2 -->
+                  <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-100 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">2</div>
+                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-green-200/30 rounded-full translate-y-8 -translate-x-8"></div>
+                    <div class="relative z-10 mr-12">
+                      <h4 class="font-bold text-xl text-green-800 mb-2">اختر "إرسال أموال"</h4>
+                      <p class="text-green-600 text-sm">من القائمة الرئيسية للتطبيق</p>
                     </div>
-                    
-                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
-                      <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <span class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                        اختر "إرسال أموال"
-                      </h4>
-                    </div>
-                    
-                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
-                      <h4 class="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                        <span class="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                        أرسل المبلغ التالي:
-                      </h4>
-                      <div class="bg-white rounded-lg p-4 border-2 border-purple-300">
+                  </div>
+                  
+                  <!-- Step 3 - Amount -->
+                  <div class="bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl p-6 border-2 border-purple-100 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">3</div>
+                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-purple-200/30 rounded-full translate-y-8 -translate-x-8"></div>
+                    <div class="relative z-10 mr-12">
+                      <h4 class="font-bold text-xl text-purple-800 mb-4">أرسل المبلغ التالي:</h4>
+                      <div class="bg-white rounded-xl p-6 border-2 border-purple-200 shadow-lg">
                         <div class="text-center">
-                          <div class="text-3xl font-bold text-purple-600">${data.amount} ${data.currency}</div>
-                          <div class="text-sm text-gray-600 mt-1">إلى الرقم</div>
-                          <div class="text-xl font-bold text-gray-800 mt-2 font-mono">${data.merchant_number}</div>
+                          <div class="text-4xl font-bold text-purple-600 mb-2">${data.amount}</div>
+                          <div class="text-lg text-purple-500 font-medium">${data.currency}</div>
+                          <div class="mt-4 text-sm text-gray-600">إلى الرقم</div>
+                          <div class="text-2xl font-bold text-gray-800 mt-2 font-mono bg-gray-50 rounded-lg py-2 px-4 border">${data.merchant_number}</div>
                         </div>
                       </div>
                     </div>
-                    
-                    <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4 border border-orange-200">
-                      <h4 class="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                        <span class="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                        استخدم المرجع:
-                      </h4>
-                      <div class="bg-white rounded-lg p-3 border-2 border-orange-300">
-                        <div class="text-center font-mono text-lg font-bold text-gray-800">${data.reference}</div>
+                  </div>
+                  
+                  <!-- Step 4 - Reference -->
+                  <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-6 border-2 border-orange-100 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">4</div>
+                    <div class="absolute bottom-0 left-0 w-16 h-16 bg-orange-200/30 rounded-full translate-y-8 -translate-x-8"></div>
+                    <div class="relative z-10 mr-12">
+                      <h4 class="font-bold text-xl text-orange-800 mb-4">استخدم المرجع:</h4>
+                      <div class="bg-white rounded-xl p-4 border-2 border-orange-200 shadow-lg">
+                        <div class="text-center">
+                          <div class="text-lg font-bold text-gray-800 font-mono bg-gray-50 rounded-lg py-3 px-4 border">${data.reference}</div>
+                          <button onclick="navigator.clipboard.writeText('${data.reference}'); this.innerHTML='<span class=&quot;text-green-600&quot;>✓ تم النسخ!</span>'; setTimeout(() => this.innerHTML='نسخ المرجع', 2000)" 
+                                  class="mt-3 bg-orange-100 hover:bg-orange-200 text-orange-800 text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                            نسخ المرجع
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="bg-gray-50 rounded-xl p-4 text-center">
+                  <!-- Confirmation -->
+                  <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl p-6 border-2 border-gray-200 text-center">
+                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      </svg>
+                    </div>
                     <div class="text-sm text-gray-600 mb-2">⏱️ سيتم تأكيد الدفع خلال</div>
-                    <div class="text-lg font-bold text-gray-800">دقائق قليلة</div>
+                    <div class="text-2xl font-bold text-gray-800 mb-4">دقائق قليلة</div>
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <div class="text-sm text-green-700">ستصلك رسالة تأكيد فور إتمام العملية</div>
+                    </div>
                   </div>
+                </div>
 
-                  <div class="grid grid-cols-2 gap-3">
-                    <button onclick="this.closest('.fixed').remove()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-3 px-4 rounded-xl transition-colors">
+                <!-- Footer Actions -->
+                <div class="p-6 bg-gray-50 border-t">
+                  <div class="grid grid-cols-2 gap-4">
+                    <button onclick="this.closest('.fixed').remove()" 
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">
                       إغلاق
                     </button>
-                    <button onclick="navigator.clipboard.writeText('${data.merchant_number}'); this.textContent='تم النسخ!'; setTimeout(() => this.textContent='نسخ الرقم', 2000)" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-3 px-4 rounded-xl transition-all">
+                    <button onclick="navigator.clipboard.writeText('${data.merchant_number}'); this.innerHTML='<span class=&quot;text-white&quot;>✓ تم النسخ!</span>'; setTimeout(() => this.innerHTML='نسخ الرقم', 2000)" 
+                            class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
                       نسخ الرقم
                     </button>
+                  </div>
+                  
+                  <!-- Support Info -->
+                  <div class="mt-4 text-center">
+                    <div class="text-xs text-gray-500">هل تحتاج مساعدة؟</div>
+                    <div class="text-sm text-gray-600 font-medium">اتصل بنا على: 920000000</div>
                   </div>
                 </div>
               </div>
