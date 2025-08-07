@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 import { 
   Building2, 
   TrendingUp, 
@@ -32,10 +33,15 @@ import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm"
 const BusinessServices = () => {
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [selectedService, setSelectedService] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleRequestService = (serviceName: string) => {
     setSelectedService(serviceName);
     setShowServiceForm(true);
+  };
+
+  const handleViewDetails = (serviceId: string) => {
+    navigate(`/business-services/${serviceId}`);
   };
 
   const businessServices = [
@@ -244,13 +250,23 @@ const BusinessServices = () => {
                       </div>
                     </div>
                     
-                    <Button 
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                      onClick={() => handleRequestService(service.title)}
-                    >
-                      <MessageCircle className="w-5 h-5 ml-2" />
-                      اطلب الخدمة الآن
-                    </Button>
+                    <div className="flex gap-3">
+                      <Button 
+                        variant="outline"
+                        className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-xl py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                        onClick={() => handleViewDetails(service.id)}
+                      >
+                        <FileText className="w-5 h-5 ml-2" />
+                        التفاصيل
+                      </Button>
+                      <Button 
+                        className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                        onClick={() => handleRequestService(service.title)}
+                      >
+                        <MessageCircle className="w-5 h-5 ml-2" />
+                        اطلب الآن
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               );

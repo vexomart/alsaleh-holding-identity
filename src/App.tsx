@@ -61,6 +61,9 @@ import Dashboard from "./pages/Dashboard";
 import Partnerships from "./pages/Partnerships";
 import AffiliateMarketing from "./pages/AffiliateMarketing";
 import BusinessServices from "./pages/BusinessServices";
+import BusinessConsulting from "./pages/business-services/BusinessConsulting";
+import DigitalTransformation from "./pages/business-services/DigitalTransformation";
+import FinancialPlanning from "./pages/business-services/FinancialPlanning";
 import DepartmentDetails from "./pages/DepartmentDetails";
 import UserGuide from "./pages/UserGuide";
 import Auth from "./pages/Auth";
@@ -144,6 +147,9 @@ const App = () => {
           <Route path="/partnerships" element={<Partnerships />} />
           <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
           <Route path="/business-services" element={<BusinessServices />} />
+          <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
+          <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
+          <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
           <Route path="/department/:id" element={<DepartmentDetails />} />
           <Route path="/user-guide" element={<UserGuide />} />
           <Route path="/auth" element={<Auth />} />
