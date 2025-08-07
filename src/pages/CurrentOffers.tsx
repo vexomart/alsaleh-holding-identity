@@ -160,7 +160,66 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
       ...formData,
       [e.target.name]: e.target.value,
     });
-  };
+};
+
+const OfferCard = ({ offer, setShowForm }: { offer: any; setShowForm: (show: boolean) => void }) => (
+  <Card className="relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+    {offer.isPopular && (
+      <div className="absolute top-4 right-4 z-10">
+        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+          <Star className="w-4 h-4 mr-1" />
+          الأكثر طلباً
+        </Badge>
+      </div>
+    )}
+    
+    <div className="absolute top-4 left-4 z-10">
+      <Badge variant="destructive" className="bg-red-500 text-white animate-pulse">
+        خصم {offer.discount}
+      </Badge>
+    </div>
+
+    <CardHeader className="relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-50"></div>
+      <CardTitle className="relative text-xl mb-2">{offer.title}</CardTitle>
+      <div className="relative flex items-center gap-2 mb-4">
+        <Clock className="w-4 h-4 text-orange-500" />
+        <span className="text-sm text-orange-600 font-medium">متبقي {offer.timeLeft}</span>
+      </div>
+      <div className="relative">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-3xl font-bold text-green-600">{offer.discountedPrice} ريال</span>
+          <span className="text-lg text-gray-500 line-through">{offer.originalPrice} ريال</span>
+        </div>
+      </div>
+      <p className="relative text-muted-foreground">{offer.description}</p>
+    </CardHeader>
+
+    <CardContent>
+      <div className="space-y-4">
+        <div>
+          <h4 className="font-medium mb-2">ما يشمله العرض:</h4>
+          <ul className="space-y-1">
+            {offer.features.map((feature: string, index: number) => (
+              <li key={index} className="flex items-center gap-2 text-sm">
+                <Star className="w-3 h-3 text-green-500" />
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        <Button 
+          onClick={() => setShowForm(true)}
+          className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold"
+        >
+          اطلب العرض الآن
+          <ArrowRight className="w-4 h-4 mr-2" />
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+);
 
   const handlePayment = async () => {
     if (!formData.name || !formData.email) {
