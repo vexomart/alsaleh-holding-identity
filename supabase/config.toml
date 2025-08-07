@@ -18,3 +18,6 @@ verify_jwt = false
 
 [functions.tap-payment]
 verify_jwt = false
+
+[functions.consultation-booking]
+verify_jwt = false
