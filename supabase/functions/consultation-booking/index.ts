@@ -99,7 +99,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send notification email to admin
     console.log("Sending admin email to: consultation@emkan.sa");
     const adminEmailResponse = await resend.emails.send({
-      from: "Emkan Consulting <noreply@emkan.sa>",
+      from: "Emkan Consulting <onboarding@resend.dev>",
       to: ["consultation@emkan.sa"], // Replace with actual admin email
       subject: `طلب استشارة جديد من ${name}`,
       html: `
@@ -195,7 +195,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending client confirmation email to:", email);
     const clientEmailResponse = await resend.emails.send({
-      from: "Emkan Consulting <noreply@emkan.sa>",
+      from: "Emkan Consulting <onboarding@resend.dev>",
       to: [email],
       subject: "تأكيد استلام طلب الاستشارة - إمكان",
       html: `
