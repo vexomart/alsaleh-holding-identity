@@ -27,7 +27,10 @@ import {
   ArrowRight,
   Fuel,
   Settings,
-  Eye
+  Eye,
+  Headphones,
+  DollarSign,
+  TrendingUp
 } from "lucide-react";
 
 const CarRentalLanding = () => {
@@ -594,6 +597,147 @@ const CarRentalLanding = () => {
                 </Card>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* قسم التوظيف */}
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">
+              انضم إلى فريقنا
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              كن جزءاً من فريق عمل متميز في شركة رائدة في مجال تأجير السيارات
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {/* وظيفة مندوب مبيعات */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover:-translate-y-2 border border-blue-100">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-6">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">مندوب مبيعات</h3>
+              <p className="text-slate-600 mb-6 leading-relaxed">
+                مطلوب مندوب مبيعات متحمس للانضمام إلى فريقنا وتقديم أفضل خدمة للعملاء
+              </p>
+              <ul className="space-y-2 mb-6 text-slate-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  خبرة في المبيعات
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  مهارات تواصل ممتازة
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  رخصة قيادة سارية
+                </li>
+              </ul>
+              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                تقدم للوظيفة
+              </Button>
+            </div>
+
+            {/* وظيفة فني صيانة */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover:-translate-y-2 border border-blue-100">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mb-6">
+                <Settings className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">فني صيانة</h3>
+              <p className="text-slate-600 mb-6 leading-relaxed">
+                نبحث عن فني صيانة مهني للحفاظ على أسطولنا من السيارات في أفضل حالة
+              </p>
+              <ul className="space-y-2 mb-6 text-slate-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  خبرة في صيانة السيارات
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  شهادة فني معتمد
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  القدرة على العمل بفريق
+                </li>
+              </ul>
+              <Button className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">
+                تقدم للوظيفة
+              </Button>
+            </div>
+
+            {/* وظيفة خدمة عملاء */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all hover:-translate-y-2 border border-blue-100">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mb-6">
+                <Headphones className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">موظف خدمة عملاء</h3>
+              <p className="text-slate-600 mb-6 leading-relaxed">
+                انضم إلى فريق خدمة العملاء لتقديم الدعم والمساعدة للعملاء على مدار الساعة
+              </p>
+              <ul className="space-y-2 mb-6 text-slate-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  إتقان اللغة العربية والإنجليزية
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  مهارات حل المشاكل
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  خبرة في خدمة العملاء
+                </li>
+              </ul>
+              <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                تقدم للوظيفة
+              </Button>
+            </div>
+          </div>
+
+          {/* مزايا العمل معنا */}
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl">
+            <h3 className="text-3xl font-bold text-slate-800 text-center mb-12">
+              لماذا تختار العمل معنا؟
+            </h3>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <DollarSign className="w-10 h-10 text-white" />
+                </div>
+                <h4 className="text-xl font-semibold text-slate-800 mb-2">راتب تنافسي</h4>
+                <p className="text-slate-600">نقدم رواتب ومكافآت تنافسية في السوق</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-10 h-10 text-white" />
+                </div>
+                <h4 className="text-xl font-semibold text-slate-800 mb-2">نمو مهني</h4>
+                <p className="text-slate-600">فرص تطوير وتدريب مستمرة لتحقيق النجاح</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-10 h-10 text-white" />
+                </div>
+                <h4 className="text-xl font-semibold text-slate-800 mb-2">تأمين صحي</h4>
+                <p className="text-slate-600">تأمين صحي شامل لك ولعائلتك</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-orange-600 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Clock className="w-10 h-10 text-white" />
+                </div>
+                <h4 className="text-xl font-semibold text-slate-800 mb-2">مرونة في العمل</h4>
+                <p className="text-slate-600">ساعات عمل مرنة وبيئة عمل إيجابية</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
