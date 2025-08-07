@@ -380,31 +380,6 @@ const OfferDetails = () => {
               </div>
             </div>
 
-            {/* Gallery */}
-            <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="relative">
-                <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/20 backdrop-blur-sm">
-                  <img 
-                    src={offer.galleryImages[selectedImage]} 
-                    alt={offer.title}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
-                </div>
-                <div className="flex gap-2 mt-4 justify-center">
-                  {offer.galleryImages.map((img: string, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                        selectedImage === index ? 'border-primary shadow-lg scale-110' : 'border-white/20 hover:border-primary/50'
-                      }`}
-                    >
-                      <img src={img} alt="" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
