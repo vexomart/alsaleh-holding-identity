@@ -705,8 +705,40 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 6: Current Projects */}
+            {/* Column 6: Company Updates */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+              {/* Company Updates */}
+              <div>
+                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-emerald-400 animate-pulse" />
+                  تحديثات الشركة
+                </h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a 
+                      href="/company-updates" 
+                      className="flex items-center gap-2 text-slate-300 hover:text-emerald-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                    >
+                      <ChevronRight className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                      <span className="group-hover:font-medium transition-all duration-300">
+                        تحديثات الشركة الداخلية
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="/company-news" 
+                      className="flex items-center gap-2 text-slate-300 hover:text-emerald-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                    >
+                      <ChevronRight className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
+                      <span className="group-hover:font-medium transition-all duration-300">
+                        أخبار الشركة
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
               {/* Current Projects */}
               <div>
                 <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">

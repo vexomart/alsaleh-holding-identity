@@ -73,6 +73,7 @@ import NotFound from "./pages/NotFound";
 import StartWithUs from "./pages/StartWithUs";
 import BookConsultation from "./pages/BookConsultation";
 import HostingServices from "./pages/HostingServices";
+import CompanyUpdates from "./pages/CompanyUpdates";
 
 const queryClient = new QueryClient();
 
@@ -159,8 +160,9 @@ const App = () => {
           <Route path="/client-dashboard" element={<ClientDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/start-with-us" element={<StartWithUs />} />
-          <Route path="/book-consultation" element={<BookConsultation />} />
-          <Route path="/hosting-services" element={<HostingServices />} />
+              <Route path="/book-consultation" element={<BookConsultation />} />
+              <Route path="/hosting-services" element={<HostingServices />} />
+              <Route path="/company-updates" element={<CompanyUpdates />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
