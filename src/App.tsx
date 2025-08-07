@@ -72,6 +72,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import StartWithUs from "./pages/StartWithUs";
 import BookConsultation from "./pages/BookConsultation";
+import HostingServices from "./pages/HostingServices";
+import DomainRegistration from "./pages/hosting/DomainRegistration";
+import SaudiHosting from "./pages/hosting/SaudiHosting";
 
 const queryClient = new QueryClient();
 
@@ -159,6 +162,9 @@ const App = () => {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/start-with-us" element={<StartWithUs />} />
           <Route path="/book-consultation" element={<BookConsultation />} />
+          <Route path="/hosting-services" element={<HostingServices />} />
+          <Route path="/hosting/domain-registration" element={<DomainRegistration />} />
+          <Route path="/hosting/saudi-hosting" element={<SaudiHosting />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
