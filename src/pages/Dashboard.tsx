@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Footer from '@/components/Footer';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
@@ -90,9 +91,10 @@ export default function Dashboard() {
   }
 
   // Render appropriate dashboard based on user role
-  if (userRole === 'admin') {
-    return <AdminDashboard />;
-  }
-
-  return <ClientDashboard />;
+  return (
+    <div>
+      {userRole === 'admin' ? <AdminDashboard /> : <ClientDashboard />}
+      <Footer />
+    </div>
+  );
 }
