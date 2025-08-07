@@ -97,10 +97,10 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Preparing to send admin email...");
     
     // Send notification email to admin
-    console.log("Sending admin email to: consultation@emkan.sa");
+    console.log("Sending admin email to: info@alialshehriholding.com");
     const adminEmailResponse = await resend.emails.send({
-      from: "Emkan Consulting <onboarding@resend.dev>",
-      to: ["consultation@emkan.sa"], // Replace with actual admin email
+      from: "Ali Al Shehri Holding <onboarding@resend.dev>",
+      to: ["info@alialshehriholding.com"],
       subject: `طلب استشارة جديد من ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; direction: rtl;">
@@ -195,9 +195,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending client confirmation email to:", email);
     const clientEmailResponse = await resend.emails.send({
-      from: "Emkan Consulting <onboarding@resend.dev>",
+      from: "Ali Al Shehri Holding <onboarding@resend.dev>",
       to: [email],
-      subject: "تأكيد استلام طلب الاستشارة - إمكان",
+      subject: "تأكيد استلام طلب الاستشارة - مجموعة علي الشهري",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; direction: rtl;">
           <div style="background: linear-gradient(135deg, #1e40af, #0ea5e9); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
@@ -235,7 +235,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="text-align: center;">
             <h3 style="color: #1e40af; margin-bottom: 15px;">تواصل معنا</h3>
             <p style="color: #6b7280; margin: 5px 0;">📞 الهاتف: 0555812567</p>
-            <p style="color: #6b7280; margin: 5px 0;">📧 البريد: consultation@emkan.sa</p>
+            <p style="color: #6b7280; margin: 5px 0;">📧 البريد: info@alialshehriholding.com</p>
             <p style="color: #6b7280; margin: 5px 0;">📍 الموقع: الرياض، المملكة العربية السعودية</p>
           </div>
           
