@@ -323,7 +323,7 @@ const Navigation = () => {
                 className="h-8 px-2 sm:px-4 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 asChild
               >
-                <a href="https://alialshehriholding.com" target="_blank" rel="noopener noreferrer">
+                <a href="/start-with-us">
                   <span className="hidden sm:block">ابدأ معنا</span>
                   <span className="sm:hidden">ابدأ</span>
                   <Zap className="w-3 h-3 mr-1 sm:mr-1.5" />
