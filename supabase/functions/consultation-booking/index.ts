@@ -52,8 +52,29 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("Starting consultation booking process...");
+    
+    // Check if RESEND_API_KEY is available
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    if (!resendApiKey) {
+      console.error("RESEND_API_KEY not found in environment variables");
+      throw new Error("Email service not configured properly");
+    }
+    console.log("RESEND_API_KEY found, proceeding...");
+    
     const requestData: ConsultationRequest = await req.json();
     console.log("Received consultation booking request:", requestData);
+
+    // Validate required fields
+    if (!requestData.name || !requestData.email || !requestData.service || !requestData.consultationType) {
+      console.error("Missing required fields:", {
+        name: !!requestData.name,
+        email: !!requestData.email,
+        service: !!requestData.service,
+        consultationType: !!requestData.consultationType
+      });
+      throw new Error("الرجاء ملء جميع الحقول المطلوبة");
+    }
 
     const { 
       name, 
@@ -68,10 +89,15 @@ const handler = async (req: Request): Promise<Response> => {
       message 
     } = requestData;
 
+    console.log("Extracted data:", { name, email, service, consultationType });
+
     const serviceName = serviceNames[service] || service;
     const consultationTypeName = consultationTypeNames[consultationType] || consultationType;
 
+    console.log("Preparing to send admin email...");
+    
     // Send notification email to admin
+    console.log("Sending admin email to: consultation@emkan.sa");
     const adminEmailResponse = await resend.emails.send({
       from: "Emkan Consulting <noreply@emkan.sa>",
       to: ["consultation@emkan.sa"], // Replace with actual admin email
@@ -158,12 +184,16 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
+    console.log("Admin email response:", adminEmailResponse);
+    
     if (adminEmailResponse.error) {
       console.error("Error sending admin email:", adminEmailResponse.error);
       throw adminEmailResponse.error;
     }
 
-    // Send confirmation email to client
+    console.log("Admin email sent successfully, sending client email...");
+
+    console.log("Sending client confirmation email to:", email);
     const clientEmailResponse = await resend.emails.send({
       from: "Emkan Consulting <noreply@emkan.sa>",
       to: [email],
@@ -204,7 +234,7 @@ const handler = async (req: Request): Promise<Response> => {
 
           <div style="text-align: center;">
             <h3 style="color: #1e40af; margin-bottom: 15px;">تواصل معنا</h3>
-            <p style="color: #6b7280; margin: 5px 0;">📞 الهاتف: +966 11 234 5678</p>
+            <p style="color: #6b7280; margin: 5px 0;">📞 الهاتف: 0555812567</p>
             <p style="color: #6b7280; margin: 5px 0;">📧 البريد: consultation@emkan.sa</p>
             <p style="color: #6b7280; margin: 5px 0;">📍 الموقع: الرياض، المملكة العربية السعودية</p>
           </div>
@@ -218,6 +248,8 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
+    console.log("Client email response:", clientEmailResponse);
+    
     if (clientEmailResponse.error) {
       console.error("Error sending client email:", clientEmailResponse.error);
       throw clientEmailResponse.error;
