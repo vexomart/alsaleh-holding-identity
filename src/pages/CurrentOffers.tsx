@@ -711,36 +711,66 @@ const CurrentOffers = () => {
         </div>
       </div>
 
-      {/* Hero Section */}
+      {/* Enhanced Hero Section */}
       <section className="relative pt-32 pb-20 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full px-6 py-3 mb-8 border border-primary/20 animate-fade-in">
-            <Gift className="w-5 h-5 text-primary animate-bounce-gentle" />
-            <span className="text-primary font-semibold">عروض حصرية ومحدودة</span>
-            <Sparkles className="w-5 h-5 text-accent animate-pulse" />
+          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500/10 via-red-500/10 to-pink-500/10 rounded-full px-8 py-4 mb-8 border border-orange-200/50 animate-fade-in backdrop-blur-sm">
+            <Gift className="w-6 h-6 text-orange-600 animate-bounce" />
+            <span className="text-orange-600 font-bold text-lg">عروض حصرية ومحدودة - وفر حتى 61%</span>
+            <Sparkles className="w-5 h-5 text-red-500 animate-pulse" />
           </div>
           
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent mb-6 animate-scale-in">
-            العروض الحالية
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-scale-in leading-tight">
+            <span className="bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
+              العروض الحالية
+            </span>
+            <br />
+            <span className="text-foreground">المميزة والحصرية</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            استفد من عروضنا الاستثنائية واحصل على أفضل الخدمات التقنية بأسعار لا تُقاوم
+          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            اكتشف مجموعة من أفضل عروضنا الحصرية بأسعار استثنائية ولفترة محدودة. خدمات احترافية بجودة عالية وأسعار لا تُقاوم
           </p>
 
-          {/* Stats Counter */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto mb-16 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">99%</div>
-              <div className="text-muted-foreground">رضا العملاء</div>
+          {/* Enhanced Features Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-green-200/50 hover:shadow-lg transition-all duration-300 group">
+              <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-3 group-hover:scale-110 transition-transform" />
+              <div className="text-lg font-bold text-green-700 mb-1">خصومات تصل إلى 61%</div>
+              <div className="text-sm text-green-600">على جميع الخدمات</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-accent mb-2">500+</div>
-              <div className="text-muted-foreground">مشروع مكتمل</div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-200/50 hover:shadow-lg transition-all duration-300 group">
+              <Timer className="w-8 h-8 text-blue-500 mx-auto mb-3 group-hover:scale-110 transition-transform" />
+              <div className="text-lg font-bold text-blue-700 mb-1">عروض محدودة الوقت</div>
+              <div className="text-sm text-blue-600">أسرع قبل انتهاء المدة</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-secondary mb-2">24/7</div>
-              <div className="text-muted-foreground">دعم فني</div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-purple-200/50 hover:shadow-lg transition-all duration-300 group">
+              <Crown className="w-8 h-8 text-purple-500 mx-auto mb-3 group-hover:scale-110 transition-transform" />
+              <div className="text-lg font-bold text-purple-700 mb-1">جودة احترافية مضمونة</div>
+              <div className="text-sm text-purple-600">معايير عالمية</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-orange-200/50 hover:shadow-lg transition-all duration-300 group">
+              <Award className="w-8 h-8 text-orange-500 mx-auto mb-3 group-hover:scale-110 transition-transform" />
+              <div className="text-lg font-bold text-orange-700 mb-1">دعم فني متواصل</div>
+              <div className="text-sm text-orange-600">24/7 طوال الأسبوع</div>
+            </div>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 mb-8 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+              <div className="group">
+                <div className="text-4xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform">500+</div>
+                <div className="text-muted-foreground font-medium">عميل راضٍ</div>
+              </div>
+              <div className="group">
+                <div className="text-4xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform">1000+</div>
+                <div className="text-muted-foreground font-medium">مشروع مكتمل</div>
+              </div>
+              <div className="group">
+                <div className="text-4xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform">24/7</div>
+                <div className="text-muted-foreground font-medium">دعم فني</div>
+              </div>
             </div>
           </div>
 

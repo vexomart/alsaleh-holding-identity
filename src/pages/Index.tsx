@@ -1,6 +1,8 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import StatsSection from "@/components/StatsSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
@@ -8,6 +10,9 @@ import ContactSection from "@/components/ContactSection";
 
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { Gift, Sparkles, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
 
 
 
@@ -27,6 +32,104 @@ const Index = () => {
         {/* Content Sections with Proper Spacing */}
         <div className="space-y-0">
 
+          {/* Digital Services Banner Section */}
+          <section className="relative py-8 sm:py-12 md:py-16 lg:py-20 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-50/80 via-indigo-50/60 to-purple-50/80 dark:from-blue-950/20 dark:via-indigo-950/10 dark:to-purple-950/20"></div>
+            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="max-w-6xl mx-auto">
+                <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-2xl group">
+                  <img 
+                    src={digitalServicesBanner} 
+                    alt="خدماتنا الرقمية المتطورة" 
+                    className="w-full h-64 sm:h-80 lg:h-96 object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
+                  <div className="absolute inset-0 flex items-center justify-start p-6 sm:p-8 lg:p-12">
+                    <div className="text-white max-w-2xl">
+                      <Badge className="mb-4 bg-white/20 text-white border-white/30 hover:bg-white/30">
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        خدمات متطورة
+                      </Badge>
+                      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 leading-tight">
+                        خدماتنا الرقمية المتطورة
+                      </h2>
+                      <p className="text-lg sm:text-xl mb-6 text-white/90 leading-relaxed">
+                        نقدم حلولاً رقمية شاملة لتطوير أعمالك وتحقيق أهدافك التجارية
+                      </p>
+                      <Link to="/professional-services">
+                        <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold">
+                          استكشف خدماتنا
+                          <ArrowRight className="w-5 h-5 mr-2" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Current Offers Call-to-Action Section */}
+          <section className="relative py-8 sm:py-12 md:py-16 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-l from-orange-50/80 via-red-50/60 to-pink-50/80 dark:from-orange-950/20 dark:via-red-950/10 dark:to-pink-950/20"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-200/40 to-red-200/40 rounded-full blur-2xl animate-pulse"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-br from-pink-200/30 to-orange-200/30 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+            
+            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto text-center">
+                <Badge className="mb-6 bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 text-lg px-6 py-2 animate-pulse">
+                  <Gift className="w-5 h-5 mr-2" />
+                  عروض محدودة الوقت
+                </Badge>
+                
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
+                  عروضنا الحالية المميزة
+                </h2>
+                
+                <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto">
+                  اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات بأسعار استثنائية
+                </p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+                  <Card className="bg-white/80 backdrop-blur-sm border border-orange-200/50 hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-6 text-center">
+                      <div className="text-2xl font-bold text-orange-600 mb-2">تصميم مواقع</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 35%</div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-white/80 backdrop-blur-sm border border-red-200/50 hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-6 text-center">
+                      <div className="text-2xl font-bold text-red-600 mb-2">متاجر إلكترونية</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 61%</div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-white/80 backdrop-blur-sm border border-pink-200/50 hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-6 text-center">
+                      <div className="text-2xl font-bold text-pink-600 mb-2">هوية بصرية</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 40%</div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <Link to="/current-offers">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-600 hover:via-red-600 hover:to-pink-600 text-white font-bold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+                  >
+                    <Gift className="w-6 h-6 ml-2" />
+                    شاهد جميع العروض الحالية
+                    <ArrowRight className="w-6 h-6 mr-2" />
+                  </Button>
+                </Link>
+                
+                <div className="mt-4 text-sm text-muted-foreground">
+                  ⏰ عروض محدودة الوقت - لا تفوت الفرصة!
+                </div>
+              </div>
+            </div>
+          </section>
 
           {/* Stats Section */}
           <section id="stats" className="relative py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden">
