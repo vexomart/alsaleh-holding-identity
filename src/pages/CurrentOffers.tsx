@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Gift, Star, Clock, ArrowRight, Code, Palette, Megaphone, Smartphone, Globe, Award, CreditCard } from "lucide-react";
+import { Gift, Star, Clock, ArrowLeft, Code, Palette, Megaphone, Smartphone, Globe, Award, CreditCard } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import PaymentDialog from "@/components/ui/payment-dialog";
 import { useState, useEffect } from "react";
@@ -141,12 +141,12 @@ const CurrentOffers = () => {
   const allOffers = [...offers.development, ...offers.design, ...offers.marketing, ...offers.applications, ...offers.hosting];
 
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]" dir="rtl">
+    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]" dir="rtl" style={{ direction: 'rtl', textAlign: 'right' }}>
       <Navigation />
       
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12" style={{ direction: 'rtl', textAlign: 'right' }}>
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-12">
+        <div className="text-center mb-8 sm:mb-12" style={{ textAlign: 'center' }}>
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-4 sm:mb-6">
             <Gift className="w-4 sm:w-5 h-4 sm:h-5 text-orange-600" />
             <span className="text-orange-600 font-medium text-sm sm:text-base">عروض محدودة الوقت</span>
@@ -162,10 +162,10 @@ const CurrentOffers = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir="rtl">
           <div className="overflow-x-auto mb-6 sm:mb-8">
-            <TabsList className="inline-flex h-auto p-1 bg-muted rounded-lg">
-              <div className="flex gap-1">
+            <TabsList className="inline-flex h-auto p-1 bg-muted rounded-lg w-full justify-center">
+              <div className="flex gap-1 justify-center w-full">
                 <TabsTrigger value="all" className="text-xs sm:text-sm px-3 py-2 whitespace-nowrap">
                   جميع العروض
                 </TabsTrigger>
@@ -190,7 +190,7 @@ const CurrentOffers = () => {
 
           {/* All Offers */}
           <TabsContent value="all">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl">
               {allOffers.map((offer) => (
                 <OfferCard key={offer.id} offer={offer} />
               ))}
@@ -200,7 +200,7 @@ const CurrentOffers = () => {
           {/* Category Offers */}
           {Object.entries(offers).map(([category, categoryOffers]) => (
             <TabsContent key={category} value={category}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl">
                 {categoryOffers.map((offer) => (
                   <OfferCard key={offer.id} offer={offer} />
                 ))}
@@ -216,58 +216,58 @@ const CurrentOffers = () => {
 };
 
 const OfferCard = ({ offer }: { offer: any }) => (
-  <Card className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+  <Card className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 h-full flex flex-col" dir="rtl" style={{ direction: 'rtl', textAlign: 'right' }}>
     {offer.isPopular && (
-      <div className="absolute top-4 left-4 z-10">
+      <div className="absolute top-4 right-4 z-10">
         <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
-          <Star className="w-4 h-4 ml-1" />
+          <Star className="w-4 h-4 mr-1" />
           الأكثر طلباً
         </Badge>
       </div>
     )}
     
-    <div className="absolute top-4 right-4 z-10">
+    <div className="absolute top-4 left-4 z-10">
       <Badge variant="destructive" className="bg-red-500 text-white animate-pulse">
         خصم {offer.discount}
       </Badge>
     </div>
 
-    <CardHeader className="relative pb-4">
+    <CardHeader className="relative pb-4" style={{ textAlign: 'right' }}>
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
       
-      <div className="relative flex items-center gap-3 mb-4">
-        <div className="text-3xl">{offer.icon}</div>
-        <div className="flex-1">
-          <CardTitle className="text-xl">{offer.title}</CardTitle>
-          <div className="flex items-center gap-2 mt-2">
-            <Clock className="w-4 h-4 text-orange-500" />
+      <div className="relative flex items-center gap-3 mb-4" style={{ flexDirection: 'row' }}>
+        <div className="text-3xl order-1">{offer.icon}</div>
+        <div className="flex-1 order-2" style={{ textAlign: 'right' }}>
+          <CardTitle className="text-xl" style={{ textAlign: 'right' }}>{offer.title}</CardTitle>
+          <div className="flex items-center gap-2 mt-2 justify-end">
             <span className="text-sm text-orange-600 font-medium">متبقي {offer.timeLeft}</span>
+            <Clock className="w-4 h-4 text-orange-500" />
           </div>
         </div>
       </div>
       
-      <div className="relative mb-4">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-3xl font-bold text-green-600">{offer.discountedPrice} ريال</span>
+      <div className="relative mb-4" style={{ textAlign: 'right' }}>
+        <div className="flex items-center gap-3 mb-2 justify-end">
           <span className="text-lg text-gray-500 line-through">{offer.originalPrice} ريال</span>
+          <span className="text-3xl font-bold text-green-600">{offer.discountedPrice} ريال</span>
         </div>
-        <div className="text-sm text-green-600 font-medium">
+        <div className="text-sm text-green-600 font-medium" style={{ textAlign: 'right' }}>
           توفير {parseInt(offer.originalPrice.replace(/,/g, '')) - parseInt(offer.discountedPrice.replace(/,/g, ''))} ريال
         </div>
       </div>
       
-      <p className="relative text-muted-foreground text-sm">{offer.description}</p>
+      <p className="relative text-muted-foreground text-sm" style={{ textAlign: 'right' }}>{offer.description}</p>
     </CardHeader>
 
-    <CardContent className="pt-0 flex-1 flex flex-col">
+    <CardContent className="pt-0 flex-1 flex flex-col" style={{ textAlign: 'right' }}>
       <div className="space-y-4 flex-1">
         <div className="flex-1">
-          <h4 className="font-semibold mb-3">ما يشمله العرض:</h4>
+          <h4 className="font-semibold mb-3" style={{ textAlign: 'right' }}>ما يشمله العرض:</h4>
           <ul className="space-y-2">
             {offer.features.map((feature: string, index: number) => (
-              <li key={index} className="flex items-center gap-2 text-sm">
-                <Star className="w-4 h-4 text-green-500" />
-                <span>{feature}</span>
+              <li key={index} className="flex items-center gap-2 text-sm justify-end" style={{ flexDirection: 'row' }}>
+                <span className="order-2" style={{ textAlign: 'right' }}>{feature}</span>
+                <Star className="w-4 h-4 text-green-500 order-1" />
               </li>
             ))}
           </ul>
@@ -278,7 +278,7 @@ const OfferCard = ({ offer }: { offer: any }) => (
             offer={offer}
             trigger={
               <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3">
-                <CreditCard className="w-4 h-4 ml-2" />
+                <CreditCard className="w-4 h-4 mr-2" />
                 ادفع الآن - {offer.discountedPrice} ريال
               </Button>
             }
@@ -286,8 +286,8 @@ const OfferCard = ({ offer }: { offer: any }) => (
           
           <Link to="/contact">
             <Button variant="outline" className="w-full">
+              <ArrowLeft className="w-4 h-4 ml-2" />
               استفسر عن العرض
-              <ArrowRight className="w-4 h-4 mr-2" />
             </Button>
           </Link>
         </div>

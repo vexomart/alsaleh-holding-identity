@@ -153,10 +153,24 @@ html {
   direction: rtl;
 }
 
-/* RTL Fixes */
-* {
+html, body, #root {
   direction: rtl;
   text-align: right;
+}
+
+/* Force RTL for all elements */
+* {
+  direction: rtl !important;
+}
+
+/* Flex direction fix for RTL */
+.flex {
+  flex-direction: row-reverse;
+}
+
+/* Grid RTL support */
+.grid {
+  direction: rtl;
 }
 
 [dir="rtl"] .flex {
