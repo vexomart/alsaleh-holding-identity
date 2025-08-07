@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { 
@@ -39,7 +40,9 @@ import {
   MessageCircle,
   Phone,
   Timer,
-  Send
+  Send,
+  CreditCard,
+  Loader2
 } from "lucide-react";
 
 // بيانات العروض (يجب أن تتطابق مع CurrentOffers.tsx)
@@ -215,6 +218,13 @@ const OfferDetails = () => {
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [paymentData, setPaymentData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
 
   useEffect(() => {
     const foundOffer = offersData.find(o => o.id === parseInt(id || '1'));
@@ -230,6 +240,63 @@ const OfferDetails = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handlePaymentInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPaymentData({
+      ...paymentData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleTapPayment = async () => {
+    if (!paymentData.name || !paymentData.email) {
+      toast({
+        title: "خطأ",
+        description: "يرجى ملء جميع الحقول المطلوبة",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsPaymentLoading(true);
+    try {
+      const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
+      
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
+        body: {
+          amount: amount,
+          currency: 'SAR',
+          customer_name: paymentData.name,
+          customer_email: paymentData.email,
+          customer_phone: paymentData.phone,
+          offer_title: offer.title,
+          description: `دفع عرض: ${offer.title}`,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data?.payment_url) {
+        window.open(data.payment_url, '_blank');
+        setIsPaymentOpen(false);
+        toast({
+          title: "تم إنشاء عملية الدفع",
+          description: "سيتم فتح صفحة الدفع في نافذة جديدة",
+        });
+      }
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      toast({
+        title: "خطأ في عملية الدفع",
+        description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPaymentLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -363,12 +430,103 @@ const OfferDetails = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  className={`flex-1 h-14 bg-gradient-to-r from-green-500 to-emerald-500 hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group`}
-                >
-                  <Crown className="w-5 h-5 ml-2 group-hover:animate-bounce" />
-                  ادفع الآن
-                </Button>
+                <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      className={`flex-1 h-14 bg-gradient-to-r from-green-500 to-emerald-500 hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group`}
+                    >
+                      <Crown className="w-5 h-5 ml-2 group-hover:animate-bounce" />
+                      ادفع الآن
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md" dir="rtl">
+                    <DialogHeader>
+                      <DialogTitle className="text-center text-2xl">
+                        الدفع عبر تاب 💳
+                      </DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                      {/* Offer Summary */}
+                      <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 p-4 rounded-lg">
+                        <h3 className="font-bold text-lg mb-2">{offer.title}</h3>
+                        <div className="flex justify-between items-center">
+                          <span className="text-2xl font-bold text-green-600">
+                            {offer.currentPrice} ر.س
+                          </span>
+                          <Badge variant="destructive">خصم {offer.discount}</Badge>
+                        </div>
+                      </div>
+
+                      {/* Payment Form */}
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="payment-name">الاسم الكامل *</Label>
+                          <Input
+                            id="payment-name"
+                            name="name"
+                            type="text"
+                            value={paymentData.name}
+                            onChange={handlePaymentInputChange}
+                            placeholder="أدخل اسمك الكامل"
+                            required
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="payment-email">البريد الإلكتروني *</Label>
+                          <Input
+                            id="payment-email"
+                            name="email"
+                            type="email"
+                            value={paymentData.email}
+                            onChange={handlePaymentInputChange}
+                            placeholder="example@email.com"
+                            required
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="payment-phone">رقم الجوال</Label>
+                          <Input
+                            id="payment-phone"
+                            name="phone"
+                            type="tel"
+                            value={paymentData.phone}
+                            onChange={handlePaymentInputChange}
+                            placeholder="05xxxxxxxx"
+                            dir="ltr"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Payment Button */}
+                      <Button
+                        onClick={handleTapPayment}
+                        disabled={isPaymentLoading}
+                        className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white py-3 text-lg font-bold"
+                      >
+                        {isPaymentLoading ? (
+                          <>
+                            <Loader2 className="w-5 h-5 ml-2 animate-spin" />
+                            جاري المعالجة...
+                          </>
+                        ) : (
+                          <>
+                            <CreditCard className="w-5 h-5 ml-2" />
+                            ادفع {offer.currentPrice} ر.س
+                          </>
+                        )}
+                      </Button>
+
+                      {/* Security Notice */}
+                      <div className="text-center text-sm text-muted-foreground">
+                        🔒 جميع المدفوعات آمنة ومحمية بتقنية التشفير
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                
                 <Button 
                   variant="outline"
                   className="flex-1 h-14 border-2 border-primary hover:bg-primary/5 text-primary font-medium text-lg rounded-xl transition-all duration-300 hover-scale group"
