@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import BackButton from "@/components/ui/back-button";
 import { 
   Briefcase, 
@@ -22,11 +22,17 @@ import {
   FileText,
   Lightbulb,
   Brain,
-  PieChart
+  PieChart,
+  Calendar
 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";
 
 const BusinessConsulting = () => {
+  const navigate = useNavigate();
   const [showServiceForm, setShowServiceForm] = useState(false);
 
   const handleRequestService = () => {
@@ -149,7 +155,7 @@ const BusinessConsulting = () => {
                 className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-6 rounded-xl backdrop-blur-sm"
                 asChild
               >
-                <a href="tel:+966555812567">
+                <a href="tel:0555812567">
                   <Phone className="w-5 h-5 ml-2" />
                   اتصل بنا الآن
                 </a>
@@ -363,9 +369,9 @@ const BusinessConsulting = () => {
             <Button 
               size="lg" 
               className="bg-white text-blue-600 hover:bg-blue-50 text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              onClick={handleRequestService}
+              onClick={() => navigate('/book-consultation')}
             >
-              <MessageCircle className="w-5 h-5 ml-2" />
+              <Calendar className="w-5 h-5 ml-2" />
               احجز استشارة مجانية
             </Button>
             <Button 

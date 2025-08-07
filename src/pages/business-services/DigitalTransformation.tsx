@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,11 +25,13 @@ import {
   Users,
   BarChart3,
   Workflow,
-  Bot
+  Bot,
+  Calendar
 } from "lucide-react";
 import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";
 
 const DigitalTransformation = () => {
+  const navigate = useNavigate();
   const [showServiceForm, setShowServiceForm] = useState(false);
 
   const handleRequestService = () => {
@@ -380,22 +383,32 @@ const DigitalTransformation = () => {
           <p className="text-xl text-purple-100 mb-10 max-w-3xl mx-auto">
             لا تتأخر في مواكبة التطور التقني، ابدأ رحلة التحول الرقمي مع فريق الخبراء
           </p>
-          
-          <Button 
-            size="lg" 
-            className="bg-white text-purple-600 hover:bg-purple-50 text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 mb-8"
-            onClick={handleRequestService}
-          >
-            <Zap className="w-5 h-5 ml-2" />
-            ابدأ مشروعك الآن
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <Button 
+              size="lg" 
+              className="bg-white text-purple-600 hover:bg-purple-50 text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={() => navigate('/book-consultation')}
+            >
+              <Calendar className="w-5 h-5 ml-2" />
+              احجز استشارة مجانية
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-2 border-white text-white hover:bg-white hover:text-purple-600 text-lg px-8 py-6 rounded-xl backdrop-blur-sm transition-all duration-300"
+              onClick={handleRequestService}
+            >
+              <Zap className="w-5 h-5 ml-2" />
+              ابدأ مشروعك الآن
+            </Button>
+          </div>
           
           <div className="text-center text-purple-100">
             <p className="text-lg">تواصل معنا مباشرة</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
-              <a href="tel:+966555812567" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href="tel:0555812567" className="flex items-center gap-2 hover:text-white transition-colors">
                 <Phone className="w-5 h-5" />
-                +966 555 812 567
+                0555812567
               </a>
               <a href="https://wa.me/966555812567" className="flex items-center gap-2 hover:text-white transition-colors">
                 <MessageCircle className="w-5 h-5" />

@@ -385,7 +385,7 @@ export default function BookConsultation() {
           <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
             <div className="flex items-center justify-center space-x-3 space-x-reverse">
               <Phone className="w-5 h-5 text-primary" />
-              <span>+966 11 234 5678</span>
+              <span>0555812567</span>
             </div>
             <div className="flex items-center justify-center space-x-3 space-x-reverse">
               <Mail className="w-5 h-5 text-primary" />
