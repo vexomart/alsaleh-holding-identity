@@ -75,6 +75,7 @@ import BookConsultation from "./pages/BookConsultation";
 import HostingServices from "./pages/HostingServices";
 import CompanyUpdates from "./pages/CompanyUpdates";
 import SoftwareProducts from "./pages/SoftwareProducts";
+import CarRentalWebsite from "./pages/CarRentalWebsite";
 
 const queryClient = new QueryClient();
 
@@ -165,6 +166,7 @@ const App = () => {
               <Route path="/hosting-services" element={<HostingServices />} />
               <Route path="/company-updates" element={<CompanyUpdates />} />
               <Route path="/software-products" element={<SoftwareProducts />} />
+              <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
