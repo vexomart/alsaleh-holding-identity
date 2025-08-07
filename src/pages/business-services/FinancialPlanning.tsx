@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import BackButton from "@/components/ui/back-button";
+import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";
 import { 
   DollarSign, 
   TrendingUp, 
@@ -25,7 +29,6 @@ import {
   Coins,
   Calendar
 } from "lucide-react";
-import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";
 
 const FinancialPlanning = () => {
   const navigate = useNavigate();
@@ -120,6 +123,8 @@ const FinancialPlanning = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50 to-emerald-50" dir="rtl">
+      <Navigation />
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-green-900 via-emerald-800 to-teal-900 text-white">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -164,7 +169,7 @@ const FinancialPlanning = () => {
                 className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-6 rounded-xl backdrop-blur-sm"
                 asChild
               >
-                <a href="tel:+966555812567">
+                <a href="tel:0555812567">
                   <Phone className="w-5 h-5 ml-2" />
                   تواصل مباشر
                 </a>
@@ -416,6 +421,9 @@ const FinancialPlanning = () => {
         </div>
       </section>
 
+      <Footer />
+      <WhatsAppButton />
+      
       {/* Service Request Form Modal */}
       {showServiceForm && (
         <BusinessServiceRequestForm
