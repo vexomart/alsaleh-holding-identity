@@ -141,7 +141,7 @@ const CurrentOffers = () => {
   const allOffers = [...offers.development, ...offers.design, ...offers.marketing, ...offers.applications, ...offers.hosting];
 
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]" dir="rtl" style={{ direction: 'rtl', textAlign: 'right' }}>
+    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]" dir="rtl" style={{ direction: 'rtl', textAlign: 'right', fontFamily: 'Noto Sans Arabic, sans-serif' }}>
       <Navigation />
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12" style={{ direction: 'rtl', textAlign: 'right' }}>
@@ -165,7 +165,7 @@ const CurrentOffers = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir="rtl">
           <div className="overflow-x-auto mb-6 sm:mb-8">
             <TabsList className="inline-flex h-auto p-1 bg-muted rounded-lg w-full justify-center">
-              <div className="flex gap-1 justify-center w-full">
+              <div className="flex gap-1 justify-center w-full flex-wrap">
                 <TabsTrigger value="all" className="text-xs sm:text-sm px-3 py-2 whitespace-nowrap">
                   جميع العروض
                 </TabsTrigger>
@@ -190,7 +190,7 @@ const CurrentOffers = () => {
 
           {/* All Offers */}
           <TabsContent value="all">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl" style={{ direction: 'rtl' }}>
               {allOffers.map((offer) => (
                 <OfferCard key={offer.id} offer={offer} />
               ))}
@@ -200,7 +200,7 @@ const CurrentOffers = () => {
           {/* Category Offers */}
           {Object.entries(offers).map(([category, categoryOffers]) => (
             <TabsContent key={category} value={category}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl" style={{ direction: 'rtl' }}>
                 {categoryOffers.map((offer) => (
                   <OfferCard key={offer.id} offer={offer} />
                 ))}
@@ -235,11 +235,11 @@ const OfferCard = ({ offer }: { offer: any }) => (
     <CardHeader className="relative pb-4" style={{ textAlign: 'right' }}>
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
       
-      <div className="relative flex items-center gap-3 mb-4" style={{ flexDirection: 'row' }}>
+      <div className="relative mb-4" style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'right', direction: 'rtl' }}>
         <div className="text-3xl order-1">{offer.icon}</div>
         <div className="flex-1 order-2" style={{ textAlign: 'right' }}>
-          <CardTitle className="text-xl" style={{ textAlign: 'right' }}>{offer.title}</CardTitle>
-          <div className="flex items-center gap-2 mt-2 justify-end">
+          <CardTitle className="text-xl mb-2" style={{ textAlign: 'right' }}>{offer.title}</CardTitle>
+          <div className="flex items-center gap-2 justify-end">
             <span className="text-sm text-orange-600 font-medium">متبقي {offer.timeLeft}</span>
             <Clock className="w-4 h-4 text-orange-500" />
           </div>
@@ -247,9 +247,9 @@ const OfferCard = ({ offer }: { offer: any }) => (
       </div>
       
       <div className="relative mb-4" style={{ textAlign: 'right' }}>
-        <div className="flex items-center gap-3 mb-2 justify-end">
-          <span className="text-lg text-gray-500 line-through">{offer.originalPrice} ريال</span>
-          <span className="text-3xl font-bold text-green-600">{offer.discountedPrice} ريال</span>
+        <div className="flex items-center gap-3 mb-2 justify-end" style={{ direction: 'rtl' }}>
+          <span className="text-lg text-gray-500 line-through order-2">{offer.originalPrice} ريال</span>
+          <span className="text-3xl font-bold text-green-600 order-1">{offer.discountedPrice} ريال</span>
         </div>
         <div className="text-sm text-green-600 font-medium" style={{ textAlign: 'right' }}>
           توفير {parseInt(offer.originalPrice.replace(/,/g, '')) - parseInt(offer.discountedPrice.replace(/,/g, ''))} ريال
@@ -265,9 +265,9 @@ const OfferCard = ({ offer }: { offer: any }) => (
           <h4 className="font-semibold mb-3" style={{ textAlign: 'right' }}>ما يشمله العرض:</h4>
           <ul className="space-y-2">
             {offer.features.map((feature: string, index: number) => (
-              <li key={index} className="flex items-center gap-2 text-sm justify-end" style={{ flexDirection: 'row' }}>
-                <span className="order-2" style={{ textAlign: 'right' }}>{feature}</span>
-                <Star className="w-4 h-4 text-green-500 order-1" />
+              <li key={index} className="text-sm" style={{ display: 'flex', alignItems: 'center', gap: '8px', textAlign: 'right', direction: 'rtl' }}>
+                <span className="order-2" style={{ textAlign: 'right', flex: 1 }}>{feature}</span>
+                <Star className="w-4 h-4 text-green-500 order-1" style={{ flexShrink: 0 }} />
               </li>
             ))}
           </ul>
@@ -277,17 +277,21 @@ const OfferCard = ({ offer }: { offer: any }) => (
           <PaymentDialog
             offer={offer}
             trigger={
-              <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3">
-                <CreditCard className="w-4 h-4 mr-2" />
-                ادفع الآن - {offer.discountedPrice} ريال
+              <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3" style={{ direction: 'rtl' }}>
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <CreditCard className="w-4 h-4" />
+                  ادفع الآن - {offer.discountedPrice} ريال
+                </span>
               </Button>
             }
           />
           
           <Link to="/contact">
-            <Button variant="outline" className="w-full">
-              <ArrowLeft className="w-4 h-4 ml-2" />
-              استفسر عن العرض
+            <Button variant="outline" className="w-full" style={{ direction: 'rtl' }}>
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <ArrowLeft className="w-4 h-4" />
+                استفسر عن العرض
+              </span>
             </Button>
           </Link>
         </div>
