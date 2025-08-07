@@ -10,7 +10,7 @@ import ContactSection from "@/components/ContactSection";
 
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { Gift, Sparkles, ArrowRight, Code, Palette, Megaphone, Smartphone, Globe } from "lucide-react";
+import { Gift, Sparkles, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
 
@@ -18,7 +18,7 @@ import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden" dir="rtl" style={{ direction: 'rtl', textAlign: 'right' }}>
+    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden">
       <Navigation />
       
       <main className="relative overflow-hidden">
@@ -90,56 +90,27 @@ const Index = () => {
                   اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات بأسعار استثنائية
                 </p>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6 mb-8">
-                  <Link to="/current-offers?category=development">
-                    <Card className="bg-white/80 backdrop-blur-sm border border-blue-200/50 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                      <CardContent className="p-6 text-center">
-                        <Code className="w-8 h-8 mx-auto mb-3 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
-                        <div className="text-lg font-bold text-blue-600 mb-2">البرمجة والتطوير</div>
-                        <div className="text-sm text-muted-foreground">خصم حتى 45%</div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+                  <Card className="bg-white/80 backdrop-blur-sm border border-orange-200/50 hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-6 text-center">
+                      <div className="text-2xl font-bold text-orange-600 mb-2">تصميم مواقع</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 35%</div>
+                    </CardContent>
+                  </Card>
                   
-                  <Link to="/current-offers?category=design">
-                    <Card className="bg-white/80 backdrop-blur-sm border border-purple-200/50 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                      <CardContent className="p-6 text-center">
-                        <Palette className="w-8 h-8 mx-auto mb-3 text-purple-600 group-hover:scale-110 transition-transform duration-300" />
-                        <div className="text-lg font-bold text-purple-600 mb-2">التصميم</div>
-                        <div className="text-sm text-muted-foreground">خصم حتى 40%</div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                  <Card className="bg-white/80 backdrop-blur-sm border border-red-200/50 hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-6 text-center">
+                      <div className="text-2xl font-bold text-red-600 mb-2">متاجر إلكترونية</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 61%</div>
+                    </CardContent>
+                  </Card>
                   
-                  <Link to="/current-offers?category=marketing">
-                    <Card className="bg-white/80 backdrop-blur-sm border border-green-200/50 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                      <CardContent className="p-6 text-center">
-                        <Megaphone className="w-8 h-8 mx-auto mb-3 text-green-600 group-hover:scale-110 transition-transform duration-300" />
-                        <div className="text-lg font-bold text-green-600 mb-2">التسويق</div>
-                        <div className="text-sm text-muted-foreground">خصم حتى 35%</div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                  
-                  <Link to="/current-offers?category=applications">
-                    <Card className="bg-white/80 backdrop-blur-sm border border-indigo-200/50 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                      <CardContent className="p-6 text-center">
-                        <Smartphone className="w-8 h-8 mx-auto mb-3 text-indigo-600 group-hover:scale-110 transition-transform duration-300" />
-                        <div className="text-lg font-bold text-indigo-600 mb-2">التطبيقات</div>
-                        <div className="text-sm text-muted-foreground">خصم حتى 50%</div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                  
-                  <Link to="/current-offers?category=hosting">
-                    <Card className="bg-white/80 backdrop-blur-sm border border-orange-200/50 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                      <CardContent className="p-6 text-center">
-                        <Globe className="w-8 h-8 mx-auto mb-3 text-orange-600 group-hover:scale-110 transition-transform duration-300" />
-                        <div className="text-lg font-bold text-orange-600 mb-2">النطاقات والهوست</div>
-                        <div className="text-sm text-muted-foreground">خصم حتى 30%</div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                  <Card className="bg-white/80 backdrop-blur-sm border border-pink-200/50 hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-6 text-center">
+                      <div className="text-2xl font-bold text-pink-600 mb-2">هوية بصرية</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 40%</div>
+                    </CardContent>
+                  </Card>
                 </div>
                 
                 <Link to="/current-offers">
