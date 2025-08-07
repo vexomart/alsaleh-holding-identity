@@ -27,13 +27,16 @@ import {
   Palette,
   BookOpen,
   Heart,
-  TrendingUp
+  TrendingUp,
+  Package,
+  Code
 } from "lucide-react";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showServices, setShowServices] = useState(false);
+  const [showProducts, setShowProducts] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
@@ -272,13 +275,48 @@ const Navigation = () => {
                 شركاتنا
                 <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
               </a>
-              <a 
-                href="/ready-projects" 
-                className="relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group"
+              
+              {/* Products Dropdown */}
+              <div 
+                className="relative group"
+                onMouseEnter={() => setShowProducts(true)}
+                onMouseLeave={() => setShowProducts(false)}
               >
-                منتجاتنا
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
-              </a>
+                <button 
+                  className="relative flex items-center gap-1 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300"
+                >
+                  منتجاتنا
+                  <ChevronDown className="w-3 h-3 group-hover:rotate-180 transition-transform" />
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
+                </button>
+                
+                {showProducts && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
+                    <div className="p-3">
+                      <a
+                        href="/ready-projects"
+                        className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all group"
+                      >
+                        <Package className="w-4 h-4 text-blue-500 group-hover:scale-110 transition-transform" />
+                        <div>
+                          <div className="font-medium">المشاريع الجاهزة</div>
+                          <div className="text-xs text-gray-500">حلول جاهزة للتطبيق</div>
+                        </div>
+                      </a>
+                      <a
+                        href="/software-products"
+                        className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all group"
+                      >
+                        <Code className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
+                        <div>
+                          <div className="font-medium">منتجاتنا البرمجية</div>
+                          <div className="text-xs text-gray-500">برمجيات وتطبيقات متخصصة</div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
               <a 
                 href="/contact"
                 className="relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group"
@@ -418,13 +456,37 @@ const Navigation = () => {
                 >
                   شركاتنا
                 </a>
-                <a 
-                  href="/ready-projects" 
-                  className="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium rounded-lg transition-all"
-                  onClick={() => setIsOpen(false)}
-                >
-                  منتجاتنا
-                </a>
+                
+                {/* Products Dropdown for Mobile */}
+                <div className="border-b border-gray-200 pb-3">
+                  <button 
+                    className="flex items-center justify-between w-full py-3 px-2 text-gray-900 font-semibold hover:text-blue-600 hover:bg-blue-50 transition-all rounded-lg"
+                  >
+                    <span>منتجاتنا</span>
+                  </button>
+                  <div className="space-y-1 pr-2 mt-2">
+                    <a
+                      href="/ready-projects"
+                      className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-lg text-sm"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Package className="w-4 h-4 text-blue-600" />
+                      </div>
+                      <span className="text-gray-700 leading-tight">المشاريع الجاهزة</span>
+                    </a>
+                    <a
+                      href="/software-products"
+                      className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-lg text-sm"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Code className="w-4 h-4 text-purple-600" />
+                      </div>
+                      <span className="text-gray-700 leading-tight">منتجاتنا البرمجية</span>
+                    </a>
+                  </div>
+                </div>
                 
                 {/* أخرى في الموبايل - Enhanced */}
                 <div className="border-b border-gray-200 pb-3">
