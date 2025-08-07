@@ -57,6 +57,7 @@ const Navigation = () => {
   ];
 
   const othersItems = [
+    { name: "العمل عن بُعد", href: "/remote-work", icon: Globe },
     { name: "الشراكات", href: "/partnerships", icon: Users },
     { name: "التسويق بالعمولة", href: "/affiliate-marketing", icon: TrendingUp },
     { name: "طرق الدفع", href: "/payment-methods", icon: Phone },

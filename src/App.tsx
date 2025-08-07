@@ -31,6 +31,7 @@ import AnnualReports from "./pages/AnnualReports";
 import FAQ from "./pages/FAQ";
 import DigitalContracts from "./pages/DigitalContracts";
 import ReadyProjects from "./pages/ReadyProjects";
+import RemoteWork from "./pages/RemoteWork";
 import ProjectDetails from "./pages/ProjectDetails";
 import AISolutions from "./pages/AISolutions";
 import IoTSolutions from "./pages/IoTSolutions";
@@ -113,6 +114,7 @@ const App = () => {
               <Route path="/faq" element={<FAQ />} />
               <Route path="/digital-contracts" element={<DigitalContracts />} />
               <Route path="/ready-projects" element={<ReadyProjects />} />
+              <Route path="/remote-work" element={<RemoteWork />} />
               <Route path="/project/:projectId" element={<ProjectDetails />} />
               <Route path="/ai-solutions" element={<AISolutions />} />
               <Route path="/iot-solutions" element={<IoTSolutions />} />

@@ -248,6 +248,7 @@ const Footer = () => {
   ];
 
   const digitalSolutions = [
+    { name: "العمل عن بُعد", href: "/remote-work", icon: Globe },
     { name: "الذكاء الاصطناعي", href: "/ai-solutions", icon: Zap },
     { name: "إنترنت الأشياء", href: "/iot-solutions", icon: Lightbulb },
     { name: "الحوسبة السحابية", href: "/cloud-solutions", icon: Globe },
