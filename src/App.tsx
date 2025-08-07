@@ -173,6 +173,8 @@ const App = () => {
               <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
               <Route path="/car-rental-landing" element={<CarRentalLanding />} />
               <Route path="/car-rental" element={<CarRentalLanding />} />
+              <Route path="/car-rental-landing" element={<CarRentalLanding />} />
+              <Route path="/car-rental-website" element={<CarRentalWebsite />} />
               <Route path="/car-rental/careers" element={<CareersPage />} />
               
               <Route path="/car-fleet" element={<CarFleet />} />

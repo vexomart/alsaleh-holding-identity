@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import BackButton from "@/components/ui/back-button";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Car,
   MapPin,
@@ -31,23 +34,66 @@ import {
   Eye,
   Headphones,
   DollarSign,
-  TrendingUp
+  TrendingUp,
+  Heart,
+  Share2,
+  MessageCircle,
+  Navigation,
+  Zap,
+  Sparkles,
+  MapPin as LocationIcon,
+  Timer,
+  Target,
+  BookOpen,
+  Bookmark,
+  Send,
+  ChevronDown,
+  Wifi,
+  Battery,
+  Bluetooth,
+  Camera,
+  Video
 } from "lucide-react";
 
 const CarRentalLanding = () => {
+  const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [hoveredService, setHoveredService] = useState(null);
+  const [selectedCarType, setSelectedCarType] = useState('all');
 
-  // الصور الحقيقية للسيارات مع سلايدر متطور
+  // الصور المتطورة مع سلايدر ديناميكي
   const heroSlides = [
+    {
+      id: 1,
+      title: "تأجير السيارات الذكي",
+      subtitle: "تكنولوجيا متقدمة وخدمة استثنائية",
+      description: "احجز • اقود • استمتع",
+      image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      cta: "ابدأ الآن",
+      badge: "الأحدث"
+    },
     {
       id: 2,
       title: "سيارات فاخرة لكل مناسبة",
       subtitle: "تجربة قيادة استثنائية مع أحدث السيارات الفاخرة",
       description: "مرسيدس • BMW • أودي وأكثر",
       image: "https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      cta: "استكشف الأسطول"
+      cta: "استكشف الأسطول",
+      badge: "الأكثر شعبية"
+    },
+    {
+      id: 3,
+      title: "رحلات آمنة ومريحة",
+      subtitle: "مع تأمين شامل وخدمة عملاء 24/7",
+      description: "تأمين • صيانة • دعم فني",
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      cta: "احجز بثقة",
+      badge: "موثوق"
     }
   ];
 
@@ -133,10 +179,77 @@ const CarRentalLanding = () => {
   ];
 
   const stats = [
-    { number: "15,000+", label: "عميل راضٍ", icon: Users, color: "from-blue-500 to-blue-600" },
-    { number: "800+", label: "سيارة متاحة", icon: Car, color: "from-green-500 to-green-600" },
-    { number: "35+", label: "مدينة نخدمها", icon: MapPin, color: "from-purple-500 to-purple-600" },
-    { number: "8", label: "سنوات خبرة", icon: Award, color: "from-orange-500 to-orange-600" }
+    { number: "25,000+", label: "عميل راضٍ", icon: Users, color: "from-blue-500 to-blue-600", growth: "+12%" },
+    { number: "1,200+", label: "سيارة متاحة", icon: Car, color: "from-green-500 to-green-600", growth: "+25%" },
+    { number: "50+", label: "مدينة نخدمها", icon: MapPin, color: "from-purple-500 to-purple-600", growth: "+8%" },
+    { number: "12", label: "سنوات خبرة", icon: Award, color: "from-orange-500 to-orange-600", growth: "مستمر" },
+    { number: "4.9/5", label: "تقييم العملاء", icon: Star, color: "from-yellow-500 to-yellow-600", growth: "+0.2" },
+    { number: "24/7", label: "دعم فني", icon: Clock, color: "from-red-500 to-red-600", growth: "دائم" }
+  ];
+
+  // آراء العملاء المتقدمة
+  const testimonials = [
+    {
+      id: 1,
+      name: "أحمد السعيد",
+      title: "رجل أعمال",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      rating: 5,
+      text: "خدمة ممتازة وسيارات نظيفة ومريحة. الحجز كان سهل والتعامل احترافي جداً.",
+      date: "منذ أسبوع",
+      verified: true,
+      helpful: 45
+    },
+    {
+      id: 2, 
+      name: "فاطمة النور",
+      title: "طبيبة",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=150&h=150&fit=crop&crop=face",
+      rating: 5,
+      text: "استخدمت الخدمة لرحلة عائلية وكانت تجربة رائعة. السيارة كانت حديثة ومجهزة بكل شيء.",
+      date: "منذ 3 أيام",
+      verified: true,
+      helpful: 32
+    },
+    {
+      id: 3,
+      name: "محمد العلي",
+      title: "مهندس",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      rating: 5,
+      text: "أفضل شركة تأجير سيارات جربتها. السعر معقول والخدمة ممتازة.",
+      date: "منذ يومين",
+      verified: true,
+      helpful: 28
+    }
+  ];
+
+  // مواقع متقدمة
+  const locations = [
+    { 
+      name: "الرياض", 
+      branches: 8, 
+      popular: true,
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
+    },
+    { 
+      name: "جدة", 
+      branches: 6, 
+      popular: true,
+      image: "https://images.unsplash.com/photo-1564639883071-b3b6bb6e4498?w=300&h=200&fit=crop"
+    },
+    { 
+      name: "الدمام", 
+      branches: 4, 
+      popular: false,
+      image: "https://images.unsplash.com/photo-1512733596533-7b00ccf8ebaf?w=300&h=200&fit=crop"
+    },
+    { 
+      name: "مكة المكرمة", 
+      branches: 3, 
+      popular: true,
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
+    }
   ];
 
   useEffect(() => {
