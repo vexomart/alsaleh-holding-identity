@@ -279,35 +279,7 @@ const HeroSection = () => {
         </div>
       </div>
       
-      {/* Modern Slide Indicators - Responsive */}
-      <div className="absolute bottom-8 sm:bottom-12 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3 z-30 bg-white/10 backdrop-blur-xl rounded-xl sm:rounded-2xl px-3 sm:px-6 py-2 sm:py-4 border border-white/20 shadow-2xl">
-        {businessImages.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`relative overflow-hidden transition-all duration-700 rounded-lg sm:rounded-xl border-2 group ${
-              index === currentSlide 
-                ? 'w-12 h-4 sm:w-16 sm:h-6 bg-gradient-to-r from-blue-500 to-indigo-600 border-blue-400 shadow-xl shadow-blue-500/30' 
-                : 'w-4 h-4 sm:w-6 sm:h-6 bg-white/40 border-white/30 hover:bg-white/60 hover:scale-110 hover:border-blue-400/70'
-            }`}
-          >
-            {index === currentSlide && (
-              <>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/50 to-indigo-500/50 animate-pulse rounded-lg sm:rounded-xl" />
-                <div className="absolute inset-1 bg-white/20 rounded-md sm:rounded-lg animate-pulse" />
-              </>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 group-hover:from-blue-500/20 to-indigo-600/0 group-hover:to-indigo-600/20 rounded-lg sm:rounded-xl transition-all duration-300" />
-          </button>
-        ))}
-        
-        {/* Slide Counter - Responsive */}
-        <div className="flex items-center ml-2 sm:ml-4 px-2 sm:px-3 py-1 bg-white/20 rounded-md sm:rounded-lg border border-white/30">
-          <span className="text-white text-xs sm:text-sm font-bold">
-            {currentSlide + 1} / {businessImages.length}
-          </span>
-        </div>
-      </div>
+      {/* Modern Slide Indicators - Hidden as requested */}
       
       {/* Enhanced Scroll Indicator - Responsive */}
       <div className="absolute bottom-16 sm:bottom-24 left-1/2 transform -translate-x-1/2 animate-bounce z-20 group">
