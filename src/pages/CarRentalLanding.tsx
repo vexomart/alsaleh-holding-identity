@@ -169,6 +169,12 @@ const CarRentalLanding = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* شريط التحذير */}
+      <div className="bg-yellow-400 text-black py-2 text-center text-sm font-medium relative z-50">
+        <div className="container mx-auto px-4">
+          ⚠️ هذا موقع تجريبي فقط - جميع المعلومات والأسعار غير صحيحة ولأغراض العرض فقط
+        </div>
+      </div>
       {/* شريط علوي */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2">
         <div className="container mx-auto px-4">
