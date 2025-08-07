@@ -448,17 +448,7 @@ const Navigation = () => {
                 </a>
                 
                 {/* Mobile Action Button */}
-                <div className="pt-3 border-t border-gray-200">
-                  <Button 
-                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3"
-                    asChild
-                  >
-                    <a href="https://ash.holdings" target="_blank" rel="noopener noreferrer">
-                      <Zap className="w-4 h-4 mr-2" />
-                      ابدأ رحلتك معنا الآن
-                    </a>
-                  </Button>
-                </div>
+                {/* CTA button hidden as requested */}
               </div>
             </div>
           )}

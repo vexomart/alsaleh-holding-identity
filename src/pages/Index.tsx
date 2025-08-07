@@ -21,24 +21,7 @@ const Index = () => {
         <section id="home" className="relative z-10">
           <HeroSection />
           
-          {/* Quick Access Buttons */}
-          <div className="relative z-20 flex justify-center gap-4 mt-8 px-4">
-            <Button 
-              size="lg" 
-              className="bg-primary text-white hover:bg-primary/90 text-lg px-8 py-3"
-              onClick={() => window.location.href = '/auth'}
-            >
-              ابدأ رحلتك معنا
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary/10 text-lg px-8 py-3"
-              onClick={() => window.location.href = '/dashboard'}
-            >
-              لوحة التحكم
-            </Button>
-          </div>
+          {/* Quick Access Buttons - Hidden as requested */}
         </section>
 
         {/* Content Sections with Proper Spacing */}

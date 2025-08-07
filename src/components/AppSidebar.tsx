@@ -44,7 +44,7 @@ import {
 
 const mainNavItems = [
   { title: "الرئيسية", url: "/", icon: Home },
-  { title: "لوحة التحكم", url: "/dashboard", icon: BarChart3 },
+  // { title: "لوحة التحكم", url: "/dashboard", icon: BarChart3 }, // Hidden as requested
   { title: "من نحن", url: "/about", icon: Building2 },
   { title: "رؤيتنا", url: "/vision", icon: Eye },
   { title: "شركاتنا", url: "/subsidiaries", icon: Briefcase },
