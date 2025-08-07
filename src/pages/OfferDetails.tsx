@@ -200,30 +200,6 @@ const offersData = [
   }
 ];
 
-// آراء العملاء
-const testimonials = [
-  {
-    name: "أحمد السعيد",
-    company: "شركة النور للتجارة",
-    text: "خدمة ممتازة وتصميم رائع! تم تسليم المشروع في الوقت المحدد وبجودة عالية جداً.",
-    rating: 5,
-    image: "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png"
-  },
-  {
-    name: "فاطمة المحمد",
-    company: "متجر الأزياء العصرية",
-    text: "الفريق محترف جداً والنتيجة فاقت توقعاتي. أنصح بالتعامل معهم بشدة.",
-    rating: 5,
-    image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png"
-  },
-  {
-    name: "محمد العتيبي",
-    company: "مؤسسة الإبداع التقني",
-    text: "تعامل راقي ودعم فني ممتاز. المشروع نفذ بدقة وإتقان عالي.",
-    rating: 5,
-    image: "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png"
-  }
-];
 
 const OfferDetails = () => {
   const { id } = useParams();
@@ -388,19 +364,18 @@ const OfferDetails = () => {
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
-                  className={`flex-1 h-14 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group`}
-                  onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
+                  className={`flex-1 h-14 bg-gradient-to-r from-green-500 to-emerald-500 hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group`}
                 >
-                  <Send className="w-5 h-5 ml-2 group-hover:animate-bounce" />
-                  اطلب العرض الآن
+                  <Crown className="w-5 h-5 ml-2 group-hover:animate-bounce" />
+                  ادفع الآن
                 </Button>
                 <Button 
                   variant="outline"
                   className="flex-1 h-14 border-2 border-primary hover:bg-primary/5 text-primary font-medium text-lg rounded-xl transition-all duration-300 hover-scale group"
-                  onClick={() => window.open('https://wa.me/966502463367?text=أريد الاستفسار عن ' + offer.title, '_blank')}
+                  onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   <MessageCircle className="w-5 h-5 ml-2 group-hover:animate-bounce" />
-                  تواصل واتساب
+                  لديك مشروع مختلف أو إضافات؟
                 </Button>
               </div>
             </div>
@@ -508,54 +483,6 @@ const OfferDetails = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="relative px-6 py-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4 animate-fade-in">
-              آراء عملائنا
-            </h2>
-            <p className="text-xl text-muted-foreground animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              تقييمات حقيقية من عملاء راضين
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card 
-                key={index}
-                className="group relative overflow-hidden border border-white/20 shadow-lg bg-gradient-to-br from-background/50 to-muted/30 backdrop-blur-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-2 animate-fade-in rounded-xl"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20">
-                      <img src={testimonial.image} alt={testimonial.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-foreground">{testimonial.name}</h4>
-                      <p className="text-sm text-muted-foreground">{testimonial.company}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="relative">
-                    <Quote className="absolute -top-2 -right-2 w-8 h-8 text-primary/20" />
-                    <p className="text-muted-foreground leading-relaxed relative z-10">
-                      {testimonial.text}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Contact Form */}
       <section id="contact-form" className="relative px-6 py-20 bg-gradient-to-r from-muted/20 to-background/50">
