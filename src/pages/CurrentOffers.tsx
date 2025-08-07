@@ -211,158 +211,217 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
       <DialogTrigger asChild>
         {trigger}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md" dir="rtl">
-        <DialogHeader>
-          <DialogTitle className="text-center text-2xl text-gradient-primary">
-            الدفع الآمن 💳
+      <DialogContent className="sm:max-w-3xl max-h-[95vh] overflow-y-auto animate-scale-in bg-gradient-to-br from-background/95 via-primary/5 to-accent/10 backdrop-blur-xl border-primary/20 shadow-2xl" dir="rtl">
+        {/* Floating Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-2xl animate-float"></div>
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-secondary/15 to-primary/15 rounded-full blur-2xl animate-float-delayed"></div>
+          <div className="absolute top-1/2 right-1/3 w-24 h-24 bg-gradient-to-br from-accent/10 to-warning/10 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
+
+        <DialogHeader className="relative z-10 text-center pb-6 border-b border-primary/10">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="p-3 bg-gradient-to-br from-primary to-accent rounded-full shadow-glow animate-pulse">
+              <CreditCard className="w-8 h-8 text-white" />
+            </div>
+          </div>
+          <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-fade-in">
+            الدفع الآمن والمحمي
           </DialogTitle>
+          <p className="text-muted-foreground text-lg mt-2 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            اختر طريقة الدفع المناسبة واستمتع بتجربة آمنة ومضمونة
+          </p>
         </DialogHeader>
-        <div className="space-y-6">
-          {/* Payment Gateway Selection */}
-          <div className="space-y-4">
-            <label className="text-sm font-medium text-foreground">
-              اختر بوابة الدفع
-            </label>
-            
-            {/* Active Payment Methods */}
-            <div className="grid grid-cols-3 gap-3">
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentGateway('tap')}
-                className={`p-4 border-2 rounded-lg transition-all hover-scale ${
-                  selectedPaymentGateway === 'tap'
-                    ? 'border-primary bg-primary/10 shadow-glow'
-                    : 'border-border hover:border-primary/50'
-                }`}
-              >
-                <div className="text-center">
-                  <div className="font-semibold text-sm">Tap</div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    دفع آمن
+
+        <div className="relative z-10 space-y-8 pt-6">
+          {/* Premium Offer Summary Card */}
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 border border-primary/20 p-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
+                    <Award className="w-6 h-6 text-primary" />
                   </div>
+                  <h3 className="font-bold text-xl text-foreground">{offer.title}</h3>
                 </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentGateway('paylink')}
-                className={`p-4 border-2 rounded-lg transition-all hover-scale ${
-                  selectedPaymentGateway === 'paylink'
-                    ? 'border-primary bg-primary/10 shadow-glow'
-                    : 'border-border hover:border-primary/50'
-                }`}
-              >
-                <div className="text-center">
-                  <div className="font-semibold text-sm">Paylink</div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    دفع محلي
-                  </div>
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentGateway('stc_pay')}
-                className={`p-4 border-2 rounded-lg transition-all hover-scale ${
-                  selectedPaymentGateway === 'stc_pay'
-                    ? 'border-primary bg-primary/10 shadow-glow'
-                    : 'border-border hover:border-primary/50'
-                }`}
-              >
-                <div className="text-center">
-                  <div className="font-semibold text-sm">STC Pay</div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    محفظة رقمية
-                  </div>
-                </div>
-              </button>
-            </div>
-            
-            {/* Coming Soon Section */}
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-muted-foreground text-center">قريباً</h4>
-              
-              {/* Row 1: Installments & Tamara */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-4 bg-gradient-to-r from-secondary/10 to-accent/10 border border-secondary/20 rounded-lg text-center relative overflow-hidden">
-                  <div className="absolute top-2 right-2">
-                    <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
-                  </div>
-                  <img src="/src/assets/tamara-logo.png" alt="تمارا" className="w-8 h-8 mx-auto mb-2 opacity-60" />
-                  <div className="font-semibold text-sm text-muted-foreground">تمارا</div>
-                  <div className="text-xs text-muted-foreground mt-1">الدفع بالأقساط</div>
-                </div>
-                <div className="p-4 bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/20 rounded-lg text-center relative overflow-hidden">
-                  <div className="absolute top-2 right-2">
-                    <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
-                  </div>
-                  <img src="/src/assets/tabby-logo.png" alt="تابي" className="w-8 h-8 mx-auto mb-2 opacity-60" />
-                  <div className="font-semibold text-sm text-muted-foreground">تابي</div>
-                  <div className="text-xs text-muted-foreground mt-1">أقساط بدون فوائد</div>
-                </div>
+                <Badge className="bg-gradient-to-r from-destructive to-orange-500 text-white shadow-lg animate-bounce-gentle">
+                  خصم {offer.discount}
+                </Badge>
               </div>
               
-              {/* Row 2: Banking Solutions */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-4 bg-gradient-to-r from-primary/10 to-success/10 border border-primary/20 rounded-lg text-center relative overflow-hidden">
-                  <div className="absolute top-2 right-2">
-                    <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl font-bold bg-gradient-to-r from-success to-accent bg-clip-text text-transparent">
+                      {offer.currentPrice} ر.س
+                    </span>
+                    <span className="text-lg text-muted-foreground line-through">
+                      {offer.originalPrice} ر.س
+                    </span>
                   </div>
-                  <img src="/src/assets/alrajhi-bank-logo.png" alt="البنك الراجحي" className="w-8 h-8 mx-auto mb-2 opacity-60" />
-                  <div className="font-semibold text-sm text-muted-foreground">البنك الراجحي</div>
-                  <div className="text-xs text-muted-foreground mt-1">حلول مصرفية</div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Timer className="w-4 h-4" />
+                    <span className="text-sm">باقي {offer.timeLeft} على انتهاء العرض</span>
+                  </div>
                 </div>
-                <div className="p-4 bg-gradient-to-r from-warning/10 to-destructive/10 border border-warning/20 rounded-lg text-center relative overflow-hidden">
-                  <div className="absolute top-2 right-2">
-                    <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
+                <div className="text-right">
+                  <div className="text-sm text-muted-foreground">وفر</div>
+                  <div className="text-lg font-bold text-success">
+                    {(parseFloat(offer.originalPrice.replace(/,/g, '')) - parseFloat(offer.currentPrice.replace(/,/g, ''))).toLocaleString()} ر.س
                   </div>
-                  <img src="/src/assets/tasaheel-logo.png" alt="تساهيل" className="w-8 h-8 mx-auto mb-2 opacity-60" />
-                  <div className="font-semibold text-sm text-muted-foreground">تساهيل</div>
-                  <div className="text-xs text-muted-foreground mt-1">تمويل مرن</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Offer Summary */}
-          <div className="glass-effect p-4 rounded-lg border">
-            <h3 className="font-bold text-lg mb-2">{offer.title}</h3>
-            <div className="flex justify-between items-center">
-              <span className="text-2xl font-bold text-success">
-                {offer.currentPrice} ر.س
-              </span>
-              <Badge variant="destructive">خصم {offer.discount}</Badge>
+          {/* Payment Gateway Selection - Enhanced Banking Style */}
+          <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="text-center">
+              <h4 className="text-xl font-bold text-foreground mb-2">اختر بوابة الدفع المفضلة</h4>
+              <p className="text-muted-foreground">جميع الطرق آمنة ومحمية بأعلى معايير الأمان</p>
+            </div>
+            
+            {/* Active Payment Methods - Premium Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { 
+                  id: 'tap', 
+                  name: 'Tap Payments', 
+                  description: 'دفع آمن ومضمون',
+                  features: ['✓ حماية متقدمة', '✓ دفع فوري', '✓ دعم العملات المختلفة'],
+                  gradient: 'from-blue-500/20 to-indigo-500/20',
+                  borderGradient: 'from-blue-500 to-indigo-500'
+                },
+                { 
+                  id: 'paylink', 
+                  name: 'Paylink', 
+                  description: 'الحل المحلي الأول',
+                  features: ['✓ حل سعودي محلي', '✓ دعم فني ممتاز', '✓ تكامل مع البنوك المحلية'],
+                  gradient: 'from-green-500/20 to-emerald-500/20',
+                  borderGradient: 'from-green-500 to-emerald-500'
+                },
+                { 
+                  id: 'stc_pay', 
+                  name: 'STC Pay', 
+                  description: 'المحفظة الرقمية الرائدة',
+                  features: ['✓ دفع عبر الجوال', '✓ سرعة في التحويل', '✓ أمان عالي'],
+                  gradient: 'from-purple-500/20 to-pink-500/20',
+                  borderGradient: 'from-purple-500 to-pink-500'
+                }
+              ].map((gateway) => (
+                <button
+                  key={gateway.id}
+                  type="button"
+                  onClick={() => setSelectedPaymentGateway(gateway.id as any)}
+                  className={`relative overflow-hidden p-6 rounded-xl border-2 transition-all duration-300 hover-scale text-right group ${
+                    selectedPaymentGateway === gateway.id
+                      ? `bg-gradient-to-br ${gateway.gradient} border-primary shadow-glow scale-105`
+                      : `bg-gradient-to-br from-background/50 to-muted/30 border-border hover:border-primary/50 hover:shadow-lg`
+                  }`}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-r ${gateway.borderGradient} opacity-0 ${
+                    selectedPaymentGateway === gateway.id ? 'opacity-10' : 'group-hover:opacity-5'
+                  } transition-opacity duration-300`}></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-3">
+                      <h5 className="font-bold text-lg text-foreground">{gateway.name}</h5>
+                      {selectedPaymentGateway === gateway.id && (
+                        <div className="p-1 bg-primary rounded-full animate-bounce-gentle">
+                          <CheckCircle className="w-5 h-5 text-white" />
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-muted-foreground text-sm mb-4">{gateway.description}</p>
+                    <div className="space-y-1">
+                      {gateway.features.map((feature, index) => (
+                        <div key={index} className="text-xs text-muted-foreground">{feature}</div>
+                      ))}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+            
+            {/* Coming Soon Section - Banking Style */}
+            <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+              <div className="text-center">
+                <h5 className="text-lg font-bold text-muted-foreground mb-1">قريباً - حلول دفع إضافية</h5>
+                <p className="text-sm text-muted-foreground">المزيد من الخيارات المبتكرة في الطريق</p>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { name: 'تمارا', logo: '/src/assets/tamara-logo.png', desc: 'أقساط مرنة' },
+                  { name: 'تابي', logo: '/src/assets/tabby-logo.png', desc: 'ادفع لاحقاً' },
+                  { name: 'الراجحي', logo: '/src/assets/alrajhi-bank-logo.png', desc: 'حلول بنكية' },
+                  { name: 'تساهيل', logo: '/src/assets/tasaheel-logo.png', desc: 'تمويل مبتكر' }
+                ].map((item, index) => (
+                  <div key={index} className="relative p-4 bg-gradient-to-br from-muted/30 to-background/50 border border-muted rounded-xl text-center overflow-hidden group">
+                    <div className="absolute top-2 right-2">
+                      <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative z-10">
+                      <img src={item.logo} alt={item.name} className="w-10 h-10 mx-auto mb-2 opacity-60 group-hover:opacity-80 transition-opacity" />
+                      <div className="font-semibold text-sm text-muted-foreground">{item.name}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Payment Form */}
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">الاسم الكامل *</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="أدخل اسمك الكامل"
-                required
-              />
+          {/* Enhanced Payment Form */}
+          <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="text-center">
+              <h4 className="text-xl font-bold text-foreground mb-2">بياناتك الشخصية</h4>
+              <p className="text-muted-foreground">معلومات آمنة ومحمية وفقاً لأعلى معايير الخصوصية</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  الاسم الكامل *
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="أدخل اسمك الكامل كما هو في الهوية"
+                  className="h-12 bg-background/50 border-2 border-muted focus:border-primary transition-all duration-300 rounded-xl"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  البريد الإلكتروني *
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="example@domain.com"
+                  className="h-12 bg-background/50 border-2 border-muted focus:border-primary transition-all duration-300 rounded-xl"
+                  required
+                />
+              </div>
             </div>
             
-            <div>
-              <Label htmlFor="email">البريد الإلكتروني *</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="example@email.com"
-                required
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="phone">رقم الجوال</Label>
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-sm font-medium flex items-center gap-2">
+                <div className="w-2 h-2 bg-muted-foreground rounded-full"></div>
+                رقم الجوال (اختياري)
+              </Label>
               <Input
                 id="phone"
                 name="phone"
@@ -370,36 +429,67 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
                 value={formData.phone}
                 onChange={handleInputChange}
                 placeholder="05xxxxxxxx"
+                className="h-12 bg-background/50 border-2 border-muted focus:border-primary transition-all duration-300 rounded-xl"
                 dir="ltr"
               />
             </div>
           </div>
 
-          {/* Payment Button */}
-          <Button
-            onClick={handlePayment}
-            disabled={isLoading}
-            className="w-full bg-gradient-to-r from-success to-accent hover:shadow-glow text-white py-3 text-lg font-bold hover-scale"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 ml-2 animate-spin" />
-                جاري المعالجة...
-              </>
-            ) : (
-              <>
-                <CreditCard className="w-5 h-5 ml-2" />
-                {selectedPaymentGateway === 'stc_pay' ? 
-                  `ادفع عبر STC Pay - ${offer.currentPrice} ر.س` :
-                  `ادفع عبر ${selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'} - ${offer.currentPrice} ر.س`
-                }
-              </>
-            )}
-          </Button>
+          {/* Enhanced Payment Button */}
+          <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.7s' }}>
+            <Button
+              onClick={handlePayment}
+              disabled={isLoading}
+              className="w-full h-14 bg-gradient-to-r from-primary via-accent to-secondary hover:shadow-2xl text-white text-lg font-bold rounded-xl transition-all duration-300 hover-scale relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+              
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-3">
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  <span>جاري معالجة الطلب...</span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-3">
+                  <CreditCard className="w-6 h-6" />
+                  <span>
+                    {selectedPaymentGateway === 'stc_pay' ? 
+                      `ادفع عبر STC Pay - ${offer.currentPrice} ر.س` :
+                      `ادفع عبر ${selectedPaymentGateway === 'tap' ? 'Tap Payments' : 'Paylink'} - ${offer.currentPrice} ر.س`
+                    }
+                  </span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              )}
+            </Button>
 
-          {/* Security Notice */}
-          <div className="text-center text-sm text-muted-foreground">
-            🔒 جميع المدفوعات آمنة ومحمية بتقنية التشفير
+            {/* Security and Trust Indicators */}
+            <div className="grid grid-cols-3 gap-4 text-center text-sm">
+              <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>SSL محمي</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <span>PCI معتمد</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                <span>بيانات مشفرة</span>
+              </div>
+            </div>
+
+            <div className="text-center p-4 bg-gradient-to-r from-muted/30 to-background/50 rounded-xl border border-muted">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="p-2 bg-green-500/20 rounded-full">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                </div>
+                <span className="font-medium text-foreground">ضمان الأمان الكامل</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                جميع المدفوعات محمية بتقنيات التشفير المتقدمة ومعايير الأمان العالمية. بياناتك في أمان تام.
+              </p>
+            </div>
           </div>
         </div>
       </DialogContent>
