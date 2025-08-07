@@ -78,6 +78,11 @@ import SoftwareProducts from "./pages/SoftwareProducts";
 import CarRentalWebsite from "./pages/CarRentalWebsite";
 import CareersPage from "./pages/CareersPage";
 import CarRentalLanding from "./pages/CarRentalLanding";
+import AboutUs from "./pages/car-rental/AboutUs";
+import ContactUs from "./pages/car-rental/ContactUs";
+import CarRentalFAQ from "./pages/car-rental/FAQ";
+import CarRentalTerms from "./pages/car-rental/Terms";
+import CarRentalPrivacy from "./pages/car-rental/Privacy";
 import CarFleet from "./pages/CarFleet";
 import CarBooking from "./pages/CarBooking";
 
@@ -175,6 +180,11 @@ const App = () => {
               <Route path="/car-rental" element={<CarRentalLanding />} />
               <Route path="/car-rental-landing" element={<CarRentalLanding />} />
               <Route path="/car-rental-website" element={<CarRentalWebsite />} />
+              <Route path="/car-rental/about" element={<AboutUs />} />
+              <Route path="/car-rental/contact" element={<ContactUs />} />
+              <Route path="/car-rental/faq" element={<CarRentalFAQ />} />
+              <Route path="/car-rental/terms" element={<CarRentalTerms />} />
+              <Route path="/car-rental/privacy" element={<CarRentalPrivacy />} />
               <Route path="/car-rental/careers" element={<CareersPage />} />
               
               <Route path="/car-fleet" element={<CarFleet />} />

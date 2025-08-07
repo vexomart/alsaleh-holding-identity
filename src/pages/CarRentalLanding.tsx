@@ -972,48 +972,48 @@ const CarRentalLanding = () => {
             <div>
               <h4 className="text-lg font-semibold mb-4 text-blue-400">معلومات مهمة</h4>
               <ul className="space-y-3 text-slate-300">
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/terms" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   شروط الإيجار
                 </a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/privacy" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
-                  سياسة التأمين
+                  سياسة الخصوصية
                 </a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/faq" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   أسئلة شائعة
                 </a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/guide" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   دليل العميل
                 </a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/insurance" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
-                  سياسة الخصوصية
+                  سياسة التأمين
                 </a></li>
               </ul>
             </div>
             
-            {/* التوظيف */}
+            {/* التوظيف والصفحات */}
             <div>
-              <h4 className="text-lg font-semibold mb-4 text-blue-400">التوظيف</h4>
+              <h4 className="text-lg font-semibold mb-4 text-blue-400">الشركة</h4>
               <ul className="space-y-3 text-slate-300">
+                <li><a href="/car-rental/about" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4" />
+                  من نحن
+                </a></li>
                 <li><a href="/car-rental/careers" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
                   فرص العمل
                 </a></li>
-                <li><a href="/car-rental/careers#application" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/news" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
-                  تقدم للوظيفة
+                  أخبار الشركة
                 </a></li>
-                <li><a href="/car-rental/careers#benefits" className="hover:text-blue-400 transition-colors flex items-center gap-2">
+                <li><a href="/car-rental/partners" className="hover:text-blue-400 transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4" />
-                  مزايا العمل معنا
-                </a></li>
-                <li><a href="/car-rental/careers#culture" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  ثقافة الشركة
+                  شركاؤنا
                 </a></li>
               </ul>
             </div>
@@ -1065,9 +1065,9 @@ const CarRentalLanding = () => {
           <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm">
             <p>&copy; 2024 كار رنت برو. جميع الحقوق محفوظة.</p>
             <div className="flex items-center gap-6 mt-4 md:mt-0">
-              <a href="#" className="hover:text-blue-400 transition-colors">الشروط والأحكام</a>
-              <a href="#" className="hover:text-blue-400 transition-colors">سياسة الخصوصية</a>
-              <a href="#" className="hover:text-blue-400 transition-colors">اتصل بنا</a>
+              <a href="/car-rental/terms" className="hover:text-blue-400 transition-colors">الشروط والأحكام</a>
+              <a href="/car-rental/privacy" className="hover:text-blue-400 transition-colors">سياسة الخصوصية</a>
+              <a href="/car-rental/contact" className="hover:text-blue-400 transition-colors">اتصل بنا</a>
             </div>
           </div>
         </div>
