@@ -164,11 +164,11 @@ const StartWithUs = () => {
   ];
 
   const timeline = [
-    { year: "٢٠١٦", title: "تأسيس الشركة", description: "بداية الرحلة مع رؤية طموحة" },
+    { year: "٢٠١٦", title: "تأسيس المؤسسة", description: "بداية الرحلة كمؤسسة برؤية طموحة" },
     { year: "٢٠١٨", title: "أول ١٠٠ عميل", description: "تحقيق ثقة العملاء الأوائل" },
     { year: "٢٠٢٠", title: "التوسع الإقليمي", description: "فتح فروع في دول الخليج" },
     { year: "٢٠٢٢", title: "شراكات عالمية", description: "شراكة مع عمالقة التقنية" },
-    { year: "٢٠٢٤", title: "الريادة المحلية", description: "الشركة الرائدة في المنطقة" }
+    { year: "٢٠٢٥", title: "تأسيس الشركة القابضة", description: "التطور إلى شركة قابضة متكاملة" }
   ];
 
   const technologies = [
