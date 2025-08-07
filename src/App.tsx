@@ -46,6 +46,7 @@ import TechProjects from "./pages/TechProjects";
 import TechProjectDetails from "./pages/TechProjectDetails";
 import Technologies from "./pages/Technologies";
 import CurrentOffers from "./pages/CurrentOffers";
+import OfferDetails from "./pages/OfferDetails";
 import ProfessionalServices from "./pages/ProfessionalServices";
 import ContentCreation from "./pages/ContentCreation";
 import DesignSolutions from "./pages/DesignSolutions";
@@ -124,6 +125,7 @@ const App = () => {
               <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
               <Route path="/technologies" element={<Technologies />} />
               <Route path="/current-offers" element={<CurrentOffers />} />
+              <Route path="/offer-details/:id" element={<OfferDetails />} />
               <Route path="/professional-services" element={<ProfessionalServices />} />
               <Route path="/content-creation" element={<ContentCreation />} />
               <Route path="/design-solutions" element={<DesignSolutions />} />

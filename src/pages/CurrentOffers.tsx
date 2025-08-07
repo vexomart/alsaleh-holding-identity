@@ -890,20 +890,16 @@ const CurrentOffers = () => {
                       }
                     />
                     
-                    <OfferRequestForm 
-                      offer={offer}
-                      trigger={
-                        <Button 
-                          variant="outline" 
-                          className="w-full h-12 sm:h-14 border-2 border-border hover:border-primary bg-background/50 hover:bg-primary/5 text-foreground font-medium text-base sm:text-lg rounded-xl transition-all duration-300 hover-scale group backdrop-blur-sm"
-                        >
-                          <div className="flex items-center justify-center gap-2">
-                            <MessageCircle className="w-5 h-5 group-hover:animate-bounce" />
-                            <span>اطلب المزيد</span>
-                          </div>
-                        </Button>
-                      }
-                    />
+                    <Button 
+                      variant="outline" 
+                      onClick={() => window.location.href = `/offer-details/${offer.id}`}
+                      className="w-full h-12 sm:h-14 border-2 border-border hover:border-primary bg-background/50 hover:bg-primary/5 text-foreground font-medium text-base sm:text-lg rounded-xl transition-all duration-300 hover-scale group backdrop-blur-sm"
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <MessageCircle className="w-5 h-5 group-hover:animate-bounce" />
+                        <span>عرض التفاصيل</span>
+                      </div>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
