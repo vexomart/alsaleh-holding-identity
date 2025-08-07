@@ -90,25 +90,44 @@ const Index = () => {
                   اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات بأسعار استثنائية
                 </p>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
-                  <Card className="bg-white/80 backdrop-blur-sm border border-orange-200/50 hover:shadow-lg transition-all duration-300">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6 mb-8">
+                  <Card className="bg-white/80 backdrop-blur-sm border border-blue-200/50 hover:shadow-lg transition-all duration-300 group">
                     <CardContent className="p-6 text-center">
-                      <div className="text-2xl font-bold text-orange-600 mb-2">تصميم مواقع</div>
+                      <div className="text-2xl mb-3 group-hover:scale-110 transition-transform duration-300">💻</div>
+                      <div className="text-lg font-bold text-blue-600 mb-2">البرمجة والتطوير</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 45%</div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-white/80 backdrop-blur-sm border border-purple-200/50 hover:shadow-lg transition-all duration-300 group">
+                    <CardContent className="p-6 text-center">
+                      <div className="text-2xl mb-3 group-hover:scale-110 transition-transform duration-300">🎨</div>
+                      <div className="text-lg font-bold text-purple-600 mb-2">التصميم</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 40%</div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-white/80 backdrop-blur-sm border border-green-200/50 hover:shadow-lg transition-all duration-300 group">
+                    <CardContent className="p-6 text-center">
+                      <div className="text-2xl mb-3 group-hover:scale-110 transition-transform duration-300">📢</div>
+                      <div className="text-lg font-bold text-green-600 mb-2">التسويق</div>
                       <div className="text-sm text-muted-foreground">خصم حتى 35%</div>
                     </CardContent>
                   </Card>
                   
-                  <Card className="bg-white/80 backdrop-blur-sm border border-red-200/50 hover:shadow-lg transition-all duration-300">
+                  <Card className="bg-white/80 backdrop-blur-sm border border-indigo-200/50 hover:shadow-lg transition-all duration-300 group">
                     <CardContent className="p-6 text-center">
-                      <div className="text-2xl font-bold text-red-600 mb-2">متاجر إلكترونية</div>
-                      <div className="text-sm text-muted-foreground">خصم حتى 61%</div>
+                      <div className="text-2xl mb-3 group-hover:scale-110 transition-transform duration-300">📱</div>
+                      <div className="text-lg font-bold text-indigo-600 mb-2">التطبيقات</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 50%</div>
                     </CardContent>
                   </Card>
                   
-                  <Card className="bg-white/80 backdrop-blur-sm border border-pink-200/50 hover:shadow-lg transition-all duration-300">
+                  <Card className="bg-white/80 backdrop-blur-sm border border-orange-200/50 hover:shadow-lg transition-all duration-300 group">
                     <CardContent className="p-6 text-center">
-                      <div className="text-2xl font-bold text-pink-600 mb-2">هوية بصرية</div>
-                      <div className="text-sm text-muted-foreground">خصم حتى 40%</div>
+                      <div className="text-2xl mb-3 group-hover:scale-110 transition-transform duration-300">🌐</div>
+                      <div className="text-lg font-bold text-orange-600 mb-2">النطاقات والهوست</div>
+                      <div className="text-sm text-muted-foreground">خصم حتى 30%</div>
                     </CardContent>
                   </Card>
                 </div>
