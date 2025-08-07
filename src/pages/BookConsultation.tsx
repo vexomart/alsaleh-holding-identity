@@ -22,8 +22,11 @@ import {
   CheckCircle,
   Phone,
   Mail,
-  MapPin
+  MapPin,
+  AlertCircle,
+  Send
 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const services = [
   {
@@ -95,9 +98,14 @@ interface FormData {
   message: string;
 }
 
+interface FormErrors {
+  [key: string]: string;
+}
+
 export default function BookConsultation() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -111,24 +119,74 @@ export default function BookConsultation() {
     message: ""
   });
 
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    // التحقق من الحقول المطلوبة
+    if (!formData.name.trim()) {
+      newErrors.name = "الاسم الكامل مطلوب";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "البريد الإلكتروني مطلوب";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "البريد الإلكتروني غير صالح";
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "رقم الهاتف مطلوب";
+    } else if (!/^((\+966)|0)?5[0-9]{8}$/.test(formData.phone.replace(/\s/g, ''))) {
+      newErrors.phone = "رقم الهاتف غير صالح (يجب أن يبدأ بـ 05 ويحتوي على 10 أرقام)";
+    }
+
+    if (!formData.service) {
+      newErrors.service = "يرجى اختيار نوع الخدمة";
+    }
+
+    if (!formData.consultationType) {
+      newErrors.consultationType = "يرجى اختيار نوع الاستشارة";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // إزالة الخطأ عند بدء الكتابة
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: "" }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      toast.error("يرجى تصحيح الأخطاء في النموذج");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.functions.invoke('consultation-booking', {
+      console.log("Sending consultation request:", formData);
+      
+      const { data, error } = await supabase.functions.invoke('consultation-booking', {
         body: formData
       });
 
-      if (error) throw error;
+      console.log("Response:", { data, error });
 
-      toast.success("تم إرسال طلب الاستشارة بنجاح! سنتواصل معك قريباً");
+      if (error) {
+        console.error("Supabase function error:", error);
+        throw new Error(error.message || "حدث خطأ في الخدمة");
+      }
+
+      toast.success("تم إرسال طلب الاستشارة بنجاح! سنتواصل معك خلال 24 ساعة");
       
-      // Reset form
+      // إعادة تعيين النموذج
       setFormData({
         name: "",
         email: "",
@@ -141,10 +199,11 @@ export default function BookConsultation() {
         preferredTime: "",
         message: ""
       });
+      setErrors({});
 
-    } catch (error) {
-      console.error('Error submitting consultation request:', error);
-      toast.error("حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى");
+    } catch (error: any) {
+      console.error('Detailed error:', error);
+      toast.error(error.message || "حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى");
     } finally {
       setIsSubmitting(false);
     }
@@ -173,7 +232,13 @@ export default function BookConsultation() {
             {services.map((service) => {
               const Icon = service.icon;
               return (
-                <Card key={service.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <Card 
+                  key={service.id} 
+                  className={`hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
+                    formData.service === service.id ? 'ring-2 ring-primary border-primary' : ''
+                  }`}
+                  onClick={() => handleInputChange('service', service.id)}
+                >
                   <CardHeader>
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                       <Icon className="w-6 h-6 text-primary" />
@@ -238,53 +303,82 @@ export default function BookConsultation() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">الاسم الكامل *</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      required
-                      placeholder="أدخل اسمك الكامل"
-                    />
+                {/* معلومات شخصية */}
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold border-b pb-2">المعلومات الشخصية</h3>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-sm font-medium">
+                        الاسم الكامل <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        placeholder="أدخل اسمك الكامل"
+                        className={errors.name ? "border-destructive focus:border-destructive" : ""}
+                      />
+                      {errors.name && (
+                        <p className="text-sm text-destructive flex items-center mt-1">
+                          <AlertCircle className="w-4 h-4 ml-1" />
+                          {errors.name}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-sm font-medium">
+                        البريد الإلكتروني <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        placeholder="your@email.com"
+                        className={errors.email ? "border-destructive focus:border-destructive" : ""}
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-destructive flex items-center mt-1">
+                          <AlertCircle className="w-4 h-4 ml-1" />
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">البريد الإلكتروني *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      required
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">رقم الهاتف *</Label>
-                    <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      required
-                      placeholder="+966 5X XXX XXXX"
-                    />
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-sm font-medium">
+                        رقم الهاتف <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        id="phone"
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        placeholder="05xxxxxxxx"
+                        className={errors.phone ? "border-destructive focus:border-destructive" : ""}
+                      />
+                      {errors.phone && (
+                        <p className="text-sm text-destructive flex items-center mt-1">
+                          <AlertCircle className="w-4 h-4 ml-1" />
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="company">اسم الشركة/المؤسسة</Label>
+                      <Input
+                        id="company"
+                        value={formData.company}
+                        onChange={(e) => handleInputChange('company', e.target.value)}
+                        placeholder="اسم شركتك أو مؤسستك"
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="company">اسم الشركة/المؤسسة</Label>
-                    <Input
-                      id="company"
-                      value={formData.company}
-                      onChange={(e) => handleInputChange('company', e.target.value)}
-                      placeholder="اسم شركتك أو مؤسستك"
-                    />
-                  </div>
-                </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="position">المنصب/الوظيفة</Label>
                     <Input
@@ -294,76 +388,92 @@ export default function BookConsultation() {
                       placeholder="منصبك في الشركة"
                     />
                   </div>
+                </div>
+
+                {/* تفاصيل الاستشارة */}
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold border-b pb-2">تفاصيل الاستشارة</h3>
+                  
+                  {formData.service && (
+                    <Alert>
+                      <CheckCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        تم اختيار خدمة: <strong>{services.find(s => s.id === formData.service)?.title}</strong>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
                   <div className="space-y-2">
-                    <Label htmlFor="service">نوع الخدمة المطلوبة *</Label>
-                    <Select onValueChange={(value) => handleInputChange('service', value)} required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="اختر نوع الخدمة" />
+                    <Label htmlFor="consultationType" className="text-sm font-medium">
+                      نوع الاستشارة <span className="text-destructive">*</span>
+                    </Label>
+                    <Select 
+                      onValueChange={(value) => handleInputChange('consultationType', value)}
+                      value={formData.consultationType}
+                    >
+                      <SelectTrigger className={errors.consultationType ? "border-destructive" : ""}>
+                        <SelectValue placeholder="اختر نوع الاستشارة" />
                       </SelectTrigger>
                       <SelectContent>
-                        {services.map((service) => (
-                          <SelectItem key={service.id} value={service.id}>
-                            {service.title}
+                        {consultationTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                    {errors.consultationType && (
+                      <p className="text-sm text-destructive flex items-center mt-1">
+                        <AlertCircle className="w-4 h-4 ml-1" />
+                        {errors.consultationType}
+                      </p>
+                    )}
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="consultationType">نوع الاستشارة *</Label>
-                  <Select onValueChange={(value) => handleInputChange('consultationType', value)} required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="اختر نوع الاستشارة" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {consultationTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="preferredDate" className="flex items-center">
+                        <Calendar className="w-4 h-4 ml-1" />
+                        التاريخ المفضل
+                      </Label>
+                      <Input
+                        id="preferredDate"
+                        type="date"
+                        value={formData.preferredDate}
+                        onChange={(e) => handleInputChange('preferredDate', e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="preferredTime" className="flex items-center">
+                        <Clock className="w-4 h-4 ml-1" />
+                        الوقت المفضل
+                      </Label>
+                      <Select onValueChange={(value) => handleInputChange('preferredTime', value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="اختر الوقت المناسب" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {timeSlots.map((time) => (
+                            <SelectItem key={time} value={time}>
+                              {time}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="preferredDate">التاريخ المفضل</Label>
-                    <Input
-                      id="preferredDate"
-                      type="date"
-                      value={formData.preferredDate}
-                      onChange={(e) => handleInputChange('preferredDate', e.target.value)}
-                      min={new Date().toISOString().split('T')[0]}
+                    <Label htmlFor="message">تفاصيل إضافية</Label>
+                    <Textarea
+                      id="message"
+                      value={formData.message}
+                      onChange={(e) => handleInputChange('message', e.target.value)}
+                      placeholder="أخبرنا عن التحديات التي تواجهها أو أهدافك المحددة..."
+                      rows={4}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="preferredTime">الوقت المفضل</Label>
-                    <Select onValueChange={(value) => handleInputChange('preferredTime', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="اختر الوقت المناسب" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeSlots.map((time) => (
-                          <SelectItem key={time} value={time}>
-                            {time}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="message">تفاصيل إضافية</Label>
-                  <Textarea
-                    id="message"
-                    value={formData.message}
-                    onChange={(e) => handleInputChange('message', e.target.value)}
-                    placeholder="أخبرنا عن التحديات التي تواجهها أو أهدافك المحددة..."
-                    rows={4}
-                  />
                 </div>
 
                 <Button 
@@ -372,7 +482,17 @@ export default function BookConsultation() {
                   size="lg"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "جاري الإرسال..." : "احجز الاستشارة الآن"}
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
+                      جاري الإرسال...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 ml-2" />
+                      احجز الاستشارة الآن
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>
