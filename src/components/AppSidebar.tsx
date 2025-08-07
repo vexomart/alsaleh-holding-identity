@@ -221,7 +221,7 @@ export function AppSidebar() {
             {/* Action Buttons */}
             <div className="space-y-2">
               <a 
-                href="https://wa.me/966555812567" 
+                href="https://wa.me/966112345678"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 p-2.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors duration-200 text-sm"
@@ -230,11 +230,11 @@ export function AppSidebar() {
                 <span>واتساب</span>
               </a>
               <a 
-                href="tel:+966555812567"
+                href="tel:+966112345678"
                 className="flex items-center gap-2 p-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors duration-200 text-sm"
               >
                 <Phone className="w-4 h-4" />
-                <span>0555812567</span>
+                <span>+966 11 234 5678</span>
               </a>
               <a 
                 href="mailto:info@ash.holdings"
@@ -249,7 +249,7 @@ export function AppSidebar() {
         {collapsed && (
           <div className="flex flex-col items-center space-y-2">
             <a 
-              href="https://wa.me/966555812567" 
+              href="https://wa.me/966112345678" 
               target="_blank" 
               rel="noopener noreferrer"
               className="p-2 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors"
@@ -257,7 +257,7 @@ export function AppSidebar() {
               <MessageCircle className="w-4 h-4" />
             </a>
             <a 
-              href="tel:+966555812567"
+              href="tel:+966112345678"
               className="p-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors"
             >
               <Phone className="w-4 h-4" />

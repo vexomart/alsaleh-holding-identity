@@ -20,7 +20,7 @@ const ContactSection = () => {
       icon: Phone,
       title: "الهاتف المباشر",
       titleEn: "Direct Phone",
-      value: "0555812567",
+      value: "+966 11 234 5678",
       description: "للتواصل الفوري والاستشارات العاجلة",
       color: "from-green-600 to-emerald-600",
       bgEffect: "from-green-500/10 to-emerald-500/10",
@@ -199,7 +199,7 @@ const ContactSection = () => {
                       className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 px-8 py-6 text-lg font-bold shadow-glow transition-all duration-300 hover:scale-105 group/btn"
                     >
                       <a 
-                        href="https://wa.me/966555812567?text=مرحباً، أريد بدء محادثة حول خدماتكم"
+                        href="https://wa.me/966112345678?text=مرحباً، أريد بدء محادثة حول خدماتكم"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center"

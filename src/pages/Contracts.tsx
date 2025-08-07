@@ -487,7 +487,7 @@ const Contracts = () => {
               <div className="flex flex-col items-center">
                 <Phone className="w-8 h-8 text-blue-300 mb-2" />
                 <p className="text-blue-100">هاتف</p>
-                <p className="text-white font-semibold">0555812567</p>
+                <p className="text-white font-semibold">+966 11 234 5678</p>
               </div>
               <div className="flex flex-col items-center">
                 <Mail className="w-8 h-8 text-blue-300 mb-2" />
@@ -497,7 +497,7 @@ const Contracts = () => {
               <div className="flex flex-col items-center">
                 <MessageSquare className="w-8 h-8 text-blue-300 mb-2" />
                 <p className="text-blue-100">واتساب</p>
-                <p className="text-white font-semibold">0555812567</p>
+                <p className="text-white font-semibold">+966 11 234 5678</p>
               </div>
             </div>
           </div>

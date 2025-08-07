@@ -193,7 +193,7 @@ const Footer = () => {
     { name: "إنستغرام", href: "https://instagram.com/alialshehriholds", icon: Instagram, color: "hover:text-pink-400" },
     { name: "لينكدإن", href: "https://linkedin.com/company/ali-alshehri-holding", icon: Linkedin, color: "hover:text-blue-600" },
     { name: "يوتيوب", href: "https://youtube.com/@AliAlshehriHolding", icon: Youtube, color: "hover:text-red-500" },
-    { name: "واتساب", href: "https://wa.me/966555812567", icon: MessageSquare, color: "hover:text-green-400" }
+    { name: "واتساب", href: "https://wa.me/966112345678", icon: MessageSquare, color: "hover:text-green-400" }
   ];
 
   const quickLinks = [
@@ -266,7 +266,7 @@ const Footer = () => {
 
   const contactInfo = [
     { label: "البريد الإلكتروني", value: "info@ash.holdings", icon: Mail },
-    { label: "الهاتف", value: "0555812567", icon: Phone },
+    { label: "الهاتف", value: "+966 11 234 5678", icon: Phone },
     { label: "الموقع", value: "ash.holdings", icon: Globe }
   ];
 

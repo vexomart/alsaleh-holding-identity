@@ -594,7 +594,7 @@ const Careers = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-gray-500">رقم الهاتف</p>
-                    <p className="font-medium text-gray-800">0555812567</p>
+                    <p className="font-medium text-gray-800">+966 11 234 5678</p>
                   </div>
                 </div>
               </div>

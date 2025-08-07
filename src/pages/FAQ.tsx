@@ -47,7 +47,7 @@ const FAQ = () => {
         },
         {
           question: "كيف يمكنني التواصل مع الشركة؟",
-          answer: "يمكنك التواصل معنا عبر الواتساب على 0555812567، أو عبر البريد الإلكتروني info@ash.holdings، أو من خلال نموذج التواصل في الموقع. نلتزم بالرد على جميع الاستفسارات خلال 24 ساعة."
+          answer: "يمكنك التواصل معنا عبر الواتساب على +966 11 234 5678، أو عبر البريد الإلكتروني info@ash.holdings، أو من خلال نموذج التواصل في الموقع. نلتزم بالرد على جميع الاستفسارات خلال 24 ساعة."
         },
         {
           question: "هل تقدمون خدمات للشركات الصغيرة والمتوسطة؟",
@@ -154,9 +154,9 @@ const FAQ = () => {
   const quickContacts = [
     {
       method: "الواتساب",
-      value: "0555812567",
+      value: "+966 11 234 5678",
       icon: MessageCircle,
-      link: "https://wa.me/966555812567",
+      link: "https://wa.me/966112345678",
       description: "تواصل سريع ومباشر"
     },
     {
@@ -168,9 +168,9 @@ const FAQ = () => {
     },
     {
       method: "الهاتف",
-      value: "0555812567",
+      value: "+966 11 234 5678",
       icon: Phone,
-      link: "tel:+966555812567",
+      link: "tel:+966112345678",
       description: "للحالات العاجلة"
     }
   ];
@@ -386,7 +386,7 @@ const FAQ = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-secondary-foreground">
-                <a href="https://wa.me/966555812567?text=مرحباً، لدي سؤال لم أجد إجابته في الأسئلة الشائعة" target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/966112345678?text=مرحباً، لدي سؤال لم أجد إجابته في الأسئلة الشائعة" target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="w-5 h-5 mr-2" />
                   اسأل سؤالك الآن
                 </a>

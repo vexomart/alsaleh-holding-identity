@@ -95,7 +95,7 @@ const Navigation = () => {
               </div>
               <div className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors">
                 <Phone className="w-4 h-4" />
-                <a href="tel:0555812567">٠٥٥٥٨١٢٥٦٧</a>
+                <a href="tel:+966112345678">+966 11 234 5678</a>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -297,7 +297,7 @@ const Navigation = () => {
                   className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-green-500 text-green-600 hover:bg-green-50"
                   asChild
                 >
-                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
+                  <a href="https://wa.me/966112345678" target="_blank" rel="noopener noreferrer">
                     <MessageCircle className="w-3 h-3" />
                     <span className="hidden xl:block">واتساب</span>
                   </a>
@@ -308,7 +308,7 @@ const Navigation = () => {
                   className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-blue-500 text-blue-600 hover:bg-blue-50"
                   asChild
                 >
-                  <a href="tel:0555812567">
+                  <a href="tel:+966112345678">
                     <Phone className="w-3 h-3" />
                     <span className="hidden xl:block">اتصال</span>
                   </a>
@@ -346,11 +346,11 @@ const Navigation = () => {
                 {/* Mobile Contact Info */}
                 <div className="bg-gray-50 rounded-lg p-3 mb-3">
                   <div className="flex flex-col gap-2 text-sm">
-                    <a href="tel:0555812567" className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
+                    <a href="tel:+966112345678" className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
                       <Phone className="w-4 h-4" />
-                      <span>٠٥٥٥٨١٢٥٦٧</span>
+                      <span>+966 11 234 5678</span>
                     </a>
-                    <a href="https://wa.me/966555812567" className="flex items-center gap-2 text-green-600 hover:text-green-800">
+                    <a href="https://wa.me/966112345678" className="flex items-center gap-2 text-green-600 hover:text-green-800">
                       <MessageCircle className="w-4 h-4" />
                       <span>واتساب</span>
                     </a>
