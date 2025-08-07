@@ -420,68 +420,68 @@ const CurrentOffers = () => {
 const OfferCard = ({ offer }: { offer: any }) => (
   <Card className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-orange-200 h-full flex flex-col">
     {offer.isPopular && (
-      <div className="absolute top-4 right-4 z-10">
+      <div className="absolute top-4 left-4 z-10">
         <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
-          <Star className="w-4 h-4 mr-1" />
+          <Star className="w-4 h-4 ml-1" />
           الأكثر طلباً
         </Badge>
       </div>
     )}
     
-    <div className="absolute top-4 left-4 z-10">
+    <div className="absolute top-4 right-4 z-10">
       <Badge variant="destructive" className="bg-red-500 text-white animate-pulse font-bold">
         خصم {offer.discount}
       </Badge>
     </div>
 
-    <CardHeader className="relative pb-4 flex-shrink-0">
+    <CardHeader className="relative pb-4 flex-shrink-0 text-right">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
       
-      <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
+      <div className="relative flex items-start gap-3 mb-4">
         <div className="text-2xl sm:text-3xl flex-shrink-0">{offer.icon}</div>
-        <div className="flex-1 min-w-0">
-          <CardTitle className="text-lg sm:text-xl leading-tight">{offer.title}</CardTitle>
-          <div className="flex items-center gap-2 mt-2">
-            <Clock className="w-4 h-4 text-orange-500 flex-shrink-0" />
+        <div className="flex-1 min-w-0 text-right">
+          <CardTitle className="text-lg sm:text-xl leading-tight text-right">{offer.title}</CardTitle>
+          <div className="flex items-center justify-end gap-2 mt-2">
             <span className="text-sm text-orange-600 font-medium">متبقي {offer.timeLeft}</span>
+            <Clock className="w-4 h-4 text-orange-500 flex-shrink-0" />
           </div>
         </div>
       </div>
       
-      <div className="relative mb-4">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+      <div className="relative mb-4 text-right">
+        <div className="flex flex-col items-end gap-2">
           <span className="text-2xl sm:text-3xl font-bold text-green-600">{offer.discountedPrice} ريال</span>
           <span className="text-lg text-gray-500 line-through">{offer.originalPrice} ريال</span>
         </div>
-        <div className="text-sm text-green-600 font-medium mt-1">
+        <div className="text-sm text-green-600 font-medium mt-1 text-right">
           توفير {parseInt(offer.originalPrice.replace(/,/g, '')) - parseInt(offer.discountedPrice.replace(/,/g, ''))} ريال
         </div>
       </div>
       
-      <p className="relative text-muted-foreground text-sm leading-relaxed">{offer.description}</p>
+      <p className="relative text-muted-foreground text-sm leading-relaxed text-right">{offer.description}</p>
     </CardHeader>
 
-    <CardContent className="pt-0 flex-1 flex flex-col">
+    <CardContent className="pt-0 flex-1 flex flex-col text-right">
       <div className="space-y-4 flex-1">
         <div className="flex-1">
-          <h4 className="font-semibold mb-3 text-gray-800">ما يشمله العرض:</h4>
+          <h4 className="font-semibold mb-3 text-gray-800 text-right">ما يشمله العرض:</h4>
           <ul className="space-y-2">
             {offer.features.map((feature: string, index: number) => (
-              <li key={index} className="flex items-start gap-2 text-sm">
+              <li key={index} className="flex items-start justify-end gap-2 text-sm text-right">
+                <span className="flex-1 text-right">{feature}</span>
                 <Star className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                <span className="flex-1">{feature}</span>
               </li>
             ))}
           </ul>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link to="/contact" className="flex-1">
+        <div className="flex flex-col gap-2 mt-4">
+          <Link to="/contact" className="w-full">
             <Button 
               className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3 shadow-lg hover:shadow-xl transition-all duration-300"
             >
+              <ArrowRight className="w-4 h-4 ml-2" />
               استفسر عن العرض
-              <ArrowRight className="w-4 h-4 mr-2" />
             </Button>
           </Link>
           
@@ -489,11 +489,11 @@ const OfferCard = ({ offer }: { offer: any }) => (
             offer={offer}
             trigger={
               <Button 
-                className="flex-1 payment-button bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-full payment-button bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <CreditCard className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-2" />
                 ادفع الآن - {offer.discountedPrice} ريال
-                <ArrowRight className="w-4 h-4 mr-2" />
+                <CreditCard className="w-4 h-4 mr-2" />
               </Button>
             }
           />
