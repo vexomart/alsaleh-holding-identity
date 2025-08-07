@@ -637,8 +637,10 @@ const CarRentalLanding = () => {
                   رخصة قيادة سارية
                 </li>
               </ul>
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                تقدم للوظيفة
+              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" asChild>
+                <a href="/car-rental/careers#application">
+                  تقدم للوظيفة
+                </a>
               </Button>
             </div>
 
@@ -665,8 +667,10 @@ const CarRentalLanding = () => {
                   القدرة على العمل بفريق
                 </li>
               </ul>
-              <Button className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">
-                تقدم للوظيفة
+              <Button className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700" asChild>
+                <a href="/car-rental/careers#application">
+                  تقدم للوظيفة
+                </a>
               </Button>
             </div>
 
@@ -693,8 +697,10 @@ const CarRentalLanding = () => {
                   خبرة في خدمة العملاء
                 </li>
               </ul>
-              <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-                تقدم للوظيفة
+              <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700" asChild>
+                <a href="/car-rental/careers#application">
+                  تقدم للوظيفة
+                </a>
               </Button>
             </div>
           </div>
