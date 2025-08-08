@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import Navigation from "@/components/Navigation";
-import DesignSolutionsSection from "@/components/DesignSolutionsSection";
+import RTLDesignSolutionsSection from "@/components/RTLDesignSolutionsSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 const DesignSolutions = () => {
@@ -25,11 +25,11 @@ const DesignSolutions = () => {
     canonical.href = window.location.origin + window.location.pathname;
   }, []);
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir="rtl">
       <Navigation />
       
       <main className="relative">
-        <DesignSolutionsSection />
+        <RTLDesignSolutionsSection />
       </main>
 
       <Footer />
