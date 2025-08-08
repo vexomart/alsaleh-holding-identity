@@ -91,6 +91,8 @@ import CarRentalContactUs from "./pages/car-rental/ContactUs";
 import CarRentalSubServices from "./pages/car-rental/SubServices";
 import CarRentalEconomyCars from "./pages/car-rental/services/EconomyCars";
 import CarRentalLuxuryCars from "./pages/car-rental/services/LuxuryCars";
+import CarRentalElectricCars from "./pages/car-rental/services/ElectricCars";
+import CarRentalFamilyCars from "./pages/car-rental/services/FamilyCars";
 import CarRentalBranches from "./pages/car-rental/contact/Branches";
 import CarRentalComplaints from "./pages/car-rental/contact/ComplaintsSuggestions";
 import CarFleet from "./pages/CarFleet";
@@ -202,6 +204,8 @@ const App = () => {
               <Route path="/car-rental/sub-services" element={<CarRentalSubServices />} />
               <Route path="/car-rental/services/economy" element={<CarRentalEconomyCars />} />
               <Route path="/car-rental/services/luxury" element={<CarRentalLuxuryCars />} />
+              <Route path="/car-rental/services/electric" element={<CarRentalElectricCars />} />
+              <Route path="/car-rental/services/family" element={<CarRentalFamilyCars />} />
               <Route path="/car-rental/contact/branches" element={<CarRentalBranches />} />
               <Route path="/car-rental/contact/complaints" element={<CarRentalComplaints />} />
               <Route path="/car-rental/careers" element={<CareersPage />} />
