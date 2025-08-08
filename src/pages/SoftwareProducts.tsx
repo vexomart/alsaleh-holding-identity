@@ -82,16 +82,17 @@ const SoftwareProducts = () => {
   ];
 
   const handlePaymentMethodSelect = async (methodId: string, productName: string) => {
-    // إغلاق النافذة فوراً وإظهار حالة التحميل
+    // إغلاق النافذة فوراً
     setShowPaymentMethods(false);
     setSelectedProduct(null);
-    setIsLoading(true);
     
     // رسالة فورية
     toast({
-      title: "جاري التحويل للدفع...",
-      description: "يتم فتح صفحة الدفع الآن",
+      title: "جاري التحضير...",
+      description: "يتم تحضير صفحة الدفع",
     });
+
+    setIsLoading(true);
 
     try {
       let functionName = '';
@@ -103,12 +104,11 @@ const SoftwareProducts = () => {
           paymentData = {
             amount: 4999,
             currency: 'SAR',
-            description: `شراء منتج: ${productName}`,
-            clientName: 'عميل',
-            clientMobile: '966500000000',
-            note: `طلب شراء منتج ${productName}`,
-            callBackUrl: `${window.location.origin}/payment-success`,
-            cancelUrl: `${window.location.origin}/payment-cancel`
+            customer_name: 'عميل',
+            customer_email: 'customer@example.com',
+            customer_phone: '966500000000',
+            offer_title: productName,
+            description: `شراء منتج: ${productName}`
           };
           break;
         case 'tap':
@@ -191,10 +191,10 @@ const SoftwareProducts = () => {
 
       // Handle different response formats
       let paymentUrl = null;
-      if (data?.transactionUrl) {
-        paymentUrl = data.transactionUrl;
-      } else if (data?.payment_url) {
+      if (data?.payment_url) {
         paymentUrl = data.payment_url;
+      } else if (data?.transactionUrl) {
+        paymentUrl = data.transactionUrl;
       } else if (data?.checkout_url) {
         paymentUrl = data.checkout_url;
       } else if (data?.url) {
