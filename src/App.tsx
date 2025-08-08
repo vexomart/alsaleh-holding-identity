@@ -98,7 +98,7 @@ import CarRentalComplaints from "./pages/car-rental/contact/ComplaintsSuggestion
 import CarFleet from "./pages/CarFleet";
 import CarBooking from "./pages/CarBooking";
 import EmailTest from "./pages/EmailTest";
-import DesignCategory from "./pages/DesignCategory";
+import EnhancedDesignCategory from "./pages/EnhancedDesignCategory";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -167,7 +167,7 @@ const App = () => {
               <Route path="/professional-services" element={<ProfessionalServices />} />
               <Route path="/content-creation" element={<ContentCreation />} />
               <Route path="/design-solutions" element={<DesignSolutions />} />
-              <Route path="/design-solutions/:slug" element={<DesignCategory />} />
+              <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
               <Route path="/subsidiaries" element={<Subsidiaries />} />
               <Route path="/payment-methods" element={<PaymentMethods />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
