@@ -103,25 +103,48 @@ const SoftwareProducts = () => {
           paymentData = {
             amount: 4999,
             currency: 'SAR',
-            description: `شراء منتج: ${productName}`,
-            redirect: {
-              url: `${window.location.origin}/payment-success`
-            }
+            customer_name: 'عميل',
+            customer_email: 'customer@example.com',
+            customer_phone: '966500000000',
+            offer_title: productName,
+            description: `شراء منتج: ${productName}`
           };
           break;
         case 'tamara':
           functionName = 'tamara-payment';
           paymentData = {
+            order_reference_id: `order_${Date.now()}`,
             total_amount: {
               amount: 4999,
               currency: 'SAR'
             },
             description: `شراء منتج: ${productName}`,
+            country_code: 'SA',
+            payment_type: 'PAY_BY_INSTALMENTS',
+            instalments: 4,
+            consumer: {
+              first_name: 'عميل',
+              last_name: 'تجريبي',
+              phone_number: '966500000000',
+              email: 'customer@example.com'
+            },
             merchant_url: {
               success: `${window.location.origin}/payment-success`,
               failure: `${window.location.origin}/payment-cancel`,
-              cancel: `${window.location.origin}/payment-cancel`
-            }
+              cancel: `${window.location.origin}/payment-cancel`,
+              notification: `${window.location.origin}/api/tamara-webhook`
+            },
+            items: [{
+              name: productName,
+              type: 'Digital',
+              reference_id: `item_${Date.now()}`,
+              sku: 'DIGITAL-001',
+              quantity: 1,
+              total_amount: {
+                amount: 4999,
+                currency: 'SAR'
+              }
+            }]
           };
           break;
         case 'stc-pay':
@@ -129,7 +152,10 @@ const SoftwareProducts = () => {
           paymentData = {
             amount: 4999,
             currency: 'SAR',
-            description: `شراء منتج: ${productName}`
+            description: `شراء منتج: ${productName}`,
+            customer_name: 'عميل',
+            customer_email: 'customer@example.com',
+            customer_phone: '966500000000'
           };
           break;
         default:
@@ -150,12 +176,28 @@ const SoftwareProducts = () => {
         return;
       }
 
-      if (data?.transactionUrl || data?.url || data?.checkout_url) {
-        const paymentUrl = data.transactionUrl || data.url || data.checkout_url;
+      // Handle different response formats
+      let paymentUrl = null;
+      if (data?.transactionUrl) {
+        paymentUrl = data.transactionUrl;
+      } else if (data?.payment_url) {
+        paymentUrl = data.payment_url;
+      } else if (data?.checkout_url) {
+        paymentUrl = data.checkout_url;
+      } else if (data?.url) {
+        paymentUrl = data.url;
+      }
+
+      if (paymentUrl) {
         window.open(paymentUrl, '_blank');
         setShowPaymentMethods(false);
         setSelectedProduct(null);
+        toast({
+          title: "تم توجيهك للدفع",
+          description: "سيتم فتح صفحة الدفع في تبويب جديد",
+        });
       } else {
+        console.error('No payment URL in response:', data);
         toast({
           title: "خطأ في الدفع",
           description: "لم يتم الحصول على رابط الدفع. يرجى المحاولة مرة أخرى.",
