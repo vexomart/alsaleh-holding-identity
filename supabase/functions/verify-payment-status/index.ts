@@ -1,10 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { Resend } from "npm:resend@4.0.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY") || "");
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -57,21 +60,46 @@ serve(async (req) => {
         }
       }
     } else if (transaction.paylink_transaction_no) {
-      // Verify with Paylink
-      const paylinkResponse = await fetch(`https://restapi.paylink.sa/api/v1/getInvoice/${transaction.paylink_transaction_no}`, {
-        headers: {
-          'Authorization': `Bearer ${Deno.env.get("PAYLINK_API_KEY")}`,
-        },
-      });
+      // Verify with Paylink (authenticate to get id_token)
+      const paylinkApiId = Deno.env.get("PAYLINK_API_ID");
+      const paylinkApiKey = Deno.env.get("PAYLINK_API_KEY");
+      let paylinkToken = Deno.env.get("PAYLINK_ACCESS_TOKEN") || "";
+      if (!paylinkToken) {
+        if (!paylinkApiId || !paylinkApiKey) {
+          console.error('Missing PAYLINK credentials');
+        } else {
+          const authResp = await fetch("https://restapi.paylink.sa/api/auth", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ apiId: paylinkApiId, secretKey: paylinkApiKey, persistToken: "true" })
+          });
+          const authJson = await authResp.json();
+          if (authResp.ok && authJson.id_token) {
+            paylinkToken = authJson.id_token;
+          } else {
+            console.error('Paylink auth failed:', authJson);
+          }
+        }
+      }
+
+      const headers: Record<string, string> = { "Accept": "application/json" };
+      if (paylinkToken) headers["Authorization"] = `Bearer ${paylinkToken}`;
+
+      const paylinkResponse = await fetch(`https://restapi.paylink.sa/api/getInvoice/${transaction.paylink_transaction_no}`, { headers });
       
       if (paylinkResponse.ok) {
         const paylinkData = await paylinkResponse.json();
-        if (paylinkData.orderStatus === 'Paid') {
+        const status = String(paylinkData.orderStatus || '').toUpperCase();
+        if (status.includes('PAID') || status === 'COMPLETED') {
           newStatus = 'PAID';
           paymentVerified = true;
-        } else if (paylinkData.orderStatus === 'Expired' || paylinkData.orderStatus === 'Cancelled') {
+        } else if (['FAILED', 'CANCELLED', 'EXPIRED'].includes(status)) {
           newStatus = 'FAILED';
+        } else if (['CREATED', 'PENDING', 'PROCESSING'].includes(status)) {
+          newStatus = 'PENDING';
         }
+      } else {
+        console.error('Paylink verify error status:', paylinkResponse.status);
       }
     } else if (transaction.tamara_order_id) {
       // Verify with Tamara
