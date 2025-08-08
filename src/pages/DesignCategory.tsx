@@ -198,7 +198,8 @@ export default function DesignCategory() {
         <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
         <div className="relative max-w-3xl mx-auto">
           <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${data.accent.chip} text-white text-sm font-medium shadow` }>
-            <Sparkles className="w-4 h-4" />
+            <CatIcon className="w-4 h-4 pulse" />
+            <Sparkles className="w-4 h-4 animate-[spin_10s_linear_infinite]" />
             قسم: {data.title}
           </span>
           <h1 className="mt-4 text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
@@ -217,6 +218,14 @@ export default function DesignCategory() {
             {data.items.map((it, idx) => (
               <Card key={it.name} className="group relative overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all animate-fade-in">
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-primary/5 blur-2xl pointer-events-none hidden sm:block" />
+                <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-blue-500/5 blur-2xl pointer-events-none hidden sm:block" />
+                <div className="absolute top-3 right-3 opacity-20 text-primary hidden sm:block">
+                  <CatIcon className="w-6 h-6 animate-[spin_12s_linear_infinite]" />
+                </div>
+                <div className="absolute bottom-3 left-3 opacity-20 text-primary hidden sm:block">
+                  <Sparkles className="w-6 h-6 animate-bounce" />
+                </div>
                 <div className="p-5 flex flex-col gap-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
