@@ -295,42 +295,19 @@ const CarRentalLanding = () => {
           ⚠️ هذا موقع تجريبي فقط - جميع المعلومات والأسعار غير صحيحة ولأغراض العرض فقط
         </div>
       </div>
-      {/* شريط علوي */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1">
-                <Phone className="w-4 h-4" />
-                0555812567
-              </span>
-              <span className="flex items-center gap-1">
-                <Mail className="w-4 h-4" />
-                info@alialshehriholding.com
-              </span>
-            </div>
-            <div className="hidden md:flex items-center gap-4">
-              <span>خصم 20% على الحجز الأول</span>
-              <span className="bg-white/20 px-2 py-1 rounded text-xs">كود: FIRST20</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* الهيدر الرئيسي */}
-      <nav className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/95 backdrop-blur-lg shadow-xl' : 'bg-white'
-      }`}>
+      <nav className="bg-gradient-to-r from-blue-600 to-blue-800 sticky top-0 z-50 shadow-lg">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16">
             {/* الشعار */}
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Car className="w-7 h-7 text-white" />
+              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                <Car className="w-6 h-6 text-blue-600" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900">كار رنت برو</h1>
-                <p className="text-xs text-slate-500">Car Rent Pro</p>
+              <div className="text-white">
+                <h1 className="text-xl font-bold">كار رنت برو</h1>
+                <p className="text-xs text-blue-200">Car Rent Pro</p>
               </div>
             </div>
 
@@ -340,36 +317,29 @@ const CarRentalLanding = () => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className={`text-sm font-medium transition-all duration-200 hover:text-blue-600 relative ${
-                    item.active ? 'text-blue-600' : 'text-slate-700'
+                  className={`text-sm font-medium transition-all duration-200 hover:text-blue-200 ${
+                    item.active ? 'text-white border-b-2 border-white pb-1' : 'text-blue-100'
                   }`}
                 >
                   {item.name}
-                  {item.active && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
-                  )}
                 </a>
               ))}
             </div>
 
             {/* أزرار الإجراء */}
             <div className="hidden md:flex items-center gap-3">
-              <Button variant="outline" size="sm" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                <Phone className="w-4 h-4 ml-1" />
-                اتصل بنا
+              <Button variant="outline" size="sm" className="border-white text-white hover:bg-white hover:text-blue-600">
+                تواصل معنا
               </Button>
-              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-transform shadow-lg" asChild>
-                <a href="/car-booking">
-                  <Calendar className="w-4 h-4 ml-1" />
-                  احجز الآن
-                </a>
+              <Button size="sm" className="bg-white text-blue-600 hover:bg-blue-50" asChild>
+                <a href="/car-booking">احجز الآن</a>
               </Button>
             </div>
 
             {/* زر القائمة المحمولة */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden text-slate-700 hover:text-blue-600 transition-colors"
+              className="lg:hidden text-white hover:text-blue-200 transition-colors"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -378,23 +348,23 @@ const CarRentalLanding = () => {
 
         {/* القائمة المحمولة */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-white border-t shadow-lg animate-fade-in">
-            <div className="container mx-auto px-4 py-6">
+          <div className="lg:hidden bg-blue-700 border-t border-blue-500">
+            <div className="container mx-auto px-4 py-4">
               {navigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="block py-3 text-slate-700 hover:text-blue-600 transition-colors border-b border-slate-100 last:border-0"
+                  className="block py-2 text-blue-100 hover:text-white transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </a>
               ))}
-              <div className="flex flex-col gap-3 mt-6">
-                <Button variant="outline" className="border-blue-600 text-blue-600">
-                  اتصل بنا
+              <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-blue-500">
+                <Button variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+                  تواصل معنا
                 </Button>
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600" asChild>
+                <Button className="bg-white text-blue-600 hover:bg-blue-50" asChild>
                   <a href="/car-booking">احجز الآن</a>
                 </Button>
               </div>
@@ -404,10 +374,10 @@ const CarRentalLanding = () => {
       </nav>
 
       {/* السلايدر الرئيسي */}
-      <section className="relative h-[70vh] sm:h-[75vh] md:h-[85vh] overflow-hidden">
+      <section className="relative h-[80vh] overflow-hidden">
         <Carousel
           opts={{ loop: true }}
-          plugins={[Autoplay({ delay: 4000, stopOnInteraction: true, stopOnMouseEnter: true })]}
+          plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
           setApi={setCarouselApi}
           className="h-full"
         >
@@ -417,69 +387,87 @@ const CarRentalLanding = () => {
                 <div className="relative h-full">
                   <img
                     src={slide.image}
-                    alt={`سلايدر: ${slide.title}`}
-                    loading="lazy"
+                    alt={slide.title}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+                  <div className="absolute inset-0 bg-black/40" />
 
                   <div className="absolute inset-0 z-10 flex items-center">
                     <div className="container mx-auto px-4">
-                      <div className="max-w-4xl animate-fade-in">
-                        <div className="text-white space-y-6">
-                          <Badge className="bg-blue-600/90 text-white border-0 mb-4">سيارات فاخرة</Badge>
-                          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">{slide.title}</h1>
-                          <h2 className="text-xl md:text-2xl lg:text-3xl text-blue-200 font-medium">{slide.subtitle}</h2>
-                          <p className="text-lg md:text-xl text-gray-200 max-w-2xl">{slide.description}</p>
+                      <div className="max-w-3xl mx-auto text-center text-white">
+                        <Badge className="bg-blue-600 text-white border-0 mb-6 px-4 py-2">
+                          سيارات فاخرة
+                        </Badge>
+                        
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                          {slide.title}
+                        </h1>
+                        
+                        <p className="text-xl md:text-2xl mb-4 text-blue-100">
+                          {slide.subtitle}
+                        </p>
+                        
+                        <p className="text-lg md:text-xl mb-8 opacity-90">
+                          {slide.description}
+                        </p>
 
-                          <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                            <Button size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:scale-105 transition-all text-lg px-8 py-6 shadow-2xl" asChild>
-                              <a href="/car-booking">
-                                <Car className="w-6 h-6 ml-2" />
-                                {slide.cta}
-                              </a>
-                            </Button>
-                            <Button size="lg" variant="outline" className="border-2 border-white/80 text-white hover:bg-white hover:text-slate-900 transition-all text-lg px-8 py-6 backdrop-blur-sm">
-                              <Play className="w-6 h-6 ml-2" />
-                              شاهد الفيديو
-                            </Button>
-                          </div>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4" asChild>
+                            <a href="/car-booking">ابدأ الآن</a>
+                          </Button>
+                          <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4">
+                            شاهد الفيديو
+                          </Button>
+                        </div>
 
-                          {/* شريط البحث السريع */}
-                          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mt-8 border border-white/20">
-                            <h3 className="text-lg font-semibold mb-4">ابحث عن سيارتك المثالية</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                              <div>
-                                <label className="block text-sm mb-2">مكان الاستلام</label>
-                                <div className="relative">
-                                  <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-300" />
-                                  <input
-                                    type="text"
-                                    placeholder="اختر المدينة"
-                                    className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white placeholder-gray-300"
-                                  />
-                                </div>
+                        {/* نموذج البحث */}
+                        <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
+                          <h3 className="text-gray-800 text-lg font-semibold mb-4 text-center">
+                            ابحث عن سيارتك المثالية
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                مكان الاستلام
+                              </label>
+                              <div className="relative">
+                                <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                                <input
+                                  type="text"
+                                  placeholder="اختر المدينة"
+                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
                               </div>
-                              <div>
-                                <label className="block text-sm mb-2">تاريخ الاستلام</label>
-                                <div className="relative">
-                                  <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-300" />
-                                  <input type="date" className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white" />
-                                </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                تاريخ الاستلام
+                              </label>
+                              <div className="relative">
+                                <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                                <input
+                                  type="date"
+                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
                               </div>
-                              <div>
-                                <label className="block text-sm mb-2">تاريخ الإرجاع</label>
-                                <div className="relative">
-                                  <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-300" />
-                                  <input type="date" className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white" />
-                                </div>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                تاريخ الإرجاع
+                              </label>
+                              <div className="relative">
+                                <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                                <input
+                                  type="date"
+                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
                               </div>
-                              <div className="flex items-end">
-                                <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3">
-                                  <Search className="w-5 h-5 ml-2" />
-                                  ابحث
-                                </Button>
-                              </div>
+                            </div>
+                            <div className="flex items-end">
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 text-lg">
+                                <Search className="w-5 h-5 ml-2" />
+                                ابحث
+                              </Button>
                             </div>
                           </div>
                         </div>
@@ -491,18 +479,19 @@ const CarRentalLanding = () => {
             ))}
           </CarouselContent>
 
-          <CarouselPrevious className="left-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30" />
-          <CarouselNext className="right-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30" />
+          <CarouselPrevious className="left-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30 w-12 h-12" />
+          <CarouselNext className="right-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30 w-12 h-12" />
         </Carousel>
 
         {/* مؤشرات السلايدر */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
           {heroSlides.map((_, i) => (
             <button
               key={i}
               onClick={() => carouselApi?.scrollTo(i)}
-              aria-label={`اذهب إلى الشريحة ${i + 1}`}
-              className={`w-3 h-3 rounded-full transition-all ${i === selectedIndex ? 'bg-white scale-125' : 'bg-white/50'}`}
+              className={`w-3 h-3 rounded-full transition-all ${
+                i === selectedIndex ? 'bg-white scale-125' : 'bg-white/60'
+              }`}
             />
           ))}
         </div>
