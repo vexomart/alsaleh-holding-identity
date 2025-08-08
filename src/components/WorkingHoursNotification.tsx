@@ -20,8 +20,8 @@ const WorkingHoursNotification = () => {
         return;
       }
       
-      // Working hours: 9 AM to 6 PM
-      if (currentHour >= 9 && currentHour < 18) {
+      // Working hours: 8 AM to 6 PM (Sunday to Thursday)
+      if (currentHour >= 8 && currentHour < 18) {
         setCurrentStatus('working');
       } else {
         setCurrentStatus('closed');
@@ -38,7 +38,7 @@ const WorkingHoursNotification = () => {
     switch (currentStatus) {
       case 'working':
         return {
-          text: "مفتوح الآن - ساعات العمل: 9:00 ص - 6:00 م",
+          text: "مفتوح الآن - ساعات العمل: 8:00 ص - 6:00 م",
           icon: Clock,
           bgColor: "bg-gradient-to-r from-green-500 to-emerald-600",
           textColor: "text-white",
@@ -46,7 +46,7 @@ const WorkingHoursNotification = () => {
         };
       case 'closed':
         return {
-          text: "مغلق الآن - ساعات العمل: 9:00 ص - 6:00 م (الأحد - الخميس)",
+          text: "مغلق الآن - ساعات العمل: 8:00 ص - 6:00 م (الأحد - الخميس)",
           icon: Coffee,
           bgColor: "bg-gradient-to-r from-orange-500 to-red-500",
           textColor: "text-white",
@@ -54,7 +54,7 @@ const WorkingHoursNotification = () => {
         };
       case 'weekend':
         return {
-          text: "إجازة نهاية الأسبوع - سنعود يوم الأحد الساعة 9:00 ص",
+          text: "إجازة نهاية الأسبوع - سنعود يوم الأحد الساعة 8:00 ص",
           icon: Calendar,
           bgColor: "bg-gradient-to-r from-blue-500 to-purple-600",
           textColor: "text-white",
