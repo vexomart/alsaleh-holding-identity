@@ -56,13 +56,13 @@ import {
 } from "lucide-react";
 
 import Autoplay from "embla-carousel-autoplay";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const CarRentalLanding = () => {
   const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [carouselApi, setCarouselApi] = useState<any>();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [newsletterEmail, setNewsletterEmail] = useState('');
