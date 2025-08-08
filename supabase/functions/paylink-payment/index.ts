@@ -25,10 +25,10 @@ serve(async (req) => {
 
   try {
     const paylinkApiKey = Deno.env.get("PAYLINK_API_KEY");
+    const paylinkApiId = Deno.env.get("PAYLINK_API_ID");
     if (!paylinkApiKey) {
       throw new Error("PAYLINK_API_KEY not configured");
     }
-
     // Create Supabase client for database operations
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -66,13 +66,18 @@ serve(async (req) => {
 
     console.log("Sending request to Paylink API...");
 
+    const headers: Record<string, string> = {
+      "Authorization": `Bearer ${paylinkApiKey}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    };
+    if (paylinkApiId) {
+      headers["ApiId"] = paylinkApiId;
+    }
+
     const paylinkResponse = await fetch("https://restapi.paylink.sa/api/addInvoice", {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${paylinkApiKey}`,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
+      headers,
       body: JSON.stringify(paylinkPayload),
     });
 
