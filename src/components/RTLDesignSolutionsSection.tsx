@@ -215,7 +215,7 @@ const RTLDesignSolutionsSection = () => {
         </div>
 
         {/* فلتر الأقسام */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 animate-on-scroll">
+        <div className="flex flex-wrap justify-center gap-3 mb-12 animate-on-scroll" dir="rtl">
           {filters.map((filter) => {
             const IconComp = filter.icon;
             return (
@@ -225,16 +225,17 @@ const RTLDesignSolutionsSection = () => {
                 size="sm"
                 onClick={() => setActiveFilter(filter.id)}
                 className="flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                dir="rtl"
               >
+                <span>{filter.label}</span>
                 <IconComp className="w-4 h-4" />
-                {filter.label}
               </Button>
             );
           })}
         </div>
 
         {/* عرض الأقسام بشبكة محسنة */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20" dir="rtl">
           {filteredCategories.map((cat, index) => {
             const IconComp = cat.Icon as any;
             return (
@@ -242,31 +243,32 @@ const RTLDesignSolutionsSection = () => {
                 key={cat.slug} 
                 className="group relative overflow-hidden rounded-3xl border-2 border-primary/10 hover:border-primary/30 transition-all duration-700 hover:shadow-2xl hover:scale-105 bg-card/60 backdrop-blur-sm animate-on-scroll"
                 style={{ animationDelay: `${index * 100}ms` }}
+                dir="rtl"
               >
                 {/* شارات التصنيف */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
                   {(cat as any).popular && (
-                    <Badge className="bg-yellow-500 text-black text-xs flex items-center gap-1">
+                    <Badge className="bg-yellow-500 text-black text-xs flex items-center gap-1" dir="rtl">
+                      <span>الأكثر طلباً</span>
                       <TrendingUp className="w-3 h-3" />
-                      الأكثر طلباً
                     </Badge>
                   )}
                   {(cat as any).trending && (
-                    <Badge className="bg-green-500 text-white text-xs flex items-center gap-1">
+                    <Badge className="bg-green-500 text-white text-xs flex items-center gap-1" dir="rtl">
+                      <span>رائج</span>
                       <Zap className="w-3 h-3" />
-                      رائج
                     </Badge>
                   )}
                   {(cat as any).premium && (
-                    <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs flex items-center gap-1">
+                    <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs flex items-center gap-1" dir="rtl">
+                      <span>مميز</span>
                       <Award className="w-3 h-3" />
-                      مميز
                     </Badge>
                   )}
                   {(cat as any).exclusive && (
-                    <Badge className="bg-gradient-to-r from-gold-500 to-yellow-600 text-black text-xs flex items-center gap-1">
+                    <Badge className="bg-gradient-to-r from-gold-500 to-yellow-600 text-black text-xs flex items-center gap-1" dir="rtl">
+                      <span>حصري</span>
                       <Star className="w-3 h-3" />
-                      حصري
                     </Badge>
                   )}
                 </div>
@@ -290,9 +292,9 @@ const RTLDesignSolutionsSection = () => {
                 <div className="p-8 pt-20 space-y-6">
                   {/* العنوان والوصف */}
                   <div className="space-y-4">
-                    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${cat.accent} text-white text-sm font-bold shadow-lg`}>
+                    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${cat.accent} text-white text-sm font-bold shadow-lg`} dir="rtl">
+                      <span>قسم عالمي</span>
                       <Brush className="w-4 h-4" />
-                      قسم عالمي
                     </div>
                     <h2 className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">
                       {cat.title}
@@ -325,15 +327,15 @@ const RTLDesignSolutionsSection = () => {
 
                   {/* معاينة الخدمات */}
                   <div className="space-y-3">
-                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2" dir="rtl">
+                      <span>الخدمات المتاحة:</span>
                       <CheckCircle className="w-4 h-4 text-success" />
-                      الخدمات المتاحة:
                     </h3>
                     <ul className="space-y-2">
                       {cat.preview.slice(0, 4).map((service, i) => (
-                        <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <CheckCircle className="w-4 h-4 text-success animate-pulse" />
+                        <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground" dir="rtl">
                           <span>{service}</span>
+                          <CheckCircle className="w-4 h-4 text-success animate-pulse" />
                         </li>
                       ))}
                       {cat.preview.length > 4 && (
@@ -345,10 +347,10 @@ const RTLDesignSolutionsSection = () => {
                   </div>
 
                   {/* التسليم والسعر */}
-                  <div className="flex items-center justify-between p-4 bg-primary/5 rounded-xl border border-primary/20">
+                  <div className="flex items-center justify-between p-4 bg-primary/5 rounded-xl border border-primary/20" dir="rtl">
                     <div className="flex items-center gap-2 text-sm">
-                      <Clock className="w-4 h-4 text-primary" />
                       <span className="text-muted-foreground">{cat.delivery}</span>
+                      <Clock className="w-4 h-4 text-primary" />
                     </div>
                     <div className="text-sm">
                       <span className="text-muted-foreground">من </span>
@@ -358,11 +360,11 @@ const RTLDesignSolutionsSection = () => {
 
                   {/* زر الإجراء */}
                   <div className="pt-2">
-                    <Button asChild className="w-full group bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary transition-all duration-300">
+                    <Button asChild className="w-full group bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary transition-all duration-300" dir="rtl">
                       <Link to={`/design-solutions/${cat.slug}`} aria-label={`استكشاف قسم ${cat.title}`}>
-                        <Eye className="w-4 h-4 ml-2" />
+                        <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                         استكشف القسم
-                        <ChevronRight className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
+                        <Eye className="w-4 h-4 mr-2" />
                       </Link>
                     </Button>
                   </div>
@@ -391,6 +393,7 @@ const RTLDesignSolutionsSection = () => {
                 key={client.name}
                 className="flex flex-col items-center p-6 bg-card/50 rounded-2xl border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105 animate-on-scroll"
                 style={{ animationDelay: `${index * 100}ms` }}
+                dir="rtl"
               >
                 <div className="text-4xl mb-3">{client.logo}</div>
                 <h3 className="font-bold text-sm text-foreground">{client.name}</h3>
@@ -451,38 +454,38 @@ const RTLDesignSolutionsSection = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button size="lg" className="px-12 py-4 text-lg bg-gradient-to-r from-success to-success/80 hover:from-success/80 hover:to-success transition-all duration-300 group">
-                <Heart className="w-6 h-6 ml-3 animate-pulse" />
+              <Button size="lg" className="px-12 py-4 text-lg bg-gradient-to-r from-success to-success/80 hover:from-success/80 hover:to-success transition-all duration-300 group" dir="rtl">
+                <ChevronRight className="w-5 h-5 ml-3 transition-transform group-hover:translate-x-1" />
                 تواصل عبر واتساب
-                <ChevronRight className="w-5 h-5 mr-3 transition-transform group-hover:-translate-x-1" />
+                <Heart className="w-6 h-6 mr-3 animate-pulse" />
               </Button>
             </a>
-            <Button asChild size="lg" variant="outline" className="px-12 py-4 text-lg border-2 border-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 group">
+            <Button asChild size="lg" variant="outline" className="px-12 py-4 text-lg border-2 border-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 group" dir="rtl">
               <Link to="/book-consultation">
-                <Users className="w-6 h-6 ml-3" />
+                <ChevronRight className="w-5 h-5 ml-3 transition-transform group-hover:translate-x-1" />
                 احجز استشارة مجانية
-                <ChevronRight className="w-5 h-5 mr-3 transition-transform group-hover:-translate-x-1" />
+                <Users className="w-6 h-6 mr-3" />
               </Link>
             </Button>
           </div>
 
           {/* مؤشرات الثقة */}
           <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-muted-foreground pt-6">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" dir="rtl">
+              <span>ضمان الجودة العالمية</span>
               <CheckCircle className="w-5 h-5 text-success" />
-              ضمان الجودة العالمية
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" dir="rtl">
+              <span>تعديلات مجانية لمدة شهر</span>
               <CheckCircle className="w-5 h-5 text-success" />
-              تعديلات مجانية لمدة شهر
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" dir="rtl">
+              <span>دعم مستمر 24/7</span>
               <CheckCircle className="w-5 h-5 text-success" />
-              دعم مستمر 24/7
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" dir="rtl">
+              <span>خدمة عملاء متعددة اللغات</span>
               <CheckCircle className="w-5 h-5 text-success" />
-              خدمة عملاء متعددة اللغات
             </div>
           </div>
         </div>
