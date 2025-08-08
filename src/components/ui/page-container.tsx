@@ -9,13 +9,15 @@ interface PageContainerProps {
   className?: string;
   showNavigation?: boolean;
   showFooter?: boolean;
+  showWhatsAppButton?: boolean;
 }
 
 export function PageContainer({ 
   children, 
   className,
-  showNavigation = true,
-  showFooter = true
+  showNavigation = false,
+  showFooter = false,
+  showWhatsAppButton = true
 }: PageContainerProps) {
   return (
     <div className={cn(
@@ -29,7 +31,7 @@ export function PageContainer({
           {children}
         </main>
         {showFooter && <Footer />}
-        <WhatsAppButton />
+        {showWhatsAppButton && <WhatsAppButton />}
       </div>
     </div>
   );

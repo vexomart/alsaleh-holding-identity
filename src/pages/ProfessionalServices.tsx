@@ -30,7 +30,7 @@ const ProfessionalServices = () => {
   }, []);
 
   return (
-    <PageContainer>
+    <PageContainer showNavigation showFooter>
       <PageHeader
         title="خدماتنا الاحترافية"
         description="نقدم مجموعة شاملة ومتكاملة من الخدمات التقنية والتسويقية المتطورة بمعايير عالمية لتحقيق أهدافك التجارية بأعلى مستويات الاحترافية"

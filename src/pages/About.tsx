@@ -106,7 +106,7 @@ const About = () => {
       <Navigation />
       
       <div className="pt-[48px] lg:pt-[112px]">
-        <PageContainer>
+        <PageContainer showNavigation={false} showFooter={false} showWhatsAppButton={false}>
           <BackButton />
           
           <PageHeader
