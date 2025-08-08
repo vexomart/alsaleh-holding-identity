@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Code, 
   Database, 
@@ -33,28 +34,110 @@ import {
   Clock,
   Heart,
   Share2,
-  Play
+  Play,
+  CreditCard,
+  Banknote,
+  Wallet
 } from "lucide-react";
 
 const SoftwareProducts = () => {
   const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState("جميع المنتجات");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
-  const handlePurchase = async (productName: string, price: string) => {
+  const paymentMethods = [
+    {
+      id: 'paylink',
+      name: 'Paylink',
+      icon: CreditCard,
+      color: 'from-blue-500 to-blue-600',
+      description: 'دفع آمن عبر Paylink'
+    },
+    {
+      id: 'tap',
+      name: 'Tap',
+      icon: Banknote,
+      color: 'from-green-500 to-green-600',
+      description: 'دفع سريع عبر Tap'
+    },
+    {
+      id: 'tamara',
+      name: 'تمارا',
+      icon: Wallet,
+      color: 'from-purple-500 to-purple-600',
+      description: 'اشتري الآن وادفع لاحقاً'
+    },
+    {
+      id: 'stc-pay',
+      name: 'STC Pay',
+      icon: CreditCard,
+      color: 'from-orange-500 to-orange-600',
+      description: 'دفع عبر STC Pay'
+    }
+  ];
+
+  const handlePaymentMethodSelect = async (methodId: string, productName: string) => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
-        body: {
-          amount: 4999,
-          currency: 'SAR',
-          description: `شراء منتج: ${productName}`,
-          clientName: 'عميل',
-          clientMobile: '966500000000',
-          note: `طلب شراء منتج ${productName}`,
-          callBackUrl: `${window.location.origin}/payment-success`,
-          cancelUrl: `${window.location.origin}/payment-cancel`
-        }
+      let functionName = '';
+      let paymentData = {};
+
+      switch (methodId) {
+        case 'paylink':
+          functionName = 'paylink-payment';
+          paymentData = {
+            amount: 4999,
+            currency: 'SAR',
+            description: `شراء منتج: ${productName}`,
+            clientName: 'عميل',
+            clientMobile: '966500000000',
+            note: `طلب شراء منتج ${productName}`,
+            callBackUrl: `${window.location.origin}/payment-success`,
+            cancelUrl: `${window.location.origin}/payment-cancel`
+          };
+          break;
+        case 'tap':
+          functionName = 'tap-payment';
+          paymentData = {
+            amount: 4999,
+            currency: 'SAR',
+            description: `شراء منتج: ${productName}`,
+            redirect: {
+              url: `${window.location.origin}/payment-success`
+            }
+          };
+          break;
+        case 'tamara':
+          functionName = 'tamara-payment';
+          paymentData = {
+            total_amount: {
+              amount: 4999,
+              currency: 'SAR'
+            },
+            description: `شراء منتج: ${productName}`,
+            merchant_url: {
+              success: `${window.location.origin}/payment-success`,
+              failure: `${window.location.origin}/payment-cancel`,
+              cancel: `${window.location.origin}/payment-cancel`
+            }
+          };
+          break;
+        case 'stc-pay':
+          functionName = 'stc-pay';
+          paymentData = {
+            amount: 4999,
+            currency: 'SAR',
+            description: `شراء منتج: ${productName}`
+          };
+          break;
+        default:
+          throw new Error('طريقة دفع غير مدعومة');
+      }
+
+      const { data, error } = await supabase.functions.invoke(functionName, {
+        body: paymentData
       });
 
       if (error) {
@@ -67,8 +150,11 @@ const SoftwareProducts = () => {
         return;
       }
 
-      if (data?.transactionUrl) {
-        window.open(data.transactionUrl, '_blank');
+      if (data?.transactionUrl || data?.url || data?.checkout_url) {
+        const paymentUrl = data.transactionUrl || data.url || data.checkout_url;
+        window.open(paymentUrl, '_blank');
+        setShowPaymentMethods(false);
+        setSelectedProduct(null);
       } else {
         toast({
           title: "خطأ في الدفع",
@@ -86,6 +172,11 @@ const SoftwareProducts = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handlePurchase = (product: any) => {
+    setSelectedProduct(product);
+    setShowPaymentMethods(true);
   };
 
   const products = [
@@ -397,7 +488,7 @@ const SoftwareProducts = () => {
                         
                         <Button 
                           size="sm" 
-                          onClick={() => handlePurchase(product.name, product.price)}
+                          onClick={() => handlePurchase(product)}
                           disabled={product.status !== "متاح الآن" || isLoading}
                           className={`${product.status === "متاح الآن" 
                             ? "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg" 
@@ -409,7 +500,7 @@ const SoftwareProducts = () => {
                           ) : (
                             <TrendingUp className="w-4 h-4 ml-1" />
                           )}
-                          {product.status === "متاح الآن" ? (isLoading ? "جاري المعالجة..." : "اشتري الآن") : "قريباً"}
+                          {product.status === "متاح الآن" ? (isLoading ? "جاري المعالجة..." : "ادفع الآن") : "قريباً"}
                         </Button>
                       </div>
                       
@@ -486,6 +577,70 @@ const SoftwareProducts = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Payment Methods Dialog */}
+      <Dialog open={showPaymentMethods} onOpenChange={setShowPaymentMethods}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl font-bold text-slate-900 dark:text-white">
+              اختر طريقة الدفع
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 p-6">
+            <div className="text-center mb-6">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                {selectedProduct?.name}
+              </h3>
+              <p className="text-2xl font-bold text-primary mt-2">
+                {selectedProduct?.price}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-3">
+              {paymentMethods.map((method) => {
+                const IconComponent = method.icon;
+                return (
+                  <Button
+                    key={method.id}
+                    variant="outline"
+                    onClick={() => handlePaymentMethodSelect(method.id, selectedProduct?.name)}
+                    disabled={isLoading}
+                    className="w-full p-4 h-auto flex items-center justify-between hover:bg-primary/5 hover:border-primary/20 transition-all duration-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 bg-gradient-to-r ${method.color} rounded-lg flex items-center justify-center`}>
+                        <IconComponent className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-slate-900 dark:text-white">
+                          {method.name}
+                        </p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          {method.description}
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-slate-400" />
+                  </Button>
+                );
+              })}
+            </div>
+            
+            <div className="text-center pt-4">
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setShowPaymentMethods(false);
+                  setSelectedProduct(null);
+                }}
+                className="text-slate-500 hover:text-slate-700"
+              >
+                إلغاء
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 };
