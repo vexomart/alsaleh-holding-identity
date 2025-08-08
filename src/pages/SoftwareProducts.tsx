@@ -79,15 +79,15 @@ const SoftwareProducts = () => {
   ];
 
   const handlePaymentMethodSelect = async (methodId: string, productName: string) => {
-    // إظهار رسالة فورية والحالة
-    setIsLoading(true);
+    // إغلاق النافذة فوراً وإظهار حالة التحميل
     setShowPaymentMethods(false);
     setSelectedProduct(null);
+    setIsLoading(true);
     
     // رسالة فورية
     toast({
-      title: "جاري المعالجة...",
-      description: "يتم تحضير رابط الدفع، يرجى الانتظار...",
+      title: "جاري التحويل للدفع...",
+      description: "يتم فتح صفحة الدفع الآن",
     });
 
     try {
