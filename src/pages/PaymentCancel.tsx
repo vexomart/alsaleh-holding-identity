@@ -9,7 +9,7 @@ const PaymentCancel = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background pt-20 sm:pt-24 md:pt-32">
+    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]">
       <Navigation />
       
       <main className="container mx-auto px-4 py-16">
