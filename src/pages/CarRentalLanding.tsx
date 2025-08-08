@@ -55,11 +55,15 @@ import {
   Video
 } from "lucide-react";
 
+import Autoplay from "embla-carousel-autoplay";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
+
 const CarRentalLanding = () => {
   const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [testimonialIndex, setTestimonialIndex] = useState(0);
@@ -260,13 +264,16 @@ const CarRentalLanding = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // السلايدر التلقائي
+  // مزامنة مؤشر السلايدر مع Embla
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
+    if (!carouselApi) return;
+    const onSelect = () => setSelectedIndex(carouselApi.selectedScrollSnap());
+    onSelect();
+    carouselApi.on("select", onSelect);
+    return () => {
+      carouselApi.off("select", onSelect as any);
+    };
+  }, [carouselApi]);
 
   const navigation = [
     { name: "الرئيسية", href: "/car-rental-landing", active: true },
@@ -277,14 +284,7 @@ const CarRentalLanding = () => {
     { name: "تواصل معنا", href: "/car-rental/contact" }
   ];
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  };
-
+  // التحكم في التنقل يتم عبر أزرار CarouselPrevious و CarouselNext
   return (
     <div className="min-h-screen bg-white">
       <BackButton />
@@ -404,141 +404,105 @@ const CarRentalLanding = () => {
       </nav>
 
       {/* السلايدر الرئيسي */}
-      <section className="relative h-[90vh] overflow-hidden">
-        {/* الخلفيات */}
-        <div className="absolute inset-0">
-          {heroSlides.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={`absolute inset-0 transition-all duration-1000 ${
-                index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
-              }`}
-            >
-              <img 
-                src={slide.image}
-                alt={slide.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
-            </div>
-          ))}
-        </div>
+      <section className="relative h-[70vh] sm:h-[75vh] md:h-[85vh] overflow-hidden">
+        <Carousel
+          opts={{ loop: true }}
+          plugins={[Autoplay({ delay: 4000, stopOnInteraction: true, stopOnMouseEnter: true })]}
+          setApi={setCarouselApi}
+          className="h-full"
+        >
+          <CarouselContent className="h-full">
+            {heroSlides.map((slide) => (
+              <CarouselItem key={slide.id} className="h-full">
+                <div className="relative h-full">
+                  <img
+                    src={slide.image}
+                    alt={`سلايدر: ${slide.title}`}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
 
-        {/* المحتوى */}
-        <div className="relative z-20 h-full flex items-center">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl animate-fade-in">
-              <div className="text-white space-y-6">
-                <Badge className="bg-blue-600/90 text-white border-0 mb-4">
-                  سيارات فاخرة
-                </Badge>
-                
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                  {heroSlides[currentSlide].title}
-                </h1>
-                
-                <h2 className="text-xl md:text-2xl lg:text-3xl text-blue-200 font-medium">
-                  {heroSlides[currentSlide].subtitle}
-                </h2>
-                
-                <p className="text-lg md:text-xl text-gray-200 max-w-2xl">
-                  {heroSlides[currentSlide].description}
-                </p>
+                  <div className="absolute inset-0 z-10 flex items-center">
+                    <div className="container mx-auto px-4">
+                      <div className="max-w-4xl animate-fade-in">
+                        <div className="text-white space-y-6">
+                          <Badge className="bg-blue-600/90 text-white border-0 mb-4">سيارات فاخرة</Badge>
+                          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">{slide.title}</h1>
+                          <h2 className="text-xl md:text-2xl lg:text-3xl text-blue-200 font-medium">{slide.subtitle}</h2>
+                          <p className="text-lg md:text-xl text-gray-200 max-w-2xl">{slide.description}</p>
 
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <Button 
-                    size="lg" 
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-all text-lg px-8 py-6 shadow-2xl"
-                    asChild
-                  >
-                    <a href="/car-booking">
-                      <Car className="w-6 h-6 ml-2" />
-                      {heroSlides[currentSlide].cta}
-                    </a>
-                  </Button>
-                  
-                  <Button 
-                    size="lg" 
-                    variant="outline"
-                    className="border-2 border-white/80 text-white hover:bg-white hover:text-slate-900 transition-all text-lg px-8 py-6 backdrop-blur-sm"
-                  >
-                    <Play className="w-6 h-6 ml-2" />
-                    شاهد الفيديو
-                  </Button>
-                </div>
+                          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                            <Button size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:scale-105 transition-all text-lg px-8 py-6 shadow-2xl" asChild>
+                              <a href="/car-booking">
+                                <Car className="w-6 h-6 ml-2" />
+                                {slide.cta}
+                              </a>
+                            </Button>
+                            <Button size="lg" variant="outline" className="border-2 border-white/80 text-white hover:bg-white hover:text-slate-900 transition-all text-lg px-8 py-6 backdrop-blur-sm">
+                              <Play className="w-6 h-6 ml-2" />
+                              شاهد الفيديو
+                            </Button>
+                          </div>
 
-                {/* شريط البحث السريع */}
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mt-8 border border-white/20">
-                  <h3 className="text-lg font-semibold mb-4">ابحث عن سيارتك المثالية</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-sm mb-2">مكان الاستلام</label>
-                      <div className="relative">
-                        <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                        <input 
-                          type="text" 
-                          placeholder="اختر المدينة"
-                          className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white placeholder-gray-300"
-                        />
+                          {/* شريط البحث السريع */}
+                          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mt-8 border border-white/20">
+                            <h3 className="text-lg font-semibold mb-4">ابحث عن سيارتك المثالية</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                              <div>
+                                <label className="block text-sm mb-2">مكان الاستلام</label>
+                                <div className="relative">
+                                  <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-300" />
+                                  <input
+                                    type="text"
+                                    placeholder="اختر المدينة"
+                                    className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white placeholder-gray-300"
+                                  />
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm mb-2">تاريخ الاستلام</label>
+                                <div className="relative">
+                                  <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-300" />
+                                  <input type="date" className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white" />
+                                </div>
+                              </div>
+                              <div>
+                                <label className="block text-sm mb-2">تاريخ الإرجاع</label>
+                                <div className="relative">
+                                  <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-300" />
+                                  <input type="date" className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white" />
+                                </div>
+                              </div>
+                              <div className="flex items-end">
+                                <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3">
+                                  <Search className="w-5 h-5 ml-2" />
+                                  ابحث
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm mb-2">تاريخ الاستلام</label>
-                      <div className="relative">
-                        <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                        <input 
-                          type="date" 
-                          className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm mb-2">تاريخ الإرجاع</label>
-                      <div className="relative">
-                        <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                        <input 
-                          type="date" 
-                          className="w-full bg-white/20 border border-white/30 rounded-lg px-10 py-3 text-white"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-end">
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3">
-                        <Search className="w-5 h-5 ml-2" />
-                        ابحث
-                      </Button>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
 
-        {/* أزرار التنقل */}
-        <button 
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
-        >
-          <ArrowLeft className="w-6 h-6" />
-        </button>
-        
-        <button 
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
-        >
-          <ArrowRight className="w-6 h-6" />
-        </button>
+          <CarouselPrevious className="left-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30" />
+          <CarouselNext className="right-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30" />
+        </Carousel>
 
         {/* مؤشرات السلايدر */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3">
-          {heroSlides.map((_, index) => (
+          {heroSlides.map((_, i) => (
             <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                index === currentSlide ? 'bg-white scale-125' : 'bg-white/50'
-              }`}
+              key={i}
+              onClick={() => carouselApi?.scrollTo(i)}
+              aria-label={`اذهب إلى الشريحة ${i + 1}`}
+              className={`w-3 h-3 rounded-full transition-all ${i === selectedIndex ? 'bg-white scale-125' : 'bg-white/50'}`}
             />
           ))}
         </div>
