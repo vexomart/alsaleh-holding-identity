@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { 
-  Palette, Sparkles, ChevronRight, CheckCircle, PenTool, Megaphone, 
+  Palette, Sparkles, ChevronLeft, CheckCircle, PenTool, Megaphone, 
   Share2, Printer, MonitorSmartphone, Layers, Clock, TrendingUp, 
   Users, Award, Eye, Heart, Zap, Target, Lightbulb, Brush, Rocket,
-  Star, Globe, Building2, Briefcase, Camera, Paintbrush, Smartphone
+  Star, Globe, Building2, Briefcase, Camera, Paintbrush, Smartphone,
+  ArrowLeft, Play, Pause, MousePointer2, Wand2, Crown, Gem, Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -224,11 +225,11 @@ const RTLDesignSolutionsSection = () => {
                 variant={activeFilter === filter.id ? "default" : "outline"}
                 size="sm"
                 onClick={() => setActiveFilter(filter.id)}
-                className="flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                className="flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 dir="rtl"
               >
+                <IconComp className="w-4 h-4 transition-transform duration-300 hover:rotate-12" />
                 <span>{filter.label}</span>
-                <IconComp className="w-4 h-4" />
               </Button>
             );
           })}
@@ -279,12 +280,12 @@ const RTLDesignSolutionsSection = () => {
                   <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full bg-gradient-to-tr from-accent/20 to-secondary/20 blur-2xl transition-all duration-700 group-hover:scale-125" />
                 </div>
 
-                {/* أيقونة مع تأثيرات محسنة */}
+                {/* أيقونة متحركة مع تأثيرات محسنة */}
                 <div className="absolute top-4 right-4 z-20">
                   <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary-glow rounded-xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="relative inline-flex items-center justify-center w-14 h-14 rounded-xl bg-background/90 border-2 border-primary/20 shadow-lg backdrop-blur-sm group-hover:scale-110 transition-transform">
-                      <IconComp className="w-7 h-7 text-primary animate-pulse" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary-glow rounded-xl blur-lg opacity-50 group-hover:opacity-100 transition-all duration-500 animate-pulse"></div>
+                    <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-background/95 border-2 border-primary/30 shadow-xl backdrop-blur-md group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
+                      <IconComp className="w-8 h-8 text-primary transition-all duration-500 group-hover:scale-110 animate-bounce" style={{ animationDuration: '2s' }} />
                     </div>
                   </div>
                 </div>
@@ -362,7 +363,7 @@ const RTLDesignSolutionsSection = () => {
                   <div className="pt-2">
                     <Button asChild className="w-full group bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary transition-all duration-300" dir="rtl">
                       <Link to={`/design-solutions/${cat.slug}`} aria-label={`استكشاف قسم ${cat.title}`}>
-                        <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                        <ChevronLeft className="w-4 h-4 ml-2 transition-transform group-hover:-translate-x-1" />
                         استكشف القسم
                         <Eye className="w-4 h-4 mr-2" />
                       </Link>
@@ -455,14 +456,14 @@ const RTLDesignSolutionsSection = () => {
               rel="noopener noreferrer"
             >
               <Button size="lg" className="px-12 py-4 text-lg bg-gradient-to-r from-success to-success/80 hover:from-success/80 hover:to-success transition-all duration-300 group" dir="rtl">
-                <ChevronRight className="w-5 h-5 ml-3 transition-transform group-hover:translate-x-1" />
+                <ChevronLeft className="w-5 h-5 ml-3 transition-transform group-hover:-translate-x-1" />
                 تواصل عبر واتساب
                 <Heart className="w-6 h-6 mr-3 animate-pulse" />
               </Button>
             </a>
             <Button asChild size="lg" variant="outline" className="px-12 py-4 text-lg border-2 border-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 group" dir="rtl">
               <Link to="/book-consultation">
-                <ChevronRight className="w-5 h-5 ml-3 transition-transform group-hover:translate-x-1" />
+                <ChevronLeft className="w-5 h-5 ml-3 transition-transform group-hover:-translate-x-1" />
                 احجز استشارة مجانية
                 <Users className="w-6 h-6 mr-3" />
               </Link>
