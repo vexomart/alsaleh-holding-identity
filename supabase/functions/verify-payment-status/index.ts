@@ -120,8 +120,9 @@ serve(async (req) => {
       }
     }
 
-    // Update transaction status if changed
-    if (newStatus !== transaction.status) {
+    // Update transaction status if changed and send email notifications
+    const statusChanged = newStatus !== transaction.status;
+    if (statusChanged) {
       const { error: updateError } = await supabaseClient
         .from('payment_transactions')
         .update({ 
@@ -132,6 +133,67 @@ serve(async (req) => {
 
       if (updateError) {
         console.error('Error updating transaction:', updateError);
+      } else {
+        try {
+          // Prepare email payload in Arabic based on status
+          const to = transaction.customer_email as string | null;
+          if (to) {
+            const isPaid = newStatus === 'PAID' || newStatus === 'COMPLETED';
+            const subject = isPaid
+              ? `تم استلام دفعتك بنجاح`
+              : `تعذر إتمام عملية الدفع`;
+            const amountStr = `${transaction.amount} ${transaction.currency || 'SAR'}`;
+            const trxNo = transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.tamara_order_id || transaction.stc_pay_reference || transactionId;
+
+            const html = isPaid
+              ? `
+                <div dir="rtl" style="font-family:Tahoma,Arial,sans-serif">
+                  <h2>تم الدفع بنجاح ✅</h2>
+                  <p>شكرًا لك ${transaction.customer_name || ''}، تم استلام دفعتك ومعالجة الطلب جاري الآن.</p>
+                  <ul>
+                    <li>العرض: ${transaction.offer_title || ''}</li>
+                    <li>المبلغ: <b>${amountStr}</b></li>
+                    <li>رقم المعاملة: <code>${trxNo}</code></li>
+                    <li>طريقة الدفع: ${transaction.payment_method || ''}</li>
+                  </ul>
+                  <p>سيتواصل معك فريق العمل خلال 24 ساعة لإتمام الإجراءات.</p>
+                  <p style="color:#666">فريق علي الشهرى القابضة</p>
+                </div>
+              `
+              : `
+                <div dir="rtl" style="font-family:Tahoma,Arial,sans-serif">
+                  <h2>لم تكتمل عملية الدفع ❌</h2>
+                  <p>عذرًا ${transaction.customer_name || ''}، لم تكتمل عملية الدفع الخاصة بك.</p>
+                  <ul>
+                    <li>العرض: ${transaction.offer_title || ''}</li>
+                    <li>المبلغ: <b>${amountStr}</b></li>
+                    <li>الحالة: ${newStatus}</li>
+                    <li>رقم المرجع: <code>${trxNo}</code></li>
+                  </ul>
+                  <p>يمكنك إعادة المحاولة من صفحة العروض أو التواصل معنا للمساعدة.</p>
+                  <p style="color:#666">الدعم: info@alialshehriholding.com — 0555812567</p>
+                </div>
+              `;
+
+            // Send email in background when possible (non-blocking), otherwise send inline
+            // @ts-ignore EdgeRuntime may be available in Supabase Edge Functions
+            // deno-lint-ignore no-explicit-any
+            const ER: any = (globalThis as any).EdgeRuntime;
+            const sendPromise = resend.emails.send({
+              from: 'Ali Holding <onboarding@resend.dev>',
+              to: [to],
+              subject,
+              html,
+            }).then((res) => console.log('Email sent:', res)).catch((e) => console.error('Email error:', e));
+            if (ER && typeof ER.waitUntil === 'function') {
+              ER.waitUntil(sendPromise);
+            } else {
+              await sendPromise;
+            }
+          }
+        } catch (e) {
+          console.error('Error preparing/sending email:', e);
+        }
       }
     }
 

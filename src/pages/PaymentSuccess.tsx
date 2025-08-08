@@ -18,7 +18,16 @@ const PaymentSuccess = () => {
   const checkPaymentStatus = async () => {
     try {
       // Get transaction details from URL parameters
-      const chargeId = searchParams.get("tap_id") || searchParams.get("paylink_id") || searchParams.get("tamara_id") || searchParams.get("stc_id");
+      const chargeId =
+        // Direct gateway params
+        searchParams.get("tap_id") ||
+        searchParams.get("paylink_id") ||
+        searchParams.get("tamara_id") ||
+        searchParams.get("stc_id") ||
+        // Paylink commonly returns transactionNo
+        searchParams.get("transactionNo") ||
+        searchParams.get("transaction_no") ||
+        searchParams.get("transaction");
       const amount = searchParams.get("amount") || searchParams.get("amt");
       const currency = searchParams.get("currency") || searchParams.get("curr") || "SAR";
       
