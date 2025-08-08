@@ -87,8 +87,10 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailResponse = await resend.emails.send({
-      from: "الصالح القابضة <noreply@alsalehholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: [to],
+      bcc: ["info@alialshehriholding.com"],
+      reply_to: "info@alialshehriholding.com",
       subject,
       html,
     });

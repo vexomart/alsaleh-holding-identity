@@ -180,8 +180,10 @@ serve(async (req) => {
             // deno-lint-ignore no-explicit-any
             const ER: any = (globalThis as any).EdgeRuntime;
             const sendPromise = resend.emails.send({
-              from: 'Ali Holding <onboarding@resend.dev>',
+              from: 'Ali AlShehri Holding <info@alialshehriholding.com>',
               to: [to],
+              bcc: ['info@alialshehriholding.com'],
+              reply_to: 'info@alialshehriholding.com',
               subject,
               html,
             }).then((res) => console.log('Email sent:', res)).catch((e) => console.error('Email error:', e));
