@@ -783,15 +783,16 @@ export default function EnhancedDesignCategory() {
             {/* Services Tab */}
             <TabsContent value="services" className="space-y-8">
               {/* Filters and Search */}
-              <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="flex flex-col md:flex-row gap-4 items-center justify-between" dir="rtl">
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                     <Input
                       placeholder="ابحث في الخدمات..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pr-10 w-64"
+                      className="pl-10 w-64"
+                      dir="rtl"
                     />
                   </div>
                   
