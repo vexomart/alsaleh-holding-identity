@@ -15,55 +15,84 @@ const PaymentSuccess = () => {
   const [paymentStatus, setPaymentStatus] = useState<'checking' | 'success' | 'pending' | 'failed'>('checking');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const checkPaymentStatus = async () => {
-      try {
-        // Get transaction details from URL parameters
-        const chargeId = searchParams.get("tap_id");
-        const amount = searchParams.get("amount") || searchParams.get("amt");
-        const currency = searchParams.get("currency") || searchParams.get("curr") || "SAR";
-        
-        if (chargeId) {
-          setTransactionDetails({
-            chargeId,
-            amount,
-            currency,
-            timestamp: new Date().toISOString(),
-          });
+  const checkPaymentStatus = async () => {
+    try {
+      // Get transaction details from URL parameters
+      const chargeId = searchParams.get("tap_id") || searchParams.get("paylink_id") || searchParams.get("tamara_id") || searchParams.get("stc_id");
+      const amount = searchParams.get("amount") || searchParams.get("amt");
+      const currency = searchParams.get("currency") || searchParams.get("curr") || "SAR";
+      
+      if (chargeId) {
+        setTransactionDetails({
+          chargeId,
+          amount,
+          currency,
+          timestamp: new Date().toISOString(),
+        });
 
-          // التحقق من حالة المعاملة في قاعدة البيانات
-          const { data: transaction, error } = await supabase
-            .from('payment_transactions')
-            .select('*')
-            .or(`tap_charge_id.eq.${chargeId},paylink_transaction_no.eq.${chargeId}`)
-            .single();
+        // التحقق من حالة المعاملة في قاعدة البيانات
+        const { data: transaction, error } = await supabase
+          .from('payment_transactions')
+          .select('*')
+          .or(`tap_charge_id.eq.${chargeId},paylink_transaction_no.eq.${chargeId},tamara_order_id.eq.${chargeId},stc_pay_reference.eq.${chargeId}`)
+          .single();
 
-          if (error) {
-            console.error('Error fetching transaction:', error);
-            setPaymentStatus('failed');
-          } else if (transaction) {
-            // التحقق من حالة المعاملة
-            if (transaction.status === 'PAID' || transaction.status === 'COMPLETED') {
-              setPaymentStatus('success');
-            } else if (transaction.status === 'INITIATED' || transaction.status === 'PENDING') {
-              setPaymentStatus('pending');
-            } else {
-              setPaymentStatus('failed');
-            }
+        if (error) {
+          console.error('Error fetching transaction:', error);
+          setPaymentStatus('failed');
+        } else if (transaction) {
+          setTransactionDetails(transaction);
+          
+          // إذا كانت الحالة لا تزال pending أو initiated، تحقق من الحالة الفعلية
+          if (transaction.status === 'INITIATED' || transaction.status === 'PENDING') {
+            await verifyPaymentWithProvider(transaction.id);
+          } else if (transaction.status === 'PAID' || transaction.status === 'COMPLETED') {
+            setPaymentStatus('success');
           } else {
-            setPaymentStatus('pending');
+            setPaymentStatus('failed');
           }
         } else {
-          setPaymentStatus('failed');
+          setPaymentStatus('pending');
         }
-      } catch (error) {
-        console.error('Error checking payment status:', error);
+      } else {
         setPaymentStatus('failed');
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+      setPaymentStatus('failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const verifyPaymentWithProvider = async (transactionId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-payment-status', {
+        body: { transactionId }
+      });
+
+      if (error) {
+        console.error('Error verifying payment:', error);
+        setPaymentStatus('pending');
+        return;
+      }
+
+      if (data.status === 'PAID' || data.status === 'COMPLETED') {
+        setPaymentStatus('success');
+        setTransactionDetails(prev => prev ? { ...prev, status: data.status } : null);
+      } else if (data.status === 'FAILED') {
+        setPaymentStatus('failed');
+        setTransactionDetails(prev => prev ? { ...prev, status: data.status } : null);
+      } else {
+        setPaymentStatus('pending');
+      }
+    } catch (error) {
+      console.error('Error verifying payment status:', error);
+      setPaymentStatus('pending');
+    }
+  };
+
+  useEffect(() => {
     checkPaymentStatus();
   }, [searchParams]);
 
@@ -210,10 +239,10 @@ const PaymentSuccess = () => {
                     العودة للرئيسية
                   </Button>
                   <Button 
-                    onClick={() => window.location.reload()}
+                    onClick={() => checkPaymentStatus()}
                     className="flex items-center gap-2"
                   >
-                    تحديث الصفحة
+                    التحقق من حالة الدفع
                   </Button>
                 </div>
               </CardContent>
