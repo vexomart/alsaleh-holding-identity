@@ -83,6 +83,10 @@ import ContactUs from "./pages/car-rental/ContactUs";
 import CarRentalFAQ from "./pages/car-rental/FAQ";
 import CarRentalTerms from "./pages/car-rental/Terms";
 import CarRentalPrivacy from "./pages/car-rental/Privacy";
+import CarRentalUserGuide from "./pages/car-rental/UserGuide";
+import CarRentalInsurancePolicy from "./pages/car-rental/InsurancePolicy";
+import CarRentalCompanyNews from "./pages/car-rental/CompanyNews";
+import CarRentalServices from "./pages/car-rental/Services";
 import CarFleet from "./pages/CarFleet";
 import CarBooking from "./pages/CarBooking";
 
@@ -185,6 +189,10 @@ const App = () => {
               <Route path="/car-rental/faq" element={<CarRentalFAQ />} />
               <Route path="/car-rental/terms" element={<CarRentalTerms />} />
               <Route path="/car-rental/privacy" element={<CarRentalPrivacy />} />
+              <Route path="/car-rental/guide" element={<CarRentalUserGuide />} />
+              <Route path="/car-rental/insurance" element={<CarRentalInsurancePolicy />} />
+              <Route path="/car-rental/news" element={<CarRentalCompanyNews />} />
+              <Route path="/car-rental/services" element={<CarRentalServices />} />
               <Route path="/car-rental/careers" element={<CareersPage />} />
               
               <Route path="/car-fleet" element={<CarFleet />} />
