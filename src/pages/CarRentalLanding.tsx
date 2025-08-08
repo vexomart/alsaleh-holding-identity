@@ -952,166 +952,262 @@ const CarRentalLanding = () => {
         </div>
       </section>
 
-      {/* الفوتر */}
-      <footer className="bg-slate-900 text-white">
-        <div className="container mx-auto px-4 py-16">
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
-            {/* معلومات الشركة */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <Car className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold">كار رنت برو</h3>
-                  <p className="text-xs text-slate-400">Car Rent Pro</p>
-                </div>
+      {/* الفوتر المطور */}
+      <footer className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white pt-16 pb-8">
+        <div className="container mx-auto px-4">
+          {/* الإحصائيات العلوية */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 text-center">
+            <div className="group">
+              <div className="flex flex-col items-center">
+                <Award className="w-12 h-12 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
+                <div className="text-3xl font-bold text-white mb-2">+15</div>
+                <div className="text-slate-400">جائزة</div>
+                <div className="text-xs text-slate-500 mt-1">جوائز التميز</div>
               </div>
-              <p className="text-slate-300 leading-relaxed">
-                شركة رائدة في تأجير السيارات بالمملكة العربية السعودية، نقدم خدمات متميزة وأسطول حديث لضمان راحة وأمان عملائنا.
+            </div>
+            <div className="group">
+              <div className="flex flex-col items-center">
+                <Star className="w-12 h-12 text-yellow-400 mb-4 group-hover:scale-110 transition-transform" />
+                <div className="text-3xl font-bold text-white mb-2">4.9/5</div>
+                <div className="text-slate-400">تقييم العملاء</div>
+                <div className="text-xs text-slate-500 mt-1">تقييم العملاء</div>
+              </div>
+            </div>
+            <div className="group">
+              <div className="flex flex-col items-center">
+                <Users className="w-12 h-12 text-green-400 mb-4 group-hover:scale-110 transition-transform" />
+                <div className="text-3xl font-bold text-white mb-2">+10,000</div>
+                <div className="text-slate-400">عميل</div>
+                <div className="text-xs text-slate-500 mt-1">عميل راضٍ</div>
+              </div>
+            </div>
+            <div className="group">
+              <div className="flex flex-col items-center">
+                <Car className="w-12 h-12 text-purple-400 mb-4 group-hover:scale-110 transition-transform" />
+                <div className="text-3xl font-bold text-white mb-2">+500</div>
+                <div className="text-slate-400">سيارة</div>
+                <div className="text-xs text-slate-500 mt-1">أسطول متنوع</div>
+              </div>
+            </div>
+          </div>
+
+          {/* المحتوى الرئيسي */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            {/* الدعم والمساعدة */}
+            <div>
+              <h3 className="text-xl font-bold mb-6 text-white">الدعم والمساعدة</h3>
+              <ul className="space-y-3">
+                <li>
+                  <a href="/car-rental/guide" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    دليل العميل
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/faq" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    الأسئلة الشائعة
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/insurance" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    سياسة التأمين
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/terms" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    الشروط والأحكام
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* خدماتنا */}
+            <div>
+              <h3 className="text-xl font-bold mb-6 text-white">خدماتنا</h3>
+              <ul className="space-y-3">
+                <li>
+                  <a href="/car-rental/services" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    تأجير يومي
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/services" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    تأجير شهري
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/services/luxury" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    سيارات فاخرة
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/services/economy" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    سيارات اقتصادية
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/services" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    خدمة التوصيل
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/services" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    سائق خاص
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* روابط سريعة */}
+            <div>
+              <h3 className="text-xl font-bold mb-6 text-white">روابط سريعة</h3>
+              <ul className="space-y-3">
+                <li>
+                  <a href="/car-rental" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    الرئيسية
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-fleet" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    أسطول السيارات
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-booking" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    احجز الآن
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/about" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    العروض الحالية
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/about" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    من نحن
+                  </a>
+                </li>
+                <li>
+                  <a href="/car-rental/contact" className="text-slate-300 hover:text-blue-400 transition-colors flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    تواصل معنا
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* تأجير السيارات - معلومات الاتصال */}
+            <div>
+              <h3 className="text-xl font-bold mb-6 text-white">تأجير السيارات</h3>
+              <div className="text-xs text-slate-400 mb-4">على الشهادة الذهبية</div>
+              
+              <p className="text-slate-300 text-sm mb-6 leading-relaxed">
+                نوفر خدمات تأجير السيارات بأعلى معايير الجودة والأمان، مع أسطول حديث ومتنوع يلبي جميع احتياجاتك.
               </p>
-              <div className="flex gap-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
-                  <Globe className="w-5 h-5" />
-                </div>
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
-                  <Mail className="w-5 h-5" />
-                </div>
-              </div>
-            </div>
-            
-            {/* الخدمات */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-blue-400">خدماتنا</h4>
-              <ul className="space-y-3 text-slate-300">
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  تأجير يومي
-                </a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  تأجير شهري
-                </a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  سيارات الأعراس
-                </a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  النقل التنفيذي
-                </a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  رحلات المطار
-                </a></li>
-              </ul>
-            </div>
-            
-            {/* معلومات مهمة */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-blue-400">معلومات مهمة</h4>
-              <ul className="space-y-3 text-slate-300">
-                <li><a href="/car-rental/terms" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  شروط الإيجار
-                </a></li>
-                <li><a href="/car-rental/privacy" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  سياسة الخصوصية
-                </a></li>
-                <li><a href="/car-rental/faq" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  أسئلة شائعة
-                </a></li>
-                <li><a href="/car-rental/guide" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  دليل العميل
-                </a></li>
-                <li><a href="/car-rental/insurance" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  سياسة التأمين
-                </a></li>
-              </ul>
-            </div>
-            
-            {/* التوظيف والصفحات */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-blue-400">الشركة</h4>
-              <ul className="space-y-3 text-slate-300">
-                <li><a href="/car-rental/about" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  من نحن
-                </a></li>
-                <li><a href="/car-rental/careers" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  فرص العمل
-                </a></li>
-                <li><a href="/car-rental/news" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  أخبار الشركة
-                </a></li>
-                <li><a href="/car-rental/partners" className="hover:text-blue-400 transition-colors flex items-center gap-2">
-                  <ChevronRight className="w-4 h-4" />
-                  شركاؤنا
-                </a></li>
-              </ul>
-            </div>
-            
-            {/* تواصل معنا */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-blue-400">تواصل معنا</h4>
-              <div className="space-y-4 text-slate-300">
+
+              <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
                     <Phone className="w-4 h-4 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-slate-400">اتصل بنا</p>
-                    <p className="font-medium">0555812567</p>
+                    <div className="text-white font-medium">0555812567</div>
+                    <div className="text-xs text-slate-400">هاتف</div>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
                     <Mail className="w-4 h-4 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-slate-400">راسلنا</p>
-                    <p className="font-medium">info@alialshehriholding.com</p>
+                    <div className="text-white font-medium text-sm">rental@alialshehriholding.com</div>
+                    <div className="text-xs text-slate-400">بريد إلكتروني</div>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
                     <MapPin className="w-4 h-4 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-slate-400">العنوان</p>
-                    <p className="font-medium">الرياض، المملكة العربية السعودية</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                    <Clock className="w-4 h-4 text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-400">ساعات العمل</p>
-                    <p className="font-medium">متاح 24/7</p>
+                    <div className="text-white font-medium text-sm">الرياض، حي الملز، شارع الأمير محمد بن عبدالعزيز</div>
+                    <div className="text-xs text-slate-400">عنوان</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
-          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm">
-            <p>&copy; 2024 كار رنت برو. جميع الحقوق محفوظة.</p>
-            <div className="flex items-center gap-6 mt-4 md:mt-0">
-              <a href="/car-rental/terms" className="hover:text-blue-400 transition-colors">الشروط والأحكام</a>
-              <a href="/car-rental/privacy" className="hover:text-blue-400 transition-colors">سياسة الخصوصية</a>
-              <a href="/car-rental/contact" className="hover:text-blue-400 transition-colors">اتصل بنا</a>
+
+          {/* ساعات العمل */}
+          <div className="bg-slate-800/50 rounded-2xl p-6 mb-8">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
+                <Clock className="w-6 h-6 text-blue-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white">ساعات العمل</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+              <div className="flex justify-between items-center py-2 border-b border-slate-700">
+                <span className="text-slate-300">الأحد - الخميس</span>
+                <span className="text-white font-medium">8:00 ص - 10:00 م</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-slate-700">
+                <span className="text-slate-300">الجمعة</span>
+                <span className="text-white font-medium">2:00 م - 10:00 م</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-slate-700">
+                <span className="text-slate-300">السبت</span>
+                <span className="text-white font-medium">8:00 ص - 10:00 م</span>
+              </div>
+              <div className="md:col-span-3 text-center">
+                <div className="inline-flex items-center gap-2 bg-red-500/20 text-red-400 px-4 py-2 rounded-lg">
+                  <Clock className="w-4 h-4" />
+                  <span className="font-medium">خدمة الطوارئ</span>
+                  <span className="text-white">24/7 متاح</span>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* أسفل الصفحة */}
+          <div className="border-t border-slate-700 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-slate-400 text-sm mb-4 md:mb-0">
+                &copy; 2024 كار رنت برو. جميع الحقوق محفوظة.
+              </p>
+              <div className="flex items-center gap-6 text-sm">
+                <a href="/car-rental/terms" className="text-slate-400 hover:text-blue-400 transition-colors">الشروط والأحكام</a>
+                <a href="/car-rental/privacy" className="text-slate-400 hover:text-blue-400 transition-colors">سياسة الخصوصية</a>
+                <a href="/car-rental/contact" className="text-slate-400 hover:text-blue-400 transition-colors">اتصل بنا</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* زر الاتصال الثابت */}
+        <div className="fixed bottom-8 left-8 z-50">
+          <a 
+            href="tel:0555812567"
+            className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all duration-300 animate-pulse"
+          >
+            <Phone className="w-8 h-8 text-white" />
+          </a>
         </div>
       </footer>
     </div>
