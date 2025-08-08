@@ -10,7 +10,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import heroBg from "@/assets/hero-bg.jpg";
+import brandIdentityImg from "@/assets/brand-identity-service.jpg";
+import marketingDesignsImg from "@/assets/marketing-designs-service.jpg";
+import socialMediaImg from "@/assets/social-media-service.jpg";
+import printAdsImg from "@/assets/print-ads-service.jpg";
+import digitalDesignsImg from "@/assets/digital-designs-service.jpg";
+import customDesignsImg from "@/assets/custom-designs-service.jpg";
 import { Sparkles, CreditCard, Loader2, Lock, Calendar, Clock, ArrowRight, CheckCircle, Palette, Megaphone, MessageCircle, Printer, MonitorSmartphone, Wrench, Crown, IdCard, FileText, BookOpen, Package, Shirt, Gift, Edit3, Layout, Image, Layers, BadgeCheck, BarChart3, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -110,6 +115,17 @@ export default function DesignCategory() {
   const [appt, setAppt] = useState({ date: "", time: "", note: "" });
 
   const data = catalog[(slug as CatalogKey) || "brand-identity"];
+  
+  const serviceImages = {
+    "brand-identity": brandIdentityImg,
+    "marketing-designs": marketingDesignsImg,
+    "social-media": socialMediaImg,
+    "print-ads": printAdsImg,
+    "digital-designs": digitalDesignsImg,
+    "custom-designs": customDesignsImg,
+  } as const;
+  
+  const currentImage = serviceImages[(slug as CatalogKey) || "brand-identity"];
 
   const iconMap = {
     "brand-identity": Palette,
@@ -261,7 +277,7 @@ export default function DesignCategory() {
 
                   <AspectRatio ratio={16/9}>
                     <img
-                      src={heroBg}
+                      src={currentImage}
                       alt={`صورة خدمة ${it.name}`}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
