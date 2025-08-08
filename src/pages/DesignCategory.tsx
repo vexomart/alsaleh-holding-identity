@@ -376,6 +376,7 @@ export default function DesignCategory() {
                 </div>
               </Card>
               );
+            })}
           </div>
 
           {/* CTA */}
