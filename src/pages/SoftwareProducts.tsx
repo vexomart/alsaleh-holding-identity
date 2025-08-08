@@ -93,6 +93,8 @@ const SoftwareProducts = () => {
     });
 
     setIsLoading(true);
+    
+    console.log('بدء عملية الدفع:', methodId, productName);
 
     try {
       let functionName = '';
@@ -175,9 +177,13 @@ const SoftwareProducts = () => {
           throw new Error('طريقة دفع غير مدعومة');
       }
 
+      console.log('إرسال البيانات:', paymentData);
+      
       const { data, error } = await supabase.functions.invoke(functionName, {
         body: paymentData
       });
+      
+      console.log('استجابة الدفع:', data, error);
 
       if (error) {
         console.error('Payment error:', error);
@@ -209,6 +215,7 @@ const SoftwareProducts = () => {
         });
         
         // عرض صفحة الدفع داخل الموقع
+        console.log('فتح صفحة الدفع:', paymentUrl);
         setPaymentUrl(paymentUrl);
         setShowPaymentFrame(true);
       } else {
