@@ -133,7 +133,7 @@ const enhancedCatalog = {
       }
     ]
   },
-  "marketing-designs": {
+    "marketing-designs": {
     title: "التصاميم التسويقية",
     subtitle: "تصاميم تسويقية جذابة تضاعف تأثير حملاتك الإعلانية",
     description: "نصمم مواد تسويقية احترافية تجذب الانتباه وتحقق أهدافك التسويقية بكفاءة عالية.",
@@ -176,9 +176,65 @@ const enhancedCatalog = {
         rating: 4.8,
         reviews: 203,
         color: "from-cyan-400 to-blue-500"
+      },
+      {
+        name: "فلاير إعلاني مميز",
+        desc: "فلاير احترافي لحملاتك الإعلانية يجذب العملاء ويحقق أهدافك التسويقية",
+        price: 599,
+        originalPrice: 799,
+        delivery: "2-3 أيام",
+        complexity: "بسيط",
+        icon: Layout,
+        animationType: "pulse",
+        features: [
+          "تصميم جذاب وملفت للنظر",
+          "رسائل تسويقية واضحة",
+          "ألوان محترفة ومتناسقة",
+          "جاهز للطباعة والنشر الرقمي"
+        ],
+        includes: ["PDF", "PNG", "JPG"],
+        rating: 4.6,
+        reviews: 156,
+        color: "from-pink-400 to-red-500"
+      },
+      {
+        name: "كتالوج منتجات شامل",
+        desc: "كتالوج احترافي يعرض منتجاتك أو خدماتك بطريقة منظمة وجذابة",
+        price: 1299,
+        originalPrice: 1699,
+        delivery: "5-7 أيام",
+        complexity: "متقدم",
+        icon: BookOpen,
+        animationType: "spin",
+        features: [
+          "تصميم متعدد الصفحات",
+          "عرض منتجات منظم",
+          "معلومات شاملة وواضحة",
+          "تصميم قابل للطباعة والعرض الرقمي"
+        ],
+        includes: ["PDF", "AI", "InDesign"],
+        premium: true,
+        rating: 4.9,
+        reviews: 89,
+        color: "from-purple-500 to-indigo-600"
       }
     ],
-    testimonials: []
+    testimonials: [
+      {
+        name: "محمد العتيبي",
+        company: "شركة الإبداع التسويقي",
+        text: "تصاميم تسويقية رائعة ساعدتنا في زيادة المبيعات بنسبة 40%",
+        rating: 5,
+        avatar: "👨‍💼"
+      },
+      {
+        name: "نورا السعد",
+        company: "متجر الأناقة",
+        text: "كتالوج المنتجات فاق توقعاتي، تصميم احترافي وجذاب جداً",
+        rating: 5,
+        avatar: "👩‍💼"
+      }
+    ]
   },
   "social-media": {
     title: "تصاميم وسائل التواصل الاجتماعي",
@@ -202,8 +258,79 @@ const enhancedCatalog = {
       gradient: "from-pink-500 via-rose-500 to-red-500",
       headerBg: "bg-gradient-to-br from-accent/10 via-pink-50 to-rose-50 dark:from-accent/15 dark:via-slate-900 dark:to-slate-800",
     },
-    services: [],
-    testimonials: []
+    services: [
+      {
+        name: "منشورات السوشيال ميديا",
+        desc: "منشورات جذابة لجميع منصات التواصل الاجتماعي تزيد التفاعل والمتابعين",
+        price: 399,
+        originalPrice: 599,
+        delivery: "1-2 أيام",
+        complexity: "بسيط",
+        icon: Share2,
+        animationType: "bounce",
+        features: [
+          "تصميم لجميع المنصات",
+          "محتوى جذاب ومؤثر",
+          "ألوان وخطوط متناسقة",
+          "تصاميم ترندي وعصرية"
+        ],
+        includes: ["PNG", "JPG", "Stories", "Posts"],
+        popular: true,
+        rating: 4.8,
+        reviews: 342,
+        color: "from-purple-400 to-pink-500"
+      },
+      {
+        name: "أغلفة السوشيال ميديا",
+        desc: "أغلفة احترافية لحساباتك على جميع منصات التواصل الاجتماعي",
+        price: 699,
+        originalPrice: 999,
+        delivery: "2-3 أيام",
+        complexity: "متوسط",
+        icon: Image,
+        animationType: "pulse",
+        features: [
+          "تصميم لجميع المنصات",
+          "أحجام مناسبة لكل منصة",
+          "تصميم متجاوب وجذاب",
+          "ملفات عالية الجودة"
+        ],
+        includes: ["Facebook", "Twitter", "LinkedIn", "YouTube"],
+        rating: 4.7,
+        reviews: 198,
+        color: "from-blue-400 to-purple-500"
+      },
+      {
+        name: "قوالب القصص التفاعلية",
+        desc: "قوالب جاهزة للقصص على إنستغرام وسناب شات بتصاميم عصرية وجذابة",
+        price: 899,
+        originalPrice: 1299,
+        delivery: "3-4 أيام",
+        complexity: "متقدم",
+        icon: Smartphone,
+        animationType: "spin",
+        features: [
+          "قوالب متعددة الأشكال",
+          "تصاميم تفاعلية",
+          "سهولة التعديل والتخصيص",
+          "مناسبة للعلامات التجارية"
+        ],
+        includes: ["Instagram", "Snapchat", "WhatsApp", "PSD"],
+        premium: true,
+        rating: 4.9,
+        reviews: 156,
+        color: "from-gradient-to-r from-yellow-400 to-orange-500"
+      }
+    ],
+    testimonials: [
+      {
+        name: "سارة أحمد",
+        company: "مطعم الذوق الرفيع",
+        text: "تصاميم السوشيال ميديا زادت التفاعل مع حساباتنا بشكل ملحوظ",
+        rating: 5,
+        avatar: "👩‍💼"
+      }
+    ]
   },
   "print-ads": {
     title: "التصاميم الإعلانية المطبوعة",
@@ -227,8 +354,78 @@ const enhancedCatalog = {
       gradient: "from-orange-500 via-amber-500 to-yellow-500",
       headerBg: "bg-gradient-to-br from-secondary/10 via-orange-50 to-yellow-50 dark:from-secondary/15 dark:via-slate-900 dark:to-slate-800",
     },
-    services: [],
-    testimonials: []
+    services: [
+      {
+        name: "لوحة إعلانية كبيرة",
+        desc: "لوحة إعلانية احترافية للطرقات والشوارع بتصميم جذاب ومؤثر",
+        price: 1999,
+        originalPrice: 2599,
+        delivery: "5-7 أيام",
+        complexity: "متقدم",
+        icon: Layout,
+        animationType: "bounce",
+        features: [
+          "تصميم عالي الدقة للطباعة الكبيرة",
+          "رسائل واضحة ومؤثرة",
+          "ألوان زاهية وجذابة",
+          "مناسب للعرض الخارجي"
+        ],
+        includes: ["PDF", "AI", "EPS", "PNG"],
+        popular: true,
+        rating: 4.8,
+        reviews: 167,
+        color: "from-red-500 to-orange-600"
+      },
+      {
+        name: "إعلان صحيفة احترافي",
+        desc: "إعلان مطبوع للصحف والمجلات بتصميم أنيق ومحترف",
+        price: 799,
+        originalPrice: 1099,
+        delivery: "3-4 أيام",
+        complexity: "متوسط",
+        icon: FileText,
+        animationType: "pulse",
+        features: [
+          "تصميم مناسب للطباعة الصحفية",
+          "محتوى منظم وواضح",
+          "ألوان محافظة ومهنية",
+          "جودة طباعة عالية"
+        ],
+        includes: ["PDF", "AI", "PNG"],
+        rating: 4.6,
+        reviews: 134,
+        color: "from-blue-500 to-indigo-600"
+      },
+      {
+        name: "رول أب احترافي",
+        desc: "رول أب قابل للطي للمعارض والفعاليات بتصميم جذاب وعملي",
+        price: 699,
+        originalPrice: 999,
+        delivery: "4-5 أيام",
+        complexity: "متوسط",
+        icon: Image,
+        animationType: "spin",
+        features: [
+          "تصميم مناسب لأحجام الرول أب",
+          "معلومات منظمة وواضحة",
+          "تصميم جذاب للمعارض",
+          "جودة طباعة عالية"
+        ],
+        includes: ["PDF", "AI", "PNG", "مقاسات مختلفة"],
+        rating: 4.7,
+        reviews: 198,
+        color: "from-green-500 to-teal-600"
+      }
+    ],
+    testimonials: [
+      {
+        name: "خالد الراشد",
+        company: "شركة البناء المتطور",
+        text: "اللوحات الإعلانية التي صممتموها لنا جذبت انتباه العملاء بشكل كبير",
+        rating: 5,
+        avatar: "👨‍💼"
+      }
+    ]
   },
   "digital-designs": {
     title: "التصاميم الرقمية المتطورة",
@@ -252,8 +449,80 @@ const enhancedCatalog = {
       gradient: "from-indigo-500 via-purple-500 to-pink-500",
       headerBg: "bg-gradient-to-br from-purple-500/10 via-indigo-50 to-pink-50 dark:from-purple-500/15 dark:via-slate-900 dark:to-slate-800",
     },
-    services: [],
-    testimonials: []
+    services: [
+      {
+        name: "تصميم واجهة موقع إلكتروني",
+        desc: "تصميم واجهة موقع إلكتروني حديثة ومتجاوبة توفر تجربة مستخدم استثنائية",
+        price: 2999,
+        originalPrice: 3999,
+        delivery: "7-10 أيام",
+        complexity: "متقدم",
+        icon: MonitorSmartphone,
+        animationType: "bounce",
+        features: [
+          "تصميم متجاوب لجميع الأجهزة",
+          "واجهة مستخدم حديثة وجذابة",
+          "تجربة مستخدم محسنة",
+          "تصميم محسن لمحركات البحث"
+        ],
+        includes: ["Figma", "Adobe XD", "Sketch", "HTML/CSS"],
+        premium: true,
+        rating: 4.9,
+        reviews: 145,
+        color: "from-blue-500 to-purple-600"
+      },
+      {
+        name: "تصميم تطبيق جوال",
+        desc: "تصميم واجهة تطبيق جوال عصري وسهل الاستخدام",
+        price: 3999,
+        originalPrice: 5499,
+        delivery: "10-14 أيام",
+        complexity: "متقدم",
+        icon: Smartphone,
+        animationType: "pulse",
+        features: [
+          "تصميم لأنظمة iOS و Android",
+          "واجهات تفاعلية وحديثة",
+          "تجربة مستخدم متميزة",
+          "أيقونات وعناصر مخصصة"
+        ],
+        includes: ["Figma", "Adobe XD", "Prototypes", "Assets"],
+        premium: true,
+        rating: 5.0,
+        reviews: 89,
+        color: "from-purple-500 to-pink-600"
+      },
+      {
+        name: "بانر رقمي تفاعلي",
+        desc: "بانر رقمي متحرك وتفاعلي للمواقع والإعلانات الرقمية",
+        price: 899,
+        originalPrice: 1299,
+        delivery: "3-5 أيام",
+        complexity: "متوسط",
+        icon: Layout,
+        animationType: "spin",
+        features: [
+          "تصميم متحرك وجذاب",
+          "تحسين لسرعة التحميل",
+          "مقاسات متعددة للإعلانات",
+          "تفاعل مع المستخدم"
+        ],
+        includes: ["GIF", "HTML5", "CSS3", "JavaScript"],
+        popular: true,
+        rating: 4.7,
+        reviews: 234,
+        color: "from-green-500 to-blue-500"
+      }
+    ],
+    testimonials: [
+      {
+        name: "أحمد التميمي",
+        company: "شركة التقنية المتقدمة",
+        text: "تصميم الموقع الإلكتروني كان رائعاً ومتجاوباً مع جميع الأجهزة",
+        rating: 5,
+        avatar: "👨‍💻"
+      }
+    ]
   },
   "custom-designs": {
     title: "التصاميم المخصصة والفريدة",
@@ -277,8 +546,80 @@ const enhancedCatalog = {
       gradient: "from-violet-500 via-purple-500 to-fuchsia-500",
       headerBg: "bg-gradient-to-br from-violet-500/10 via-purple-50 to-fuchsia-50 dark:from-violet-500/15 dark:via-slate-900 dark:to-slate-800",
     },
-    services: [],
-    testimonials: []
+    services: [
+      {
+        name: "تصميم هدايا دعائية مخصصة",
+        desc: "تصميم هدايا دعائية فريدة ومخصصة تعكس شخصية علامتك التجارية",
+        price: 1499,
+        originalPrice: 1999,
+        delivery: "5-8 أيام",
+        complexity: "متقدم",
+        icon: Gift,
+        animationType: "bounce",
+        features: [
+          "تصميم حصري ومبتكر",
+          "مناسب لجميع أنواع الهدايا",
+          "تصميم يعكس الهوية التجارية",
+          "ملفات جاهزة للإنتاج"
+        ],
+        includes: ["AI", "PDF", "PNG", "استشارة مجانية"],
+        popular: true,
+        rating: 4.8,
+        reviews: 156,
+        color: "from-emerald-500 to-cyan-600"
+      },
+      {
+        name: "تصميم معرض أو حدث خاص",
+        desc: "تصميم شامل للمعارض والفعاليات بما يشمل الهوية البصرية والمواد الترويجية",
+        price: 4999,
+        originalPrice: 6999,
+        delivery: "2-3 أسابيع",
+        complexity: "معقد",
+        icon: Layout,
+        animationType: "pulse",
+        features: [
+          "تصميم هوية كاملة للفعالية",
+          "مواد ترويجية شاملة",
+          "تصميم أكشاك ومساحات",
+          "دليل تطبيق الهوية"
+        ],
+        includes: ["تصميم شامل", "دليل الاستخدام", "ملفات الإنتاج"],
+        premium: true,
+        rating: 5.0,
+        reviews: 67,
+        color: "from-purple-600 to-pink-600"
+      },
+      {
+        name: "مشروع تصميم خاص",
+        desc: "مشروع تصميم مخصص بالكامل حسب احتياجاتك ومتطلباتك الفريدة",
+        price: 2999,
+        originalPrice: 3999,
+        delivery: "حسب المشروع",
+        complexity: "متغير",
+        icon: Wand2,
+        animationType: "spin",
+        features: [
+          "استشارة مخصصة مجانية",
+          "تصميم حسب المواصفات",
+          "مرونة كاملة في التعديل",
+          "دعم مستمر للمشروع"
+        ],
+        includes: ["استشارة", "تصميم مخصص", "دعم مستمر"],
+        exclusive: true,
+        rating: 4.9,
+        reviews: 89,
+        color: "from-gradient-to-r from-yellow-400 to-orange-500"
+      }
+    ],
+    testimonials: [
+      {
+        name: "عبدالله المنصور",
+        company: "شركة الإبداع الخاص",
+        text: "تصميم المعرض كان استثنائياً وحقق لنا نجاحاً كبيراً في الفعالية",
+        rating: 5,
+        avatar: "👨‍💼"
+      }
+    ]
   }
 };
 
@@ -663,7 +1004,7 @@ const EnhancedDesignCategory = () => {
                         <TrendingUp className="w-3 h-3" />
                       </Badge>
                     )}
-                    {service.premium && (
+                    {(service as any).premium && (
                       <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs flex items-center gap-1" dir="rtl">
                         <span>مميز</span>
                         <Crown className="w-3 h-3" />
