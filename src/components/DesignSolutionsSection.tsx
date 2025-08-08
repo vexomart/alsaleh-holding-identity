@@ -61,7 +61,7 @@ const categories = [
 
 const whatsappNumber = "966555812567";
 
-const DesignSolutionsSection = () => {
+const EnhancedDesignSolutionsSection = () => {
   return (
     <section id="design-solutions" className="relative py-16 bg-gradient-to-br from-success/5 via-success/5 to-success/10 dark:from-success/10 dark:via-background dark:to-muted/10">
       <div className="container mx-auto px-6">
@@ -158,4 +158,4 @@ const DesignSolutionsSection = () => {
   );
 };
 
-export default DesignSolutionsSection;
+export default EnhancedDesignSolutionsSection;

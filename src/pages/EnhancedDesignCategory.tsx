@@ -267,10 +267,231 @@ const enhancedCatalog = {
       { step: 3, title: "مراجعة وتعديل", desc: "نراجع التصميم مع العميل ونعدل حسب الملاحظات" },
       { step: 4, title: "التسليم والدعم", desc: "نسلم الملفات وندعم في الاستخدام الأمثل" }
     ]
+  },
+  // Add other categories with similar enhancement
+  "social-media": {
+    title: "تصاميم وسائل التواصل الاجتماعي",
+    subtitle: "تواجد قوي وجذاب على كافة المنصات",
+    description: "نصمم محتوى بصري متميز لوسائل التواصل الاجتماعي يزيد من تفاعل جمهورك ويعزز حضورك الرقمي.",
+    hero: {
+      stats: [
+        { number: "1200+", label: "منشور مصمم" },
+        { number: "80%", label: "زيادة في التفاعل" },
+        { number: "12", label: "ساعة متوسط التسليم" }
+      ],
+      features: [
+        "تصاميم تفاعلية مبتكرة",
+        "محتوى مدروس لكل منصة",
+        "قوالب قابلة للتعديل",
+        "دعم جميع أحجام المنصات"
+      ]
+    },
+    accent: { 
+      headerBg: "bg-gradient-to-br from-violet-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", 
+      chip: "from-success to-success/80" 
+    },
+    services: [
+      { 
+        name: "تصميم المنشورات", 
+        desc: "قوالب جذابة ومتناسقة لجميع منصات التواصل الاجتماعي", 
+        price: 149, 
+        originalPrice: 200,
+        delivery: "24-48 ساعة", 
+        complexity: "بسيط",
+        features: [
+          "قوالب متعددة للاختيار", 
+          "أبعاد جميع المنصات", 
+          "ملفات قابلة للتعديل",
+          "محتوى جذاب ومدروس"
+        ],
+        includes: ["PNG", "JPG", "PSD"],
+        popular: true,
+        rating: 4.8,
+        reviews: 342
+      }
+    ],
+    testimonials: [
+      {
+        name: "خالد العمري",
+        company: "متجر الإلكترونيات الذكية",
+        text: "تفاعل متابعينا زاد 200% بعد استخدام تصاميمهم",
+        rating: 5,
+        avatar: "👨‍💼"
+      }
+    ],
+    process: [
+      { step: 1, title: "تحليل المنصة", desc: "ندرس خصائص كل منصة ومتطلباتها" },
+      { step: 2, title: "تصميم المحتوى", desc: "ننشئ تصاميم جذابة تناسب كل منصة" },
+      { step: 3, title: "التسليم", desc: "نسلم الملفات بجميع الأحجام المطلوبة" }
+    ]
+  },
+  "print-ads": {
+    title: "التصاميم الإعلانية المطبوعة",
+    subtitle: "تصاميم مطبوعة عالية الجودة للتأثير التقليدي الحديث",
+    description: "نصمم إعلانات مطبوعة مؤثرة وجذابة تحقق الهدف التسويقي وتترك انطباعاً قوياً لدى الجمهور.",
+    hero: {
+      stats: [
+        { number: "400+", label: "إعلان مطبوع" },
+        { number: "90%", label: "جودة الطباعة" },
+        { number: "5", label: "أيام متوسط التسليم" }
+      ],
+      features: [
+        "دقة عالية للطباعة",
+        "ألوان احترافية",
+        "تصاميم مؤثرة",
+        "مقاسات متعددة"
+      ]
+    },
+    accent: { 
+      headerBg: "bg-gradient-to-br from-amber-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", 
+      chip: "from-success to-success/80" 
+    },
+    services: [
+      { 
+        name: "اللوحات الطرقية", 
+        desc: "رسائل قوية على نطاق واسع تجذب الانتباه", 
+        price: 1899, 
+        originalPrice: 2500,
+        delivery: "1-2 أسبوع", 
+        complexity: "متقدم",
+        features: [
+          "أحجام متعددة", 
+          "موك أب واقعي", 
+          "ملفات جاهزة للطباعة",
+          "تصميم يجذب الانتباه"
+        ],
+        includes: ["PDF", "AI", "تصميم ثلاثي الأبعاد"],
+        rating: 4.9,
+        reviews: 67
+      }
+    ],
+    testimonials: [
+      {
+        name: "محمد الزهراني",
+        company: "شركة البناء المتقدم",
+        text: "لوحاتنا الإعلانية أصبحت تجذب عملاء أكثر",
+        rating: 5,
+        avatar: "👨‍💼"
+      }
+    ],
+    process: [
+      { step: 1, title: "دراسة الموقع", desc: "ندرس مكان وضع الإعلان" },
+      { step: 2, title: "التصميم", desc: "ننشئ تصميماً يناسب المساحة" },
+      { step: 3, title: "التسليم", desc: "نسلم ملفات جاهزة للطباعة" }
+    ]
+  },
+  "digital-designs": {
+    title: "التصاميم الرقمية",
+    subtitle: "حلول رقمية متوافقة مع جميع الأجهزة والمنصات",
+    description: "نصمم واجهات وتجارب رقمية استثنائية تجمع بين الجمال والوظائف العملية.",
+    hero: {
+      stats: [
+        { number: "200+", label: "واجهة مصممة" },
+        { number: "99%", label: "توافق الأجهزة" },
+        { number: "7", label: "أيام متوسط التسليم" }
+      ],
+      features: [
+        "تصميم متجاوب",
+        "تجربة مستخدم ممتازة",
+        "تحسين للأداء",
+        "تصميم حديث"
+      ]
+    },
+    accent: { 
+      headerBg: "bg-gradient-to-br from-primary/10 via-blue-50 to-indigo-50 dark:from-primary/15 dark:via-slate-900 dark:to-slate-800", 
+      chip: "from-success to-success/80" 
+    },
+    services: [
+      { 
+        name: "واجهات المواقع", 
+        desc: "واجهات احترافية وسريعة تحقق أهدافك", 
+        price: 3299, 
+        originalPrice: 4500,
+        delivery: "1-2 أسبوع", 
+        complexity: "متقدم",
+        features: [
+          "تصميم صفحات رئيسية", 
+          "نمط مكونات UI", 
+          "توافق مع الجوال",
+          "تحسين الأداء"
+        ],
+        includes: ["Figma", "HTML/CSS", "React Components"],
+        premium: true,
+        rating: 4.9,
+        reviews: 89
+      }
+    ],
+    testimonials: [
+      {
+        name: "عبدالله الشمري",
+        company: "متجر إلكتروني",
+        text: "الواجهة الجديدة زادت مبيعاتنا بنسبة 150%",
+        rating: 5,
+        avatar: "👨‍💼"
+      }
+    ],
+    process: [
+      { step: 1, title: "تحليل المتطلبات", desc: "نفهم احتياجاتك بدقة" },
+      { step: 2, title: "التصميم", desc: "ننشئ تصميماً متجاوباً" },
+      { step: 3, title: "التطوير", desc: "نحول التصميم لكود فعال" }
+    ]
+  },
+  "custom-designs": {
+    title: "التصاميم الخاصة",
+    subtitle: "حلول مخصصة تلبي احتياجاتك الفردية بكفاءة",
+    description: "نقدم حلول تصميم مخصصة وإبداعية لجميع احتياجاتك الخاصة.",
+    hero: {
+      stats: [
+        { number: "300+", label: "تصميم مخصص" },
+        { number: "100%", label: "حلول فريدة" },
+        { number: "5", label: "أيام متوسط التسليم" }
+      ],
+      features: [
+        "تصاميم فريدة",
+        "حلول إبداعية",
+        "جودة عالية",
+        "أسعار تنافسية"
+      ]
+    },
+    accent: { 
+      headerBg: "bg-gradient-to-br from-teal-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", 
+      chip: "from-success to-success/80" 
+    },
+    services: [
+      { 
+        name: "تصميم المنتجات والعلب", 
+        desc: "تغليف يزيد جاذبية المنتج ويميزه", 
+        price: 1999, 
+        originalPrice: 2800,
+        delivery: "1-2 أسبوع", 
+        complexity: "متقدم",
+        features: [
+          "تصميم ثلاثي الأبعاد", 
+          "مقترحات مواد", 
+          "ملفات جاهزة للطباعة",
+          "موك أب احترافي"
+        ],
+        includes: ["3D Design", "AI", "PDF"],
+        rating: 4.8,
+        reviews: 123
+      }
+    ],
+    testimonials: [
+      {
+        name: "فاطمة الدوسري",
+        company: "منتجات العناية الطبيعية",
+        text: "التصميم الجديد للعبوات زاد إقبال العملاء بشكل كبير",
+        rating: 5,
+        avatar: "👩‍💼"
+      }
+    ],
+    process: [
+      { step: 1, title: "الاستشارة", desc: "نفهم رؤيتك الخاصة" },
+      { step: 2, title: "التصميم المخصص", desc: "ننشئ حلولاً فريدة" },
+      { step: 3, title: "التسليم", desc: "نسلم مع ضمان الجودة" }
+    ]
   }
-}
-
-as const;
+} as const;
 
 type CatalogKey = keyof typeof enhancedCatalog;
 
@@ -339,8 +560,8 @@ export default function EnhancedDesignCategory() {
     const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          service.desc.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterType === 'all' || 
-                         (filterType === 'premium' && service.premium) ||
-                         (filterType === 'basic' && !service.premium);
+                         (filterType === 'premium' && (service as any).premium) ||
+                         (filterType === 'basic' && !(service as any).premium);
     return matchesSearch && matchesFilter;
   }) || [];
 
@@ -616,13 +837,13 @@ export default function EnhancedDesignCategory() {
                     
                     {/* Service badges */}
                     <div className="absolute top-4 right-4 flex flex-col gap-2 z-10">
-                      {service.popular && (
+                      {(service as any).popular && (
                         <Badge className="bg-yellow-500 text-black">
                           <Star className="w-3 h-3 ml-1" />
                           الأكثر طلباً
                         </Badge>
                       )}
-                      {service.premium && (
+                      {(service as any).premium && (
                         <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
                           <Crown className="w-3 h-3 ml-1" />
                           متميز
