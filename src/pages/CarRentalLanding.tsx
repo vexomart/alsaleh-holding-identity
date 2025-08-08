@@ -660,6 +660,48 @@ const CarRentalLanding = () => {
                     <Button variant="outline" size="sm" className="px-3">
                       <Eye className="w-4 h-4" />
                     </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="px-3" 
+                      onClick={() => {
+                        const shareUrl = `${window.location.origin}/car-rental?car=${car.name}`;
+                        const shareText = `تحقق من هذه السيارة الرائعة: ${car.name} - ${car.price} ر.س/يوم`;
+                        
+                        if (navigator.share) {
+                          navigator.share({
+                            title: `${car.name} - كار رنت برو`,
+                            text: shareText,
+                            url: shareUrl,
+                          }).catch((error) => {
+                            console.log('Error sharing:', error);
+                            // Fallback to copy to clipboard
+                            navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+                              toast({
+                                title: "تم النسخ!",
+                                description: "تم نسخ رابط السيارة إلى الحافظة",
+                              });
+                            });
+                          });
+                        } else {
+                          // Fallback to copy to clipboard
+                          navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+                            toast({
+                              title: "تم النسخ!",
+                              description: "تم نسخ رابط السيارة إلى الحافظة",
+                            });
+                          }).catch(() => {
+                            toast({
+                              title: "خطأ",
+                              description: "لم يتم نسخ الرابط، حاول مرة أخرى",
+                              variant: "destructive",
+                            });
+                          });
+                        }
+                      }}
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
