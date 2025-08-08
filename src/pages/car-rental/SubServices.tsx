@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BackButton from "@/components/ui/back-button";
-import Footer from "@/components/Footer";
+import CarRentalFooter from "@/components/CarRentalFooter";
 import { 
   Car,
   Zap,
@@ -431,29 +431,8 @@ const SubServices = () => {
           </Card>
         </div>
 
-        {/* Footer */}
-        <div className="bg-gray-900 text-white py-8 mt-16">
-          <div className="container mx-auto px-6 text-center">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="flex items-center gap-6">
-                <a href="/car-rental-landing" className="hover:text-blue-400 transition-colors">
-                  العودة للرئيسية
-                </a>
-                <a href="/car-rental/services" className="hover:text-blue-400 transition-colors">
-                  الخدمات العامة
-                </a>
-                <a href="/car-rental/contact" className="hover:text-blue-400 transition-colors">
-                  اتصل بنا
-                </a>
-              </div>
-              <p className="text-sm text-gray-400">
-                © 2024 علي الشهري القابضة. جميع الحقوق محفوظة.
-              </p>
-            </div>
-          </div>
-        </div>
         
-        <Footer />
+        <CarRentalFooter />
       </div>
     </div>
   );

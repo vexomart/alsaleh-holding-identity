@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import CarRentalFooter from "@/components/CarRentalFooter";
 import BackButton from "@/components/ui/back-button";
 import { 
   FileText, 
@@ -313,6 +314,8 @@ const Terms = () => {
           </div>
         </div>
       </section>
+      
+      <CarRentalFooter />
     </div>
   );
 };

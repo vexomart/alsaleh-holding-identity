@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import BackButton from "@/components/ui/back-button";
-import Footer from "@/components/Footer";
+import CarRentalFooter from "@/components/CarRentalFooter";
 import { 
   Phone,
   Mail,
@@ -345,7 +345,7 @@ const ContactUs = () => {
           </div>
         </div>
         
-        <Footer />
+        <CarRentalFooter />
       </div>
     </div>
   );

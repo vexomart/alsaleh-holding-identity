@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import CarRentalFooter from "@/components/CarRentalFooter";
 import BackButton from "@/components/ui/back-button";
 import { 
   Award, 
@@ -257,6 +258,8 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+      
+      <CarRentalFooter />
     </div>
   );
 };
