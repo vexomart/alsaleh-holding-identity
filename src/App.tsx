@@ -97,6 +97,7 @@ import CarRentalBranches from "./pages/car-rental/contact/Branches";
 import CarRentalComplaints from "./pages/car-rental/contact/ComplaintsSuggestions";
 import CarFleet from "./pages/CarFleet";
 import CarBooking from "./pages/CarBooking";
+import EmailTest from "./pages/EmailTest";
 
 const queryClient = new QueryClient();
 
@@ -212,6 +213,7 @@ const App = () => {
               
               <Route path="/car-fleet" element={<CarFleet />} />
               <Route path="/car-booking" element={<CarBooking />} />
+              <Route path="/email-test" element={<EmailTest />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
