@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import WorkingHoursNotification from "@/components/WorkingHoursNotification";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -716,6 +717,7 @@ const EnhancedDesignCategory = () => {
   if (!currentCategory) {
     return (
       <div className="min-h-screen bg-background" dir="rtl">
+        <WorkingHoursNotification />
         <Navigation />
         <main className="container mx-auto px-6 py-20">
           <div className="text-center">
@@ -789,6 +791,7 @@ const EnhancedDesignCategory = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <WorkingHoursNotification />
       <Navigation />
       
       {/* Hero Section with Enhanced Design */}
