@@ -281,8 +281,8 @@ const PaymentSuccess = () => {
               فريق الدعم الفني متاح على مدار الساعة لمساعدتك
             </p>
             <div className="flex flex-col sm:flex-row gap-2 text-sm">
-              <span>📧 support@emkan.dev</span>
-              <span>📱 +966 50 000 0000</span>
+              <span>📧 info@alialshehriholding.com</span>
+              <span>📱 0555812567</span>
             </div>
           </div>
         </div>
