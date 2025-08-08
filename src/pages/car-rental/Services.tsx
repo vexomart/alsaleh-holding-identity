@@ -397,17 +397,28 @@ const Services = () => {
                         ))}
                       </div>
 
-                      {/* Quick Action Buttons */}
+                       {/* Quick Action Buttons */}
                       <div className="flex gap-3">
-                        <Button className={`bg-gradient-to-r ${service.color} text-white border-0 hover:shadow-lg transition-all duration-300`}>
-                          احجز الآن
-                          <ArrowRight className="w-4 h-4 mr-2" />
+                        <Button className={`bg-gradient-to-r ${service.color} text-white border-0 hover:shadow-lg transition-all duration-300`} asChild>
+                          <a href="/car-booking">
+                            احجز الآن
+                            <ArrowRight className="w-4 h-4 mr-2" />
+                          </a>
                         </Button>
-                        <Button variant="outline">
-                          معرفة المزيد
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Phone className="w-4 h-4" />
+                        {service.id === 'car-rental' && (
+                          <Button variant="outline" asChild>
+                            <a href="/car-rental/sub-services">معرفة المزيد</a>
+                          </Button>
+                        )}
+                        {service.id !== 'car-rental' && (
+                          <Button variant="outline">
+                            معرفة المزيد
+                          </Button>
+                        )}
+                        <Button variant="ghost" size="sm" asChild>
+                          <a href="/car-rental/contact">
+                            <Phone className="w-4 h-4" />
+                          </a>
                         </Button>
                       </div>
                     </div>

@@ -171,8 +171,16 @@ const ContactUs = () => {
                     <Badge variant="outline" className="text-xs mb-4">
                       {method.available}
                     </Badge>
-                    <Button variant="outline" size="sm" className="w-full">
-                      {method.action}
+                    <Button variant="outline" size="sm" className="w-full" asChild>
+                      {method.title === 'زيارة المكتب' ? (
+                        <a href="/car-rental/contact/branches">{method.action}</a>
+                      ) : method.title === 'الدردشة المباشرة' ? (
+                        <a href="/car-rental/contact/complaints">{method.action}</a>
+                      ) : (
+                        <a href={`${method.title === 'الاتصال المباشر' ? 'tel:' : 'mailto:'}${method.value}`}>
+                          {method.action}
+                        </a>
+                      )}
                     </Button>
                   </CardContent>
                 </Card>
@@ -319,9 +327,11 @@ const ContactUs = () => {
                         شارع الأمير محمد بن عبدالعزيز<br />
                         مجمع الأعمال التجاري، الطابق الثالث
                       </p>
-                      <Button variant="outline" size="sm" className="w-full">
-                        <MapPin className="w-4 h-4 mr-2" />
-                        عرض على الخريطة
+                      <Button variant="outline" size="sm" className="w-full" asChild>
+                        <a href="/car-rental/contact/branches">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          عرض على الخريطة
+                        </a>
                       </Button>
                     </div>
                   </div>
