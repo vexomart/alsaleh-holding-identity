@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import BackButton from "@/components/ui/back-button";
+import Footer from "@/components/Footer";
 import { 
   Calendar,
   Clock,
@@ -515,6 +516,8 @@ const CompanyNews = () => {
             </div>
           </div>
         </div>
+        
+        <Footer />
       </div>
     </div>
   );

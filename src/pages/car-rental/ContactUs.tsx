@@ -2,366 +2,351 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import BackButton from "@/components/ui/back-button";
-import { useToast } from "@/hooks/use-toast";
+import Footer from "@/components/Footer";
 import { 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Clock, 
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
   MessageCircle,
   Send,
-  Globe,
+  CheckCircle,
+  Star,
   Users,
-  Car,
-  Headphones
+  Calendar,
+  Globe,
+  Headphones,
+  Target,
+  Heart,
+  Zap,
+  Award
 } from "lucide-react";
 
 const ContactUs = () => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: ""
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+    serviceType: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const contactMethods = [
     {
+      title: 'الاتصال المباشر',
+      description: 'تحدث مع فريق خدمة العملاء',
       icon: Phone,
-      title: "اتصل بنا",
-      info: "0555812567",
-      description: "متاح 24/7 لخدمتك",
-      color: "from-blue-500 to-blue-600"
+      value: '0555812567',
+      action: 'اتصل الآن',
+      color: 'from-green-500 to-emerald-500',
+      available: '24/7'
     },
     {
+      title: 'البريد الإلكتروني',
+      description: 'راسلنا واحصل على رد سريع',
       icon: Mail,
-      title: "راسلنا",
-      info: "info@alialshehriholding.com",
-      description: "نرد خلال ساعة واحدة",
-      color: "from-green-500 to-green-600"
+      value: 'info@alialshehriholding.com',
+      action: 'أرسل إيميل',
+      color: 'from-blue-500 to-cyan-500',
+      available: 'رد خلال 2-4 ساعات'
     },
     {
+      title: 'الدردشة المباشرة',
+      description: 'تحدث معنا فورياً',
       icon: MessageCircle,
-      title: "الدردشة المباشرة",
-      info: "متاح الآن",
-      description: "تحدث مع فريق الدعم فوراً",
-      color: "from-purple-500 to-purple-600"
+      value: 'دردشة مباشرة',
+      action: 'ابدأ المحادثة',
+      color: 'from-purple-500 to-indigo-500',
+      available: 'متاح الآن'
     },
     {
+      title: 'زيارة المكتب',
+      description: 'تفضل بزيارتنا شخصياً',
       icon: MapPin,
-      title: "زيارة الفرع",
-      info: "الرياض، حي العليا",
-      description: "طريق الملك فهد",
-      color: "from-orange-500 to-orange-600"
+      value: 'الرياض، حي الملز',
+      action: 'عرض الخريطة',
+      color: 'from-orange-500 to-red-500',
+      available: 'الأحد - الخميس'
     }
   ];
 
-  const offices = [
-    {
-      city: "الرياض",
-      address: "طريق الملك فهد، حي العليا، مبنى 123",
-      phone: "0555812567",
-      email: "info@alialshehriholding.com",
-      hours: "السبت - الخميس: 8:00 ص - 10:00 م | الجمعة: 2:00 م - 10:00 م",
-      isMain: true
-    },
-    {
-      city: "جدة",
-      address: "كورنيش جدة، حي الشاطئ، مجمع 456",
-      phone: "0555812567",
-      email: "info@alialshehriholding.com",
-      hours: "السبت - الخميس: 8:00 ص - 10:00 م | الجمعة: 2:00 م - 10:00 م",
-      isMain: false
-    },
-    {
-      city: "الدمام",
-      address: "الواجهة البحرية، الدمام، برج 789",
-      phone: "0555812567",
-      email: "info@alialshehriholding.com",
-      hours: "السبت - الخميس: 8:00 ص - 10:00 م | الجمعة: 2:00 م - 10:00 م",
-      isMain: false
-    }
+  const serviceTypes = [
+    'حجز سيارة جديد',
+    'استفسار عن حجز موجود',
+    'مشكلة تقنية',
+    'شكوى أو اقتراح',
+    'طلب عرض سعر للشركات',
+    'استفسار عام'
   ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!formData.name || !formData.email || !formData.message) {
-      toast({
-        title: "خطأ",
-        description: "يرجى ملء جميع الحقول المطلوبة",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    toast({
-      title: "تم إرسال الرسالة",
-      description: "شكراً لك! سنتواصل معك قريباً.",
-    });
-
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: ""
-    });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setIsSubmitting(false);
+    setIsSubmitted(true);
+    
+    // Reset form after 3 seconds
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+        serviceType: ''
+      });
+    }, 3000);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <BackButton />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
       
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <Badge className="bg-white/20 text-white border-0 mb-6 text-lg px-4 py-2 animate-fade-in">
-              <MessageCircle className="w-4 h-4 ml-1" />
-              تواصل معنا
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in">
-              نحن هنا لمساعدتك
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed animate-fade-in">
-              فريق الدعم جاهز لخدمتك على مدار الساعة
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Contact Methods */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-6 animate-fade-in">
-              طرق التواصل
-            </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto animate-fade-in">
-              اختر الطريقة الأنسب لك للتواصل مع فريق خدمة العملاء
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {contactMethods.map((method, index) => {
-              const IconComponent = method.icon;
-              return (
-                <Card 
-                  key={index} 
-                  className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <CardContent className="p-6 text-center">
-                    <div className={`w-16 h-16 bg-gradient-to-r ${method.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
-                      {method.title}
-                    </h3>
-                    <p className="text-blue-600 font-semibold mb-1">
-                      {method.info}
-                    </p>
-                    <p className="text-sm text-slate-600">
-                      {method.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form & Info */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div className="animate-fade-in">
-              <Card className="shadow-xl">
-                <CardHeader>
-                  <CardTitle className="text-2xl">أرسل لنا رسالة</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="name">الاسم الكامل *</Label>
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          placeholder="أدخل اسمك الكامل"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="phone">رقم الجوال</Label>
-                        <Input
-                          id="phone"
-                          value={formData.phone}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                          placeholder="05xxxxxxxx"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="email">البريد الإلكتروني *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        placeholder="example@email.com"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="subject">الموضوع</Label>
-                      <Input
-                        id="subject"
-                        value={formData.subject}
-                        onChange={(e) => handleInputChange('subject', e.target.value)}
-                        placeholder="موضوع الرسالة"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="message">الرسالة *</Label>
-                      <Textarea
-                        id="message"
-                        value={formData.message}
-                        onChange={(e) => handleInputChange('message', e.target.value)}
-                        placeholder="اكتب رسالتك هنا..."
-                        rows={5}
-                        required
-                      />
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-all"
-                      size="lg"
-                    >
-                      <Send className="w-4 h-4 ml-2" />
-                      إرسال الرسالة
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-white/20 dark:border-slate-700/50">
+          <div className="container mx-auto px-6 py-8">
+            <div className="flex items-center gap-4 mb-6">
+              <BackButton fallbackPath="/car-rental-landing" />
+              <div className="flex-1">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                  تواصل معنا
+                </h1>
+                <p className="text-lg text-muted-foreground">
+                  نحن هنا لمساعدتك في أي وقت وبكفاءة عالية
+                </p>
+              </div>
             </div>
 
-            {/* Office Locations */}
-            <div className="space-y-6 animate-fade-in">
-              <h3 className="text-3xl font-bold text-slate-900 mb-8">مواقع فروعنا</h3>
-              
-              {offices.map((office, index) => (
-                <Card 
-                  key={index} 
-                  className="group hover:shadow-lg transition-all hover:-translate-y-1"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              {[
+                { label: 'زمن الاستجابة', value: '< 30 ثانية', icon: Clock, color: 'text-blue-500' },
+                { label: 'رضا العملاء', value: '98%', icon: Heart, color: 'text-green-500' },
+                { label: 'متاح', value: '24/7', icon: Globe, color: 'text-orange-500' },
+                { label: 'فريق الدعم', value: '50+ خبير', icon: Users, color: 'text-purple-500' }
+              ].map((stat, index) => (
+                <Card key={index} className="text-center bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border-white/20 dark:border-slate-700/50 hover:shadow-lg transition-all duration-300">
                   <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                        <MapPin className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="text-xl font-bold text-slate-900">{office.city}</h4>
-                          {office.isMain && (
-                            <Badge className="bg-blue-100 text-blue-800 text-xs">
-                              الفرع الرئيسي
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-slate-600 mb-3">{office.address}</p>
-                        
-                        <div className="space-y-2 text-sm">
-                          <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4 text-green-500" />
-                            <span className="text-slate-700">{office.phone}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Mail className="w-4 h-4 text-blue-500" />
-                            <span className="text-slate-700">{office.email}</span>
-                          </div>
-                          <div className="flex items-start gap-2">
-                            <Clock className="w-4 h-4 text-purple-500 mt-0.5" />
-                            <span className="text-slate-700">{office.hours}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <stat.icon className={`w-8 h-8 mx-auto mb-3 ${stat.color}`} />
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
+                    <div className="text-sm text-muted-foreground">{stat.label}</div>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Quick Stats */}
-      <section className="py-20 bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-white mb-6 animate-fade-in">
-              نحن في خدمتك دائماً
-            </h2>
+        <div className="container mx-auto px-6 py-8">
+          {/* Contact Methods */}
+          <div className="mb-12 animate-fade-in">
+            <h2 className="text-2xl font-bold text-center mb-8">طرق التواصل</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {contactMethods.map((method, index) => (
+                <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border-white/20 dark:border-slate-700/50">
+                  <CardContent className="p-6 text-center">
+                    <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${method.color} mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                      <method.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">{method.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{method.description}</p>
+                    <p className="font-medium text-blue-600 mb-2">{method.value}</p>
+                    <Badge variant="outline" className="text-xs mb-4">
+                      {method.available}
+                    </Badge>
+                    <Button variant="outline" size="sm" className="w-full">
+                      {method.action}
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center animate-fade-in">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-3xl font-bold text-white mb-2">24/7</div>
-              <div className="text-white/80 text-sm">خدمة العملاء</div>
-            </div>
-            
-            <div className="text-center animate-fade-in">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Headphones className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-3xl font-bold text-white mb-2">&lt; 5 دقائق</div>
-              <div className="text-white/80 text-sm">متوسط الاستجابة</div>
-            </div>
-            
-            <div className="text-center animate-fade-in">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-3xl font-bold text-white mb-2">98%</div>
-              <div className="text-white/80 text-sm">نسبة الرضا</div>
-            </div>
-            
-            <div className="text-center animate-fade-in">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Globe className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-3xl font-bold text-white mb-2">50+</div>
-              <div className="text-white/80 text-sm">مدينة نخدمها</div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Contact Form */}
+            <Card className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border-white/20 dark:border-slate-700/50 animate-fade-in">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-blue-500" />
+                  أرسل رسالة
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isSubmitted ? (
+                  <div className="text-center py-8">
+                    <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold mb-2">تم إرسال رسالتك بنجاح!</h3>
+                    <p className="text-muted-foreground">
+                      سنتواصل معك خلال 24 ساعة
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">الاسم الكامل *</label>
+                        <Input
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          placeholder="أدخل اسمك الكامل"
+                          required
+                          className="bg-white/50 dark:bg-slate-800/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">رقم الهاتف *</label>
+                        <Input
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          placeholder="05xxxxxxxx"
+                          required
+                          className="bg-white/50 dark:bg-slate-800/50"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">البريد الإلكتروني *</label>
+                      <Input
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="example@email.com"
+                        required
+                        className="bg-white/50 dark:bg-slate-800/50"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">نوع الخدمة</label>
+                      <select
+                        name="serviceType"
+                        value={formData.serviceType}
+                        onChange={handleInputChange}
+                        className="w-full p-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">اختر نوع الخدمة</option>
+                        {serviceTypes.map((type, index) => (
+                          <option key={index} value={type}>{type}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">الموضوع *</label>
+                      <Input
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleInputChange}
+                        placeholder="موضوع الرسالة"
+                        required
+                        className="bg-white/50 dark:bg-slate-800/50"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">الرسالة *</label>
+                      <Textarea
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        placeholder="اكتب رسالتك هنا..."
+                        rows={5}
+                        required
+                        className="bg-white/50 dark:bg-slate-800/50"
+                      />
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:shadow-lg transition-all duration-300"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          جاري الإرسال...
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Send className="w-4 h-4" />
+                          إرسال الرسالة
+                        </div>
+                      )}
+                    </Button>
+                  </form>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Office Info */}
+            <div className="space-y-6 animate-fade-in">
+              {/* Location */}
+              <Card className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border-white/20 dark:border-slate-700/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-red-500" />
+                    موقعنا
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700">
+                      <h4 className="font-bold mb-2">المكتب الرئيسي</h4>
+                      <p className="text-muted-foreground mb-2">
+                        الرياض، حي الملز<br />
+                        شارع الأمير محمد بن عبدالعزيز<br />
+                        مجمع الأعمال التجاري، الطابق الثالث
+                      </p>
+                      <Button variant="outline" size="sm" className="w-full">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        عرض على الخريطة
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Emergency Contact */}
+              <Card className="bg-gradient-to-r from-red-500 to-orange-500 text-white">
+                <CardContent className="p-6 text-center">
+                  <Phone className="w-12 h-12 mx-auto mb-4 opacity-80" />
+                  <h3 className="text-xl font-bold mb-2">خط الطوارئ</h3>
+                  <p className="mb-4 opacity-90">
+                    للحالات الطارئة على مدار الساعة
+                  </p>
+                  <Button variant="secondary" size="lg" className="bg-white text-red-600 hover:bg-gray-100">
+                    0555812567
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
-      </section>
+        
+        <Footer />
+      </div>
     </div>
   );
 };

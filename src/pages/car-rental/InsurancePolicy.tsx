@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BackButton from "@/components/ui/back-button";
+import Footer from "@/components/Footer";
 import { 
   Shield,
   CheckCircle,
@@ -580,6 +581,8 @@ const InsurancePolicy = () => {
             </div>
           </div>
         </div>
+        
+        <Footer />
       </div>
     </div>
   );
