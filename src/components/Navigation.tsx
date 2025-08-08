@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import BackButton from "@/components/ui/back-button";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -42,9 +42,6 @@ const Navigation = () => {
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
   const location = useLocation();
   
-  // Show back button on all pages except home page
-  const showBackButton = location.pathname !== '/';
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -117,16 +114,6 @@ const Navigation = () => {
             
             {/* Logo & Company Name - Responsive */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Back Button - Shows on all pages except home */}
-              {showBackButton && (
-                <div className="mr-2">
-                  <BackButton 
-                    showText={false}
-                    className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
-                  />
-                </div>
-              )}
-              
               <a href="/" className="flex items-center gap-1 sm:gap-2 group">
                 {/* Logo */}
                 <div className="relative">

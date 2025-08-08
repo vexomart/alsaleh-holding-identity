@@ -10,6 +10,7 @@ interface BackButtonProps {
   variant?: "default" | "outline" | "ghost";
   size?: "sm" | "default" | "lg";
   showHomeButton?: boolean;
+  enabled?: boolean;
 }
 
 const BackButton = ({ 
@@ -19,7 +20,8 @@ const BackButton = ({
   fallbackPath = "/",
   variant = "outline",
   size = "sm",
-  showHomeButton = true
+  showHomeButton = true,
+  enabled = false
 }: BackButtonProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,9 +39,10 @@ const BackButton = ({
     navigate("/");
   };
 
-  // Don't show on homepage
-  if (isHomePage) return null;
-
+// Don't show unless explicitly enabled
+if (!enabled) return null;
+// Don't show on homepage
+if (isHomePage) return null;
   return (
     <div className="flex items-center gap-3 mb-6">
       <Button

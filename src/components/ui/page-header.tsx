@@ -16,7 +16,7 @@ export function PageHeader({
   description, 
   children, 
   className,
-  showBackButton = true,
+  showBackButton = false,
   backButtonFallback = "/"
 }: PageHeaderProps) {
   return (
@@ -31,7 +31,7 @@ export function PageHeader({
       {/* Back Button */}
       {showBackButton && (
         <div className="absolute top-6 right-6 z-10">
-          <BackButton fallbackPath={backButtonFallback} />
+          <BackButton enabled fallbackPath={backButtonFallback} />
         </div>
       )}
       
