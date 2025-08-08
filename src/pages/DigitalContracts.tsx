@@ -31,7 +31,7 @@ const currentOffers = [
   {
     id: 1,
     title: "عرض الموقع الاحترافي الكامل",
-    price: "9750",
+    price: "15",
     originalPrice: "15000",
     features: [
       "تصميم مخصص وفريد",
@@ -328,7 +328,7 @@ const DigitalContracts = () => {
             <div style="font-size: 13px; line-height: 1.8;">
               <div><strong>نوع الخدمة:</strong> ${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</div>
               <div><strong>وصف الخدمة:</strong> ${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</div>
-              <div><strong>قيمة الخدمة:</strong> ${selectedOfferDetails?.price || '9750'} ريال سعودي</div>
+              <div><strong>قيمة الخدمة:</strong> ${selectedOfferDetails?.price || '15'} ريال سعودي</div>
               <div><strong>مدة التنفيذ:</strong> ${selectedOfferDetails?.duration || '3-4 أسابيع'}</div>
             </div>
           </div>
