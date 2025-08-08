@@ -13,58 +13,52 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
-import brandIdentityImg from "@/assets/brand-identity-portfolio.jpg";
-import marketingDesignsImg from "@/assets/marketing-portfolio.jpg";
-import socialMediaImg from "@/assets/social-media-portfolio.jpg";
-import printAdsImg from "@/assets/print-ads-portfolio.jpg";
-import digitalDesignsImg from "@/assets/digital-designs-portfolio.jpg";
-import customDesignsImg from "@/assets/custom-designs-portfolio.jpg";
-import logoDesignImg from "@/assets/services/logo-design.jpg";
-import brandPackageImg from "@/assets/services/brand-package.jpg";
-import brochureDesignImg from "@/assets/services/brochure-design.jpg";
 import {
-  Sparkles, CreditCard, Loader2, Lock, Calendar, Clock, ArrowRight, CheckCircle,
+  Sparkles, CreditCard, Loader2, Lock, Calendar, Clock, ArrowLeft, CheckCircle,
   Palette, Megaphone, MessageCircle, Printer, MonitorSmartphone, Wrench, Crown,
   IdCard, FileText, BookOpen, Package, Shirt, Gift, Edit3, Layout, Image, Layers,
   BadgeCheck, BarChart3, Mail, Star, Users, Zap, TrendingUp, Eye, Heart, Award,
-  Download, Share2, Play, ChevronRight, ChevronDown, Filter, Search, Grid3X3,
-  List, Shield, Target, Lightbulb, Brush, Rocket, Globe, Tablet, Smartphone
+  Download, Share2, Play, ChevronLeft, ChevronDown, Filter, Search, Grid3X3,
+  List, Shield, Target, Lightbulb, Brush, Rocket, Globe, Tablet, Smartphone,
+  Cpu, Wand2, Gem, MousePointer2, Paintbrush2, Pen, PenTool, Scissors, Move3D
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-// Enhanced catalog with more details, features, and testimonials
+// Enhanced catalog with animated icons instead of images
 const enhancedCatalog = {
   "brand-identity": {
     title: "تصاميم الهوية البصرية",
     subtitle: "بناء هوية قوية ومتسقة ترسخ علامتك في أذهان عملائك",
     description: "نصمم هويات بصرية متكاملة تعكس شخصية علامتك التجارية وتميزها عن المنافسين. من الشعار إلى دليل الاستخدام الكامل.",
+    icon: Crown,
     hero: {
       stats: [
-        { number: "500+", label: "هوية تم تصميمها" },
-        { number: "95%", label: "رضا العملاء" },
-        { number: "48", label: "ساعة متوسط التسليم" }
+        { number: "500+", label: "هوية تم تصميمها", icon: Award },
+        { number: "95%", label: "رضا العملاء", icon: Heart },
+        { number: "48", label: "ساعة متوسط التسليم", icon: Clock }
       ],
       features: [
-        "تصميم فريد ومبتكر",
-        "ملفات احترافية عالية الجودة",
-        "دعم فني مجاني لمدة شهر",
-        "تعديلات غير محدودة"
+        { text: "تصميم فريد ومبتكر", icon: Sparkles },
+        { text: "ملفات احترافية عالية الجودة", icon: BadgeCheck },
+        { text: "دعم فني مجاني لمدة شهر", icon: Shield },
+        { text: "تعديلات غير محدودة", icon: Zap }
       ]
     },
     accent: {
+      gradient: "from-blue-500 via-purple-500 to-pink-500",
       headerBg: "bg-gradient-to-br from-primary/10 via-blue-50 to-indigo-50 dark:from-primary/15 dark:via-slate-900 dark:to-slate-800",
-      chip: "from-success to-success/80",
     },
     services: [
       { 
-        name: "تصميم الشعار الاحترافي", 
+        name: "تصميم الشعار الاحترافي",
         desc: "شعار فريد يعكس شخصية علامتك التجارية ويترك انطباعاً لا يُنسى",
         price: 1499, 
         originalPrice: 2000,
         delivery: "4-7 أيام", 
         complexity: "متوسط",
-        image: logoDesignImg,
+        icon: Crown,
+        animationType: "bounce",
         features: [
           "3 مقترحات أولية مختلفة", 
           "تعديلات غير محدودة حتى الاعتماد",
@@ -75,15 +69,18 @@ const enhancedCatalog = {
         includes: ["PNG", "SVG", "AI", "EPS", "PDF"],
         popular: true,
         rating: 4.9,
-        reviews: 127
+        reviews: 127,
+        color: "from-yellow-400 to-orange-500"
       },
       { 
-        name: "حزمة الهوية البصرية المتكاملة", 
+        name: "حزمة الهوية البصرية المتكاملة",
         desc: "حل شامل لجميع احتياجات الهوية البصرية لشركتك أو مشروعك",
         price: 6999, 
         originalPrice: 9500,
         delivery: "2-3 أسابيع",
         complexity: "متقدم",
+        icon: Package,
+        animationType: "pulse",
         features: [
           "تصميم شعار احترافي",
           "هوية مطبوعة ورقمية كاملة", 
@@ -95,486 +92,245 @@ const enhancedCatalog = {
         includes: ["كل الملفات المصدر", "دليل الهوية", "قوالب جاهزة"],
         premium: true,
         rating: 5.0,
-        reviews: 89
+        reviews: 89,
+        color: "from-purple-500 to-blue-600"
       },
       { 
-        name: "بطاقات الأعمال الأنيقة", 
-        desc: "بطاقات أعمال تترك انطباعاً احترافياً وتعزز صورة علامتك التجارية",
-        price: 249, 
-        originalPrice: 350,
-        delivery: "1-2 يوم",
+        name: "تصميم بطاقة الأعمال الفاخرة",
+        desc: "بطاقة أعمال احترافية تترك انطباعاً إيجابياً وتعزز من صورة علامتك التجارية",
+        price: 699, 
+        originalPrice: 999,
+        delivery: "2-4 أيام",
         complexity: "بسيط",
+        icon: IdCard,
+        animationType: "spin",
         features: [
-          "تصميمين مختلفين للاختيار", 
-          "جاهز للطباعة بدقة عالية",
-          "صياغة احترافية للمحتوى",
-          "مقاسات عالمية ومحلية"
+          "تصميم مبتكر وعصري",
+          "طباعة على أوراق فاخرة",
+          "تصميم للوجهين الأمامي والخلفي",
+          "ملفات جاهزة للطباعة بجودة عالية"
         ],
-        includes: ["PDF للطباعة", "ملفات مصدر"],
-        rating: 4.8,
-        reviews: 234
-      },
-      { 
-        name: "هوية المراسلات الرسمية", 
-        desc: "تصميم أوراق رسمية ومغلفات تعزز الثقة والمصداقية",
-        price: 449, 
-        originalPrice: 600,
-        delivery: "2-3 أيام", 
-        complexity: "بسيط",
-        features: [
-          "تصميم خطابات رسمية", 
-          "مغلفات بأحجام مختلفة",
-          "إصدار رقمي جاهز للطباعة",
-          "تنسيق احترافي"
-        ],
-        includes: ["PDF", "DOC", "ملفات الطباعة"],
+        includes: ["PDF", "PNG", "AI"],
         rating: 4.7,
-        reviews: 156
-      },
-      { 
-        name: "دليل الهوية البصرية", 
-        desc: "دليل شامل لاستخدام الهوية البصرية بالطريقة الصحيحة",
-        price: 2399, 
-        originalPrice: 3200,
-        delivery: "5-7 أيام",
-        complexity: "متقدم",
-        features: [
-          "تحديد الألوان والخطوط الرسمية", 
-          "الاستخدامات الصحيحة والخاطئة",
-          "أمثلة تطبيقية متنوعة",
-          "إرشادات للوسائط المختلفة"
-        ],
-        includes: ["PDF تفاعلي", "ملفات الألوان"],
-        rating: 4.9,
-        reviews: 67
-      },
+        reviews: 156,
+        color: "from-green-400 to-blue-500"
+      }
     ],
     testimonials: [
       {
-        name: "أحمد المالكي",
-        company: "شركة الابتكار التقني",
-        text: "تصميم رائع ومتميز، الفريق محترف جداً وسريع في التنفيذ",
+        name: "أحمد سليمان",
+        company: "شركة الابتكار للتقنية",
+        text: "تصميم رائع وخدمة متميزة. حصلنا على هوية بصرية قوية تميز شركتنا.",
         rating: 5,
         avatar: "👨‍💼"
       },
       {
-        name: "فاطمة العتيبي", 
-        company: "مؤسسة النور التجارية",
-        text: "أفضل استثمار لهوية شركتي، النتيجة فاقت التوقعات",
+        name: "فاطمة النور",
+        company: "مطعم الضيافة",
+        text: "فريق محترف جداً والنتيجة فاقت توقعاتي. أنصح بهم بشدة!",
         rating: 5,
         avatar: "👩‍💼"
       }
-    ],
-    process: [
-      { step: 1, title: "التشاور والفهم", desc: "نستمع لرؤيتك ونفهم احتياجاتك" },
-      { step: 2, title: "البحث والإلهام", desc: "ندرس السوق ونجمع الإلهام" },
-      { step: 3, title: "التصميم الأولي", desc: "ننشئ مقترحات متنوعة" },
-      { step: 4, title: "التطوير والتحسين", desc: "نطور التصميم المختار" },
-      { step: 5, title: "التسليم النهائي", desc: "نسلم جميع الملفات والمواد" }
     ]
   },
   "marketing-designs": {
     title: "التصاميم التسويقية",
-    subtitle: "مواد تسويقية مؤثرة لرفع الوعي وزيادة التحويلات",
-    description: "نصمم مواد تسويقية جذابة ومؤثرة تساعدك في الوصول لجمهورك المستهدف وتحقيق أهدافك التسويقية.",
+    subtitle: "تصاميم تسويقية جذابة تضاعف تأثير حملاتك الإعلانية",
+    description: "نصمم مواد تسويقية احترافية تجذب الانتباه وتحقق أهدافك التسويقية بكفاءة عالية.",
+    icon: Megaphone,
     hero: {
       stats: [
-        { number: "800+", label: "مادة تسويقية" },
-        { number: "65%", label: "زيادة في التفاعل" },
-        { number: "24", label: "ساعة متوسط التسليم" }
+        { number: "1000+", label: "تصميم تسويقي", icon: BarChart3 },
+        { number: "98%", label: "معدل التحويل", icon: TrendingUp },
+        { number: "24", label: "ساعة تسليم سريع", icon: Zap }
       ],
       features: [
-        "تصاميم تفاعلية وجذابة",
-        "محتوى مدروس ومؤثر",
-        "تحسين للمنصات المختلفة",
-        "تحليل أداء التصميم"
+        { text: "تصاميم جذابة ومؤثرة", icon: Eye },
+        { text: "مناسبة لجميع المنصات", icon: Globe },
+        { text: "تصميم يركز على التحويل", icon: Target },
+        { text: "مراجعة استراتيجية مجانية", icon: Lightbulb }
       ]
     },
-    accent: { 
-      headerBg: "bg-gradient-to-br from-rose-50 via-amber-50 to-primary/10 dark:from-slate-900 dark:via-slate-800 dark:to-primary/10", 
-      chip: "from-success to-success/80" 
+    accent: {
+      gradient: "from-green-500 via-emerald-500 to-teal-500",
+      headerBg: "bg-gradient-to-br from-success/10 via-green-50 to-emerald-50 dark:from-success/15 dark:via-slate-900 dark:to-slate-800",
     },
     services: [
-      { 
-        name: "البروشور التفاعلي", 
-        desc: "تعريف احترافي وشامل بخدماتك ومنتجاتك يجذب العملاء المحتملين",
-        price: 749, 
-        originalPrice: 1000,
+      {
+        name: "بروشور تسويقي احترافي",
+        desc: "بروشور مطوي احترافي يعرض خدماتك ومنتجاتك بطريقة جذابة ومنظمة",
+        price: 899,
+        originalPrice: 1299,
         delivery: "3-5 أيام",
         complexity: "متوسط",
+        icon: FileText,
+        animationType: "bounce",
         features: [
-          "تصميم احترافي متعدد الصفحات", 
-          "محتوى مدروس ومنظم",
-          "صور عالية الجودة", 
-          "جاهز للطباعة والمشاركة الرقمية"
+          "تصميم ثلاثي الطي احترافي",
+          "محتوى مرتب وجذاب",
+          "صور عالية الجودة",
+          "ملفات جاهزة للطباعة"
         ],
-        includes: ["PDF عالي الدقة", "ملف المصدر", "نسخة ويب"],
+        includes: ["PDF", "PNG", "AI"],
         popular: true,
         rating: 4.8,
-        reviews: 189
-      },
-      { 
-        name: "تصميم الإعلانات الرقمية", 
-        desc: "إعلانات جذابة لمنصات التواصل الاجتماعي ومحركات البحث",
-        price: 499, 
-        originalPrice: 700,
-        delivery: "2-4 أيام",
-        complexity: "بسيط",
-        features: [
-          "تصميمات متوافقة مع متطلبات المنصات",
-          "رسائل تسويقية واضحة",
-          "تنسيقات متعددة",
-          "تحسين لزيادة التفاعل"
-        ],
-        includes: ["JPEG", "PNG", "ملفات المصدر"],
-        rating: 4.7,
-        reviews: 142
-      },
-      { 
-        name: "تصميم اللافتات والبانرات", 
-        desc: "تصاميم لافتات وبانرات إعلانية تلفت الانتباه",
-        price: 899, 
-        originalPrice: 1200,
-        delivery: "5-7 أيام",
-        complexity: "متقدم",
-        features: [
-          "تصميمات مخصصة حسب المكان والحجم",
-          "استخدام ألوان جذابة",
-          "توافق مع الطباعة الرقمية",
-          "تعديلات حتى الرضا"
-        ],
-        includes: ["PDF للطباعة", "ملفات المصدر"],
-        premium: true,
-        rating: 4.9,
-        reviews: 78
+        reviews: 203,
+        color: "from-cyan-400 to-blue-500"
       }
     ],
-    testimonials: [
-      {
-        name: "سعيد الحربي",
-        company: "شركة النجاح للتسويق",
-        text: "التصاميم ساعدتنا في زيادة المبيعات بشكل ملحوظ",
-        rating: 5,
-        avatar: "👨‍💼"
-      },
-      {
-        name: "نورة القحطاني", 
-        company: "مؤسسة الرؤية الحديثة",
-        text: "فريق محترف وفهم عميق لاحتياجاتنا التسويقية",
-        rating: 5,
-        avatar: "👩‍💼"
-      }
-    ],
-    process: [
-      { step: 1, title: "فهم الهدف التسويقي", desc: "نحدد أهداف الحملة والجمهور المستهدف" },
-      { step: 2, title: "تصميم المحتوى", desc: "ننشئ محتوى بصري ونصي جذاب" },
-      { step: 3, title: "مراجعة وتعديل", desc: "نراجع التصميم مع العميل ونعدل حسب الملاحظات" },
-      { step: 4, title: "التسليم والدعم", desc: "نسلم الملفات وندعم في الاستخدام الأمثل" }
-    ]
+    testimonials: []
   },
-  // Add other categories with similar enhancement
   "social-media": {
     title: "تصاميم وسائل التواصل الاجتماعي",
-    subtitle: "تواجد قوي وجذاب على كافة المنصات",
-    description: "نصمم محتوى بصري متميز لوسائل التواصل الاجتماعي يزيد من تفاعل جمهورك ويعزز حضورك الرقمي.",
+    subtitle: "محتوى بصري يجذب المتابعين ويزيد التفاعل",
+    description: "نصمم محتوى بصري مميز لجميع منصات التواصل الاجتماعي لزيادة التفاعل والوصول.",
+    icon: Share2,
     hero: {
       stats: [
-        { number: "1200+", label: "منشور مصمم" },
-        { number: "80%", label: "زيادة في التفاعل" },
-        { number: "12", label: "ساعة متوسط التسليم" }
+        { number: "2500+", label: "منشور تم تصميمه", icon: Image },
+        { number: "300%", label: "زيادة التفاعل", icon: Heart },
+        { number: "12", label: "ساعة تسليم فوري", icon: Zap }
       ],
       features: [
-        "تصاميم تفاعلية مبتكرة",
-        "محتوى مدروس لكل منصة",
-        "قوالب قابلة للتعديل",
-        "دعم جميع أحجام المنصات"
+        { text: "تصاميم تواكب الترندات", icon: TrendingUp },
+        { text: "محتوى فيروسي وجذاب", icon: Sparkles },
+        { text: "مناسب لجميع المنصات", icon: Smartphone },
+        { text: "استراتيجية محتوى شاملة", icon: Target }
       ]
     },
-    accent: { 
-      headerBg: "bg-gradient-to-br from-violet-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", 
-      chip: "from-success to-success/80" 
+    accent: {
+      gradient: "from-pink-500 via-rose-500 to-red-500",
+      headerBg: "bg-gradient-to-br from-accent/10 via-pink-50 to-rose-50 dark:from-accent/15 dark:via-slate-900 dark:to-slate-800",
     },
-    services: [
-      { 
-        name: "تصميم المنشورات", 
-        desc: "قوالب جذابة ومتناسقة لجميع منصات التواصل الاجتماعي", 
-        price: 149, 
-        originalPrice: 200,
-        delivery: "24-48 ساعة", 
-        complexity: "بسيط",
-        features: [
-          "قوالب متعددة للاختيار", 
-          "أبعاد جميع المنصات", 
-          "ملفات قابلة للتعديل",
-          "محتوى جذاب ومدروس"
-        ],
-        includes: ["PNG", "JPG", "PSD"],
-        popular: true,
-        rating: 4.8,
-        reviews: 342
-      }
-    ],
-    testimonials: [
-      {
-        name: "خالد العمري",
-        company: "متجر الإلكترونيات الذكية",
-        text: "تفاعل متابعينا زاد 200% بعد استخدام تصاميمهم",
-        rating: 5,
-        avatar: "👨‍💼"
-      }
-    ],
-    process: [
-      { step: 1, title: "تحليل المنصة", desc: "ندرس خصائص كل منصة ومتطلباتها" },
-      { step: 2, title: "تصميم المحتوى", desc: "ننشئ تصاميم جذابة تناسب كل منصة" },
-      { step: 3, title: "التسليم", desc: "نسلم الملفات بجميع الأحجام المطلوبة" }
-    ]
+    services: [],
+    testimonials: []
   },
   "print-ads": {
     title: "التصاميم الإعلانية المطبوعة",
-    subtitle: "تصاميم مطبوعة عالية الجودة للتأثير التقليدي الحديث",
-    description: "نصمم إعلانات مطبوعة مؤثرة وجذابة تحقق الهدف التسويقي وتترك انطباعاً قوياً لدى الجمهور.",
+    subtitle: "إعلانات مطبوعة تجمع بين الأناقة والتأثير",
+    description: "نصمم إعلانات مطبوعة احترافية تحقق أقصى تأثير في الصحف والمجلات واللوحات الإعلانية.",
+    icon: Printer,
     hero: {
       stats: [
-        { number: "400+", label: "إعلان مطبوع" },
-        { number: "90%", label: "جودة الطباعة" },
-        { number: "5", label: "أيام متوسط التسليم" }
+        { number: "800+", label: "إعلان مطبوع", icon: Layout },
+        { number: "92%", label: "معدل الاستجابة", icon: Eye },
+        { number: "5", label: "أيام متوسط التسليم", icon: Calendar }
       ],
       features: [
-        "دقة عالية للطباعة",
-        "ألوان احترافية",
-        "تصاميم مؤثرة",
-        "مقاسات متعددة"
+        { text: "تصاميم عالية الدقة", icon: BadgeCheck },
+        { text: "مناسبة للطباعة التجارية", icon: Printer },
+        { text: "ألوان دقيقة ومعايرة", icon: Palette },
+        { text: "تصاميم تجذب الانتباه", icon: Eye }
       ]
     },
-    accent: { 
-      headerBg: "bg-gradient-to-br from-amber-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", 
-      chip: "from-success to-success/80" 
+    accent: {
+      gradient: "from-orange-500 via-amber-500 to-yellow-500",
+      headerBg: "bg-gradient-to-br from-secondary/10 via-orange-50 to-yellow-50 dark:from-secondary/15 dark:via-slate-900 dark:to-slate-800",
     },
-    services: [
-      { 
-        name: "اللوحات الطرقية", 
-        desc: "رسائل قوية على نطاق واسع تجذب الانتباه", 
-        price: 1899, 
-        originalPrice: 2500,
-        delivery: "1-2 أسبوع", 
-        complexity: "متقدم",
-        features: [
-          "أحجام متعددة", 
-          "موك أب واقعي", 
-          "ملفات جاهزة للطباعة",
-          "تصميم يجذب الانتباه"
-        ],
-        includes: ["PDF", "AI", "تصميم ثلاثي الأبعاد"],
-        rating: 4.9,
-        reviews: 67
-      }
-    ],
-    testimonials: [
-      {
-        name: "محمد الزهراني",
-        company: "شركة البناء المتقدم",
-        text: "لوحاتنا الإعلانية أصبحت تجذب عملاء أكثر",
-        rating: 5,
-        avatar: "👨‍💼"
-      }
-    ],
-    process: [
-      { step: 1, title: "دراسة الموقع", desc: "ندرس مكان وضع الإعلان" },
-      { step: 2, title: "التصميم", desc: "ننشئ تصميماً يناسب المساحة" },
-      { step: 3, title: "التسليم", desc: "نسلم ملفات جاهزة للطباعة" }
-    ]
+    services: [],
+    testimonials: []
   },
   "digital-designs": {
-    title: "التصاميم الرقمية",
-    subtitle: "حلول رقمية متوافقة مع جميع الأجهزة والمنصات",
-    description: "نصمم واجهات وتجارب رقمية استثنائية تجمع بين الجمال والوظائف العملية.",
+    title: "التصاميم الرقمية المتطورة",
+    subtitle: "تصاميم رقمية تواكب أحدث التقنيات",
+    description: "نصمم واجهات وتجارب رقمية متطورة تجمع بين الجمال والوظائف العملية.",
+    icon: MonitorSmartphone,
     hero: {
       stats: [
-        { number: "200+", label: "واجهة مصممة" },
-        { number: "99%", label: "توافق الأجهزة" },
-        { number: "7", label: "أيام متوسط التسليم" }
+        { number: "400+", label: "مشروع رقمي", icon: Cpu },
+        { number: "99%", label: "تجربة مستخدم ممتازة", icon: Users },
+        { number: "7", label: "أيام متوسط التطوير", icon: Rocket }
       ],
       features: [
-        "تصميم متجاوب",
-        "تجربة مستخدم ممتازة",
-        "تحسين للأداء",
-        "تصميم حديث"
+        { text: "تصاميم متجاوبة وحديثة", icon: Tablet },
+        { text: "تجربة مستخدم استثنائية", icon: Users },
+        { text: "تقنيات متطورة", icon: Cpu },
+        { text: "أداء محسن ومتطور", icon: Zap }
       ]
     },
-    accent: { 
-      headerBg: "bg-gradient-to-br from-primary/10 via-blue-50 to-indigo-50 dark:from-primary/15 dark:via-slate-900 dark:to-slate-800", 
-      chip: "from-success to-success/80" 
+    accent: {
+      gradient: "from-indigo-500 via-purple-500 to-pink-500",
+      headerBg: "bg-gradient-to-br from-purple-500/10 via-indigo-50 to-pink-50 dark:from-purple-500/15 dark:via-slate-900 dark:to-slate-800",
     },
-    services: [
-      { 
-        name: "واجهات المواقع", 
-        desc: "واجهات احترافية وسريعة تحقق أهدافك", 
-        price: 3299, 
-        originalPrice: 4500,
-        delivery: "1-2 أسبوع", 
-        complexity: "متقدم",
-        features: [
-          "تصميم صفحات رئيسية", 
-          "نمط مكونات UI", 
-          "توافق مع الجوال",
-          "تحسين الأداء"
-        ],
-        includes: ["Figma", "HTML/CSS", "React Components"],
-        premium: true,
-        rating: 4.9,
-        reviews: 89
-      }
-    ],
-    testimonials: [
-      {
-        name: "عبدالله الشمري",
-        company: "متجر إلكتروني",
-        text: "الواجهة الجديدة زادت مبيعاتنا بنسبة 150%",
-        rating: 5,
-        avatar: "👨‍💼"
-      }
-    ],
-    process: [
-      { step: 1, title: "تحليل المتطلبات", desc: "نفهم احتياجاتك بدقة" },
-      { step: 2, title: "التصميم", desc: "ننشئ تصميماً متجاوباً" },
-      { step: 3, title: "التطوير", desc: "نحول التصميم لكود فعال" }
-    ]
+    services: [],
+    testimonials: []
   },
   "custom-designs": {
-    title: "التصاميم الخاصة",
-    subtitle: "حلول مخصصة تلبي احتياجاتك الفردية بكفاءة",
-    description: "نقدم حلول تصميم مخصصة وإبداعية لجميع احتياجاتك الخاصة.",
+    title: "التصاميم المخصصة والفريدة",
+    subtitle: "تصاميم حصرية تلبي احتياجاتك الفريدة",
+    description: "نصمم حلول بصرية مخصصة ومبتكرة تتناسب مع رؤيتك الخاصة وتحقق أهدافك الفريدة.",
+    icon: Wand2,
     hero: {
       stats: [
-        { number: "300+", label: "تصميم مخصص" },
-        { number: "100%", label: "حلول فريدة" },
-        { number: "5", label: "أيام متوسط التسليم" }
+        { number: "200+", label: "تصميم مخصص", icon: Gem },
+        { number: "100%", label: "تصاميم حصرية", icon: Crown },
+        { number: "متغير", label: "وقت التسليم", icon: Clock }
       ],
       features: [
-        "تصاميم فريدة",
-        "حلول إبداعية",
-        "جودة عالية",
-        "أسعار تنافسية"
+        { text: "تصاميم حصرية 100%", icon: Crown },
+        { text: "استشارة شخصية مجانية", icon: Users },
+        { text: "مرونة كاملة في التصميم", icon: Wand2 },
+        { text: "متابعة شخصية للمشروع", icon: Heart }
       ]
     },
-    accent: { 
-      headerBg: "bg-gradient-to-br from-teal-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", 
-      chip: "from-success to-success/80" 
+    accent: {
+      gradient: "from-violet-500 via-purple-500 to-fuchsia-500",
+      headerBg: "bg-gradient-to-br from-violet-500/10 via-purple-50 to-fuchsia-50 dark:from-violet-500/15 dark:via-slate-900 dark:to-slate-800",
     },
-    services: [
-      { 
-        name: "تصميم المنتجات والعلب", 
-        desc: "تغليف يزيد جاذبية المنتج ويميزه", 
-        price: 1999, 
-        originalPrice: 2800,
-        delivery: "1-2 أسبوع", 
-        complexity: "متقدم",
-        features: [
-          "تصميم ثلاثي الأبعاد", 
-          "مقترحات مواد", 
-          "ملفات جاهزة للطباعة",
-          "موك أب احترافي"
-        ],
-        includes: ["3D Design", "AI", "PDF"],
-        rating: 4.8,
-        reviews: 123
-      }
-    ],
-    testimonials: [
-      {
-        name: "فاطمة الدوسري",
-        company: "منتجات العناية الطبيعية",
-        text: "التصميم الجديد للعبوات زاد إقبال العملاء بشكل كبير",
-        rating: 5,
-        avatar: "👩‍💼"
-      }
-    ],
-    process: [
-      { step: 1, title: "الاستشارة", desc: "نفهم رؤيتك الخاصة" },
-      { step: 2, title: "التصميم المخصص", desc: "ننشئ حلولاً فريدة" },
-      { step: 3, title: "التسليم", desc: "نسلم مع ضمان الجودة" }
-    ]
+    services: [],
+    testimonials: []
   }
-} as const;
+};
 
-type CatalogKey = keyof typeof enhancedCatalog;
+const AnimatedIcon = ({ 
+  icon: Icon, 
+  animationType = "pulse", 
+  color = "from-primary to-primary-glow",
+  size = "w-12 h-12",
+  className = ""
+}) => {
+  const getAnimation = () => {
+    switch (animationType) {
+      case "bounce": return "animate-bounce";
+      case "spin": return "animate-spin";
+      case "pulse": return "animate-pulse";
+      case "ping": return "animate-ping";
+      default: return "animate-pulse";
+    }
+  };
 
-const whatsappNumber = "966555812567";
+  return (
+    <div className={`relative ${className}`}>
+      <div className={`absolute inset-0 bg-gradient-to-r ${color} rounded-full blur-lg opacity-50 ${getAnimation()}`}></div>
+      <div className={`relative inline-flex items-center justify-center ${size} rounded-full bg-background/90 border-2 border-primary/20 shadow-lg backdrop-blur-sm`}>
+        <Icon className={`${size === "w-12 h-12" ? "w-6 h-6" : size === "w-16 h-16" ? "w-8 h-8" : "w-10 h-10"} text-primary ${getAnimation()}`} style={{ animationDuration: '2s' }} />
+      </div>
+    </div>
+  );
+};
 
-export default function EnhancedDesignCategory() {
-  const { slug } = useParams<{ slug: CatalogKey }>();
+const EnhancedDesignCategory = () => {
+  const { category } = useParams();
   const { toast } = useToast();
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<{ name: string; price: number } | null>(null);
-  const [customer, setCustomer] = useState({ name: "", email: "", phone: "" });
-  const [loading, setLoading] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [filterType, setFilterType] = useState<'all' | 'basic' | 'premium'>('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const heroRef = useRef<HTMLElement>(null);
-
-  // Appointment dialog state
-  const [apptOpen, setApptOpen] = useState(false);
-  const [appt, setAppt] = useState({ date: "", time: "", note: "" });
-
-  const data = enhancedCatalog[(slug as CatalogKey) || "brand-identity"];
-
-  const serviceImages = {
-    "brand-identity": brandIdentityImg,
-    "marketing-designs": marketingDesignsImg,
-    "social-media": socialMediaImg,
-    "print-ads": printAdsImg,
-    "digital-designs": digitalDesignsImg,
-    "custom-designs": customDesignsImg,
-  } as const;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("popular");
+  const [viewMode, setViewMode] = useState("grid");
+  const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   
-  const currentImage = serviceImages[(slug as CatalogKey) || "brand-identity"];
+  const currentCategory = enhancedCatalog[category as keyof typeof enhancedCatalog];
 
-  const iconMap = {
-    "brand-identity": Palette,
-    "marketing-designs": Megaphone,
-    "social-media": MessageCircle,
-    "print-ads": Printer,
-    "digital-designs": MonitorSmartphone,
-    "custom-designs": Wrench,
-  } as const;
-  const CatIcon: any = (iconMap as any)[(slug as CatalogKey) || "brand-identity"] || Sparkles;
+  const whatsappNumber = "966555812567";
 
-  // Intersection Observer for animations
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    if (!currentCategory) return;
+    
+    document.title = `${currentCategory.title} | شركة علي الشهري القابضة`;
+    const desc = currentCategory.description;
 
-    const animateElements = document.querySelectorAll('.animate-on-scroll');
-    animateElements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Filter services
-  const filteredServices = data.services?.filter(service => {
-    const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         service.desc.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterType === 'all' || 
-                         (filterType === 'premium' && (service as any).premium) ||
-                         (filterType === 'basic' && !(service as any).premium);
-    return matchesSearch && matchesFilter;
-  }) || [];
-
-  // SEO
-  useEffect(() => {
-    const title = `${data.title} | حلول التصميم الاحترافية`;
-    document.title = title;
-
-    const desc = `${data.description} — خدمات تصميم احترافية بأسعار تنافسية وجودة عالية.`;
     let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!meta) {
       meta = document.createElement("meta");
@@ -589,627 +345,664 @@ export default function EnhancedDesignCategory() {
       canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    canonical.href = window.location.origin + `/design-solutions/${slug}`;
-  }, [slug, data.title, data.description]);
+    canonical.href = window.location.origin + window.location.pathname;
+  }, [currentCategory]);
 
-  const startPayment = async () => {
-    if (!selected) return;
-    if (!customer.name || !customer.email) {
-      toast({ 
-        title: "البيانات مطلوبة", 
-        description: "يرجى إدخال الاسم والبريد الإلكتروني.", 
-        variant: "destructive" 
-      });
-      return;
-    }
+  // Intersection Observer for animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            entry.target.classList.add('animate-fade-in');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
 
-    setLoading(true);
+    const animateElements = document.querySelectorAll('.animate-on-scroll');
+    animateElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (!currentCategory) {
+    return (
+      <div className="min-h-screen bg-background" dir="rtl">
+        <Navigation />
+        <main className="container mx-auto px-6 py-20">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-foreground mb-4">القسم غير موجود</h1>
+            <p className="text-muted-foreground mb-8">عذراً، لم نتمكن من العثور على القسم المطلوب.</p>
+            <Link to="/design-solutions">
+              <Button>العودة لحلول التصميم</Button>
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const filteredServices = currentCategory.services
+    .filter(service => 
+      service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.desc.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "price-low": return a.price - b.price;
+        case "price-high": return b.price - a.price;
+        case "rating": return (b.rating || 0) - (a.rating || 0);
+        case "popular": return (b.popular ? 1 : 0) - (a.popular ? 1 : 0);
+        default: return 0;
+      }
+    });
+
+  const handleOrderSubmit = async (formData: any) => {
+    if (!selectedService) return;
+
+    setIsLoading(true);
     try {
-      const { data: resp, error } = await supabase.functions.invoke("paylink-payment", {
-        body: {
-          amount: selected.price,
-          currency: "SAR",
-          customer_name: customer.name,
-          customer_email: customer.email,
-          customer_phone: customer.phone,
-          offer_title: selected.name,
-          description: `${data.title} - ${selected.name}`,
-          success_url: window.location.origin,
-        },
+      // Instead of using Supabase, use WhatsApp redirect
+      const message = `مرحباً، أود طلب خدمة: ${selectedService.name}
+      
+الاسم: ${formData.name}
+البريد: ${formData.email}
+الهاتف: ${formData.phone}
+تفاصيل المشروع: ${formData.details}
+السعر: ${selectedService.price} ر.س
+مدة التسليم: ${selectedService.delivery}`;
+
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+
+      toast({
+        title: "تم توجيهك لواتساب!",
+        description: "سيتم فتح واتساب لإكمال طلبك. سنتواصل معك فوراً.",
       });
 
-      if (error) throw error;
-      if (!resp?.payment_url) throw new Error("تعذر إنشاء رابط الدفع");
-
-      toast({ 
-        title: "إعادة التوجيه للدفع", 
-        description: "سيتم فتح صفحة Paylink لإتمام العملية." 
-      });
-      window.open(resp.payment_url, "_blank");
-      setOpen(false);
-    } catch (e: any) {
-      console.error(e);
-      toast({ 
-        title: "فشل الدفع", 
-        description: e.message || "حدث خطأ غير متوقع", 
-        variant: "destructive" 
+      setIsOrderDialogOpen(false);
+      setSelectedService(null);
+    } catch (error: any) {
+      toast({
+        title: "حدث خطأ",
+        description: "لم نتمكن من إرسال طلبك. حاول مرة أخرى أو تواصل معنا مباشرة.",
+        variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const bookAppointment = () => {
-    if (!appt.date || !appt.time) {
-      toast({ 
-        title: "أدخل الموعد", 
-        description: "يرجى اختيار التاريخ والوقت", 
-        variant: "destructive" 
-      });
-      return;
-    }
-    const msg = `مرحباً، أود حجز موعد لخدمة: ${selected?.name || data.title}\nالتاريخ: ${appt.date}\nالوقت: ${appt.time}\nملاحظات: ${appt.note || "-"}`;
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
-    setAppt({ date: "", time: "", note: "" });
-    setApptOpen(false);
-  };
+  const CategoryIcon = currentCategory.icon;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir="rtl">
       <Navigation />
-
-      {/* Enhanced Hero Section */}
-      <header 
-        ref={heroRef}
-        className="relative overflow-hidden bg-gradient-to-br from-success/10 via-success/5 to-background dark:from-success/20 dark:via-slate-900 dark:to-slate-900"
-      >
-        {/* Animated background elements */}
+      
+      {/* Hero Section with Enhanced Design */}
+      <section className={`relative py-20 ${currentCategory.accent.headerBg} overflow-hidden`} dir="rtl">
+        {/* Animated Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-success/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-success/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-3/4 right-3/4 w-64 h-64 bg-accent/10 rounded-full blur-3xl animate-pulse delay-500"></div>
         </div>
-        
-        <div className="relative container mx-auto px-6 py-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Content */}
-            <div className="space-y-8 animate-fade-in">
-              <div className="space-y-4">
-                <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${data.accent.chip} text-white text-sm font-medium shadow-lg`}>
-                  <CatIcon className="w-4 h-4" />
-                  <Sparkles className="w-4 h-4 animate-spin" />
-                  {data.title}
-                </span>
-                
-                <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                  <span className="bg-gradient-to-r from-success to-success/80 bg-clip-text text-transparent">
-                    {data.title.split(' ')[0]}
-                  </span>
-                  <br />
-                  <span className="text-foreground">
-                    {data.title.split(' ').slice(1).join(' ')}
-                  </span>
-                </h1>
-                
-                <p className="text-xl text-muted-foreground max-w-lg">
-                  {data.subtitle}
-                </p>
-              </div>
 
-              {/* Hero Stats */}
-              <div className="grid grid-cols-3 gap-6">
-                {data.hero?.stats.map((stat, idx) => (
-                  <div key={idx} className="text-center animate-on-scroll" style={{ animationDelay: `${idx * 200}ms` }}>
-                    <div className="text-3xl font-bold bg-gradient-to-r from-success to-success/80 bg-clip-text text-transparent">
-                      {stat.number}
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-5xl mx-auto">
+            {/* Breadcrumb */}
+            <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8 animate-fade-in">
+              <Link to="/design-solutions" className="hover:text-primary transition-colors">حلول التصميم</Link>
+              <ChevronLeft className="w-4 h-4" />
+              <span className="text-foreground">{currentCategory.title}</span>
+            </nav>
+
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Content */}
+              <div className="space-y-8 animate-on-scroll">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <AnimatedIcon 
+                      icon={CategoryIcon} 
+                      size="w-16 h-16"
+                      color={currentCategory.accent.gradient}
+                      animationType="bounce"
+                    />
+                    <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r ${currentCategory.accent.gradient} text-white text-sm font-bold shadow-lg`}>
+                      <Sparkles className="w-4 h-4 animate-spin" style={{ animationDuration: '3s' }} />
+                      <span>قسم متخصص</span>
                     </div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
                   </div>
-                ))}
-              </div>
 
-              {/* Hero Features */}
-              <div className="space-y-3">
-                {data.hero?.features.map((feature, idx) => (
-                  <div key={idx} className="flex items-center gap-3 animate-on-scroll" style={{ animationDelay: `${idx * 100}ms` }}>
-                    <CheckCircle className="w-5 h-5 text-success" />
-                    <span className="text-muted-foreground">{feature}</span>
+                  <div className="space-y-4">
+                    <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+                      <span className={`bg-gradient-to-r ${currentCategory.accent.gradient} bg-clip-text text-transparent`}>
+                        {currentCategory.title}
+                      </span>
+                    </h1>
+                    <p className="text-xl text-muted-foreground leading-relaxed">
+                      {currentCategory.subtitle}
+                    </p>
+                    <p className="text-lg text-muted-foreground/80 leading-relaxed">
+                      {currentCategory.description}
+                    </p>
                   </div>
-                ))}
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="group">
-                  <Eye className="w-5 h-5 ml-2" />
-                  استعرض الخدمات
-                  <ChevronRight className="w-4 h-4 mr-2 transition-transform group-hover:translate-x-1" />
-                </Button>
-                <Button variant="outline" size="lg">
-                  <MessageCircle className="w-5 h-5 ml-2" />
-                  تحدث مع خبير
-                </Button>
-              </div>
-            </div>
-
-            {/* Hero Image */}
-            <div className="relative animate-fade-in delay-300">
-              <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-                <AspectRatio ratio={4/3}>
-                  <img
-                    src={currentImage}
-                    alt={data.title}
-                    className="w-full h-full object-cover"
-                  />
-                </AspectRatio>
-                
-                {/* Floating elements */}
-                <div className="absolute top-6 right-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-xl p-4 shadow-lg animate-bounce">
-                  <div className="flex items-center gap-2">
-                    <Star className="w-5 h-5 text-yellow-500 fill-current" />
-                    <span className="text-sm font-medium">4.9/5</span>
-                  </div>
-                  <div className="text-xs text-muted-foreground">تقييم العملاء</div>
                 </div>
-                
-                <div className="absolute bottom-6 left-6 bg-success/90 text-white rounded-xl p-4 shadow-lg">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    <span className="text-sm font-medium">+200%</span>
+
+                {/* Features */}
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold text-foreground">مميزات حصرية:</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {currentCategory.hero.features.map((feature, index) => {
+                      const FeatureIcon = feature.icon;
+                      return (
+                        <div key={index} className="flex items-center gap-3 p-4 rounded-xl bg-card/60 backdrop-blur-sm border border-border/50 hover:shadow-lg transition-all duration-300 group">
+                          <div className="relative">
+                            <div className={`absolute inset-0 bg-gradient-to-r ${currentCategory.accent.gradient} rounded-lg blur-sm opacity-50 group-hover:opacity-100 transition-opacity`}></div>
+                            <div className="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background/90 border border-border/30">
+                              <FeatureIcon className="w-5 h-5 text-primary animate-pulse" />
+                            </div>
+                          </div>
+                          <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{feature.text}</span>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className="text-xs opacity-90">زيادة في الطلبات</div>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button 
+                    size="lg" 
+                    className={`bg-gradient-to-l ${currentCategory.accent.gradient} hover:shadow-xl transition-all duration-300 hover:scale-105 text-white group`}
+                    onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+                    dir="rtl"
+                  >
+                    <ChevronLeft className="w-5 h-5 ml-2 transition-transform group-hover:-translate-x-1" />
+                    <span>استكشف الخدمات</span>
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    onClick={() => window.open(`https://wa.me/${whatsappNumber}?text=مرحباً، أود الاستفسار عن ${currentCategory.title}`, '_blank')}
+                    className="border-2 hover:bg-success hover:text-white hover:border-success transition-all duration-300 group"
+                    dir="rtl"
+                  >
+                    <MessageCircle className="w-5 h-5 ml-2 group-hover:scale-110 transition-transform" />
+                    <span>تواصل واتساب</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="space-y-8 animate-on-scroll" style={{ animationDelay: '200ms' }}>
+                <div className="grid grid-cols-1 gap-6">
+                  {currentCategory.hero.stats.map((stat, index) => {
+                    const StatIcon = stat.icon;
+                    return (
+                      <Card key={index} className="p-6 bg-card/60 backdrop-blur-sm border-2 border-primary/10 hover:border-primary/30 transition-all duration-500 group hover:shadow-xl hover:scale-105">
+                        <div className="flex items-center gap-4">
+                          <AnimatedIcon 
+                            icon={StatIcon} 
+                            size="w-12 h-12"
+                            color={currentCategory.accent.gradient}
+                            animationType={index % 2 === 0 ? "bounce" : "pulse"}
+                          />
+                          <div className="space-y-1">
+                            <div className={`text-3xl font-bold bg-gradient-to-r ${currentCategory.accent.gradient} bg-clip-text text-transparent`}>
+                              {stat.number}
+                            </div>
+                            <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </header>
+      </section>
 
-      <main className="relative py-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Navigation Tabs */}
-          <Tabs defaultValue="services" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-12">
-              <TabsTrigger value="services" className="flex items-center gap-2">
-                <Grid3X3 className="w-4 h-4" />
-                الخدمات
-              </TabsTrigger>
-              <TabsTrigger value="process" className="flex items-center gap-2">
-                <Rocket className="w-4 h-4" />
-                العملية
-              </TabsTrigger>
-              <TabsTrigger value="testimonials" className="flex items-center gap-2">
-                <Heart className="w-4 h-4" />
-                التقييمات
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Services Tab */}
-            <TabsContent value="services" className="space-y-8">
-              {/* Filters and Search */}
-              <div className="flex flex-col md:flex-row gap-4 items-center justify-between" dir="rtl">
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                    <Input
-                      placeholder="ابحث في الخدمات..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 w-64"
-                      dir="rtl"
-                    />
-                  </div>
-                  
-                  <select 
-                    value={filterType} 
-                    onChange={(e) => setFilterType(e.target.value as any)}
-                    className="px-4 py-2 rounded-lg border bg-background"
-                  >
-                    <option value="all">جميع الخدمات</option>
-                    <option value="basic">الخدمات الأساسية</option>
-                    <option value="premium">الخدمات المتميزة</option>
-                  </select>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                  >
-                    <Grid3X3 className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                  >
-                    <List className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Services Grid/List */}
-              <div className={`grid gap-8 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
-                  : 'grid-cols-1'
-              }`}>
-                {filteredServices.map((service, idx) => (
-                  <Card key={service.name} className={`group relative overflow-hidden border-2 border-success/10 hover:border-success/30 transition-all duration-500 hover:shadow-2xl animate-on-scroll ${
-                    viewMode === 'list' ? 'flex flex-col md:flex-row' : ''
-                  }`} style={{ animationDelay: `${idx * 100}ms` }}>
-                    
-                    {/* Service badges */}
-                    <div className="absolute top-4 right-4 flex flex-col gap-2 z-10">
-                      {(service as any).popular && (
-                        <Badge className="bg-yellow-500 text-black">
-                          <Star className="w-3 h-3 ml-1" />
-                          الأكثر طلباً
-                        </Badge>
-                      )}
-                      {(service as any).premium && (
-                        <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                          <Crown className="w-3 h-3 ml-1" />
-                          متميز
-                        </Badge>
-                      )}
-                    </div>
-
-                    {/* Animated background elements */}
-                    <div className="absolute inset-0 pointer-events-none">
-                      <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-gradient-to-r from-success/10 to-primary/10 blur-2xl transition-all duration-700 group-hover:scale-150" />
-                      <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-2xl transition-all duration-700 group-hover:scale-150" />
-                    </div>
-
-                    <div className={`relative ${viewMode === 'list' ? 'md:w-2/3' : ''}`}>
-                      {/* Image section */}
-                      <AspectRatio ratio={16/9} className="relative overflow-hidden">
-                        <img
-                          src={(service as any).image || currentImage}
-                          alt={service.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        
-                        {/* Price overlay */}
-                        <div className="absolute bottom-4 left-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm rounded-lg p-3">
-                          <div className="flex items-center gap-2">
-                            {service.originalPrice && (
-                              <span className="text-sm text-muted-foreground line-through">
-                                {service.originalPrice} ر.س
-                              </span>
-                            )}
-                            <span className="text-xl font-bold text-success">
-                              {service.price} ر.س
-                            </span>
-                          </div>
-                          {service.originalPrice && (
-                            <div className="text-xs text-green-600">
-                              وفر {service.originalPrice - service.price} ر.س
-                            </div>
-                          )}
-                        </div>
-                      </AspectRatio>
-
-                      {/* Content */}
-                      <div className="p-6 space-y-4">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h3 className="text-xl font-bold group-hover:text-success transition-colors">
-                              {service.name}
-                            </h3>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {service.desc}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Rating and reviews */}
-                        {service.rating && (
-                          <div className="flex items-center gap-2" dir="rtl">
-                            <span className="text-sm text-muted-foreground">
-                              ({service.reviews} تقييم) {service.rating}
-                            </span>
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className={`w-4 h-4 ${
-                                    i < Math.floor(service.rating!) 
-                                      ? 'text-yellow-500 fill-current' 
-                                      : 'text-gray-300'
-                                  }`} 
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Meta info */}
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4 text-success" />
-                            {service.delivery}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Target className="w-4 h-4 text-success" />
-                            {service.complexity}
-                          </div>
-                        </div>
-
-                        {/* Features list */}
-                        <div className="space-y-2">
-                          <h4 className="font-medium text-sm">المتضمن:</h4>
-                          <ul className="space-y-1">
-                            {service.features.slice(0, viewMode === 'list' ? service.features.length : 3).map((feature, i) => (
-                              <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <CheckCircle className="w-3 h-3 text-success flex-shrink-0" />
-                                {feature}
-                              </li>
-                            ))}
-                            {viewMode === 'grid' && service.features.length > 3 && (
-                              <li className="text-xs text-muted-foreground">
-                                +{service.features.length - 3} المزيد...
-                              </li>
-                            )}
-                          </ul>
-                        </div>
-
-                        {/* File types */}
-                        <div className="flex flex-wrap gap-1">
-                          {service.includes.map((type) => (
-                            <Badge key={type} variant="secondary" className="text-xs">
-                              {type}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        {/* Action buttons */}
-                        <div className="flex gap-3 pt-4">
-                          <Dialog open={open && selected?.name === service.name} onOpenChange={setOpen}>
-                            <DialogTrigger asChild>
-                              <Button 
-                                className="flex-1 group"
-                                onClick={() => setSelected({ name: service.name, price: service.price })}
-                              >
-                                <CreditCard className="w-4 h-4 ml-2" />
-                                اطلب الآن
-                                <ArrowRight className="w-4 h-4 mr-2 transition-transform group-hover:translate-x-1" />
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-md">
-                              <DialogHeader>
-                                <DialogTitle>إتمام الطلب - {service.name}</DialogTitle>
-                              </DialogHeader>
-                              <div className="space-y-4">
-                                <div className="p-4 bg-muted rounded-lg">
-                                  <div className="flex justify-between items-center">
-                                    <span>السعر:</span>
-                                    <span className="font-bold text-success">{service.price} ر.س</span>
-                                  </div>
-                                </div>
-                                <div className="space-y-3">
-                                  <div>
-                                    <Label htmlFor="name">الاسم الكامل *</Label>
-                                    <Input
-                                      id="name"
-                                      value={customer.name}
-                                      onChange={(e) => setCustomer(prev => ({ ...prev, name: e.target.value }))}
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label htmlFor="email">البريد الإلكتروني *</Label>
-                                    <Input
-                                      id="email"
-                                      type="email"
-                                      value={customer.email}
-                                      onChange={(e) => setCustomer(prev => ({ ...prev, email: e.target.value }))}
-                                    />
-                                  </div>
-                                  <div>
-                                    <Label htmlFor="phone">رقم الهاتف</Label>
-                                    <Input
-                                      id="phone"
-                                      value={customer.phone}
-                                      onChange={(e) => setCustomer(prev => ({ ...prev, phone: e.target.value }))}
-                                    />
-                                  </div>
-                                </div>
-                                <Button 
-                                  onClick={startPayment} 
-                                  disabled={loading}
-                                  className="w-full"
-                                >
-                                  {loading ? (
-                                    <>
-                                      <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-                                      جاري المعالجة...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Lock className="w-4 h-4 ml-2" />
-                                      ادفع بأمان {service.price} ر.س
-                                    </>
-                                  )}
-                                </Button>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-
-                          <Dialog open={apptOpen && selected?.name === service.name} onOpenChange={setApptOpen}>
-                            <DialogTrigger asChild>
-                              <Button 
-                                variant="outline"
-                                onClick={() => setSelected({ name: service.name, price: service.price })}
-                              >
-                                <Calendar className="w-4 h-4" />
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-md">
-                              <DialogHeader>
-                                <DialogTitle>حجز موعد استشارة</DialogTitle>
-                              </DialogHeader>
-                              <div className="space-y-4">
-                                <div>
-                                  <Label htmlFor="date">التاريخ</Label>
-                                  <Input
-                                    id="date"
-                                    type="date"
-                                    value={appt.date}
-                                    onChange={(e) => setAppt(prev => ({ ...prev, date: e.target.value }))}
-                                  />
-                                </div>
-                                <div>
-                                  <Label htmlFor="time">الوقت</Label>
-                                  <Input
-                                    id="time"
-                                    type="time"
-                                    value={appt.time}
-                                    onChange={(e) => setAppt(prev => ({ ...prev, time: e.target.value }))}
-                                  />
-                                </div>
-                                <div>
-                                  <Label htmlFor="note">ملاحظات إضافية</Label>
-                                  <Input
-                                    id="note"
-                                    value={appt.note}
-                                    onChange={(e) => setAppt(prev => ({ ...prev, note: e.target.value }))}
-                                  />
-                                </div>
-                                <Button onClick={bookAppointment} className="w-full">
-                                  <MessageCircle className="w-4 h-4 ml-2" />
-                                  احجز عبر واتساب
-                                </Button>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* Process Tab */}
-            <TabsContent value="process" className="space-y-12">
-              <div className="text-center space-y-4">
-                <h2 className="text-3xl font-bold">كيف نعمل؟</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  نتبع منهجية مجربة ومطورة لضمان تحقيق أفضل النتائج لمشروعك
-                </p>
-              </div>
-
-              <div className="relative">
-                {/* Progress line */}
-                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-success to-success/20 rounded-full hidden lg:block"></div>
-
-                <div className="space-y-12">
-                  {data.process?.map((step, idx) => (
-                    <div key={idx} className={`flex items-center gap-8 ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} animate-on-scroll`} style={{ animationDelay: `${idx * 200}ms` }}>
-                      {/* Step content */}
-                      <div className="flex-1 space-y-4">
-                        <div className="space-y-2">
-                          <h3 className="text-2xl font-bold">{step.title}</h3>
-                          <p className="text-muted-foreground">{step.desc}</p>
-                        </div>
-                      </div>
-
-                      {/* Step number */}
-                      <div className="relative z-10 w-16 h-16 bg-gradient-to-r from-success to-success/80 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                        {step.step}
-                      </div>
-
-                      {/* Spacer for opposite side */}
-                      <div className="flex-1 hidden lg:block"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Testimonials Tab */}
-            <TabsContent value="testimonials" className="space-y-12">
-              <div className="text-center space-y-4">
-                <h2 className="text-3xl font-bold">ماذا يقول عملاؤنا؟</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  شهادات حقيقية من عملاء راضين عن خدماتنا
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                {data.testimonials?.map((testimonial, idx) => (
-                  <Card key={idx} className="p-8 animate-on-scroll" style={{ animationDelay: `${idx * 200}ms` }}>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-1" dir="rtl">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 text-yellow-500 fill-current" />
-                        ))}
-                      </div>
-                      <blockquote className="text-lg italic">
-                        "{testimonial.text}"
-                      </blockquote>
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-r from-success to-success/80 rounded-full flex items-center justify-center text-white text-xl">
-                          {testimonial.avatar}
-                        </div>
-                        <div>
-                          <div className="font-semibold">{testimonial.name}</div>
-                          <div className="text-sm text-muted-foreground">{testimonial.company}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          {/* Bottom CTA */}
-          <div className="mt-16 text-center space-y-8 animate-on-scroll">
-            <div className="space-y-4">
-              <h2 className="text-3xl font-bold">جاهز لبدء مشروعك؟</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                تواصل معنا اليوم واحصل على استشارة مجانية لمشروعك
-              </p>
+      {/* Services Section */}
+      <section id="services" className="py-20 bg-muted/30" dir="rtl">
+        <div className="container mx-auto px-6">
+          {/* Section Header */}
+          <div className="text-center mb-16 space-y-6 animate-on-scroll">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border-2 bg-card/80 border-primary/20 shadow-lg backdrop-blur-sm">
+              <Package className="w-6 h-6 text-primary animate-spin" style={{ animationDuration: '4s' }} />
+              <span className="text-lg font-bold text-foreground">خدماتنا المتميزة</span>
+              <Sparkles className="w-5 h-5 text-success animate-pulse" />
             </div>
+            
+            <h2 className="text-4xl md:text-5xl font-bold">
+              <span className={`bg-gradient-to-r ${currentCategory.accent.gradient} bg-clip-text text-transparent`}>
+                اختر الخدمة المناسبة
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              مجموعة شاملة من الخدمات المصممة خصيصاً لتلبية احتياجاتك وتحقيق أهدافك
+            </p>
+          </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`مرحباً، أود الاستفسار عن ${data.title}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
+          {/* Search and Filter Controls */}
+          <div className="flex flex-col md:flex-row gap-4 mb-12 animate-on-scroll">
+            <div className="relative flex-1">
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Input
+                placeholder="ابحث في الخدمات..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pr-10 text-right"
+                dir="rtl"
+              />
+            </div>
+            
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === "grid" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+                className="flex items-center gap-2"
               >
-                <Button size="lg" className="px-8">
-                  <MessageCircle className="w-5 h-5 ml-2" />
-                  تواصل عبر واتساب
-                </Button>
-              </a>
-              <Button asChild size="lg" variant="outline" className="px-8">
-                <Link to="/book-consultation">
-                  <Calendar className="w-5 h-5 ml-2" />
-                  احجز استشارة مجانية
-                </Link>
+                <Grid3X3 className="w-4 h-4" />
+                <span>شبكة</span>
+              </Button>
+              
+              <Button
+                variant={viewMode === "list" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+                className="flex items-center gap-2"
+              >
+                <List className="w-4 h-4" />
+                <span>قائمة</span>
               </Button>
             </div>
 
-            <div className="mt-8">
-              <Link 
-                to="/design-solutions" 
-                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-success transition-colors story-link"
-              >
-                <ChevronRight className="w-4 h-4 rotate-180" />
-                العودة إلى جميع أقسام حلول التصميم
-              </Link>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-2 rounded-lg border border-border bg-background text-foreground text-right"
+              dir="rtl"
+            >
+              <option value="popular">الأكثر طلباً</option>
+              <option value="price-low">السعر من الأقل</option>
+              <option value="price-high">السعر من الأعلى</option>
+              <option value="rating">الأعلى تقييماً</option>
+            </select>
+          </div>
+
+          {/* Services Grid/List */}
+          <div className={`${viewMode === "grid" ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8" : "space-y-6"}`}>
+            {filteredServices.map((service, index) => {
+              const ServiceIcon = service.icon;
+              return (
+                <Card 
+                  key={index}
+                  className="group relative overflow-hidden rounded-3xl border-2 border-primary/10 hover:border-primary/30 transition-all duration-700 hover:shadow-2xl hover:scale-105 bg-card/60 backdrop-blur-sm animate-on-scroll"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                  dir="rtl"
+                >
+                  {/* Background Effects */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className={`absolute -top-8 -right-8 w-32 h-32 rounded-full bg-gradient-to-br ${service.color} opacity-20 blur-2xl transition-all duration-700 group-hover:scale-150 group-hover:opacity-40`} />
+                    <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-gradient-to-tr from-accent/20 to-secondary/20 blur-2xl transition-all duration-700 group-hover:scale-125" />
+                  </div>
+
+                  {/* Badges */}
+                  <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
+                    {service.popular && (
+                      <Badge className="bg-yellow-500 text-black text-xs flex items-center gap-1" dir="rtl">
+                        <span>الأكثر طلباً</span>
+                        <TrendingUp className="w-3 h-3" />
+                      </Badge>
+                    )}
+                    {service.premium && (
+                      <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs flex items-center gap-1" dir="rtl">
+                        <span>مميز</span>
+                        <Crown className="w-3 h-3" />
+                      </Badge>
+                    )}
+                  </div>
+
+                  {/* Animated Icon */}
+                  <div className="absolute top-4 right-4 z-20">
+                    <AnimatedIcon 
+                      icon={ServiceIcon} 
+                      size="w-16 h-16"
+                      color={service.color}
+                      animationType={service.animationType}
+                    />
+                  </div>
+
+                  <div className="p-8 pt-20 space-y-6">
+                    {/* Service Info */}
+                    <div className="space-y-4">
+                      <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${service.color} text-white text-sm font-bold shadow-lg`} dir="rtl">
+                        <span>{service.complexity}</span>
+                        <BadgeCheck className="w-4 h-4" />
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">
+                        {service.name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {service.desc}
+                      </p>
+                    </div>
+
+                    {/* Features */}
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-semibold text-foreground flex items-center gap-2" dir="rtl">
+                        <span>المميزات المتضمنة:</span>
+                        <CheckCircle className="w-4 h-4 text-success" />
+                      </h4>
+                      <ul className="space-y-2">
+                        {service.features.slice(0, 3).map((feature, i) => (
+                          <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground" dir="rtl">
+                            <span>{feature}</span>
+                            <CheckCircle className="w-4 h-4 text-success animate-pulse" />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Rating and Reviews */}
+                    {service.rating && (
+                      <div className="flex items-center gap-2" dir="rtl">
+                        <span className="text-sm text-muted-foreground">
+                          ({service.reviews} تقييم) {service.rating}
+                        </span>
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={`w-4 h-4 ${
+                                i < Math.floor(service.rating!) 
+                                  ? 'text-yellow-500 fill-current' 
+                                  : 'text-gray-300'
+                              }`} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Pricing */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between" dir="rtl">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-primary">{service.price} ر.س</span>
+                            {service.originalPrice && (
+                              <span className="text-lg text-muted-foreground line-through">{service.originalPrice} ر.س</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span>التسليم: {service.delivery}</span>
+                            <Clock className="w-4 h-4" />
+                          </div>
+                        </div>
+                        
+                        {service.originalPrice && (
+                          <Badge variant="destructive" className="text-xs">
+                            خصم {Math.round((1 - service.price / service.originalPrice) * 100)}%
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {service.includes.map((include, i) => (
+                          <span key={i} className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-md border">
+                            {include}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col gap-3 pt-4 border-t border-border/50">
+                      <Button 
+                        size="lg" 
+                        className={`w-full bg-gradient-to-l ${service.color} hover:shadow-lg transition-all duration-300 group-hover:scale-105 text-white`}
+                        onClick={() => {
+                          setSelectedService(service);
+                          setIsOrderDialogOpen(true);
+                        }}
+                        dir="rtl"
+                      >
+                        <ChevronLeft className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:-translate-x-1" />
+                        <span>اطلب الخدمة الآن</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => window.open(`https://wa.me/${whatsappNumber}?text=مرحباً، أود الاستفسار عن ${service.name}`, '_blank')}
+                        className="w-full hover:bg-success hover:text-white transition-all duration-300"
+                        dir="rtl"
+                      >
+                        <MessageCircle className="w-4 h-4 ml-2" />
+                        <span>استفسار واتساب</span>
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+
+          {filteredServices.length === 0 && (
+            <div className="text-center py-16 animate-fade-in">
+              <div className="space-y-4">
+                <div className="w-24 h-24 mx-auto rounded-full bg-muted flex items-center justify-center">
+                  <Search className="w-12 h-12 text-muted-foreground" />
+                </div>
+                <h3 className="text-2xl font-semibold text-foreground">لا توجد خدمات مطابقة</h3>
+                <p className="text-muted-foreground">جرب البحث بكلمات مختلفة أو تصفح جميع الخدمات</p>
+                <Button onClick={() => setSearchTerm("")} variant="outline">
+                  عرض جميع الخدمات
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      {currentCategory.testimonials.length > 0 && (
+        <section className="py-20 bg-background" dir="rtl">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16 animate-on-scroll">
+              <h2 className="text-4xl font-bold mb-4">آراء عملائنا</h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                اكتشف تجارب عملائنا معنا وكيف ساعدناهم في تحقيق أهدافهم
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {currentCategory.testimonials.map((testimonial, idx) => (
+                <Card key={idx} className="p-8 animate-on-scroll hover:shadow-xl transition-all duration-300 hover:scale-105" style={{ animationDelay: `${idx * 200}ms` }}>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-1" dir="rtl">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 text-yellow-500 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed italic">"{testimonial.text}"</p>
+                    <div className="flex items-center gap-3 pt-4 border-t border-border/50">
+                      <div className="text-3xl">{testimonial.avatar}</div>
+                      <div>
+                        <div className="font-semibold">{testimonial.name}</div>
+                        <div className="text-sm text-muted-foreground">{testimonial.company}</div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CTA Section */}
+      <section className="py-20 bg-muted/50" dir="rtl">
+        <div className="container mx-auto px-6">
+          <div className={`text-center bg-gradient-to-l ${currentCategory.accent.gradient} rounded-3xl p-12 text-white animate-on-scroll relative overflow-hidden`}>
+            {/* Background Effects */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
+            </div>
+            
+            <div className="max-w-3xl mx-auto space-y-8 relative z-10">
+              <div className="space-y-4">
+                <h2 className="text-4xl md:text-5xl font-bold">
+                  ابدأ مشروعك الآن
+                </h2>
+                <p className="text-xl text-white/90 leading-relaxed">
+                  احصل على تصميم احترافي يميز علامتك التجارية ويحقق أهدافك
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button 
+                  size="lg" 
+                  variant="secondary"
+                  onClick={() => window.open(`https://wa.me/${whatsappNumber}?text=مرحباً، أود الحصول على عرض سعر لـ ${currentCategory.title}`, '_blank')}
+                  className="bg-white text-primary hover:bg-white/90 transition-all duration-300 hover:scale-105 group"
+                  dir="rtl"
+                >
+                  <MessageCircle className="w-6 h-6 ml-2 group-hover:scale-110 transition-transform" />
+                  <span>تواصل عبر واتساب</span>
+                </Button>
+                
+                <Link to="/book-consultation">
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="bg-transparent border-white text-white hover:bg-white hover:text-primary transition-all duration-300 hover:scale-105"
+                    dir="rtl"
+                  >
+                    <Calendar className="w-5 h-5 ml-2" />
+                    <span>احجز استشارة مجانية</span>
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="flex items-center justify-center gap-8 text-white/80 text-sm" dir="rtl">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 animate-pulse" />
+                  <span>ضمان الجودة</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 animate-pulse delay-200" />
+                  <span>دعم مستمر</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Award className="w-5 h-5 animate-pulse delay-400" />
+                  <span>معايير عالمية</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* Order Dialog */}
+      <Dialog open={isOrderDialogOpen} onOpenChange={setIsOrderDialogOpen}>
+        <DialogContent className="max-w-2xl" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">طلب خدمة {selectedService?.name}</DialogTitle>
+          </DialogHeader>
+          
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target as HTMLFormElement);
+            handleOrderSubmit({
+              name: formData.get('name'),
+              email: formData.get('email'),
+              phone: formData.get('phone'),
+              details: formData.get('details')
+            });
+          }} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">الاسم الكامل *</Label>
+                <Input id="name" name="name" required placeholder="اكتب اسمك الكامل" />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="phone">رقم الهاتف *</Label>
+                <Input id="phone" name="phone" required placeholder="05xxxxxxxx" />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="email">البريد الإلكتروني *</Label>
+              <Input id="email" name="email" type="email" required placeholder="name@example.com" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="details">تفاصيل المشروع</Label>
+              <textarea 
+                id="details" 
+                name="details"
+                className="w-full h-32 px-3 py-2 border border-border rounded-lg resize-none bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="اكتب تفاصيل مشروعك، أهدافك، والمواصفات المطلوبة..."
+              />
+            </div>
+
+            {selectedService && (
+              <div className="p-4 bg-muted rounded-lg space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">الخدمة المطلوبة:</span>
+                  <span>{selectedService.name}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">السعر:</span>
+                  <span className="text-primary font-bold">{selectedService.price} ر.س</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">مدة التسليم:</span>
+                  <span>{selectedService.delivery}</span>
+                </div>
+              </div>
+            )}
+            
+            <div className="flex gap-4 pt-4">
+              <Button type="submit" disabled={isLoading} className="flex-1">
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    جاري الإرسال...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    إرسال الطلب
+                  </>
+                )}
+              </Button>
+              
+              <Button type="button" variant="outline" onClick={() => setIsOrderDialogOpen(false)}>
+                إلغاء
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
       <WhatsAppButton />
     </div>
   );
-}
+};
+
+export default EnhancedDesignCategory;
