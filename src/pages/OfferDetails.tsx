@@ -273,6 +273,7 @@ const OfferDetails = () => {
         customer_phone: paymentData.phone,
         offer_title: offer.title,
         description: `دفع عرض: ${offer.title}`,
+        ...(selectedPaymentMethod === 'paylink' ? { success_url: window.location.origin } : {})
       };
 
       switch (selectedPaymentMethod) {

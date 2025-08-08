@@ -191,16 +191,18 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
                              selectedPaymentGateway === 'paylink' ? 'paylink-payment' : 
                              'stc-pay';
       
+      const payload = {
+        amount: amount,
+        currency: 'SAR',
+        customer_name: formData.name,
+        customer_email: formData.email,
+        customer_phone: formData.phone,
+        offer_title: offer.title,
+        description: `دفع عرض: ${offer.title}`,
+        ...(selectedPaymentGateway === 'paylink' ? { success_url: window.location.origin } : {})
+      };
       const { data, error } = await supabase.functions.invoke(paymentFunction, {
-        body: {
-          amount: amount,
-          currency: 'SAR',
-          customer_name: formData.name,
-          customer_email: formData.email,
-          customer_phone: formData.phone,
-          offer_title: offer.title,
-          description: `دفع عرض: ${offer.title}`,
-        },
+        body: payload,
       });
 
       if (error) {

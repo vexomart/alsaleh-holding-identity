@@ -108,7 +108,8 @@ const SoftwareProducts = () => {
             customer_email: 'customer@example.com',
             customer_phone: '966500000000',
             offer_title: productName,
-            description: `شراء منتج: ${productName}`
+            description: `شراء منتج: ${productName}`,
+            success_url: window.location.origin
           };
           break;
         case 'tap':

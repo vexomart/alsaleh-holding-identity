@@ -14,6 +14,7 @@ interface PayLinkPaymentRequest {
   customer_phone?: string;
   offer_title: string;
   description: string;
+  success_url?: string;
 }
 
 serve(async (req) => {
@@ -57,7 +58,7 @@ serve(async (req) => {
       clientMobile: requestData.customer_phone?.replace(/[^\d]/g, '') || "966500000000",
       clientName: requestData.customer_name,
       note: requestData.description,
-      callBackUrl: `${req.headers.get("origin")}/payment-success`,
+      callBackUrl: `${requestData.success_url || req.headers.get("origin") || new URL(req.url).origin}/payment-success`,
       clientEmail: requestData.customer_email,
       currency: requestData.currency,
       displayCurrencyIso: requestData.currency,
