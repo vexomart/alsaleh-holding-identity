@@ -21,3 +21,6 @@ verify_jwt = false
 
 [functions.consultation-booking]
 verify_jwt = false
+
+[functions.paylink-payment]
+verify_jwt = false
