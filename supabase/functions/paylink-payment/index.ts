@@ -52,28 +52,66 @@ serve(async (req) => {
       console.log("No authenticated user, proceeding as guest");
     }
 
-    // Create invoice with Paylink
+    // Create invoice with Paylink (per docs: orderNumber, products, etc.)
+    const origin = requestData.success_url || req.headers.get("origin") || new URL(req.url).origin;
+    const orderNumber = `ORD-${Date.now()}`;
+    const rawPhone = (requestData.customer_phone || "0500000000").replace(/[^\d]/g, "");
+    const normalizedPhone = rawPhone.startsWith("05")
+      ? rawPhone
+      : rawPhone.startsWith("9665")
+        ? `0${rawPhone.slice(3)}`
+        : rawPhone.startsWith("5")
+          ? `0${rawPhone}`
+          : rawPhone || "0500000000";
+
     const paylinkPayload = {
+      orderNumber,
       amount: requestData.amount,
-      clientMobile: requestData.customer_phone?.replace(/[^\d]/g, '') || "966500000000",
+      callBackUrl: `${origin}/payment-success`,
+      cancelUrl: `${origin}/payment-cancel`,
       clientName: requestData.customer_name,
-      note: requestData.description,
-      callBackUrl: `${requestData.success_url || req.headers.get("origin") || new URL(req.url).origin}/payment-success`,
       clientEmail: requestData.customer_email,
-      currency: requestData.currency,
-      displayCurrencyIso: requestData.currency,
+      clientMobile: normalizedPhone,
+      currency: requestData.currency || "SAR",
+      products: [
+        {
+          title: requestData.offer_title || "خدمة",
+          price: requestData.amount,
+          qty: 1,
+          description: requestData.description || "",
+          isDigital: true
+        }
+      ],
+      supportedCardBrands: ["mada", "visaMastercard"],
+      note: requestData.description,
     };
 
-    console.log("Sending request to Paylink API...");
+    console.log("Authenticating with Paylink...");
+    let token = Deno.env.get("PAYLINK_ACCESS_TOKEN") || "";
+    if (!token) {
+      if (!paylinkApiId || !paylinkApiKey) {
+        throw new Error("PAYLINK_API_ID and PAYLINK_API_KEY are required to fetch token");
+      }
+      const authResp = await fetch("https://restapi.paylink.sa/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ apiId: paylinkApiId, secretKey: paylinkApiKey, persistToken: "true" })
+      });
+      const authJson = await authResp.json();
+      console.log("Paylink auth status:", authResp.status);
+      if (!authResp.ok || !authJson.id_token) {
+        console.error("Paylink auth error:", authJson);
+        throw new Error("Failed to authenticate with Paylink");
+      }
+      token = authJson.id_token;
+    }
 
+    console.log("Creating invoice on Paylink...");
     const headers: Record<string, string> = {
-      "Authorization": `Bearer ${paylinkApiKey}`,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json",
       "Accept": "application/json",
     };
-    if (paylinkApiId) {
-      headers["ApiId"] = paylinkApiId;
-    }
 
     const paylinkResponse = await fetch("https://restapi.paylink.sa/api/addInvoice", {
       method: "POST",
