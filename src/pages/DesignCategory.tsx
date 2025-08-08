@@ -223,7 +223,7 @@ export default function DesignCategory() {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      <header className={`relative bg-gradient-to-br from-emerald-50 via-green-50 to-primary/10 dark:from-emerald-950 dark:via-slate-900 dark:to-slate-900 border-b border-white/20 dark:border-slate-700/50 py-16 px-6 text-center animate-fade-in`}>
+      <header className={`relative bg-gradient-to-br from-success/10 via-success/5 to-success/0 dark:from-success/20 dark:via-slate-900 dark:to-slate-900 border-b border-white/20 dark:border-slate-700/50 py-16 px-6 text-center animate-fade-in`}>
         <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 to-background/80"></div>
         <div className="relative max-w-3xl mx-auto">
