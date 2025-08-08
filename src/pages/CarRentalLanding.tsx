@@ -271,9 +271,10 @@ const CarRentalLanding = () => {
   const navigation = [
     { name: "الرئيسية", href: "/car-rental-landing", active: true },
     { name: "أسطول السيارات", href: "/car-fleet" },
+    { name: "خدماتنا", href: "/car-rental/services" },
     { name: "احجز الآن", href: "/car-booking" },
-    { name: "من نحن", href: "#about" },
-    { name: "تواصل معنا", href: "#contact" }
+    { name: "من نحن", href: "/car-rental/about" },
+    { name: "تواصل معنا", href: "/car-rental/contact" }
   ];
 
   const nextSlide = () => {
