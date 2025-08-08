@@ -9,7 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles, CreditCard, Loader2, Lock, Calendar, Clock, ArrowRight, CheckCircle, Palette, Megaphone, MessageCircle, Printer, MonitorSmartphone, Wrench, Crown } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import heroBg from "@/assets/hero-bg.jpg";
+import { Sparkles, CreditCard, Loader2, Lock, Calendar, Clock, ArrowRight, CheckCircle, Palette, Megaphone, MessageCircle, Printer, MonitorSmartphone, Wrench, Crown, IdCard, FileText, BookOpen, Package, Shirt, Gift, Edit3, Layout, Image, Layers, BadgeCheck, BarChart3, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -119,6 +121,33 @@ export default function DesignCategory() {
   } as const;
   const CatIcon: any = (iconMap as any)[(slug as CatalogKey) || "brand-identity"] || Sparkles;
 
+  const getServiceIcon = (name: string) => {
+    const n = name.toLowerCase();
+    if (n.includes("شعار")) return Crown;
+    if (n.includes("هوية")) return Palette;
+    if (n.includes("بزنس") || n.includes("بطاقات")) return IdCard;
+    if (n.includes("الأوراق") || n.includes("خطابات")) return FileText;
+    if (n.includes("دليل")) return BookOpen;
+    if (n.includes("بروشور")) return Layout;
+    if (n.includes("فلاير")) return Megaphone;
+    if (n.includes("بنرات") || n.includes("بوسترات") || n.includes("أغلفة") || n.includes("منشورات") || n.includes("قوالب")) return Image;
+    if (n.includes("كتالوج")) return Layers;
+    if (n.includes("واجهات المواقع") || n.includes("المواقع")) return MonitorSmartphone;
+    if (n.includes("واجهات التطبيقات") || n.includes("التطبيقات")) return MonitorSmartphone;
+    if (n.includes("العروض التقديمية") || n.includes("عرض")) return Layout;
+    if (n.includes("الإنفوجرافيك")) return BarChart3;
+    if (n.includes("النشرات البريدية") || n.includes("إيميل")) return Mail;
+    if (n.includes("billboard") || n.includes("اللوحات")) return Megaphone;
+    if (n.includes("roll") || n.includes("رول")) return BadgeCheck;
+    if (n.includes("الصحف") || n.includes("المجلات")) return FileText;
+    if (n.includes("الدعوات") || n.includes("المناسبات")) return Gift;
+    if (n.includes("المنتجات") || n.includes("العلب")) return Package;
+    if (n.includes("الملابس") || n.includes("تيشيرت")) return Shirt;
+    if (n.includes("الهدايا")) return Gift;
+    if (n.includes("تحسين") || n.includes("تعديل")) return Edit3;
+    return CatIcon;
+  };
+
   // SEO
   useEffect(() => {
     const title = `${data.title} | حلول التصميم`;
@@ -194,8 +223,9 @@ export default function DesignCategory() {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      <header className={`relative ${data.accent.headerBg} border-b border-white/20 dark:border-slate-700/50 py-16 px-6 text-center animate-fade-in`}>
+      <header className={`relative bg-gradient-to-br from-emerald-50 via-green-50 to-primary/10 dark:from-emerald-950 dark:via-slate-900 dark:to-slate-900 border-b border-white/20 dark:border-slate-700/50 py-16 px-6 text-center animate-fade-in`}>
         <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 to-background/80"></div>
         <div className="relative max-w-3xl mx-auto">
           <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${data.accent.chip} text-white text-sm font-medium shadow` }>
             <CatIcon className="w-4 h-4 pulse" />
@@ -215,55 +245,66 @@ export default function DesignCategory() {
         <div className="max-w-5xl mx-auto">
           {/* Services grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {data.items.map((it, idx) => (
-              <Card key={it.name} className="group relative overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all animate-fade-in">
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-primary/5 blur-2xl pointer-events-none hidden sm:block" />
-                <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-blue-500/5 blur-2xl pointer-events-none hidden sm:block" />
-                <div className="absolute top-3 right-3 opacity-20 text-primary hidden sm:block">
-                  <CatIcon className="w-6 h-6 animate-[spin_12s_linear_infinite]" />
-                </div>
-                <div className="absolute bottom-3 left-3 opacity-20 text-primary hidden sm:block">
-                  <Sparkles className="w-6 h-6 animate-bounce" />
-                </div>
-                <div className="p-5 flex flex-col gap-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <CatIcon className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <h2 className="text-lg font-semibold">{it.name}</h2>
-                        <p className="text-sm text-muted-foreground mt-0.5">{it.desc}</p>
-                      </div>
-                    </div>
-                    {idx === 0 ? (
-                      <Badge className="bg-gradient-to-r from-primary to-blue-600 text-white shadow">الأكثر طلباً</Badge>
-                    ) : (
-                      <Badge variant="secondary">أفضل قيمة</Badge>
-                    )}
+            {data.items.map((it, idx) => {
+              const SvcIcon: any = getServiceIcon(it.name);
+              return (
+                <Card key={it.name} className="group relative overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all animate-fade-in">
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-primary/5 blur-2xl pointer-events-none hidden sm:block" />
+                  <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-blue-500/5 blur-2xl pointer-events-none hidden sm:block" />
+                  <div className="absolute top-3 right-3 opacity-20 text-primary hidden sm:block">
+                    <CatIcon className="w-6 h-6 animate-[spin_12s_linear_infinite]" />
+                  </div>
+                  <div className="absolute bottom-3 left-3 opacity-20 text-primary hidden sm:block">
+                    <Sparkles className="w-6 h-6 animate-bounce" />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="text-primary font-extrabold text-xl">{it.price.toLocaleString()} ر.س</div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Calendar className="w-4 h-4" />
-                      <span>مدة التنفيذ: {it.delivery}</span>
+                  <AspectRatio ratio={16/9}>
+                    <img
+                      src={heroBg}
+                      alt={`صورة خدمة ${it.name}`}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </AspectRatio>
+
+                  <div className="p-5 flex flex-col gap-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                          <SvcIcon className="w-5 h-5 animate-[float_4s_ease-in-out_infinite]" />
+                        </div>
+                        <div>
+                          <h2 className="text-lg font-semibold">{it.name}</h2>
+                          <p className="text-sm text-muted-foreground mt-0.5">{it.desc}</p>
+                        </div>
+                      </div>
+                      {idx === 0 ? (
+                        <Badge className="bg-gradient-to-r from-primary to-blue-600 text-white shadow">الأكثر طلباً</Badge>
+                      ) : (
+                        <Badge variant="secondary">أفضل قيمة</Badge>
+                      )}
                     </div>
-                  </div>
 
-                  {/* Features */}
-                  <ul className="space-y-2">
-                    {it.features.map((f: string) => (
-                      <li key={f} className="flex items-start gap-2 text-sm">
-                        <CheckCircle className="w-4 h-4 text-primary mt-0.5" />
-                        <span className="text-muted-foreground">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
+                    <div className="flex items-center justify-between">
+                      <div className="text-primary font-extrabold text-xl">{it.price.toLocaleString()} ر.س</div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Calendar className="w-4 h-4" />
+                        <span>مدة التنفيذ: {it.delivery}</span>
+                      </div>
+                    </div>
 
-                  {/* Actions */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <ul className="space-y-2">
+                      {it.features.map((f: string) => (
+                        <li key={f} className="flex items-start gap-2 text-sm">
+                          <CheckCircle className="w-4 h-4 text-primary mt-0.5" />
+                          <span className="text-muted-foreground">{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Actions */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     {/* Pay Now */}
                     <Dialog open={open && selected?.name === it.name} onOpenChange={(o) => { setOpen(o); if (!o) setSelected(null); }}>
                       <DialogTrigger asChild>
