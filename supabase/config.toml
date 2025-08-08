@@ -24,3 +24,6 @@ verify_jwt = false
 
 [functions.paylink-payment]
 verify_jwt = false
+
+[functions.email-test]
+verify_jwt = false
