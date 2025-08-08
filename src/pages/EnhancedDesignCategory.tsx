@@ -651,7 +651,7 @@ const AnimatedIcon = ({
 };
 
 const EnhancedDesignCategory = () => {
-  const { category } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("popular");
@@ -662,8 +662,12 @@ const EnhancedDesignCategory = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   
-  const currentCategory = enhancedCatalog[category as keyof typeof enhancedCatalog];
+  const currentCategory = enhancedCatalog[slug as keyof typeof enhancedCatalog];
 
+  console.log("Current slug param:", slug);
+  console.log("Current category data:", currentCategory);
+  console.log("Available categories:", Object.keys(enhancedCatalog));
+  
   const whatsappNumber = "966555812567";
 
   useEffect(() => {
@@ -741,6 +745,10 @@ const EnhancedDesignCategory = () => {
         default: return 0;
       }
     });
+
+  console.log("Current category services:", currentCategory?.services);
+  console.log("Filtered services:", filteredServices);
+  console.log("Services length:", filteredServices?.length);
 
   const handleOrderSubmit = async (formData: any) => {
     if (!selectedService) return;
