@@ -37,7 +37,8 @@ import {
   Play,
   CreditCard,
   Banknote,
-  Wallet
+  Wallet,
+  X
 } from "lucide-react";
 
 const SoftwareProducts = () => {
@@ -46,6 +47,8 @@ const SoftwareProducts = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPaymentMethods, setShowPaymentMethods] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [showPaymentFrame, setShowPaymentFrame] = useState(false);
 
   const paymentMethods = [
     {
@@ -199,16 +202,15 @@ const SoftwareProducts = () => {
       }
 
       if (paymentUrl) {
-        // رسالة نجاح مع فتح الرابط
+        // رسالة نجاح وفتح الصفحة داخل الموقع
         toast({
           title: "تم تحضير رابط الدفع ✅",
-          description: "سيتم فتح صفحة الدفع في تبويب جديد",
+          description: "يتم فتح صفحة الدفع الآن",
         });
         
-        // فتح الرابط بعد تأخير قصير لعرض الرسالة
-        setTimeout(() => {
-          window.open(paymentUrl, '_blank');
-        }, 500);
+        // عرض صفحة الدفع داخل الموقع
+        setPaymentUrl(paymentUrl);
+        setShowPaymentFrame(true);
       } else {
         console.error('No payment URL in response:', data);
         toast({
@@ -693,6 +695,47 @@ const SoftwareProducts = () => {
                 إلغاء
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Payment Frame Dialog */}
+      <Dialog open={showPaymentFrame} onOpenChange={setShowPaymentFrame}>
+        <DialogContent className="max-w-4xl w-full h-[90vh] p-0">
+          <DialogHeader className="p-4 border-b">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="text-lg font-bold text-slate-900 dark:text-white">
+                صفحة الدفع
+              </DialogTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setShowPaymentFrame(false);
+                  setPaymentUrl(null);
+                }}
+                className="hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </DialogHeader>
+          
+          <div className="flex-1 p-0">
+            {paymentUrl && (
+              <iframe
+                src={paymentUrl}
+                className="w-full h-full border-0"
+                title="صفحة الدفع"
+                style={{ height: 'calc(90vh - 80px)' }}
+                onLoad={() => {
+                  toast({
+                    title: "تم تحميل صفحة الدفع ✅",
+                    description: "يمكنك الآن إكمال عملية الدفع",
+                  });
+                }}
+              />
+            )}
           </div>
         </DialogContent>
       </Dialog>
