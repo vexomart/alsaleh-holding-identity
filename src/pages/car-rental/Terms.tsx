@@ -269,8 +269,8 @@ const Terms = () => {
               </p>
               <p>
                 للاستفسارات حول الشروط والأحكام، يرجى التواصل مع فريق خدمة العملاء على الرقم 
-                <strong> +966 11 123 4567</strong> أو عبر البريد الإلكتروني 
-                <strong> legal@carrentpro.sa</strong>
+                <strong> 0555812567</strong> أو عبر البريد الإلكتروني 
+                <strong> info@alialshehriholding.com</strong>
               </p>
             </CardContent>
           </Card>

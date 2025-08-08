@@ -301,11 +301,11 @@ const CarRentalLanding = () => {
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
                 <Phone className="w-4 h-4" />
-                +966 11 123 4567
+                0555812567
               </span>
               <span className="flex items-center gap-1">
                 <Mail className="w-4 h-4" />
-                info@carrentpro.sa
+                info@alialshehriholding.com
               </span>
             </div>
             <div className="hidden md:flex items-center gap-4">
@@ -1070,7 +1070,7 @@ const CarRentalLanding = () => {
                   </div>
                   <div>
                     <p className="text-sm text-slate-400">اتصل بنا</p>
-                    <p className="font-medium">+966 11 123 4567</p>
+                    <p className="font-medium">0555812567</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -1079,7 +1079,7 @@ const CarRentalLanding = () => {
                   </div>
                   <div>
                     <p className="text-sm text-slate-400">راسلنا</p>
-                    <p className="font-medium">info@carrentpro.sa</p>
+                    <p className="font-medium">info@alialshehriholding.com</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

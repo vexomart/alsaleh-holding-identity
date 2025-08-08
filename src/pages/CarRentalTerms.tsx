@@ -129,16 +129,16 @@ const CarRentalTerms = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <a 
-                  href="tel:+966111234567" 
+                  href="tel:0555812567" 
                   className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  اتصل بنا: +966 11 123 4567
+                  اتصل بنا: 0555812567
                 </a>
                 <a 
-                  href="mailto:info@carrentpro.sa" 
+                  href="mailto:info@alialshehriholding.com" 
                   className="inline-flex items-center justify-center px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
                 >
-                  info@carrentpro.sa
+                  info@alialshehriholding.com
                 </a>
               </div>
             </CardContent>

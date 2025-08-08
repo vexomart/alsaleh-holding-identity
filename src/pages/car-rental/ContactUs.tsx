@@ -34,14 +34,14 @@ const ContactUs = () => {
     {
       icon: Phone,
       title: "اتصل بنا",
-      info: "+966 11 123 4567",
+      info: "0555812567",
       description: "متاح 24/7 لخدمتك",
       color: "from-blue-500 to-blue-600"
     },
     {
       icon: Mail,
       title: "راسلنا",
-      info: "info@carrentpro.sa",
+      info: "info@alialshehriholding.com",
       description: "نرد خلال ساعة واحدة",
       color: "from-green-500 to-green-600"
     },
@@ -65,24 +65,24 @@ const ContactUs = () => {
     {
       city: "الرياض",
       address: "طريق الملك فهد، حي العليا، مبنى 123",
-      phone: "+966 11 123 4567",
-      email: "riyadh@carrentpro.sa",
+      phone: "0555812567",
+      email: "info@alialshehriholding.com",
       hours: "السبت - الخميس: 8:00 ص - 10:00 م | الجمعة: 2:00 م - 10:00 م",
       isMain: true
     },
     {
       city: "جدة",
       address: "كورنيش جدة، حي الشاطئ، مجمع 456",
-      phone: "+966 12 234 5678",
-      email: "jeddah@carrentpro.sa",
+      phone: "0555812567",
+      email: "info@alialshehriholding.com",
       hours: "السبت - الخميس: 8:00 ص - 10:00 م | الجمعة: 2:00 م - 10:00 م",
       isMain: false
     },
     {
       city: "الدمام",
       address: "الواجهة البحرية، الدمام، برج 789",
-      phone: "+966 13 345 6789",
-      email: "dammam@carrentpro.sa",
+      phone: "0555812567",
+      email: "info@alialshehriholding.com",
       hours: "السبت - الخميس: 8:00 ص - 10:00 م | الجمعة: 2:00 م - 10:00 م",
       isMain: false
     }

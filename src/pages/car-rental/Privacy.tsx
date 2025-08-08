@@ -366,7 +366,7 @@ const Privacy = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-slate-900">البريد الإلكتروني</h4>
-                    <p className="text-slate-600">privacy@carrentpro.sa</p>
+                    <p className="text-slate-600">info@alialshehriholding.com</p>
                   </div>
                 </div>
 
@@ -376,7 +376,7 @@ const Privacy = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-slate-900">الهاتف</h4>
-                    <p className="text-slate-600">+966 11 123 4567</p>
+                    <p className="text-slate-600">0555812567</p>
                   </div>
                 </div>
               </div>
