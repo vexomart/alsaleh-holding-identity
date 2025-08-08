@@ -51,13 +51,8 @@ const whatsappNumber = "966555812567";
 
 const DesignSolutionsSection = () => {
   return (
-    <section id="design-solutions" className="relative py-20 md:py-28 overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900">
-      {/* Background Elements (like Current Offers) */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-indigo-100/40"></div>
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/20 to-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-blue-300/5 to-indigo-300/5 rounded-full blur-2xl"></div>
-      <div className="container mx-auto px-6 relative z-10">
+    <section id="design-solutions" className="relative py-16 bg-gradient-to-br from-primary/5 via-blue-50 to-indigo-50 dark:from-primary/10 dark:via-slate-900 dark:to-slate-800">
+      <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border bg-muted/30 border-border">
@@ -73,43 +68,29 @@ const DesignSolutionsSection = () => {
         </div>
 
         {/* Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {categories.map((cat) => (
-            <article
-              key={cat.slug}
-              className="relative overflow-hidden group hover:scale-[1.02] hover:shadow-2xl transition-all duration-700 border-0 bg-white/80 dark:bg-slate-900/60 backdrop-blur-lg shadow-xl rounded-2xl p-6"
-            >
-              {/* Gradient overlays like Current Offers */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${cat.accent} opacity-0 group-hover:opacity-20 transition-opacity duration-500 z-0`} />
-              <div className="absolute inset-0 bg-gradient-to-t from-white/60 to-transparent dark:from-slate-900/40" />
-
-              <div className="relative z-10">
-                <header className="mb-4">
-                  <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r ${cat.accent} text-white text-xs font-medium shadow` }>
-                    <Sparkles className="w-3 h-3" />
-                    قسم تصميم
-                  </div>
-                  <h2 className="mt-3 text-2xl font-semibold tracking-tight">{cat.title}</h2>
-                  <p className="text-sm text-muted-foreground mt-1">{cat.description}</p>
-                </header>
-
-                <ul className="space-y-2">
-                  {cat.preview.map((p) => (
-                    <li key={p} className="flex items-start gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-primary mt-0.5" />
-                      <span className="text-muted-foreground">{p}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-6">
-                  <Button asChild size="lg" className="group w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white py-3">
-                    <Link to={`/design-solutions/${cat.slug}`}>
-                      استكشف القسم
-                      <ChevronRight className="w-4 h-4 mr-1 transition-transform group-hover:translate-x-0.5" />
-                    </Link>
-                  </Button>
+            <article key={cat.slug} className="rounded-2xl border bg-card text-card-foreground shadow-sm p-6 animate-fade-in hover-scale">
+              <header className="mb-4">
+                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r ${cat.accent} text-white text-xs font-medium`}>
+                  <Sparkles className="w-3 h-3" />
+                  قسم تصميم
                 </div>
+                <h2 className="mt-3 text-2xl font-semibold tracking-tight">{cat.title}</h2>
+                <p className="text-sm text-muted-foreground mt-1">{cat.description}</p>
+              </header>
+              <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                {cat.preview.map((p) => (
+                  <li key={p} className="before:content-['•'] before:mx-1 before:text-primary">{p}</li>
+                ))}
+              </ul>
+              <div className="mt-5">
+                <Button asChild className="group">
+                  <Link to={`/design-solutions/${cat.slug}`}>
+                    استكشف القسم
+                    <ChevronRight className="w-4 h-4 mr-1 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                </Button>
               </div>
             </article>
           ))}
