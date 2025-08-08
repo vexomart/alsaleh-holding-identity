@@ -522,8 +522,8 @@ const OfferDetails = () => {
                           >
                             <div className="text-center">
                               <Globe className="w-8 h-8 mx-auto mb-2 text-green-600" />
-                              <div className="font-bold text-sm">Paylink</div>
-                              <div className="text-xs text-muted-foreground">دفع آمن</div>
+                              <div className="font-bold text-sm">مدى • فيزا • أبل باي</div>
+                              <div className="text-xs text-muted-foreground">عبر Paylink</div>
                             </div>
                           </button>
                           

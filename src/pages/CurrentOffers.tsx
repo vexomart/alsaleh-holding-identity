@@ -348,7 +348,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
           toast({
             title: "تم إنشاء رابط الدفع بنجاح",
             description: `سيتم فتح صفحة الدفع الآن عبر ${
-              selectedPaymentGateway === 'tap' ? 'Tap' : 'Paylink'
+              selectedPaymentGateway === 'tap' ? 'Tap' : 'مدى/فيزا/أبل باي'
             }`,
           });
           
@@ -465,9 +465,9 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
                 },
                 { 
                   id: 'paylink', 
-                  name: 'Paylink', 
-                  description: 'الحل المحلي الأول',
-                  features: ['✓ حل سعودي محلي', '✓ دعم فني ممتاز', '✓ تكامل مع البنوك المحلية'],
+                  name: 'الدفع عن طريق مدى أو فيزا أو أبل باي', 
+                  description: 'عبر Paylink - يدعم مدى، فيزا، أبل باي',
+                  features: ['✓ يدعم مدى', '✓ فيزا وماستركارد', '✓ Apple Pay'],
                   gradient: 'from-green-500/20 to-emerald-500/20',
                   borderGradient: 'from-green-500 to-emerald-500'
                 },
@@ -642,7 +642,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
                   <span>
                     {selectedPaymentGateway === 'stc_pay' ? 
                       `ادفع عبر STC Pay - ${offer.currentPrice} ر.س` :
-                      `ادفع عبر ${selectedPaymentGateway === 'tap' ? 'Tap Payments' : 'Paylink'} - ${offer.currentPrice} ر.س`
+                      `ادفع عبر ${selectedPaymentGateway === 'tap' ? 'Tap Payments' : 'مدى/فيزا/أبل باي'} - ${offer.currentPrice} ر.س`
                     }
                   </span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -51,10 +51,10 @@ const SoftwareProducts = () => {
   const paymentMethods = [
     {
       id: 'paylink',
-      name: 'Paylink',
+      name: 'مدى • فيزا • أبل باي',
       icon: CreditCard,
       color: 'from-blue-500 to-blue-600',
-      description: 'دفع آمن عبر Paylink'
+      description: 'الدفع عبر Paylink (مدى/فيزا/أبل باي)'
     },
     {
       id: 'tap',
