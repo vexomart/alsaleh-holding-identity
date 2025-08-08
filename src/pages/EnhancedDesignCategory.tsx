@@ -13,12 +13,15 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
-import brandIdentityImg from "@/assets/brand-identity-service.jpg";
-import marketingDesignsImg from "@/assets/marketing-designs-service.jpg";
-import socialMediaImg from "@/assets/social-media-service.jpg";
-import printAdsImg from "@/assets/print-ads-service.jpg";
-import digitalDesignsImg from "@/assets/digital-designs-service.jpg";
-import customDesignsImg from "@/assets/custom-designs-service.jpg";
+import brandIdentityImg from "@/assets/brand-identity-portfolio.jpg";
+import marketingDesignsImg from "@/assets/marketing-portfolio.jpg";
+import socialMediaImg from "@/assets/social-media-portfolio.jpg";
+import printAdsImg from "@/assets/print-ads-portfolio.jpg";
+import digitalDesignsImg from "@/assets/digital-designs-portfolio.jpg";
+import customDesignsImg from "@/assets/custom-designs-portfolio.jpg";
+import logoDesignImg from "@/assets/services/logo-design.jpg";
+import brandPackageImg from "@/assets/services/brand-package.jpg";
+import brochureDesignImg from "@/assets/services/brochure-design.jpg";
 import {
   Sparkles, CreditCard, Loader2, Lock, Calendar, Clock, ArrowRight, CheckCircle,
   Palette, Megaphone, MessageCircle, Printer, MonitorSmartphone, Wrench, Crown,
@@ -61,6 +64,7 @@ const enhancedCatalog = {
         originalPrice: 2000,
         delivery: "4-7 أيام", 
         complexity: "متوسط",
+        image: logoDesignImg,
         features: [
           "3 مقترحات أولية مختلفة", 
           "تعديلات غير محدودة حتى الاعتماد",
@@ -862,7 +866,7 @@ export default function EnhancedDesignCategory() {
                       {/* Image section */}
                       <AspectRatio ratio={16/9} className="relative overflow-hidden">
                         <img
-                          src={currentImage}
+                          src={(service as any).image || currentImage}
                           alt={service.name}
                           loading="lazy"
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -904,7 +908,10 @@ export default function EnhancedDesignCategory() {
 
                         {/* Rating and reviews */}
                         {service.rating && (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2" dir="rtl">
+                            <span className="text-sm text-muted-foreground">
+                              ({service.reviews} تقييم) {service.rating}
+                            </span>
                             <div className="flex items-center">
                               {[...Array(5)].map((_, i) => (
                                 <Star 
@@ -917,9 +924,6 @@ export default function EnhancedDesignCategory() {
                                 />
                               ))}
                             </div>
-                            <span className="text-sm text-muted-foreground">
-                              {service.rating} ({service.reviews} تقييم)
-                            </span>
                           </div>
                         )}
 
@@ -1139,7 +1143,7 @@ export default function EnhancedDesignCategory() {
                 {data.testimonials?.map((testimonial, idx) => (
                   <Card key={idx} className="p-8 animate-on-scroll" style={{ animationDelay: `${idx * 200}ms` }}>
                     <div className="space-y-4">
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1" dir="rtl">
                         {[...Array(testimonial.rating)].map((_, i) => (
                           <Star key={i} className="w-5 h-5 text-yellow-500 fill-current" />
                         ))}
