@@ -5,10 +5,11 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles, CreditCard, Loader2, Lock, Calendar, Clock, ArrowRight, CheckCircle } from "lucide-react";
+import { Sparkles, CreditCard, Loader2, Lock, Calendar, Clock, ArrowRight, CheckCircle, Palette, Megaphone, MessageCircle, Printer, MonitorSmartphone, Wrench, Crown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -108,6 +109,16 @@ export default function DesignCategory() {
 
   const data = catalog[(slug as CatalogKey) || "brand-identity"];
 
+  const iconMap = {
+    "brand-identity": Palette,
+    "marketing-designs": Megaphone,
+    "social-media": MessageCircle,
+    "print-ads": Printer,
+    "digital-designs": MonitorSmartphone,
+    "custom-designs": Wrench,
+  } as const;
+  const CatIcon: any = (iconMap as any)[(slug as CatalogKey) || "brand-identity"] || Sparkles;
+
   // SEO
   useEffect(() => {
     const title = `${data.title} | حلول التصميم`;
@@ -203,17 +214,33 @@ export default function DesignCategory() {
         <div className="max-w-5xl mx-auto">
           {/* Services grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {data.items.map((it) => (
-              <Card key={it.name} className="p-5 animate-fade-in hover-scale">
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <h2 className="text-lg font-semibold">{it.name}</h2>
-                    <p className="text-sm text-muted-foreground mt-1">{it.desc}</p>
-                    <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
+            {data.items.map((it, idx) => (
+              <Card key={it.name} className="group relative overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all animate-fade-in">
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="p-5 flex flex-col gap-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <CatIcon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-semibold">{it.name}</h2>
+                        <p className="text-sm text-muted-foreground mt-0.5">{it.desc}</p>
+                      </div>
+                    </div>
+                    {idx === 0 ? (
+                      <Badge className="bg-gradient-to-r from-primary to-blue-600 text-white shadow">الأكثر طلباً</Badge>
+                    ) : (
+                      <Badge variant="secondary">أفضل قيمة</Badge>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="text-primary font-extrabold text-xl">{it.price.toLocaleString()} ر.س</div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="w-4 h-4" />
                       <span>مدة التنفيذ: {it.delivery}</span>
                     </div>
-                    <div className="mt-3 text-primary font-bold text-lg">{it.price.toLocaleString()} ر.س</div>
                   </div>
 
                   {/* Features */}
