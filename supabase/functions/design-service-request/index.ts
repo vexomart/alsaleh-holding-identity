@@ -83,9 +83,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال بريد إلكتروني للشركة
     const companyEmailResponse = await resend.emails.send({
-      from: "noreply@alialshehriholding.com",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: ["info@alialshehriholding.com"],
-      subject: `🎨 طلب خدمة تصميم جديد - ${service.title}`,
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -481,9 +481,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال بريد تأكيد للعميل
     const customerEmailResponse = await resend.emails.send({
-      from: "noreply@alialshehriholding.com",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: [customerInfo.email],
-      subject: `✅ تأكيد استلام طلب خدمة التصميم - ${service.title}`,
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">

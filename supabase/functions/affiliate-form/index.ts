@@ -35,9 +35,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "نظام التسويق بالعمولة <noreply@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: ["affiliate@alialshehriholding.com"],
-      subject: `🚀 طلب جديد للانضمام لبرنامج التسويق بالعمولة - ${formData.fullName}`,
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -283,9 +283,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "فريق التسويق بالعمولة <affiliate@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: [formData.email],
-      subject: `🎉 مرحباً ${formData.fullName}! تم استلام طلب انضمامك لبرنامج التسويق بالعمولة`,
+      bcc: ["info@alialshehriholding.com"],
+      reply_to: "info@alialshehriholding.com",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">

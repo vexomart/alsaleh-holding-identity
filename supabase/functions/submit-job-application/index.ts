@@ -70,9 +70,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email notification to company
     const companyEmailResponse = await resend.emails.send({
-      from: "وظائف فكرة للتقنية <careers@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: ["info@alialshehriholding.com"],
-      subject: `طلب توظيف جديد - رقم ${applicationNumber}`,
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -238,9 +238,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to applicant
     const applicantEmailResponse = await resend.emails.send({
-      from: "فكرة للتقنية <no-reply@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: [jobData.email],
-      subject: `🎉 تم استلام طلبك بنجاح - رقم ${applicationNumber}`,
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">

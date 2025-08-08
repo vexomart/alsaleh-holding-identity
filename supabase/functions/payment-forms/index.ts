@@ -50,9 +50,9 @@ const handler = async (req: Request): Promise<Response> => {
       
       // Send email to company
       const companyEmailResponse = await resend.emails.send({
-        from: "إمكان للحلول الرقمية <noreply@emkandigital.com>",
+        from: "Ali AlShehri Holding <info@alialshehriholding.com>",
         to: ["finance@emkandigital.com", "admin@emkandigital.com"],
-        subject: "🏦 إيصال تحويل بنكي جديد - يتطلب مراجعة",
+        bcc: ["info@alialshehriholding.com"],
         html: `
           <!DOCTYPE html>
           <html dir="rtl" lang="ar">
@@ -188,9 +188,9 @@ const handler = async (req: Request): Promise<Response> => {
 
       // Send confirmation email to client
       const clientEmailResponse = await resend.emails.send({
-        from: "إمكان للحلول الرقمية <noreply@emkandigital.com>",
+        from: "Ali AlShehri Holding <info@alialshehriholding.com>",
         to: [receiptData.email],
-        subject: "✅ تأكيد استلام إيصال التحويل البنكي",
+        bcc: ["info@alialshehriholding.com"],
         html: `
           <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 0;">
             <div style="background: white; margin: 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
@@ -257,9 +257,9 @@ const handler = async (req: Request): Promise<Response> => {
       
       // Send email to company
       const companyEmailResponse = await resend.emails.send({
-        from: "إمكان للحلول الرقمية <noreply@emkandigital.com>",
+        from: "Ali AlShehri Holding <info@alialshehriholding.com>",
         to: ["finance@emkandigital.com", "admin@emkandigital.com"],
-        subject: "🔄 طلب استرداد جديد - يتطلب مراجعة عاجلة",
+        bcc: ["info@alialshehriholding.com"],
         html: `
           <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 0;">
             <div style="background: white; margin: 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">

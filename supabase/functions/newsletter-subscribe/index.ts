@@ -97,8 +97,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send welcome email to subscriber
     const welcomeEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <newsletter@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: [subscriptionData.email],
+      bcc: ["info@alialshehriholding.com"],
       subject: "مرحباً بك في النشرة الإخبارية",
       html: `
         <!DOCTYPE html>
@@ -214,9 +215,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to company
     const notificationEmailResponse = await resend.emails.send({
-      from: "النشرة الإخبارية <newsletter@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: ["info@alialshehriholding.com"],
-      subject: "اشتراك جديد في النشرة الإخبارية",
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px;">
           <h1 style="color: #2563eb;">اشتراك جديد في النشرة الإخبارية</h1>

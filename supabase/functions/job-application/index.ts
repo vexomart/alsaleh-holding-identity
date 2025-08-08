@@ -76,9 +76,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "نظام طلبات التوظيف <careers@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: ["info@alialshehriholding.com"],
-      subject: `طلب توظيف جديد - ${applicationData.position}`,
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 10px;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
@@ -166,9 +166,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to applicant
     const applicantEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <no-reply@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: [applicationData.email],
-      subject: "تم استلام طلب التوظيف بنجاح",
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 10px;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">

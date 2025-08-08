@@ -103,8 +103,9 @@ serve(async (req: Request) => {
     console.log("Attempting to send test email...");
     try {
       const testEmailResponse = await resend.emails.send({
-        from: "Ali Al Shehri Holding <onboarding@resend.dev>",
+        from: "Ali AlShehri Holding <info@alialshehriholding.com>",
         to: ["info@alialshehriholding.com"],
+        bcc: ["info@alialshehriholding.com"],
         subject: "Test - طلب استشارة جديد",
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; direction: rtl;">

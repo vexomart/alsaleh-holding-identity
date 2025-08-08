@@ -216,17 +216,18 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "طلبات التعاقد <contracts@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: ["info@alialshehriholding.com"],
+      bcc: ["info@alialshehriholding.com"],
       subject: subject,
       html: emailHtml,
     });
 
     // Send confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <no-reply@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: data.clientEmail,
-      subject: "تأكيد استلام طلب العقد - شركة علي صالح الشهري القابضة",
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc;">
           <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">

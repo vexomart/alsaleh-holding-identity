@@ -33,9 +33,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "نظام طلبات المحتوى <noreply@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: ["info@alialshehriholding.com"],
-      subject: `طلب جديد لخدمة ${requestData.serviceName}`,
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -133,9 +133,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Confirmation email to client
     const clientEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <noreply@alialshehriholding.com>",
+      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: [requestData.email],
-      subject: `شكراً لك - تم استلام طلبك لخدمة ${requestData.serviceName}`,
+      bcc: ["info@alialshehriholding.com"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
