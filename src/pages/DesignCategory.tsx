@@ -22,7 +22,7 @@ const catalog = {
     description: "بناء هوية قوية ومتسقة ترسخ علامتك في أذهان عملائك.",
     accent: {
       headerBg: "bg-gradient-to-br from-primary/10 via-blue-50 to-indigo-50 dark:from-primary/15 dark:via-slate-900 dark:to-slate-800",
-      chip: "from-primary to-blue-600",
+      chip: "from-success to-success/80",
     },
     items: [
       { name: "تصميم الشعار (Logo Design)", desc: "شعار فريد يعكس شخصية علامتك.", price: 1499, delivery: "4-7 أيام", features: ["3 مقترحات أولية", "تعديلات غير محدودة حتى الاعتماد", "ملفات مفتوحة ومتجهية"] },
@@ -35,7 +35,7 @@ const catalog = {
   "marketing-designs": {
     title: "التصاميم التسويقية",
     description: "مواد تسويقية مؤثرة لرفع الوعي وزيادة التحويلات.",
-    accent: { headerBg: "bg-gradient-to-br from-rose-50 via-amber-50 to-primary/10 dark:from-slate-900 dark:via-slate-800 dark:to-primary/10", chip: "from-rose-500 to-amber-500" },
+    accent: { headerBg: "bg-gradient-to-br from-rose-50 via-amber-50 to-primary/10 dark:from-slate-900 dark:via-slate-800 dark:to-primary/10", chip: "from-success to-success/80" },
     items: [
       { name: "البروشور (Brochure)", desc: "تعريف احترافي بالخدمات والمنتجات.", price: 749, delivery: "3-5 أيام", features: ["تصميم احترافي", "قياسات متعددة", "جاهز للطباعة"] },
       { name: "الفلاير (Flyer)", desc: "منشورات دعائية سريعة التأثير.", price: 299, delivery: "1-2 يوم", features: ["مقاسين للاختيار", "محتوى موجز", "تدرجات لونية جذابة"] },
@@ -47,7 +47,7 @@ const catalog = {
   "social-media": {
     title: "تصاميم وسائل التواصل الاجتماعي",
     description: "تواجد قوي وجذاب على كافة المنصات.",
-    accent: { headerBg: "bg-gradient-to-br from-violet-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", chip: "from-violet-500 to-indigo-500" },
+    accent: { headerBg: "bg-gradient-to-br from-violet-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", chip: "from-success to-success/80" },
     items: [
       { name: "تصميم المنشورات (Posts)", desc: "قوالب جذابة ومتناسقة.", price: 149, delivery: "24-48 ساعة", features: ["قوالب متعددة", "أبعاد المنصات", "قابلة للتعديل"] },
       { name: "تصميم القصص (Stories)", desc: "قصص قصيرة ملفتة.", price: 119, delivery: "24 ساعة", features: ["حركة خفيفة", "مطبوعات جذابة", "أبعاد مناسبة"] },
@@ -59,7 +59,7 @@ const catalog = {
   "print-ads": {
     title: "التصاميم الإعلانية المطبوعة",
     description: "تصاميم مطبوعة عالية الجودة للتأثير التقليدي الحديث.",
-    accent: { headerBg: "bg-gradient-to-br from-amber-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", chip: "from-amber-500 to-orange-500" },
+    accent: { headerBg: "bg-gradient-to-br from-amber-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", chip: "from-success to-success/80" },
     items: [
       { name: "اللوحات الطرقية (Billboard)", desc: "رسائل قوية على نطاق واسع.", price: 1899, delivery: "1-2 أسبوع", features: ["أحجام متعددة", "موك أب واقعي", "ملفات للطباعة"] },
       { name: "ستاند رول أب (Roll-up)", desc: "لافتات معارض فعالة.", price: 299, delivery: "2-3 أيام", features: ["قياسات معيارية", "تصميمين", "ملفات للطباعة"] },
@@ -70,7 +70,7 @@ const catalog = {
   "digital-designs": {
     title: "التصاميم الرقمية",
     description: "حلول رقمية متوافقة مع جميع الأجهزة والمنصات.",
-    accent: { headerBg: "bg-gradient-to-br from-primary/10 via-blue-50 to-indigo-50 dark:from-primary/15 dark:via-slate-900 dark:to-slate-800", chip: "from-primary to-indigo-600" },
+    accent: { headerBg: "bg-gradient-to-br from-primary/10 via-blue-50 to-indigo-50 dark:from-primary/15 dark:via-slate-900 dark:to-slate-800", chip: "from-success to-success/80" },
     items: [
       { name: "واجهات المواقع (Website UI)", desc: "واجهات احترافية وسريعة.", price: 3299, delivery: "1-2 أسبوع", features: ["تصميم صفحات رئيسية", "نمط مكونات UI", "توافق جوال"] },
       { name: "واجهات التطبيقات (App UI)", desc: "تجربة استخدام عصرية وسهلة.", price: 4299, delivery: "2-3 أسابيع", features: ["خرائط تدفق", "مكونات قابلة لإعادة الاستخدام", "تصميم متجاوب"] },
@@ -82,7 +82,7 @@ const catalog = {
   "custom-designs": {
     title: "التصاميم الخاصة",
     description: "حلول مخصصة تلبي احتياجاتك الفردية بكفاءة.",
-    accent: { headerBg: "bg-gradient-to-br from-teal-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", chip: "from-teal-500 to-emerald-500" },
+    accent: { headerBg: "bg-gradient-to-br from-teal-50 via-primary/10 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900", chip: "from-success to-success/80" },
     items: [
       { name: "مطبوعات دعائية للشركات", desc: "كل ما يدعم صورة شركتك.", price: 1699, delivery: "3-7 أيام", features: ["تصاميم متسقة", "إخراج للطباعة", "خيارات متعددة"] },
       { name: "تصميم المنتجات والعلب", desc: "تغليف يزيد جاذبية المنتج.", price: 1999, delivery: "1-2 أسبوع", features: ["تصميم 3D", "مقترحات مواد", "ملفات للطباعة"] },
@@ -232,7 +232,7 @@ export default function DesignCategory() {
             <Sparkles className="w-4 h-4 animate-[spin_10s_linear_infinite]" />
             قسم: {data.title}
           </span>
-          <h1 className="mt-4 text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          <h1 className="mt-4 text-4xl md:text-5xl font-bold bg-gradient-to-r from-success to-success/80 bg-clip-text text-transparent">
             {data.title}
           </h1>
           <p className="mt-3 text-muted-foreground">
@@ -248,14 +248,14 @@ export default function DesignCategory() {
             {data.items.map((it, idx) => {
               const SvcIcon: any = getServiceIcon(it.name);
               return (
-                <Card key={it.name} className="group relative overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all animate-fade-in">
-                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Card key={it.name} className="group relative overflow-hidden border-2 border-success/10 hover:border-success/30 transition-all animate-fade-in">
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-success/5 via-transparent to-success/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-primary/5 blur-2xl pointer-events-none hidden sm:block" />
                   <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-blue-500/5 blur-2xl pointer-events-none hidden sm:block" />
-                  <div className="absolute top-3 right-3 opacity-20 text-primary hidden sm:block">
+                  <div className="absolute top-3 right-3 opacity-20 text-success hidden sm:block">
                     <CatIcon className="w-6 h-6 animate-[spin_12s_linear_infinite]" />
                   </div>
-                  <div className="absolute bottom-3 left-3 opacity-20 text-primary hidden sm:block">
+                  <div className="absolute bottom-3 left-3 opacity-20 text-success hidden sm:block">
                     <Sparkles className="w-6 h-6 animate-bounce" />
                   </div>
 
@@ -271,7 +271,7 @@ export default function DesignCategory() {
                   <div className="p-5 flex flex-col gap-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success">
                           <SvcIcon className="w-5 h-5 animate-[float_4s_ease-in-out_infinite]" />
                         </div>
                         <div>
@@ -280,14 +280,14 @@ export default function DesignCategory() {
                         </div>
                       </div>
                       {idx === 0 ? (
-                        <Badge className="bg-gradient-to-r from-primary to-blue-600 text-white shadow">الأكثر طلباً</Badge>
+                        <Badge className="bg-gradient-to-r from-success to-success/80 text-white shadow">الأكثر طلباً</Badge>
                       ) : (
                         <Badge variant="secondary">أفضل قيمة</Badge>
                       )}
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="text-primary font-extrabold text-xl">{it.price.toLocaleString()} ر.س</div>
+                      <div className="text-success font-extrabold text-xl">{it.price.toLocaleString()} ر.س</div>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Calendar className="w-4 h-4" />
                         <span>مدة التنفيذ: {it.delivery}</span>
@@ -297,7 +297,7 @@ export default function DesignCategory() {
                     <ul className="space-y-2">
                       {it.features.map((f: string) => (
                         <li key={f} className="flex items-start gap-2 text-sm">
-                          <CheckCircle className="w-4 h-4 text-primary mt-0.5" />
+                          <CheckCircle className="w-4 h-4 text-success mt-0.5" />
                           <span className="text-muted-foreground">{f}</span>
                         </li>
                       ))}
@@ -310,7 +310,7 @@ export default function DesignCategory() {
                       <DialogTrigger asChild>
                         <Button
                           size="lg"
-                          className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white font-bold"
+                          className="w-full bg-gradient-to-r from-success to-success/80 hover:from-success/90 hover:to-success text-white font-bold"
                           onClick={() => { setSelected({ name: it.name, price: it.price }); setOpen(true); }}
                         >
                           <CreditCard className="w-5 h-5 ml-2" /> ادفع الآن
@@ -375,7 +375,7 @@ export default function DesignCategory() {
                   </div>
                 </div>
               </Card>
-            ))}
+              );
           </div>
 
           {/* CTA */}
@@ -393,7 +393,7 @@ export default function DesignCategory() {
           </div>
 
           <div className="mt-8 text-center text-xs text-muted-foreground">
-            <Sparkles className="inline-block w-4 h-4 ml-1 align-[-2px] text-primary" />
+            <Sparkles className="inline-block w-4 h-4 ml-1 align-[-2px] text-success" />
             الأسعار بالريال السعودي (SAR) وتشمل ربط الدفع عبر Paylink.
           </div>
 
