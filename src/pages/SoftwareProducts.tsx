@@ -79,7 +79,17 @@ const SoftwareProducts = () => {
   ];
 
   const handlePaymentMethodSelect = async (methodId: string, productName: string) => {
+    // إظهار رسالة فورية والحالة
     setIsLoading(true);
+    setShowPaymentMethods(false);
+    setSelectedProduct(null);
+    
+    // رسالة فورية
+    toast({
+      title: "جاري المعالجة...",
+      description: "يتم تحضير رابط الدفع، يرجى الانتظار...",
+    });
+
     try {
       let functionName = '';
       let paymentData = {};
@@ -189,13 +199,16 @@ const SoftwareProducts = () => {
       }
 
       if (paymentUrl) {
-        window.open(paymentUrl, '_blank');
-        setShowPaymentMethods(false);
-        setSelectedProduct(null);
+        // رسالة نجاح مع فتح الرابط
         toast({
-          title: "تم توجيهك للدفع",
+          title: "تم تحضير رابط الدفع ✅",
           description: "سيتم فتح صفحة الدفع في تبويب جديد",
         });
+        
+        // فتح الرابط بعد تأخير قصير لعرض الرسالة
+        setTimeout(() => {
+          window.open(paymentUrl, '_blank');
+        }, 500);
       } else {
         console.error('No payment URL in response:', data);
         toast({
