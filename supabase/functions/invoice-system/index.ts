@@ -114,12 +114,17 @@ const handler = async (req: Request): Promise<Response> => {
         emailContent = generatePendingInvoiceEmail(invoice);
       }
 
+      console.log('Sending email to:', invoice.customer_email);
+      console.log('Email subject:', emailSubject);
+      
       const emailResult = await resend.emails.send({
-        from: "نظام الفواتير <invoices@emkan.solutions>",
+        from: "نظام الفواتير <invoices@resend.dev>",
         to: [invoice.customer_email],
         subject: emailSubject,
         html: emailContent,
       });
+
+      console.log('Email result:', emailResult);
 
       // تحديث حالة الفاتورة
       await supabaseClient
