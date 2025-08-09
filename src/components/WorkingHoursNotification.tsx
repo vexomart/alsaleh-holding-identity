@@ -110,9 +110,10 @@ const WorkingHoursNotification = () => {
   return (
     <div 
       className={cn(
-        "w-full py-2 px-4 text-center relative overflow-hidden",
+        "inline-flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg relative overflow-hidden backdrop-blur-sm border",
         statusInfo.bgColor,
-        statusInfo.animation
+        statusInfo.animation,
+        "border-white/20"
       )}
     >
       {/* Background Pattern */}
@@ -120,32 +121,30 @@ const WorkingHoursNotification = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent transform -skew-x-12 animate-slide-in-right"></div>
       </div>
       
-      <div className="relative z-10 flex flex-col items-center justify-center gap-1">
+      <div className="relative z-10 flex items-center gap-2">
         {/* Status Badge */}
-        <div className={cn("px-3 py-1 rounded-full text-xs font-bold", statusInfo.badgeColor)}>
+        <div className={cn("px-2 py-1 rounded-md text-xs font-bold", statusInfo.badgeColor)}>
           {statusInfo.badge}
         </div>
         
-        {/* Main Content */}
-        <div className="flex items-center justify-center gap-3">
-          <StatusIcon className={cn("w-5 h-5", statusInfo.textColor)} />
-          <div className="flex flex-col items-center gap-1">
-            <span className={cn("text-sm font-medium", statusInfo.textColor)}>
-              {statusInfo.text}
+        <StatusIcon className={cn("w-4 h-4", statusInfo.textColor)} />
+        
+        <div className="flex flex-col">
+          <span className={cn("text-xs font-medium leading-tight", statusInfo.textColor)}>
+            {statusInfo.text}
+          </span>
+          <div className="flex items-center gap-2 mt-1">
+            <span className={cn("text-xs font-semibold", statusInfo.textColor)}>
+              {statusInfo.subText}
             </span>
-            <div className="flex items-center gap-3">
-              <span className={cn("text-xs font-semibold", statusInfo.textColor)}>
-                {statusInfo.subText}
-              </span>
-              <Timer className={cn("w-3 h-3", statusInfo.textColor)} />
-              <span className={cn("text-xs font-mono", statusInfo.textColor)}>
-                {currentTime.toLocaleTimeString('ar-SA', { 
-                  hour: '2-digit', 
-                  minute: '2-digit',
-                  hour12: true 
-                })}
-              </span>
-            </div>
+            <Timer className={cn("w-3 h-3", statusInfo.textColor)} />
+            <span className={cn("text-xs font-mono", statusInfo.textColor)}>
+              {currentTime.toLocaleTimeString('ar-SA', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+              })}
+            </span>
           </div>
         </div>
       </div>

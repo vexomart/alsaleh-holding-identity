@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import WorkingHoursNotification from "@/components/WorkingHoursNotification";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -986,14 +987,19 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Right side - Status indicator */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full border border-green-500/20">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-green-300 text-xs">الأنظمة تعمل بصورة طبيعية</span>
-              </div>
-              <div className="text-slate-500 text-xs">
-                آخر تحديث: {new Date().toLocaleDateString('ar-SA')}
+            {/* Right side - Working Hours Widget & Status */}
+            <div className="flex flex-col lg:flex-row items-center gap-4">
+              {/* Working Hours Notification */}
+              <WorkingHoursNotification />
+              
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full border border-green-500/20">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-green-300 text-xs">الأنظمة تعمل بصورة طبيعية</span>
+                </div>
+                <div className="text-slate-500 text-xs">
+                  آخر تحديث: {new Date().toLocaleDateString('ar-SA')}
+                </div>
               </div>
             </div>
           </div>
