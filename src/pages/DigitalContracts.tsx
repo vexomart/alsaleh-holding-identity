@@ -453,6 +453,45 @@ const DigitalContracts = () => {
             </div>
           </div>
           
+          
+          <!-- تنبيه هام: سريان العقد وسياسة الاسترداد -->
+          <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: 3px solid #991b1b; padding: 30px; margin: 30px 0; border-radius: 15px; position: relative; box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);">
+            <h2 style="color: white; font-size: 20px; margin: 0 0 25px 0; font-weight: bold; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+              🚨 تنبيه هام: سريان العقد وسياسة الاسترداد 🚨
+            </h2>
+            
+            <div style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); padding: 20px; border-radius: 10px; font-size: 15px; line-height: 2;">
+              <div style="margin-bottom: 20px;">
+                <h3 style="color: #fef2f2; font-size: 17px; margin: 0 0 15px 0; font-weight: bold;">
+                  ✅ سريان العقد وبدء التنفيذ:
+                </h3>
+                <ul style="margin: 0; padding-right: 25px; list-style-type: disc;">
+                  <li>يعتبر هذا العقد <strong>ساري المفعول وموافق عليه نهائياً</strong> من كلا الطرفين فور تحويل المبلغ المتفق عليه</li>
+                  <li>يجب <strong>إرسال إيصال التحويل البنكي</strong> خلال 24 ساعة من إجراء التحويل لتفعيل العقد</li>
+                  <li>يبدأ العمل فوراً بعد تأكيد استلام المبلغ المحول</li>
+                  <li>المبلغ المطلوب تحويله هو: <strong>${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي</strong> (الدفعة المقدمة 50%)</li>
+                </ul>
+              </div>
+              
+              <div style="border-top: 2px solid rgba(255,255,255,0.3); padding-top: 20px;">
+                <h3 style="color: #fef2f2; font-size: 17px; margin: 0 0 15px 0; font-weight: bold;">
+                  ❌ سياسة الاسترداد:
+                </h3>
+                <ul style="margin: 0; padding-right: 25px; list-style-type: disc;">
+                  <li><strong>لا يمكن ولا بأي حال من الأحوال استرداد المبلغ</strong> بعد بدء العمل في المشروع</li>
+                  <li>استرداد المبلغ يتطلب <strong>موافقة خطية مسبقة من الشركة</strong> وفقاً لحالات استثنائية محددة</li>
+                  <li>في حالة إلغاء المشروع من قبل العميل بعد البدء، <strong>لا يسترد أي مبلغ</strong></li>
+                  <li>العميل مسؤول عن <strong>قراءة وفهم</strong> جميع شروط العقد قبل الدفع</li>
+                  <li>الموافقة على هذا العقد تعني <strong>القبول التام</strong> لسياسة عدم الاسترداد</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.95); color: #dc2626; padding: 15px; margin-top: 20px; border-radius: 8px; text-align: center; font-weight: bold; border: 2px solid rgba(255,255,255,0.5);">
+              <span style="font-size: 16px;">⚠️ بالتوقيع أدناه، فإنك توافق على جميع الشروط والأحكام المذكورة أعلاه ⚠️</span>
+            </div>
+          </div>
+          
           <!-- معلومات الحساب البنكي -->
           <div style="background: #f0fff4; border: 3px solid #10b981; padding: 25px; margin: 25px 0; border-radius: 10px; position: relative;">
             <!-- شعار البنك -->
