@@ -262,13 +262,13 @@ const DigitalContracts = () => {
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
         width: 100%;
-        max-width: 210mm;
-        min-height: 297mm;
-        padding: 20px;
+        max-width: 794px;
+        min-height: auto;
+        padding: 30px 20px;
         background: white;
         font-family: 'Tajawal', 'Arial', sans-serif;
-        font-size: clamp(12px, 2vw, 14px);
-        line-height: 1.6;
+        font-size: 12px;
+        line-height: 1.7;
         direction: rtl;
         text-align: right;
         color: #000;
@@ -277,17 +277,8 @@ const DigitalContracts = () => {
         left: -9999px;
         box-sizing: border-box;
         margin: 0 auto;
-        page-break-inside: avoid;
-        
-        @media (max-width: 768px) {
-          padding: 15px;
-          font-size: 12px;
-        }
-        
-        @media (max-width: 480px) {
-          padding: 10px;
-          font-size: 11px;
-        }
+        page-break-inside: auto;
+        overflow: visible;
     `;
 
     contractElement.innerHTML = `
@@ -302,41 +293,41 @@ const DigitalContracts = () => {
             
             <!-- المحتوى الرئيسي للترويسة -->
             <div style="position: relative; z-index: 2;">
-              <!-- شعار الشركة المطور -->
-              <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); color: #0066cc; width: 180px; height: 180px; border-radius: 50%; margin: 0 auto 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-align: center; line-height: 1.2; box-shadow: 0 12px 40px rgba(0,0,0,0.5); border: 6px solid #f8fafc; position: relative;">
+              <!-- شعار الشركة المطور ومتجاوب -->
+              <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); color: #0066cc; width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-align: center; line-height: 1.1; box-shadow: 0 8px 25px rgba(0,0,0,0.4); border: 4px solid #f8fafc; position: relative;">
                 <div style="text-align: center;">
-                  <div style="font-size: 24px; margin-bottom: 8px;">🏢</div>
-                  <div style="font-size: 16px; color: #1e40af; line-height: 1.1;">Ali Saleh</div>
-                  <div style="font-size: 16px; color: #0066cc; line-height: 1.1;">Al-Shehri</div>
-                  <div style="font-size: 16px; font-weight: bold; color: #1e3a8a; line-height: 1.1;">Holding</div>
-                  <div style="font-size: 11px; margin-top: 5px; color: #64748b;">⚡ Tech Solutions ⚡</div>
+                  <div style="font-size: 16px; margin-bottom: 4px;">🏢</div>
+                  <div style="font-size: 11px; color: #1e40af; line-height: 1;">Ali Saleh</div>
+                  <div style="font-size: 11px; color: #0066cc; line-height: 1;">Al-Shehri</div>
+                  <div style="font-size: 11px; font-weight: bold; color: #1e3a8a; line-height: 1;">Holding</div>
+                  <div style="font-size: 8px; margin-top: 3px; color: #64748b;">⚡ Tech Solutions ⚡</div>
                 </div>
                 <!-- حلقة زخرفية -->
-                <div style="position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%;"></div>
+                <div style="position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;"></div>
               </div>
               
-              <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-shadow: 0 4px 12px rgba(0,0,0,0.6); text-align: center; letter-spacing: 0.5px; line-height: 1.3;">
+              <h1 style="margin: 0; font-size: 20px; font-weight: bold; text-shadow: 0 3px 8px rgba(0,0,0,0.5); text-align: center; letter-spacing: 0.3px; line-height: 1.2;">
                 Ali Saleh Al-Shehri Holding Company
               </h1>
-              <div style="font-size: 22px; margin: 25px 0; opacity: 0.95; text-align: center; font-weight: 500;">
+              <div style="font-size: 16px; margin: 15px 0; opacity: 0.95; text-align: center; font-weight: 500;">
                 🚀 للتقنية والحلول الرقمية المتقدمة 🌟
               </div>
-              <div style="font-size: 18px; opacity: 0.9; text-align: center; margin-bottom: 25px;">
+              <div style="font-size: 14px; opacity: 0.9; text-align: center; margin-bottom: 20px;">
                 📍 السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية 🇸🇦
               </div>
               
-              <!-- جدول معلومات الشركة المطور -->
-              <table style="width: 100%; margin-top: 30px; border-collapse: collapse; background: rgba(255,255,255,0.15); border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.3);">
+              <!-- جدول معلومات الشركة المطور والمتجاوب -->
+              <table style="width: 100%; margin-top: 20px; border-collapse: collapse; background: rgba(255,255,255,0.15); border-radius: 10px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.25); font-size: 11px;">
                 <tr>
-                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">📞 الهاتف</td>
-                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">0555812567</td>
-                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">📧 البريد الإلكتروني</td>
-                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">info@alialshehriholding.com</td>
+                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">📞 الهاتف</td>
+                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">0555812567</td>
+                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">📧 البريد الإلكتروني</td>
+                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center; font-size: 10px;">info@alialshehriholding.com</td>
                 </tr>
                 <tr>
-                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">🏛️ الرقم الضريبي</td>
-                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">300445123700003</td>
-                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">👤 المدير العام</td>
+                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">🏛️ الرقم الضريبي</td>
+                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">300445123700003</td>
+                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">👤 المدير العام</td>
                   <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">علي صالح الشهري</td>
                 </tr>
               </table>
