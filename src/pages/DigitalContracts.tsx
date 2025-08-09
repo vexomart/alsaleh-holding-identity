@@ -244,7 +244,7 @@ const DigitalContracts = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // إنشاء عنصر HTML للعقد مع دعم كامل للغة العربية
+  // إنشاء عنصر HTML للعقد الرسمي المحدث
   const createContractHTML = () => {
     const contractDate = new Date().toLocaleDateString('ar-SA', {
       year: 'numeric',
@@ -280,257 +280,564 @@ const DigitalContracts = () => {
     `;
 
     contractElement.innerHTML = `
-        <div style="border: 3px solid #0066cc; min-height: 100vh; padding: clamp(20px, 3vw, 40px); position: relative;">
+      <div style="border: 4px solid #0066cc; min-height: 100vh; padding: clamp(20px, 3vw, 40px); position: relative; background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);">
         <!-- إطار داخلي -->
-        <div style="border: 1px solid #ddd; min-height: calc(100vh - 80px); padding: clamp(15px, 2vw, 30px); position: relative;">
+        <div style="border: 2px solid #e2e8f0; min-height: calc(100vh - 80px); padding: clamp(15px, 2vw, 30px); position: relative; border-radius: 8px; background: white;">
           
-          <!-- الترويسة الرسمية للشركة -->
-          <div style="background: linear-gradient(135deg, #0066cc, #004499); color: white; padding: 35px; margin: -30px -30px 40px -30px; text-align: center; border-radius: 0;">
-            <!-- شعار الشركة -->
-            <div style="background: white; color: #0066cc; width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; text-align: center; line-height: 1.2; box-shadow: 0 6px 20px rgba(0,0,0,0.3);">
-              <div>
-                <div style="font-size: 16px;">شركة</div>
-                <div style="font-size: 12px;">علي صالح الشهري</div>
-                <div style="font-size: 14px;">القابضة</div>
-              </div>
-            </div>
+          <!-- الترويسة الرسمية المطورة -->
+          <div style="background: linear-gradient(135deg, #0066cc 0%, #1e40af 50%, #1e3a8a 100%); color: white; padding: 40px; margin: -30px -30px 50px -30px; border-radius: 0; position: relative; overflow: hidden;">
+            <!-- خلفية مزخرفة -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 2px, transparent 2px), radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 2px, transparent 2px); background-size: 30px 30px; opacity: 0.3;"></div>
             
-            <h1 style="margin: 0; font-size: 32px; font-weight: bold; text-shadow: 0 3px 6px rgba(0,0,0,0.4);">
-              شركة علي صالح الشهري القابضة
-            </h1>
-            <div style="font-size: 18px; margin: 15px 0; opacity: 0.9;">
-              للتقنية والحلول الرقمية المتقدمة
+            <!-- المحتوى الرئيسي للترويسة -->
+            <div style="position: relative; z-index: 2;">
+              <!-- شعار الشركة المطور -->
+              <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); color: #0066cc; width: 180px; height: 180px; border-radius: 50%; margin: 0 auto 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-align: center; line-height: 1.2; box-shadow: 0 12px 40px rgba(0,0,0,0.5); border: 6px solid #f8fafc; position: relative;">
+                <div style="text-align: center;">
+                  <div style="font-size: 24px; margin-bottom: 8px;">🏢</div>
+                  <div style="font-size: 18px; color: #1e40af;">شركة</div>
+                  <div style="font-size: 15px; color: #0066cc;">علي صالح الشهري</div>
+                  <div style="font-size: 17px; font-weight: bold; color: #1e3a8a;">القابضة</div>
+                  <div style="font-size: 11px; margin-top: 5px; color: #64748b;">⚡ التقنية المتقدمة ⚡</div>
+                </div>
+                <!-- حلقة زخرفية -->
+                <div style="position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%;"></div>
+              </div>
+              
+              <h1 style="margin: 0; font-size: 42px; font-weight: bold; text-shadow: 0 4px 12px rgba(0,0,0,0.6); text-align: center; letter-spacing: 1px;">
+                شركة علي صالح الشهري القابضة
+              </h1>
+              <div style="font-size: 22px; margin: 25px 0; opacity: 0.95; text-align: center; font-weight: 500;">
+                🚀 للتقنية والحلول الرقمية المتقدمة 🌟
+              </div>
+              <div style="font-size: 18px; opacity: 0.9; text-align: center; margin-bottom: 25px;">
+                📍 السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية 🇸🇦
+              </div>
+              
+              <!-- جدول معلومات الشركة المطور -->
+              <table style="width: 100%; margin-top: 30px; border-collapse: collapse; background: rgba(255,255,255,0.15); border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.3);">
+                <tr>
+                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">📞 الهاتف</td>
+                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">0555812567</td>
+                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">📧 البريد الإلكتروني</td>
+                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">info@alialshehriholding.com</td>
+                </tr>
+                <tr>
+                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">🏛️ الرقم الضريبي</td>
+                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">300445123700003</td>
+                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">👤 المدير العام</td>
+                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">علي صالح الشهري</td>
+                </tr>
+              </table>
+              
+              <div style="border-top: 4px solid rgba(255,255,255,0.5); margin: 30px auto 0; width: 80%; border-radius: 2px;"></div>
             </div>
-            <div style="font-size: 16px; opacity: 0.8;">
-              السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية
-            </div>
-            <div style="border-top: 3px solid rgba(255,255,255,0.3); margin: 20px auto 0; width: 60%;"></div>
           </div>
           
-          <!-- معلومات التاريخ والعقد -->
-          <div style="display: flex; justify-content: space-between; margin-bottom: 30px; background: #f8fafc; padding: 20px; border-left: 5px solid #0066cc; border-radius: 8px;">
-            <div>
-              <div style="color: #0066cc; font-weight: bold; font-size: 18px;">رقم العقد: ${Date.now().toString().slice(-8)}</div>
-              <div style="color: #666; font-size: 14px; margin-top: 8px;">تاريخ الإصدار: ${hijriDate}</div>
-            </div>
-            <div style="text-align: left;">
-              <div style="color: #0066cc; font-weight: bold; font-size: 18px;">Contract No: ${Date.now().toString().slice(-8)}</div>
-              <div style="color: #666; font-size: 14px; margin-top: 8px;">Issue Date: ${contractDate}</div>
-            </div>
+          <!-- معلومات التاريخ والعقد المطورة -->
+          <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border: 4px solid #0066cc; padding: 30px; margin-bottom: 50px; border-radius: 20px; box-shadow: 0 12px 35px rgba(0,102,204,0.2);">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="width: 50%; padding: 20px; border: 3px solid #0066cc; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
+                  <div style="color: #0066cc; font-weight: bold; font-size: 24px; margin-bottom: 15px;">📋 رقم العقد الرسمي</div>
+                  <div style="font-size: 28px; font-weight: bold; color: #1e40af; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">ASH-${Date.now().toString().slice(-8)}</div>
+                  <div style="color: #64748b; font-size: 16px; margin-top: 12px;">📅 تاريخ الإصدار الهجري</div>
+                  <div style="color: #334155; font-size: 18px; font-weight: bold; margin-top: 5px;">${hijriDate}</div>
+                </td>
+                <td style="width: 50%; padding: 20px; border: 3px solid #0066cc; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
+                  <div style="color: #0066cc; font-weight: bold; font-size: 24px; margin-bottom: 15px;">🗓️ Contract Number</div>
+                  <div style="font-size: 28px; font-weight: bold; color: #1e40af; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">ASH-${Date.now().toString().slice(-8)}</div>
+                  <div style="color: #64748b; font-size: 16px; margin-top: 12px;">📆 Issue Date (Gregorian)</div>
+                  <div style="color: #334155; font-size: 18px; font-weight: bold; margin-top: 5px;">${contractDate}</div>
+                </td>
+              </tr>
+            </table>
           </div>
           
-          <!-- العنوان الرئيسي للعقد -->
-          <h1 style="text-align: center; color: #0066cc; font-size: 30px; margin: 40px 0; font-weight: bold; border: 3px solid #0066cc; padding: 20px; background: linear-gradient(45deg, #f0f8ff, #e6f3ff); border-radius: 10px;">
-            عقد تقديم الخدمات التقنية والاستشارية
+          <!-- العنوان الرئيسي للعقد المطور -->
+          <h1 style="text-align: center; color: #0066cc; font-size: 38px; margin: 60px 0; font-weight: bold; border: 5px solid #0066cc; padding: 35px; background: linear-gradient(135deg, #f0f8ff 0%, #dbeafe 30%, #bfdbfe 70%, #93c5fd 100%); border-radius: 20px; box-shadow: 0 15px 40px rgba(0,102,204,0.3); text-shadow: 0 3px 6px rgba(0,0,0,0.1);">
+            📋 عقد تقديم الخدمات التقنية والاستشارية 💼
+            <div style="font-size: 16px; margin-top: 15px; color: #64748b; font-weight: normal;">تحت إشراف الأنظمة السعودية المعتمدة</div>
           </h1>
           
-          <!-- مقدمة العقد -->
-          <div style="background: #f8fafc; border: 2px solid #ddd; padding: 20px; margin: 25px 0; border-radius: 8px;">
-            <p style="font-size: 14px; line-height: 1.8; margin: 0; text-align: justify;">
-              بحمد الله وتوفيقه، اتفق الطرفان المذكوران أدناه على إبرام هذا العقد، وذلك وفقاً لأحكام النظام التجاري السعودي ولوائحه التنفيذية، 
-              ونظام العمل والعمال، واللوائح والقرارات ذات العلاقة المعمول بها في المملكة العربية السعودية.
-              <br><br>
-              <strong>الطرف الأول:</strong> شركة علي صالح الشهري القابضة ويمثلها الأستاذ / علي صالح الشهري
-              <br>
-              <strong>الطرف الثاني:</strong> ${formData.clientName || 'العميل'} 
-              <br><br>
-              وقد اتفق الطرفان على الشروط والأحكام التالية:
-            </p>
-          </div>
-          
-          <!-- معلومات الطرف الأول -->
-          <div style="background: #f0f8ff; border: 3px solid #0066cc; padding: 25px; margin: 25px 0; border-radius: 10px;">
-            <h2 style="color: #0066cc; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #0066cc; padding-bottom: 10px;">
-              الطرف الأول - مقدم الخدمة (المقاول)
+          <!-- الأساس القانوني والنظامي -->
+          <div style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 50%, #fed7aa 100%); border: 4px solid #f59e0b; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(245,158,11,0.2);">
+            <h2 style="color: #d97706; font-size: 24px; margin: 0 0 25px 0; font-weight: bold; text-align: center; border-bottom: 3px solid #f59e0b; padding-bottom: 15px;">
+              ⚖️ الأساس القانوني والنظامي للعقد
             </h2>
-            <div style="font-size: 16px; line-height: 2.2;">
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">اسم الشركة:</span> شركة علي صالح الشهري القابضة</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">يمثلها:</span> الأستاذ / علي صالح الشهري</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">السجل التجاري:</span> 4030554749</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">الرقم الضريبي:</span> 300445123700003</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">العنوان:</span> جدة، حي الروضة، المملكة العربية السعودية</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">البريد الإلكتروني:</span> info@alialshehriholding.com</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">الهاتف:</span> 0555812567</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">الممثل القانوني:</span> علي صالح الشهري</div>
-            </div>
-          </div>
-          
-          <!-- معلومات الطرف الثاني -->
-          <div style="background: #f0f8ff; border: 3px solid #0066cc; padding: 25px; margin: 25px 0; border-radius: 10px;">
-            <h2 style="color: #0066cc; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #0066cc; padding-bottom: 10px;">
-              الطرف الثاني - العميل (صاحب العمل)
-            </h2>
-            <div style="font-size: 14px; line-height: 2;">
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الاسم:</span> ${formData.clientName || 'علي صالح الشهري'}</div>
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">البريد الإلكتروني:</span> ${formData.clientEmail || 'ali6c205@gmail.com'}</div>
-              ${formData.clientPhone ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الهاتف:</span> ${formData.clientPhone}</div>` : ''}
-              ${formData.clientIdNumber ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">رقم الهوية:</span> ${formData.clientIdNumber}</div>` : ''}
-              ${formData.clientAddress ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">العنوان:</span> ${formData.clientAddress}</div>` : ''}
-              ${formData.commercialRegister ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">السجل التجاري:</span> ${formData.commercialRegister}</div>` : ''}
-              ${formData.taxNumber ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الرقم الضريبي:</span> ${formData.taxNumber}</div>` : ''}
-              ${formData.authorizedPerson ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">المخول بالتوقيع:</span> ${formData.authorizedPerson}</div>` : ''}
-            </div>
-          </div>
-          
-          <!-- تفاصيل الخدمة والنطاق -->
-          <div style="background: #f0fff0; border: 3px solid #009600; padding: 25px; margin: 25px 0; border-radius: 10px;">
-            <h2 style="color: #009600; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #009600; padding-bottom: 10px;">
-              المادة الأولى: موضوع العقد ونطاق العمل
-            </h2>
-            <div style="font-size: 14px; line-height: 2;">
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">نوع الخدمة:</span> ${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">وصف الخدمة:</span> ${formData.serviceDescription || selectedOfferDetails?.title || 'تطوير وتصميم موقع إلكتروني متكامل'}</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">المتطلبات الخاصة:</span> ${formData.customRequirements || 'وفقاً للمواصفات المتفق عليها'}</div>
+            <div style="background: white; padding: 25px; border-radius: 12px; border-left: 6px solid #f59e0b; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
+              <p style="margin: 0 0 20px 0; font-size: 16px; font-weight: bold; text-align: center; color: #d97706;">
+                🏛️ يستند هذا العقد إلى الأنظمة والقوانين السعودية التالية:
+              </p>
               
-              <h3 style="color: #009600; margin: 20px 0 10px 0;">المخرجات المتوقعة:</h3>
-              <ul style="margin: 10px 0; padding-right: 20px;">
-                ${selectedOfferDetails?.features?.map(feature => `<li style="margin-bottom: 5px;">${feature}</li>`).join('') || 
-                  '<li>تصميم وتطوير موقع إلكتروني احترافي</li><li>استضافة مجانية لمدة سنة</li><li>دعم فني شامل</li>'}
-              </ul>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <tr style="background: #f59e0b; color: white;">
+                  <th style="padding: 15px; border: 2px solid #d97706; text-align: center; font-weight: bold;">⚖️ النظام</th>
+                  <th style="padding: 15px; border: 2px solid #d97706; text-align: center; font-weight: bold;">📜 المادة</th>
+                  <th style="padding: 15px; border: 2px solid #d97706; text-align: center; font-weight: bold;">📋 التفاصيل</th>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">النظام التجاري السعودي</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (1)</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">المرسوم الملكي رقم (م/32) تاريخ 1419/6/16هـ</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">نظام العمل السعودي</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (25)</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">المرسوم الملكي رقم (م/51) تاريخ 1426/8/23هـ</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">نظام ضريبة القيمة المضافة</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (3)</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">اللائحة التنفيذية لضريبة القيمة المضافة</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">نظام حماية البيانات</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (7)</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">نظام حماية البيانات الشخصية 2021م</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">نظام التحكيم السعودي</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (15)</td>
+                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">قانون حل المنازعات التجارية</td>
+                </tr>
+              </table>
             </div>
           </div>
           
-          <!-- المادة المالية -->
-          <div style="background: #fff5f5; border: 3px solid #dc2626; padding: 25px; margin: 25px 0; border-radius: 10px;">
-            <h2 style="color: #dc2626; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #dc2626; padding-bottom: 10px;">
-              المادة الثانية: القيمة المالية وطريقة الدفع
+          <!-- مقدمة العقد وأطرافه -->
+          <div style="background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 50%, #bfdbfe 100%); border: 4px solid #0284c7; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(2,132,199,0.2);">
+            <h2 style="color: #0284c7; font-size: 22px; margin: 0 0 25px 0; font-weight: bold; text-align: center; border-bottom: 3px solid #0284c7; padding-bottom: 15px;">
+              🤝 مقدمة العقد وتعريف الأطراف المتعاقدة
             </h2>
-            <div style="font-size: 14px; line-height: 2;">
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">القيمة الإجمالية للعقد:</span> ${selectedOfferDetails?.price || '15'} ريال سعودي</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">ضريبة القيمة المضافة (15%):</span> ${(parseFloat(selectedOfferDetails?.price || '15') * 0.15).toFixed(2)} ريال سعودي</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">إجمالي المبلغ شامل الضريبة:</span> ${(parseFloat(selectedOfferDetails?.price || '15') * 1.15).toFixed(2)} ريال سعودي</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">طريقة الدفع:</span> تحويل بنكي</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">الدفعة المقدمة (50%):</span> ${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">الدفعة الأخيرة (50%):</span> ${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي</div>
-            </div>
-          </div>
-          
-          <!-- الجدول الزمني -->
-          <div style="background: #f0f4ff; border: 3px solid #6366f1; padding: 25px; margin: 25px 0; border-radius: 10px;">
-            <h2 style="color: #6366f1; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #6366f1; padding-bottom: 10px;">
-              المادة الثالثة: الجدول الزمني للتنفيذ
-            </h2>
-            <div style="font-size: 14px; line-height: 2;">
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">مدة التنفيذ الإجمالية:</span> ${selectedOfferDetails?.duration || '3-4 أسابيع'}</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">تاريخ بداية العمل:</span> خلال 3 أيام عمل من استلام الدفعة المقدمة</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">تاريخ التسليم المتوقع:</span> يحدد بعد بداية العمل وفقاً للجدول الزمني</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">فترة الضمان:</span> 6 أشهر من تاريخ التسليم النهائي</div>
-            </div>
-          </div>
-          
-          <!-- الشروط والأحكام التفصيلية -->
-          <div style="background: #fffbeb; border: 3px solid #f59e0b; padding: 25px; margin: 25px 0; border-radius: 10px;">
-            <h2 style="color: #d97706; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #f59e0b; padding-bottom: 10px;">
-              المادة الرابعة: الشروط والأحكام العامة
-            </h2>
-            <div style="font-size: 13px; line-height: 1.8;">
-              <h3 style="color: #d97706; margin: 15px 0 10px 0;">4.1 التزامات الطرف الأول (مقدم الخدمة):</h3>
-              <ul style="margin: 10px 0; padding-right: 20px;">
-                <li>تنفيذ الخدمة وفقاً للمواصفات والمعايير المتفق عليها</li>
-                <li>الالتزام بالجدول الزمني المحدد للتسليم</li>
-                <li>توفير الدعم الفني اللازم خلال فترة التنفيذ</li>
-                <li>ضمان جودة العمل وفقاً لأفضل الممارسات المهنية</li>
-                <li>المحافظة على سرية المعلومات والبيانات</li>
-              </ul>
+            <div style="background: white; padding: 25px; border-radius: 12px; border-left: 6px solid #0284c7; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
+              <p style="font-size: 17px; line-height: 2.2; margin: 0 0 25px 0; text-align: justify; color: #1e293b;">
+                بحمد الله وتوفيقه، اتفق الطرفان المذكوران أدناه على إبرام هذا العقد، وذلك استناداً إلى الأنظمة السعودية المعمول بها، 
+                وبناءً على مبدأ العدالة والشفافية في التعاملات التجارية، وحفظاً لحقوق الطرفين، والالتزام بأحكام الشريعة الإسلامية.
+              </p>
               
-              <h3 style="color: #d97706; margin: 15px 0 10px 0;">4.2 التزامات الطرف الثاني (العميل):</h3>
-              <ul style="margin: 10px 0; padding-right: 20px;">
-                <li>دفع المبالغ المستحقة في المواعيد المحددة</li>
-                <li>توفير المعلومات والبيانات اللازمة للمشروع</li>
-                <li>التعاون مع فريق العمل وتقديم التغذية الراجعة</li>
-                <li>مراجعة واعتماد المراحل المختلفة للمشروع</li>
-              </ul>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden;">
+                <tr style="background: #0284c7; color: white;">
+                  <th style="padding: 18px; border: 2px solid #0369a1; font-weight: bold; text-align: center;">🏷️ تعريف الطرف</th>
+                  <th style="padding: 18px; border: 2px solid #0369a1; font-weight: bold; text-align: center;">📋 البيانات الرسمية</th>
+                </tr>
+                <tr>
+                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 16px;">🏢 الطرف الأول</td>
+                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: white; font-size: 16px;">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</td>
+                </tr>
+                <tr>
+                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 16px;">👤 الممثل القانوني</td>
+                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: white; font-size: 16px;">الأستاذ / علي صالح الشهري - المدير العام</td>
+                </tr>
+                <tr>
+                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 16px;">🤝 الطرف الثاني</td>
+                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: white; font-size: 16px;">${formData.clientName || 'العميل المحترم'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 16px;">📍 محل التعاقد</td>
+                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: white; font-size: 16px;">المملكة العربية السعودية - جدة</td>
+                </tr>
+              </table>
               
-              <h3 style="color: #d97706; margin: 15px 0 10px 0;">4.3 أحكام عامة:</h3>
-              <ul style="margin: 10px 0; padding-right: 20px;">
-                <li>يعتبر هذا العقد ساري المفعول من تاريخ توقيعه من الطرفين</li>
-                <li>إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين</li>
-                <li>يتم اعتماد العقد نهائياً بعد الدفع والبدء في تنفيذ الخدمة</li>
-                <li>أي تعديل على هذا العقد يجب أن يكون كتابياً وموقعاً من الطرفين</li>
-                <li>في حالة النزاع، يحال الأمر للجهات المختصة في المملكة العربية السعودية</li>
-                <li>يخضع هذا العقد لأحكام النظام التجاري السعودي</li>
+              <div style="background: linear-gradient(135deg, #0284c7, #0369a1); color: white; padding: 20px; margin: 25px 0 0 0; border-radius: 10px; text-align: center; box-shadow: 0 6px 20px rgba(2,132,199,0.3);">
+                <p style="font-size: 16px; line-height: 1.8; margin: 0; font-weight: bold;">
+                  ⚖️ وقد اتفق الطرفان على الشروط والأحكام التالية بموجب هذا العقد الملزم قانونياً ⚖️
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- معلومات الطرف الأول بجدول مطور -->
+          <div style="background: linear-gradient(135deg, #f0f8ff 0%, #e0e7ff 50%, #c7d2fe 100%); border: 4px solid #0066cc; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,102,204,0.2);">
+            <h2 style="color: #0066cc; font-size: 22px; margin: 0 0 30px 0; font-weight: bold; border-bottom: 3px solid #0066cc; padding-bottom: 15px; text-align: center;">
+              🏢 بيانات الطرف الأول - مقدم الخدمة (المقاول)
+            </h2>
+            
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+              <tr style="background: linear-gradient(135deg, #0066cc, #1e40af); color: white;">
+                <th style="padding: 18px; border: 2px solid #1e40af; font-weight: bold; text-align: center; font-size: 16px;">📋 البيان</th>
+                <th style="padding: 18px; border: 2px solid #1e40af; font-weight: bold; text-align: center; font-size: 16px;">📝 التفاصيل الرسمية</th>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">🏢 اسم الشركة</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px;">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">👤 الممثل القانوني</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px;">الأستاذ / علي صالح الشهري - المدير العام والمالك</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">📋 السجل التجاري</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #dc2626; font-weight: bold;">4030554749</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">🏛️ الرقم الضريبي</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #dc2626; font-weight: bold;">300445123700003</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">📍 العنوان الرسمي</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px;">جدة، حي الروضة، شارع الأمير سلطان، المملكة العربية السعودية</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">📧 البريد الإلكتروني</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #2563eb;">info@alialshehriholding.com</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">📞 الهاتف الرسمي</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #dc2626; font-weight: bold;">0555812567</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">🎯 طبيعة النشاط</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px;">خدمات تقنية واستشارية وحلول رقمية متقدمة</td>
+              </tr>
+            </table>
+          </div>
+          
+          <!-- معلومات الطرف الثاني بجدول مطور -->
+          <div style="background: linear-gradient(135deg, #f0f8ff 0%, #e0e7ff 50%, #c7d2fe 100%); border: 4px solid #0066cc; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,102,204,0.2);">
+            <h2 style="color: #0066cc; font-size: 22px; margin: 0 0 30px 0; font-weight: bold; border-bottom: 3px solid #0066cc; padding-bottom: 15px; text-align: center;">
+              👤 بيانات الطرف الثاني - العميل (صاحب العمل)
+            </h2>
+            
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+              <tr style="background: linear-gradient(135deg, #0066cc, #1e40af); color: white;">
+                <th style="padding: 18px; border: 2px solid #1e40af; font-weight: bold; text-align: center; font-size: 16px;">📋 البيان</th>
+                <th style="padding: 18px; border: 2px solid #1e40af; font-weight: bold; text-align: center; font-size: 16px;">📝 التفاصيل المقدمة</th>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">👤 الاسم الكامل</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px;">${formData.clientName || 'علي صالح الشهري'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">📧 البريد الإلكتروني</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #2563eb;">${formData.clientEmail || 'ali6c205@gmail.com'}</td>
+              </tr>
+              ${formData.clientPhone ? `
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">📞 رقم الهاتف</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #dc2626; font-weight: bold;">${formData.clientPhone}</td>
+              </tr>` : ''}
+              ${formData.clientIdNumber ? `
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">🆔 رقم الهوية الوطنية</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #dc2626; font-weight: bold;">${formData.clientIdNumber}</td>
+              </tr>` : ''}
+              ${formData.clientAddress ? `
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">📍 العنوان</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px;">${formData.clientAddress}</td>
+              </tr>` : ''}
+              ${formData.commercialRegister ? `
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">📋 السجل التجاري</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #dc2626; font-weight: bold;">${formData.commercialRegister}</td>
+              </tr>` : ''}
+              ${formData.taxNumber ? `
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">🏛️ الرقم الضريبي</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #dc2626; font-weight: bold;">${formData.taxNumber}</td>
+              </tr>` : ''}
+              ${formData.authorizedPerson ? `
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f8ff; font-weight: bold; font-size: 14px;">✍️ المخول بالتوقيع</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px;">${formData.authorizedPerson}</td>
+              </tr>` : ''}
+            </table>
+          </div>
+          
+          <!-- تفاصيل الخدمة والنطاق بجدول مطور -->
+          <div style="background: linear-gradient(135deg, #f0fff0 0%, #dcfce7 50%, #bbf7d0 100%); border: 4px solid #22c55e; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(34,197,94,0.2);">
+            <h2 style="color: #15803d; font-size: 22px; margin: 0 0 30px 0; font-weight: bold; border-bottom: 3px solid #22c55e; padding-bottom: 15px; text-align: center;">
+              📋 المادة الأولى: موضوع العقد ونطاق العمل التفصيلي
+            </h2>
+            
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); margin-bottom: 25px;">
+              <tr style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white;">
+                <th style="padding: 18px; border: 2px solid #16a34a; font-weight: bold; text-align: center; font-size: 16px;">🔍 عنصر الخدمة</th>
+                <th style="padding: 18px; border: 2px solid #16a34a; font-weight: bold; text-align: center; font-size: 16px;">📝 التفاصيل والمواصفات</th>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff0; font-weight: bold; font-size: 14px;">🎯 نوع الخدمة الرئيسية</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 14px;">${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff0; font-weight: bold; font-size: 14px;">📄 وصف الخدمة التفصيلي</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 14px;">${formData.serviceDescription || selectedOfferDetails?.title || 'تطوير وتصميم موقع إلكتروني متكامل'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff0; font-weight: bold; font-size: 14px;">⚙️ المتطلبات الخاصة</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 14px;">${formData.customRequirements || 'وفقاً للمواصفات المتفق عليها والمعايير الدولية'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff0; font-weight: bold; font-size: 14px;">📅 مدة التنفيذ</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 14px; color: #dc2626; font-weight: bold;">${selectedOfferDetails?.duration || '3-4 أسابيع'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff0; font-weight: bold; font-size: 14px;">🏆 معايير الجودة</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 14px;">معايير الجودة العالمية ISO 9001 ومعايير الويب W3C</td>
+              </tr>
+            </table>
+            
+            <h3 style="color: #15803d; margin: 25px 0 20px 0; font-size: 18px; font-weight: bold; text-align: center; background: rgba(34,197,94,0.1); padding: 15px; border-radius: 8px;">
+              🎯 المخرجات والتسليمات المتوقعة
+            </h3>
+            <div style="background: white; padding: 20px; border-radius: 12px; border-left: 6px solid #22c55e; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr style="background: #22c55e; color: white;">
+                  <th style="padding: 12px; border: 1px solid #16a34a; text-align: center; font-weight: bold;">✅ المخرج</th>
+                  <th style="padding: 12px; border: 1px solid #16a34a; text-align: center; font-weight: bold;">📋 التفاصيل</th>
+                </tr>
+                ${selectedOfferDetails?.features?.map(feature => `
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #dcfce7; background: #f0fff0; font-weight: bold; text-align: center;">✅</td>
+                  <td style="padding: 10px; border: 1px solid #dcfce7; background: white;">${feature}</td>
+                </tr>
+                `).join('') || `
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #dcfce7; background: #f0fff0; font-weight: bold; text-align: center;">✅</td>
+                  <td style="padding: 10px; border: 1px solid #dcfce7; background: white;">تطوير وتصميم موقع إلكتروني متكامل</td>
+                </tr>
+                `}
+              </table>
+            </div>
+          </div>
+          
+          <!-- القيمة المالية والدفع بجدول مطور -->
+          <div style="background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 50%, #fb923c 100%); border: 4px solid #ea580c; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(234,88,12,0.2);">
+            <h2 style="color: #ea580c; font-size: 22px; margin: 0 0 30px 0; font-weight: bold; border-bottom: 3px solid #ea580c; padding-bottom: 15px; text-align: center;">
+              💰 المادة الثانية: القيمة المالية وشروط الدفع التفصيلية
+            </h2>
+            
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+              <tr style="background: linear-gradient(135deg, #ea580c, #dc2626); color: white;">
+                <th style="padding: 18px; border: 2px solid #dc2626; font-weight: bold; text-align: center; font-size: 16px;">💸 البيان المالي</th>
+                <th style="padding: 18px; border: 2px solid #dc2626; font-weight: bold; text-align: center; font-size: 16px;">💵 القيمة بالريال السعودي</th>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: #fff7ed; font-weight: bold; font-size: 14px;">💼 قيمة الخدمة الأساسية</td>
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: white; font-weight: bold; color: #ea580c; font-size: 16px; text-align: center;">${selectedOfferDetails?.price || '15'} ريال سعودي</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: #fff7ed; font-weight: bold; font-size: 14px;">🏛️ ضريبة القيمة المضافة (15%)</td>
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: white; font-weight: bold; color: #dc2626; font-size: 16px; text-align: center;">${(parseFloat(selectedOfferDetails?.price || '15') * 0.15).toFixed(2)} ريال سعودي</td>
+              </tr>
+              <tr style="background: linear-gradient(135deg, #f97316, #ea580c); color: white;">
+                <td style="padding: 15px; border: 2px solid #dc2626; font-weight: bold; font-size: 16px;">💯 إجمالي المبلغ شامل الضريبة</td>
+                <td style="padding: 15px; border: 2px solid #dc2626; font-weight: bold; font-size: 18px; text-align: center;">${(parseFloat(selectedOfferDetails?.price || '15') * 1.15).toFixed(2)} ريال سعودي</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: #fff7ed; font-weight: bold; font-size: 14px;">🏦 طريقة الدفع المعتمدة</td>
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: white; font-size: 14px; text-align: center;">تحويل بنكي مباشر</td>
+              </tr>
+              <tr style="background: rgba(220,38,38,0.1);">
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: #fff7ed; font-weight: bold; font-size: 14px;">💳 الدفعة المقدمة (50%)</td>
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: white; font-weight: bold; color: #dc2626; font-size: 16px; text-align: center;">${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي</td>
+              </tr>
+              <tr style="background: rgba(34,197,94,0.1);">
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: #fff7ed; font-weight: bold; font-size: 14px;">✅ الدفعة النهائية (50%)</td>
+                <td style="padding: 15px; border: 2px solid #fed7aa; background: white; font-weight: bold; color: #22c55e; font-size: 16px; text-align: center;">${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي</td>
+              </tr>
+            </table>
+            
+            <div style="background: rgba(234,88,12,0.1); border: 2px solid #ea580c; padding: 20px; margin-top: 20px; border-radius: 10px;">
+              <h4 style="color: #ea580c; margin: 0 0 15px 0; font-size: 16px; font-weight: bold; text-align: center;">📋 شروط الدفع الإضافية</h4>
+              <ul style="margin: 0; padding-right: 20px; line-height: 2; color: #7c2d12;">
+                <li>💳 الدفعة المقدمة مطلوبة قبل البدء في العمل</li>
+                <li>✅ الدفعة النهائية تستحق عند التسليم النهائي</li>
+                <li>🏦 جميع التحويلات تتم للحساب البنكي المعتمد</li>
+                <li>📄 إرسال إيصال التحويل إجباري لتفعيل العقد</li>
               </ul>
             </div>
           </div>
           
-          
+          <!-- الجدول الزمني للتنفيذ -->
+          <div style="background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 50%, #c7d2fe 100%); border: 4px solid #6366f1; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(99,102,241,0.2);">
+            <h2 style="color: #4338ca; font-size: 22px; margin: 0 0 30px 0; font-weight: bold; border-bottom: 3px solid #6366f1; padding-bottom: 15px; text-align: center;">
+              ⏰ المادة الثالثة: الجدول الزمني للتنفيذ والتسليم
+            </h2>
+            
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+              <tr style="background: linear-gradient(135deg, #6366f1, #4338ca); color: white;">
+                <th style="padding: 18px; border: 2px solid #4338ca; font-weight: bold; text-align: center; font-size: 16px;">📅 المرحلة الزمنية</th>
+                <th style="padding: 18px; border: 2px solid #4338ca; font-weight: bold; text-align: center; font-size: 16px;">⏳ المدة المحددة</th>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f4ff; font-weight: bold; font-size: 14px;">🎯 مدة التنفيذ الإجمالية</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #dc2626; font-weight: bold; text-align: center;">${selectedOfferDetails?.duration || '3-4 أسابيع'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f4ff; font-weight: bold; font-size: 14px;">🚀 تاريخ بداية العمل</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; text-align: center;">خلال 3 أيام عمل من استلام الدفعة المقدمة</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f4ff; font-weight: bold; font-size: 14px;">📋 تاريخ التسليم المبدئي</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; text-align: center;">يحدد بعد بداية العمل وفقاً للجدول الزمني المعتمد</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f4ff; font-weight: bold; font-size: 14px;">✅ التسليم النهائي</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; text-align: center;">بعد اعتماد العميل واستلام الدفعة النهائية</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f4ff; font-weight: bold; font-size: 14px;">🛡️ فترة الضمان</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; color: #22c55e; font-weight: bold; text-align: center;">6 أشهر من تاريخ التسليم النهائي</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: #f0f4ff; font-weight: bold; font-size: 14px;">📞 الدعم الفني</td>
+                <td style="padding: 15px; border: 2px solid #e0e7ff; background: white; font-size: 14px; text-align: center;">متاح 24/7 خلال فترة الضمان</td>
+              </tr>
+            </table>
+          </div>
+
           <!-- تنبيه هام: سريان العقد وسياسة الاسترداد -->
-          <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: 3px solid #991b1b; padding: 30px; margin: 30px 0; border-radius: 15px; position: relative; box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);">
-            <h2 style="color: white; font-size: 20px; margin: 0 0 25px 0; font-weight: bold; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
-              🚨 تنبيه هام: سريان العقد وسياسة الاسترداد 🚨
-            </h2>
+          <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: 4px solid #991b1b; padding: 35px; margin: 40px 0; border-radius: 20px; position: relative; box-shadow: 0 15px 40px rgba(220, 38, 38, 0.4);">
+            <!-- خلفية زخرفية للتنبيه -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px); background-size: 20px 20px; opacity: 0.3; border-radius: 16px;"></div>
             
-            <div style="background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); padding: 20px; border-radius: 10px; font-size: 15px; line-height: 2;">
-              <div style="margin-bottom: 20px;">
-                <h3 style="color: #fef2f2; font-size: 17px; margin: 0 0 15px 0; font-weight: bold;">
-                  ✅ سريان العقد وبدء التنفيذ:
-                </h3>
-                <ul style="margin: 0; padding-right: 25px; list-style-type: disc;">
-                  <li>يعتبر هذا العقد <strong>ساري المفعول وموافق عليه نهائياً</strong> من كلا الطرفين فور تحويل المبلغ المتفق عليه</li>
-                  <li>يجب <strong>إرسال إيصال التحويل البنكي</strong> خلال 24 ساعة من إجراء التحويل لتفعيل العقد</li>
-                  <li>يبدأ العمل فوراً بعد تأكيد استلام المبلغ المحول</li>
-                  <li>المبلغ المطلوب تحويله هو: <strong>${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي</strong> (الدفعة المقدمة 50%)</li>
-                </ul>
+            <div style="position: relative; z-index: 2;">
+              <h2 style="color: white; font-size: 28px; margin: 0 0 30px 0; font-weight: bold; text-align: center; text-shadow: 0 3px 6px rgba(0,0,0,0.6);">
+                🚨 تنبيه هام: سريان العقد وسياسة الاسترداد 🚨
+              </h2>
+              
+              <div style="background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.4); padding: 25px; border-radius: 15px; margin-bottom: 25px;">
+                <div style="margin-bottom: 25px;">
+                  <h3 style="color: #fef2f2; font-size: 20px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid rgba(255,255,255,0.5); padding-bottom: 10px;">
+                    ✅ شروط سريان العقد وبدء التنفيذ:
+                  </h3>
+                  <table style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;">
+                    <tr>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">📋 سريان العقد</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3);">يعتبر ساري المفعول وموافق عليه نهائياً فور تحويل المبلغ</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">📄 إيصال التحويل</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3);">يجب إرساله خلال 24 ساعة لتفعيل العقد</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">🚀 بدء العمل</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3);">فوراً بعد تأكيد استلام المبلغ المحول</td>
+                    </tr>
+                    <tr style="background: rgba(255,255,255,0.2);">
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">💰 المبلغ المطلوب</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold; font-size: 16px;">${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي (الدفعة المقدمة)</td>
+                    </tr>
+                  </table>
+                </div>
+                
+                <div style="border-top: 3px solid rgba(255,255,255,0.4); padding-top: 25px;">
+                  <h3 style="color: #fef2f2; font-size: 20px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid rgba(255,255,255,0.5); padding-bottom: 10px;">
+                    ❌ سياسة الاسترداد الصارمة:
+                  </h3>
+                  <table style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;">
+                    <tr>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">🚫 عدم الاسترداد</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3);">لا يمكن استرداد المبلغ بأي حال من الأحوال بعد بدء العمل</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">📝 الموافقة المسبقة</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3);">الاسترداد يتطلب موافقة خطية من الشركة فقط</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">⚠️ إلغاء المشروع</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3);">في حالة الإلغاء من العميل، لا يسترد أي مبلغ</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">📚 المسؤولية</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3);">العميل مسؤول عن قراءة وفهم جميع الشروط</td>
+                    </tr>
+                    <tr style="background: rgba(255,255,255,0.2);">
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">✅ القبول النهائي</td>
+                      <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold;">التوقيع يعني القبول التام لسياسة عدم الاسترداد</td>
+                    </tr>
+                  </table>
+                </div>
               </div>
               
-              <div style="border-top: 2px solid rgba(255,255,255,0.3); padding-top: 20px;">
-                <h3 style="color: #fef2f2; font-size: 17px; margin: 0 0 15px 0; font-weight: bold;">
-                  ❌ سياسة الاسترداد:
-                </h3>
-                <ul style="margin: 0; padding-right: 25px; list-style-type: disc;">
-                  <li><strong>لا يمكن ولا بأي حال من الأحوال استرداد المبلغ</strong> بعد بدء العمل في المشروع</li>
-                  <li>استرداد المبلغ يتطلب <strong>موافقة خطية مسبقة من الشركة</strong> وفقاً لحالات استثنائية محددة</li>
-                  <li>في حالة إلغاء المشروع من قبل العميل بعد البدء، <strong>لا يسترد أي مبلغ</strong></li>
-                  <li>العميل مسؤول عن <strong>قراءة وفهم</strong> جميع شروط العقد قبل الدفع</li>
-                  <li>الموافقة على هذا العقد تعني <strong>القبول التام</strong> لسياسة عدم الاسترداد</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div style="background: rgba(255,255,255,0.95); color: #dc2626; padding: 15px; margin-top: 20px; border-radius: 8px; text-align: center; font-weight: bold; border: 2px solid rgba(255,255,255,0.5);">
-              <span style="font-size: 16px;">⚠️ بالتوقيع أدناه، فإنك توافق على جميع الشروط والأحكام المذكورة أعلاه ⚠️</span>
-            </div>
-          </div>
-          
-          <!-- معلومات الحساب البنكي -->
-          <div style="background: #f0fff4; border: 3px solid #10b981; padding: 25px; margin: 25px 0; border-radius: 10px; position: relative;">
-            <!-- شعار البنك -->
-            <div style="position: absolute; left: 20px; top: 20px; background: #0066cc; color: white; padding: 10px 15px; border-radius: 8px; font-size: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-              <div style="font-weight: bold;">مصرف</div>
-              <div style="font-weight: bold;">الراجحي</div>
-            </div>
-            
-            <h2 style="color: #10b981; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #10b981; padding-bottom: 10px;">
-              المادة الخامسة: معلومات الحساب البنكي للدفع
-            </h2>
-            <div style="font-size: 14px; line-height: 2;">
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">اسم البنك:</span> مصرف الراجحي</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">اسم الحساب:</span> شركة علي صالح الشهري القابضة</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">رقم الحساب:</span> 161000010006086071040</div>
-              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">رقم الآيبان:</span> SA1980000161608016071040</div>
-              <div style="background: #fef3c7; padding: 15px; margin-top: 15px; border-radius: 5px; border-left: 4px solid #f59e0b;">
-                <strong>ملاحظة مهمة:</strong> يرجى إرسال إيصال التحويل فور إتمام الدفع لتفعيل العقد وبدء العمل.
+              <div style="background: rgba(255,255,255,0.95); color: #dc2626; padding: 20px; border-radius: 12px; text-align: center; font-weight: bold; border: 3px solid rgba(255,255,255,0.6); box-shadow: 0 6px 20px rgba(0,0,0,0.3);">
+                <span style="font-size: 18px;">⚠️ بالتوقيع أدناه، فإنك توافق على جميع الشروط والأحكام المذكورة أعلاه وتتحمل المسؤولية القانونية الكاملة ⚠️</span>
               </div>
             </div>
           </div>
           
-          <!-- منطقة التوقيعات -->
-          <div style="background: #f8fafc; border: 3px solid #374151; padding: 25px; margin: 25px 0; border-radius: 10px;">
-            <h2 style="color: #374151; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; text-align: center;">
-              التوقيعات والاعتماد
+          <!-- معلومات الحساب البنكي المطورة -->
+          <div style="background: linear-gradient(135deg, #f0fff4 0%, #dcfce7 50%, #bbf7d0 100%); border: 4px solid #22c55e; padding: 30px; margin: 40px 0; border-radius: 15px; position: relative; box-shadow: 0 10px 30px rgba(34,197,94,0.2);">
+            <!-- شعار البنك المطور -->
+            <div style="position: absolute; left: 25px; top: 25px; background: linear-gradient(135deg, #0066cc, #1e40af); color: white; padding: 15px 20px; border-radius: 12px; font-size: 14px; text-align: center; box-shadow: 0 8px 25px rgba(0,102,204,0.4); border: 3px solid #f8fafc;">
+              <div style="font-weight: bold; font-size: 16px;">🏦 مصرف</div>
+              <div style="font-weight: bold; font-size: 16px;">الراجحي</div>
+              <div style="font-size: 10px; margin-top: 5px; opacity: 0.9;">معتمد رسمياً</div>
+            </div>
+            
+            <h2 style="color: #15803d; font-size: 22px; margin: 0 0 30px 0; font-weight: bold; border-bottom: 3px solid #22c55e; padding-bottom: 15px; text-align: center;">
+              💳 المادة الخامسة: معلومات الحساب البنكي المعتمد للدفع
             </h2>
-            <div style="display: flex; justify-content: space-between; gap: 30px;">
-              <!-- توقيع الطرف الأول مع الختم الرقمي -->
-              <div style="border: 3px solid #0066cc; padding: 20px; flex: 1; text-align: center; min-height: 150px; position: relative; border-radius: 8px; background: white;">
-                <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px; font-size: 14px;">الطرف الأول - مقدم الخدمة</div>
-                <div style="font-size: 13px; margin-bottom: 10px; color: #666;">شركة علي صالح الشهري القابضة</div>
+            
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+              <tr style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white;">
+                <th style="padding: 18px; border: 2px solid #16a34a; font-weight: bold; text-align: center; font-size: 16px;">🏦 البيان البنكي</th>
+                <th style="padding: 18px; border: 2px solid #16a34a; font-weight: bold; text-align: center; font-size: 16px;">📋 التفاصيل المصرفية</th>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff4; font-weight: bold; font-size: 14px;">🏦 اسم البنك</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 14px; font-weight: bold; color: #0066cc;">مصرف الراجحي (Al Rajhi Bank)</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff4; font-weight: bold; font-size: 14px;">👤 اسم صاحب الحساب</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 14px; font-weight: bold;">شركة علي صالح الشهري القابضة</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff4; font-weight: bold; font-size: 14px;">💳 رقم الحساب</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 16px; font-weight: bold; color: #dc2626; text-align: center;">161000010006086071040</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff4; font-weight: bold; font-size: 14px;">🌐 رقم الآيبان الدولي</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 16px; font-weight: bold; color: #dc2626; text-align: center;">SA1980000161608016071040</td>
+              </tr>
+              <tr>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: #f0fff4; font-weight: bold; font-size: 14px;">💱 العملة المعتمدة</td>
+                <td style="padding: 15px; border: 2px solid #dcfce7; background: white; font-size: 14px; text-align: center;">الريال السعودي (SAR)</td>
+              </tr>
+            </table>
+            
+            <div style="background: linear-gradient(135deg, #fef3c7, #fed7aa); border: 3px solid #f59e0b; padding: 20px; margin-top: 25px; border-radius: 12px; box-shadow: 0 6px 20px rgba(245,158,11,0.2);">
+              <h4 style="color: #d97706; margin: 0 0 15px 0; font-size: 18px; font-weight: bold; text-align: center;">⚠️ تعليمات هامة للتحويل البنكي</h4>
+              <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fef3c7; font-weight: bold; width: 30%;">📄 إيصال التحويل</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white;">يجب إرساله فور إتمام التحويل لتفعيل العقد فوراً</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fef3c7; font-weight: bold;">⏰ مدة التفعيل</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white;">العقد يُفعّل خلال 24 ساعة من استلام إيصال التحويل</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fef3c7; font-weight: bold;">📧 طريقة الإرسال</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white;">عبر البريد الإلكتروني أو الواتساب الرسمي للشركة</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fef3c7; font-weight: bold;">🚀 بدء العمل</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white;">يبدأ خلال 3 أيام عمل من تأكيد استلام المبلغ</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          
+          <!-- منطقة التوقيعات والاعتماد المطورة -->
+          <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%); border: 4px solid #475569; padding: 35px; margin: 40px 0; border-radius: 15px; box-shadow: 0 12px 35px rgba(71,85,105,0.3);">
+            <h2 style="color: #334155; font-size: 24px; margin: 0 0 35px 0; font-weight: bold; text-align: center; border-bottom: 3px solid #475569; padding-bottom: 15px;">
+              ✍️ التوقيعات والاعتماد النهائي للعقد
+            </h2>
+            <div style="display: flex; justify-content: space-between; gap: 40px;">
+              <!-- توقيع الطرف الأول مع الختم الرقمي المطور -->
+              <div style="border: 4px solid #0066cc; padding: 25px; flex: 1; text-align: center; min-height: 200px; position: relative; border-radius: 15px; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); box-shadow: 0 8px 25px rgba(0,102,204,0.2);">
+                <div style="color: #0066cc; font-weight: bold; margin-bottom: 15px; font-size: 16px; border-bottom: 2px solid #0066cc; padding-bottom: 8px;">الطرف الأول - مقدم الخدمة</div>
+                <div style="font-size: 14px; margin-bottom: 15px; color: #64748b; font-weight: bold;">شركة علي صالح الشهري القابضة</div>
                 
-                <!-- الختم الرقمي -->
-                <div style="margin: 15px auto; display: flex; justify-content: center;">
+                <!-- الختم الرقمي المطور -->
+                <div style="margin: 20px auto; display: flex; justify-content: center;">
                   <div style="
-                    width: 90px;
-                    height: 90px;
-                    border: 3px solid #0066cc;
+                    width: 110px;
+                    height: 110px;
+                    border: 4px solid #0066cc;
                     border-radius: 50%;
                     display: flex;
                     flex-direction: column;
@@ -538,45 +845,37 @@ const DigitalContracts = () => {
                     justify-content: center;
                     text-align: center;
                     direction: rtl;
-                    font-size: 7px;
+                    font-size: 8px;
                     font-weight: bold;
                     color: #0066cc;
                     font-family: Arial, sans-serif;
-                    line-height: 1.1;
-                    padding: 8px;
+                    line-height: 1.2;
+                    padding: 10px;
                     box-sizing: border-box;
                     position: relative;
-                    background: white;
-                    box-shadow: 0 2px 8px rgba(0,102,204,0.3);
+                    background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+                    box-shadow: 0 8px 25px rgba(0,102,204,0.4);
                   ">
-                    <div style="font-size: 8px; font-weight: bold; margin-bottom: 2px;">شركة علي صالح الشهري القابضة</div>
-                    <div style="font-size: 6px; margin-bottom: 1px;">سجل تجاري</div>
-                    <div style="font-size: 7px; font-weight: bold;">4030554749</div>
-                    <!-- دائرة داخلية للزينة -->
-                    <div style="
-                      position: absolute;
-                      top: 50%;
-                      left: 50%;
-                      transform: translate(-50%, -50%);
-                      width: 70%;
-                      height: 70%;
-                      border: 1px solid #0066cc;
-                      border-radius: 50%;
-                      opacity: 0.3;
-                    "></div>
+                    <div style="font-size: 9px; font-weight: bold; margin-bottom: 3px;">شركة علي صالح الشهري القابضة</div>
+                    <div style="font-size: 7px; margin-bottom: 2px; color: #64748b;">سجل تجاري</div>
+                    <div style="font-size: 8px; font-weight: bold; color: #dc2626;">4030554749</div>
+                    <div style="font-size: 6px; margin-top: 2px; color: #64748b;">جدة - السعودية</div>
+                    <!-- دوائر زخرفية -->
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; border: 2px solid #0066cc; border-radius: 50%; opacity: 0.3;"></div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60%; height: 60%; border: 1px solid #0066cc; border-radius: 50%; opacity: 0.2;"></div>
                   </div>
                 </div>
                 
-                <div style="margin-top: 10px; border-bottom: 2px solid #0066cc; width: 120px; margin-left: auto; margin-right: auto;"></div>
-                <div style="font-size: 11px; margin-top: 8px; color: #666;">التوقيع والختم</div>
-                <div style="font-size: 10px; margin-top: 5px; color: #999;">التاريخ: ${hijriDate}</div>
+                <div style="margin-top: 15px; border-bottom: 3px solid #0066cc; width: 150px; margin-left: auto; margin-right: auto;"></div>
+                <div style="font-size: 12px; margin-top: 10px; color: #64748b; font-weight: bold;">التوقيع والختم الرسمي</div>
+                <div style="font-size: 11px; margin-top: 8px; color: #94a3b8;">التاريخ: ${hijriDate}</div>
               </div>
               
-              <!-- توقيع الطرف الثاني -->
-              <div style="border: 3px solid #0066cc; padding: 20px; flex: 1; text-align: center; min-height: 150px; position: relative; border-radius: 8px; background: white;">
-                <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px; font-size: 14px;">الطرف الثاني - العميل</div>
-                <div style="font-size: 13px; margin-bottom: 15px; color: #666;">${formData.clientName || 'علي صالح الشهري'}</div>
-                <div id="signature-area" style="margin: 20px auto; height: 70px; display: flex; align-items: center; justify-content: center;">
+              <!-- توقيع الطرف الثاني المطور -->
+              <div style="border: 4px solid #0066cc; padding: 25px; flex: 1; text-align: center; min-height: 200px; position: relative; border-radius: 15px; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); box-shadow: 0 8px 25px rgba(0,102,204,0.2);">
+                <div style="color: #0066cc; font-weight: bold; margin-bottom: 15px; font-size: 16px; border-bottom: 2px solid #0066cc; padding-bottom: 8px;">الطرف الثاني - العميل</div>
+                <div style="font-size: 14px; margin-bottom: 20px; color: #64748b; font-weight: bold;">${formData.clientName || 'العميل المحترم'}</div>
+                <div id="signature-area" style="margin: 25px auto; height: 90px; display: flex; align-items: center; justify-content: center; border: 2px dashed #cbd5e1; border-radius: 8px; background: #f8fafc;">
                   ${(() => {
                     const canvas = signatureCanvasRef.current;
                     if (canvas) {
@@ -588,37 +887,37 @@ const DigitalContracts = () => {
                             if (index % 4 === 3) return false;
                             return channel !== 255;
                           });
-                          
                           if (hasSignature) {
-                            const signatureData = canvas.toDataURL('image/png');
-                            return `<img src="${signatureData}" style="max-width: 100%; max-height: 70px; border: 1px solid #ddd; border-radius: 4px;" alt="توقيع العميل" />`;
+                            const dataURL = canvas.toDataURL();
+                            return `<img src="${dataURL}" style="max-width: 140px; max-height: 80px; border-radius: 4px;" />`;
                           }
                         }
                       } catch (error) {
-                        console.error('خطأ في إضافة التوقيع:', error);
+                        console.error('Error getting signature:', error);
                       }
                     }
-                    return '<div style="border-bottom: 2px solid #0066cc; width: 120px; margin: 0 auto;"></div>';
+                    return '<div style="color: #94a3b8; font-size: 12px;">منطقة التوقيع الرقمي</div>';
                   })()}
                 </div>
-                <div style="font-size: 11px; margin-top: 8px; color: #666;">التوقيع</div>
-                <div style="font-size: 10px; margin-top: 5px; color: #999;">التاريخ: ${hijriDate}</div>
+                <div style="margin-top: 15px; border-bottom: 3px solid #0066cc; width: 150px; margin-left: auto; margin-right: auto;"></div>
+                <div style="font-size: 12px; margin-top: 10px; color: #64748b; font-weight: bold;">توقيع العميل</div>
+                <div style="font-size: 11px; margin-top: 8px; color: #94a3b8;">التاريخ: ${contractDate}</div>
+              </div>
+            </div>
+            
+            <!-- اعتماد نهائي -->
+            <div style="background: linear-gradient(135deg, #0066cc, #1e40af); color: white; padding: 25px; margin-top: 30px; border-radius: 12px; text-align: center; box-shadow: 0 8px 25px rgba(0,102,204,0.4);">
+              <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold;">🏛️ اعتماد العقد الرسمي</h3>
+              <p style="margin: 0; font-size: 14px; line-height: 1.8;">
+                هذا العقد معتمد ومصدق وفقاً للأنظمة السعودية المعمول بها، وهو ملزم قانونياً لكلا الطرفين 
+                من تاريخ التوقيع والدفع، ويخضع لاختصاص المحاكم السعودية في جدة.
+              </p>
+              <div style="margin-top: 15px; font-size: 12px; opacity: 0.9;">
+                تم إنشاء هذا العقد بواسطة النظام الإلكتروني المعتمد | ${new Date().toLocaleString('ar-SA')}
               </div>
             </div>
           </div>
           
-          <!-- التذييل الرسمي -->
-          <div style="margin-top: 40px; border-top: 3px solid #0066cc; padding-top: 20px; text-align: center; background: #f8fafc; margin-left: -20px; margin-right: -20px; margin-bottom: -20px; padding-left: 20px; padding-right: 20px; padding-bottom: 20px;">
-            <div style="color: #0066cc; font-size: 16px; font-weight: bold; margin-bottom: 10px;">
-              شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية
-            </div>
-            <div style="color: #666; font-size: 12px; margin-bottom: 5px;">
-              تم إنشاء هذا العقد بتاريخ: ${contractDate} الموافق ${hijriDate}
-            </div>
-            <div style="color: #666; font-size: 13px;">
-              العنوان: جدة - حي الروضة | الهاتف: 0555812567 | البريد الإلكتروني: info@alialshehriholding.com
-            </div>
-          </div>
         </div>
       </div>
     `;
@@ -626,64 +925,69 @@ const DigitalContracts = () => {
     return contractElement;
   };
 
-  // إنشاء PDF من HTML باستخدام html2canvas
-  const generateContractPDF = async (): Promise<jsPDF> => {
-    return new Promise(async (resolve, reject) => {
+  // إنشاء وإرجاع PDF للعقد
+  const generateContractPDF = () => {
+    return new Promise<jsPDF>((resolve, reject) => {
       try {
-        // إنشاء عنصر HTML للعقد
+        // إنشاء عنصر العقد
         const contractElement = createContractHTML();
         
-        // إضافة العنصر مؤقتاً للدوم
+        // إضافة العنصر للصفحة مؤقتاً
         document.body.appendChild(contractElement);
         
         // انتظار قصير للتأكد من تحميل كامل للعنصر
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // تحويل HTML إلى canvas بضبط الارتفاع تلقائياً
-        const canvas = await html2canvas(contractElement, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#ffffff',
-          logging: false,
-          scrollX: 0,
-          scrollY: 0,
-          windowWidth: contractElement.scrollWidth,
-          windowHeight: contractElement.scrollHeight
-        });
-        
-        // إزالة العنصر المؤقت
-        document.body.removeChild(contractElement);
-        
-        // حساب النسبة الصحيحة لـ PDF
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        
-        // إنشاء PDF بأبعاد A4
-        const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4'
-        });
-        
-        // أبعاد A4 بالملليمتر
-        const pdfWidth = 210;
-        const pdfHeight = 297;
-        
-        // حساب النسبة للحفاظ على التناسب
-        const ratio = Math.min(pdfWidth / (canvasWidth / 3.779), pdfHeight / (canvasHeight / 3.779));
-        const imgWidth = (canvasWidth / 3.779) * ratio;
-        const imgHeight = (canvasHeight / 3.779) * ratio;
-        
-        // توسيط الصورة في الصفحة
-        const x = (pdfWidth - imgWidth) / 2;
-        const y = 0;
-        
-        // إضافة الصورة للـ PDF
-        const imgData = canvas.toDataURL('image/png', 1.0);
-        pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-        
-        resolve(pdf);
+        setTimeout(async () => {
+          try {
+            // تحويل HTML إلى canvas بضبط الارتفاع تلقائياً
+            const canvas = await html2canvas(contractElement, {
+              scale: 2,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: '#ffffff',
+              logging: false,
+              scrollX: 0,
+              scrollY: 0,
+              windowWidth: contractElement.scrollWidth,
+              windowHeight: contractElement.scrollHeight
+            });
+            
+            // إزالة العنصر المؤقت
+            document.body.removeChild(contractElement);
+            
+            // حساب النسبة الصحيحة لـ PDF
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            
+            // إنشاء PDF بأبعاد A4
+            const pdf = new jsPDF({
+              orientation: 'portrait',
+              unit: 'mm',
+              format: 'a4'
+            });
+            
+            // أبعاد A4 بالملليمتر
+            const pdfWidth = 210;
+            const pdfHeight = 297;
+            
+            // حساب النسبة للحفاظ على التناسب
+            const ratio = Math.min(pdfWidth / (canvasWidth / 3.779), pdfHeight / (canvasHeight / 3.779));
+            const imgWidth = (canvasWidth / 3.779) * ratio;
+            const imgHeight = (canvasHeight / 3.779) * ratio;
+            
+            // توسيط الصورة في الصفحة
+            const x = (pdfWidth - imgWidth) / 2;
+            const y = 0;
+            
+            // إضافة الصورة للـ PDF
+            const imgData = canvas.toDataURL('image/png', 1.0);
+            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+            
+            resolve(pdf);
+          } catch (error) {
+            console.error('خطأ في إنشاء PDF:', error);
+            reject(error);
+          }
+        }, 500);
       } catch (error) {
         console.error('خطأ في إنشاء PDF:', error);
         reject(error);
@@ -843,276 +1147,187 @@ const DigitalContracts = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Header Section */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center mb-6">
-              <div className="p-4 bg-primary/10 rounded-full">
-                <FileText className="h-12 w-12 text-primary" />
-              </div>
-            </div>
-            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              العقود الرقمية المتطورة
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              أنشئ عقدك الرقمي بطريقة احترافية وآمنة مع التوقيع الإلكتروني المعتمد
-            </p>
-          </div>
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-primary mb-4">
+            العقود الرقمية المطورة
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            إنشاء وتوقيع العقود الرسمية بشكل إلكتروني آمن ومعتمد
+          </p>
+        </div>
 
-          {/* Features Banner */}
-          <div className="grid md:grid-cols-4 gap-4 mb-8">
-            {[
-              { icon: Shield, title: "آمن ومحمي", desc: "تشفير متقدم" },
-              { icon: Zap, title: "سريع ومرن", desc: "إنشاء فوري" },
-              { icon: Award, title: "معتمد قانونياً", desc: "وفق الأنظمة السعودية" },
-              { icon: Star, title: "توقيع رقمي", desc: "معتمد إلكترونياً" }
-            ].map((feature, index) => (
-              <Card key={index} className="text-center p-4 border-2 border-primary/20 hover:border-primary/40 transition-colors">
-                <feature.icon className="h-8 w-8 text-primary mx-auto mb-2" />
-                <h3 className="font-semibold text-sm">{feature.title}</h3>
-                <p className="text-xs text-muted-foreground">{feature.desc}</p>
-              </Card>
-            ))}
-          </div>
-
-          {/* Main Form */}
-          <Card className="shadow-xl border-2 border-primary/20">
-            <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10">
-              <CardTitle className="text-2xl text-center flex items-center justify-center gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* نموذج العقد */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                 <FileText className="h-6 w-6" />
-                إنشاء عقد جديد
+                بيانات العقد
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Client Type Selection */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-semibold">نوع العميل</Label>
+            <CardContent className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* نوع العميل */}
+                <div>
+                  <Label htmlFor="clientType">نوع العميل *</Label>
                   <Select value={formData.clientType} onValueChange={(value) => handleInputChange("clientType", value)}>
-                    <SelectTrigger className="border-2 border-primary/20 focus:border-primary">
+                    <SelectTrigger>
                       <SelectValue placeholder="اختر نوع العميل" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="individual">فرد</SelectItem>
                       <SelectItem value="company">شركة</SelectItem>
-                      <SelectItem value="government">جهة حكومية</SelectItem>
+                      <SelectItem value="organization">مؤسسة</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                {/* Basic Information */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
+                {/* البيانات الأساسية */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
                     <Label htmlFor="clientName">الاسم الكامل *</Label>
                     <Input
                       id="clientName"
                       value={formData.clientName}
                       onChange={(e) => handleInputChange("clientName", e.target.value)}
-                      className="border-2 border-primary/20 focus:border-primary"
                       placeholder="أدخل الاسم الكامل"
+                      required
                     />
                   </div>
-                  
-                  <div className="space-y-2">
+                  <div>
                     <Label htmlFor="clientEmail">البريد الإلكتروني *</Label>
                     <Input
                       id="clientEmail"
                       type="email"
                       value={formData.clientEmail}
                       onChange={(e) => handleInputChange("clientEmail", e.target.value)}
-                      className="border-2 border-primary/20 focus:border-primary"
-                      placeholder="example@domain.com"
+                      placeholder="example@email.com"
+                      required
                     />
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
                     <Label htmlFor="clientPhone">رقم الهاتف *</Label>
                     <Input
                       id="clientPhone"
                       value={formData.clientPhone}
                       onChange={(e) => handleInputChange("clientPhone", e.target.value)}
-                      className="border-2 border-primary/20 focus:border-primary"
-                      placeholder="+966 5X XXX XXXX"
+                      placeholder="05xxxxxxxx"
+                      required
                     />
                   </div>
-
-                  {formData.clientType === "individual" && (
-                    <div className="space-y-2">
-                      <Label htmlFor="clientIdNumber">رقم الهوية الوطنية</Label>
-                      <Input
-                        id="clientIdNumber"
-                        value={formData.clientIdNumber}
-                        onChange={(e) => handleInputChange("clientIdNumber", e.target.value)}
-                        className="border-2 border-primary/20 focus:border-primary"
-                        placeholder="10 أرقام"
-                      />
-                    </div>
-                  )}
+                  <div>
+                    <Label htmlFor="clientIdNumber">رقم الهوية/الإقامة</Label>
+                    <Input
+                      id="clientIdNumber"
+                      value={formData.clientIdNumber}
+                      onChange={(e) => handleInputChange("clientIdNumber", e.target.value)}
+                      placeholder="1234567890"
+                    />
+                  </div>
                 </div>
 
-                {/* Company Information */}
-                {formData.clientType !== "individual" && (
-                  <div className="space-y-6 p-6 bg-secondary/10 rounded-lg border-2 border-secondary/20">
-                    <h3 className="text-lg font-semibold text-secondary">معلومات الشركة/الجهة</h3>
-                    
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="commercialRegister">رقم السجل التجاري</Label>
-                        <Input
-                          id="commercialRegister"
-                          value={formData.commercialRegister}
-                          onChange={(e) => handleInputChange("commercialRegister", e.target.value)}
-                          className="border-2 border-secondary/20 focus:border-secondary"
-                          placeholder="رقم السجل التجاري"
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="taxNumber">الرقم الضريبي</Label>
-                        <Input
-                          id="taxNumber"
-                          value={formData.taxNumber}
-                          onChange={(e) => handleInputChange("taxNumber", e.target.value)}
-                          className="border-2 border-secondary/20 focus:border-secondary"
-                          placeholder="الرقم الضريبي"
-                        />
-                      </div>
-                    </div>
+                <div>
+                  <Label htmlFor="clientAddress">العنوان</Label>
+                  <Input
+                    id="clientAddress"
+                    value={formData.clientAddress}
+                    onChange={(e) => handleInputChange("clientAddress", e.target.value)}
+                    placeholder="المدينة، الحي، الشارع"
+                  />
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="authorizedPerson">اسم المفوض بالتوقيع</Label>
+                {formData.clientType === "company" && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="commercialRegister">السجل التجاري</Label>
                       <Input
-                        id="authorizedPerson"
-                        value={formData.authorizedPerson}
-                        onChange={(e) => handleInputChange("authorizedPerson", e.target.value)}
-                        className="border-2 border-secondary/20 focus:border-secondary"
-                        placeholder="اسم الشخص المفوض بالتوقيع"
+                        id="commercialRegister"
+                        value={formData.commercialRegister}
+                        onChange={(e) => handleInputChange("commercialRegister", e.target.value)}
+                        placeholder="1234567890"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="taxNumber">الرقم الضريبي</Label>
+                      <Input
+                        id="taxNumber"
+                        value={formData.taxNumber}
+                        onChange={(e) => handleInputChange("taxNumber", e.target.value)}
+                        placeholder="300123456789003"
                       />
                     </div>
                   </div>
                 )}
 
-                {/* Address */}
-                <div className="space-y-2">
-                  <Label htmlFor="clientAddress">العنوان</Label>
+                {formData.clientType === "company" && (
+                  <div>
+                    <Label htmlFor="authorizedPerson">المخول بالتوقيع</Label>
+                    <Input
+                      id="authorizedPerson"
+                      value={formData.authorizedPerson}
+                      onChange={(e) => handleInputChange("authorizedPerson", e.target.value)}
+                      placeholder="اسم المخول بالتوقيع"
+                    />
+                  </div>
+                )}
+
+                {/* اختيار العرض */}
+                <div>
+                  <Label htmlFor="selectedOffer">اختيار العرض *</Label>
+                  <Select value={formData.selectedOffer} onValueChange={(value) => handleInputChange("selectedOffer", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="اختر العرض المناسب" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currentOffers.map((offer) => (
+                        <SelectItem key={offer.id} value={offer.id.toString()}>
+                          {offer.title} - {offer.price} ريال
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* وصف الخدمة */}
+                <div>
+                  <Label htmlFor="serviceDescription">وصف الخدمة التفصيلي</Label>
                   <Textarea
-                    id="clientAddress"
-                    value={formData.clientAddress}
-                    onChange={(e) => handleInputChange("clientAddress", e.target.value)}
-                    className="border-2 border-primary/20 focus:border-primary"
-                    placeholder="العنوان التفصيلي"
+                    id="serviceDescription"
+                    value={formData.serviceDescription}
+                    onChange={(e) => handleInputChange("serviceDescription", e.target.value)}
+                    placeholder="اكتب وصفاً تفصيلياً للخدمة المطلوبة..."
+                    rows={4}
+                  />
+                </div>
+
+                {/* المتطلبات الخاصة */}
+                <div>
+                  <Label htmlFor="customRequirements">المتطلبات الخاصة</Label>
+                  <Textarea
+                    id="customRequirements"
+                    value={formData.customRequirements}
+                    onChange={(e) => handleInputChange("customRequirements", e.target.value)}
+                    placeholder="أي متطلبات أو ملاحظات خاصة..."
                     rows={3}
                   />
                 </div>
 
-                {/* Service Selection */}
-                <div className="space-y-6 p-6 bg-accent/10 rounded-lg border-2 border-accent/20">
-                  <h3 className="text-lg font-semibold text-accent">تفاصيل الخدمة المطلوبة</h3>
-                  
-                  <div className="space-y-4">
-                    <Label className="text-base font-medium">اختر العرض المطلوب *</Label>
-                    <Select value={formData.selectedOffer} onValueChange={(value) => handleInputChange("selectedOffer", value)}>
-                      <SelectTrigger className="border-2 border-accent/20 focus:border-accent">
-                        <SelectValue placeholder="اختر العرض المناسب" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {currentOffers.map((offer) => (
-                          <SelectItem key={offer.id} value={offer.id.toString()}>
-                            {offer.title} - {offer.price} ريال
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Selected Offer Details */}
-                  {selectedOfferDetails && (
-                    <Card className="border-2 border-accent/30 bg-accent/5">
-                      <CardContent className="p-4">
-                        <h4 className="font-semibold mb-2">{selectedOfferDetails.title}</h4>
-                        <div className="grid md:grid-cols-2 gap-4 mb-4">
-                          <div>
-                            <span className="text-sm text-muted-foreground">السعر: </span>
-                            <span className="font-semibold text-lg">{selectedOfferDetails.price} ريال</span>
-                            {selectedOfferDetails.originalPrice && (
-                              <span className="text-sm text-muted-foreground line-through mr-2">
-                                {selectedOfferDetails.originalPrice} ريال
-                              </span>
-                            )}
-                          </div>
-                          <div>
-                            <span className="text-sm text-muted-foreground">مدة التنفيذ: </span>
-                            <span className="font-medium">{selectedOfferDetails.duration}</span>
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-sm font-medium">المميزات المشمولة:</p>
-                          <div className="grid md:grid-cols-2 gap-1">
-                            {selectedOfferDetails.features.map((feature: string, index: number) => (
-                              <div key={index} className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-green-500" />
-                                <span className="text-sm">{feature}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  <div className="space-y-2">
-                    <Label htmlFor="serviceDescription">وصف تفصيلي للخدمة</Label>
-                    <Textarea
-                      id="serviceDescription"
-                      value={formData.serviceDescription}
-                      onChange={(e) => handleInputChange("serviceDescription", e.target.value)}
-                      className="border-2 border-accent/20 focus:border-accent"
-                      placeholder="أضف تفاصيل إضافية عن الخدمة المطلوبة"
-                      rows={4}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="customRequirements">متطلبات خاصة</Label>
-                    <Textarea
-                      id="customRequirements"
-                      value={formData.customRequirements}
-                      onChange={(e) => handleInputChange("customRequirements", e.target.value)}
-                      className="border-2 border-accent/20 focus:border-accent"
-                      placeholder="أي متطلبات خاصة أو تعديلات مطلوبة"
-                      rows={3}
-                    />
-                  </div>
-                </div>
-
-                {/* Digital Signature */}
-                <div className="space-y-6 p-6 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border-2 border-primary/20">
-                  <div className="text-center">
-                    <h3 className="text-lg font-semibold mb-2 flex items-center justify-center gap-2">
-                      <Signature className="h-5 w-5" />
-                      التوقيع الرقمي المعتمد
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      يرجى التوقيع في المربع أدناه باستخدام الماوس أو اللمس
-                    </p>
-                  </div>
-
-                  <div className="relative">
+                {/* التوقيع الرقمي */}
+                <div>
+                  <Label>التوقيع الرقمي *</Label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                     <canvas
                       ref={signatureCanvasRef}
-                      width={600}
-                      height={200}
-                      className="border-2 border-dashed border-primary/40 rounded-lg cursor-crosshair w-full bg-white shadow-inner"
-                      style={{ 
-                        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-                        touchAction: 'none'
-                      }}
+                      width={400}
+                      height={150}
+                      className="border border-gray-200 rounded cursor-crosshair mx-auto"
                       onMouseDown={startDrawing}
                       onMouseMove={draw}
                       onMouseUp={stopDrawing}
@@ -1121,111 +1336,151 @@ const DigitalContracts = () => {
                       onTouchMove={draw}
                       onTouchEnd={stopDrawing}
                     />
-                    
-                    <div className="absolute top-2 left-2 flex items-center gap-2 text-xs text-muted-foreground">
-                      <Shield className="h-3 w-3" />
-                      <span>مشفر وآمن</span>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-center">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={clearSignature}
-                      className="border-2 border-destructive/30 text-destructive hover:bg-destructive/10"
-                    >
-                      مسح التوقيع
-                    </Button>
-                  </div>
-
-                  <div className="text-center text-xs text-muted-foreground space-y-1">
-                    <p>💡 نصائح للتوقيع:</p>
-                    <p>• استخدم خطاً واضحاً ومقروءاً</p>
-                    <p>• تأكد من اكتمال التوقيع قبل الإرسال</p>
-                    <p>• التوقيع مشفر ومحمي قانونياً</p>
-                  </div>
-                </div>
-
-                {/* Terms and Conditions */}
-                <div className="space-y-4 p-6 bg-muted/50 rounded-lg border-2 border-muted-foreground/20">
-                  <h3 className="text-lg font-semibold">الموافقة على الشروط والأحكام</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-2 space-x-reverse">
-                      <Checkbox
-                        id="agreeToTerms"
-                        checked={formData.agreeToTerms}
-                        onCheckedChange={(checked) => handleInputChange("agreeToTerms", checked as boolean)}
-                        className="mt-1"
-                      />
-                      <Label htmlFor="agreeToTerms" className="text-sm leading-relaxed">
-                        أوافق على الشروط والأحكام الخاصة بالعقد وأقر بأن إرسال هذا العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين، 
-                        ويعتبر العقد نافذاً بعد دفع المبلغ المتفق عليه للحساب البنكي المحدد.
-                      </Label>
-                    </div>
-                    
-                    <div className="flex items-start space-x-2 space-x-reverse">
-                      <Checkbox
-                        id="agreeToPrivacy"
-                        checked={formData.agreeToPrivacy}
-                        onCheckedChange={(checked) => handleInputChange("agreeToPrivacy", checked as boolean)}
-                        className="mt-1"
-                      />
-                      <Label htmlFor="agreeToPrivacy" className="text-sm leading-relaxed">
-                        أوافق على سياسة الخصوصية وعلى استخدام بياناتي لأغراض تنفيذ العقد والتواصل المهني.
-                      </Label>
+                    <div className="mt-2 flex justify-center">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={clearSignature}
+                      >
+                        مسح التوقيع
+                      </Button>
                     </div>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                {/* الموافقات */}
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2 space-x-reverse">
+                    <Checkbox
+                      id="agreeToTerms"
+                      checked={formData.agreeToTerms}
+                      onCheckedChange={(checked) => handleInputChange("agreeToTerms", checked)}
+                    />
+                    <Label htmlFor="agreeToTerms" className="text-sm">
+                      أوافق على الشروط والأحكام *
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 space-x-reverse">
+                    <Checkbox
+                      id="agreeToPrivacy"
+                      checked={formData.agreeToPrivacy}
+                      onCheckedChange={(checked) => handleInputChange("agreeToPrivacy", checked)}
+                    />
+                    <Label htmlFor="agreeToPrivacy" className="text-sm">
+                      أوافق على سياسة الخصوصية *
+                    </Label>
+                  </div>
+                </div>
+
+                {/* أزرار العمل */}
+                <div className="flex flex-col sm:flex-row gap-4">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={handleDownloadPDF}
-                    className="flex-1 border-2 border-primary/30 text-primary hover:bg-primary/10"
-                    disabled={!formData.clientName || !formData.selectedOffer}
+                    className="flex-1"
                   >
-                    <Download className="h-4 w-4 mr-2" />
-                    تحميل معاينة العقد
+                    <Download className="w-4 h-4 mr-2" />
+                    تحميل العقد PDF
                   </Button>
-                  
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-semibold py-3 shadow-lg"
+                    className="flex-1"
                   >
                     {isSubmitting ? (
-                      <>
-                        <Clock className="h-4 w-4 mr-2 animate-spin" />
-                        جاري الإرسال...
-                      </>
+                      <Clock className="w-4 h-4 mr-2 animate-spin" />
                     ) : (
-                      <>
-                        <Send className="h-4 w-4 mr-2" />
-                        إرسال العقد للمراجعة
-                      </>
+                      <Send className="w-4 h-4 mr-2" />
                     )}
+                    {isSubmitting ? "جاري الإرسال..." : "إرسال العقد"}
                   </Button>
-                </div>
-
-                {/* Important Notice */}
-                <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 text-center">
-                  <p className="text-sm text-yellow-800 font-medium">
-                    ⚠️ ملاحظة مهمة: إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين
-                  </p>
-                  <p className="text-xs text-yellow-700 mt-1">
-                    سيتم التواصل معك لتأكيد التفاصيل واعتماد العقد نهائياً
-                  </p>
                 </div>
               </form>
             </CardContent>
           </Card>
+
+          {/* معلومات العرض */}
+          <div className="space-y-6">
+            {selectedOfferDetails && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Star className="h-5 w-5 text-yellow-500" />
+                    تفاصيل العرض
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-bold text-lg">{selectedOfferDetails.title}</h3>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-2xl font-bold text-primary">
+                          {selectedOfferDetails.price} ريال
+                        </span>
+                        <span className="text-sm text-muted-foreground line-through">
+                          {selectedOfferDetails.originalPrice} ريال
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold mb-2">المميزات المشمولة:</h4>
+                      <ul className="space-y-1">
+                        {selectedOfferDetails.features.map((feature: string, index: number) => (
+                          <li key={index} className="flex items-center gap-2 text-sm">
+                            <CheckCircle className="h-4 w-4 text-green-500" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="pt-4 border-t">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">مدة التنفيذ: {selectedOfferDetails.duration}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* مميزات العقود الرقمية */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-green-500" />
+                  مميزات العقود الرقمية
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Award className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm">معتمد قانونياً</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-yellow-500" />
+                    <span className="text-sm">سريع وآمن</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">توقيع إلكتروني</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-purple-500" />
+                    <span className="text-sm">نسخة PDF مدمجة</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );
