@@ -7,7 +7,6 @@ import StatsSection from "@/components/StatsSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
-import WorkingHoursNotification from "@/components/WorkingHoursNotification";
 
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -20,7 +19,6 @@ import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative">
-      <WorkingHoursNotification />
       <Navigation />
       
       {/* Animated Background Elements */}
