@@ -22,6 +22,8 @@ interface Invoice {
   offer_title: string;
   created_at: string;
   due_date?: string;
+  notes?: string;
+  issue_date: string;
 }
 
 const InvoiceAdmin = () => {
@@ -126,10 +128,27 @@ const InvoiceAdmin = () => {
     const statusMap = {
       pending: { label: 'في الانتظار', variant: 'secondary' as const },
       sent: { label: 'تم الإرسال', variant: 'default' as const },
-      paid: { label: 'مدفوع', variant: 'default' as const }
+      paid: { label: 'مدفوع', variant: 'default' as const },
+      overdue: { label: 'متأخر', variant: 'destructive' as const }
     };
     
     const statusInfo = statusMap[status as keyof typeof statusMap] || { label: status, variant: 'secondary' as const };
+    return (
+      <Badge variant={statusInfo.variant} className="font-arabic">
+        {statusInfo.label}
+      </Badge>
+    );
+  };
+
+  const getPaymentStatusBadge = (paymentStatus: string) => {
+    const statusMap = {
+      pending: { label: 'في انتظار الدفع', variant: 'secondary' as const },
+      paid: { label: 'مدفوع', variant: 'default' as const },
+      failed: { label: 'فشل الدفع', variant: 'destructive' as const },
+      cancelled: { label: 'ملغي', variant: 'outline' as const }
+    };
+    
+    const statusInfo = statusMap[paymentStatus as keyof typeof statusMap] || { label: paymentStatus, variant: 'secondary' as const };
     return (
       <Badge variant={statusInfo.variant} className="font-arabic">
         {statusInfo.label}
@@ -245,39 +264,65 @@ const InvoiceAdmin = () => {
             ) : (
               <div className="space-y-4">
                 {invoices.map((invoice) => (
-                  <div key={invoice.id} className="border rounded-lg p-4 space-y-3">
+                  <div key={invoice.id} className="border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-semibold">{invoice.invoice_number}</h3>
                           {getStatusBadge(invoice.status)}
+                          {getPaymentStatusBadge(invoice.payment_status)}
                         </div>
                         <p className="text-sm text-muted-foreground">{invoice.offer_title}</p>
+                        {invoice.notes && (
+                          <p className="text-xs text-muted-foreground bg-muted p-2 rounded">
+                            ملاحظات: {invoice.notes}
+                          </p>
+                        )}
                       </div>
                       <div className="text-left">
                         <p className="font-bold text-lg">{invoice.amount} {invoice.currency}</p>
                         <p className="text-sm text-muted-foreground">
-                          {new Date(invoice.created_at).toLocaleDateString('ar-SA')}
+                          تاريخ الإصدار: {new Date(invoice.issue_date || invoice.created_at).toLocaleDateString('ar-SA')}
                         </p>
+                        {invoice.due_date && (
+                          <p className="text-xs text-muted-foreground">
+                            تاريخ الاستحقاق: {new Date(invoice.due_date).toLocaleDateString('ar-SA')}
+                          </p>
+                        )}
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
                       <div className="flex items-center gap-1">
                         <User className="h-4 w-4" />
                         {invoice.customer_name}
                       </div>
-                      <div>{invoice.customer_email}</div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        {invoice.customer_email}
+                      </div>
+                      {invoice.customer_phone && (
+                        <div>{invoice.customer_phone}</div>
+                      )}
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 pt-2 border-t">
                       <Button
                         size="sm"
                         onClick={() => sendInvoice(invoice.id)}
                         disabled={sending === invoice.id}
+                        className="flex-1"
                       >
                         <Send className="w-4 h-4 mr-2" />
                         {sending === invoice.id ? 'جاري الإرسال...' : 'إرسال الفاتورة'}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => window.open(`/invoice-viewer/${invoice.id}`, '_blank')}
+                      >
+                        <FileText className="w-4 h-4 mr-2" />
+                        عرض PDF
                       </Button>
                     </div>
                   </div>
