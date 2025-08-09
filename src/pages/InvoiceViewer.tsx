@@ -146,8 +146,8 @@ const InvoiceViewer = () => {
             <div className="text-center space-y-4">
               {/* Company Logo Area */}
               <div className="space-y-2">
-                <h1 className="text-4xl font-bold text-primary">شركة الحلول الرقمية</h1>
-                <p className="text-lg text-muted-foreground font-semibold">Digital Solutions Company</p>
+                <h1 className="text-4xl font-bold text-primary">شركة علي صالح الشهري القابضة</h1>
+                <p className="text-lg text-muted-foreground font-semibold">Alsaleh Holding Company</p>
                 <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
               </div>
 
@@ -159,11 +159,11 @@ const InvoiceViewer = () => {
                 </div>
                 <div className="flex items-center gap-2 justify-center">
                   <Mail className="h-4 w-4 text-primary" />
-                  <span>info@company.com</span>
+                  <span>info@alialshehriholding.com</span>
                 </div>
                 <div className="flex items-center gap-2 justify-center">
                   <Globe className="h-4 w-4 text-primary" />
-                  <span>www.company.com</span>
+                  <span>www.alialshehriholding.com</span>
                 </div>
                 <div className="flex items-center gap-2 justify-center">
                   <MapPin className="h-4 w-4 text-primary" />
@@ -311,21 +311,21 @@ const InvoiceViewer = () => {
                   <div>
                     <p className="font-bold mb-1">معلومات التواصل</p>
                     <p>هاتف: 920033442</p>
-                    <p>بريد: info@company.com</p>
+                    <p>بريد: info@alialshehriholding.com</p>
                   </div>
                   <div>
                     <p className="font-bold mb-1">العنوان</p>
                     <p>المملكة العربية السعودية</p>
-                    <p>www.company.com</p>
+                    <p>www.alialshehriholding.com</p>
                   </div>
                 </div>
                 
                 <div className="border-t border-primary-foreground/20 pt-4">
                   <p className="text-xs opacity-90">
-                    هذه الفاتورة صادرة إلكترونياً من الشركة وهي معتمدة ولا تحتاج لتوقيع
+                    هذه الفاتورة صادرة إلكترونياً من شركة علي صالح الشهري القابضة وهي معتمدة ولا تحتاج لتوقيع
                   </p>
                   <p className="text-xs opacity-75 mt-1">
-                    This invoice is digitally issued by the company and is certified without requiring signature
+                    This invoice is digitally issued by Alsaleh Holding Company and is certified without requiring signature
                   </p>
                 </div>
               </div>

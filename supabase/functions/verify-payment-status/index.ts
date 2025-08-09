@@ -207,7 +207,7 @@ serve(async (req) => {
                     <li>رقم المرجع: <code>${trxNo}</code></li>
                   </ul>
                   <p>يمكنك إعادة المحاولة من صفحة العروض أو التواصل معنا للمساعدة.</p>
-                  <p style="color:#666">الدعم: info@company.com — 920033442</p>
+                  <p style="color:#666">الدعم: info@alialshehriholding.com — 920033442</p>
                 </div>
               `;
 
@@ -218,8 +218,8 @@ serve(async (req) => {
             const sendPromise = resend.emails.send({
               from: 'نظام المدفوعات <payments@resend.dev>',
               to: [to],
-              bcc: ['info@company.com'],
-              reply_to: 'info@company.com',
+              bcc: ['info@alialshehriholding.com'],
+              reply_to: 'info@alialshehriholding.com',
               subject,
               html,
             }).then((res) => console.log('Email sent:', res)).catch((e) => console.error('Email error:', e));

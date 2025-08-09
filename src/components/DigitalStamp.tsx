@@ -42,13 +42,13 @@ const DigitalStamp: React.FC<DigitalStampProps> = ({ className = "" }) => {
           stroke="none"
         />
         <text 
-          fontSize="10" 
+          fontSize="9" 
           fontWeight="bold" 
           fill="currentColor"
           textAnchor="middle"
         >
           <textPath href="#topArc" startOffset="50%">
-            شركة الحلول الرقمية
+            شركة علي صالح الشهري القابضة
           </textPath>
         </text>
         
@@ -65,7 +65,7 @@ const DigitalStamp: React.FC<DigitalStampProps> = ({ className = "" }) => {
           textAnchor="middle"
         >
           <textPath href="#bottomArc" startOffset="50%">
-            DIGITAL SOLUTIONS
+            ALSALEH HOLDING
           </textPath>
         </text>
         

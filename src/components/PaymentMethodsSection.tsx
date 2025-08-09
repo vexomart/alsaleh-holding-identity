@@ -116,7 +116,7 @@ const PaymentMethodsSection = () => {
       premium: false
     },
     {
-      name: "الحلول الرقمية",
+      name: "شركة علي صالح الشهري القابضة",
       logo: companyLogo, 
       description: "منصة التمويل الرقمي الرائدة بحلول مالية ذكية",
       features: [
@@ -749,7 +749,7 @@ const PaymentMethodsSection = () => {
                       <option value="tamara">تمارا</option>
                       <option value="tabby">تابي</option>
                       <option value="madfu">مدفوع</option>
-                      <option value="company">الحلول الرقمية</option>
+                      <option value="alsaleh">شركة علي صالح الشهري القابضة</option>
                       <option value="tasaheel">تساهيل</option>
                     </select>
                   </div>

@@ -51,7 +51,7 @@ const handler = async (req: Request): Promise<Response> => {
       // Send email to company
       const companyEmailResponse = await resend.emails.send({
         from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-        to: ["finance@company.com", "admin@company.com"],
+        to: ["finance@alialshehriholding.com", "admin@alialshehriholding.com"],
         bcc: ["info@alialshehriholding.com"],
         html: `
           <!DOCTYPE html>
@@ -230,7 +230,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <p style="color: #0c4a6e; margin: 0; font-size: 14px; line-height: 1.6;">
                     في حال كان لديكم أي استفسار، يمكنكم التواصل معنا عبر:
                     <br><strong>واتساب:</strong> +966-XX-XXX-XXXX
-                    <br><strong>إيميل:</strong> support@company.com
+                    <br><strong>إيميل:</strong> support@alialshehriholding.com
                   </p>
                 </div>
 
@@ -258,7 +258,7 @@ const handler = async (req: Request): Promise<Response> => {
       // Send email to company
       const companyEmailResponse = await resend.emails.send({
         from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-        to: ["finance@company.com", "admin@company.com"],
+        to: ["finance@alialshehriholding.com", "admin@alialshehriholding.com"],
         bcc: ["info@alialshehriholding.com"],
         html: `
           <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 0;">
@@ -360,7 +360,7 @@ const handler = async (req: Request): Promise<Response> => {
 
       // Send confirmation email to client
       const clientEmailResponse = await resend.emails.send({
-        from: "الحلول الرقمية <noreply@company.com>",
+        from: "شركة علي صالح الشهري القابضة <noreply@alialshehriholding.com>",
         to: [refundData.email],
         subject: "✅ تأكيد استلام طلب الاسترداد",
         html: `
@@ -411,7 +411,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <p style="color: #0c4a6e; margin: 0; font-size: 14px; line-height: 1.6;">
                     في حال كان لديكم أي استفسار حول طلب الاسترداد:
                     <br><strong>واتساب:</strong> +966-XX-XXX-XXXX
-                    <br><strong>إيميل:</strong> support@company.com
+                    <br><strong>إيميل:</strong> support@alialshehriholding.com
                   </p>
                 </div>
 
