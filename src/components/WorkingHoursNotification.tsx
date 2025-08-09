@@ -110,30 +110,31 @@ const WorkingHoursNotification = () => {
   return (
     <div 
       className={cn(
-        "flex items-center gap-2 px-3 py-2 rounded-lg border backdrop-blur-sm text-xs",
+        "flex flex-col sm:flex-row items-center gap-2 sm:gap-2 px-2 sm:px-3 py-2 rounded-lg border backdrop-blur-sm text-xs mobile-tap",
         statusInfo.bgColor,
         "border-white/10 shadow-sm"
       )}
     >
       {/* Status Icon & Badge */}
       <div className="flex items-center gap-1">
-        <StatusIcon className={cn("w-3 h-3", statusInfo.textColor)} />
-        <span className={cn("font-semibold", statusInfo.textColor)}>
+        <StatusIcon className={cn("icon-responsive-sm", statusInfo.textColor)} />
+        <span className={cn("font-semibold text-xs sm:text-sm", statusInfo.textColor)}>
           {statusInfo.badge}
         </span>
       </div>
       
-      {/* Separator */}
-      <div className="w-px h-3 bg-white/20"></div>
+      {/* Separator - Hidden on mobile */}
+      <div className="hidden sm:block w-px h-3 bg-white/20"></div>
       
       {/* Status Info */}
-      <div className={cn("text-xs", statusInfo.textColor)}>
-        {statusInfo.subText}
+      <div className={cn("text-xs text-center sm:text-right", statusInfo.textColor)}>
+        <span className="hidden sm:inline">{statusInfo.subText}</span>
+        <span className="sm:hidden">{statusInfo.subText.split(' ').slice(0, 3).join(' ')}</span>
       </div>
       
       {/* Time */}
-      <div className="flex items-center gap-1 mr-auto">
-        <Timer className={cn("w-3 h-3", statusInfo.textColor)} />
+      <div className="flex items-center gap-1 sm:mr-auto">
+        <Timer className={cn("icon-responsive-sm", statusInfo.textColor)} />
         <span className={cn("font-mono text-xs", statusInfo.textColor)}>
           {currentTime.toLocaleTimeString('ar-SA', { 
             hour: '2-digit', 

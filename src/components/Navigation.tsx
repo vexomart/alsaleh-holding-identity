@@ -108,20 +108,20 @@ const Navigation = () => {
       </div>
 
       {/* Main Corporate Navigation */}
-      <nav className="fixed top-0 lg:top-[48px] w-full z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
+      <nav className="fixed top-0 lg:top-[48px] w-full z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50 mobile-tap">
+        <div className="container-fluid">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             
-            {/* Logo & Company Name - Responsive */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              <a href="/" className="flex items-center gap-1 sm:gap-2 group">
+            {/* Logo & Company Name - Enhanced Responsive */}
+            <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
+              <a href="/" className="flex items-center gap-1 sm:gap-2 group touch-target">
                 {/* Logo */}
                 <div className="relative">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300">
                     <img 
                       src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
                       alt="ASH Holdings" 
-                      className="h-4 w-auto sm:h-6 object-contain filter brightness-0 invert"
+                      className="h-3 w-auto sm:h-4 md:h-5 lg:h-6 object-contain filter brightness-0 invert retina-optimized"
                     />
                   </div>
                 </div>

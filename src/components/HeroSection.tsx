@@ -89,7 +89,10 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden mobile-scroll"
+      onTouchStart={(e) => e.currentTarget.classList.add('touch-active')}
+      onTouchEnd={(e) => e.currentTarget.classList.remove('touch-active')}
+    >
       {/* Enhanced Dynamic Background Slider with Modern Transitions */}
       <div className="absolute inset-0">
         {businessImages.map((image, index) => (
