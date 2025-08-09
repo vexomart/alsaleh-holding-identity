@@ -32,7 +32,7 @@ const currentOffers = [
   {
     id: 1,
     title: "عرض الموقع الاحترافي الكامل",
-    price: "15",
+    price: "69",
     originalPrice: "15000",
     features: [
       "تصميم مخصص وفريد",
