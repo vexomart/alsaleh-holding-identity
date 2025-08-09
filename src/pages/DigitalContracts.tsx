@@ -325,8 +325,13 @@ const DigitalContracts = () => {
           <!-- مقدمة العقد -->
           <div style="background: #f8fafc; border: 2px solid #ddd; padding: 20px; margin: 25px 0; border-radius: 8px;">
             <p style="font-size: 14px; line-height: 1.8; margin: 0; text-align: justify;">
-              بحمد الله وتوفيقه، يُبرم هذا العقد بين الطرفين المذكورين أدناه، وذلك وفقاً لأحكام النظام التجاري السعودي ولوائحه التنفيذية، 
-              ونظام العمل والعمال، واللوائح والقرارات ذات العلاقة المعمول بها في المملكة العربية السعودية، 
+              بحمد الله وتوفيقه، اتفق الطرفان المذكوران أدناه على إبرام هذا العقد، وذلك وفقاً لأحكام النظام التجاري السعودي ولوائحه التنفيذية، 
+              ونظام العمل والعمال، واللوائح والقرارات ذات العلاقة المعمول بها في المملكة العربية السعودية.
+              <br><br>
+              <strong>الطرف الأول:</strong> شركة علي صالح الشهري القابضة ويمثلها الأستاذ / علي صالح الشهري
+              <br>
+              <strong>الطرف الثاني:</strong> ${formData.clientName || 'العميل'} 
+              <br><br>
               وقد اتفق الطرفان على الشروط والأحكام التالية:
             </p>
           </div>
@@ -338,6 +343,7 @@ const DigitalContracts = () => {
             </h2>
             <div style="font-size: 14px; line-height: 2;">
               <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">اسم الشركة:</span> شركة علي صالح الشهري القابضة</div>
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">يمثلها:</span> الأستاذ / علي صالح الشهري</div>
               <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">السجل التجاري:</span> 4030554749</div>
               <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الرقم الضريبي:</span> 300445123700003</div>
               <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">العنوان:</span> الرياض، حي النرجس، المملكة العربية السعودية</div>
