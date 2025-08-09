@@ -198,12 +198,19 @@ const WorkingHoursNotification = () => {
       {/* Main Status Text */}
       <div className="w-full lg:flex-1">
         <p className={cn("text-xs lg:text-xs leading-relaxed", statusInfo.textColor)}>
-          <span className="lg:hidden">{statusInfo.countdown}</span>
+          <span className="lg:hidden">{statusInfo.status}</span>
           <span className="hidden lg:inline">{statusInfo.mainText}</span>
         </p>
         
         {/* Countdown - Mobile Only */}
         <div className="lg:hidden mt-1">
+          <p className={cn("text-xs font-medium", statusInfo.textColor)}>
+            {statusInfo.countdown}
+          </p>
+        </div>
+        
+        {/* Desktop Countdown */}
+        <div className="hidden lg:block mt-1">
           <p className={cn("text-xs font-medium", statusInfo.textColor)}>
             {statusInfo.countdown}
           </p>
