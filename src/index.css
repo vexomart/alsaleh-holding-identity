@@ -38,56 +38,62 @@
 
 @layer base {
   :root {
-    /* Corporate Professional Color Palette - Enhanced Contrast */
+    /* Professional Color System - Unified and Consistent */
     --background: 0 0% 100%;
-    --foreground: 225 20% 10%;
+    --foreground: 210 15% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 225 20% 10%;
+    --card-foreground: 210 15% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 225 20% 10%;
+    --popover-foreground: 210 15% 15%;
     
-    /* Primary Brand Colors - Deep Blue Corporate with better contrast */
-    --primary: 220 100% 25%;
+    /* Primary Brand Colors - Consistent Blue System */
+    --primary: 220 85% 35%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 220 100% 40%;
+    --primary-glow: 220 85% 50%;
+    --primary-variant: 220 75% 45%;
     
-    /* Secondary - Enhanced Gold/Amber */
-    --secondary: 40 100% 50%;
-    --secondary-foreground: 225 20% 10%;
-    --secondary-dark: 35 90% 40%;
+    /* Secondary - Elegant Gold System */
+    --secondary: 45 95% 55%;
+    --secondary-foreground: 210 15% 15%;
+    --secondary-dark: 40 85% 45%;
+    --secondary-light: 50 100% 65%;
     
-    /* Accent - Enhanced Teal */
-    --accent: 180 100% 30%;
+    /* Accent - Refined Teal System */
+    --accent: 185 85% 40%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 180 100% 50%;
+    --accent-light: 185 75% 55%;
+    --accent-dark: 185 95% 25%;
     
-    /* Neutral System with better contrast */
-    --muted: 220 20% 95%;
-    --muted-foreground: 225 20% 40%;
-    --border: 220 20% 85%;
-    --input: 220 20% 92%;
-    --ring: 220 100% 25%;
+    /* Neutral System - Enhanced Harmony */
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 20% 45%;
+    --border: 220 15% 88%;
+    --input: 220 15% 94%;
+    --ring: 220 85% 35%;
     
-    /* Status Colors */
-    --destructive: 0 75% 55%;
+    /* Status Colors - Consistent System */
+    --destructive: 0 80% 55%;
     --destructive-foreground: 0 0% 98%;
-    --success: 145 75% 45%;
+    --success: 145 70% 45%;
     --success-foreground: 0 0% 98%;
-    --warning: 35 85% 55%;
-    --warning-foreground: 225 15% 15%;
+    --warning: 40 90% 55%;
+    --warning-foreground: 210 15% 15%;
     
-    /* Corporate Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(220 90% 20%), hsl(220 90% 35%));
-    --gradient-secondary: linear-gradient(135deg, hsl(45 95% 65%), hsl(35 85% 45%));
-    --gradient-accent: linear-gradient(135deg, hsl(180 85% 35%), hsl(180 85% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 90% 15%) 0%, hsl(220 85% 25%) 50%, hsl(180 85% 35%) 100%);
+    /* Unified Gradients System */
+    --gradient-primary: linear-gradient(135deg, hsl(220 85% 35%), hsl(220 75% 45%));
+    --gradient-secondary: linear-gradient(135deg, hsl(45 95% 55%), hsl(40 85% 45%));
+    --gradient-accent: linear-gradient(135deg, hsl(185 85% 40%), hsl(185 75% 55%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 85% 35%) 0%, hsl(185 85% 40%) 50%, hsl(45 95% 55%) 100%);
+    --gradient-subtle: linear-gradient(135deg, hsl(220 85% 35% / 0.1), hsl(185 85% 40% / 0.1));
     
-    /* Professional Shadows */
-    --shadow-sm: 0 2px 4px -1px hsl(220 20% 20% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(220 20% 20% / 0.1), 0 2px 4px -1px hsl(220 20% 20% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(220 20% 20% / 0.1), 0 4px 6px -2px hsl(220 20% 20% / 0.05);
-    --shadow-xl: 0 25px 50px -12px hsl(220 20% 20% / 0.25);
-    --shadow-glow: 0 0 20px hsl(220 90% 35% / 0.4);
+    /* Professional Shadow System */
+    --shadow-sm: 0 2px 4px -1px hsl(220 20% 20% / 0.08);
+    --shadow-md: 0 4px 8px -2px hsl(220 20% 20% / 0.12), 0 2px 4px -1px hsl(220 20% 20% / 0.08);
+    --shadow-lg: 0 12px 24px -4px hsl(220 20% 20% / 0.15), 0 4px 8px -2px hsl(220 20% 20% / 0.08);
+    --shadow-xl: 0 24px 48px -12px hsl(220 20% 20% / 0.25);
+    --shadow-glow: 0 0 32px hsl(220 85% 35% / 0.5);
+    --shadow-accent-glow: 0 0 32px hsl(185 85% 40% / 0.4);
+    --shadow-secondary-glow: 0 0 32px hsl(45 95% 55% / 0.4);
     
     --radius: 0.75rem;
     
@@ -103,18 +109,19 @@
   }
 
   .dark {
-    /* Dark Mode Corporate Colors - Enhanced Contrast */
-    --background: 220 100% 5%;
-    --foreground: 0 0% 100%;
-    --card: 220 100% 8%;
-    --card-foreground: 0 0% 100%;
-    --popover: 220 100% 8%;
-    --popover-foreground: 0 0% 100%;
+    /* Dark Mode - Unified Professional System */
+    --background: 220 25% 6%;
+    --foreground: 0 0% 98%;
+    --card: 220 20% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 220 20% 8%;
+    --popover-foreground: 0 0% 98%;
     
-    /* Dark Primary */
-    --primary: 40 100% 60%;
-    --primary-foreground: 225 20% 10%;
-    --primary-glow: 40 100% 70%;
+    /* Dark Primary - Consistent with Light Mode */
+    --primary: 45 95% 65%;
+    --primary-foreground: 210 15% 15%;
+    --primary-glow: 45 100% 75%;
+    --primary-variant: 50 90% 60%;
     
     /* Dark Secondary */
     --secondary: 220 100% 30%;

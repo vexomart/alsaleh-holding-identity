@@ -38,16 +38,19 @@ export default {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
           glow: "hsl(var(--primary-glow))",
+          variant: "hsl(var(--primary-variant))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
           dark: "hsl(var(--secondary-dark))",
+          light: "hsl(var(--secondary-light))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
           light: "hsl(var(--accent-light))",
+          dark: "hsl(var(--accent-dark))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -154,10 +157,22 @@ export default {
           '@apply bg-white/20 backdrop-blur-sm border border-white/30': {},
         },
         '.gradient-text': {
-          '@apply bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent': {},
+          '@apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent': {},
+        },
+        '.gradient-text-primary': {
+          '@apply bg-gradient-to-r from-primary to-primary-variant bg-clip-text text-transparent': {},
+        },
+        '.gradient-text-accent': {
+          '@apply bg-gradient-to-r from-accent to-accent-light bg-clip-text text-transparent': {},
         },
         '.shadow-glow': {
-          'box-shadow': '0 0 30px rgba(59, 130, 246, 0.3)',
+          'box-shadow': 'var(--shadow-glow)',
+        },
+        '.shadow-accent-glow': {
+          'box-shadow': 'var(--shadow-accent-glow)',
+        },
+        '.shadow-secondary-glow': {
+          'box-shadow': 'var(--shadow-secondary-glow)',
         },
         '.delay-100': {
           'animation-delay': '100ms',
