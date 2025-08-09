@@ -261,13 +261,13 @@ const DigitalContracts = () => {
     // إنشاء div مؤقت للعقد
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
-      width: 210mm;
-      min-height: 297mm;
-      padding: 20mm;
+      width: 800px;
+      min-height: auto;
+      padding: 40px;
       background: white;
       font-family: 'Arial', 'Tahoma', sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.5;
       direction: rtl;
       text-align: right;
       color: #000;
@@ -280,9 +280,9 @@ const DigitalContracts = () => {
     `;
 
     contractElement.innerHTML = `
-      <div style="border: 4px solid #0066cc; min-height: 277mm; padding: 15mm; position: relative; background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);">
+      <div style="border: 4px solid #0066cc; min-height: auto; padding: 30px; position: relative; background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);">
         <!-- إطار داخلي -->
-        <div style="border: 2px solid #e2e8f0; min-height: 247mm; padding: 10mm; position: relative; border-radius: 8px; background: white;">
+        <div style="border: 2px solid #e2e8f0; min-height: auto; padding: 25px; position: relative; border-radius: 8px; background: white;">
           
           <!-- الترويسة الرسمية المطورة -->
           <div style="background: linear-gradient(135deg, #0066cc 0%, #1e40af 50%, #1e3a8a 100%); color: white; padding: 40px; margin: -30px -30px 50px -30px; border-radius: 0; position: relative; overflow: hidden;">
