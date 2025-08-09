@@ -304,9 +304,9 @@ const DigitalContracts = () => {
                 <div style="position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%;"></div>
               </div>
               
-               <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-shadow: 0 4px 12px rgba(0,0,0,0.6); text-align: center; letter-spacing: 0.5px; line-height: 1.4;">
-                  Ali Saleh Al-Shahri Holding Company
-                </h1>
+               <h1 style="margin: 0; font-size: 32px; font-weight: bold; text-shadow: 0 4px 12px rgba(0,0,0,0.6); text-align: center; letter-spacing: 0.5px; line-height: 1.3;">
+                 شركة علي صالح الشهري القابضة
+               </h1>
               <div style="font-size: 22px; margin: 25px 0; opacity: 0.95; text-align: center; font-weight: 500;">
                 🚀 للتقنية والحلول الرقمية المتقدمة 🌟
               </div>
