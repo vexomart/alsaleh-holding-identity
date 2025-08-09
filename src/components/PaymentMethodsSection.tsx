@@ -34,7 +34,7 @@ import {
 import tamaraLogo from "@/assets/tamara-logo.png";
 import tabbyLogo from "@/assets/tabby-logo.png";
 import madfuLogo from "@/assets/madfu-logo.png";
-import emkanLogo from "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png";
+import companyLogo from "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png";
 import tasaheelLogo from "@/assets/alrajhi-bank-logo.png";
 
 const PaymentMethodsSection = () => {
@@ -116,8 +116,8 @@ const PaymentMethodsSection = () => {
       premium: false
     },
     {
-      name: "امكان",
-      logo: emkanLogo, 
+      name: "الحلول الرقمية",
+      logo: companyLogo, 
       description: "منصة التمويل الرقمي الرائدة بحلول مالية ذكية",
       features: [
         "تقسيط طويل الأمد حتى 60 شهر",
@@ -749,7 +749,7 @@ const PaymentMethodsSection = () => {
                       <option value="tamara">تمارا</option>
                       <option value="tabby">تابي</option>
                       <option value="madfu">مدفوع</option>
-                      <option value="emkan">امكان</option>
+                      <option value="company">الحلول الرقمية</option>
                       <option value="tasaheel">تساهيل</option>
                     </select>
                   </div>

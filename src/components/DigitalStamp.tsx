@@ -48,7 +48,7 @@ const DigitalStamp: React.FC<DigitalStampProps> = ({ className = "" }) => {
           textAnchor="middle"
         >
           <textPath href="#topArc" startOffset="50%">
-            شركة إمكان للحلول الرقمية
+            شركة الحلول الرقمية
           </textPath>
         </text>
         
@@ -65,7 +65,7 @@ const DigitalStamp: React.FC<DigitalStampProps> = ({ className = "" }) => {
           textAnchor="middle"
         >
           <textPath href="#bottomArc" startOffset="50%">
-            EMKAN DIGITAL SOLUTIONS
+            DIGITAL SOLUTIONS
           </textPath>
         </text>
         

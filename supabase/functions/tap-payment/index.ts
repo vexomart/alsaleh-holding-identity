@@ -58,7 +58,7 @@ serve(async (req) => {
       threeDSecure: true,
       save_card: false,
       description: requestData.description,
-      statement_descriptor: "EMKAN-" + requestData.offer_title.substring(0, 15),
+      statement_descriptor: "DIGITAL-" + requestData.offer_title.substring(0, 15),
       metadata: {
         offer_title: requestData.offer_title,
         customer_name: requestData.customer_name,

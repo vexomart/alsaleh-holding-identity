@@ -207,7 +207,7 @@ serve(async (req) => {
                     <li>رقم المرجع: <code>${trxNo}</code></li>
                   </ul>
                   <p>يمكنك إعادة المحاولة من صفحة العروض أو التواصل معنا للمساعدة.</p>
-                  <p style="color:#666">الدعم: info@emkan.solutions — 920033442</p>
+                  <p style="color:#666">الدعم: info@company.com — 920033442</p>
                 </div>
               `;
 
@@ -216,10 +216,10 @@ serve(async (req) => {
             // deno-lint-ignore no-explicit-any
             const ER: any = (globalThis as any).EdgeRuntime;
             const sendPromise = resend.emails.send({
-              from: 'نظام المدفوعات <payments@emkan.solutions>',
+              from: 'نظام المدفوعات <payments@resend.dev>',
               to: [to],
-              bcc: ['info@emkan.solutions'],
-              reply_to: 'info@emkan.solutions',
+              bcc: ['info@company.com'],
+              reply_to: 'info@company.com',
               subject,
               html,
             }).then((res) => console.log('Email sent:', res)).catch((e) => console.error('Email error:', e));

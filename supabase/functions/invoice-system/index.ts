@@ -282,8 +282,8 @@ function generatePaidInvoiceEmail(invoice: any): string {
             </div>
             
             <div class="footer">
-                <p>شركة إمكان للحلول الرقمية</p>
-                <p>للاستفسارات: info@emkan.solutions | 920033442</p>
+                <p>شركة الحلول الرقمية</p>
+                <p>للاستفسارات: info@company.com | 920033442</p>
             </div>
         </div>
     </body>
@@ -402,15 +402,15 @@ function generateUnpaidInvoiceEmail(invoice: any): string {
                 <p>يمكنك إعادة المحاولة أو التواصل معنا لمساعدتك في إتمام عملية الدفع.</p>
                 
                 <div style="text-align: center;">
-                    <a href="https://emkan.solutions/payment-methods" class="retry-btn">
+                    <a href="#" class="retry-btn">
                         إعادة المحاولة
                     </a>
                 </div>
             </div>
             
             <div class="footer">
-                <p>شركة إمكان للحلول الرقمية</p>
-                <p>للاستفسارات: info@emkan.solutions | 920033442</p>
+                <p>شركة الحلول الرقمية</p>
+                <p>للاستفسارات: info@company.com | 920033442</p>
             </div>
         </div>
     </body>
@@ -534,15 +534,15 @@ function generatePendingInvoiceEmail(invoice: any): string {
                 <p>يرجى إتمام عملية الدفع في أقرب وقت لضمان بدء تنفيذ خدمتك.</p>
                 
                 <div style="text-align: center;">
-                    <a href="https://emkan.solutions/payment-methods" class="pay-btn">
+                    <a href="#" class="pay-btn">
                         ادفع الآن
                     </a>
                 </div>
             </div>
             
             <div class="footer">
-                <p>شركة إمكان للحلول الرقمية</p>
-                <p>للاستفسارات: info@emkan.solutions | 920033442</p>
+                <p>شركة الحلول الرقمية</p>
+                <p>للاستفسارات: info@company.com | 920033442</p>
             </div>
         </div>
     </body>
