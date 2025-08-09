@@ -258,27 +258,25 @@ const DigitalContracts = () => {
       day: 'numeric'
     });
 
-    // إنشاء div مؤقت للعقد
+    // إنشاء div مؤقت للعقد بتصميم محسن
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
-      width: 2480px;
-      min-height: 3508px;
-      padding: 120px;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 15mm;
       background: white;
-      font-family: 'Arial', 'Tahoma', sans-serif;
-      font-size: 36px;
-      line-height: 1.8;
+      font-family: 'Tajawal', 'Arial', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
       direction: rtl;
       text-align: right;
       color: #000;
       position: absolute;
       top: -9999px;
       left: -9999px;
-      overflow: visible;
       box-sizing: border-box;
       margin: 0;
-      transform: scale(1);
-      zoom: 1;
+      page-break-inside: avoid;
     `;
 
     contractElement.innerHTML = `
@@ -940,19 +938,21 @@ const DigitalContracts = () => {
         // انتظار قصير للتأكد من تحميل كامل للعنصر
         setTimeout(async () => {
           try {
-            // تحويل HTML إلى canvas بضبط الارتفاع تلقائياً
+            // تحويل HTML إلى canvas بإعدادات محسنة
             const canvas = await html2canvas(contractElement, {
-              scale: 2,
+              scale: 3,
               useCORS: true,
               allowTaint: true,
               backgroundColor: '#ffffff',
               logging: false,
               scrollX: 0,
               scrollY: 0,
-              width: 2480,
-              height: 3508,
-              windowWidth: 2480,
-              windowHeight: 3508
+              width: contractElement.scrollWidth,
+              height: contractElement.scrollHeight,
+              windowWidth: contractElement.scrollWidth,
+              windowHeight: contractElement.scrollHeight,
+              imageTimeout: 15000,
+              removeContainer: true
             });
             
             // إزالة العنصر المؤقت
