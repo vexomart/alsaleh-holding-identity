@@ -261,12 +261,12 @@ const DigitalContracts = () => {
     // إنشاء div مؤقت للعقد
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
-      width: 1600px;
-      min-height: auto;
-      padding: 60px;
+      width: 2480px;
+      min-height: 3508px;
+      padding: 120px;
       background: white;
       font-family: 'Arial', 'Tahoma', sans-serif;
-      font-size: 22px;
+      font-size: 36px;
       line-height: 1.8;
       direction: rtl;
       text-align: right;
@@ -277,6 +277,8 @@ const DigitalContracts = () => {
       overflow: visible;
       box-sizing: border-box;
       margin: 0;
+      transform: scale(1);
+      zoom: 1;
     `;
 
     contractElement.innerHTML = `
@@ -940,17 +942,17 @@ const DigitalContracts = () => {
           try {
             // تحويل HTML إلى canvas بضبط الارتفاع تلقائياً
             const canvas = await html2canvas(contractElement, {
-              scale: 4,
+              scale: 2,
               useCORS: true,
               allowTaint: true,
               backgroundColor: '#ffffff',
               logging: false,
               scrollX: 0,
               scrollY: 0,
-              width: 1600,
-              height: contractElement.scrollHeight,
-              windowWidth: 1600,
-              windowHeight: contractElement.scrollHeight
+              width: 2480,
+              height: 3508,
+              windowWidth: 2480,
+              windowHeight: 3508
             });
             
             // إزالة العنصر المؤقت
@@ -984,9 +986,9 @@ const DigitalContracts = () => {
             const x = (pdfWidth - imgWidth) / 2;
             const y = (pdfHeight - imgHeight) / 2;
             
-            // إضافة الصورة للـ PDF بجودة عالية
-            const imgData = canvas.toDataURL('image/jpeg', 0.98);
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            // إضافة الصورة للـ PDF بجودة عالية لملء الصفحة بالكامل
+            const imgData = canvas.toDataURL('image/png', 1.0);
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
             
             resolve(pdf);
           } catch (error) {
