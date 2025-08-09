@@ -132,6 +132,7 @@ export type Database = {
           status: string
           transaction_id: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           amount: number
@@ -151,6 +152,7 @@ export type Database = {
           status?: string
           transaction_id?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           amount?: number
@@ -170,6 +172,7 @@ export type Database = {
           status?: string
           transaction_id?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -344,6 +347,63 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      service_requests: {
+        Row: {
+          actual_cost: number | null
+          actual_delivery_date: string | null
+          admin_notes: string | null
+          attachments: Json | null
+          created_at: string | null
+          description: string | null
+          estimated_cost: number | null
+          estimated_delivery_date: string | null
+          id: string
+          notes: string | null
+          priority: string | null
+          service_type: string
+          status: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          actual_cost?: number | null
+          actual_delivery_date?: string | null
+          admin_notes?: string | null
+          attachments?: Json | null
+          created_at?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_delivery_date?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          service_type: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          actual_cost?: number | null
+          actual_delivery_date?: string | null
+          admin_notes?: string | null
+          attachments?: Json | null
+          created_at?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_delivery_date?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          service_type?: string
+          status?: string | null
+          title?: string
           updated_at?: string | null
           user_id?: string
         }
