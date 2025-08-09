@@ -135,12 +135,47 @@ serve(async (req) => {
         console.error('Error updating transaction:', updateError);
       } else {
         try {
-          // Prepare email payload in Arabic based on status
+          // إنشاء وإرسال الفاتورة إذا كان الدفع ناجحاً
+          if (newStatus === 'PAID') {
+            try {
+              // إنشاء الفاتورة
+              const invoiceResponse = await supabaseClient.functions.invoke('invoice-system', {
+                body: {
+                  transactionId: transactionId,
+                  action: 'generate'
+                }
+              });
+
+              if (invoiceResponse.data?.success) {
+                console.log('تم إنشاء الفاتورة بنجاح:', invoiceResponse.data.invoice);
+                
+                // إرسال الفاتورة بالإيميل
+                const sendResponse = await supabaseClient.functions.invoke('invoice-system', {
+                  body: {
+                    transactionId: transactionId,
+                    action: 'send'
+                  }
+                });
+
+                if (sendResponse.data?.success) {
+                  console.log('تم إرسال الفاتورة بالإيميل بنجاح');
+                } else {
+                  console.error('خطأ في إرسال الفاتورة:', sendResponse.error);
+                }
+              } else {
+                console.error('خطأ في إنشاء الفاتورة:', invoiceResponse.error);
+              }
+            } catch (invoiceError) {
+              console.error('خطأ في معالجة الفاتورة:', invoiceError);
+            }
+          }
+
+          // إرسال إيميل تأكيد الدفع
           const to = transaction.customer_email as string | null;
           if (to) {
             const isPaid = newStatus === 'PAID' || newStatus === 'COMPLETED';
             const subject = isPaid
-              ? `تم استلام دفعتك بنجاح`
+              ? `تم استلام دفعتك بنجاح - مرفق الفاتورة`
               : `تعذر إتمام عملية الدفع`;
             const amountStr = `${transaction.amount} ${transaction.currency || 'SAR'}`;
             const trxNo = transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.tamara_order_id || transaction.stc_pay_reference || transactionId;
@@ -156,8 +191,9 @@ serve(async (req) => {
                     <li>رقم المعاملة: <code>${trxNo}</code></li>
                     <li>طريقة الدفع: ${transaction.payment_method || ''}</li>
                   </ul>
+                  <p><strong>تم إرسال الفاتورة الرسمية إليك في إيميل منفصل.</strong></p>
                   <p>سيتواصل معك فريق العمل خلال 24 ساعة لإتمام الإجراءات.</p>
-                  <p style="color:#666">فريق علي الشهرى القابضة</p>
+                  <p style="color:#666">شركة إمكان للحلول الرقمية</p>
                 </div>
               `
               : `
@@ -171,7 +207,7 @@ serve(async (req) => {
                     <li>رقم المرجع: <code>${trxNo}</code></li>
                   </ul>
                   <p>يمكنك إعادة المحاولة من صفحة العروض أو التواصل معنا للمساعدة.</p>
-                  <p style="color:#666">الدعم: info@alialshehriholding.com — 0555812567</p>
+                  <p style="color:#666">الدعم: info@emkan.solutions — 920033442</p>
                 </div>
               `;
 
@@ -180,10 +216,10 @@ serve(async (req) => {
             // deno-lint-ignore no-explicit-any
             const ER: any = (globalThis as any).EdgeRuntime;
             const sendPromise = resend.emails.send({
-              from: 'Ali AlShehri Holding <info@alialshehriholding.com>',
+              from: 'نظام المدفوعات <payments@emkan.solutions>',
               to: [to],
-              bcc: ['info@alialshehriholding.com'],
-              reply_to: 'info@alialshehriholding.com',
+              bcc: ['info@emkan.solutions'],
+              reply_to: 'info@emkan.solutions',
               subject,
               html,
             }).then((res) => console.log('Email sent:', res)).catch((e) => console.error('Email error:', e));
