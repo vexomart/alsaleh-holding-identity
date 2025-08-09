@@ -62,7 +62,7 @@ const Index = () => {
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-7xl mx-auto">
                 {/* Luxury Card Container */}
-                <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-2xl group backdrop-blur-sm border border-white/10">
+                <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl group backdrop-blur-sm border border-white/10">
                   {/* Premium Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-secondary opacity-95"></div>
                   
@@ -70,7 +70,7 @@ const Index = () => {
                   <img 
                     src={digitalServicesBanner} 
                     alt="خدماتنا الرقمية المتطورة" 
-                    className="w-full h-[24rem] sm:h-[28rem] md:h-[32rem] lg:h-[36rem] xl:h-[40rem] object-cover transition-all duration-1000 group-hover:scale-110 mix-blend-overlay"
+                    className="w-full h-[20rem] sm:h-[24rem] lg:h-[28rem] object-cover transition-all duration-1000 group-hover:scale-110 mix-blend-overlay"
                   />
                   
                   {/* Enhanced Gradient Overlays */}
@@ -78,58 +78,58 @@ const Index = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/30 via-transparent to-secondary/30"></div>
                   
                   {/* Main Content Container */}
-                  <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-8 lg:p-12 xl:p-16">
-                    <div className="text-white w-full max-w-5xl text-center space-y-6 sm:space-y-8 lg:space-y-10">
+                  <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-6 lg:p-8">
+                    <div className="text-white w-full max-w-4xl text-center space-y-3 sm:space-y-5 lg:space-y-6">
                       
                       {/* Premium Badge */}
                       <div className="flex justify-center">
-                        <Badge className="bg-gradient-to-r from-white/20 to-white/30 text-white border border-white/40 hover:from-white/30 hover:to-white/40 backdrop-blur-lg text-xs sm:text-sm lg:text-base px-4 sm:px-6 lg:px-8 py-2 sm:py-3 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-full">
-                          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ml-2" />
+                        <Badge className="bg-gradient-to-r from-white/20 to-white/30 text-white border border-white/40 hover:from-white/30 hover:to-white/40 backdrop-blur-lg text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-2 shadow-xl rounded-full">
+                          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
                           خدمات متطورة عالمية المستوى
                         </Badge>
                       </div>
                       
                       {/* Enhanced Main Title */}
-                      <div className="space-y-2 sm:space-y-4">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                          <span className="block text-white drop-shadow-2xl mb-1 sm:mb-2">
+                      <div className="space-y-1 sm:space-y-2">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
+                          <span className="block text-white drop-shadow-2xl mb-1">
                             خدماتنا الرقمية
                           </span>
-                          <span className="block text-transparent bg-gradient-to-r from-white via-white/90 to-secondary bg-clip-text drop-shadow-2xl font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+                          <span className="block text-transparent bg-gradient-to-r from-white via-white/90 to-secondary bg-clip-text drop-shadow-2xl font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
                             المتطورة
                           </span>
                         </h2>
                       </div>
                       
                       {/* Enhanced Description */}
-                      <div className="max-w-4xl mx-auto">
-                        <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white/95 leading-relaxed font-medium drop-shadow-lg px-2 sm:px-4">
+                      <div className="max-w-3xl mx-auto">
+                        <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/95 leading-relaxed font-medium drop-shadow-lg px-1 sm:px-2">
                           نقدم حلولاً رقمية شاملة بمعايير عالمية لتطوير أعمالك وتحقيق رؤيتك المستقبلية
                         </p>
                       </div>
                       
-                      {/* Premium Features Grid - Mobile Optimized */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 max-w-5xl mx-auto">
-                        <div className="flex flex-col items-center justify-center text-white py-8 px-6 bg-gradient-to-r from-white/20 to-white/30 rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
-                          <Globe className="w-8 h-8 mb-4 flex-shrink-0 transition-transform duration-300" />
-                          <span className="font-bold text-lg text-center leading-relaxed">حلول عالمية</span>
+                      {/* Premium Features Grid - Compact Mobile */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4 max-w-4xl mx-auto">
+                        <div className="flex flex-col items-center justify-center text-white py-4 sm:py-5 px-3 sm:px-4 bg-gradient-to-r from-white/20 to-white/30 rounded-lg sm:rounded-xl backdrop-blur-lg border border-white/40 shadow-xl transition-all duration-300">
+                          <Globe className="w-5 h-5 sm:w-6 sm:h-6 mb-2 flex-shrink-0" />
+                          <span className="font-semibold text-sm sm:text-base text-center">حلول عالمية</span>
                         </div>
-                        <div className="flex flex-col items-center justify-center text-white py-8 px-6 bg-gradient-to-r from-white/20 to-white/30 rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
-                          <Shield className="w-8 h-8 mb-4 flex-shrink-0 transition-transform duration-300" />
-                          <span className="font-bold text-lg text-center leading-relaxed">أمان متقدم</span>
+                        <div className="flex flex-col items-center justify-center text-white py-4 sm:py-5 px-3 sm:px-4 bg-gradient-to-r from-white/20 to-white/30 rounded-lg sm:rounded-xl backdrop-blur-lg border border-white/40 shadow-xl transition-all duration-300">
+                          <Shield className="w-5 h-5 sm:w-6 sm:h-6 mb-2 flex-shrink-0" />
+                          <span className="font-semibold text-sm sm:text-base text-center">أمان متقدم</span>
                         </div>
-                        <div className="flex flex-col items-center justify-center text-white py-8 px-6 bg-gradient-to-r from-white/20 to-white/30 rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
-                          <TrendingUp className="w-8 h-8 mb-4 flex-shrink-0 transition-transform duration-300" />
-                          <span className="font-bold text-lg text-center leading-relaxed">نمو مستدام</span>
+                        <div className="flex flex-col items-center justify-center text-white py-4 sm:py-5 px-3 sm:px-4 bg-gradient-to-r from-white/20 to-white/30 rounded-lg sm:rounded-xl backdrop-blur-lg border border-white/40 shadow-xl transition-all duration-300">
+                          <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 mb-2 flex-shrink-0" />
+                          <span className="font-semibold text-sm sm:text-base text-center">نمو مستدام</span>
                         </div>
                       </div>
                       
                       {/* Premium CTA Button */}
-                      <div className="flex justify-center pt-2 sm:pt-4">
+                      <div className="flex justify-center pt-2 sm:pt-3">
                         <Link to="/professional-services">
-                          <Button size="lg" className="group bg-gradient-to-r from-white to-white/95 hover:from-white/95 hover:to-white text-primary hover:text-primary/90 font-bold text-sm sm:text-base lg:text-lg xl:text-xl px-6 sm:px-8 lg:px-12 xl:px-16 py-3 sm:py-4 lg:py-5 xl:py-6 shadow-2xl hover:shadow-3xl transition-all duration-300 hover-scale rounded-xl sm:rounded-2xl border-2 border-white/20">
+                          <Button size="sm" className="group bg-gradient-to-r from-white to-white/95 hover:from-white/95 hover:to-white text-primary hover:text-primary/90 font-bold text-sm sm:text-base px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 shadow-2xl hover:shadow-3xl transition-all duration-300 hover-scale rounded-lg sm:rounded-xl border border-white/20">
                             استكشف خدماتنا المتطورة
-                            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                           </Button>
                         </Link>
                       </div>
@@ -137,17 +137,17 @@ const Index = () => {
                   </div>
                   
                   {/* Enhanced Decorative Elements */}
-                  <div className="absolute top-3 right-3 sm:top-6 sm:right-6 lg:top-8 lg:right-8 opacity-40">
-                    <Star className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 xl:w-10 xl:h-10 text-white animate-pulse" />
+                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-6 lg:right-6 opacity-40">
+                    <Star className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white animate-pulse" />
                   </div>
-                  <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 lg:bottom-10 lg:left-10 opacity-30">
-                    <Globe className="w-6 h-6 sm:w-7 sm:h-7 lg:w-9 lg:h-9 xl:w-10 xl:h-10 text-white animate-float" />
+                  <div className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 lg:bottom-7 lg:left-7 opacity-30">
+                    <Globe className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white animate-float" />
                   </div>
-                  <div className="absolute top-1/3 left-3 sm:left-6 lg:left-8 opacity-20">
-                    <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white animate-pulse" style={{ animationDelay: '1.5s' }} />
+                  <div className="absolute top-1/3 left-2 sm:left-4 lg:left-6 opacity-20">
+                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white animate-pulse" style={{ animationDelay: '1.5s' }} />
                   </div>
-                  <div className="absolute bottom-1/3 right-3 sm:right-6 lg:right-8 opacity-25">
-                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white animate-float" style={{ animationDelay: '2s' }} />
+                  <div className="absolute bottom-1/3 right-2 sm:right-4 lg:right-6 opacity-25">
+                    <Shield className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white animate-float" style={{ animationDelay: '2s' }} />
                   </div>
                 </div>
               </div>
