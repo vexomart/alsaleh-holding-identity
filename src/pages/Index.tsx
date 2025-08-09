@@ -108,19 +108,19 @@ const Index = () => {
                         </p>
                       </div>
                       
-                      {/* Premium Features Grid - Enhanced Responsive */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
-                        <div className="group flex flex-col sm:flex-row items-center justify-center text-white text-sm sm:text-base lg:text-lg py-6 sm:py-7 lg:py-8 px-6 sm:px-7 lg:px-8 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale min-h-[80px] sm:min-h-[90px]">
-                          <Globe className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 mb-2 sm:mb-0 sm:ml-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="font-semibold text-center sm:text-right">حلول عالمية</span>
+                      {/* Premium Features Grid - Mobile Optimized */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 max-w-5xl mx-auto">
+                        <div className="flex flex-col items-center justify-center text-white py-8 px-6 bg-gradient-to-r from-white/20 to-white/30 rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
+                          <Globe className="w-8 h-8 mb-4 flex-shrink-0 transition-transform duration-300" />
+                          <span className="font-bold text-lg text-center leading-relaxed">حلول عالمية</span>
                         </div>
-                        <div className="group flex flex-col sm:flex-row items-center justify-center text-white text-sm sm:text-base lg:text-lg py-6 sm:py-7 lg:py-8 px-6 sm:px-7 lg:px-8 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale min-h-[80px] sm:min-h-[90px]">
-                          <Shield className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 mb-2 sm:mb-0 sm:ml-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="font-semibold text-center sm:text-right">أمان متقدم</span>
+                        <div className="flex flex-col items-center justify-center text-white py-8 px-6 bg-gradient-to-r from-white/20 to-white/30 rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
+                          <Shield className="w-8 h-8 mb-4 flex-shrink-0 transition-transform duration-300" />
+                          <span className="font-bold text-lg text-center leading-relaxed">أمان متقدم</span>
                         </div>
-                        <div className="group flex flex-col sm:flex-row items-center justify-center text-white text-sm sm:text-base lg:text-lg py-6 sm:py-7 lg:py-8 px-6 sm:px-7 lg:px-8 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale min-h-[80px] sm:min-h-[90px]">
-                          <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 mb-2 sm:mb-0 sm:ml-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="font-semibold text-center sm:text-right">نمو مستدام</span>
+                        <div className="flex flex-col items-center justify-center text-white py-8 px-6 bg-gradient-to-r from-white/20 to-white/30 rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
+                          <TrendingUp className="w-8 h-8 mb-4 flex-shrink-0 transition-transform duration-300" />
+                          <span className="font-bold text-lg text-center leading-relaxed">نمو مستدام</span>
                         </div>
                       </div>
                       
