@@ -24,8 +24,18 @@ const WorkingHoursNotification = () => {
         const nextWorkDay = new Date(now);
         nextWorkDay.setDate(now.getDate() + daysUntilSunday);
         nextWorkDay.setHours(8, 0, 0, 0);
-        const hoursLeft = Math.floor((nextWorkDay.getTime() - now.getTime()) / (1000 * 60 * 60));
-        setTimeUntilChange(`${hoursLeft} ساعة`);
+        
+        const totalMinutes = Math.floor((nextWorkDay.getTime() - now.getTime()) / (1000 * 60));
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        
+        if (hours > 24) {
+          const days = Math.floor(hours / 24);
+          const remainingHours = hours % 24;
+          setTimeUntilChange(`${days} يوم و ${remainingHours} ساعة`);
+        } else {
+          setTimeUntilChange(`${hours} ساعة و ${minutes} دقيقة`);
+        }
         return;
       }
       
@@ -36,26 +46,36 @@ const WorkingHoursNotification = () => {
         const minutesLeft = (17 - currentHour) * 60 + (60 - currentMinute);
         const hoursLeft = Math.floor(minutesLeft / 60);
         const minsLeft = minutesLeft % 60;
-        setTimeUntilChange(`${hoursLeft}:${minsLeft.toString().padStart(2, '0')}`);
+        setTimeUntilChange(`${hoursLeft} ساعة و ${minsLeft} دقيقة`);
       } else {
         setCurrentStatus('closed');
-        // Calculate time until opening (8 AM next day or Monday if weekend)
+        // Calculate time until opening
         let nextOpenTime = new Date(now);
         if (currentHour >= 18 && currentDay < 5) {
           // After hours today, open tomorrow
           nextOpenTime.setDate(now.getDate() + 1);
           nextOpenTime.setHours(8, 0, 0, 0);
-        } else if (currentDay === 0) {
-          // Sunday before 8 AM
+        } else if (currentHour < 8 && currentDay >= 1 && currentDay <= 4) {
+          // Before hours today (Sunday-Thursday)
           nextOpenTime.setHours(8, 0, 0, 0);
         } else {
-          // Saturday night or Sunday after hours
+          // Weekend or Sunday after hours
           const daysUntilMonday = currentDay === 0 ? 1 : (8 - currentDay);
           nextOpenTime.setDate(now.getDate() + daysUntilMonday);
           nextOpenTime.setHours(8, 0, 0, 0);
         }
-        const hoursLeft = Math.floor((nextOpenTime.getTime() - now.getTime()) / (1000 * 60 * 60));
-        setTimeUntilChange(`${hoursLeft} ساعة`);
+        
+        const totalMinutes = Math.floor((nextOpenTime.getTime() - now.getTime()) / (1000 * 60));
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        
+        if (hours > 24) {
+          const days = Math.floor(hours / 24);
+          const remainingHours = hours % 24;
+          setTimeUntilChange(`${days} يوم و ${remainingHours} ساعة`);
+        } else {
+          setTimeUntilChange(`${hours} ساعة و ${minutes} دقيقة`);
+        }
       }
     };
 
@@ -67,39 +87,75 @@ const WorkingHoursNotification = () => {
 
   const getStatusInfo = () => {
     const currentHour = currentTime.getHours();
+    const currentDay = currentTime.getDay();
+    
+    // Dynamic colors based on day and status
+    const getDayColor = () => {
+      if (currentStatus === 'working') {
+        // Different green shades for working days
+        const workingColors = [
+          'bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600', // Sunday
+          'bg-gradient-to-r from-green-500 via-emerald-500 to-lime-600', // Monday  
+          'bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500',     // Tuesday
+          'bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500', // Wednesday
+          'bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500'  // Thursday
+        ];
+        return workingColors[currentDay] || workingColors[0];
+      } else if (currentStatus === 'closed') {
+        // Different warm colors for closed hours
+        const closedColors = [
+          'bg-gradient-to-r from-orange-500 via-red-500 to-pink-600',    // Sunday
+          'bg-gradient-to-r from-red-500 via-rose-500 to-pink-600',     // Monday
+          'bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-600', // Tuesday
+          'bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600', // Wednesday
+          'bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600'     // Thursday
+        ];
+        return closedColors[currentDay] || closedColors[0];
+      } else {
+        // Weekend colors
+        return currentDay === 5 ? 
+          'bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-700' : // Friday
+          'bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-700';  // Saturday
+      }
+    };
+
     switch (currentStatus) {
       case 'working':
         return {
-          text: "مفتوح الآن - ساعات العمل: 8:00 ص - 6:00 م",
-          subText: `متبقي ${timeUntilChange} حتى الإغلاق`,
+          status: "مفتوح الآن",
+          mainText: "ساعات العمل: 8:00 ص - 6:00 م",
+          countdown: `متبقي ${timeUntilChange} حتى الإغلاق`,
           icon: currentHour < 12 ? Sun : Clock,
-          bgColor: "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600",
+          bgColor: getDayColor(),
           textColor: "text-white",
           animation: "animate-pulse",
-          badge: "مفتوح",
-          badgeColor: "bg-white/20 text-white"
+          badge: "🟢 مفتوح",
+          alertType: "success"
         };
       case 'closed':
         return {
-          text: "مغلق الآن - ساعات العمل: 8:00 ص - 6:00 م (الأحد - الخميس)",
-          subText: `عودة العمل خلال ${timeUntilChange}`,
+          status: "مغلق الآن", 
+          mainText: "ساعات العمل: 8:00 ص - 6:00 م (الأحد - الخميس)",
+          countdown: `سنفتح خلال ${timeUntilChange}`,
           icon: Moon,
-          bgColor: "bg-gradient-to-r from-red-600 via-rose-500 to-pink-600",
+          bgColor: getDayColor(),
           textColor: "text-white",
           animation: "animate-bounce",
-          badge: "مغلق",
-          badgeColor: "bg-white/20 text-white"
+          badge: "🔴 مغلق",
+          alertType: "warning"
         };
       case 'weekend':
+        const dayName = currentDay === 5 ? 'الجمعة' : 'السبت';
         return {
-          text: "إجازة نهاية الأسبوع - سنعود يوم الأحد الساعة 8:00 ص",
-          subText: `عودة العمل خلال ${timeUntilChange}`,
+          status: `إجازة ${dayName}`,
+          mainText: "سنعود يوم الأحد الساعة 8:00 ص",
+          countdown: `عودة العمل خلال ${timeUntilChange}`,
           icon: Calendar,
-          bgColor: "bg-gradient-to-r from-purple-600 via-violet-500 to-indigo-600",
-          textColor: "text-white",
+          bgColor: getDayColor(),
+          textColor: "text-white", 
           animation: "animate-pulse",
-          badge: "إجازة",
-          badgeColor: "bg-white/20 text-white"
+          badge: "🟡 إجازة",
+          alertType: "info"
         };
     }
   };
@@ -142,14 +198,14 @@ const WorkingHoursNotification = () => {
       {/* Main Status Text */}
       <div className="w-full lg:flex-1">
         <p className={cn("text-xs lg:text-xs leading-relaxed", statusInfo.textColor)}>
-          <span className="lg:hidden">{statusInfo.subText}</span>
-          <span className="hidden lg:inline">{statusInfo.text}</span>
+          <span className="lg:hidden">{statusInfo.countdown}</span>
+          <span className="hidden lg:inline">{statusInfo.mainText}</span>
         </p>
         
         {/* Countdown - Mobile Only */}
         <div className="lg:hidden mt-1">
           <p className={cn("text-xs font-medium", statusInfo.textColor)}>
-            {statusInfo.subText}
+            {statusInfo.countdown}
           </p>
         </div>
       </div>
