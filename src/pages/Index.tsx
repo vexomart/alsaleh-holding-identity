@@ -49,75 +49,82 @@ const Index = () => {
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
 
-          {/* Digital Services Banner Section - Enhanced */}
-          <section className="relative py-16 lg:py-24 overflow-hidden">
+          {/* Digital Services Banner Section - Enhanced Mobile Responsive */}
+          <section className="relative py-8 sm:py-12 lg:py-20 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/8 to-accent/6"></div>
-            <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_30%_70%,transparent,hsl(var(--primary))_20%,transparent_40%,hsl(var(--secondary))_60%,transparent)] opacity-20"></div>
             
-            {/* Floating Elements */}
-            <div className="absolute top-20 left-20 w-32 h-32 bg-primary/20 rounded-full blur-xl animate-float"></div>
-            <div className="absolute bottom-20 right-20 w-24 h-24 bg-secondary/15 rounded-full blur-lg animate-float-delayed"></div>
-            <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-accent/10 rounded-full blur-md animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+            {/* Mobile-friendly Floating Elements */}
+            <div className="absolute top-4 left-4 sm:top-10 sm:left-10 lg:top-20 lg:left-20 w-8 h-8 sm:w-16 sm:h-16 lg:w-32 lg:h-32 bg-primary/20 rounded-full blur-lg lg:blur-xl animate-float"></div>
+            <div className="absolute bottom-4 right-4 sm:bottom-10 sm:right-10 lg:bottom-20 lg:right-20 w-6 h-6 sm:w-12 sm:h-12 lg:w-24 lg:h-24 bg-secondary/15 rounded-full blur-md lg:blur-lg animate-float-delayed"></div>
             
-            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 container-fluid">
               <div className="max-w-6xl mx-auto">
-                <div className="relative overflow-hidden rounded-3xl shadow-2xl group">
+                <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-2xl group">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-90"></div>
                   <img 
                     src={digitalServicesBanner} 
                     alt="خدماتنا الرقمية المتطورة" 
-                    className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-105 mix-blend-overlay"
+                    className="w-full h-64 sm:h-80 lg:h-96 object-cover transition-transform duration-700 group-hover:scale-105 mix-blend-overlay img-responsive"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20"></div>
                   
                   {/* Glass Effect Overlay */}
                   <div className="absolute inset-0 glass-effect"></div>
                   
-                  <div className="absolute inset-0 flex items-center justify-start p-8 lg:p-16">
-                    <div className="text-white max-w-3xl">
-                      <div className="flex items-center mb-6">
-                        <div className="w-2 h-2 bg-white rounded-full animate-pulse mr-3"></div>
-                        <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm">
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          خدمات متطورة عالمية
-                        </Badge>
+                  <div className="absolute inset-0 flex items-center justify-center sm:justify-start p-4 sm:p-6 lg:p-16">
+                    <div className="text-white max-w-full sm:max-w-3xl text-center sm:text-right">
+                      <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start mb-4 sm:mb-6 gap-2">
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse ml-2"></div>
+                          <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-xs sm:text-sm">
+                            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
+                            خدمات متطورة عالمية
+                          </Badge>
+                        </div>
                       </div>
                       
-                      <h2 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight gradient-text">
-                        خدماتنا الرقمية المتطورة
+                      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+                        <span className="block text-white drop-shadow-lg">
+                          خدماتنا الرقمية
+                        </span>
+                        <span className="block text-yellow-300 drop-shadow-lg">
+                          المتطورة
+                        </span>
                       </h2>
                       
-                      <p className="text-xl lg:text-2xl mb-8 text-white/90 leading-relaxed">
+                      <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-6 sm:mb-8 text-white/90 leading-relaxed max-w-2xl mx-auto sm:mx-0">
                         نقدم حلولاً رقمية شاملة بمعايير عالمية لتطوير أعمالك وتحقيق رؤيتك المستقبلية
                       </p>
                       
-                      <div className="flex flex-wrap gap-4 mb-8">
-                        <div className="flex items-center text-white/80">
-                          <Globe className="w-5 h-5 mr-2" />
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
+                        <div className="flex items-center justify-center sm:justify-start text-white/80 text-xs sm:text-sm">
+                          <Globe className="icon-responsive-sm ml-1 sm:ml-2" />
                           حلول عالمية
                         </div>
-                        <div className="flex items-center text-white/80">
-                          <Shield className="w-5 h-5 mr-2" />
+                        <div className="flex items-center justify-center sm:justify-start text-white/80 text-xs sm:text-sm">
+                          <Shield className="icon-responsive-sm ml-1 sm:ml-2" />
                           أمان متقدم
                         </div>
-                        <div className="flex items-center text-white/80">
-                          <TrendingUp className="w-5 h-5 mr-2" />
+                        <div className="flex items-center justify-center sm:justify-start text-white/80 text-xs sm:text-sm">
+                          <TrendingUp className="icon-responsive-sm ml-1 sm:ml-2" />
                           نمو مستدام
                         </div>
                       </div>
                       
-                      <Link to="/professional-services">
-                        <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale">
-                          استكشف خدماتنا
-                          <ArrowRight className="w-5 h-5 mr-2" />
-                        </Button>
-                      </Link>
+                      <div className="flex justify-center sm:justify-start">
+                        <Link to="/professional-services">
+                          <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-3 sm:py-4 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale touch-target">
+                            استكشف خدماتنا
+                            <ArrowRight className="icon-responsive-sm ml-1 sm:ml-2" />
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                   
-                  {/* Floating Icons */}
-                  <div className="absolute top-8 right-8 opacity-30">
-                    <Star className="w-8 h-8 text-white animate-pulse" />
+                  {/* Floating Icons - Mobile Responsive */}
+                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-8 lg:right-8 opacity-30">
+                    <Star className="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white animate-pulse" />
                   </div>
                   <div className="absolute bottom-8 left-8 opacity-20">
                     <Globe className="w-6 h-6 text-white animate-float" />

@@ -110,32 +110,54 @@ const WorkingHoursNotification = () => {
   return (
     <div 
       className={cn(
-        "flex flex-col sm:flex-row items-center gap-2 sm:gap-2 px-2 sm:px-3 py-2 rounded-lg border backdrop-blur-sm text-xs mobile-tap",
+        "w-full max-w-md mx-auto lg:mx-0 lg:max-w-none lg:w-auto",
+        "flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-3",
+        "p-3 lg:p-4 rounded-xl lg:rounded-lg border backdrop-blur-sm shadow-sm mobile-tap",
         statusInfo.bgColor,
-        "border-white/10 shadow-sm"
+        "border-white/20"
       )}
     >
-      {/* Status Icon & Badge */}
-      <div className="flex items-center gap-1">
-        <StatusIcon className={cn("icon-responsive-sm", statusInfo.textColor)} />
-        <span className={cn("font-semibold text-xs sm:text-sm", statusInfo.textColor)}>
-          {statusInfo.badge}
-        </span>
+      {/* Header Row - Status & Badge */}
+      <div className="flex items-center justify-between w-full lg:w-auto lg:flex-shrink-0">
+        <div className="flex items-center gap-2">
+          <StatusIcon className={cn("w-4 h-4 lg:w-3 lg:h-3", statusInfo.textColor)} />
+          <span className={cn("font-bold text-sm lg:text-xs", statusInfo.textColor)}>
+            {statusInfo.badge}
+          </span>
+        </div>
+        
+        {/* Current Time - Mobile */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <Timer className={cn("w-3 h-3", statusInfo.textColor)} />
+          <span className={cn("font-mono text-xs", statusInfo.textColor)}>
+            {currentTime.toLocaleTimeString('ar-SA', { 
+              hour: '2-digit', 
+              minute: '2-digit',
+              hour12: true 
+            })}
+          </span>
+        </div>
       </div>
       
-      {/* Separator - Hidden on mobile */}
-      <div className="hidden sm:block w-px h-3 bg-white/20"></div>
-      
-      {/* Status Info */}
-      <div className={cn("text-xs text-center sm:text-right", statusInfo.textColor)}>
-        <span className="hidden sm:inline">{statusInfo.subText}</span>
-        <span className="sm:hidden">{statusInfo.subText.split(' ').slice(0, 3).join(' ')}</span>
+      {/* Main Status Text */}
+      <div className="w-full lg:flex-1">
+        <p className={cn("text-xs lg:text-xs leading-relaxed", statusInfo.textColor)}>
+          <span className="lg:hidden">{statusInfo.subText}</span>
+          <span className="hidden lg:inline">{statusInfo.text}</span>
+        </p>
+        
+        {/* Countdown - Mobile Only */}
+        <div className="lg:hidden mt-1">
+          <p className={cn("text-xs font-medium", statusInfo.textColor)}>
+            {statusInfo.subText}
+          </p>
+        </div>
       </div>
       
-      {/* Time */}
-      <div className="flex items-center gap-1 sm:mr-auto">
-        <Timer className={cn("icon-responsive-sm", statusInfo.textColor)} />
-        <span className={cn("font-mono text-xs", statusInfo.textColor)}>
+      {/* Desktop Time */}
+      <div className="hidden lg:flex items-center gap-1 flex-shrink-0">
+        <Timer className={cn("w-3 h-3", statusInfo.textColor)} />
+        <span className={cn("font-mono text-xs whitespace-nowrap", statusInfo.textColor)}>
           {currentTime.toLocaleTimeString('ar-SA', { 
             hour: '2-digit', 
             minute: '2-digit',
