@@ -49,7 +49,7 @@ const Index = () => {
         <div className="space-y-0">
 
           {/* Enhanced Digital Services Section - Luxury Responsive Design */}
-          <section className="relative py-8 sm:py-16 lg:py-24 xl:py-32 overflow-hidden">
+          <section className="relative py-16 lg:py-24 overflow-hidden">
             {/* Enhanced Background Effects */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-secondary/12 to-accent/10"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,hsl(var(--primary))_0%,transparent_50%),radial-gradient(ellipse_at_bottom_right,hsl(var(--secondary))_0%,transparent_50%)] opacity-30"></div>
