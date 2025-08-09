@@ -128,6 +128,7 @@ export type Database = {
           notes: string | null
           offer_title: string
           payment_method: string | null
+          payment_status: string | null
           status: string
           transaction_id: string | null
           updated_at: string
@@ -146,6 +147,7 @@ export type Database = {
           notes?: string | null
           offer_title: string
           payment_method?: string | null
+          payment_status?: string | null
           status?: string
           transaction_id?: string | null
           updated_at?: string
@@ -164,6 +166,7 @@ export type Database = {
           notes?: string | null
           offer_title?: string
           payment_method?: string | null
+          payment_status?: string | null
           status?: string
           transaction_id?: string | null
           updated_at?: string
