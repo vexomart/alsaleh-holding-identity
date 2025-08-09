@@ -261,13 +261,13 @@ const DigitalContracts = () => {
     // إنشاء div مؤقت للعقد
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
-      width: 794px;
-      min-height: 1400px;
-      padding: 40px;
+      width: 900px;
+      min-height: 1800px;
+      padding: 50px;
       background: white;
       font-family: 'Arial', 'Tahoma', sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 16px;
+      line-height: 1.8;
       direction: rtl;
       text-align: right;
       color: #000;
@@ -283,42 +283,42 @@ const DigitalContracts = () => {
         <div style="border: 1px solid #ddd; min-height: 1540px; padding: 20px; position: relative;">
           
           <!-- الترويسة الرسمية للشركة -->
-          <div style="background: linear-gradient(135deg, #0066cc, #004499); color: white; padding: 25px; margin: -20px -20px 30px -20px; text-align: center; border-radius: 0;">
+          <div style="background: linear-gradient(135deg, #0066cc, #004499); color: white; padding: 35px; margin: -30px -30px 40px -30px; text-align: center; border-radius: 0;">
             <!-- شعار الشركة -->
-            <div style="background: white; color: #0066cc; width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; text-align: center; line-height: 1.2; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <div style="background: white; color: #0066cc; width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; text-align: center; line-height: 1.2; box-shadow: 0 6px 20px rgba(0,0,0,0.3);">
               <div>
-                <div style="font-size: 14px;">شركة</div>
-                <div style="font-size: 10px;">علي صالح الشهري</div>
-                <div style="font-size: 12px;">القابضة</div>
+                <div style="font-size: 16px;">شركة</div>
+                <div style="font-size: 12px;">علي صالح الشهري</div>
+                <div style="font-size: 14px;">القابضة</div>
               </div>
             </div>
             
-            <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+            <h1 style="margin: 0; font-size: 32px; font-weight: bold; text-shadow: 0 3px 6px rgba(0,0,0,0.4);">
               شركة علي صالح الشهري القابضة
             </h1>
-            <div style="font-size: 16px; margin: 10px 0; opacity: 0.9;">
+            <div style="font-size: 18px; margin: 15px 0; opacity: 0.9;">
               للتقنية والحلول الرقمية المتقدمة
             </div>
-            <div style="font-size: 14px; opacity: 0.8;">
-              السجل التجاري: 4030554749 | الرياض - المملكة العربية السعودية
+            <div style="font-size: 16px; opacity: 0.8;">
+              السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية
             </div>
-            <div style="border-top: 2px solid rgba(255,255,255,0.3); margin: 15px auto 0; width: 60%;"></div>
+            <div style="border-top: 3px solid rgba(255,255,255,0.3); margin: 20px auto 0; width: 60%;"></div>
           </div>
           
           <!-- معلومات التاريخ والعقد -->
-          <div style="display: flex; justify-content: space-between; margin-bottom: 25px; background: #f8fafc; padding: 15px; border-left: 4px solid #0066cc;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 30px; background: #f8fafc; padding: 20px; border-left: 5px solid #0066cc; border-radius: 8px;">
             <div>
-              <div style="color: #0066cc; font-weight: bold; font-size: 16px;">رقم العقد: ${Date.now().toString().slice(-8)}</div>
-              <div style="color: #666; font-size: 12px; margin-top: 5px;">تاريخ الإصدار: ${hijriDate}</div>
+              <div style="color: #0066cc; font-weight: bold; font-size: 18px;">رقم العقد: ${Date.now().toString().slice(-8)}</div>
+              <div style="color: #666; font-size: 14px; margin-top: 8px;">تاريخ الإصدار: ${hijriDate}</div>
             </div>
             <div style="text-align: left;">
-              <div style="color: #0066cc; font-weight: bold; font-size: 16px;">Contract No: ${Date.now().toString().slice(-8)}</div>
-              <div style="color: #666; font-size: 12px; margin-top: 5px;">Issue Date: ${contractDate}</div>
+              <div style="color: #0066cc; font-weight: bold; font-size: 18px;">Contract No: ${Date.now().toString().slice(-8)}</div>
+              <div style="color: #666; font-size: 14px; margin-top: 8px;">Issue Date: ${contractDate}</div>
             </div>
           </div>
           
           <!-- العنوان الرئيسي للعقد -->
-          <h1 style="text-align: center; color: #0066cc; font-size: 26px; margin: 30px 0; font-weight: bold; border: 2px solid #0066cc; padding: 15px; background: linear-gradient(45deg, #f0f8ff, #e6f3ff);">
+          <h1 style="text-align: center; color: #0066cc; font-size: 30px; margin: 40px 0; font-weight: bold; border: 3px solid #0066cc; padding: 20px; background: linear-gradient(45deg, #f0f8ff, #e6f3ff); border-radius: 10px;">
             عقد تقديم الخدمات التقنية والاستشارية
           </h1>
           
@@ -341,15 +341,15 @@ const DigitalContracts = () => {
             <h2 style="color: #0066cc; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #0066cc; padding-bottom: 10px;">
               الطرف الأول - مقدم الخدمة (المقاول)
             </h2>
-            <div style="font-size: 14px; line-height: 2;">
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">اسم الشركة:</span> شركة علي صالح الشهري القابضة</div>
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">يمثلها:</span> الأستاذ / علي صالح الشهري</div>
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">السجل التجاري:</span> 4030554749</div>
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الرقم الضريبي:</span> 300445123700003</div>
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">العنوان:</span> الرياض، حي النرجس، المملكة العربية السعودية</div>
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">البريد الإلكتروني:</span> info@alialshehriholding.com</div>
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الهاتف:</span> +966 567 812 555</div>
-              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الممثل القانوني:</span> علي صالح الشهري</div>
+            <div style="font-size: 16px; line-height: 2.2;">
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">اسم الشركة:</span> شركة علي صالح الشهري القابضة</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">يمثلها:</span> الأستاذ / علي صالح الشهري</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">السجل التجاري:</span> 4030554749</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">الرقم الضريبي:</span> 300445123700003</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">العنوان:</span> جدة، حي الروضة، المملكة العربية السعودية</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">البريد الإلكتروني:</span> info@alialshehriholding.com</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">الهاتف:</span> 0555812567</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 180px;">الممثل القانوني:</span> علي صالح الشهري</div>
             </div>
           </div>
           
@@ -574,8 +574,8 @@ const DigitalContracts = () => {
             <div style="color: #666; font-size: 12px; margin-bottom: 5px;">
               تم إنشاء هذا العقد بتاريخ: ${contractDate} الموافق ${hijriDate}
             </div>
-            <div style="color: #666; font-size: 11px;">
-              العنوان: الرياض - حي النرجس | الهاتف: +966 567 812 555 | البريد الإلكتروني: info@alialshehriholding.com
+            <div style="color: #666; font-size: 13px;">
+              العنوان: جدة - حي الروضة | الهاتف: 0555812567 | البريد الإلكتروني: info@alialshehriholding.com
             </div>
           </div>
         </div>
