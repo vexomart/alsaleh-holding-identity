@@ -82,26 +82,24 @@ const WorkingHoursNotification = () => {
       case 'closed':
         return {
           text: "مغلق الآن - ساعات العمل: 8:00 ص - 6:00 م (الأحد - الخميس)",
-          subText: `سنفتح خلال ${timeUntilChange} - للطوارئ: 0555812567`,
+          subText: `عودة العمل خلال ${timeUntilChange}`,
           icon: Moon,
           bgColor: "bg-gradient-to-r from-red-600 via-rose-500 to-pink-600",
           textColor: "text-white",
           animation: "animate-bounce",
           badge: "مغلق",
-          badgeColor: "bg-white/20 text-white",
-          phoneNumber: "0555812567"
+          badgeColor: "bg-white/20 text-white"
         };
       case 'weekend':
         return {
           text: "إجازة نهاية الأسبوع - سنعود يوم الأحد الساعة 8:00 ص",
-          subText: `عودة العمل خلال ${timeUntilChange} - للتواصل: 0555812567`,
+          subText: `عودة العمل خلال ${timeUntilChange}`,
           icon: Calendar,
           bgColor: "bg-gradient-to-r from-purple-600 via-violet-500 to-indigo-600",
           textColor: "text-white",
           animation: "animate-pulse",
           badge: "إجازة",
-          badgeColor: "bg-white/20 text-white",
-          phoneNumber: "0555812567"
+          badgeColor: "bg-white/20 text-white"
         };
     }
   };
