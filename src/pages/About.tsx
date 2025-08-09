@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import BackButton from "@/components/ui/back-button";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 
 import { 
   Users, 
@@ -106,7 +106,7 @@ const About = () => {
       <Navigation />
       
       <div className="pt-[48px] lg:pt-[112px]">
-        <PageContainer showNavigation={false} showFooter={false} showWhatsAppButton={false}>
+        <PageContainer showNavigation={false} showFooter={false}>
           <BackButton />
           
           <PageHeader
@@ -274,7 +274,7 @@ const About = () => {
       </div>
       
       <Footer />
-      <WhatsAppButton />
+      
     </div>
   );
 };

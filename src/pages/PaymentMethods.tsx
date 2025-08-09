@@ -1,7 +1,7 @@
 import Navigation from "@/components/Navigation";
 import PaymentMethodsSection from "@/components/PaymentMethodsSection";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 
 const PaymentMethods = () => {
   return (
@@ -46,7 +46,7 @@ const PaymentMethods = () => {
       </footer>
 
       {/* Floating Elements */}
-      <WhatsAppButton />
+      
       
       {/* Background Decorative Elements */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none overflow-hidden z-0">

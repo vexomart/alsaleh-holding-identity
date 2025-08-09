@@ -9,7 +9,6 @@ import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
 
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
@@ -286,9 +285,6 @@ const Index = () => {
           <Footer />
         </div>
       </footer>
-
-      {/* Floating Elements */}
-      <WhatsAppButton />
     </div>
   );
 };

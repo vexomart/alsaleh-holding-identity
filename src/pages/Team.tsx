@@ -1,6 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Users, Code, TrendingUp, Building2, Shield, Star, Award, ChevronRight, Sparkles, Brain, Heart, Zap } from "lucide-react";
@@ -272,7 +272,7 @@ const Team = () => {
       </main>
       
       <Footer />
-      <WhatsAppButton />
+      
     </div>
   );
 };

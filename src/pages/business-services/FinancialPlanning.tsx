@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 import BackButton from "@/components/ui/back-button";
 import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";
 import { 
@@ -422,7 +422,7 @@ const FinancialPlanning = () => {
       </section>
 
       <Footer />
-      <WhatsAppButton />
+      
       
       {/* Service Request Form Modal */}
       {showServiceForm && (

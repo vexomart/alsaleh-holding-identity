@@ -1,6 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -484,7 +484,7 @@ const Vision = () => {
       </section>
 
       <Footer />
-      <WhatsAppButton />
+      
       
     </div>
   );

@@ -2,14 +2,14 @@ import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 
 interface PageContainerProps {
   children: ReactNode;
   className?: string;
   showNavigation?: boolean;
   showFooter?: boolean;
-  showWhatsAppButton?: boolean;
+  
 }
 
 export function PageContainer({ 
@@ -17,7 +17,7 @@ export function PageContainer({
   className,
   showNavigation = false,
   showFooter = false,
-  showWhatsAppButton = true
+  
 }: PageContainerProps) {
   return (
     <div className={cn(
@@ -31,7 +31,7 @@ export function PageContainer({
           {children}
         </main>
         {showFooter && <Footer />}
-        {showWhatsAppButton && <WhatsAppButton />}
+        
       </div>
     </div>
   );

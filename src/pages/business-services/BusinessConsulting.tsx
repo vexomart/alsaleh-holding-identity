@@ -28,7 +28,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";
 
 const BusinessConsulting = () => {

@@ -1,7 +1,7 @@
 import Navigation from "@/components/Navigation";
 import SubsidiariesSection from "@/components/SubsidiariesSection";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 
 const Subsidiaries = () => {
   return (
@@ -13,7 +13,7 @@ const Subsidiaries = () => {
       </main>
 
       <Footer />
-      <WhatsAppButton />
+      
     </div>
   );
 };

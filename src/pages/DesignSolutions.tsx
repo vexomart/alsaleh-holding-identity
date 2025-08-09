@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import RTLDesignSolutionsSection from "@/components/RTLDesignSolutionsSection";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 const DesignSolutions = () => {
   useEffect(() => {
     document.title = "حلول التصميم | شركة علي الشهري القابضة";
@@ -33,7 +33,7 @@ const DesignSolutions = () => {
       </main>
 
       <Footer />
-      <WhatsAppButton />
+      
     </div>
   );
 };

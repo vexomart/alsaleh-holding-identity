@@ -31,7 +31,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 import { supabase } from "@/integrations/supabase/client";
 
 const Partnerships = () => {
@@ -430,7 +430,7 @@ const Partnerships = () => {
       </section>
 
       <Footer />
-      <WhatsAppButton />
+      
     </div>
   );
 };

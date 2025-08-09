@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 import InteractiveMap from "@/components/InteractiveMap";
 import { 
   MapPin, 
@@ -630,7 +630,7 @@ const GlobalPresence = () => {
       </main>
 
       <Footer />
-      <WhatsAppButton />
+      
     </div>
   );
 };

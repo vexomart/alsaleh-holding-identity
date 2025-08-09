@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 import BackButton from "@/components/ui/back-button";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -478,7 +478,7 @@ const Contact = () => {
       </div>
       
       <Footer />
-      <WhatsAppButton />
+      
     </div>
   );
 };
