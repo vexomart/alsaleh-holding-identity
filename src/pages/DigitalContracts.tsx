@@ -23,6 +23,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import DigitalStamp from "@/components/DigitalStamp";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -369,11 +370,52 @@ const DigitalContracts = () => {
           <!-- منطقة التوقيعات -->
           <div style="background: #f8fafc; border: 2px solid #666; padding: 20px; margin: 20px 0;">
             <div style="display: flex; justify-content: space-between; gap: 20px;">
-              <!-- توقيع الطرف الأول -->
-              <div style="border: 2px solid #0066cc; padding: 15px; flex: 1; text-align: center; min-height: 120px;">
+              <!-- توقيع الطرف الأول مع الختم الرقمي -->
+              <div style="border: 2px solid #0066cc; padding: 15px; flex: 1; text-align: center; min-height: 120px; position: relative;">
                 <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px;">الطرف الأول - مقدم الخدمة</div>
                 <div style="font-size: 12px; margin-bottom: 5px;">شركة علي صالح الشهري القابضة</div>
-                <div style="margin-top: 30px; border-bottom: 1px solid #000; width: 150px; margin-left: auto; margin-right: auto;"></div>
+                
+                <!-- الختم الرقمي -->
+                <div style="margin: 10px auto; display: flex; justify-content: center;">
+                  <div style="
+                    width: 80px;
+                    height: 80px;
+                    border: 3px solid #0066cc;
+                    border-radius: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    direction: rtl;
+                    fontSize: 7px;
+                    font-weight: bold;
+                    color: #0066cc;
+                    font-family: Arial, sans-serif;
+                    line-height: 1.1;
+                    padding: 6px;
+                    box-sizing: border-box;
+                    position: relative;
+                    background: white;
+                  ">
+                    <div style="font-size: 8px; font-weight: bold; margin-bottom: 2px;">شركة علي صالح الشهري القابضة</div>
+                    <div style="font-size: 6px; margin-bottom: 1px;">سجل تجاري</div>
+                    <div style="font-size: 7px; font-weight: bold;">4030554749</div>
+                    <!-- دائرة داخلية للزينة -->
+                    <div style="
+                      position: absolute;
+                      top: 50%;
+                      left: 50%;
+                      transform: translate(-50%, -50%);
+                      width: 70%;
+                      height: 70%;
+                      border: 1px solid #0066cc;
+                      border-radius: 50%;
+                      opacity: 0.3;
+                    "></div>
+                  </div>
+                </div>
+                
                 <div style="font-size: 10px; margin-top: 5px;">التوقيع والختم</div>
               </div>
               
