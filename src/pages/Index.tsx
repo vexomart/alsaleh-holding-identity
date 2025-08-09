@@ -108,19 +108,19 @@ const Index = () => {
                         </p>
                       </div>
                       
-                      {/* Premium Features Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-4xl mx-auto">
-                        <div className="group flex items-center justify-center text-white text-xs sm:text-sm lg:text-base xl:text-lg py-3 sm:py-4 lg:py-5 px-3 sm:px-4 lg:px-6 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
+                      {/* Premium Features Grid - Enhanced Responsive */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-4xl mx-auto">
+                        <div className="group flex items-center justify-center text-white text-xs sm:text-sm lg:text-base xl:text-lg py-4 sm:py-5 lg:py-6 px-4 sm:px-5 lg:px-6 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale min-h-[60px] sm:min-h-[70px]">
                           <Globe className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="font-semibold">حلول عالمية</span>
+                          <span className="font-semibold whitespace-nowrap">حلول عالمية</span>
                         </div>
-                        <div className="group flex items-center justify-center text-white text-xs sm:text-sm lg:text-base xl:text-lg py-3 sm:py-4 lg:py-5 px-3 sm:px-4 lg:px-6 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
+                        <div className="group flex items-center justify-center text-white text-xs sm:text-sm lg:text-base xl:text-lg py-4 sm:py-5 lg:py-6 px-4 sm:px-5 lg:px-6 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale min-h-[60px] sm:min-h-[70px]">
                           <Shield className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="font-semibold">أمان متقدم</span>
+                          <span className="font-semibold whitespace-nowrap">أمان متقدم</span>
                         </div>
-                        <div className="group flex items-center justify-center text-white text-xs sm:text-sm lg:text-base xl:text-lg py-3 sm:py-4 lg:py-5 px-3 sm:px-4 lg:px-6 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale">
+                        <div className="group flex items-center justify-center text-white text-xs sm:text-sm lg:text-base xl:text-lg py-4 sm:py-5 lg:py-6 px-4 sm:px-5 lg:px-6 bg-gradient-to-r from-white/15 to-white/25 hover:from-white/25 hover:to-white/35 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover-scale min-h-[60px] sm:min-h-[70px]">
                           <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="font-semibold">نمو مستدام</span>
+                          <span className="font-semibold whitespace-nowrap">نمو مستدام</span>
                         </div>
                       </div>
                       
