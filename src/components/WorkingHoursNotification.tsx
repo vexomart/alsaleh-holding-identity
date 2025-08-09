@@ -110,48 +110,37 @@ const WorkingHoursNotification = () => {
   return (
     <div 
       className={cn(
-        "inline-flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg relative overflow-hidden backdrop-blur-sm border",
+        "flex items-center gap-2 px-3 py-2 rounded-lg border backdrop-blur-sm text-xs",
         statusInfo.bgColor,
-        statusInfo.animation,
-        "border-white/20"
+        "border-white/10 shadow-sm"
       )}
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent transform -skew-x-12 animate-slide-in-right"></div>
-      </div>
-      
-      <div className="relative z-10 flex items-center gap-2">
-        {/* Status Badge */}
-        <div className={cn("px-2 py-1 rounded-md text-xs font-bold", statusInfo.badgeColor)}>
+      {/* Status Icon & Badge */}
+      <div className="flex items-center gap-1">
+        <StatusIcon className={cn("w-3 h-3", statusInfo.textColor)} />
+        <span className={cn("font-semibold", statusInfo.textColor)}>
           {statusInfo.badge}
-        </div>
-        
-        <StatusIcon className={cn("w-4 h-4", statusInfo.textColor)} />
-        
-        <div className="flex flex-col">
-          <span className={cn("text-xs font-medium leading-tight", statusInfo.textColor)}>
-            {statusInfo.text}
-          </span>
-          <div className="flex items-center gap-2 mt-1">
-            <span className={cn("text-xs font-semibold", statusInfo.textColor)}>
-              {statusInfo.subText}
-            </span>
-            <Timer className={cn("w-3 h-3", statusInfo.textColor)} />
-            <span className={cn("text-xs font-mono", statusInfo.textColor)}>
-              {currentTime.toLocaleTimeString('ar-SA', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                hour12: true 
-              })}
-            </span>
-          </div>
-        </div>
+        </span>
       </div>
       
-      {/* Moving line animation */}
-      <div className="absolute bottom-0 left-0 w-full h-0.5 bg-white/30">
-        <div className="h-full bg-white/60 animate-slide-in-right"></div>
+      {/* Separator */}
+      <div className="w-px h-3 bg-white/20"></div>
+      
+      {/* Status Info */}
+      <div className={cn("text-xs", statusInfo.textColor)}>
+        {statusInfo.subText}
+      </div>
+      
+      {/* Time */}
+      <div className="flex items-center gap-1 mr-auto">
+        <Timer className={cn("w-3 h-3", statusInfo.textColor)} />
+        <span className={cn("font-mono text-xs", statusInfo.textColor)}>
+          {currentTime.toLocaleTimeString('ar-SA', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+          })}
+        </span>
       </div>
     </div>
   );
