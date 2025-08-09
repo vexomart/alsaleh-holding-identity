@@ -261,13 +261,13 @@ const DigitalContracts = () => {
     // إنشاء div مؤقت للعقد
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
-      width: 1200px;
+      width: 1600px;
       min-height: auto;
-      padding: 50px;
+      padding: 60px;
       background: white;
       font-family: 'Arial', 'Tahoma', sans-serif;
-      font-size: 18px;
-      line-height: 1.6;
+      font-size: 22px;
+      line-height: 1.8;
       direction: rtl;
       text-align: right;
       color: #000;
@@ -280,9 +280,9 @@ const DigitalContracts = () => {
     `;
 
     contractElement.innerHTML = `
-      <div style="border: 4px solid #0066cc; min-height: auto; padding: 40px; position: relative; background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);">
+      <div style="border: 4px solid #0066cc; min-height: auto; padding: 50px; position: relative; background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);">
         <!-- إطار داخلي -->
-        <div style="border: 2px solid #e2e8f0; min-height: auto; padding: 35px; position: relative; border-radius: 8px; background: white;">
+        <div style="border: 2px solid #e2e8f0; min-height: auto; padding: 45px; position: relative; border-radius: 8px; background: white;">
           
           <!-- الترويسة الرسمية المطورة -->
           <div style="background: linear-gradient(135deg, #0066cc 0%, #1e40af 50%, #1e3a8a 100%); color: white; padding: 40px; margin: -30px -30px 50px -30px; border-radius: 0; position: relative; overflow: hidden;">
@@ -962,12 +962,13 @@ const DigitalContracts = () => {
             const pdf = new jsPDF({
               orientation: 'portrait',
               unit: 'mm',
-              format: 'a4'
+              format: 'a3',
+              compress: false
             });
             
-            // أبعاد A4 بالملليمتر
-            const pdfWidth = 210;
-            const pdfHeight = 297;
+            // أبعاد A3 بالملليمتر
+            const pdfWidth = 297;
+            const pdfHeight = 420;
             
             // حساب النسبة للحفاظ على التناسب
             const ratio = Math.min(pdfWidth / (canvasWidth / 3.779), pdfHeight / (canvasHeight / 3.779));
