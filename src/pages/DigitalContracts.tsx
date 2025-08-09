@@ -261,22 +261,33 @@ const DigitalContracts = () => {
     // إنشاء div مؤقت للعقد بتصميم محسن
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
-      width: 210mm;
-      min-height: 297mm;
-      padding: 15mm;
-      background: white;
-      font-family: 'Tajawal', 'Arial', sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
-      direction: rtl;
-      text-align: right;
-      color: #000;
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
-      box-sizing: border-box;
-      margin: 0;
-      page-break-inside: avoid;
+        width: 100%;
+        max-width: 210mm;
+        min-height: 297mm;
+        padding: 20px;
+        background: white;
+        font-family: 'Tajawal', 'Arial', sans-serif;
+        font-size: clamp(12px, 2vw, 14px);
+        line-height: 1.6;
+        direction: rtl;
+        text-align: right;
+        color: #000;
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+        box-sizing: border-box;
+        margin: 0 auto;
+        page-break-inside: avoid;
+        
+        @media (max-width: 768px) {
+          padding: 15px;
+          font-size: 12px;
+        }
+        
+        @media (max-width: 480px) {
+          padding: 10px;
+          font-size: 11px;
+        }
     `;
 
     contractElement.innerHTML = `
@@ -295,18 +306,18 @@ const DigitalContracts = () => {
               <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); color: #0066cc; width: 180px; height: 180px; border-radius: 50%; margin: 0 auto 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-align: center; line-height: 1.2; box-shadow: 0 12px 40px rgba(0,0,0,0.5); border: 6px solid #f8fafc; position: relative;">
                 <div style="text-align: center;">
                   <div style="font-size: 24px; margin-bottom: 8px;">🏢</div>
-                   <div style="font-size: 16px; color: #1e40af;">شركة</div>
-                   <div style="font-size: 14px; color: #0066cc; line-height: 1.2;">علي صالح الشهري</div>
-                   <div style="font-size: 15px; font-weight: bold; color: #1e3a8a;">القابضة</div>
-                  <div style="font-size: 11px; margin-top: 5px; color: #64748b;">⚡ التقنية المتقدمة ⚡</div>
+                  <div style="font-size: 16px; color: #1e40af; line-height: 1.1;">Ali Saleh</div>
+                  <div style="font-size: 16px; color: #0066cc; line-height: 1.1;">Al-Shehri</div>
+                  <div style="font-size: 16px; font-weight: bold; color: #1e3a8a; line-height: 1.1;">Holding</div>
+                  <div style="font-size: 11px; margin-top: 5px; color: #64748b;">⚡ Tech Solutions ⚡</div>
                 </div>
                 <!-- حلقة زخرفية -->
                 <div style="position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%;"></div>
               </div>
               
-               <h1 style="margin: 0; font-size: 32px; font-weight: bold; text-shadow: 0 4px 12px rgba(0,0,0,0.6); text-align: center; letter-spacing: 0.5px; line-height: 1.3;">
-                 شركة علي صالح الشهري القابضة
-               </h1>
+              <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-shadow: 0 4px 12px rgba(0,0,0,0.6); text-align: center; letter-spacing: 0.5px; line-height: 1.3;">
+                Ali Saleh Al-Shehri Holding Company
+              </h1>
               <div style="font-size: 22px; margin: 25px 0; opacity: 0.95; text-align: center; font-weight: 500;">
                 🚀 للتقنية والحلول الرقمية المتقدمة 🌟
               </div>
