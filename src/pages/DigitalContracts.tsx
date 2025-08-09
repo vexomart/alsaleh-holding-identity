@@ -940,14 +940,16 @@ const DigitalContracts = () => {
           try {
             // تحويل HTML إلى canvas بضبط الارتفاع تلقائياً
             const canvas = await html2canvas(contractElement, {
-              scale: 2,
+              scale: 4,
               useCORS: true,
               allowTaint: true,
               backgroundColor: '#ffffff',
               logging: false,
               scrollX: 0,
               scrollY: 0,
-              windowWidth: contractElement.scrollWidth,
+              width: 1600,
+              height: contractElement.scrollHeight,
+              windowWidth: 1600,
               windowHeight: contractElement.scrollHeight
             });
             
@@ -970,18 +972,21 @@ const DigitalContracts = () => {
             const pdfWidth = 297;
             const pdfHeight = 420;
             
-            // حساب النسبة للحفاظ على التناسب
-            const ratio = Math.min(pdfWidth / (canvasWidth / 3.779), pdfHeight / (canvasHeight / 3.779));
-            const imgWidth = (canvasWidth / 3.779) * ratio;
-            const imgHeight = (canvasHeight / 3.779) * ratio;
+            // حساب النسبة لتغطية كامل الصفحة
+            const scaleX = pdfWidth / (canvasWidth / 3.779);
+            const scaleY = pdfHeight / (canvasHeight / 3.779);
+            const scale = Math.max(scaleX, scaleY) * 0.98; // أكبر نسبة لملء الصفحة
+            
+            const imgWidth = (canvasWidth / 3.779) * scale;
+            const imgHeight = (canvasHeight / 3.779) * scale;
             
             // توسيط الصورة في الصفحة
             const x = (pdfWidth - imgWidth) / 2;
-            const y = 0;
+            const y = (pdfHeight - imgHeight) / 2;
             
-            // إضافة الصورة للـ PDF
-            const imgData = canvas.toDataURL('image/png', 1.0);
-            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+            // إضافة الصورة للـ PDF بجودة عالية
+            const imgData = canvas.toDataURL('image/jpeg', 0.98);
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
             
             resolve(pdf);
           } catch (error) {
