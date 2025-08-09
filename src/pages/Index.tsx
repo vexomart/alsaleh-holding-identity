@@ -70,51 +70,51 @@ const Index = () => {
                   {/* Glass Effect Overlay */}
                   <div className="absolute inset-0 glass-effect"></div>
                   
-                  <div className="absolute inset-0 flex items-center justify-center sm:justify-start p-4 sm:p-6 lg:p-16">
-                    <div className="text-white max-w-full sm:max-w-3xl text-center sm:text-right">
-                      <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start mb-4 sm:mb-6 gap-2">
+                  <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-6 lg:p-16">
+                    <div className="text-white w-full max-w-full sm:max-w-3xl text-center">
+                      <div className="flex flex-col items-center justify-center mb-3 sm:mb-6 gap-2">
                         <div className="flex items-center">
                           <div className="w-2 h-2 bg-white rounded-full animate-pulse ml-2"></div>
-                          <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-xs sm:text-sm">
+                          <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2">
                             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
                             خدمات متطورة عالمية
                           </Badge>
                         </div>
                       </div>
                       
-                      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                        <span className="block text-white drop-shadow-lg">
+                      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-6 leading-tight px-2 sm:px-0">
+                        <span className="block text-white drop-shadow-lg mb-1 sm:mb-2">
                           خدماتنا الرقمية
                         </span>
-                        <span className="block text-yellow-300 drop-shadow-lg">
+                        <span className="block text-secondary drop-shadow-lg bg-gradient-to-r from-secondary to-secondary-light bg-clip-text text-transparent">
                           المتطورة
                         </span>
                       </h2>
                       
-                      <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-6 sm:mb-8 text-white/90 leading-relaxed max-w-2xl mx-auto sm:mx-0">
+                      <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-4 sm:mb-8 text-white/90 leading-relaxed max-w-xl sm:max-w-2xl mx-auto px-4 sm:px-0">
                         نقدم حلولاً رقمية شاملة بمعايير عالمية لتطوير أعمالك وتحقيق رؤيتك المستقبلية
                       </p>
                       
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
-                        <div className="flex items-center justify-center sm:justify-start text-white/80 text-xs sm:text-sm">
-                          <Globe className="icon-responsive-sm ml-1 sm:ml-2" />
-                          حلول عالمية
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-8 px-4 sm:px-0">
+                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1">
+                          <Globe className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
+                          <span className="truncate">حلول عالمية</span>
                         </div>
-                        <div className="flex items-center justify-center sm:justify-start text-white/80 text-xs sm:text-sm">
-                          <Shield className="icon-responsive-sm ml-1 sm:ml-2" />
-                          أمان متقدم
+                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1">
+                          <Shield className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
+                          <span className="truncate">أمان متقدم</span>
                         </div>
-                        <div className="flex items-center justify-center sm:justify-start text-white/80 text-xs sm:text-sm">
-                          <TrendingUp className="icon-responsive-sm ml-1 sm:ml-2" />
-                          نمو مستدام
+                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1">
+                          <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
+                          <span className="truncate">نمو مستدام</span>
                         </div>
                       </div>
                       
-                      <div className="flex justify-center sm:justify-start">
+                      <div className="flex justify-center px-4 sm:px-0">
                         <Link to="/professional-services">
-                          <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold text-sm sm:text-base lg:text-lg px-4 sm:px-6 lg:px-8 py-3 sm:py-4 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale touch-target">
+                          <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold text-xs sm:text-sm lg:text-base px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 lg:py-4 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale touch-target">
                             استكشف خدماتنا
-                            <ArrowRight className="icon-responsive-sm ml-1 sm:ml-2" />
+                            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
                           </Button>
                         </Link>
                       </div>
