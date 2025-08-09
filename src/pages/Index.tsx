@@ -56,34 +56,34 @@ const Index = () => {
             <div className="absolute top-4 left-4 sm:top-10 sm:left-10 lg:top-20 lg:left-20 w-8 h-8 sm:w-16 sm:h-16 lg:w-32 lg:h-32 bg-primary/20 rounded-full blur-lg lg:blur-xl animate-float"></div>
             <div className="absolute bottom-4 right-4 sm:bottom-10 sm:right-10 lg:bottom-20 lg:right-20 w-6 h-6 sm:w-12 sm:h-12 lg:w-24 lg:h-24 bg-secondary/15 rounded-full blur-md lg:blur-lg animate-float-delayed"></div>
             
-            <div className="relative z-10 container-fluid">
+            <div className="relative z-10 container px-4 sm:px-6 lg:px-8">
               <div className="max-w-6xl mx-auto">
-                <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-2xl group">
+                <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg sm:shadow-2xl group">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-90"></div>
                   <img 
                     src={digitalServicesBanner} 
                     alt="خدماتنا الرقمية المتطورة" 
-                    className="w-full h-64 sm:h-80 lg:h-96 object-cover transition-transform duration-700 group-hover:scale-105 mix-blend-overlay img-responsive"
+                    className="w-full h-48 sm:h-64 md:h-72 lg:h-80 xl:h-96 object-cover transition-transform duration-700 group-hover:scale-105 mix-blend-overlay"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/40"></div>
                   
                   {/* Glass Effect Overlay */}
                   <div className="absolute inset-0 glass-effect"></div>
                   
-                  <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-6 lg:p-16">
-                    <div className="text-white w-full max-w-full sm:max-w-3xl text-center">
-                      <div className="flex flex-col items-center justify-center mb-3 sm:mb-6 gap-2">
+                  <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6 lg:p-12 xl:p-16">
+                    <div className="text-white w-full text-center">
+                      <div className="flex flex-col items-center justify-center mb-3 sm:mb-4 lg:mb-6 gap-2">
                         <div className="flex items-center">
                           <div className="w-2 h-2 bg-white rounded-full animate-pulse ml-2"></div>
-                          <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2">
+                          <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-xs sm:text-sm px-3 py-1.5">
                             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
                             خدمات متطورة عالمية
                           </Badge>
                         </div>
                       </div>
                       
-                      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-6 leading-tight px-2 sm:px-0">
-                        <span className="block text-white drop-shadow-lg mb-1 sm:mb-2">
+                      <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-2 sm:mb-3 lg:mb-6 leading-tight px-2">
+                        <span className="block text-white drop-shadow-lg mb-1">
                           خدماتنا الرقمية
                         </span>
                         <span className="block text-secondary drop-shadow-lg bg-gradient-to-r from-secondary to-secondary-light bg-clip-text text-transparent">
@@ -91,28 +91,28 @@ const Index = () => {
                         </span>
                       </h2>
                       
-                      <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-4 sm:mb-8 text-white/90 leading-relaxed max-w-xl sm:max-w-2xl mx-auto px-4 sm:px-0">
+                      <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-3 sm:mb-4 lg:mb-8 text-white/90 leading-relaxed max-w-sm sm:max-w-lg lg:max-w-2xl mx-auto px-2">
                         نقدم حلولاً رقمية شاملة بمعايير عالمية لتطوير أعمالك وتحقيق رؤيتك المستقبلية
                       </p>
                       
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-8 px-4 sm:px-0">
-                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4 mb-3 sm:mb-4 lg:mb-8 px-2">
+                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1 bg-white/10 rounded-lg backdrop-blur-sm">
                           <Globe className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
-                          <span className="truncate">حلول عالمية</span>
+                          <span>حلول عالمية</span>
                         </div>
-                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1">
+                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1 bg-white/10 rounded-lg backdrop-blur-sm">
                           <Shield className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
-                          <span className="truncate">أمان متقدم</span>
+                          <span>أمان متقدم</span>
                         </div>
-                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1">
+                        <div className="flex items-center justify-center text-white/80 text-xs sm:text-sm py-1 bg-white/10 rounded-lg backdrop-blur-sm">
                           <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 flex-shrink-0" />
-                          <span className="truncate">نمو مستدام</span>
+                          <span>نمو مستدام</span>
                         </div>
                       </div>
                       
-                      <div className="flex justify-center px-4 sm:px-0">
+                      <div className="flex justify-center px-2">
                         <Link to="/professional-services">
-                          <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold text-xs sm:text-sm lg:text-base px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 lg:py-4 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale touch-target">
+                          <Button size="sm" className="bg-white text-primary hover:bg-white/90 font-semibold text-xs sm:text-sm lg:text-base px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 lg:py-3 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale touch-target">
                             استكشف خدماتنا
                             <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
                           </Button>
@@ -123,10 +123,10 @@ const Index = () => {
                   
                   {/* Floating Icons - Mobile Responsive */}
                   <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-8 lg:right-8 opacity-30">
-                    <Star className="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white animate-pulse" />
+                    <Star className="w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 text-white animate-pulse" />
                   </div>
-                  <div className="absolute bottom-8 left-8 opacity-20">
-                    <Globe className="w-6 h-6 text-white animate-float" />
+                  <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 lg:bottom-8 lg:left-8 opacity-20">
+                    <Globe className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white animate-float" />
                   </div>
                 </div>
               </div>
