@@ -48,106 +48,115 @@ const Index = () => {
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
 
-          {/* Enhanced Digital Services Section - Luxury Responsive Design */}
-          <section className="relative py-16 lg:py-24 overflow-hidden">
+          {/* Enhanced Digital Services Section - Fully Responsive */}
+          <section className="relative py-12 md:py-16 lg:py-20 xl:py-24 overflow-hidden">
             {/* Enhanced Background Effects */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-secondary/12 to-accent/10"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,hsl(var(--primary))_0%,transparent_50%),radial-gradient(ellipse_at_bottom_right,hsl(var(--secondary))_0%,transparent_50%)] opacity-30"></div>
             
-            {/* Luxury Floating Elements */}
-            <div className="absolute top-6 left-6 sm:top-12 sm:left-12 lg:top-20 lg:left-20 w-12 h-12 sm:w-24 sm:h-24 lg:w-40 lg:h-40 bg-gradient-to-br from-primary/25 to-secondary/20 rounded-full blur-2xl animate-float"></div>
-            <div className="absolute bottom-6 right-6 sm:bottom-12 sm:right-12 lg:bottom-20 lg:right-20 w-8 h-8 sm:w-16 sm:h-16 lg:w-32 lg:h-32 bg-gradient-to-tl from-accent/20 to-primary/15 rounded-full blur-xl animate-float-delayed"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-32 sm:h-32 lg:w-48 lg:h-48 bg-gradient-to-r from-secondary/10 to-accent/8 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+            {/* Responsive Floating Elements */}
+            <div className="absolute top-8 left-8 md:top-12 md:left-12 lg:top-16 lg:left-16 w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-primary/25 to-secondary/20 rounded-full blur-2xl animate-float"></div>
+            <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 lg:bottom-16 lg:right-16 w-12 h-12 md:w-20 md:h-20 lg:w-28 lg:h-28 bg-gradient-to-tl from-accent/20 to-primary/15 rounded-full blur-xl animate-float-delayed"></div>
             
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="max-w-7xl mx-auto">
-                {/* Luxury Card Container */}
-                <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl group backdrop-blur-sm border border-white/10">
+              <div className="max-w-6xl mx-auto">
+                {/* Responsive Card Container */}
+                <div className="relative overflow-hidden rounded-xl md:rounded-2xl lg:rounded-3xl shadow-2xl group backdrop-blur-sm border border-white/10">
                   {/* Premium Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-secondary opacity-95"></div>
                   
-                  {/* Background Image with Enhanced Effects */}
+                  {/* Responsive Background Image */}
                   <img 
                     src={digitalServicesBanner} 
                     alt="خدماتنا الرقمية المتطورة" 
-                    className="w-full h-[20rem] sm:h-[24rem] lg:h-[28rem] object-cover transition-all duration-1000 group-hover:scale-110 mix-blend-overlay"
+                    className="w-full h-[22rem] sm:h-[26rem] md:h-[30rem] lg:h-[34rem] xl:h-[38rem] object-cover transition-all duration-1000 group-hover:scale-105 mix-blend-overlay"
                   />
                   
                   {/* Enhanced Gradient Overlays */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/60"></div>
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/30 via-transparent to-secondary/30"></div>
                   
-                  {/* Main Content Container */}
-                  <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-6 lg:p-8">
-                    <div className="text-white w-full max-w-4xl text-center space-y-3 sm:space-y-5 lg:space-y-6">
+                  {/* Responsive Content Container */}
+                  <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
+                    <div className="text-white w-full max-w-5xl text-center space-y-4 sm:space-y-6 md:space-y-8">
                       
-                      {/* Premium Badge */}
+                      {/* Responsive Badge */}
                       <div className="flex justify-center">
-                        <Badge className="bg-gradient-to-r from-white/20 to-white/30 text-white border border-white/40 hover:from-white/30 hover:to-white/40 backdrop-blur-lg text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-2 shadow-xl rounded-full">
-                          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
-                          خدمات متطورة عالمية المستوى
+                        <Badge className="bg-gradient-to-r from-white/20 to-white/30 text-white border border-white/40 hover:from-white/30 hover:to-white/40 backdrop-blur-lg text-xs sm:text-sm md:text-base px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 shadow-xl rounded-full transition-all duration-300">
+                          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 ml-1.5 sm:ml-2" />
+                          <span className="font-medium">خدمات متطورة عالمية المستوى</span>
                         </Badge>
                       </div>
                       
-                      {/* Enhanced Main Title */}
-                      <div className="space-y-1 sm:space-y-2">
-                        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
-                          <span className="block text-white drop-shadow-2xl mb-1">
+                      {/* Responsive Main Title */}
+                      <div className="space-y-2 sm:space-y-3">
+                        <h2 className="font-bold leading-tight">
+                          <span className="block text-white drop-shadow-2xl text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-1 sm:mb-2">
                             خدماتنا الرقمية
                           </span>
-                          <span className="block text-transparent bg-gradient-to-r from-white via-white/90 to-secondary bg-clip-text drop-shadow-2xl font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+                          <span className="block text-transparent bg-gradient-to-r from-white via-white/90 to-secondary bg-clip-text drop-shadow-2xl font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
                             المتطورة
                           </span>
                         </h2>
                       </div>
                       
-                      {/* Enhanced Description */}
-                      <div className="max-w-3xl mx-auto">
-                        <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/95 leading-relaxed font-medium drop-shadow-lg px-1 sm:px-2">
+                      {/* Responsive Description */}
+                      <div className="max-w-4xl mx-auto px-2">
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 leading-relaxed font-medium drop-shadow-lg">
                           نقدم حلولاً رقمية شاملة بمعايير عالمية لتطوير أعمالك وتحقيق رؤيتك المستقبلية
                         </p>
                       </div>
                       
-                      {/* Premium Features Grid - Compact Mobile */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4 max-w-4xl mx-auto">
-                        <div className="flex flex-col items-center justify-center text-white py-4 sm:py-5 px-3 sm:px-4 bg-gradient-to-r from-white/20 to-white/30 rounded-lg sm:rounded-xl backdrop-blur-lg border border-white/40 shadow-xl transition-all duration-300">
-                          <Globe className="w-5 h-5 sm:w-6 sm:h-6 mb-2 flex-shrink-0" />
-                          <span className="font-semibold text-sm sm:text-base text-center">حلول عالمية</span>
+                      {/* Fully Responsive Features Grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5 lg:gap-6 max-w-5xl mx-auto">
+                        {/* Feature 1 */}
+                        <div className="flex flex-col items-center justify-center text-white py-5 sm:py-6 md:py-7 px-4 sm:px-5 md:px-6 bg-gradient-to-r from-white/20 to-white/30 hover:from-white/30 hover:to-white/40 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                          <Globe className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mb-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="font-semibold text-sm sm:text-base md:text-lg text-center leading-tight">حلول عالمية</span>
                         </div>
-                        <div className="flex flex-col items-center justify-center text-white py-4 sm:py-5 px-3 sm:px-4 bg-gradient-to-r from-white/20 to-white/30 rounded-lg sm:rounded-xl backdrop-blur-lg border border-white/40 shadow-xl transition-all duration-300">
-                          <Shield className="w-5 h-5 sm:w-6 sm:h-6 mb-2 flex-shrink-0" />
-                          <span className="font-semibold text-sm sm:text-base text-center">أمان متقدم</span>
+                        
+                        {/* Feature 2 */}
+                        <div className="flex flex-col items-center justify-center text-white py-5 sm:py-6 md:py-7 px-4 sm:px-5 md:px-6 bg-gradient-to-r from-white/20 to-white/30 hover:from-white/30 hover:to-white/40 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                          <Shield className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mb-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="font-semibold text-sm sm:text-base md:text-lg text-center leading-tight">أمان متقدم</span>
                         </div>
-                        <div className="flex flex-col items-center justify-center text-white py-4 sm:py-5 px-3 sm:px-4 bg-gradient-to-r from-white/20 to-white/30 rounded-lg sm:rounded-xl backdrop-blur-lg border border-white/40 shadow-xl transition-all duration-300">
-                          <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 mb-2 flex-shrink-0" />
-                          <span className="font-semibold text-sm sm:text-base text-center">نمو مستدام</span>
+                        
+                        {/* Feature 3 */}
+                        <div className="flex flex-col items-center justify-center text-white py-5 sm:py-6 md:py-7 px-4 sm:px-5 md:px-6 bg-gradient-to-r from-white/20 to-white/30 hover:from-white/30 hover:to-white/40 rounded-xl sm:rounded-2xl backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                          <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mb-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="font-semibold text-sm sm:text-base md:text-lg text-center leading-tight">نمو مستدام</span>
                         </div>
                       </div>
                       
-                      {/* Premium CTA Button */}
-                      <div className="flex justify-center pt-2 sm:pt-3">
+                      {/* Responsive CTA Button */}
+                      <div className="flex justify-center pt-2 sm:pt-4">
                         <Link to="/professional-services">
-                          <Button size="sm" className="group bg-gradient-to-r from-white to-white/95 hover:from-white/95 hover:to-white text-primary hover:text-primary/90 font-bold text-sm sm:text-base px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 shadow-2xl hover:shadow-3xl transition-all duration-300 hover-scale rounded-lg sm:rounded-xl border border-white/20">
-                            استكشف خدماتنا المتطورة
-                            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                          <Button className="group bg-gradient-to-r from-white to-white/95 hover:from-white/95 hover:to-white text-primary hover:text-primary/90 font-bold 
+                                           text-sm sm:text-base md:text-lg 
+                                           px-5 sm:px-6 md:px-8 lg:px-10 
+                                           py-3 sm:py-3.5 md:py-4 
+                                           shadow-2xl hover:shadow-3xl transition-all duration-300 hover-scale rounded-lg sm:rounded-xl md:rounded-2xl border border-white/20">
+                            <span className="hidden sm:inline">استكشف خدماتنا المتطورة</span>
+                            <span className="sm:hidden">استكشف خدماتنا</span>
+                            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                           </Button>
                         </Link>
                       </div>
                     </div>
                   </div>
                   
-                  {/* Enhanced Decorative Elements */}
-                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-6 lg:right-6 opacity-40">
-                    <Star className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white animate-pulse" />
+                  {/* Responsive Decorative Elements */}
+                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 opacity-40">
+                    <Star className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white animate-pulse" />
                   </div>
-                  <div className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 lg:bottom-7 lg:left-7 opacity-30">
-                    <Globe className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white animate-float" />
+                  <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 md:bottom-6 md:left-6 opacity-30">
+                    <Globe className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white animate-float" />
                   </div>
-                  <div className="absolute top-1/3 left-2 sm:left-4 lg:left-6 opacity-20">
-                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white animate-pulse" style={{ animationDelay: '1.5s' }} />
+                  <div className="absolute top-1/3 left-2 sm:left-3 md:left-4 opacity-20">
+                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white animate-pulse" style={{ animationDelay: '1.5s' }} />
                   </div>
-                  <div className="absolute bottom-1/3 right-2 sm:right-4 lg:right-6 opacity-25">
-                    <Shield className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white animate-float" style={{ animationDelay: '2s' }} />
+                  <div className="absolute bottom-1/3 right-2 sm:right-3 md:right-4 opacity-25">
+                    <Shield className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white animate-float" style={{ animationDelay: '2s' }} />
                   </div>
                 </div>
               </div>
