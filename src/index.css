@@ -412,7 +412,11 @@
     box-shadow: 0 0 20px currentColor;
     animation: socialGlow 2s ease-in-out infinite alternate;
   }
-}
+  
+  /* Touch targets for mobile */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
   
   /* Safe area handling */
   .safe-top {
