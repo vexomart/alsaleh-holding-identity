@@ -10,16 +10,21 @@ const corsHeaders = {
 };
 
 interface InvoiceRequest {
-  transactionId: string;
+  transactionId?: string;
   action: 'generate' | 'send' | 'update';
-  customerName?: string;
-  customerEmail?: string;
-  customerPhone?: string;
-  serviceTitle?: string;
-  amount?: number;
-  currency?: string;
+  customer?: {
+    name: string;
+    email: string;
+    phone?: string;
+  };
+  invoice?: {
+    amount: number;
+    currency: string;
+    offer_title: string;
+    notes?: string;
+  };
+  invoiceId?: string;
   paymentStatus?: string;
-  notes?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -33,42 +38,33 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { transactionId, action, ...invoiceData }: InvoiceRequest = await req.json();
+    const { transactionId, action, customer, invoice, invoiceId, paymentStatus }: InvoiceRequest = await req.json();
 
     if (action === 'generate') {
       // إنشاء فاتورة جديدة
-      const { data: transaction, error: transactionError } = await supabaseClient
-        .from('payment_transactions')
-        .select('*')
-        .eq('id', transactionId)
-        .single();
-
-      if (transactionError || !transaction) {
-        throw new Error('لم يتم العثور على المعاملة');
+      if (!customer || !invoice) {
+        throw new Error('بيانات العميل والفاتورة مطلوبة');
       }
 
       // حساب الضريبة (15%)
       const taxRate = 0.15;
-      const baseAmount = Number(transaction.amount);
+      const baseAmount = Number(invoice.amount);
       const taxAmount = baseAmount * taxRate;
       const totalAmount = baseAmount + taxAmount;
 
-      const { data: invoice, error: invoiceError } = await supabaseClient
+      const { data: newInvoice, error: invoiceError } = await supabaseClient
         .from('invoices')
         .insert({
-          transaction_id: transactionId,
-          customer_name: transaction.customer_name,
-          customer_email: transaction.customer_email,
-          customer_phone: transaction.customer_phone,
-          service_title: transaction.offer_title,
+          customer_name: customer.name,
+          customer_email: customer.email,
+          customer_phone: customer.phone || null,
+          offer_title: invoice.offer_title,
           amount: baseAmount,
-          currency: transaction.currency || 'SAR',
-          payment_status: transaction.status,
-          status: 'generated',
-          tax_amount: taxAmount,
-          total_amount: totalAmount,
+          currency: invoice.currency || 'SAR',
+          payment_status: 'pending',
+          status: 'pending',
           due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 يوم
-          notes: invoiceData.notes || null
+          notes: invoice.notes || null
         })
         .select()
         .single();
@@ -79,7 +75,7 @@ const handler = async (req: Request): Promise<Response> => {
 
       return new Response(JSON.stringify({
         success: true,
-        invoice,
+        invoice: newInvoice,
         message: 'تم إنشاء الفاتورة بنجاح'
       }), {
         status: 200,
@@ -89,10 +85,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (action === 'send') {
       // إرسال الفاتورة بالإيميل
+      if (!invoiceId) {
+        throw new Error('معرف الفاتورة مطلوب');
+      }
+
       const { data: invoice, error: invoiceError } = await supabaseClient
         .from('invoices')
         .select('*')
-        .eq('transaction_id', transactionId)
+        .eq('id', invoiceId)
         .single();
 
       if (invoiceError || !invoice) {
@@ -103,10 +103,10 @@ const handler = async (req: Request): Promise<Response> => {
       let emailSubject = '';
       let emailContent = '';
       
-      if (invoice.payment_status === 'PAID') {
+      if (invoice.payment_status === 'paid') {
         emailSubject = `فاتورة مدفوعة - رقم ${invoice.invoice_number}`;
         emailContent = generatePaidInvoiceEmail(invoice);
-      } else if (invoice.payment_status === 'FAILED') {
+      } else if (invoice.payment_status === 'failed') {
         emailSubject = `فاتورة غير مدفوعة - رقم ${invoice.invoice_number}`;
         emailContent = generateUnpaidInvoiceEmail(invoice);
       } else {
@@ -139,11 +139,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (action === 'update') {
       // تحديث حالة الفاتورة
+      if (!transactionId || !paymentStatus) {
+        throw new Error('معرف المعاملة وحالة الدفع مطلوبة');
+      }
+
       const { error: updateError } = await supabaseClient
         .from('invoices')
         .update({
-          payment_status: invoiceData.paymentStatus,
-          status: invoiceData.paymentStatus === 'PAID' ? 'paid' : 'pending'
+          payment_status: paymentStatus,
+          status: paymentStatus === 'paid' ? 'paid' : 'pending'
         })
         .eq('transaction_id', transactionId);
 
@@ -248,25 +252,21 @@ function generatePaidInvoiceEmail(invoice: any): string {
                         </tr>
                         <tr>
                             <td><strong>الخدمة:</strong></td>
-                            <td>${invoice.service_title}</td>
+                            <td>${invoice.offer_title}</td>
                         </tr>
                         <tr>
                             <td><strong>تاريخ الفاتورة:</strong></td>
-                            <td>${new Date(invoice.invoice_date).toLocaleDateString('ar-SA')}</td>
+                            <td>${new Date(invoice.created_at).toLocaleDateString('ar-SA')}</td>
                         </tr>
                         <tr>
-                            <td><strong>المبلغ الأساسي:</strong></td>
+                            <td><strong>المبلغ:</strong></td>
                             <td>${invoice.amount} ${invoice.currency}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>الضريبة (15%):</strong></td>
-                            <td>${invoice.tax_amount} ${invoice.currency}</td>
                         </tr>
                     </table>
                 </div>
                 
                 <div class="amount">
-                    المبلغ الإجمالي: ${invoice.total_amount} ${invoice.currency}
+                    المبلغ الإجمالي: ${invoice.amount} ${invoice.currency}
                 </div>
                 
                 <p style="text-align: center; color: #28a745; font-weight: bold;">
