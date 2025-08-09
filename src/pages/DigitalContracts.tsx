@@ -278,108 +278,211 @@ const DigitalContracts = () => {
     `;
 
     contractElement.innerHTML = `
-      <div style="border: 3px solid #0066cc; min-height: 1043px; padding: 30px; position: relative;">
+      <div style="border: 3px solid #0066cc; min-height: 1600px; padding: 30px; position: relative;">
         <!-- إطار داخلي -->
-        <div style="border: 1px solid #ddd; min-height: 983px; padding: 20px; position: relative;">
+        <div style="border: 1px solid #ddd; min-height: 1540px; padding: 20px; position: relative;">
           
-          <!-- التاريخ -->
-          <div style="text-align: right; margin-bottom: 20px; color: #666; font-size: 12px;">
-            التاريخ: ${hijriDate}
+          <!-- الترويسة الرسمية للشركة -->
+          <div style="background: linear-gradient(135deg, #0066cc, #004499); color: white; padding: 25px; margin: -20px -20px 30px -20px; text-align: center; border-radius: 0;">
+            <!-- شعار الشركة -->
+            <div style="background: white; color: #0066cc; width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; text-align: center; line-height: 1.2; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+              <div>
+                <div style="font-size: 14px;">شركة</div>
+                <div style="font-size: 10px;">علي صالح الشهري</div>
+                <div style="font-size: 12px;">القابضة</div>
+              </div>
+            </div>
+            
+            <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+              شركة علي صالح الشهري القابضة
+            </h1>
+            <div style="font-size: 16px; margin: 10px 0; opacity: 0.9;">
+              للتقنية والحلول الرقمية المتقدمة
+            </div>
+            <div style="font-size: 14px; opacity: 0.8;">
+              السجل التجاري: 4030554749 | الرياض - المملكة العربية السعودية
+            </div>
+            <div style="border-top: 2px solid rgba(255,255,255,0.3); margin: 15px auto 0; width: 60%;"></div>
           </div>
           
-          <!-- خط أزرق -->
-          <div style="height: 3px; background: #0066cc; margin-bottom: 20px;"></div>
+          <!-- معلومات التاريخ والعقد -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 25px; background: #f8fafc; padding: 15px; border-left: 4px solid #0066cc;">
+            <div>
+              <div style="color: #0066cc; font-weight: bold; font-size: 16px;">رقم العقد: ${Date.now().toString().slice(-8)}</div>
+              <div style="color: #666; font-size: 12px; margin-top: 5px;">تاريخ الإصدار: ${hijriDate}</div>
+            </div>
+            <div style="text-align: left;">
+              <div style="color: #0066cc; font-weight: bold; font-size: 16px;">Contract No: ${Date.now().toString().slice(-8)}</div>
+              <div style="color: #666; font-size: 12px; margin-top: 5px;">Issue Date: ${contractDate}</div>
+            </div>
+          </div>
           
-          <!-- العنوان الرئيسي -->
-          <h1 style="text-align: center; color: #0066cc; font-size: 24px; margin: 20px 0; font-weight: bold;">
-            عقد تقديم خدمات تقنية
+          <!-- العنوان الرئيسي للعقد -->
+          <h1 style="text-align: center; color: #0066cc; font-size: 26px; margin: 30px 0; font-weight: bold; border: 2px solid #0066cc; padding: 15px; background: linear-gradient(45deg, #f0f8ff, #e6f3ff);">
+            عقد تقديم الخدمات التقنية والاستشارية
           </h1>
           
-          <!-- الطرف الأول -->
-          <div style="background: #f0f8ff; border: 2px solid #0066cc; padding: 20px; margin: 20px 0;">
-            <h2 style="color: #0066cc; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
-              الطرف الأول - مقدم الخدمة
+          <!-- مقدمة العقد -->
+          <div style="background: #f8fafc; border: 2px solid #ddd; padding: 20px; margin: 25px 0; border-radius: 8px;">
+            <p style="font-size: 14px; line-height: 1.8; margin: 0; text-align: justify;">
+              بحمد الله وتوفيقه، يُبرم هذا العقد بين الطرفين المذكورين أدناه، وذلك وفقاً لأحكام النظام التجاري السعودي ولوائحه التنفيذية، 
+              ونظام العمل والعمال، واللوائح والقرارات ذات العلاقة المعمول بها في المملكة العربية السعودية، 
+              وقد اتفق الطرفان على الشروط والأحكام التالية:
+            </p>
+          </div>
+          
+          <!-- معلومات الطرف الأول -->
+          <div style="background: #f0f8ff; border: 3px solid #0066cc; padding: 25px; margin: 25px 0; border-radius: 10px;">
+            <h2 style="color: #0066cc; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #0066cc; padding-bottom: 10px;">
+              الطرف الأول - مقدم الخدمة (المقاول)
             </h2>
-            <div style="font-size: 13px; line-height: 1.8;">
-              <div><strong>اسم الشركة:</strong> شركة علي صالح الشهري القابضة</div>
-              <div><strong>العنوان:</strong> الرياض، المملكة العربية السعودية</div>
-              <div><strong>البريد الإلكتروني:</strong> info@alialshehriholding.com</div>
-              <div><strong>الهاتف:</strong> +966 567 812 555</div>
+            <div style="font-size: 14px; line-height: 2;">
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">اسم الشركة:</span> شركة علي صالح الشهري القابضة</div>
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">السجل التجاري:</span> 4030554749</div>
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الرقم الضريبي:</span> 300445123700003</div>
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">العنوان:</span> الرياض، حي النرجس، المملكة العربية السعودية</div>
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">البريد الإلكتروني:</span> info@alialshehriholding.com</div>
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الهاتف:</span> +966 567 812 555</div>
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الممثل القانوني:</span> علي صالح الشهري</div>
             </div>
           </div>
           
-          <!-- الطرف الثاني -->
-          <div style="background: #f0f8ff; border: 2px solid #0066cc; padding: 20px; margin: 20px 0;">
-            <h2 style="color: #0066cc; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
-              الطرف الثاني - العميل
+          <!-- معلومات الطرف الثاني -->
+          <div style="background: #f0f8ff; border: 3px solid #0066cc; padding: 25px; margin: 25px 0; border-radius: 10px;">
+            <h2 style="color: #0066cc; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #0066cc; padding-bottom: 10px;">
+              الطرف الثاني - العميل (صاحب العمل)
             </h2>
-            <div style="font-size: 13px; line-height: 1.8;">
-              <div><strong>الاسم:</strong> ${formData.clientName || 'علي صالح الشهري'}</div>
-              <div><strong>البريد الإلكتروني:</strong> ${formData.clientEmail || 'ali6c205@gmail.com'}</div>
-              ${formData.clientPhone ? `<div><strong>الهاتف:</strong> ${formData.clientPhone}</div>` : ''}
-              ${formData.clientIdNumber ? `<div><strong>رقم الهوية:</strong> ${formData.clientIdNumber}</div>` : ''}
+            <div style="font-size: 14px; line-height: 2;">
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الاسم:</span> ${formData.clientName || 'علي صالح الشهري'}</div>
+              <div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">البريد الإلكتروني:</span> ${formData.clientEmail || 'ali6c205@gmail.com'}</div>
+              ${formData.clientPhone ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الهاتف:</span> ${formData.clientPhone}</div>` : ''}
+              ${formData.clientIdNumber ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">رقم الهوية:</span> ${formData.clientIdNumber}</div>` : ''}
+              ${formData.clientAddress ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">العنوان:</span> ${formData.clientAddress}</div>` : ''}
+              ${formData.commercialRegister ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">السجل التجاري:</span> ${formData.commercialRegister}</div>` : ''}
+              ${formData.taxNumber ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">الرقم الضريبي:</span> ${formData.taxNumber}</div>` : ''}
+              ${formData.authorizedPerson ? `<div style="display: flex; margin-bottom: 8px;"><span style="font-weight: bold; width: 150px;">المخول بالتوقيع:</span> ${formData.authorizedPerson}</div>` : ''}
             </div>
           </div>
           
-          <!-- تفاصيل الخدمة -->
-          <div style="background: #f0fff0; border: 2px solid #009600; padding: 20px; margin: 20px 0;">
-            <h2 style="color: #009600; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
-              تفاصيل الخدمة المطلوبة
+          <!-- تفاصيل الخدمة والنطاق -->
+          <div style="background: #f0fff0; border: 3px solid #009600; padding: 25px; margin: 25px 0; border-radius: 10px;">
+            <h2 style="color: #009600; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #009600; padding-bottom: 10px;">
+              المادة الأولى: موضوع العقد ونطاق العمل
             </h2>
-            <div style="font-size: 13px; line-height: 1.8;">
-              <div><strong>نوع الخدمة:</strong> ${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</div>
-              <div><strong>وصف الخدمة:</strong> ${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</div>
-              <div><strong>قيمة الخدمة:</strong> ${selectedOfferDetails?.price || '15'} ريال سعودي</div>
-              <div><strong>مدة التنفيذ:</strong> ${selectedOfferDetails?.duration || '3-4 أسابيع'}</div>
+            <div style="font-size: 14px; line-height: 2;">
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">نوع الخدمة:</span> ${selectedOfferDetails?.title || 'عرض الموقع الاحترافي الكامل'}</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">وصف الخدمة:</span> ${formData.serviceDescription || selectedOfferDetails?.title || 'تطوير وتصميم موقع إلكتروني متكامل'}</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">المتطلبات الخاصة:</span> ${formData.customRequirements || 'وفقاً للمواصفات المتفق عليها'}</div>
+              
+              <h3 style="color: #009600; margin: 20px 0 10px 0;">المخرجات المتوقعة:</h3>
+              <ul style="margin: 10px 0; padding-right: 20px;">
+                ${selectedOfferDetails?.features?.map(feature => `<li style="margin-bottom: 5px;">${feature}</li>`).join('') || 
+                  '<li>تصميم وتطوير موقع إلكتروني احترافي</li><li>استضافة مجانية لمدة سنة</li><li>دعم فني شامل</li>'}
+              </ul>
             </div>
           </div>
           
-          <!-- الشروط والأحكام -->
-          <div style="background: #fffcdc; border: 2px solid #ffb400; padding: 20px; margin: 20px 0;">
-            <h2 style="color: #cc8c00; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
-              الشروط والأحكام
+          <!-- المادة المالية -->
+          <div style="background: #fff5f5; border: 3px solid #dc2626; padding: 25px; margin: 25px 0; border-radius: 10px;">
+            <h2 style="color: #dc2626; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #dc2626; padding-bottom: 10px;">
+              المادة الثانية: القيمة المالية وطريقة الدفع
             </h2>
-            <div style="font-size: 12px; line-height: 1.8;">
-              <div>• تم الاتفاق بين الطرفين على تنفيذ الخدمة المذكورة أعلاه</div>
-              <div>• إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين</div>
-              <div>• يتم اعتماد العقد نهائياً بعد الدفع عن طريق التحويل البنكي لحساب الشركة</div>
-              <div>• الشركة ملتزمة بتقديم الخدمة وفقاً للمواصفات المتفق عليها</div>
-              <div>• العميل ملتزم بدفع المبلغ المتفق عليه في المواعيد المحددة</div>
+            <div style="font-size: 14px; line-height: 2;">
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">القيمة الإجمالية للعقد:</span> ${selectedOfferDetails?.price || '15'} ريال سعودي</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">ضريبة القيمة المضافة (15%):</span> ${(parseFloat(selectedOfferDetails?.price || '15') * 0.15).toFixed(2)} ريال سعودي</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">إجمالي المبلغ شامل الضريبة:</span> ${(parseFloat(selectedOfferDetails?.price || '15') * 1.15).toFixed(2)} ريال سعودي</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">طريقة الدفع:</span> تحويل بنكي</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">الدفعة المقدمة (50%):</span> ${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">الدفعة الأخيرة (50%):</span> ${(parseFloat(selectedOfferDetails?.price || '15') * 1.15 * 0.5).toFixed(2)} ريال سعودي</div>
+            </div>
+          </div>
+          
+          <!-- الجدول الزمني -->
+          <div style="background: #f0f4ff; border: 3px solid #6366f1; padding: 25px; margin: 25px 0; border-radius: 10px;">
+            <h2 style="color: #6366f1; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #6366f1; padding-bottom: 10px;">
+              المادة الثالثة: الجدول الزمني للتنفيذ
+            </h2>
+            <div style="font-size: 14px; line-height: 2;">
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">مدة التنفيذ الإجمالية:</span> ${selectedOfferDetails?.duration || '3-4 أسابيع'}</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">تاريخ بداية العمل:</span> خلال 3 أيام عمل من استلام الدفعة المقدمة</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">تاريخ التسليم المتوقع:</span> يحدد بعد بداية العمل وفقاً للجدول الزمني</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 200px;">فترة الضمان:</span> 6 أشهر من تاريخ التسليم النهائي</div>
+            </div>
+          </div>
+          
+          <!-- الشروط والأحكام التفصيلية -->
+          <div style="background: #fffbeb; border: 3px solid #f59e0b; padding: 25px; margin: 25px 0; border-radius: 10px;">
+            <h2 style="color: #d97706; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #f59e0b; padding-bottom: 10px;">
+              المادة الرابعة: الشروط والأحكام العامة
+            </h2>
+            <div style="font-size: 13px; line-height: 1.8;">
+              <h3 style="color: #d97706; margin: 15px 0 10px 0;">4.1 التزامات الطرف الأول (مقدم الخدمة):</h3>
+              <ul style="margin: 10px 0; padding-right: 20px;">
+                <li>تنفيذ الخدمة وفقاً للمواصفات والمعايير المتفق عليها</li>
+                <li>الالتزام بالجدول الزمني المحدد للتسليم</li>
+                <li>توفير الدعم الفني اللازم خلال فترة التنفيذ</li>
+                <li>ضمان جودة العمل وفقاً لأفضل الممارسات المهنية</li>
+                <li>المحافظة على سرية المعلومات والبيانات</li>
+              </ul>
+              
+              <h3 style="color: #d97706; margin: 15px 0 10px 0;">4.2 التزامات الطرف الثاني (العميل):</h3>
+              <ul style="margin: 10px 0; padding-right: 20px;">
+                <li>دفع المبالغ المستحقة في المواعيد المحددة</li>
+                <li>توفير المعلومات والبيانات اللازمة للمشروع</li>
+                <li>التعاون مع فريق العمل وتقديم التغذية الراجعة</li>
+                <li>مراجعة واعتماد المراحل المختلفة للمشروع</li>
+              </ul>
+              
+              <h3 style="color: #d97706; margin: 15px 0 10px 0;">4.3 أحكام عامة:</h3>
+              <ul style="margin: 10px 0; padding-right: 20px;">
+                <li>يعتبر هذا العقد ساري المفعول من تاريخ توقيعه من الطرفين</li>
+                <li>إرسال العقد للمراجعة لا يعني الاتفاق النهائي بين الطرفين</li>
+                <li>يتم اعتماد العقد نهائياً بعد الدفع والبدء في تنفيذ الخدمة</li>
+                <li>أي تعديل على هذا العقد يجب أن يكون كتابياً وموقعاً من الطرفين</li>
+                <li>في حالة النزاع، يحال الأمر للجهات المختصة في المملكة العربية السعودية</li>
+                <li>يخضع هذا العقد لأحكام النظام التجاري السعودي</li>
+              </ul>
             </div>
           </div>
           
           <!-- معلومات الحساب البنكي -->
-          <div style="background: #f0fff0; border: 2px solid #009600; padding: 20px; margin: 20px 0; position: relative;">
+          <div style="background: #f0fff4; border: 3px solid #10b981; padding: 25px; margin: 25px 0; border-radius: 10px; position: relative;">
             <!-- شعار البنك -->
-            <div style="position: absolute; left: 20px; top: 20px; background: #0066cc; color: white; padding: 8px 12px; border-radius: 4px; font-size: 10px; text-align: center;">
-              <div>مصرف</div>
-              <div>الراجحي</div>
+            <div style="position: absolute; left: 20px; top: 20px; background: #0066cc; color: white; padding: 10px 15px; border-radius: 8px; font-size: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+              <div style="font-weight: bold;">مصرف</div>
+              <div style="font-weight: bold;">الراجحي</div>
             </div>
             
-            <h2 style="color: #009600; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">
-              معلومات الحساب البنكي للدفع
+            <h2 style="color: #10b981; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; border-bottom: 2px solid #10b981; padding-bottom: 10px;">
+              المادة الخامسة: معلومات الحساب البنكي للدفع
             </h2>
-            <div style="font-size: 13px; line-height: 1.8;">
-              <div><strong>اسم البنك:</strong> مصرف الراجحي</div>
-              <div><strong>اسم الحساب:</strong> شركة علي صالح الشهري القابضة</div>
-              <div><strong>رقم الحساب:</strong> 161000010006086071040</div>
-              <div><strong>رقم الآيبان:</strong> SA1980000161608016071040</div>
+            <div style="font-size: 14px; line-height: 2;">
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">اسم البنك:</span> مصرف الراجحي</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">اسم الحساب:</span> شركة علي صالح الشهري القابضة</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">رقم الحساب:</span> 161000010006086071040</div>
+              <div style="display: flex; margin-bottom: 10px;"><span style="font-weight: bold; width: 150px;">رقم الآيبان:</span> SA1980000161608016071040</div>
+              <div style="background: #fef3c7; padding: 15px; margin-top: 15px; border-radius: 5px; border-left: 4px solid #f59e0b;">
+                <strong>ملاحظة مهمة:</strong> يرجى إرسال إيصال التحويل فور إتمام الدفع لتفعيل العقد وبدء العمل.
+              </div>
             </div>
           </div>
           
           <!-- منطقة التوقيعات -->
-          <div style="background: #f8fafc; border: 2px solid #666; padding: 20px; margin: 20px 0;">
-            <div style="display: flex; justify-content: space-between; gap: 20px;">
+          <div style="background: #f8fafc; border: 3px solid #374151; padding: 25px; margin: 25px 0; border-radius: 10px;">
+            <h2 style="color: #374151; font-size: 18px; margin: 0 0 20px 0; font-weight: bold; text-align: center;">
+              التوقيعات والاعتماد
+            </h2>
+            <div style="display: flex; justify-content: space-between; gap: 30px;">
               <!-- توقيع الطرف الأول مع الختم الرقمي -->
-              <div style="border: 2px solid #0066cc; padding: 15px; flex: 1; text-align: center; min-height: 120px; position: relative;">
-                <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px;">الطرف الأول - مقدم الخدمة</div>
-                <div style="font-size: 12px; margin-bottom: 5px;">شركة علي صالح الشهري القابضة</div>
+              <div style="border: 3px solid #0066cc; padding: 20px; flex: 1; text-align: center; min-height: 150px; position: relative; border-radius: 8px; background: white;">
+                <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px; font-size: 14px;">الطرف الأول - مقدم الخدمة</div>
+                <div style="font-size: 13px; margin-bottom: 10px; color: #666;">شركة علي صالح الشهري القابضة</div>
                 
                 <!-- الختم الرقمي -->
-                <div style="margin: 10px auto; display: flex; justify-content: center;">
+                <div style="margin: 15px auto; display: flex; justify-content: center;">
                   <div style="
-                    width: 80px;
-                    height: 80px;
+                    width: 90px;
+                    height: 90px;
                     border: 3px solid #0066cc;
                     border-radius: 50%;
                     display: flex;
@@ -388,15 +491,16 @@ const DigitalContracts = () => {
                     justify-content: center;
                     text-align: center;
                     direction: rtl;
-                    fontSize: 7px;
+                    font-size: 7px;
                     font-weight: bold;
                     color: #0066cc;
                     font-family: Arial, sans-serif;
                     line-height: 1.1;
-                    padding: 6px;
+                    padding: 8px;
                     box-sizing: border-box;
                     position: relative;
                     background: white;
+                    box-shadow: 0 2px 8px rgba(0,102,204,0.3);
                   ">
                     <div style="font-size: 8px; font-weight: bold; margin-bottom: 2px;">شركة علي صالح الشهري القابضة</div>
                     <div style="font-size: 6px; margin-bottom: 1px;">سجل تجاري</div>
@@ -416,14 +520,16 @@ const DigitalContracts = () => {
                   </div>
                 </div>
                 
-                <div style="font-size: 10px; margin-top: 5px;">التوقيع والختم</div>
+                <div style="margin-top: 10px; border-bottom: 2px solid #0066cc; width: 120px; margin-left: auto; margin-right: auto;"></div>
+                <div style="font-size: 11px; margin-top: 8px; color: #666;">التوقيع والختم</div>
+                <div style="font-size: 10px; margin-top: 5px; color: #999;">التاريخ: ${hijriDate}</div>
               </div>
               
               <!-- توقيع الطرف الثاني -->
-              <div style="border: 2px solid #0066cc; padding: 15px; flex: 1; text-align: center; min-height: 120px; position: relative;">
-                <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px;">الطرف الثاني - العميل</div>
-                <div style="font-size: 12px; margin-bottom: 5px;">${formData.clientName || 'علي صالح الشهري'}</div>
-                <div id="signature-area" style="margin-top: 20px; height: 60px; display: flex; align-items: center; justify-content: center;">
+              <div style="border: 3px solid #0066cc; padding: 20px; flex: 1; text-align: center; min-height: 150px; position: relative; border-radius: 8px; background: white;">
+                <div style="color: #0066cc; font-weight: bold; margin-bottom: 10px; font-size: 14px;">الطرف الثاني - العميل</div>
+                <div style="font-size: 13px; margin-bottom: 15px; color: #666;">${formData.clientName || 'علي صالح الشهري'}</div>
+                <div id="signature-area" style="margin: 20px auto; height: 70px; display: flex; align-items: center; justify-content: center;">
                   ${(() => {
                     const canvas = signatureCanvasRef.current;
                     if (canvas) {
@@ -438,24 +544,32 @@ const DigitalContracts = () => {
                           
                           if (hasSignature) {
                             const signatureData = canvas.toDataURL('image/png');
-                            return `<img src="${signatureData}" style="max-width: 100%; max-height: 60px;" alt="توقيع العميل" />`;
+                            return `<img src="${signatureData}" style="max-width: 100%; max-height: 70px; border: 1px solid #ddd; border-radius: 4px;" alt="توقيع العميل" />`;
                           }
                         }
                       } catch (error) {
                         console.error('خطأ في إضافة التوقيع:', error);
                       }
                     }
-                    return '<div style="border-bottom: 1px solid #000; width: 150px; margin: 0 auto;"></div><div style="font-size: 10px; margin-top: 5px;">التوقيع</div>';
+                    return '<div style="border-bottom: 2px solid #0066cc; width: 120px; margin: 0 auto;"></div>';
                   })()}
                 </div>
+                <div style="font-size: 11px; margin-top: 8px; color: #666;">التوقيع</div>
+                <div style="font-size: 10px; margin-top: 5px; color: #999;">التاريخ: ${hijriDate}</div>
               </div>
             </div>
           </div>
           
-          <!-- التذييل -->
-          <div style="margin-top: 30px; border-top: 2px solid #0066cc; padding-top: 15px; text-align: center;">
-            <div style="color: #666; font-size: 12px;">
-              تم إنشاء هذا العقد بتاريخ: ${contractDate}
+          <!-- التذييل الرسمي -->
+          <div style="margin-top: 40px; border-top: 3px solid #0066cc; padding-top: 20px; text-align: center; background: #f8fafc; margin-left: -20px; margin-right: -20px; margin-bottom: -20px; padding-left: 20px; padding-right: 20px; padding-bottom: 20px;">
+            <div style="color: #0066cc; font-size: 16px; font-weight: bold; margin-bottom: 10px;">
+              شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية
+            </div>
+            <div style="color: #666; font-size: 12px; margin-bottom: 5px;">
+              تم إنشاء هذا العقد بتاريخ: ${contractDate} الموافق ${hijriDate}
+            </div>
+            <div style="color: #666; font-size: 11px;">
+              العنوان: الرياض - حي النرجس | الهاتف: +966 567 812 555 | البريد الإلكتروني: info@alialshehriholding.com
             </div>
           </div>
         </div>
