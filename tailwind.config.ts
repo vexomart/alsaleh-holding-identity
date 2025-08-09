@@ -28,6 +28,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'arabic': ['Cairo', 'Amiri', 'Segoe UI', 'Tahoma', 'sans-serif'],
+        'amiri': ['Amiri', 'serif'],
+        'cairo': ['Cairo', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

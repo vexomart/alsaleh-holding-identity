@@ -1,97 +1,106 @@
 import React from 'react';
 
 interface DigitalStampProps {
-  companyName?: string;
-  registrationNumber?: string;
-  size?: 'small' | 'medium' | 'large';
   className?: string;
 }
 
-const DigitalStamp: React.FC<DigitalStampProps> = ({
-  companyName = "شركة علي صالح الشهري القابضة",
-  registrationNumber = "4030554749",
-  size = 'medium',
-  className = ''
-}) => {
-  const sizeStyles = {
-    small: {
-      width: '80px',
-      height: '80px',
-      fontSize: '6px',
-      borderWidth: '2px'
-    },
-    medium: {
-      width: '120px',
-      height: '120px',
-      fontSize: '8px',
-      borderWidth: '3px'
-    },
-    large: {
-      width: '160px',
-      height: '160px',
-      fontSize: '10px',
-      borderWidth: '4px'
-    }
-  };
-
-  const currentSize = sizeStyles[size];
-
-  const stampStyle: React.CSSProperties = {
-    width: currentSize.width,
-    height: currentSize.height,
-    border: `${currentSize.borderWidth} solid #0066cc`,
-    borderRadius: '50%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    direction: 'rtl',
-    fontSize: currentSize.fontSize,
-    fontWeight: 'bold',
-    color: '#0066cc',
-    fontFamily: 'Arial, sans-serif',
-    lineHeight: '1.1',
-    padding: '8px',
-    boxSizing: 'border-box',
-    position: 'relative',
-    background: 'white'
-  };
-
+const DigitalStamp: React.FC<DigitalStampProps> = ({ className = "" }) => {
   return (
-    <div className={`digital-stamp ${className}`} style={stampStyle}>
-      <div style={{ 
-        fontSize: `${parseInt(currentSize.fontSize) + 1}px`,
-        fontWeight: 'bold',
-        marginBottom: '4px'
-      }}>
-        {companyName}
-      </div>
-      <div style={{
-        fontSize: currentSize.fontSize,
-        marginBottom: '2px'
-      }}>
-        سجل تجاري
-      </div>
-      <div style={{
-        fontSize: currentSize.fontSize,
-        fontWeight: 'bold'
-      }}>
-        {registrationNumber}
-      </div>
-      
-      {/* دائرة داخلية للزينة */}
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '70%',
-        height: '70%',
-        border: '1px solid #0066cc',
-        borderRadius: '50%',
-        opacity: 0.3
-      }} />
+    <div className={`relative ${className}`}>
+      <svg 
+        width="120" 
+        height="120" 
+        viewBox="0 0 120 120" 
+        className="text-primary opacity-20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Outer Circle */}
+        <circle 
+          cx="60" 
+          cy="60" 
+          r="55" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="2"
+        />
+        
+        {/* Inner Circle */}
+        <circle 
+          cx="60" 
+          cy="60" 
+          r="45" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="1"
+        />
+        
+        {/* Company Name - Top Arc */}
+        <path
+          id="topArc"
+          d="M 15 60 A 45 45 0 0 1 105 60"
+          fill="none"
+          stroke="none"
+        />
+        <text 
+          fontSize="10" 
+          fontWeight="bold" 
+          fill="currentColor"
+          textAnchor="middle"
+        >
+          <textPath href="#topArc" startOffset="50%">
+            شركة إمكان للحلول الرقمية
+          </textPath>
+        </text>
+        
+        {/* Company Name English - Bottom Arc */}
+        <path
+          id="bottomArc"
+          d="M 105 60 A 45 45 0 0 1 15 60"
+          fill="none"
+          stroke="none"
+        />
+        <text 
+          fontSize="8" 
+          fill="currentColor"
+          textAnchor="middle"
+        >
+          <textPath href="#bottomArc" startOffset="50%">
+            EMKAN DIGITAL SOLUTIONS
+          </textPath>
+        </text>
+        
+        {/* Center Content */}
+        <text 
+          x="60" 
+          y="55" 
+          textAnchor="middle" 
+          fontSize="12" 
+          fontWeight="bold" 
+          fill="currentColor"
+        >
+          معتمد
+        </text>
+        <text 
+          x="60" 
+          y="70" 
+          textAnchor="middle" 
+          fontSize="8" 
+          fill="currentColor"
+        >
+          CERTIFIED
+        </text>
+        
+        {/* Date */}
+        <text 
+          x="60" 
+          y="85" 
+          textAnchor="middle" 
+          fontSize="6" 
+          fill="currentColor"
+        >
+          {new Date().getFullYear()}
+        </text>
+      </svg>
     </div>
   );
 };
