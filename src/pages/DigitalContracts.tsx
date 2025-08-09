@@ -282,85 +282,82 @@ const DigitalContracts = () => {
     `;
 
     contractElement.innerHTML = `
-      <div style="border: 4px solid #0066cc; min-height: auto; padding: 50px; position: relative; background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);">
-        <!-- إطار داخلي -->
-        <div style="border: 2px solid #e2e8f0; min-height: auto; padding: 45px; position: relative; border-radius: 8px; background: white;">
+      <!-- العقد الأساسي -->
+      <div style="background: white; position: relative; min-height: 100vh;">
+        
+        <!-- الترويسة الرسمية الجديدة -->
+        <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%); color: white; padding: 60px 40px; text-align: center; position: relative; overflow: hidden;">
+          <!-- تأثير زخرفي في الخلفية -->
+          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"grain\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\"><circle cx=\"20\" cy=\"20\" r=\"2\" fill=\"white\" opacity=\"0.1\"/><circle cx=\"80\" cy=\"20\" r=\"2\" fill=\"white\" opacity=\"0.1\"/><circle cx=\"50\" cy=\"50\" r=\"2\" fill=\"white\" opacity=\"0.1\"/><circle cx=\"20\" cy=\"80\" r=\"2\" fill=\"white\" opacity=\"0.1\"/><circle cx=\"80\" cy=\"80\" r=\"2\" fill=\"white\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23grain)\"/></svg>'); opacity: 0.3;"></div>
           
-          <!-- الترويسة الرسمية المطورة -->
-          <div style="background: linear-gradient(135deg, #0066cc 0%, #1e40af 50%, #1e3a8a 100%); color: white; padding: 40px; margin: -30px -30px 50px -30px; border-radius: 0; position: relative; overflow: hidden;">
-            <!-- خلفية مزخرفة -->
-            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 2px, transparent 2px), radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 2px, transparent 2px); background-size: 30px 30px; opacity: 0.3;"></div>
+          <!-- الشعار والاسم -->
+          <div style="position: relative; z-index: 2;">
+            <div style="background: white; color: #1e3a8a; width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 6px solid rgba(255,255,255,0.9);">
+              <div style="text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">🏢</div>
+                <div style="font-size: 14px; color: #1e3a8a; line-height: 1.1; font-weight: bold;">Ali Saleh<br/>Al-Shehri<br/>Holding</div>
+                <div style="font-size: 10px; margin-top: 6px; color: #64748b; font-weight: normal;">Technology Solutions</div>
+              </div>
+            </div>
             
-            <!-- المحتوى الرئيسي للترويسة -->
-            <div style="position: relative; z-index: 2;">
-              <!-- شعار الشركة المطور ومتجاوب -->
-              <div style="background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); color: #0066cc; width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-align: center; line-height: 1.1; box-shadow: 0 8px 25px rgba(0,0,0,0.4); border: 4px solid #f8fafc; position: relative;">
-                <div style="text-align: center;">
-                  <div style="font-size: 16px; margin-bottom: 4px;">🏢</div>
-                  <div style="font-size: 11px; color: #1e40af; line-height: 1;">Ali Saleh</div>
-                  <div style="font-size: 11px; color: #0066cc; line-height: 1;">Al-Shehri</div>
-                  <div style="font-size: 11px; font-weight: bold; color: #1e3a8a; line-height: 1;">Holding</div>
-                  <div style="font-size: 8px; margin-top: 3px; color: #64748b;">⚡ Tech Solutions ⚡</div>
-                </div>
-                <!-- حلقة زخرفية -->
-                <div style="position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;"></div>
+            <h1 style="margin: 0 0 20px 0; font-size: 32px; font-weight: bold; text-shadow: 0 4px 12px rgba(0,0,0,0.5); letter-spacing: 1px;">
+              شركة علي صالح الشهري القابضة
+            </h1>
+            <div style="font-size: 20px; margin-bottom: 15px; opacity: 0.95; font-weight: 500;">
+              للتقنية والحلول الرقمية المتقدمة
+            </div>
+            <div style="font-size: 16px; opacity: 0.9; margin-bottom: 30px;">
+              السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية
+            </div>
+            
+            <!-- معلومات الاتصال في تخطيط أنيق -->
+            <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 30px;">
+              <div style="background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">
+                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">📞 الهاتف</div>
+                <div style="font-size: 16px; font-weight: bold;">0555812567</div>
               </div>
-              
-              <h1 style="margin: 0; font-size: 20px; font-weight: bold; text-shadow: 0 3px 8px rgba(0,0,0,0.5); text-align: center; letter-spacing: 0.3px; line-height: 1.2;">
-                Ali Saleh Al-Shehri Holding Company
-              </h1>
-              <div style="font-size: 16px; margin: 15px 0; opacity: 0.95; text-align: center; font-weight: 500;">
-                🚀 للتقنية والحلول الرقمية المتقدمة 🌟
+              <div style="background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">
+                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">📧 البريد الإلكتروني</div>
+                <div style="font-size: 14px; font-weight: bold;">info@alialshehriholding.com</div>
               </div>
-              <div style="font-size: 14px; opacity: 0.9; text-align: center; margin-bottom: 20px;">
-                📍 السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية 🇸🇦
-              </div>
-              
-              <!-- جدول معلومات الشركة المطور والمتجاوب -->
-              <table style="width: 100%; margin-top: 20px; border-collapse: collapse; background: rgba(255,255,255,0.15); border-radius: 10px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.25); font-size: 11px;">
-                <tr>
-                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">📞 الهاتف</td>
-                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">0555812567</td>
-                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">📧 البريد الإلكتروني</td>
-                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center; font-size: 10px;">info@alialshehriholding.com</td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">🏛️ الرقم الضريبي</td>
-                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">300445123700003</td>
-                  <td style="padding: 10px 8px; border: 1px solid rgba(255,255,255,0.4); color: white; font-weight: bold; text-align: center;">👤 المدير العام</td>
-                  <td style="padding: 15px; border: 1px solid rgba(255,255,255,0.4); color: white; text-align: center;">علي صالح الشهري</td>
-                </tr>
-              </table>
-              
-              <div style="border-top: 4px solid rgba(255,255,255,0.5); margin: 30px auto 0; width: 80%; border-radius: 2px;"></div>
             </div>
           </div>
-          
-          <!-- معلومات التاريخ والعقد المطورة -->
-          <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border: 4px solid #0066cc; padding: 30px; margin-bottom: 50px; border-radius: 20px; box-shadow: 0 12px 35px rgba(0,102,204,0.2);">
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr>
-                <td style="width: 50%; padding: 20px; border: 3px solid #0066cc; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
-                  <div style="color: #0066cc; font-weight: bold; font-size: 24px; margin-bottom: 15px;">📋 رقم العقد الرسمي</div>
-                  <div style="font-size: 28px; font-weight: bold; color: #1e40af; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">ASH-${Date.now().toString().slice(-8)}</div>
-                  <div style="color: #64748b; font-size: 16px; margin-top: 12px;">📅 تاريخ الإصدار الهجري</div>
-                  <div style="color: #334155; font-size: 18px; font-weight: bold; margin-top: 5px;">${hijriDate}</div>
-                </td>
-                <td style="width: 50%; padding: 20px; border: 3px solid #0066cc; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
-                  <div style="color: #0066cc; font-weight: bold; font-size: 24px; margin-bottom: 15px;">🗓️ Contract Number</div>
-                  <div style="font-size: 28px; font-weight: bold; color: #1e40af; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">ASH-${Date.now().toString().slice(-8)}</div>
-                  <div style="color: #64748b; font-size: 16px; margin-top: 12px;">📆 Issue Date (Gregorian)</div>
-                  <div style="color: #334155; font-size: 18px; font-weight: bold; margin-top: 5px;">${contractDate}</div>
-                </td>
-              </tr>
-            </table>
+        </div>
+        
+        <!-- معلومات العقد والتاريخ -->
+        <div style="padding: 40px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+          <div style="max-width: 800px; margin: 0 auto;">
+            <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+              
+              <!-- رقم العقد -->
+              <div style="flex: 1; min-width: 300px; background: white; border: 3px solid #3b82f6; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 15px 35px rgba(59,130,246,0.2);">
+                <div style="color: #3b82f6; font-size: 18px; font-weight: bold; margin-bottom: 15px;">📋 رقم العقد</div>
+                <div style="font-size: 32px; font-weight: bold; color: #1e3a8a; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">ASH-${Date.now().toString().slice(-8)}</div>
+                <div style="color: #64748b; font-size: 14px; margin-bottom: 8px;">تاريخ الإصدار</div>
+                <div style="color: #1e3a8a; font-size: 16px; font-weight: bold;">${contractDate}</div>
+              </div>
+              
+              <!-- التاريخ الهجري -->
+              <div style="flex: 1; min-width: 300px; background: white; border: 3px solid #10b981; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 15px 35px rgba(16,185,129,0.2);">
+                <div style="color: #10b981; font-size: 18px; font-weight: bold; margin-bottom: 15px;">🗓️ التاريخ الهجري</div>
+                <div style="font-size: 28px; font-weight: bold; color: #065f46; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">${hijriDate}</div>
+                <div style="color: #64748b; font-size: 14px; margin-bottom: 8px;">الموافق للميلادي</div>
+                <div style="color: #065f46; font-size: 16px; font-weight: bold;">${contractDate}</div>
+              </div>
+            </div>
           </div>
-          
-          <!-- العنوان الرئيسي للعقد المطور -->
-          <h1 style="text-align: center; color: #0066cc; font-size: 38px; margin: 60px 0; font-weight: bold; border: 5px solid #0066cc; padding: 35px; background: linear-gradient(135deg, #f0f8ff 0%, #dbeafe 30%, #bfdbfe 70%, #93c5fd 100%); border-radius: 20px; box-shadow: 0 15px 40px rgba(0,102,204,0.3); text-shadow: 0 3px 6px rgba(0,0,0,0.1);">
-            📋 عقد تقديم الخدمات التقنية والاستشارية 💼
-            <div style="font-size: 16px; margin-top: 15px; color: #64748b; font-weight: normal;">تحت إشراف الأنظمة السعودية المعتمدة</div>
+        </div>
+        
+        <!-- العنوان الرئيسي للعقد -->
+        <div style="padding: 60px 40px; text-align: center; background: white;">
+          <h1 style="color: #1e3a8a; font-size: 42px; font-weight: bold; margin: 0 0 30px 0; text-shadow: 0 4px 8px rgba(0,0,0,0.1); line-height: 1.3;">
+            عقد تقديم الخدمات التقنية والاستشارية
           </h1>
+          <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%); border: 3px solid #3b82f6; border-radius: 15px; padding: 25px; max-width: 600px; margin: 0 auto;">
+            <div style="font-size: 18px; color: #1e3a8a; font-weight: 600;">⚖️ تحت إشراف الأنظمة السعودية المعتمدة</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 10px;">وفقاً للوائح والقوانين المعمول بها في المملكة العربية السعودية</div>
+          </div>
+        </div>
           
           <!-- الأساس القانوني والنظامي -->
           <div style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 50%, #fed7aa 100%); border: 4px solid #f59e0b; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(245,158,11,0.2);">
