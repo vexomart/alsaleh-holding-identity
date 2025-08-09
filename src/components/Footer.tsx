@@ -189,12 +189,70 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { name: "فيسبوك", href: "https://facebook.com/AliAlshehriHolding", icon: Facebook, color: "hover:text-blue-400" },
-    { name: "تويتر", href: "https://twitter.com/AliAlshehriHold", icon: Twitter, color: "hover:text-sky-400" },
-    { name: "إنستغرام", href: "https://instagram.com/alialshehriholds", icon: Instagram, color: "hover:text-pink-400" },
-    { name: "لينكدإن", href: "https://linkedin.com/company/ali-alshehri-holding", icon: Linkedin, color: "hover:text-blue-600" },
-    { name: "يوتيوب", href: "https://youtube.com/@AliAlshehriHolding", icon: Youtube, color: "hover:text-red-500" },
-    { name: "واتساب", href: "https://wa.me/966555812567", icon: MessageSquare, color: "hover:text-green-400" }
+    { 
+      name: "فيسبوك", 
+      href: "https://facebook.com/ash.holdings", 
+      icon: Facebook, 
+      color: "hover:text-blue-400",
+      bgColor: "hover:bg-blue-500/20",
+      borderColor: "hover:border-blue-400/50"
+    },
+    { 
+      name: "تويتر", 
+      href: "https://twitter.com/ash_holdings", 
+      icon: Twitter, 
+      color: "hover:text-sky-400",
+      bgColor: "hover:bg-sky-500/20", 
+      borderColor: "hover:border-sky-400/50"
+    },
+    { 
+      name: "إنستغرام", 
+      href: "https://instagram.com/ash.holdings", 
+      icon: Instagram, 
+      color: "hover:text-pink-400",
+      bgColor: "hover:bg-gradient-to-br hover:from-pink-500/20 hover:to-purple-500/20",
+      borderColor: "hover:border-pink-400/50"
+    },
+    { 
+      name: "لينكدإن", 
+      href: "https://linkedin.com/company/ash-holdings", 
+      icon: Linkedin, 
+      color: "hover:text-blue-600",
+      bgColor: "hover:bg-blue-600/20",
+      borderColor: "hover:border-blue-500/50"
+    },
+    { 
+      name: "يوتيوب", 
+      href: "https://youtube.com/@ash.holdings", 
+      icon: Youtube, 
+      color: "hover:text-red-500",
+      bgColor: "hover:bg-red-500/20",
+      borderColor: "hover:border-red-400/50"
+    },
+    { 
+      name: "واتساب", 
+      href: "https://wa.me/966555812567", 
+      icon: MessageSquare, 
+      color: "hover:text-green-400",
+      bgColor: "hover:bg-green-500/20",
+      borderColor: "hover:border-green-400/50"
+    },
+    { 
+      name: "تيك توك", 
+      href: "https://tiktok.com/@ash.holdings", 
+      icon: Globe, 
+      color: "hover:text-black",
+      bgColor: "hover:bg-gray-900/20",
+      borderColor: "hover:border-gray-400/50"
+    },
+    { 
+      name: "سناب شات", 
+      href: "https://snapchat.com/add/ash.holdings", 
+      icon: Star, 
+      color: "hover:text-yellow-400",
+      bgColor: "hover:bg-yellow-500/20",
+      borderColor: "hover:border-yellow-400/50"
+    }
   ];
 
   const quickLinks = [
@@ -806,13 +864,21 @@ const Footer = () => {
                 </div>
               </div>
 
-              {/* Social Media Links */}
+              {/* Social Media Links with Enhanced Animation */}
               <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-pink-400 animate-pulse" />
-                  تابعنا
+                <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
+                  <Heart className="w-5 h-5 text-pink-400 animate-bounce" />
+                  <span className="relative">
+                    تابعنا على وسائل التواصل
+                    <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 animate-pulse"></div>
+                  </span>
+                  <div className="flex gap-1">
+                    <div className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"></div>
+                    <div className="w-1 h-1 bg-green-400 rounded-full animate-ping" style={{ animationDelay: '0.3s' }}></div>
+                    <div className="w-1 h-1 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '0.6s' }}></div>
+                  </div>
                 </h4>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   {socialLinks.map((social, index) => {
                     const IconComponent = social.icon;
                     return (
@@ -821,10 +887,29 @@ const Footer = () => {
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`flex flex-col items-center gap-1 p-2 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 group hover:scale-105 ${social.color}`}
+                        className={`relative overflow-hidden flex flex-col items-center gap-2 p-3 bg-slate-800/40 rounded-xl border border-slate-700/50 transition-all duration-500 group hover:scale-110 hover:-translate-y-1 hover:shadow-xl ${social.color} ${social.bgColor} ${social.borderColor}`}
+                        style={{ animationDelay: `${index * 0.1}s` }}
                       >
-                        <IconComponent className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                        <span className="text-xs text-slate-300 group-hover:text-white transition-colors duration-300">{social.name}</span>
+                        {/* Background Animation */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+                        
+                        {/* Icon with Pulse Animation */}
+                        <div className="relative z-10 p-2 rounded-full transition-all duration-300 group-hover:rotate-[360deg]">
+                          <IconComponent className="w-5 h-5 group-hover:scale-125 transition-all duration-300 drop-shadow-lg" />
+                        </div>
+                        
+                        {/* Name with Glow Effect */}
+                        <span className="relative z-10 text-xs font-medium text-slate-300 group-hover:text-white transition-all duration-300 group-hover:drop-shadow-lg">
+                          {social.name}
+                        </span>
+                        
+                        {/* Ripple Effect */}
+                        <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="absolute inset-0 rounded-xl animate-ping bg-current opacity-20"></div>
+                        </div>
+                        
+                        {/* Bottom Border Animation */}
+                        <div className="absolute bottom-0 left-0 w-0 h-1 bg-current group-hover:w-full transition-all duration-500 rounded-full"></div>
                       </a>
                     );
                   })}

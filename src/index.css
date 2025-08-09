@@ -193,6 +193,24 @@
   }
 }
 
+@keyframes socialFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+@keyframes socialGlow {
+  0% {
+    box-shadow: 0 0 5px currentColor;
+  }
+  100% {
+    box-shadow: 0 0 25px currentColor, 0 0 35px currentColor;
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out;
 }
@@ -380,10 +398,21 @@
     @apply flex lg:hidden;
   }
   
-  /* Touch targets for mobile */
-  .touch-target {
-    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  /* Social media animations */
+  .social-float {
+    animation: socialFloat 3s ease-in-out infinite;
   }
+  
+  .social-float-delayed {
+    animation: socialFloat 3s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+  
+  .social-glow {
+    box-shadow: 0 0 20px currentColor;
+    animation: socialGlow 2s ease-in-out infinite alternate;
+  }
+}
   
   /* Safe area handling */
   .safe-top {
