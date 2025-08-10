@@ -4,11 +4,13 @@ import {
   Share2, Printer, MonitorSmartphone, Layers, Clock, TrendingUp, 
   Users, Award, Eye, Heart, Zap, Target, Lightbulb, Brush, Rocket,
   Star, Globe, Building2, Briefcase, Camera, Paintbrush, Smartphone,
-  ArrowLeft, Play, Pause, MousePointer2, Wand2, Crown, Gem, Shield
+  ArrowLeft, Play, Pause, MousePointer2, Wand2, Crown, Gem, Shield,
+  CreditCard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PaymentDialog } from "@/components/ui/PaymentDialog";
 import { Link } from "react-router-dom";
 
 const categories = [
@@ -111,6 +113,8 @@ const whatsappNumber = "966555812567";
 const RTLDesignSolutionsSection = () => {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [isVisible, setIsVisible] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<{ name: string; price: number; category: string } | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   const filters = [
@@ -359,15 +363,34 @@ const RTLDesignSolutionsSection = () => {
                     </div>
                   </div>
 
-                  {/* زر الإجراء */}
-                  <div className="pt-2">
-                    <Button asChild className="w-full group bg-gradient-to-r from-primary to-primary-glow hover:from-primary-glow hover:to-primary transition-all duration-300" dir="rtl">
-                      <Link to={`/design-solutions/${cat.slug}`} aria-label={`استكشاف قسم ${cat.title}`}>
-                        <ChevronLeft className="w-4 h-4 ml-2 transition-transform group-hover:-translate-x-1" />
-                        استكشف القسم
-                        <Eye className="w-4 h-4 mr-2" />
-                      </Link>
-                    </Button>
+                  {/* أزرار الإجراء */}
+                  <div className="pt-2 space-y-3">
+                    <div className="grid grid-cols-1 gap-2">
+                      <Button 
+                        onClick={() => {
+                          setSelectedService({
+                            name: `باقة ${cat.title}`,
+                            price: parseInt(cat.priceFrom.replace(/[^\d]/g, '')),
+                            category: cat.title
+                          });
+                          setPaymentOpen(true);
+                        }}
+                        className="w-full group bg-gradient-to-r from-success to-success/80 hover:from-success/90 hover:to-success text-white font-bold transition-all duration-300" 
+                        dir="rtl"
+                      >
+                        <ArrowLeft className="w-4 h-4 ml-2 transition-transform group-hover:-translate-x-1" />
+                        اطلب الآن - {cat.priceFrom}
+                        <CreditCard className="w-4 h-4 mr-2" />
+                      </Button>
+                      
+                      <Button asChild variant="outline" className="w-full group border-primary/20 hover:border-primary/40 transition-all duration-300" dir="rtl">
+                        <Link to={`/design-solutions/${cat.slug}`} aria-label={`استكشاف قسم ${cat.title}`}>
+                          <ChevronLeft className="w-4 h-4 ml-2 transition-transform group-hover:-translate-x-1" />
+                          استكشف التفاصيل
+                          <Eye className="w-4 h-4 mr-2" />
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -502,6 +525,19 @@ const RTLDesignSolutionsSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Payment Dialog */}
+      {selectedService && (
+        <PaymentDialog
+          open={paymentOpen}
+          onOpenChange={setPaymentOpen}
+          service={selectedService}
+          onSuccess={() => {
+            setSelectedService(null);
+            setPaymentOpen(false);
+          }}
+        />
+      )}
     </section>
   );
 };
