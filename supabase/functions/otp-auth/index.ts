@@ -37,28 +37,21 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     if (action === "generate") {
-      // التحقق من وجود المستخدم بالبحث عن البروفايل
-      const { data: profile, error: profileError } = await supabaseClient
-        .from('profiles')
-        .select('full_name, user_id')
-        .eq('email', email)
-        .single();
-
-      // إذا لم يجد البروفايل، نبحث في auth.users
-      let userName = '';
-      if (profileError || !profile) {
-        // البحث في auth.users للتأكد من وجود المستخدم
-        const { data: authUsers, error: authError } = await supabaseClient.auth.admin.listUsers();
-        const user = authUsers?.users?.find(u => u.email === email);
-        
-        if (!user) {
-          throw new Error('المستخدم غير موجود');
-        }
-        
-        userName = user.user_metadata?.full_name || '';
-      } else {
-        userName = profile.full_name || '';
+      // البحث عن المستخدم في auth.users
+      const { data: authData, error: authError } = await supabaseClient.auth.admin.listUsers();
+      
+      if (authError) {
+        throw new Error('خطأ في النظام');
       }
+      
+      const user = authData.users?.find(u => u.email === email);
+      
+      if (!user) {
+        throw new Error('البريد الإلكتروني غير مسجل في النظام');
+      }
+
+      // الحصول على اسم المستخدم
+      const userName = user.user_metadata?.full_name || '';
 
       // توليد OTP جديد
       const newOTP = generateOTP();
