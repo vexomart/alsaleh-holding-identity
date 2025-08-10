@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import SpecificationsPDF from "@/components/SpecificationsPDF";
 import { 
   ArrowLeft,
   Star,
@@ -1214,14 +1215,14 @@ const ProjectDetails = () => {
                       طلب عرض سعر
                     </a>
                   </Button>
-                  <Button 
-                    size="lg" 
-                    variant="outline"
-                    className="border-slate-300 hover:border-blue-400 hover:text-blue-600"
-                  >
-                    <Download className="w-5 h-5 mr-2" />
-                    تحميل المواصفات
-                  </Button>
+                  <SpecificationsPDF
+                    projectTitle={project.title}
+                    projectDescription={project.detailedDescription}
+                    features={project.features}
+                    technologies={project.technologies}
+                    duration={project.duration}
+                    price={project.price}
+                  />
                 </div>
               </div>
 
