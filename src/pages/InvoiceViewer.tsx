@@ -163,7 +163,7 @@ const InvoiceViewer = () => {
                 </div>
                 <div className="flex items-center gap-2 justify-center">
                   <Globe className="h-4 w-4 text-primary" />
-                  <span>www.alialshehriholding.com</span>
+                  <span>alialshehriholding.com</span>
                 </div>
                 <div className="flex items-center gap-2 justify-center">
                   <MapPin className="h-4 w-4 text-primary" />
@@ -316,7 +316,7 @@ const InvoiceViewer = () => {
                   <div>
                     <p className="font-bold mb-1">العنوان</p>
                     <p>المملكة العربية السعودية</p>
-                    <p>www.alialshehriholding.com</p>
+                    <p>alialshehriholding.com</p>
                   </div>
                 </div>
                 

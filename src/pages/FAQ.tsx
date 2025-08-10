@@ -47,7 +47,7 @@ const FAQ = () => {
         },
         {
           question: "كيف يمكنني التواصل مع الشركة؟",
-          answer: "يمكنك التواصل معنا عبر الواتساب على 0555812567، أو عبر البريد الإلكتروني info@ash.holdings، أو من خلال نموذج التواصل في الموقع. نلتزم بالرد على جميع الاستفسارات خلال 24 ساعة."
+          answer: "يمكنك التواصل معنا عبر الواتساب على 0555812567، أو عبر البريد الإلكتروني info@alialshehriholding.com، أو من خلال نموذج التواصل في الموقع. نلتزم بالرد على جميع الاستفسارات خلال 24 ساعة."
         },
         {
           question: "هل تقدمون خدمات للشركات الصغيرة والمتوسطة؟",
@@ -161,9 +161,9 @@ const FAQ = () => {
     },
     {
       method: "البريد الإلكتروني",
-      value: "info@ash.holdings",
+      value: "info@alialshehriholding.com",
       icon: Mail,
-      link: "mailto:info@ash.holdings",
+      link: "mailto:info@alialshehriholding.com",
       description: "للاستفسارات التفصيلية"
     },
     {

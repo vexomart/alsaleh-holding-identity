@@ -324,7 +324,7 @@ const Footer = () => {
   ];
 
   const contactInfo = [
-    { label: "البريد الإلكتروني", value: "info@ash.holdings", icon: Mail },
+    { label: "البريد الإلكتروني", value: "info@alialshehriholding.com", icon: Mail },
     { label: "الهاتف", value: "0555812567", icon: Phone },
     { label: "الموقع", value: "ash.holdings", icon: Globe }
   ];
@@ -362,7 +362,7 @@ const Footer = () => {
                   </div>
                   <div>
                     <div className="text-gray-400 text-sm">البريد الإلكتروني</div>
-                    <div className="text-white font-medium">info@ash.holdings</div>
+                    <div className="text-white font-medium">info@alialshehriholding.com</div>
                   </div>
                 </div>
                 
@@ -382,7 +382,7 @@ const Footer = () => {
                   </div>
                   <div>
                     <div className="text-gray-400 text-sm">الموقع الإلكتروني</div>
-                    <div className="text-white font-medium">ash.holdings</div>
+                    <div className="text-white font-medium">alialshehriholding.com</div>
                   </div>
                 </div>
               </div>

@@ -9,7 +9,7 @@ const ContactSection = () => {
       icon: Mail,
       title: "البريد الإلكتروني",
       titleEn: "Email Support",
-      value: "info@ash.holdings",
+      value: "info@alialshehriholding.com",
       description: "للاستفسارات العامة والمراسلات الرسمية",
       color: "from-blue-600 to-cyan-600",
       bgEffect: "from-blue-500/10 to-cyan-500/10",

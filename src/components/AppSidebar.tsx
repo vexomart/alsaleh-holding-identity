@@ -237,11 +237,11 @@ export function AppSidebar() {
                 <span>0555812567</span>
               </a>
               <a 
-                href="mailto:info@ash.holdings"
+                href="mailto:info@alialshehriholding.com"
                 className="flex items-center gap-2 p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg transition-colors duration-200 text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>info@ash.holdings</span>
+                <span>info@alialshehriholding.com</span>
               </a>
             </div>
           </div>
