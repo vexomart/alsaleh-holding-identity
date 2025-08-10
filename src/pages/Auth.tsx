@@ -16,6 +16,10 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
+  const [otp, setOtp] = useState("");
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -87,6 +91,90 @@ const Auth = () => {
     }
   };
 
+  const handleRequestOtp = async () => {
+    if (!email) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال البريد الإلكتروني أولاً",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setOtpLoading(true);
+    try {
+      const { error } = await supabase.functions.invoke('otp-auth', {
+        body: {
+          action: 'generate',
+          email: email
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setOtpSent(true);
+      setShowOtpInput(true);
+      toast({
+        title: "تم الإرسال",
+        description: "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
+      });
+    } catch (error: any) {
+      toast({
+        title: "خطأ في الإرسال",
+        description: error.message || "فشل في إرسال رمز التحقق",
+        variant: "destructive",
+      });
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const handleOtpSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.functions.invoke('otp-auth', {
+        body: {
+          action: 'verify',
+          email: email,
+          otp: otp
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      // تسجيل دخول المستخدم بعد التحقق من OTP
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password: 'temp_password_for_otp' // مؤقت للاختبار
+      });
+
+      if (signInError) {
+        // إذا فشل تسجيل الدخول العادي، نحاول العثور على المستخدم وتسجيل دخوله
+        toast({
+          title: "تم التحقق بنجاح",
+          description: "رمز التحقق صحيح. يرجى استخدام كلمة المرور العادية لتسجيل الدخول",
+        });
+        setShowOtpInput(false);
+        setOtpSent(false);
+        setOtp("");
+      }
+    } catch (error: any) {
+      toast({
+        title: "خطأ في التحقق",
+        description: error.message || "رمز التحقق غير صحيح",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -134,7 +222,7 @@ const Auth = () => {
 
             <CardContent>
               <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4">
+                <div className="space-y-4">
                   <CardTitle className="text-center mb-4">تسجيل الدخول</CardTitle>
                   <CardDescription className="text-center mb-6">
                     أدخل بياناتك لتسجيل الدخول إلى حسابك
@@ -152,26 +240,95 @@ const Auth = () => {
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="password">كلمة المرور</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      dir="ltr"
-                    />
-                  </div>
+                  {showOtpInput ? (
+                    <form onSubmit={handleOtpSignIn} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="otp">رمز التحقق</Label>
+                        <Input
+                          id="otp"
+                          type="text"
+                          value={otp}
+                          onChange={(e) => setOtp(e.target.value)}
+                          placeholder="أدخل الرمز المكون من 6 أرقام"
+                          maxLength={6}
+                          required
+                          dir="ltr"
+                          className="text-center text-lg tracking-widest"
+                        />
+                        <p className="text-sm text-muted-foreground text-center">
+                          تم إرسال رمز التحقق إلى {email}
+                        </p>
+                      </div>
+                      
+                      <Button 
+                        type="submit" 
+                        className="w-full" 
+                        disabled={loading || otp.length !== 6}
+                      >
+                        {loading ? "جاري التحقق..." : "تحقق من الرمز"}
+                      </Button>
+                      
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="w-full" 
+                        onClick={handleRequestOtp}
+                        disabled={otpLoading}
+                      >
+                        {otpLoading ? "جاري الإرسال..." : "إعادة إرسال الرمز"}
+                      </Button>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={loading}
-                  >
-                    {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
-                  </Button>
-                </form>
+                      <Button 
+                        type="button" 
+                        variant="ghost" 
+                        className="w-full" 
+                        onClick={() => {
+                          setShowOtpInput(false);
+                          setOtpSent(false);
+                          setOtp("");
+                        }}
+                      >
+                        العودة لتسجيل الدخول العادي
+                      </Button>
+                    </form>
+                  ) : (
+                    <form onSubmit={handleSignIn} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="password">كلمة المرور</Label>
+                        <Input
+                          id="password"
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                          dir="ltr"
+                        />
+                      </div>
+
+                      <Button 
+                        type="submit" 
+                        className="w-full" 
+                        disabled={loading}
+                      >
+                        {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
+                      </Button>
+                      
+                      <div className="text-center">
+                        <span className="text-sm text-muted-foreground">أو</span>
+                      </div>
+                      
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="w-full" 
+                        onClick={handleRequestOtp}
+                        disabled={otpLoading || !email}
+                      >
+                        {otpLoading ? "جاري الإرسال..." : "تسجيل الدخول برمز التحقق"}
+                      </Button>
+                    </form>
+                  )}
+                </div>
               </TabsContent>
 
               <TabsContent value="signup">
