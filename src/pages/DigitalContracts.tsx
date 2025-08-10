@@ -282,164 +282,166 @@ const DigitalContracts = () => {
     `;
 
     contractElement.innerHTML = `
-      <!-- العقد الأساسي -->
-      <div style="background: white; position: relative; min-height: 100vh;">
+      <!-- العقد الأساسي المحسن -->
+      <div style="background: white; position: relative; min-height: 100vh; font-family: 'Arial', sans-serif;">
         
-        <!-- الترويسة الرسمية الجديدة -->
-        <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%); color: white; padding: 60px 40px; text-align: center; position: relative; overflow: hidden;">
-          <!-- تأثير زخرفي في الخلفية -->
-          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"grain\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\"><circle cx=\"20\" cy=\"20\" r=\"2\" fill=\"white\" opacity=\"0.1\"/><circle cx=\"80\" cy=\"20\" r=\"2\" fill=\"white\" opacity=\"0.1\"/><circle cx=\"50\" cy=\"50\" r=\"2\" fill=\"white\" opacity=\"0.1\"/><circle cx=\"20\" cy=\"80\" r=\"2\" fill=\"white\" opacity=\"0.1\"/><circle cx=\"80\" cy=\"80\" r=\"2\" fill=\"white\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23grain)\"/></svg>'); opacity: 0.3;"></div>
-          
-          <!-- الشعار والاسم -->
-          <div style="position: relative; z-index: 2;">
-            <div style="background: white; color: #1e3a8a; width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 6px solid rgba(255,255,255,0.9);">
+        <!-- الترويسة الرسمية المحسنة -->
+        <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 40px 30px; text-align: center; position: relative;">
+          <!-- إطار علوي -->
+          <div style="border: 3px solid rgba(255,255,255,0.3); border-radius: 15px; padding: 30px; margin-bottom: 20px;">
+            
+            <!-- الشعار والاسم -->
+            <div style="background: white; color: #1e3a8a; width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.2); border: 4px solid rgba(255,255,255,0.9);">
               <div style="text-align: center;">
-                <div style="font-size: 20px; margin-bottom: 8px;">🏢</div>
-                <div style="font-size: 14px; color: #1e3a8a; line-height: 1.1; font-weight: bold;">Ali Saleh<br/>Al-Shehri<br/>Holding</div>
-                <div style="font-size: 10px; margin-top: 6px; color: #64748b; font-weight: normal;">Technology Solutions</div>
+                <div style="font-size: 18px; margin-bottom: 6px;">🏢</div>
+                <div style="font-size: 12px; color: #1e3a8a; line-height: 1.1; font-weight: bold;">
+                  Ali Saleh<br/>Al-Shehri<br/>Holding
+                </div>
+                <div style="font-size: 8px; margin-top: 4px; color: #64748b;">Technology</div>
               </div>
             </div>
             
-            <h1 style="margin: 0 0 20px 0; font-size: 32px; font-weight: bold; text-shadow: 0 4px 12px rgba(0,0,0,0.5); letter-spacing: 1px;">
+            <!-- اسم الشركة -->
+            <h1 style="margin: 0 0 15px 0; font-size: 26px; font-weight: bold; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
               شركة علي صالح الشهري القابضة
             </h1>
-            <div style="font-size: 20px; margin-bottom: 15px; opacity: 0.95; font-weight: 500;">
+            <div style="font-size: 16px; margin-bottom: 10px; opacity: 0.95; font-weight: 500;">
               للتقنية والحلول الرقمية المتقدمة
             </div>
-            <div style="font-size: 16px; opacity: 0.9; margin-bottom: 30px;">
+            <div style="font-size: 13px; opacity: 0.9; margin-bottom: 20px;">
               السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية
             </div>
             
-            <!-- معلومات الاتصال في تخطيط أنيق -->
-            <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 30px;">
-              <div style="background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">
-                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">📞 الهاتف</div>
-                <div style="font-size: 16px; font-weight: bold;">0555812567</div>
+            <!-- معلومات الاتصال -->
+            <div style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap;">
+              <div style="background: rgba(255,255,255,0.2); padding: 12px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3);">
+                <div style="font-size: 11px; opacity: 0.9; margin-bottom: 3px;">📞 الهاتف</div>
+                <div style="font-size: 14px; font-weight: bold;">0555812567</div>
               </div>
-              <div style="background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">
-                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">📧 البريد الإلكتروني</div>
-                <div style="font-size: 14px; font-weight: bold;">info@alialshehriholding.com</div>
+              <div style="background: rgba(255,255,255,0.2); padding: 12px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3);">
+                <div style="font-size: 11px; opacity: 0.9; margin-bottom: 3px;">📧 البريد الإلكتروني</div>
+                <div style="font-size: 12px; font-weight: bold;">info@alialshehriholding.com</div>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- معلومات العقد والتاريخ -->
-        <div style="padding: 40px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
-          <div style="max-width: 800px; margin: 0 auto;">
-            <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+        <!-- معلومات العقد والتاريخ المحسنة -->
+        <div style="padding: 30px; background: #f8fafc;">
+          <div style="max-width: 700px; margin: 0 auto;">
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
               
               <!-- رقم العقد -->
-              <div style="flex: 1; min-width: 300px; background: white; border: 3px solid #3b82f6; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 15px 35px rgba(59,130,246,0.2);">
-                <div style="color: #3b82f6; font-size: 18px; font-weight: bold; margin-bottom: 15px;">📋 رقم العقد</div>
-                <div style="font-size: 32px; font-weight: bold; color: #1e3a8a; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">ASH-${Date.now().toString().slice(-8)}</div>
-                <div style="color: #64748b; font-size: 14px; margin-bottom: 8px;">تاريخ الإصدار</div>
-                <div style="color: #1e3a8a; font-size: 16px; font-weight: bold;">${contractDate}</div>
+              <div style="flex: 1; min-width: 280px; background: white; border: 2px solid #3b82f6; border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 8px 25px rgba(59,130,246,0.15);">
+                <div style="color: #3b82f6; font-size: 16px; font-weight: bold; margin-bottom: 12px;">📋 رقم العقد</div>
+                <div style="font-size: 24px; font-weight: bold; color: #1e3a8a; margin-bottom: 15px;">ASH-${Date.now().toString().slice(-8)}</div>
+                <div style="color: #64748b; font-size: 12px; margin-bottom: 6px;">تاريخ الإصدار</div>
+                <div style="color: #1e3a8a; font-size: 14px; font-weight: bold;">${contractDate}</div>
               </div>
               
               <!-- التاريخ الهجري -->
-              <div style="flex: 1; min-width: 300px; background: white; border: 3px solid #10b981; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 15px 35px rgba(16,185,129,0.2);">
-                <div style="color: #10b981; font-size: 18px; font-weight: bold; margin-bottom: 15px;">🗓️ التاريخ الهجري</div>
-                <div style="font-size: 28px; font-weight: bold; color: #065f46; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">${hijriDate}</div>
-                <div style="color: #64748b; font-size: 14px; margin-bottom: 8px;">الموافق للميلادي</div>
-                <div style="color: #065f46; font-size: 16px; font-weight: bold;">${contractDate}</div>
+              <div style="flex: 1; min-width: 280px; background: white; border: 2px solid #10b981; border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 8px 25px rgba(16,185,129,0.15);">
+                <div style="color: #10b981; font-size: 16px; font-weight: bold; margin-bottom: 12px;">🗓️ التاريخ الهجري</div>
+                <div style="font-size: 20px; font-weight: bold; color: #065f46; margin-bottom: 15px;">${hijriDate}</div>
+                <div style="color: #64748b; font-size: 12px; margin-bottom: 6px;">الموافق للميلادي</div>
+                <div style="color: #065f46; font-size: 14px; font-weight: bold;">${contractDate}</div>
               </div>
             </div>
           </div>
         </div>
         
         <!-- العنوان الرئيسي للعقد -->
-        <div style="padding: 60px 40px; text-align: center; background: white;">
-          <h1 style="color: #1e3a8a; font-size: 42px; font-weight: bold; margin: 0 0 30px 0; text-shadow: 0 4px 8px rgba(0,0,0,0.1); line-height: 1.3;">
+        <div style="padding: 40px 30px; text-align: center; background: white;">
+          <h1 style="color: #1e3a8a; font-size: 32px; font-weight: bold; margin: 0 0 25px 0; line-height: 1.2;">
             عقد تقديم الخدمات التقنية والاستشارية
           </h1>
-          <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%); border: 3px solid #3b82f6; border-radius: 15px; padding: 25px; max-width: 600px; margin: 0 auto;">
-            <div style="font-size: 18px; color: #1e3a8a; font-weight: 600;">⚖️ تحت إشراف الأنظمة السعودية المعتمدة</div>
-            <div style="font-size: 14px; color: #64748b; margin-top: 10px;">وفقاً للوائح والقوانين المعمول بها في المملكة العربية السعودية</div>
+          <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; max-width: 500px; margin: 0 auto;">
+            <div style="font-size: 16px; color: #1e3a8a; font-weight: 600;">⚖️ تحت إشراف الأنظمة السعودية</div>
+            <div style="font-size: 12px; color: #64748b; margin-top: 8px;">وفقاً للوائح والقوانين المعمول بها في المملكة العربية السعودية</div>
           </div>
         </div>
           
-          <!-- الأساس القانوني والنظامي -->
-          <div style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 50%, #fed7aa 100%); border: 4px solid #f59e0b; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(245,158,11,0.2);">
-            <h2 style="color: #d97706; font-size: 24px; margin: 0 0 25px 0; font-weight: bold; text-align: center; border-bottom: 3px solid #f59e0b; padding-bottom: 15px;">
+          <!-- الأساس القانوني والنظامي المحسن -->
+          <div style="background: #fefce8; border: 3px solid #f59e0b; padding: 25px; margin: 30px 0; border-radius: 12px;">
+            <h2 style="color: #d97706; font-size: 20px; margin: 0 0 20px 0; font-weight: bold; text-align: center; border-bottom: 2px solid #f59e0b; padding-bottom: 12px;">
               ⚖️ الأساس القانوني والنظامي للعقد
             </h2>
-            <div style="background: white; padding: 25px; border-radius: 12px; border-left: 6px solid #f59e0b; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
-              <p style="margin: 0 0 20px 0; font-size: 16px; font-weight: bold; text-align: center; color: #d97706;">
+            <div style="background: white; padding: 20px; border-radius: 10px; border-right: 4px solid #f59e0b;">
+              <p style="margin: 0 0 15px 0; font-size: 14px; font-weight: bold; text-align: center; color: #d97706;">
                 🏛️ يستند هذا العقد إلى الأنظمة والقوانين السعودية التالية:
               </p>
               
-              <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+              <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
                 <tr style="background: #f59e0b; color: white;">
-                  <th style="padding: 15px; border: 2px solid #d97706; text-align: center; font-weight: bold;">⚖️ النظام</th>
-                  <th style="padding: 15px; border: 2px solid #d97706; text-align: center; font-weight: bold;">📜 المادة</th>
-                  <th style="padding: 15px; border: 2px solid #d97706; text-align: center; font-weight: bold;">📋 التفاصيل</th>
+                  <th style="padding: 12px; border: 1px solid #d97706; text-align: center; font-weight: bold; font-size: 12px;">⚖️ النظام</th>
+                  <th style="padding: 12px; border: 1px solid #d97706; text-align: center; font-weight: bold; font-size: 12px;">📜 المادة</th>
+                  <th style="padding: 12px; border: 1px solid #d97706; text-align: center; font-weight: bold; font-size: 12px;">📋 التفاصيل</th>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">النظام التجاري السعودي</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (1)</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">المرسوم الملكي رقم (م/32) تاريخ 1419/6/16هـ</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fefce8; font-weight: bold; font-size: 11px;">النظام التجاري السعودي</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; text-align: center; font-size: 11px;">المادة (1)</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; font-size: 10px;">المرسوم الملكي رقم (م/32) تاريخ 1419/6/16هـ</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">نظام العمل السعودي</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (25)</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">المرسوم الملكي رقم (م/51) تاريخ 1426/8/23هـ</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fefce8; font-weight: bold; font-size: 11px;">نظام العمل السعودي</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; text-align: center; font-size: 11px;">المادة (25)</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; font-size: 10px;">المرسوم الملكي رقم (م/51) تاريخ 1426/8/23هـ</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">نظام ضريبة القيمة المضافة</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (3)</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">اللائحة التنفيذية لضريبة القيمة المضافة</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fefce8; font-weight: bold; font-size: 11px;">نظام ضريبة القيمة المضافة</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; text-align: center; font-size: 11px;">المادة (3)</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; font-size: 10px;">اللائحة التنفيذية لضريبة القيمة المضافة</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">نظام حماية البيانات</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (7)</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">نظام حماية البيانات الشخصية 2021م</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fefce8; font-weight: bold; font-size: 11px;">نظام حماية البيانات</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; text-align: center; font-size: 11px;">المادة (7)</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; font-size: 10px;">نظام حماية البيانات الشخصية 2021م</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: #fefce8; font-weight: bold;">نظام التحكيم السعودي</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white; text-align: center;">المادة (15)</td>
-                  <td style="padding: 12px; border: 2px solid #fed7aa; background: white;">قانون حل المنازعات التجارية</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: #fefce8; font-weight: bold; font-size: 11px;">نظام التحكيم السعودي</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; text-align: center; font-size: 11px;">المادة (15)</td>
+                  <td style="padding: 10px; border: 1px solid #fed7aa; background: white; font-size: 10px;">قانون حل المنازعات التجارية</td>
                 </tr>
               </table>
             </div>
           </div>
           
-          <!-- مقدمة العقد وأطرافه -->
-          <div style="background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 50%, #bfdbfe 100%); border: 4px solid #0284c7; padding: 30px; margin: 40px 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(2,132,199,0.2);">
-            <h2 style="color: #0284c7; font-size: 22px; margin: 0 0 25px 0; font-weight: bold; text-align: center; border-bottom: 3px solid #0284c7; padding-bottom: 15px;">
+          <!-- مقدمة العقد وأطرافه المحسنة -->
+          <div style="background: #f0f9ff; border: 3px solid #0284c7; padding: 25px; margin: 30px 0; border-radius: 12px;">
+            <h2 style="color: #0284c7; font-size: 20px; margin: 0 0 20px 0; font-weight: bold; text-align: center; border-bottom: 2px solid #0284c7; padding-bottom: 12px;">
               🤝 مقدمة العقد وتعريف الأطراف المتعاقدة
             </h2>
-            <div style="background: white; padding: 25px; border-radius: 12px; border-left: 6px solid #0284c7; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
-              <p style="font-size: 17px; line-height: 2.2; margin: 0 0 25px 0; text-align: justify; color: #1e293b;">
+            <div style="background: white; padding: 20px; border-radius: 10px; border-right: 4px solid #0284c7;">
+              <p style="font-size: 14px; line-height: 1.8; margin: 0 0 20px 0; text-align: justify; color: #1e293b;">
                 بحمد الله وتوفيقه، اتفق الطرفان المذكوران أدناه على إبرام هذا العقد، وذلك استناداً إلى الأنظمة السعودية المعمول بها، 
                 وبناءً على مبدأ العدالة والشفافية في التعاملات التجارية، وحفظاً لحقوق الطرفين، والالتزام بأحكام الشريعة الإسلامية.
               </p>
               
-              <table style="width: 100%; border-collapse: collapse; margin-top: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden;">
+              <table style="width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 10px; overflow: hidden;">
                 <tr style="background: #0284c7; color: white;">
-                  <th style="padding: 18px; border: 2px solid #0369a1; font-weight: bold; text-align: center;">🏷️ تعريف الطرف</th>
-                  <th style="padding: 18px; border: 2px solid #0369a1; font-weight: bold; text-align: center;">📋 البيانات الرسمية</th>
+                  <th style="padding: 15px; border: 1px solid #0369a1; font-weight: bold; text-align: center; font-size: 12px;">🏷️ تعريف الطرف</th>
+                  <th style="padding: 15px; border: 1px solid #0369a1; font-weight: bold; text-align: center; font-size: 12px;">📋 البيانات الرسمية</th>
                 </tr>
                 <tr>
-                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 16px;">🏢 الطرف الأول</td>
-                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: white; font-size: 16px;">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</td>
+                  <td style="padding: 12px; border: 1px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 13px;">🏢 الطرف الأول</td>
+                  <td style="padding: 12px; border: 1px solid #bfdbfe; background: white; font-size: 13px;">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</td>
                 </tr>
                 <tr>
-                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 16px;">👤 الممثل القانوني</td>
-                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: white; font-size: 16px;">الأستاذ / علي صالح الشهري - المدير العام</td>
+                  <td style="padding: 12px; border: 1px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 13px;">👤 الممثل القانوني</td>
+                  <td style="padding: 12px; border: 1px solid #bfdbfe; background: white; font-size: 13px;">الأستاذ / علي صالح الشهري - المدير العام</td>
                 </tr>
                 <tr>
-                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 16px;">🤝 الطرف الثاني</td>
-                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: white; font-size: 16px;">${formData.clientName || 'العميل المحترم'}</td>
+                  <td style="padding: 12px; border: 1px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 13px;">🤝 الطرف الثاني</td>
+                  <td style="padding: 12px; border: 1px solid #bfdbfe; background: white; font-size: 13px;">${formData.clientName || 'العميل المحترم'}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 16px;">📍 محل التعاقد</td>
-                  <td style="padding: 15px; border: 2px solid #bfdbfe; background: white; font-size: 16px;">المملكة العربية السعودية - جدة</td>
+                  <td style="padding: 12px; border: 1px solid #bfdbfe; background: #f0f9ff; font-weight: bold; text-align: center; font-size: 13px;">📍 محل التعاقد</td>
+                  <td style="padding: 12px; border: 1px solid #bfdbfe; background: white; font-size: 13px;">المملكة العربية السعودية - جدة</td>
                 </tr>
               </table>
               
-              <div style="background: linear-gradient(135deg, #0284c7, #0369a1); color: white; padding: 20px; margin: 25px 0 0 0; border-radius: 10px; text-align: center; box-shadow: 0 6px 20px rgba(2,132,199,0.3);">
-                <p style="font-size: 16px; line-height: 1.8; margin: 0; font-weight: bold;">
+              <div style="background: linear-gradient(135deg, #0284c7, #0369a1); color: white; padding: 15px; margin: 20px 0 0 0; border-radius: 8px; text-align: center;">
+                <p style="font-size: 14px; line-height: 1.6; margin: 0; font-weight: bold;">
                   ⚖️ وقد اتفق الطرفان على الشروط والأحكام التالية بموجب هذا العقد الملزم قانونياً ⚖️
                 </p>
               </div>
