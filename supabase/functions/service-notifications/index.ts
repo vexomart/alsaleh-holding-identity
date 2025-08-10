@@ -64,7 +64,44 @@ const handler = async (req: Request): Promise<Response> => {
           service_request_id: requestData.serviceRequestId,
           email_sent: true,
           notification_type: 'service_request_confirmation'
+    } else if (type === 'login_notification') {
+      // إشعار تسجيل الدخول
+      const emailResponse = await supabaseClient.functions.invoke('auth-emails', {
+        body: {
+          to: email,
+          subject: "تم تسجيل الدخول إلى حسابك",
+          type: "login_notification",
+          data: {
+            loginTime: new Date().toLocaleString('ar-SA'),
+            ipAddress: 'غير محدد'
+          }
         }
+      });
+
+      if (emailResponse.error) {
+        console.error('خطأ في إرسال إشعار تسجيل الدخول:', emailResponse.error);
+      }
+
+      // تسجيل النشاط
+      await supabaseClient
+        .from('user_activity_logs')
+        .insert({
+          user_id: userId,
+          activity_type: 'login',
+          description: 'تم تسجيل الدخول إلى الحساب',
+          metadata: {
+            timestamp: new Date().toISOString(),
+            notification_sent: !emailResponse.error
+          }
+        });
+
+      return new Response(JSON.stringify({
+        success: true,
+        message: "تم إرسال إشعار تسجيل الدخول بنجاح"
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders }
+      });
       });
 
     if (activityError) {

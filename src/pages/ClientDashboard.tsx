@@ -1,453 +1,642 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { SidebarLayout } from '@/components/SidebarLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  User, 
-  FileText, 
-  CreditCard, 
-  Settings, 
-  Bell, 
-  Plus, 
-  Eye, 
-  TrendingUp,
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
+import {
+  LayoutDashboard,
+  FileText,
+  CreditCard,
+  Bell,
+  Settings,
+  LogOut,
+  Package,
+  MessageSquare,
+  BarChart3,
   Calendar,
+  Download,
+  Eye,
   CheckCircle,
   Clock,
-  Star,
-  ArrowRight,
-  Download,
-  BarChart3
-} from 'lucide-react';
-import { User as SupabaseUser, Session } from '@supabase/supabase-js';
+  AlertCircle,
+  User,
+  Mail,
+  Phone,
+  Building
+} from "lucide-react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 
-interface UserProfile {
-  id: string;
-  first_name: string | null;
-  last_name: string | null;
-  avatar_url: string | null;
-  phone: string | null;
-  company: string | null;
-  created_at: string;
+interface DashboardData {
+  profile: any;
+  serviceRequests: any[];
+  invoices: any[];
+  paymentHistory: any[];
+  tickets: any[];
+  activityLogs: any[];
+  notifications: any[];
 }
 
-export default function ClientDashboard() {
-  const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+const ClientDashboard = () => {
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const [data, setData] = useState<DashboardData>({
+    profile: null,
+    serviceRequests: [],
+    invoices: [],
+    paymentHistory: [],
+    tickets: [],
+    activityLogs: [],
+    notifications: []
+  });
+  const [activeTab, setActiveTab] = useState("overview");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (!session?.user) {
-          navigate('/auth', { replace: true });
-        } else {
-          fetchProfile(session.user.id);
-        }
-      }
-    );
+    checkUser();
+  }, []);
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+  const checkUser = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
       
       if (!session?.user) {
-        navigate('/auth', { replace: true });
-      } else {
-        fetchProfile(session.user.id);
+        navigate("/auth");
+        return;
       }
-    });
 
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const fetchProfile = async (userId: string) => {
-    try {
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', userId)
-        .maybeSingle();
+      setUser(session.user);
+      await loadDashboardData(session.user.id);
       
-      if (profileData) {
-        setProfile({
-          id: profileData.id,
-          first_name: profileData.full_name?.split(' ')[0] || null,
-          last_name: profileData.full_name?.split(' ').slice(1).join(' ') || null,
-          avatar_url: null,
-          phone: profileData.phone,
-          company: profileData.company,
-          created_at: profileData.created_at
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
+      // إرسال إشعار تسجيل الدخول
+      await logLoginActivity(session.user.id, session.user.email);
+      
+    } catch (error: any) {
+      console.error("خطأ في التحقق من المستخدم:", error);
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ في تحميل البيانات",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  const logLoginActivity = async (userId: string, email: string) => {
+    try {
+      await supabase.functions.invoke('service-notifications', {
+        body: {
+          type: 'login_notification',
+          userId: userId,
+          email: email
+        }
+      });
+    } catch (error) {
+      console.error('خطأ في إرسال إشعار تسجيل الدخول:', error);
+    }
+  };
+
+  const loadDashboardData = async (userId: string) => {
+    try {
+      // تحميل بيانات المستخدم
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      // تحميل طلبات الخدمات
+      const { data: serviceRequests } = await supabase
+        .from('service_requests')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      // تحميل الفواتير
+      const { data: invoices } = await supabase
+        .from('invoices')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      // تحميل تاريخ المدفوعات
+      const { data: paymentHistory } = await supabase
+        .from('payment_history')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      // تحميل التذاكر
+      const { data: tickets } = await supabase
+        .from('tickets')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      // تحميل سجل الأنشطة
+      const { data: activityLogs } = await supabase
+        .from('user_activity_logs')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      setData({
+        profile: profile || {},
+        serviceRequests: serviceRequests || [],
+        invoices: invoices || [],
+        paymentHistory: paymentHistory || [],
+        tickets: tickets || [],
+        activityLogs: activityLogs || [],
+        notifications: []
+      });
+
+    } catch (error: any) {
+      console.error("خطأ في تحميل البيانات:", error);
+      toast({
+        title: "خطأ",
+        description: "فشل في تحميل بيانات لوحة التحكم",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/', { replace: true });
+    try {
+      await supabase.auth.signOut();
+      navigate("/");
+      toast({
+        title: "تم تسجيل الخروج",
+        description: "تم تسجيل خروجك بنجاح",
+      });
+    } catch (error: any) {
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ في تسجيل الخروج",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      pending: { label: "معلق", variant: "secondary" as const },
+      completed: { label: "مكتمل", variant: "default" as const },
+      cancelled: { label: "ملغي", variant: "destructive" as const },
+      in_progress: { label: "قيد التنفيذ", variant: "default" as const },
+      paid: { label: "مدفوع", variant: "default" as const },
+      unpaid: { label: "غير مدفوع", variant: "destructive" as const },
+      open: { label: "مفتوح", variant: "default" as const },
+      closed: { label: "مغلق", variant: "secondary" as const }
+    };
+    
+    return statusConfig[status as keyof typeof statusConfig] || { label: status, variant: "secondary" as const };
+  };
+
+  const getServiceIcon = (serviceType: string) => {
+    const icons = {
+      'design': <Package className="h-4 w-4" />,
+      'business': <Building className="h-4 w-4" />,
+      'digital': <BarChart3 className="h-4 w-4" />,
+      'content': <FileText className="h-4 w-4" />
+    };
+    return icons[serviceType as keyof typeof icons] || <Package className="h-4 w-4" />;
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <SidebarLayout>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6 animate-fade-in">
-        {/* Welcome Header with Floating Elements */}
-        <div className="relative mb-8 animate-scale-in">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-600/10 rounded-3xl blur-sm"></div>
-          <div className="relative bg-white/80 backdrop-blur-sm border border-white/20 rounded-3xl p-8 shadow-xl">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-background">
+        <AppSidebar 
+          user={user}
+          profile={data.profile}
+          onSignOut={handleSignOut}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+        
+        <main className="flex-1 overflow-hidden">
+          <header className="border-b bg-card shadow-sm">
+            <div className="flex items-center justify-between px-6 py-4">
               <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16 ring-4 ring-primary/20 animate-pulse">
-                  <AvatarImage src={profile?.avatar_url || ""} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white text-xl font-bold">
-                    {profile?.first_name?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <SidebarTrigger />
                 <div>
-                  <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                    أهلاً وسهلاً، {profile?.first_name || user?.email?.split('@')[0]}
+                  <h1 className="text-2xl font-bold text-foreground">
+                    مرحباً، {data.profile?.full_name || user?.email}
                   </h1>
-                  <p className="text-muted-foreground text-lg mt-1">إدارة حسابك ومشاريعك بكل سهولة</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Badge variant="secondary" className="animate-fade-in delay-200">
-                      <Star className="w-3 h-3 mr-1" />
-                      عميل مميز
-                    </Badge>
-                    <Badge variant="outline" className="animate-fade-in delay-300">
-                      <Clock className="w-3 h-3 mr-1" />
-                      نشط منذ {new Date(profile?.created_at || '').toLocaleDateString('ar-SA')}
-                    </Badge>
-                  </div>
+                  <p className="text-muted-foreground">
+                    لوحة التحكم الشخصية
+                  </p>
                 </div>
               </div>
-              <div className="flex gap-3">
-                <Button variant="outline" size="icon" className="relative overflow-hidden hover-scale group">
-                  <Bell className="h-4 w-4 transition-transform group-hover:scale-110" />
-                  <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                </Button>
-                <Button onClick={handleSignOut} className="hover-scale group">
-                  <Settings className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
-                  تسجيل الخروج
+              
+              <div className="flex items-center gap-3">
+                <Badge variant="outline" className="flex items-center gap-2">
+                  <CheckCircle className="h-3 w-3" />
+                  متصل
+                </Badge>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  onClick={() => setActiveTab("notifications")}
+                  className="relative"
+                >
+                  <Bell className="h-5 w-5" />
+                  {data.notifications.length > 0 && (
+                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">
+                      {data.notifications.length}
+                    </span>
+                  )}
                 </Button>
               </div>
             </div>
+          </header>
+
+          <div className="p-6 space-y-6 overflow-auto">
+            {activeTab === "overview" && (
+              <OverviewTab data={data} />
+            )}
+            
+            {activeTab === "services" && (
+              <ServicesTab data={data} onRefresh={() => loadDashboardData(user.id)} />
+            )}
+            
+            {activeTab === "invoices" && (
+              <InvoicesTab data={data} />
+            )}
+            
+            {activeTab === "payments" && (
+              <PaymentsTab data={data} />
+            )}
+            
+            {activeTab === "tickets" && (
+              <TicketsTab data={data} onRefresh={() => loadDashboardData(user.id)} />
+            )}
+            
+            {activeTab === "profile" && (
+              <ProfileTab data={data} user={user} onRefresh={() => loadDashboardData(user.id)} />
+            )}
+            
+            {activeTab === "notifications" && (
+              <NotificationsTab data={data} />
+            )}
           </div>
-        </div>
-
-        {/* Enhanced Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {[
-            { 
-              title: "الطلبات النشطة", 
-              value: "0", 
-              change: "لا توجد بيانات", 
-              icon: FileText, 
-              color: "from-blue-500 to-blue-600",
-              bgColor: "bg-blue-50",
-              delay: "delay-100"
-            },
-            { 
-              title: "المشاريع المكتملة", 
-              value: "0", 
-              change: "لا توجد بيانات", 
-              icon: CheckCircle, 
-              color: "from-green-500 to-green-600",
-              bgColor: "bg-green-50",
-              delay: "delay-200"
-            },
-            { 
-              title: "إجمالي الإنفاق", 
-              value: "0 ر.س", 
-              change: "لا توجد بيانات", 
-              icon: TrendingUp, 
-              color: "from-purple-500 to-purple-600",
-              bgColor: "bg-purple-50",
-              delay: "delay-300"
-            },
-            { 
-              title: "النقاط المكتسبة", 
-              value: "0", 
-              change: "لا توجد بيانات", 
-              icon: Star, 
-              color: "from-amber-500 to-amber-600",
-              bgColor: "bg-amber-50",
-              delay: "delay-400"
-            }
-          ].map((stat, index) => (
-            <Card key={index} className={`relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale ${stat.delay} animate-fade-in`}>
-              <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-5`}></div>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">{stat.title}</CardTitle>
-                <div className={`p-3 rounded-full ${stat.bgColor} relative`}>
-                  <stat.icon className={`w-5 h-5 bg-gradient-to-br ${stat.color} bg-clip-text text-transparent`} />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 to-transparent"></div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                <div className="flex items-center text-sm">
-                  <span className="text-gray-500">{stat.change}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Enhanced Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6 animate-fade-in delay-500">
-          <div className="bg-white/80 backdrop-blur-sm border border-white/20 rounded-2xl p-2 shadow-lg">
-            <TabsList className="grid w-full grid-cols-5 bg-transparent gap-2">
-              <TabsTrigger 
-                value="overview" 
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white transition-all duration-300 hover-scale"
-              >
-                <BarChart3 className="w-4 h-4 mr-2" />
-                نظرة عامة
-              </TabsTrigger>
-              <TabsTrigger 
-                value="orders"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white transition-all duration-300 hover-scale"
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                طلباتي
-              </TabsTrigger>
-              <TabsTrigger 
-                value="projects"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white transition-all duration-300 hover-scale"
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                مشاريعي
-              </TabsTrigger>
-              <TabsTrigger 
-                value="billing"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white transition-all duration-300 hover-scale"
-              >
-                <CreditCard className="w-4 h-4 mr-2" />
-                الفواتير
-              </TabsTrigger>
-              <TabsTrigger 
-                value="profile"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white transition-all duration-300 hover-scale"
-              >
-                <User className="w-4 h-4 mr-2" />
-                الملف الشخصي
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6 animate-fade-in">
-            <div className="grid lg:grid-cols-2 gap-6">
-              {/* Quick Actions */}
-              <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-blue-50/50 hover:shadow-xl transition-all duration-300 hover-scale">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <Plus className="w-6 h-6 text-primary" />
-                    إجراءات سريعة
-                  </CardTitle>
-                  <CardDescription>ابدأ مشروعك الجديد بنقرة واحدة</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {[
-                    { name: "طلب تصميم موقع", icon: FileText, color: "text-blue-600" },
-                    { name: "مشروع تطبيق جوال", icon: Settings, color: "text-green-600" },
-                    { name: "خدمات التسويق", icon: TrendingUp, color: "text-purple-600" },
-                  ].map((action, index) => (
-                    <Button 
-                      key={index}
-                      variant="ghost" 
-                      className="w-full justify-start h-12 hover:bg-primary/10 group transition-all duration-300"
-                    >
-                      <action.icon className={`mr-3 h-5 w-5 ${action.color} group-hover:scale-110 transition-transform`} />
-                      {action.name}
-                      <ArrowRight className="mr-auto h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </Button>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Recent Activity */}
-              <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-green-50/50 hover:shadow-xl transition-all duration-300 hover-scale">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <Clock className="w-6 h-6 text-green-600" />
-                    الأنشطة الأخيرة
-                  </CardTitle>
-                  <CardDescription>تتبع آخر التحديثات على مشاريعك</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                    <Clock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">لا توجد أنشطة حتى الآن</p>
-                    <p className="text-sm text-gray-400 mt-2">ستظهر أنشطتك هنا عند بدء استخدام المنصة</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Orders Tab */}
-          <TabsContent value="orders" className="space-y-6 animate-fade-in">
-            <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                طلباتي
-              </h2>
-              <Button className="hover-scale group bg-gradient-to-r from-primary to-blue-600">
-                <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
-                طلب جديد
-              </Button>
-            </div>
-            
-            <div className="text-center py-12">
-              <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">لا توجد طلبات حتى الآن</h3>
-              <p className="text-gray-500 mb-6">ابدأ رحلتك معنا بإنشاء طلبك الأول</p>
-              <Button className="hover-scale group bg-gradient-to-r from-primary to-blue-600">
-                <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
-                إنشاء طلب جديد
-              </Button>
-            </div>
-          </TabsContent>
-
-          {/* Projects Tab */}
-          <TabsContent value="projects" className="space-y-6 animate-fade-in">
-            <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                مشاريعي
-              </h2>
-              <Button className="hover-scale group bg-gradient-to-r from-primary to-blue-600">
-                <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
-                مشروع جديد
-              </Button>
-            </div>
-            
-            <div className="text-center py-12">
-              <Settings className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">لا توجد مشاريع حتى الآن</h3>
-              <p className="text-gray-500 mb-6">ابدأ مشروعك الأول معنا اليوم</p>
-              <Button className="hover-scale group bg-gradient-to-r from-primary to-blue-600">
-                <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
-                إنشاء مشروع جديد
-              </Button>
-            </div>
-          </TabsContent>
-
-          {/* Billing Tab */}
-          <TabsContent value="billing" className="space-y-6 animate-fade-in">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              الفواتير والمدفوعات
-            </h2>
-            
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-green-50/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <CreditCard className="w-6 h-6 text-green-600" />
-                  الفواتير الأخيرة
-                </CardTitle>
-                <CardDescription>آخر 6 أشهر من الفواتير والمدفوعات</CardDescription>
-              </CardHeader>
-               <CardContent>
-                <div className="text-center py-8">
-                  <CreditCard className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-600 mb-2">لا توجد فواتير حتى الآن</h3>
-                  <p className="text-gray-500">ستظهر فواتيرك هنا عند إتمام أول عملية شراء</p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Profile Tab */}
-          <TabsContent value="profile" className="space-y-6 animate-fade-in">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              الملف الشخصي
-            </h2>
-            
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-blue-50/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <User className="w-6 h-6 text-primary" />
-                  معلومات الحساب
-                </CardTitle>
-                <CardDescription>إدارة وتحديث معلوماتك الشخصية</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center gap-6 p-6 bg-gradient-to-r from-primary/5 to-blue-600/5 rounded-xl">
-                  <Avatar className="h-20 w-20 ring-4 ring-primary/20">
-                    <AvatarImage src={profile?.avatar_url || ""} />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white text-2xl font-bold">
-                      {profile?.first_name?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      {profile?.first_name} {profile?.last_name}
-                    </h3>
-                    <p className="text-gray-600">{user?.email}</p>
-                    <Button variant="outline" size="sm" className="mt-2">
-                      تغيير الصورة
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  {[
-                    { label: "الاسم الأول", value: profile?.first_name || 'غير محدد', icon: User },
-                    { label: "الاسم الأخير", value: profile?.last_name || 'غير محدد', icon: User },
-                    { label: "البريد الإلكتروني", value: user?.email || 'غير محدد', icon: User },
-                    { label: "رقم الهاتف", value: profile?.phone || 'غير محدد', icon: User },
-                    { label: "الشركة", value: profile?.company || 'غير محدد', icon: User },
-                    { label: "تاريخ الانضمام", value: new Date(profile?.created_at || '').toLocaleDateString('ar-SA'), icon: Calendar },
-                  ].map((field, index) => (
-                    <div key={index} className="space-y-2 p-4 bg-white/60 rounded-xl hover:bg-white/80 transition-colors">
-                      <label className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                        <field.icon className="w-4 h-4" />
-                        {field.label}
-                      </label>
-                      <p className="text-lg font-medium text-gray-900">{field.value}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-4 pt-4">
-                  <Button className="hover-scale bg-gradient-to-r from-primary to-blue-600">
-                    <Settings className="mr-2 h-4 w-4" />
-                    تحديث المعلومات
-                  </Button>
-                  <Button variant="outline" className="hover-scale">
-                    <Eye className="mr-2 h-4 w-4" />
-                    عرض الملف الكامل
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        </main>
       </div>
-    </SidebarLayout>
+    </SidebarProvider>
   );
-}
+};
+
+// مكونات التبويبات
+const OverviewTab = ({ data }: { data: DashboardData }) => {
+  const stats = [
+    {
+      title: "طلبات الخدمات",
+      value: data.serviceRequests.length,
+      icon: <Package className="h-8 w-8" />,
+      color: "text-blue-600"
+    },
+    {
+      title: "الفواتير",
+      value: data.invoices.length,
+      icon: <FileText className="h-8 w-8" />,
+      color: "text-green-600"
+    },
+    {
+      title: "المدفوعات",
+      value: data.paymentHistory.length,
+      icon: <CreditCard className="h-8 w-8" />,
+      color: "text-purple-600"
+    },
+    {
+      title: "التذاكر",
+      value: data.tickets.length,
+      icon: <MessageSquare className="h-8 w-8" />,
+      color: "text-orange-600"
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* إحصائيات سريعة */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <Card key={index} className="relative overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">{stat.title}</p>
+                  <p className="text-3xl font-bold">{stat.value}</p>
+                </div>
+                <div className={stat.color}>
+                  {stat.icon}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* آخر طلبات الخدمات */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              آخر طلبات الخدمات
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {data.serviceRequests.slice(0, 5).map((request) => (
+                <div key={request.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{request.title}</p>
+                    <p className="text-sm text-muted-foreground">{request.service_type}</p>
+                  </div>
+                  <Badge variant={request.status === 'completed' ? 'default' : 'secondary'}>
+                    {request.status === 'completed' ? 'مكتمل' : 'معلق'}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* آخر الأنشطة */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              سجل الأنشطة
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {data.activityLogs.map((log) => (
+                <div key={log.id} className="flex items-start gap-3 p-3 border rounded-lg">
+                  <div className="w-2 h-2 rounded-full bg-primary mt-2"></div>
+                  <div className="flex-1">
+                    <p className="text-sm">{log.description}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(log.created_at).toLocaleDateString('ar-SA')}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+const ServicesTab = ({ data, onRefresh }: { data: DashboardData, onRefresh: () => void }) => {
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">طلبات الخدمات</h2>
+        <Button onClick={() => window.location.href = '/current-offers'}>
+          طلب خدمة جديدة
+        </Button>
+      </div>
+
+      <div className="grid gap-6">
+        {data.serviceRequests.map((request) => (
+          <Card key={request.id}>
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Package className="h-5 w-5" />
+                    {request.title}
+                  </CardTitle>
+                  <CardDescription>{request.description}</CardDescription>
+                </div>
+                <Badge variant={request.status === 'completed' ? 'default' : 'secondary'}>
+                  {request.status === 'completed' ? 'مكتمل' : 'معلق'}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <p className="text-muted-foreground">نوع الخدمة</p>
+                  <p className="font-medium">{request.service_type}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">الأولوية</p>
+                  <p className="font-medium">{request.priority}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">تاريخ الإنشاء</p>
+                  <p className="font-medium">
+                    {new Date(request.created_at).toLocaleDateString('ar-SA')}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">التكلفة المقدرة</p>
+                  <p className="font-medium">
+                    {request.estimated_cost ? `${request.estimated_cost} ريال` : 'غير محدد'}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const InvoicesTab = ({ data }: { data: DashboardData }) => {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">الفواتير</h2>
+      
+      <div className="grid gap-4">
+        {data.invoices.map((invoice) => (
+          <Card key={invoice.id}>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    <span className="font-medium">فاتورة رقم: {invoice.invoice_number}</span>
+                  </div>
+                  <p className="text-muted-foreground">{invoice.offer_title}</p>
+                  <p className="text-2xl font-bold">{invoice.amount} {invoice.currency}</p>
+                </div>
+                <div className="text-right space-y-2">
+                  <Badge variant={invoice.status === 'paid' ? 'default' : 'destructive'}>
+                    {invoice.status === 'paid' ? 'مدفوع' : 'غير مدفوع'}
+                  </Badge>
+                  <p className="text-sm text-muted-foreground">
+                    تاريخ الإصدار: {new Date(invoice.issue_date).toLocaleDateString('ar-SA')}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const PaymentsTab = ({ data }: { data: DashboardData }) => {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">تاريخ المدفوعات</h2>
+      
+      <div className="grid gap-4">
+        {data.paymentHistory.map((payment) => (
+          <Card key={payment.id}>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="h-5 w-5" />
+                    <span className="font-medium">دفعة {payment.reference_number}</span>
+                  </div>
+                  <p className="text-muted-foreground">طريقة الدفع: {payment.payment_method}</p>
+                </div>
+                <div className="text-right space-y-2">
+                  <p className="text-xl font-bold">{payment.amount} {payment.currency}</p>
+                  <Badge variant={payment.status === 'completed' ? 'default' : 'secondary'}>
+                    {payment.status === 'completed' ? 'مكتمل' : payment.status}
+                  </Badge>
+                  <p className="text-sm text-muted-foreground">
+                    {new Date(payment.payment_date).toLocaleDateString('ar-SA')}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const TicketsTab = ({ data, onRefresh }: { data: DashboardData, onRefresh: () => void }) => {
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">تذاكر الدعم</h2>
+        <Button onClick={() => window.location.href = '/support'}>
+          إنشاء تذكرة جديدة
+        </Button>
+      </div>
+      
+      <div className="grid gap-4">
+        {data.tickets.map((ticket) => (
+          <Card key={ticket.id}>
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5" />
+                    <span className="font-medium">تذكرة رقم: {ticket.ticket_number}</span>
+                  </div>
+                  <p className="font-medium">{ticket.title}</p>
+                  <p className="text-muted-foreground">{ticket.description}</p>
+                </div>
+                <div className="text-right space-y-2">
+                  <Badge variant={ticket.status === 'closed' ? 'secondary' : 'default'}>
+                    {ticket.status === 'closed' ? 'مغلق' : 'مفتوح'}
+                  </Badge>
+                  <p className="text-sm text-muted-foreground">
+                    الأولوية: {ticket.priority}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {new Date(ticket.created_at).toLocaleDateString('ar-SA')}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ProfileTab = ({ data, user, onRefresh }: { data: DashboardData, user: any, onRefresh: () => void }) => {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">الملف الشخصي</h2>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <User className="h-5 w-5" />
+            معلومات الحساب
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground">الاسم الكامل</p>
+              <p className="font-medium">{data.profile?.full_name || 'غير محدد'}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">البريد الإلكتروني</p>
+              <p className="font-medium">{user?.email}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">رقم الهاتف</p>
+              <p className="font-medium">{data.profile?.phone || 'غير محدد'}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">الشركة</p>
+              <p className="font-medium">{data.profile?.company || 'غير محدد'}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">رقم العميل</p>
+              <p className="font-medium">{data.profile?.client_id || 'غير محدد'}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">تاريخ التسجيل</p>
+              <p className="font-medium">
+                {new Date(data.profile?.created_at).toLocaleDateString('ar-SA')}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const NotificationsTab = ({ data }: { data: DashboardData }) => {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">الإشعارات</h2>
+      
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center text-muted-foreground">
+            <Bell className="h-12 w-12 mx-auto mb-4" />
+            <p>لا توجد إشعارات جديدة</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default ClientDashboard;
