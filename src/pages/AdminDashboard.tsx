@@ -175,6 +175,8 @@ export default function AdminDashboard() {
             <TabsTrigger value="users">المستخدمين</TabsTrigger>
             <TabsTrigger value="orders">الطلبات</TabsTrigger>
             <TabsTrigger value="projects">المشاريع</TabsTrigger>
+            <TabsTrigger value="tickets">التذاكر</TabsTrigger>
+            <TabsTrigger value="invoices">الفواتير</TabsTrigger>
             <TabsTrigger value="analytics">التحليلات</TabsTrigger>
             <TabsTrigger value="settings">الإعدادات</TabsTrigger>
           </TabsList>
@@ -325,6 +327,125 @@ export default function AdminDashboard() {
                             عرض
                           </Button>
                         </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="tickets" className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">إدارة التذاكر</h2>
+              <div className="flex gap-2">
+                <Button variant="outline">تصدير</Button>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  تذكرة جديدة
+                </Button>
+              </div>
+            </div>
+            
+            <div className="grid gap-4">
+              {[1, 2, 3, 4, 5].map((ticket) => (
+                <Card key={ticket}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-lg">مشكلة في النظام</CardTitle>
+                        <CardDescription>
+                          العميل: أحمد محمد | تذكرة #TK25555{ticket}01
+                        </CardDescription>
+                      </div>
+                      <Badge variant={
+                        ticket % 3 === 0 ? 'default' : 
+                        ticket % 3 === 1 ? 'secondary' : 'destructive'
+                      }>
+                        {ticket % 3 === 0 ? 'مفتوح' : 
+                         ticket % 3 === 1 ? 'مغلق' : 'عاجل'}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center">
+                      <div className="space-y-1">
+                        <p className="text-sm text-muted-foreground">
+                          تاريخ الإنشاء: {new Date().toLocaleDateString('ar-SA')}
+                        </p>
+                        <p className="text-sm">
+                          {ticket % 2 === 0 ? 'مشكلة فنية في النظام' : 'استفسار عن الخدمة'}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          رد
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <Eye className="mr-2 h-4 w-4" />
+                          عرض
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="invoices" className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">إدارة الفواتير</h2>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => window.open('/invoice-admin', '_blank')}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  إدارة كاملة
+                </Button>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  فاتورة جديدة
+                </Button>
+              </div>
+            </div>
+            
+            <div className="grid gap-4">
+              {[1, 2, 3, 4, 5].map((invoice) => (
+                <Card key={invoice}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-lg">فاتورة تصميم موقع</CardTitle>
+                        <CardDescription>
+                          العميل: أحمد محمد | #INV25000{invoice}
+                        </CardDescription>
+                      </div>
+                      <Badge variant={
+                        invoice % 3 === 0 ? 'default' : 
+                        invoice % 3 === 1 ? 'secondary' : 'destructive'
+                      }>
+                        {invoice % 3 === 0 ? 'مدفوع' : 
+                         invoice % 3 === 1 ? 'مرسل' : 'في الانتظار'}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center">
+                      <div className="space-y-1">
+                        <p className="text-sm text-muted-foreground">
+                          تاريخ الإصدار: {new Date().toLocaleDateString('ar-SA')}
+                        </p>
+                        <p className="text-sm font-medium">
+                          المبلغ: {(invoice * 5000).toLocaleString()} ر.س
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          إرسال
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <Eye className="mr-2 h-4 w-4" />
+                          عرض
+                        </Button>
                       </div>
                     </div>
                   </CardContent>

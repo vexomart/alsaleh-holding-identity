@@ -101,6 +101,7 @@ import EmailTest from "./pages/EmailTest";
 import EnhancedDesignCategory from "./pages/EnhancedDesignCategory";
 import InvoiceAdmin from "./pages/InvoiceAdmin";
 import InvoiceViewer from "./pages/InvoiceViewer";
+import InvoiceManagement from "./pages/InvoiceManagement";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -216,9 +217,10 @@ const App = () => {
               
               <Route path="/car-fleet" element={<CarFleet />} />
               <Route path="/car-booking" element={<CarBooking />} />
-              <Route path="/email-test" element={<EmailTest />} />
-              <Route path="/invoice-admin" element={<InvoiceAdmin />} />
-              <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
+               <Route path="/email-test" element={<EmailTest />} />
+               <Route path="/invoice-admin" element={<InvoiceAdmin />} />
+               <Route path="/invoice-management" element={<InvoiceManagement />} />
+               <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
