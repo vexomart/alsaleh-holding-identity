@@ -330,16 +330,15 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-br from-background via-primary/5 to-secondary/10 overflow-hidden">
+    <footer className="relative bg-black overflow-hidden">
       {/* Modern Background Effects */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--primary))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary))_1px,transparent_1px)] bg-[size:100px_100px] opacity-[0.03]" />
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-primary/10 to-accent/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-r from-secondary/10 to-primary/10 rounded-full blur-3xl animate-float-delayed" />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-accent/8 to-secondary/8 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px] opacity-20" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-l from-white/5 to-gray-500/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-r from-white/3 to-gray-400/3 rounded-full blur-3xl" />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Footer Content */}
-        <div className="py-16 lg:py-24">
+        <div className="py-12">
           
           {/* Modern Responsive Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-8">
