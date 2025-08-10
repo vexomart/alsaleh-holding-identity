@@ -57,7 +57,6 @@ import Subsidiaries from "./pages/Subsidiaries";
 import PaymentMethods from "./pages/PaymentMethods";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
-import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import StartWithUs from "./pages/StartWithUs";
 import BookConsultation from "./pages/BookConsultation";
@@ -163,7 +162,7 @@ const App = () => {
               <Route path="/payment-methods" element={<PaymentMethods />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/payment-cancel" element={<PaymentCancel />} />
-          <Route path="/auth" element={<Auth />} />
+          
           <Route path="/start-with-us" element={<StartWithUs />} />
               <Route path="/book-consultation" element={<BookConsultation />} />
               <Route path="/hosting-services" element={<HostingServices />} />
