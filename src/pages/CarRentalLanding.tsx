@@ -55,51 +55,25 @@ import {
   Video
 } from "lucide-react";
 
-import Autoplay from "embla-carousel-autoplay";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
 const CarRentalLanding = () => {
   const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [carouselApi, setCarouselApi] = useState<any>();
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [hoveredService, setHoveredService] = useState(null);
   const [selectedCarType, setSelectedCarType] = useState('all');
 
-  // الصور المتطورة مع سلايدر ديناميكي
-  const heroSlides = [
-    {
-      id: 1,
-      title: "تأجير السيارات الذكي",
-      subtitle: "تكنولوجيا متقدمة وخدمة استثنائية",
-      description: "احجز • اقود • استمتع",
-      image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      cta: "ابدأ الآن",
-      badge: "الأحدث"
-    },
-    {
-      id: 2,
-      title: "سيارات فاخرة لكل مناسبة",
-      subtitle: "تجربة قيادة استثنائية مع أحدث السيارات الفاخرة",
-      description: "مرسيدس • BMW • أودي وأكثر",
-      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      cta: "استكشف الأسطول",
-      badge: "الأكثر شعبية"
-    },
-    {
-      id: 3,
-      title: "رحلات آمنة ومريحة",
-      subtitle: "مع تأمين شامل وخدمة عملاء 24/7",
-      description: "تأمين • صيانة • دعم فني",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      cta: "احجز بثقة",
-      badge: "موثوق"
-    }
-  ];
+  // الصورة الرئيسية
+  const heroSlide = {
+    title: "تأجير السيارات الذكي",
+    subtitle: "تكنولوجيا متقدمة وخدمة استثنائية",
+    description: "احجز • اقود • استمتع",
+    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+    cta: "ابدأ الآن",
+    badge: "الأحدث"
+  };
 
   const featuredCars = [
     {
@@ -191,71 +165,6 @@ const CarRentalLanding = () => {
     { number: "24/7", label: "دعم فني", icon: Clock, color: "from-red-500 to-red-600", growth: "دائم" }
   ];
 
-  // آراء العملاء المتقدمة
-  const testimonials = [
-    {
-      id: 1,
-      name: "أحمد السعيد",
-      title: "رجل أعمال",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-      rating: 5,
-      text: "خدمة ممتازة وسيارات نظيفة ومريحة. الحجز كان سهل والتعامل احترافي جداً.",
-      date: "منذ أسبوع",
-      verified: true,
-      helpful: 45
-    },
-    {
-      id: 2, 
-      name: "فاطمة النور",
-      title: "طبيبة",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=150&h=150&fit=crop&crop=face",
-      rating: 5,
-      text: "استخدمت الخدمة لرحلة عائلية وكانت تجربة رائعة. السيارة كانت حديثة ومجهزة بكل شيء.",
-      date: "منذ 3 أيام",
-      verified: true,
-      helpful: 32
-    },
-    {
-      id: 3,
-      name: "محمد العلي",
-      title: "مهندس",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-      rating: 5,
-      text: "أفضل شركة تأجير سيارات جربتها. السعر معقول والخدمة ممتازة.",
-      date: "منذ يومين",
-      verified: true,
-      helpful: 28
-    }
-  ];
-
-  // مواقع متقدمة
-  const locations = [
-    { 
-      name: "الرياض", 
-      branches: 8, 
-      popular: true,
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
-    },
-    { 
-      name: "جدة", 
-      branches: 6, 
-      popular: true,
-      image: "https://images.unsplash.com/photo-1564639883071-b3b6bb6e4498?w=300&h=200&fit=crop"
-    },
-    { 
-      name: "الدمام", 
-      branches: 4, 
-      popular: false,
-      image: "https://images.unsplash.com/photo-1512733596533-7b00ccf8ebaf?w=300&h=200&fit=crop"
-    },
-    { 
-      name: "مكة المكرمة", 
-      branches: 3, 
-      popular: true,
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
-    }
-  ];
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -263,17 +172,6 @@ const CarRentalLanding = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // مزامنة مؤشر السلايدر مع Embla
-  useEffect(() => {
-    if (!carouselApi) return;
-    const onSelect = () => setSelectedIndex(carouselApi.selectedScrollSnap());
-    onSelect();
-    carouselApi.on("select", onSelect);
-    return () => {
-      carouselApi.off("select", onSelect as any);
-    };
-  }, [carouselApi]);
 
   const navigation = [
     { name: "الرئيسية", href: "/car-rental-landing", active: true },
@@ -284,7 +182,6 @@ const CarRentalLanding = () => {
     { name: "تواصل معنا", href: "/car-rental/contact" }
   ];
 
-  // التحكم في التنقل يتم عبر أزرار CarouselPrevious و CarouselNext
   return (
     <div className="min-h-screen bg-white">
       <BackButton />
@@ -373,145 +270,113 @@ const CarRentalLanding = () => {
         )}
       </nav>
 
-      {/* السلايدر الرئيسي */}
+      {/* القسم الرئيسي */}
       <section className="relative bg-gray-900">
-        <Carousel
-          opts={{ loop: true }}
-          plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
-          setApi={setCarouselApi}
-          className="w-full"
-        >
-          <CarouselContent>
-            {heroSlides.map((slide, index) => (
-              <CarouselItem key={slide.id}>
-                <div className="relative h-[70vh] min-h-[500px] w-full">
-                  {/* صورة الخلفية */}
-                  <div 
-                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                    style={{ backgroundImage: `url(${slide.image})` }}
-                  />
+        <div className="relative h-[70vh] min-h-[500px] w-full">
+          {/* صورة الخلفية */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${heroSlide.image})` }}
+          />
+          
+          {/* طبقة التدرج */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 to-transparent" />
+
+          {/* المحتوى */}
+          <div className="absolute inset-0 z-10 flex items-center justify-center">
+            <div className="container mx-auto px-4 text-center">
+              <div className="max-w-4xl mx-auto text-white">
+                
+                {/* الشارة */}
+                <Badge className="bg-blue-600 text-white border-0 mb-6 px-4 py-2">
+                  {heroSlide.badge}
+                </Badge>
+                
+                {/* العنوان الرئيسي */}
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                  {heroSlide.title}
+                </h1>
+                
+                {/* العنوان الفرعي */}
+                <p className="text-lg sm:text-xl md:text-2xl mb-4 text-blue-100">
+                  {heroSlide.subtitle}
+                </p>
+                
+                {/* الوصف */}
+                <p className="text-base sm:text-lg md:text-xl mb-8 opacity-90">
+                  {heroSlide.description}
+                </p>
+
+                {/* الأزرار */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4" asChild>
+                    <a href="/car-booking">{heroSlide.cta}</a>
+                  </Button>
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4">
+                    <Play className="w-5 h-5 ml-2" />
+                    شاهد الفيديو
+                  </Button>
+                </div>
+
+                {/* نموذج البحث */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
+                  <h3 className="text-gray-800 text-lg font-semibold mb-6 text-center">
+                    ابحث عن سيارتك المثالية
+                  </h3>
                   
-                  {/* طبقة التدرج */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 to-transparent" />
-
-                  {/* المحتوى */}
-                  <div className="absolute inset-0 z-10 flex items-center justify-center">
-                    <div className="container mx-auto px-4 text-center">
-                      <div className="max-w-4xl mx-auto text-white">
-                        
-                        {/* الشارة */}
-                        <Badge className="bg-blue-600 text-white border-0 mb-6 px-4 py-2">
-                          {slide.badge}
-                        </Badge>
-                        
-                        {/* العنوان الرئيسي */}
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                          {slide.title}
-                        </h1>
-                        
-                        {/* العنوان الفرعي */}
-                        <p className="text-lg sm:text-xl md:text-2xl mb-4 text-blue-100">
-                          {slide.subtitle}
-                        </p>
-                        
-                        {/* الوصف */}
-                        <p className="text-base sm:text-lg md:text-xl mb-8 opacity-90">
-                          {slide.description}
-                        </p>
-
-                        {/* الأزرار */}
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4" asChild>
-                            <a href="/car-booking">{slide.cta}</a>
-                          </Button>
-                          <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4">
-                            <Play className="w-5 h-5 ml-2" />
-                            شاهد الفيديو
-                          </Button>
-                        </div>
-
-                        {/* نموذج البحث */}
-                        <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
-                          <h3 className="text-gray-800 text-lg font-semibold mb-6 text-center">
-                            ابحث عن سيارتك المثالية
-                          </h3>
-                          
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                مكان الاستلام
-                              </label>
-                              <div className="relative">
-                                <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                                <input
-                                  type="text"
-                                  placeholder="اختر المدينة"
-                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                              </div>
-                            </div>
-                            
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                تاريخ الاستلام
-                              </label>
-                              <div className="relative">
-                                <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                                <input
-                                  type="date"
-                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                              </div>
-                            </div>
-                            
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                تاريخ الإرجاع
-                              </label>
-                              <div className="relative">
-                                <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                                <input
-                                  type="date"
-                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-end">
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 text-lg">
-                                <Search className="w-5 h-5 ml-2" />
-                                ابحث الآن
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        مكان الاستلام
+                      </label>
+                      <div className="relative">
+                        <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <input
+                          type="text"
+                          placeholder="اختر المدينة"
+                          className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
                       </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        تاريخ الاستلام
+                      </label>
+                      <div className="relative">
+                        <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <input
+                          type="date"
+                          className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        تاريخ الإرجاع
+                      </label>
+                      <div className="relative">
+                        <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <input
+                          type="date"
+                          className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-end">
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 text-lg">
+                        <Search className="w-5 h-5 ml-2" />
+                        ابحث الآن
+                      </Button>
                     </div>
                   </div>
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-
-          {/* أزرار التنقل */}
-          <CarouselPrevious className="left-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30 w-12 h-12" />
-          <CarouselNext className="right-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30 w-12 h-12" />
-        </Carousel>
-
-        {/* مؤشرات السلايدر */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => carouselApi?.scrollTo(i)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                i === selectedIndex 
-                  ? 'bg-white scale-125' 
-                  : 'bg-white/60 hover:bg-white/80'
-              }`}
-            />
-          ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -533,18 +398,18 @@ const CarRentalLanding = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
                 <div 
                   key={index} 
-                  className="text-center group hover:scale-110 transition-all duration-300"
+                  className="text-center group hover:scale-105 transition-transform duration-300"
                 >
-                  <div className={`w-20 h-20 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl group-hover:shadow-3xl transition-all`}>
-                    <IconComponent className="w-10 h-10 text-white" />
+                  <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-r ${stat.color} rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                    <IconComponent className="w-8 h-8 text-white" />
                   </div>
-                  <div className="text-4xl md:text-5xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
+                  <div className="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
                     {stat.number}
                   </div>
                   <div className="text-white/90 font-medium text-lg">
@@ -1209,6 +1074,19 @@ const CarRentalLanding = () => {
           </a>
         </div>
       </footer>
+
+      {/* زر الاتصال العائم */}
+      <div className="fixed bottom-6 left-6 z-50">
+        <Button
+          size="lg"
+          className="bg-green-500 hover:bg-green-600 text-white rounded-full w-16 h-16 shadow-2xl animate-bounce"
+          asChild
+        >
+          <a href="tel:+966500000000" className="flex items-center justify-center">
+            <Phone className="w-6 h-6" />
+          </a>
+        </Button>
+      </div>
     </div>
   );
 };
