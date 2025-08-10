@@ -56,11 +56,13 @@ const Navigation = () => {
   useEffect(() => {
     // التحقق من حالة المصادقة
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session?.user?.email);
       setUser(session?.user ?? null);
     });
 
     // التحقق من الجلسة الحالية
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Current session:', session?.user?.email);
       setUser(session?.user ?? null);
     });
 
@@ -68,6 +70,7 @@ const Navigation = () => {
   }, []);
 
   const handleSignOut = async () => {
+    console.log('Signing out...');
     await supabase.auth.signOut();
     setUser(null);
   };
@@ -368,6 +371,7 @@ const Navigation = () => {
               <div className="hidden lg:flex items-center gap-2">
                 {user ? (
                   <>
+                    <span className="text-xs text-gray-500">مرحباً {user.email}</span>
                     <Button 
                       variant="outline"
                       size="sm"
