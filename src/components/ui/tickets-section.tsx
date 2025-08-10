@@ -104,7 +104,8 @@ export function TicketsSection() {
       
       // إرسال إشعار للإدارة
       try {
-        await supabase.functions.invoke('service-notifications', {
+        console.log('إرسال إشعار إنشاء تذكرة...', data);
+        const notificationResult = await supabase.functions.invoke('service-notifications', {
           body: {
             type: 'ticket_created',
             ticketId: data.id,
@@ -119,8 +120,9 @@ export function TicketsSection() {
             }
           }
         });
+        console.log('نتيجة إرسال الإشعار:', notificationResult);
       } catch (notificationError) {
-        console.error('Error sending notification:', notificationError);
+        console.error('خطأ في إرسال الإشعار:', notificationError);
       }
       
       setTickets([data, ...tickets]);
@@ -181,7 +183,8 @@ export function TicketsSection() {
       try {
         const selectedTicketData = tickets.find(t => t.id === selectedTicket);
         if (selectedTicketData) {
-          await supabase.functions.invoke('service-notifications', {
+          console.log('إرسال إشعار رد على تذكرة...', selectedTicketData);
+          const replyResult = await supabase.functions.invoke('service-notifications', {
             body: {
               type: 'ticket_reply',
               ticketId: selectedTicket,
@@ -192,9 +195,10 @@ export function TicketsSection() {
               }
             }
           });
+          console.log('نتيجة إرسال رد التذكرة:', replyResult);
         }
       } catch (notificationError) {
-        console.error('Error sending notification:', notificationError);
+        console.error('خطأ في إرسال إشعار الرد:', notificationError);
       }
       
       setMessages([...messages, data]);
