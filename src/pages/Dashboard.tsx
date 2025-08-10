@@ -414,21 +414,21 @@ const Dashboard = () => {
 
         {/* Main Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-sm">
-            <TabsTrigger value="overview" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
-              <BarChart3 className="h-4 w-4" />
+          <TabsList className="grid w-full grid-cols-4 bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-sm" dir="rtl">
+            <TabsTrigger value="overview" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
+              <BarChart3 className="h-4 w-4 rtl-flip" />
               نظرة عامة
             </TabsTrigger>
-            <TabsTrigger value="services" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
-              <FileText className="h-4 w-4" />
+            <TabsTrigger value="services" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
+              <FileText className="h-4 w-4 rtl-flip" />
               طلبات الخدمات
             </TabsTrigger>
-            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
-              <CreditCard className="h-4 w-4" />
+            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
+              <CreditCard className="h-4 w-4 rtl-flip" />
               الفواتير
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
-              <Settings className="h-4 w-4" />
+            <TabsTrigger value="profile" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
+              <Settings className="h-4 w-4 rtl-flip" />
               الملف الشخصي
             </TabsTrigger>
           </TabsList>
