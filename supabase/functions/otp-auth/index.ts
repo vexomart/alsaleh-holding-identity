@@ -99,7 +99,7 @@ const handler = async (req: Request): Promise<Response> => {
           success: false,
           message: "رمز التحقق غير صالح أو منتهي الصلاحية"
         }), {
-          status: 400,
+          status: 200,
           headers: { "Content-Type": "application/json", ...corsHeaders }
         });
       }
@@ -111,7 +111,7 @@ const handler = async (req: Request): Promise<Response> => {
           success: false,
           message: "رمز التحقق منتهي الصلاحية"
         }), {
-          status: 400,
+          status: 200,
           headers: { "Content-Type": "application/json", ...corsHeaders }
         });
       }
@@ -123,7 +123,7 @@ const handler = async (req: Request): Promise<Response> => {
           success: false,
           message: "تم تجاوز عدد المحاولات المسموحة"
         }), {
-          status: 400,
+          status: 200,
           headers: { "Content-Type": "application/json", ...corsHeaders }
         });
       }
@@ -135,21 +135,17 @@ const handler = async (req: Request): Promise<Response> => {
           success: false,
           message: `رمز التحقق غير صحيح. المحاولات المتبقية: ${3 - cachedData.attempts}`
         }), {
-          status: 400,
+          status: 200,
           headers: { "Content-Type": "application/json", ...corsHeaders }
         });
       }
 
       // OTP صحيح - إزالته من الذاكرة المؤقت
       otpCache.delete(email);
-
-      // إنشاء رمز مميز للجلسة
-      const sessionToken = crypto.randomUUID();
       
       return new Response(JSON.stringify({
         success: true,
-        message: "تم التحقق بنجاح",
-        sessionToken
+        message: "تم التحقق بنجاح"
       }), {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders }
