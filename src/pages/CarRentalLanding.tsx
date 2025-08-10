@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -64,6 +64,32 @@ const CarRentalLanding = () => {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [hoveredService, setHoveredService] = useState(null);
   const [selectedCarType, setSelectedCarType] = useState('all');
+  const [counters, setCounters] = useState({});
+  const [isStatsVisible, setIsStatsVisible] = useState(false);
+  const statsRef = useRef(null);
+
+  // دالة لتشغيل أنيميشن العداد
+  const animateCounter = (start, end, duration, key) => {
+    const startTime = Date.now();
+    const endTime = startTime + duration;
+    
+    const updateCounter = () => {
+      const now = Date.now();
+      const remaining = Math.max((endTime - now) / duration, 0);
+      const value = Math.round(end - (remaining * (end - start)));
+      
+      setCounters(prev => ({
+        ...prev,
+        [key]: value
+      }));
+      
+      if (remaining > 0) {
+        requestAnimationFrame(updateCounter);
+      }
+    };
+    
+    requestAnimationFrame(updateCounter);
+  };
 
   // الصورة الرئيسية
   const heroSlide = {
@@ -157,12 +183,60 @@ const CarRentalLanding = () => {
   ];
 
   const stats = [
-    { number: "25,000+", label: "عميل راضٍ", icon: Users, color: "from-blue-500 to-blue-600", growth: "+12%" },
-    { number: "1,200+", label: "سيارة متاحة", icon: Car, color: "from-green-500 to-green-600", growth: "+25%" },
-    { number: "50+", label: "مدينة نخدمها", icon: MapPin, color: "from-purple-500 to-purple-600", growth: "+8%" },
-    { number: "12", label: "سنوات خبرة", icon: Award, color: "from-orange-500 to-orange-600", growth: "مستمر" },
-    { number: "4.9/5", label: "تقييم العملاء", icon: Star, color: "from-yellow-500 to-yellow-600", growth: "+0.2" },
-    { number: "24/7", label: "دعم فني", icon: Clock, color: "from-red-500 to-red-600", growth: "دائم" }
+    { 
+      number: "25000", 
+      displayNumber: "25,000+", 
+      label: "عميل راضٍ", 
+      icon: Users, 
+      color: "from-blue-500 to-blue-600", 
+      growth: "+12%",
+      description: "عميل سعيد بخدماتنا"
+    },
+    { 
+      number: "1200", 
+      displayNumber: "1,200+", 
+      label: "سيارة متاحة", 
+      icon: Car, 
+      color: "from-green-500 to-green-600", 
+      growth: "+25%",
+      description: "سيارة حديثة ومتنوعة"
+    },
+    { 
+      number: "50", 
+      displayNumber: "50+", 
+      label: "مدينة نخدمها", 
+      icon: MapPin, 
+      color: "from-purple-500 to-purple-600", 
+      growth: "+8%",
+      description: "مدينة في المملكة"
+    },
+    { 
+      number: "12", 
+      displayNumber: "12", 
+      label: "سنوات خبرة", 
+      icon: Award, 
+      color: "from-orange-500 to-orange-600", 
+      growth: "مستمر",
+      description: "عام من التميز"
+    },
+    { 
+      number: "49", 
+      displayNumber: "4.9/5", 
+      label: "تقييم العملاء", 
+      icon: Star, 
+      color: "from-yellow-500 to-yellow-600", 
+      growth: "+0.2",
+      description: "تقييم ممتاز"
+    },
+    { 
+      number: "24", 
+      displayNumber: "24/7", 
+      label: "دعم فني", 
+      icon: Clock, 
+      color: "from-red-500 to-red-600", 
+      growth: "دائم",
+      description: "خدمة مستمرة"
+    }
   ];
 
   useEffect(() => {
@@ -172,6 +246,40 @@ const CarRentalLanding = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // مراقب الإحصائيات لتشغيل الأنيميشن
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !isStatsVisible) {
+            setIsStatsVisible(true);
+            
+            // تشغيل أنيميشن العدادات
+            stats.forEach((stat, index) => {
+              const numericValue = parseInt(stat.number);
+              if (!isNaN(numericValue)) {
+                setTimeout(() => {
+                  animateCounter(0, numericValue, 2000, index);
+                }, index * 100);
+              }
+            });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => {
+      if (statsRef.current) {
+        observer.unobserve(statsRef.current);
+      }
+    };
+  }, [isStatsVisible]);
 
   const navigation = [
     { name: "الرئيسية", href: "/car-rental-landing", active: true },
@@ -380,44 +488,99 @@ const CarRentalLanding = () => {
         </div>
       </section>
 
-      {/* الإحصائيات */}
-      <section className="py-20 bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%)`,
-          }} />
+      {/* الإحصائيات المطورة */}
+      <section ref={statsRef} className="relative py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 overflow-hidden">
+        {/* الخلفية المتحركة */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 via-purple-600/30 to-pink-600/30 animate-pulse" />
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-float-delayed" />
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* العنوان المطور */}
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+            <div className="inline-block">
+              <Badge className="bg-white/10 text-white border-white/20 mb-4 sm:mb-6 px-4 py-2 backdrop-blur-sm">
+                إنجازاتنا المتميزة
+              </Badge>
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               أرقام تتحدث عن نفسها
             </h2>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
               نفخر بثقة عملائنا وإنجازاتنا المتميزة في قطاع تأجير السيارات
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          {/* شبكة الإحصائيات المطورة */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 lg:gap-8">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
+              const animatedValue = counters[index] || 0;
+              
               return (
                 <div 
                   key={index} 
-                  className="text-center group hover:scale-105 transition-transform duration-300"
+                  className={`group text-center transform transition-all duration-500 hover:scale-110 ${
+                    isStatsVisible ? 'animate-fade-in opacity-100' : 'opacity-0'
+                  }`}
+                  style={{ animationDelay: `${index * 150}ms` }}
                 >
-                  <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-r ${stat.color} rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
-                    <IconComponent className="w-8 h-8 text-white" />
+                  {/* أيقونة مطورة */}
+                  <div className={`relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto mb-4 sm:mb-6`}>
+                    <div className={`absolute inset-0 bg-gradient-to-r ${stat.color} rounded-full shadow-lg group-hover:shadow-2xl transition-all duration-300 animate-glow`} />
+                    <div className="absolute inset-1 bg-white/10 rounded-full backdrop-blur-sm flex items-center justify-center">
+                      <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" />
+                    </div>
+                    {/* مؤشر النمو */}
+                    <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg">
+                      {stat.growth}
+                    </div>
                   </div>
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
-                    {stat.number}
+                  
+                  {/* الرقم المتحرك */}
+                  <div className="mb-2 sm:mb-3">
+                    <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300">
+                      {isStatsVisible ? (
+                        stat.displayNumber.includes('/') || stat.displayNumber.includes('+') || isNaN(parseInt(stat.number)) 
+                          ? stat.displayNumber 
+                          : `${animatedValue.toLocaleString()}${stat.displayNumber.includes('+') ? '+' : ''}`
+                      ) : '0'}
+                    </div>
                   </div>
-                  <div className="text-white/90 font-medium text-lg">
-                    {stat.label}
+                  
+                  {/* الوصف */}
+                  <div>
+                    <div className="text-white/90 font-medium text-sm sm:text-base lg:text-lg mb-1">
+                      {stat.label}
+                    </div>
+                    <div className="text-white/70 text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {stat.description}
+                    </div>
                   </div>
+                  
+                  {/* خط الزخرفة */}
+                  <div className="w-8 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               );
             })}
+          </div>
+          
+          {/* شريط التقدم العام */}
+          <div className="mt-12 sm:mt-16 lg:mt-20 max-w-4xl mx-auto">
+            <div className="bg-white/10 rounded-full h-2 overflow-hidden backdrop-blur-sm">
+              <div 
+                className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-2000"
+                style={{ 
+                  width: isStatsVisible ? '100%' : '0%',
+                  transition: 'width 3s ease-out'
+                }}
+              />
+            </div>
+            <p className="text-center text-white/80 text-sm mt-3">
+              مستوى رضا العملاء والجودة
+            </p>
           </div>
         </div>
       </section>
