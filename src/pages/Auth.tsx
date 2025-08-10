@@ -136,7 +136,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke('otp-auth', {
+      const { data, error } = await supabase.functions.invoke('otp-auth', {
         body: {
           action: 'verify',
           email: email,
@@ -148,21 +148,16 @@ const Auth = () => {
         throw error;
       }
 
-      // تسجيل دخول المستخدم بعد التحقق من OTP
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password: 'temp_password_for_otp' // مؤقت للاختبار
-      });
-
-      if (signInError) {
-        // إذا فشل تسجيل الدخول العادي، نحاول العثور على المستخدم وتسجيل دخوله
+      if (data.success) {
         toast({
           title: "تم التحقق بنجاح",
-          description: "رمز التحقق صحيح. يرجى استخدام كلمة المرور العادية لتسجيل الدخول",
+          description: "رمز التحقق صحيح. يرجى استخدام كلمة المرور لإكمال تسجيل الدخول",
         });
         setShowOtpInput(false);
         setOtpSent(false);
         setOtp("");
+      } else {
+        throw new Error(data.message || 'رمز التحقق غير صحيح');
       }
     } catch (error: any) {
       toast({
