@@ -138,7 +138,7 @@ serve(async (req) => {
           // إنشاء وإرسال الفاتورة إذا كان الدفع ناجحاً
           if (newStatus === 'PAID') {
             try {
-              // إنشاء طلب الخدمة
+              // إنشاء طلب الخدمة وإرسال إشعار للعميل
               if (transaction.user_id) {
                 const { data: serviceRequest, error: serviceError } = await supabaseClient
                   .from('service_requests')
@@ -159,6 +159,24 @@ serve(async (req) => {
                   console.error('خطأ في إنشاء طلب الخدمة:', serviceError);
                 } else {
                   console.log('تم إنشاء طلب الخدمة:', serviceRequest);
+                  
+                  // إرسال إشعار تأكيد الطلب للعميل
+                  try {
+                    await supabaseClient.functions.invoke('service-notifications', {
+                      body: {
+                        serviceRequestId: serviceRequest.id,
+                        customerEmail: transaction.customer_email,
+                        customerName: transaction.customer_name,
+                        serviceType: 'payment_based',
+                        title: transaction.offer_title,
+                        description: serviceRequest.description,
+                        amount: transaction.amount,
+                        currency: transaction.currency
+                      }
+                    });
+                  } catch (notificationError) {
+                    console.error('خطأ في إرسال إشعار الطلب:', notificationError);
+                  }
                 }
               }
 
@@ -235,63 +253,31 @@ serve(async (req) => {
             }
           }
 
-          // إرسال إيميل تأكيد الدفع
+          // إرسال إشعار حالة الدفع للعميل
           const to = transaction.customer_email as string | null;
           if (to) {
-            const isPaid = newStatus === 'PAID' || newStatus === 'COMPLETED';
-            const subject = isPaid
-              ? `تم استلام دفعتك بنجاح - مرفق الفاتورة`
-              : `تعذر إتمام عملية الدفع`;
-            const amountStr = `${transaction.amount} ${transaction.currency || 'SAR'}`;
-            const trxNo = transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.tamara_order_id || transaction.stc_pay_reference || transactionId;
-
-            const html = isPaid
-              ? `
-                <div dir="rtl" style="font-family:Tahoma,Arial,sans-serif">
-                  <h2>تم الدفع بنجاح ✅</h2>
-                  <p>شكرًا لك ${transaction.customer_name || ''}، تم استلام دفعتك ومعالجة الطلب جاري الآن.</p>
-                  <ul>
-                    <li>العرض: ${transaction.offer_title || ''}</li>
-                    <li>المبلغ: <b>${amountStr}</b></li>
-                    <li>رقم المعاملة: <code>${trxNo}</code></li>
-                    <li>طريقة الدفع: ${transaction.payment_method || ''}</li>
-                  </ul>
-                  <p><strong>تم إرسال الفاتورة الرسمية إليك في إيميل منفصل.</strong></p>
-                  <p>سيتواصل معك فريق العمل خلال 24 ساعة لإتمام الإجراءات.</p>
-                  <p style="color:#666">شركة إمكان للحلول الرقمية</p>
-                </div>
-              `
-              : `
-                <div dir="rtl" style="font-family:Tahoma,Arial,sans-serif">
-                  <h2>لم تكتمل عملية الدفع ❌</h2>
-                  <p>عذرًا ${transaction.customer_name || ''}، لم تكتمل عملية الدفع الخاصة بك.</p>
-                  <ul>
-                    <li>العرض: ${transaction.offer_title || ''}</li>
-                    <li>المبلغ: <b>${amountStr}</b></li>
-                    <li>الحالة: ${newStatus}</li>
-                    <li>رقم المرجع: <code>${trxNo}</code></li>
-                  </ul>
-                  <p>يمكنك إعادة المحاولة من صفحة العروض أو التواصل معنا للمساعدة.</p>
-                  <p style="color:#666">الدعم: info@alialshehriholding.com — 920033442</p>
-                </div>
-              `;
-
-            // Send email in background when possible (non-blocking), otherwise send inline
-            // @ts-ignore EdgeRuntime may be available in Supabase Edge Functions
-            // deno-lint-ignore no-explicit-any
-            const ER: any = (globalThis as any).EdgeRuntime;
-            const sendPromise = resend.emails.send({
-              from: 'نظام المدفوعات <payments@resend.dev>',
-              to: [to],
-              bcc: ['info@alialshehriholding.com'],
-              reply_to: 'info@alialshehriholding.com',
-              subject,
-              html,
-            }).then((res) => console.log('Email sent:', res)).catch((e) => console.error('Email error:', e));
-            if (ER && typeof ER.waitUntil === 'function') {
-              ER.waitUntil(sendPromise);
-            } else {
-              await sendPromise;
+            try {
+              await supabaseClient.functions.invoke('auth-emails', {
+                body: {
+                  to: to,
+                  subject: newStatus === 'PAID' ? 'تم الدفع بنجاح - شركة الصالح القابضة' : 
+                          newStatus === 'FAILED' ? 'فشل في عملية الدفع - شركة الصالح القابضة' : 
+                          'تحديث حالة الدفع - شركة الصالح القابضة',
+                  type: 'payment_status_update',
+                  data: {
+                    customerName: transaction.customer_name,
+                    status: newStatus,
+                    offerTitle: transaction.offer_title,
+                    amount: transaction.amount,
+                    currency: transaction.currency,
+                    paymentMethod: transaction.payment_method,
+                    transactionId: transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.tamara_order_id || transactionId
+                  }
+                }
+              });
+              console.log('تم إرسال إشعار حالة الدفع بنجاح');
+            } catch (emailError) {
+              console.error('خطأ في إرسال إشعار حالة الدفع:', emailError);
             }
           }
         } catch (e) {
