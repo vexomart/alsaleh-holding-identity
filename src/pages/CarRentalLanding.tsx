@@ -66,7 +66,9 @@ const CarRentalLanding = () => {
   const [selectedCarType, setSelectedCarType] = useState('all');
   const [counters, setCounters] = useState({});
   const [isStatsVisible, setIsStatsVisible] = useState(false);
+  const [isServicesVisible, setIsServicesVisible] = useState(false);
   const statsRef = useRef(null);
+  const servicesRef = useRef(null);
 
   // دالة لتشغيل أنيميشن العداد
   const animateCounter = (start, end, duration, key) => {
@@ -280,6 +282,30 @@ const CarRentalLanding = () => {
       }
     };
   }, [isStatsVisible]);
+
+  // مراقب الخدمات لتشغيل الأنيميشن
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !isServicesVisible) {
+            setIsServicesVisible(true);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (servicesRef.current) {
+      observer.observe(servicesRef.current);
+    }
+
+    return () => {
+      if (servicesRef.current) {
+        observer.unobserve(servicesRef.current);
+      }
+    };
+  }, [isServicesVisible]);
 
   const navigation = [
     { name: "الرئيسية", href: "/car-rental-landing", active: true },
@@ -746,42 +772,127 @@ const CarRentalLanding = () => {
         </div>
       </section>
 
-      {/* الخدمات */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="bg-purple-100 text-purple-800 mb-4">خدماتنا المتميزة</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+      {/* الخدمات المطورة */}
+      <section ref={servicesRef} className="relative py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 overflow-hidden">
+        {/* الخلفية التفاعلية */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-0 w-72 h-72 bg-blue-300/20 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl animate-float-delayed" />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-green-300/20 rounded-full blur-3xl animate-bounce-gentle" />
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* العنوان المطور */}
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+            <div className="inline-block">
+              <Badge className={`bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 mb-4 sm:mb-6 px-4 py-2 backdrop-blur-sm transition-all duration-700 ${
+                isServicesVisible ? 'animate-fade-in scale-100' : 'scale-95 opacity-0'
+              }`}>
+                خدماتنا المتميزة
+              </Badge>
+            </div>
+            
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight transition-all duration-700 delay-200 ${
+              isServicesVisible ? 'animate-fade-in translate-y-0' : 'translate-y-8 opacity-0'
+            }`}>
               لماذا تختار كار رنت برو؟
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            
+            <p className={`text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed transition-all duration-700 delay-400 ${
+              isServicesVisible ? 'animate-fade-in translate-y-0' : 'translate-y-8 opacity-0'
+            }`}>
               نقدم أفضل الخدمات والمميزات لضمان تجربة تأجير استثنائية ومريحة لجميع عملائنا
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* شبكة الخدمات المطورة */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
             {services.map((service, index) => {
               const IconComponent = service.icon;
               return (
-                <Card 
-                  key={index} 
-                  className="group hover:shadow-2xl transition-all duration-300 border-0 hover:-translate-y-2 relative overflow-hidden"
+                <div
+                  key={index}
+                  className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 hover:border-blue-200/50 hover:-translate-y-4 transform ${
+                    isServicesVisible ? 'animate-fade-in translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+                  }`}
+                  style={{ 
+                    animationDelay: `${600 + index * 150}ms`,
+                    transitionDelay: `${index * 50}ms`
+                  }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <CardContent className="p-8 text-center relative z-10">
-                    <div className={`w-16 h-16 ${service.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                      <IconComponent className="w-8 h-8 text-white" />
+                  {/* تأثير الخلفية المتحرك */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-purple-50/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  {/* الزخرفة العلوية */}
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse" />
+                  </div>
+                  
+                  <div className="relative z-10 text-center">
+                    {/* الأيقونة المطورة */}
+                    <div className="relative mb-6 sm:mb-8">
+                      <div className={`w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 ${service.color} rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-2xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 relative overflow-hidden`}>
+                        {/* تأثير اللمعان */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                        
+                        {/* نبضة الخلفية */}
+                        <div className="absolute inset-0 bg-white/20 rounded-2xl sm:rounded-3xl animate-ping opacity-0 group-hover:opacity-75" />
+                      </div>
+                      
+                      {/* الدوائر المتحركة */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 border-2 border-blue-200/30 rounded-full animate-spin opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ animationDuration: '3s' }} />
+                        <div className="absolute w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 border border-purple-200/30 rounded-full animate-spin opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ animationDuration: '2s', animationDirection: 'reverse' }} />
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-blue-600 transition-colors">
+                    
+                    {/* النص المطور */}
+                    <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4 group-hover:text-blue-600 transition-colors duration-300">
                       {service.title}
                     </h3>
-                    <p className="text-slate-600 leading-relaxed">
+                    
+                    <p className="text-slate-600 leading-relaxed text-sm sm:text-base group-hover:text-slate-700 transition-colors duration-300">
                       {service.description}
                     </p>
-                  </CardContent>
-                </Card>
+                    
+                    {/* خط الزخرفة */}
+                    <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 sm:mt-6 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center" />
+                    
+                    {/* زر التفاعل الخفي */}
+                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                        <ChevronRight className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* تأثير الإضاءة الجانبية */}
+                  <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-center" />
+                </div>
               );
             })}
+          </div>
+          
+          {/* قسم إضافي للتميز */}
+          <div className={`mt-12 sm:mt-16 lg:mt-20 text-center transition-all duration-700 delay-1000 ${
+            isServicesVisible ? 'animate-fade-in translate-y-0' : 'translate-y-8 opacity-0'
+          }`}>
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 sm:p-8 lg:p-10 text-white max-w-4xl mx-auto relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-purple-600/80" />
+              <div className="relative z-10">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-4">
+                  استعد لتجربة تأجير لا تُنسى
+                </h3>
+                <p className="text-lg sm:text-xl text-blue-100 mb-6">
+                  انضم إلى آلاف العملاء الراضين واستمتع بخدمة متميزة
+                </p>
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 font-semibold px-8 py-3 transform hover:scale-105 transition-all duration-300 shadow-lg">
+                  ابدأ رحلتك الآن
+                  <ChevronRight className="w-5 h-5 mr-2" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
