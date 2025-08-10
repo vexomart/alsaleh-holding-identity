@@ -418,7 +418,7 @@ const Footer = () => {
           </div>
 
           {/* Links Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8 mb-16">
             
             {/* Quick Links */}
             <div>
@@ -468,6 +468,82 @@ const Footer = () => {
               </ul>
             </div>
 
+            {/* Digital Solutions */}
+            <div>
+              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <Zap className="w-5 h-5" />
+                الحلول الرقمية
+              </h4>
+              <ul className="space-y-3">
+                {digitalSolutions.map((solution, index) => {
+                  const IconComponent = solution.icon;
+                  return (
+                    <li key={index}>
+                      <a 
+                        href={solution.href} 
+                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
+                      >
+                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
+                        <span>{solution.name}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Careers and Opportunities */}
+            <div>
+              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                الوظائف والفرص
+              </h4>
+              <ul className="space-y-3">
+                {careersAndOpportunities.map((career, index) => {
+                  const IconComponent = career.icon;
+                  return (
+                    <li key={index}>
+                      <a 
+                        href={career.href} 
+                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
+                        onClick={career.name === "طلب وظيفة" ? (e) => {
+                          e.preventDefault();
+                          setShowJobForm(true);
+                        } : undefined}
+                      >
+                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
+                        <span>{career.name}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Ready Projects */}
+            <div>
+              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <Code className="w-5 h-5" />
+                المشاريع الجاهزة
+              </h4>
+              <ul className="space-y-3">
+                {readyProjects.map((project, index) => {
+                  const IconComponent = project.icon;
+                  return (
+                    <li key={index}>
+                      <a 
+                        href={project.href} 
+                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
+                      >
+                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
+                        <span>{project.name}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
             {/* Support */}
             <div>
               <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
@@ -475,7 +551,7 @@ const Footer = () => {
                 الدعم والمساعدة
               </h4>
               <ul className="space-y-3">
-                {supportLinks.slice(0, 4).map((link, index) => {
+                {supportLinks.slice(0, 5).map((link, index) => {
                   const IconComponent = link.icon;
                   return (
                     <li key={index}>
@@ -496,6 +572,58 @@ const Footer = () => {
                 })}
               </ul>
             </div>
+          </div>
+
+          {/* Additional Sections Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 pb-8 border-b border-white/10">
+            
+            {/* Current Projects */}
+            <div>
+              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5" />
+                المشاريع الحالية
+              </h4>
+              <ul className="space-y-3">
+                {currentProjects.map((project, index) => {
+                  const IconComponent = project.icon;
+                  return (
+                    <li key={index}>
+                      <a 
+                        href={project.href} 
+                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
+                      >
+                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
+                        <span>{project.name}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Contracts */}
+            <div>
+              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                التعاقد
+              </h4>
+              <ul className="space-y-3">
+                {contracts.map((contract, index) => {
+                  const IconComponent = contract.icon;
+                  return (
+                    <li key={index}>
+                      <a 
+                        href={contract.href} 
+                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
+                      >
+                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
+                        <span>{contract.name}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
 
             {/* Company Updates */}
             <div>
@@ -504,7 +632,7 @@ const Footer = () => {
                 أخبار الشركة
               </h4>
               <ul className="space-y-3">
-                {companyUpdates.slice(0, 4).map((update, index) => {
+                {companyUpdates.map((update, index) => {
                   const IconComponent = update.icon;
                   return (
                     <li key={index}>
