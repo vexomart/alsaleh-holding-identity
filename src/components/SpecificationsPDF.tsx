@@ -165,6 +165,109 @@ const SpecificationsPDF = ({
             </div>
           </div>
 
+          <!-- Services & Support Section -->
+          <div style="background: white; 
+                      padding: 25px; 
+                      border-radius: 12px; 
+                      margin-bottom: 25px;
+                      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+                      border: 1px solid #e2e8f0;">
+            <h3 style="font-size: 20px; color: #1e293b; margin: 0 0 20px 0; 
+                       display: flex; align-items: center; gap: 10px;">
+              🎯 الخدمات والدعم المتضمن
+            </h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div>
+                <h4 style="font-size: 16px; color: #3b82f6; margin: 0 0 12px 0; font-weight: bold;">
+                  📋 خدمات التطوير
+                </h4>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  <li style="padding: 6px 0; color: #64748b; font-size: 14px;">✓ تحليل وتصميم النظام</li>
+                  <li style="padding: 6px 0; color: #64748b; font-size: 14px;">✓ برمجة وتطوير متقدم</li>
+                  <li style="padding: 6px 0; color: #64748b; font-size: 14px;">✓ اختبار شامل للجودة</li>
+                  <li style="padding: 6px 0; color: #64748b; font-size: 14px;">✓ تسليم المشروع كاملاً</li>
+                </ul>
+              </div>
+              <div>
+                <h4 style="font-size: 16px; color: #16a34a; margin: 0 0 12px 0; font-weight: bold;">
+                  🛠️ الدعم والصيانة
+                </h4>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  <li style="padding: 6px 0; color: #64748b; font-size: 14px;">✓ دعم تقني مجاني لمدة 6 أشهر</li>
+                  <li style="padding: 6px 0; color: #64748b; font-size: 14px;">✓ تحديثات أمنية دورية</li>
+                  <li style="padding: 6px 0; color: #64748b; font-size: 14px;">✓ تدريب فريق العمل</li>
+                  <li style="padding: 6px 0; color: #64748b; font-size: 14px;">✓ وثائق تقنية مفصلة</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); 
+                        padding: 20px; 
+                        border-radius: 10px; 
+                        margin-top: 20px;
+                        border-right: 4px solid #3b82f6;">
+              <h4 style="font-size: 16px; color: #1e40af; margin: 0 0 10px 0; font-weight: bold;">
+                🏆 ضمانات الجودة
+              </h4>
+              <p style="font-size: 14px; color: #1e293b; margin: 0; line-height: 1.6;">
+                نضمن جودة العمل وفقاً لأعلى المعايير الدولية، مع إمكانية المراجعة والتعديل حتى 3 مرات مجاناً. 
+                كما نوفر استضافة مجانية لمدة سنة كاملة مع شهادة SSL وحماية متقدمة ضد الهجمات الإلكترونية.
+              </p>
+            </div>
+          </div>
+
+          <!-- Timeline Section -->
+          <div style="background: white; 
+                      padding: 25px; 
+                      border-radius: 12px; 
+                      margin-bottom: 25px;
+                      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+                      border: 1px solid #e2e8f0;">
+            <h3 style="font-size: 20px; color: #1e293b; margin: 0 0 20px 0; 
+                       display: flex; align-items: center; gap: 10px;">
+              📅 خطة التنفيذ والجدولة الزمنية
+            </h3>
+            <div style="position: relative;">
+              <div style="position: absolute; right: 20px; top: 0; bottom: 0; width: 2px; background: #e2e8f0;"></div>
+              
+              <div style="position: relative; padding-right: 50px; margin-bottom: 20px;">
+                <div style="position: absolute; right: 11px; top: 5px; width: 12px; height: 12px; 
+                            background: #3b82f6; border-radius: 50%; border: 3px solid white; 
+                            box-shadow: 0 0 0 2px #3b82f6;"></div>
+                <h4 style="font-size: 14px; color: #3b82f6; margin: 0 0 5px 0; font-weight: bold;">
+                  المرحلة الأولى: التحليل والتصميم (25% من المدة)
+                </h4>
+                <p style="font-size: 13px; color: #64748b; margin: 0;">
+                  دراسة المتطلبات، تصميم واجهة المستخدم، وضع الهيكل التقني
+                </p>
+              </div>
+              
+              <div style="position: relative; padding-right: 50px; margin-bottom: 20px;">
+                <div style="position: absolute; right: 11px; top: 5px; width: 12px; height: 12px; 
+                            background: #f59e0b; border-radius: 50%; border: 3px solid white; 
+                            box-shadow: 0 0 0 2px #f59e0b;"></div>
+                <h4 style="font-size: 14px; color: #f59e0b; margin: 0 0 5px 0; font-weight: bold;">
+                  المرحلة الثانية: التطوير الأساسي (50% من المدة)
+                </h4>
+                <p style="font-size: 13px; color: #64748b; margin: 0;">
+                  برمجة الوظائف الأساسية، تطوير قاعدة البيانات، ربط APIs
+                </p>
+              </div>
+              
+              <div style="position: relative; padding-right: 50px;">
+                <div style="position: absolute; right: 11px; top: 5px; width: 12px; height: 12px; 
+                            background: #16a34a; border-radius: 50%; border: 3px solid white; 
+                            box-shadow: 0 0 0 2px #16a34a;"></div>
+                <h4 style="font-size: 14px; color: #16a34a; margin: 0 0 5px 0; font-weight: bold;">
+                  المرحلة الثالثة: الاختبار والتسليم (25% من المدة)
+                </h4>
+                <p style="font-size: 13px; color: #64748b; margin: 0;">
+                  اختبار شامل، تحسين الأداء، التدريب والتسليم النهائي
+                </p>
+              </div>
+            </div>
+          </div>
+
           <!-- Contact Information -->
           <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); 
                       color: white; 
@@ -179,8 +282,8 @@ const SpecificationsPDF = ({
                 <div style="background: rgba(255,255,255,0.1); 
                             padding: 15px; 
                             border-radius: 10px;">
-                  <p style="margin: 0 0 8px 0; font-size: 14px; opacity: 0.8;">الهاتف</p>
-                  <p style="margin: 0; font-size: 16px; font-weight: bold;">+966 555 812 567</p>
+                  <p style="margin: 0 0 8px 0; font-size: 14px; opacity: 0.8;">خدمة العملاء</p>
+                  <p style="margin: 0; font-size: 16px; font-weight: bold;">0555812567</p>
                 </div>
               </div>
               <div>
