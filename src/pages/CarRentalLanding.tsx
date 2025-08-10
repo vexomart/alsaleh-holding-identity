@@ -373,102 +373,131 @@ const CarRentalLanding = () => {
         )}
       </nav>
 
-      {/* السلايدر الرئيسي */}
-      <section className="relative h-[80vh] overflow-hidden">
+      {/* السلايدر الرئيسي المحسن */}
+      <section className="relative h-[60vh] sm:h-[70vh] lg:h-[85vh] overflow-hidden">
         <Carousel
           opts={{ loop: true }}
-          plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
+          plugins={[Autoplay({ delay: 6000, stopOnInteraction: true })]}
           setApi={setCarouselApi}
-          className="h-full"
+          className="h-full w-full"
         >
-          <CarouselContent className="h-full">
-            {heroSlides.map((slide) => (
-              <CarouselItem key={slide.id} className="h-full">
-                <div className="relative h-full">
-                  <img
-                    src={slide.image}
-                    alt={slide.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/40" />
+          <CarouselContent className="h-full -ml-0">
+            {heroSlides.map((slide, index) => (
+              <CarouselItem key={slide.id} className="h-full pl-0">
+                <div className="relative h-full w-full">
+                  {/* الصورة مع تحسين الاستجابة */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="w-full h-full object-cover scale-105 transition-transform duration-[8000ms] ease-out"
+                      loading={index === 0 ? "eager" : "lazy"}
+                    />
+                  </div>
+                  
+                  {/* طبقة التدرج المحسنة */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 to-transparent" />
 
-                  <div className="absolute inset-0 z-10 flex items-center">
-                    <div className="container mx-auto px-4">
-                      <div className="max-w-3xl mx-auto text-center text-white">
-                        <Badge className="bg-blue-600 text-white border-0 mb-6 px-4 py-2">
-                          سيارات فاخرة
-                        </Badge>
+                  {/* المحتوى الرئيسي */}
+                  <div className="absolute inset-0 z-10 flex items-center justify-center">
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                      <div className="max-w-4xl mx-auto text-center text-white">
                         
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                        {/* الشارة المحسنة */}
+                        <div className="animate-fade-in delay-200 mb-4 sm:mb-6">
+                          <Badge className="bg-gradient-to-r from-blue-600 to-blue-700 text-white border-0 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm shadow-lg">
+                            {slide.badge}
+                          </Badge>
+                        </div>
+                        
+                        {/* العنوان الرئيسي المتجاوب */}
+                        <h1 className="animate-fade-in delay-300 text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight text-shadow-lg">
                           {slide.title}
                         </h1>
                         
-                        <p className="text-xl md:text-2xl mb-4 text-blue-100">
+                        {/* العنوان الفرعي */}
+                        <p className="animate-fade-in delay-400 text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 text-blue-100 max-w-3xl mx-auto">
                           {slide.subtitle}
                         </p>
                         
-                        <p className="text-lg md:text-xl mb-8 opacity-90">
+                        {/* الوصف */}
+                        <p className="animate-fade-in delay-500 text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90 max-w-2xl mx-auto">
                           {slide.description}
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4" asChild>
-                            <a href="/car-booking">ابدأ الآن</a>
+                        {/* الأزرار المحسنة */}
+                        <div className="animate-fade-in delay-600 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-12 px-4">
+                          <Button 
+                            size="lg" 
+                            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-sm sm:text-base lg:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-xl transform transition-all duration-300 hover:scale-105" 
+                            asChild
+                          >
+                            <a href="/car-booking">{slide.cta}</a>
                           </Button>
-                          <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4">
+                          <Button 
+                            size="lg" 
+                            variant="outline" 
+                            className="border-2 border-white text-white hover:bg-white hover:text-blue-600 text-sm sm:text-base lg:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-xl backdrop-blur-sm bg-white/10 transition-all duration-300 hover:scale-105"
+                          >
+                            <Play className="w-4 h-4 ml-2" />
                             شاهد الفيديو
                           </Button>
                         </div>
 
-                        {/* نموذج البحث */}
-                        <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
-                          <h3 className="text-gray-800 text-lg font-semibold mb-4 text-center">
+                        {/* نموذج البحث المحسن */}
+                        <div className="animate-fade-in delay-700 bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl max-w-5xl mx-auto border border-white/20">
+                          <h3 className="text-gray-800 text-base sm:text-lg lg:text-xl font-semibold mb-4 sm:mb-6 text-center">
                             ابحث عن سيارتك المثالية
                           </h3>
-                          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                          
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                            <div className="space-y-2">
+                              <label className="block text-xs sm:text-sm font-medium text-gray-700">
                                 مكان الاستلام
                               </label>
                               <div className="relative">
-                                <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                                <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                                 <input
                                   type="text"
                                   placeholder="اختر المدينة"
-                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  className="w-full border border-gray-300 rounded-lg px-8 sm:px-10 py-2.5 sm:py-3 text-sm sm:text-base text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                                 />
                               </div>
                             </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                            
+                            <div className="space-y-2">
+                              <label className="block text-xs sm:text-sm font-medium text-gray-700">
                                 تاريخ الاستلام
                               </label>
                               <div className="relative">
-                                <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                                <input
-                                  type="date"
-                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                تاريخ الإرجاع
-                              </label>
-                              <div className="relative">
-                                <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                                <input
-                                  type="date"
-                                  className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex items-end">
-                              <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 text-lg">
-                                <Search className="w-5 h-5 ml-2" />
-                                ابحث
-                              </Button>
-                            </div>
+                                <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                                 <input
+                                   type="date"
+                                   className="w-full border border-gray-300 rounded-lg px-8 sm:px-10 py-2.5 sm:py-3 text-sm sm:text-base text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                 />
+                               </div>
+                             </div>
+                             
+                             <div className="space-y-2">
+                               <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                                 تاريخ الإرجاع
+                               </label>
+                               <div className="relative">
+                                 <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                                 <input
+                                   type="date"
+                                   className="w-full border border-gray-300 rounded-lg px-8 sm:px-10 py-2.5 sm:py-3 text-sm sm:text-base text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                 />
+                               </div>
+                             </div>
+                             
+                             <div className="flex items-end sm:col-span-2 lg:col-span-1">
+                               <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 py-2.5 sm:py-3 text-sm sm:text-base lg:text-lg shadow-lg transform transition-all duration-300 hover:scale-105">
+                                 <Search className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+                                 ابحث الآن
+                               </Button>
+                             </div>
                           </div>
                         </div>
                       </div>
@@ -479,21 +508,30 @@ const CarRentalLanding = () => {
             ))}
           </CarouselContent>
 
-          <CarouselPrevious className="left-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30 w-12 h-12" />
-          <CarouselNext className="right-4 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30 w-12 h-12" />
+          {/* أزرار التنقل المحسنة */}
+          <CarouselPrevious className="hidden sm:flex left-4 lg:left-8 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30 w-10 h-10 sm:w-12 sm:h-12 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110" />
+          <CarouselNext className="hidden sm:flex right-4 lg:right-8 top-1/2 -translate-y-1/2 bg-white/20 text-white hover:bg-white/30 border-white/30 w-10 h-10 sm:w-12 sm:h-12 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110" />
         </Carousel>
 
-        {/* مؤشرات السلايدر */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+        {/* مؤشرات السلايدر المحسنة */}
+        <div className="absolute bottom-4 sm:bottom-6 lg:bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2 sm:gap-3">
           {heroSlides.map((_, i) => (
             <button
               key={i}
               onClick={() => carouselApi?.scrollTo(i)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                i === selectedIndex ? 'bg-white scale-125' : 'bg-white/60'
+              className={`w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 rounded-full transition-all duration-300 ${
+                i === selectedIndex 
+                  ? 'bg-white scale-125 shadow-lg shadow-white/50' 
+                  : 'bg-white/60 hover:bg-white/80 hover:scale-110'
               }`}
+              aria-label={`الانتقال إلى الشريحة ${i + 1}`}
             />
           ))}
+        </div>
+        
+        {/* مؤشر التمرير للموبايل */}
+        <div className="absolute bottom-2 sm:hidden left-1/2 -translate-x-1/2 z-30 text-white/80 text-xs animate-bounce">
+          <ChevronDown className="w-4 h-4" />
         </div>
       </section>
 
@@ -539,85 +577,112 @@ const CarRentalLanding = () => {
         </div>
       </section>
 
-      {/* السيارات المميزة */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="bg-blue-100 text-blue-800 mb-4">السيارات المميزة</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+      {/* السيارات المميزة المحسنة */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-blue-50/30">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <Badge className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 mb-4 px-4 py-2 text-sm sm:text-base">
+              السيارات المميزة
+            </Badge>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight">
               اختر من أفضل السيارات
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               مجموعة مختارة من أفضل السيارات المتاحة مع عروض خاصة وخصومات حصرية
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredCars.map((car) => (
-              <Card key={car.id} className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2">
-                <div className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {featuredCars.map((car, index) => (
+              <Card 
+                key={car.id} 
+                className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 group hover:-translate-y-2 bg-white/80 backdrop-blur-sm animate-fade-in"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                <div className="relative overflow-hidden">
                   <img 
                     src={car.image} 
                     alt={car.name}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-48 sm:h-52 lg:h-56 object-cover group-hover:scale-110 transition-transform duration-700"
+                    loading="lazy"
                   />
-                  <div className="absolute top-4 right-4">
-                    <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                  
+                  {/* الشارات المحسنة */}
+                  <div className="absolute top-3 sm:top-4 right-3 sm:right-4">
+                    <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg text-xs sm:text-sm">
                       {car.badge}
                     </Badge>
                   </div>
-                  <div className="absolute top-4 left-4">
-                    <Badge variant={car.available ? "default" : "secondary"} className="bg-green-500 text-white">
+                  <div className="absolute top-3 sm:top-4 left-3 sm:left-4">
+                    <Badge 
+                      variant={car.available ? "default" : "secondary"} 
+                      className={`${car.available ? 'bg-green-500' : 'bg-red-500'} text-white shadow-lg text-xs sm:text-sm`}
+                    >
                       {car.available ? "متاح" : "غير متاح"}
                     </Badge>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  {/* طبقة التدرج المحسنة */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  {/* أيقونة القلب */}
+                  <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <button className="w-8 h-8 sm:w-10 sm:h-10 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                      <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
+                    </button>
+                  </div>
                 </div>
                 
-                <CardContent className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-900 mb-1">{car.name}</h3>
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex justify-between items-start mb-3 sm:mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-1 line-clamp-1">{car.name}</h3>
                       <p className="text-slate-500 text-sm">{car.category}</p>
                     </div>
-                    <div className="text-left">
+                    <div className="text-left ml-2">
                       <div className="flex items-center gap-1 mb-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium">{car.rating}</span>
-                        <span className="text-xs text-slate-500">({car.reviews})</span>
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-xs sm:text-sm font-medium">{car.rating}</span>
+                        <span className="text-xs text-slate-500 hidden sm:inline">({car.reviews})</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {car.features.map((feature, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs bg-slate-100 text-slate-700">
+                  {/* المميزات المحسنة */}
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4">
+                    {car.features.slice(0, 4).map((feature, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs bg-slate-100 text-slate-700 px-2 py-1">
                         {feature}
                       </Badge>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-slate-900">{car.price} ر.س</span>
+                  {/* السعر المحسن */}
+                  <div className="flex items-center justify-between mb-4 sm:mb-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                      <span className="text-xl sm:text-2xl font-bold text-slate-900">{car.price} ر.س</span>
                       <span className="text-sm text-slate-500 line-through">{car.originalPrice} ر.س</span>
                     </div>
-                    <span className="text-sm text-slate-500">/ يوم</span>
+                    <span className="text-xs sm:text-sm text-slate-500 whitespace-nowrap">/ يوم</span>
                   </div>
 
+                  {/* الأزرار المحسنة */}
                   <div className="flex gap-2">
-                    <Button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105 transition-transform" asChild>
+                    <Button 
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg text-sm sm:text-base" 
+                      asChild
+                    >
                       <a href="/car-booking">
                         احجز الآن
                       </a>
                     </Button>
-                    <Button variant="outline" size="sm" className="px-3">
-                      <Eye className="w-4 h-4" />
+                    <Button variant="outline" size="sm" className="px-2 sm:px-3 hover:scale-105 transition-transform">
+                      <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="px-3" 
+                      className="px-2 sm:px-3 hover:scale-105 transition-transform"
                       onClick={() => {
                         const shareUrl = `${window.location.origin}/car-rental?car=${car.name}`;
                         const shareText = `تحقق من هذه السيارة الرائعة: ${car.name} - ${car.price} ر.س/يوم`;
