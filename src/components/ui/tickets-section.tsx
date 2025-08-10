@@ -103,24 +103,38 @@ export function TicketsSection() {
       if (error) throw error;
       
       // إرسال إشعار للإدارة
+      console.log('بدء إرسال الإشعار للإدارة...');
       try {
-        console.log('إرسال إشعار إنشاء تذكرة...', data);
-        const notificationResult = await supabase.functions.invoke('service-notifications', {
-          body: {
-            type: 'ticket_created',
-            ticketId: data.id,
-            data: {
-              ticketNumber: data.ticket_number,
-              title: data.title,
-              description: data.description,
-              category: data.category,
-              priority: data.priority,
-              customerName: profile?.full_name || user.email || 'غير محدد',
-              customerEmail: user.email
-            }
+        console.log('بيانات التذكرة:', data);
+        console.log('معلومات المستخدم:', { email: user.email, fullName: profile?.full_name });
+        
+        const notificationPayload = {
+          type: 'ticket_created',
+          ticketId: data.id,
+          data: {
+            ticketNumber: data.ticket_number,
+            title: data.title,
+            description: data.description,
+            category: data.category,
+            priority: data.priority,
+            customerName: profile?.full_name || user.email || 'غير محدد',
+            customerEmail: user.email
           }
+        };
+        
+        console.log('محتوى الطلب:', notificationPayload);
+        
+        const notificationResult = await supabase.functions.invoke('service-notifications', {
+          body: notificationPayload
         });
-        console.log('نتيجة إرسال الإشعار:', notificationResult);
+        
+        console.log('نتيجة استدعاء الدالة:', notificationResult);
+        
+        if (notificationResult.error) {
+          console.error('خطأ في استدعاء دالة الإشعارات:', notificationResult.error);
+        } else {
+          console.log('تم إرسال الإشعار بنجاح');
+        }
       } catch (notificationError) {
         console.error('خطأ في إرسال الإشعار:', notificationError);
       }
