@@ -256,10 +256,10 @@ const ClientDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white animate-fade-in" dir="rtl">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-80 bg-slate-800/50 backdrop-blur-sm border-l border-slate-700 min-h-screen">
+        <div className="w-80 bg-slate-800/50 backdrop-blur-sm border-l border-slate-700 min-h-screen animate-slide-in-right">
           {/* User Profile Header */}
           <div className="p-6 border-b border-slate-700">
             <div className="text-center">
@@ -273,51 +273,51 @@ const ClientDashboard = () => {
             <div className="space-y-2">
               <div 
                 onClick={() => setActiveTab("overview")}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
-                  activeTab === "overview" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-700"
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-100 ${
+                  activeTab === "overview" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
                 }`}
               >
-                <LayoutDashboard className="h-5 w-5" />
+                <LayoutDashboard className="h-5 w-5 transition-transform duration-200" />
                 <span>جميع الطلبات</span>
               </div>
               
               <div 
                 onClick={() => setActiveTab("digital-services")}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
-                  activeTab === "digital-services" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-700"
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-200 ${
+                  activeTab === "digital-services" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
                 }`}
               >
-                <Monitor className="h-5 w-5" />
+                <Monitor className="h-5 w-5 transition-transform duration-200" />
                 <span>الخدمات الرقمية</span>
               </div>
               
               <div 
                 onClick={() => setActiveTab("design-services")}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
-                  activeTab === "design-services" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-700"
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-300 ${
+                  activeTab === "design-services" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
                 }`}
               >
-                <Palette className="h-5 w-5" />
+                <Palette className="h-5 w-5 transition-transform duration-200" />
                 <span>خدمات التصميم</span>
               </div>
               
               <div 
                 onClick={() => setActiveTab("business-services")}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
-                  activeTab === "business-services" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-700"
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-400 ${
+                  activeTab === "business-services" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
                 }`}
               >
-                <Briefcase className="h-5 w-5" />
+                <Briefcase className="h-5 w-5 transition-transform duration-200" />
                 <span>الخدمات التجارية</span>
               </div>
               
               <div 
                 onClick={() => setActiveTab("content-services")}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
-                  activeTab === "content-services" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-700"
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-500 ${
+                  activeTab === "content-services" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
                 }`}
               >
-                <PenTool className="h-5 w-5" />
+                <PenTool className="h-5 w-5 transition-transform duration-200" />
                 <span>إنتاج المحتوى</span>
               </div>
             </div>
@@ -332,36 +332,36 @@ const ClientDashboard = () => {
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => window.location.href = '/content-creation'}
-                className="bg-purple-600 p-4 rounded-xl cursor-pointer hover:bg-purple-700 transition-colors text-center"
+                className="bg-purple-600 p-4 rounded-xl cursor-pointer hover:bg-purple-700 transition-all duration-300 hover-scale animate-fade-in delay-100 text-center"
               >
-                <PenTool className="h-6 w-6 mx-auto mb-2" />
+                <PenTool className="h-6 w-6 mx-auto mb-2 animate-pulse" />
                 <p className="text-xs font-medium">إنتاج المحتوى</p>
                 <p className="text-xs opacity-80">محتوى إبداعي لعلامتك التجارية</p>
               </div>
               
               <div 
                 onClick={() => window.location.href = '/business-services'}
-                className="bg-orange-600 p-4 rounded-xl cursor-pointer hover:bg-orange-700 transition-colors text-center"
+                className="bg-orange-600 p-4 rounded-xl cursor-pointer hover:bg-orange-700 transition-all duration-300 hover-scale animate-fade-in delay-200 text-center"
               >
-                <Briefcase className="h-6 w-6 mx-auto mb-2" />
+                <Briefcase className="h-6 w-6 mx-auto mb-2 animate-pulse" />
                 <p className="text-xs font-medium">خدمات الأعمال</p>
                 <p className="text-xs opacity-80">استشارات وحلول تجارية</p>
               </div>
               
               <div 
                 onClick={() => window.location.href = '/development'}
-                className="bg-green-600 p-4 rounded-xl cursor-pointer hover:bg-green-700 transition-colors text-center"
+                className="bg-green-600 p-4 rounded-xl cursor-pointer hover:bg-green-700 transition-all duration-300 hover-scale animate-fade-in delay-300 text-center"
               >
-                <Globe className="h-6 w-6 mx-auto mb-2" />
+                <Globe className="h-6 w-6 mx-auto mb-2 animate-pulse" />
                 <p className="text-xs font-medium">خدمات تطوير الويب</p>
                 <p className="text-xs opacity-80">مواقع ويب متطورة وسريعة</p>
               </div>
               
               <div 
                 onClick={() => window.location.href = '/design-solutions'}
-                className="bg-blue-600 p-4 rounded-xl cursor-pointer hover:bg-blue-700 transition-colors text-center"
+                className="bg-blue-600 p-4 rounded-xl cursor-pointer hover:bg-blue-700 transition-all duration-300 hover-scale animate-fade-in delay-400 text-center"
               >
-                <Palette className="h-6 w-6 mx-auto mb-2" />
+                <Palette className="h-6 w-6 mx-auto mb-2 animate-pulse" />
                 <p className="text-xs font-medium">طلب خدمة تصميم</p>
                 <p className="text-xs opacity-80">احصل على تصميمات احترافية</p>
               </div>
@@ -409,57 +409,57 @@ const OverviewContent = ({ data }: { data: DashboardData }) => (
     {/* Top Stats Cards */}
     <div className="grid grid-cols-4 gap-6 mb-8">
       {/* تذاكر الدعم */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 animate-scale-in hover-scale hover:shadow-glow transition-all duration-300 delay-100">
         <div className="flex items-center justify-between">
           <div>
-            <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center mb-4 animate-fade-in">
               <Headphones className="h-6 w-6 text-orange-400" />
             </div>
             <h3 className="text-lg font-semibold text-white">تذاكر الدعم</h3>
-            <p className="text-3xl font-bold text-white mt-2">{data.tickets.length}</p>
-            <p className="text-orange-400 text-sm mt-1">3% ↗</p>
+            <p className="text-3xl font-bold text-white mt-2 animate-fade-in delay-200">{data.tickets.length}</p>
+            <p className="text-orange-400 text-sm mt-1 animate-fade-in delay-300">3% ↗</p>
           </div>
         </div>
       </div>
 
       {/* المدفوعات */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 animate-scale-in hover-scale hover:shadow-glow transition-all duration-300 delay-200">
         <div className="flex items-center justify-between">
           <div>
-            <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 animate-fade-in">
               <CreditCard className="h-6 w-6 text-purple-400" />
             </div>
             <h3 className="text-lg font-semibold text-white">المدفوعات</h3>
-            <p className="text-3xl font-bold text-white mt-2">{data.paymentHistory.length}</p>
-            <p className="text-purple-400 text-sm mt-1">15% ↗</p>
+            <p className="text-3xl font-bold text-white mt-2 animate-fade-in delay-200">{data.paymentHistory.length}</p>
+            <p className="text-purple-400 text-sm mt-1 animate-fade-in delay-300">15% ↗</p>
           </div>
         </div>
       </div>
 
       {/* الفواتير */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 animate-scale-in hover-scale hover:shadow-glow transition-all duration-300 delay-300">
         <div className="flex items-center justify-between">
           <div>
-            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4 animate-fade-in">
               <FileText className="h-6 w-6 text-green-400" />
             </div>
             <h3 className="text-lg font-semibold text-white">الفواتير</h3>
-            <p className="text-3xl font-bold text-white mt-2">{data.invoices.length}</p>
-            <p className="text-green-400 text-sm mt-1">8% ↗</p>
+            <p className="text-3xl font-bold text-white mt-2 animate-fade-in delay-200">{data.invoices.length}</p>
+            <p className="text-green-400 text-sm mt-1 animate-fade-in delay-300">8% ↗</p>
           </div>
         </div>
       </div>
 
       {/* طلبات الخدمات */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 animate-scale-in hover-scale hover:shadow-glow transition-all duration-300 delay-400">
         <div className="flex items-center justify-between">
           <div>
-            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4 animate-fade-in">
               <Package className="h-6 w-6 text-blue-400" />
             </div>
             <h3 className="text-lg font-semibold text-white">طلبات الخدمات</h3>
-            <p className="text-3xl font-bold text-white mt-2">{data.serviceRequests.length}</p>
-            <p className="text-blue-400 text-sm mt-1">12% ↗</p>
+            <p className="text-3xl font-bold text-white mt-2 animate-fade-in delay-200">{data.serviceRequests.length}</p>
+            <p className="text-blue-400 text-sm mt-1 animate-fade-in delay-300">12% ↗</p>
           </div>
         </div>
       </div>
