@@ -67,6 +67,10 @@ const CarRentalLanding = () => {
   const [counters, setCounters] = useState({});
   const [isStatsVisible, setIsStatsVisible] = useState(false);
   const [isServicesVisible, setIsServicesVisible] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [isWorkingHours, setIsWorkingHours] = useState(false);
+  const [nextOpenTime, setNextOpenTime] = useState('');
+  const [timeUntilOpen, setTimeUntilOpen] = useState('');
   const statsRef = useRef(null);
   const servicesRef = useRef(null);
 
@@ -306,6 +310,69 @@ const CarRentalLanding = () => {
       }
     };
   }, [isServicesVisible]);
+
+  // تحديث الوقت وحساب ساعات العمل
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now);
+      
+      const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const currentMinutes = hours * 60 + minutes;
+      
+      // ساعات العمل: الأحد-الخميس 8:00-22:00، الجمعة 14:00-22:00، السبت 8:00-12:00
+      let isOpen = false;
+      let nextOpen = '';
+      
+      if (day >= 0 && day <= 4) { // الأحد إلى الخميس
+        isOpen = currentMinutes >= 480 && currentMinutes < 1320; // 8:00 AM to 10:00 PM
+        if (!isOpen && currentMinutes < 480) {
+          nextOpen = 'اليوم في 8:00 صباحاً';
+        } else if (!isOpen) {
+          nextOpen = 'غداً في 8:00 صباحاً';
+        }
+      } else if (day === 5) { // الجمعة
+        isOpen = currentMinutes >= 840 && currentMinutes < 1320; // 2:00 PM to 10:00 PM
+        if (!isOpen && currentMinutes < 840) {
+          nextOpen = 'اليوم في 2:00 مساءً';
+        } else if (!isOpen) {
+          nextOpen = 'الأحد في 8:00 صباحاً';
+        }
+      } else { // السبت
+        isOpen = currentMinutes >= 480 && currentMinutes < 720; // 8:00 AM to 12:00 PM
+        if (!isOpen && currentMinutes < 480) {
+          nextOpen = 'اليوم في 8:00 صباحاً';
+        } else if (!isOpen) {
+          nextOpen = 'الأحد في 8:00 صباحاً';
+        }
+      }
+      
+      setIsWorkingHours(isOpen);
+      setNextOpenTime(nextOpen);
+      
+      // حساب الوقت المتبقي
+      if (!isOpen && nextOpen.includes('اليوم')) {
+        const targetHour = nextOpen.includes('8:00 صباحاً') ? 8 : 14;
+        const targetMinutes = targetHour * 60;
+        const timeLeft = targetMinutes - currentMinutes;
+        
+        if (timeLeft > 0) {
+          const hoursLeft = Math.floor(timeLeft / 60);
+          const minutesLeft = timeLeft % 60;
+          setTimeUntilOpen(`${hoursLeft} ساعة و ${minutesLeft} دقيقة`);
+        }
+      } else {
+        setTimeUntilOpen('');
+      }
+    };
+    
+    updateTime();
+    const timer = setInterval(updateTime, 60000); // تحديث كل دقيقة
+    
+    return () => clearInterval(timer);
+  }, []);
 
   const navigation = [
     { name: "الرئيسية", href: "/car-rental-landing", active: true },
@@ -1291,33 +1358,159 @@ const CarRentalLanding = () => {
             </div>
           </div>
 
-          {/* ساعات العمل */}
-          <div className="bg-slate-800/50 rounded-2xl p-6 mb-8">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                <Clock className="w-6 h-6 text-blue-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white">ساعات العمل</h3>
+          {/* ساعات العمل المطورة */}
+          <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-6 mb-8 border border-slate-700/50 backdrop-blur-sm relative overflow-hidden">
+            {/* خلفية متحركة */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl animate-pulse" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-green-500/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-              <div className="flex justify-between items-center py-2 border-b border-slate-700">
-                <span className="text-slate-300">الأحد - الخميس</span>
-                <span className="text-white font-medium">8:00 ص - 10:00 م</span>
+            <div className="relative z-10">
+              {/* العنوان مع الحالة الحالية */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center relative ${
+                    isWorkingHours 
+                      ? 'bg-green-500/20 animate-pulse' 
+                      : 'bg-red-500/20'
+                  }`}>
+                    <Clock className={`w-6 h-6 ${
+                      isWorkingHours ? 'text-green-400' : 'text-red-400'
+                    }`} />
+                    {isWorkingHours && (
+                      <div className="absolute inset-0 rounded-full bg-green-500/30 animate-ping" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">ساعات العمل</h3>
+                    <p className="text-sm text-slate-400">
+                      {currentTime.toLocaleTimeString('ar-SA', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        hour12: true 
+                      })}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* مؤشر الحالة */}
+                <div className={`px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 ${
+                  isWorkingHours 
+                    ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                }`}>
+                  <div className={`w-2 h-2 rounded-full ${
+                    isWorkingHours ? 'bg-green-400 animate-pulse' : 'bg-red-400'
+                  }`} />
+                  {isWorkingHours ? 'مفتوح الآن' : 'مغلق'}
+                </div>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-slate-700">
-                <span className="text-slate-300">الجمعة</span>
-                <span className="text-white font-medium">2:00 م - 10:00 م</span>
+
+              {/* العد التنازلي */}
+              {!isWorkingHours && timeUntilOpen && (
+                <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center">
+                      <Timer className="w-4 h-4 text-orange-400" />
+                    </div>
+                    <div>
+                      <p className="text-orange-400 font-medium">سنفتح خلال</p>
+                      <p className="text-white text-sm">{timeUntilOpen}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {nextOpenTime && !isWorkingHours && (
+                <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                      <Calendar className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-blue-400 font-medium">الافتتاح التالي</p>
+                      <p className="text-white text-sm">{nextOpenTime}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* جدول الأوقات */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { day: 'الأحد - الخميس', time: '8:00 ص - 10:00 م', current: [0,1,2,3,4].includes(currentTime.getDay()) },
+                  { day: 'الجمعة', time: '2:00 م - 10:00 م', current: currentTime.getDay() === 5 },
+                  { day: 'السبت', time: '8:00 ص - 12:00 م', current: currentTime.getDay() === 6 }
+                ].map((schedule, index) => (
+                  <div 
+                    key={index}
+                    className={`group p-4 rounded-xl border transition-all duration-300 hover:scale-105 ${
+                      schedule.current
+                        ? 'bg-blue-500/10 border-blue-500/30 shadow-lg shadow-blue-500/10'
+                        : 'bg-slate-700/30 border-slate-600/30 hover:bg-slate-700/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className={`font-medium text-sm mb-1 ${
+                          schedule.current ? 'text-blue-400' : 'text-slate-300'
+                        }`}>
+                          {schedule.day}
+                        </p>
+                        <p className="text-white font-bold">
+                          {schedule.time}
+                        </p>
+                      </div>
+                      {schedule.current && (
+                        <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse" />
+                      )}
+                    </div>
+                    
+                    {/* شريط تقدم اليوم */}
+                    {schedule.current && isWorkingHours && (
+                      <div className="mt-3">
+                        <div className="w-full bg-slate-600/30 rounded-full h-1.5">
+                          <div 
+                            className="bg-gradient-to-r from-blue-400 to-green-400 h-1.5 rounded-full transition-all duration-1000"
+                            style={{ 
+                              width: `${((currentTime.getHours() - 8) / 14) * 100}%` 
+                            }}
+                          />
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1">تقدم ساعات العمل</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-slate-700">
-                <span className="text-slate-300">السبت</span>
-                <span className="text-white font-medium">8:00 ص - 10:00 م</span>
+
+              {/* خدمة الطوارئ */}
+              <div className="mt-6 text-center">
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-red-500/20 to-orange-500/20 text-red-400 px-6 py-3 rounded-xl border border-red-500/30 backdrop-blur-sm">
+                  <div className="relative">
+                    <Phone className="w-5 h-5" />
+                    <div className="absolute inset-0 animate-ping">
+                      <Phone className="w-5 h-5 text-red-400/50" />
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <span className="font-medium text-white">خدمة الطوارئ</span>
+                    <div className="text-sm">24/7 متاح طوال الأسبوع</div>
+                  </div>
+                  <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
+                </div>
               </div>
-              <div className="md:col-span-3 text-center">
-                <div className="inline-flex items-center gap-2 bg-red-500/20 text-red-400 px-4 py-2 rounded-lg">
-                  <Clock className="w-4 h-4" />
-                  <span className="font-medium">خدمة الطوارئ</span>
-                  <span className="text-white">24/7 متاح</span>
+
+              {/* معلومات إضافية */}
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="flex items-center gap-2 text-slate-400">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span>استقبال السيارات حتى 30 دقيقة قبل الإغلاق</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-400">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span>خدمة التوصيل متاحة في جميع الأوقات</span>
                 </div>
               </div>
             </div>
