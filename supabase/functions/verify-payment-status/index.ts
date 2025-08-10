@@ -138,6 +138,71 @@ serve(async (req) => {
           // إنشاء وإرسال الفاتورة إذا كان الدفع ناجحاً
           if (newStatus === 'PAID') {
             try {
+              // إنشاء طلب الخدمة
+              if (transaction.user_id) {
+                const { data: serviceRequest, error: serviceError } = await supabaseClient
+                  .from('service_requests')
+                  .insert({
+                    user_id: transaction.user_id,
+                    service_type: 'payment_based',
+                    title: transaction.offer_title,
+                    description: `طلب خدمة من المعاملة: ${transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.tamara_order_id || transactionId}`,
+                    status: 'pending',
+                    priority: 'high',
+                    estimated_cost: transaction.amount,
+                    notes: `تم الدفع بمبلغ ${transaction.amount} ${transaction.currency} عبر ${transaction.payment_method}`
+                  })
+                  .select()
+                  .single();
+
+                if (serviceError) {
+                  console.error('خطأ في إنشاء طلب الخدمة:', serviceError);
+                } else {
+                  console.log('تم إنشاء طلب الخدمة:', serviceRequest);
+                }
+              }
+
+              // إضافة السجل إلى تاريخ المدفوعات
+              const { error: paymentHistoryError } = await supabaseClient
+                .from('payment_history')
+                .insert({
+                  user_id: transaction.user_id,
+                  amount: transaction.amount,
+                  currency: transaction.currency,
+                  payment_method: transaction.payment_method,
+                  status: 'completed',
+                  reference_number: transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.tamara_order_id,
+                  notes: `دفع مقابل: ${transaction.offer_title}`,
+                  payment_date: new Date().toISOString()
+                });
+
+              if (paymentHistoryError) {
+                console.error('خطأ في إضافة سجل الدفع:', paymentHistoryError);
+              } else {
+                console.log('تم إضافة سجل الدفع بنجاح');
+              }
+
+              // تسجيل النشاط
+              if (transaction.user_id) {
+                const { error: activityError } = await supabaseClient
+                  .from('user_activity_logs')
+                  .insert({
+                    user_id: transaction.user_id,
+                    activity_type: 'payment',
+                    description: `دفع ناجح لخدمة: ${transaction.offer_title}`,
+                    metadata: {
+                      transaction_id: transactionId,
+                      amount: transaction.amount,
+                      currency: transaction.currency,
+                      payment_method: transaction.payment_method
+                    }
+                  });
+
+                if (activityError) {
+                  console.error('خطأ في تسجيل النشاط:', activityError);
+                }
+              }
+
               // إنشاء الفاتورة
               const invoiceResponse = await supabaseClient.functions.invoke('invoice-system', {
                 body: {
