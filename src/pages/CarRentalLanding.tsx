@@ -319,56 +319,56 @@ const CarRentalLanding = () => {
                   </Button>
                 </div>
 
-                {/* نموذج البحث */}
-                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
-                  <h3 className="text-gray-800 text-lg font-semibold mb-6 text-center">
+                {/* نموذج البحث المتجاوب */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-2xl max-w-5xl mx-auto">
+                  <h3 className="text-gray-800 text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center">
                     ابحث عن سيارتك المثالية
                   </h3>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+                    <div className="space-y-2">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700">
                         مكان الاستلام
                       </label>
                       <div className="relative">
-                        <MapPin className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                           type="text"
                           placeholder="اختر المدينة"
-                          className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full border border-gray-300 rounded-lg px-9 py-3 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         />
                       </div>
                     </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="space-y-2">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700">
                         تاريخ الاستلام
                       </label>
                       <div className="relative">
-                        <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                           type="date"
-                          className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full border border-gray-300 rounded-lg px-9 py-3 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         />
                       </div>
                     </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="space-y-2">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700">
                         تاريخ الإرجاع
                       </label>
                       <div className="relative">
-                        <Calendar className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
+                        <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                           type="date"
-                          className="w-full border border-gray-300 rounded-lg px-10 py-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full border border-gray-300 rounded-lg px-9 py-3 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         />
                       </div>
                     </div>
                     
-                    <div className="flex items-end">
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 text-lg">
-                        <Search className="w-5 h-5 ml-2" />
+                    <div className="flex items-end sm:col-span-2 lg:col-span-1">
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 text-sm sm:text-base font-medium shadow-lg hover:shadow-xl transition-all">
+                        <Search className="w-4 h-4 ml-2" />
                         ابحث الآن
                       </Button>
                     </div>
