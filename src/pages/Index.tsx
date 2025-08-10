@@ -200,6 +200,7 @@ const Index = () => {
             variant="outline" 
             size="sm" 
             className="bg-background/95 backdrop-blur-sm border-primary/20 hover:bg-primary/10"
+            onClick={() => console.log('Admin button clicked')}
           >
             <Shield className="h-4 w-4 mr-2" />
             لوحة الإدارة
