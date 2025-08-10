@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +42,7 @@ const Navigation = () => {
   const [showOthers, setShowOthers] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const location = useLocation();
   
   useEffect(() => {
@@ -49,6 +52,25 @@ const Navigation = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    // التحقق من حالة المصادقة
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    // التحقق من الجلسة الحالية
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
 
   const services = [
     { name: "العروض الحالية", href: "/current-offers", icon: Gift },
@@ -344,26 +366,39 @@ const Navigation = () => {
               
               {/* Authentication/Dashboard Links */}
               <div className="hidden lg:flex items-center gap-2">
-                <Button 
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-3 text-xs text-gray-600 hover:text-blue-600 hover:bg-blue-50"
-                  asChild
-                >
-                  <a href="/auth">
-                    تسجيل الدخول
-                  </a>
-                </Button>
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  className="h-8 px-3 text-xs border-purple-500 text-purple-600 hover:bg-purple-50"
-                  asChild
-                >
-                  <a href="/dashboard">
-                    لوحة التحكم
-                  </a>
-                </Button>
+                {user ? (
+                  <>
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8 px-3 text-xs border-purple-500 text-purple-600 hover:bg-purple-50"
+                      asChild
+                    >
+                      <a href="/dashboard">
+                        لوحة التحكم
+                      </a>
+                    </Button>
+                    <Button 
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 px-3 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50"
+                      onClick={handleSignOut}
+                    >
+                      تسجيل الخروج
+                    </Button>
+                  </>
+                ) : (
+                  <Button 
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-3 text-xs text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                    asChild
+                  >
+                    <a href="/auth">
+                      تسجيل الدخول
+                    </a>
+                  </Button>
+                )}
               </div>
               
               {/* Main CTA - Responsive */}
