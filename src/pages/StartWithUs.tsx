@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/PageLayout";
 import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
@@ -51,7 +52,9 @@ import {
   Layers,
   Network,
   BarChart3,
-  Headphones
+  Headphones,
+  LogIn,
+  UserPlus
 } from "lucide-react";
 
 const StartWithUs = () => {
@@ -223,6 +226,43 @@ const StartWithUs = () => {
                 <Award className="w-3 sm:w-4 h-3 sm:h-4 mr-1 sm:mr-2" />
                 رائدة في التقنية
               </Badge>
+            </div>
+
+            {/* Auth Section */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-8 sm:mt-12">
+              <div className="text-center mb-4 sm:mb-0">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+                  انضم إلى شركاء النجاح
+                </h3>
+                <p className="text-gray-600 text-sm sm:text-base mb-4">
+                  سجل دخولك لإدارة مشاريعك ومتابعة طلباتك
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/auth">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 font-bold shadow-lg hover:shadow-xl transition-all duration-300 group"
+                  >
+                    <LogIn className="w-5 h-5 ml-2 group-hover:scale-110 transition-transform" />
+                    تسجيل الدخول
+                    <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+
+                <Link to="/auth">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3 font-bold transition-all duration-300 group"
+                  >
+                    <UserPlus className="w-5 h-5 ml-2 group-hover:scale-110 transition-transform" />
+                    إنشاء حساب جديد
+                    <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </PageHeader>

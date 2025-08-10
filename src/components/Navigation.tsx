@@ -208,14 +208,6 @@ const Navigation = () => {
                 )}
               </div>
 
-              {/* Login Link */}
-              <Link
-                to="/auth"
-                className="flex items-center gap-1 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 relative"
-              >
-                تسجيل الدخول
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
-              </Link>
 
               {/* Others Dropdown */}
               <div 
