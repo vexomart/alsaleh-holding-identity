@@ -25,7 +25,28 @@ import {
   User,
   Mail,
   Phone,
-  Building
+  Building,
+  TrendingUp,
+  DollarSign,
+  Activity,
+  Target,
+  Zap,
+  Globe,
+  PenTool,
+  Briefcase,
+  Palette,
+  Monitor,
+  Smartphone,
+  Image,
+  Video,
+  FileImage,
+  PieChart,
+  Users,
+  Star,
+  Award,
+  Headphones,
+  Shield,
+  RefreshCw
 } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -218,7 +239,9 @@ const ClientDashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
+      <div className="flex min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" dir="rtl">
+        <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
+        
         <AppSidebar 
           user={user}
           profile={data.profile}
@@ -227,35 +250,35 @@ const ClientDashboard = () => {
           onTabChange={setActiveTab}
         />
         
-        <main className="flex-1 overflow-hidden">
-          <header className="border-b bg-card shadow-sm">
+        <main className="flex-1 overflow-hidden relative z-10">
+          <header className="border-b bg-card/80 backdrop-blur-lg shadow-sm">
             <div className="flex items-center justify-between px-6 py-4">
               <div className="flex items-center gap-4">
                 <SidebarTrigger />
-                <div>
-                  <h1 className="text-2xl font-bold text-foreground">
+                <div className="animate-fade-in">
+                  <h1 className="text-2xl font-bold text-gradient-primary">
                     مرحباً، {data.profile?.full_name || user?.email}
                   </h1>
                   <p className="text-muted-foreground">
-                    لوحة التحكم الشخصية
+                    لوحة التحكم الشخصية - شركة الصالح
                   </p>
                 </div>
               </div>
               
               <div className="flex items-center gap-3">
-                <Badge variant="outline" className="flex items-center gap-2">
-                  <CheckCircle className="h-3 w-3" />
+                <Badge variant="outline" className="flex items-center gap-2 animate-glow">
+                  <CheckCircle className="h-3 w-3 text-success" />
                   متصل
                 </Badge>
                 <Button 
                   variant="ghost" 
                   size="icon"
                   onClick={() => setActiveTab("notifications")}
-                  className="relative"
+                  className="relative hover:scale-105 transition-transform"
                 >
                   <Bell className="h-5 w-5" />
                   {data.notifications.length > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center animate-pulse">
                       {data.notifications.length}
                     </span>
                   )}
@@ -269,8 +292,14 @@ const ClientDashboard = () => {
               <OverviewTab data={data} />
             )}
             
-            {activeTab === "services" && (
-              <ServicesTab data={data} onRefresh={() => loadDashboardData(user.id)} />
+            {(activeTab === "services" || activeTab === "digital-services" || activeTab === "design-services" || activeTab === "business-services" || activeTab === "content-services") && (
+              <ServicesTab 
+                data={data} 
+                onRefresh={() => loadDashboardData(user.id)} 
+                activeSubTab={activeTab}
+                getServiceIcon={getServiceIcon}
+                getStatusBadge={getStatusBadge}
+              />
             )}
             
             {activeTab === "invoices" && (
@@ -306,47 +335,118 @@ const OverviewTab = ({ data }: { data: DashboardData }) => {
       title: "طلبات الخدمات",
       value: data.serviceRequests.length,
       icon: <Package className="h-8 w-8" />,
-      color: "text-blue-600"
+      color: "text-primary",
+      bgColor: "bg-primary/10",
+      change: "+12%",
+      changeColor: "text-green-600"
     },
     {
       title: "الفواتير",
       value: data.invoices.length,
       icon: <FileText className="h-8 w-8" />,
-      color: "text-green-600"
+      color: "text-green-600",
+      bgColor: "bg-green-100 dark:bg-green-900/20",
+      change: "+8%",
+      changeColor: "text-green-600"
     },
     {
       title: "المدفوعات",
       value: data.paymentHistory.length,
       icon: <CreditCard className="h-8 w-8" />,
-      color: "text-purple-600"
+      color: "text-purple-600",
+      bgColor: "bg-purple-100 dark:bg-purple-900/20",
+      change: "+15%",
+      changeColor: "text-green-600"
     },
     {
-      title: "التذاكر",
+      title: "تذاكر الدعم",
       value: data.tickets.length,
-      icon: <MessageSquare className="h-8 w-8" />,
-      color: "text-orange-600"
+      icon: <Headphones className="h-8 w-8" />,
+      color: "text-orange-600",
+      bgColor: "bg-orange-100 dark:bg-orange-900/20",
+      change: "-3%",
+      changeColor: "text-red-600"
+    }
+  ];
+
+  const quickActions = [
+    {
+      title: "طلب خدمة تصميم",
+      description: "احصل على تصميمات احترافية",
+      icon: <Palette className="h-6 w-6" />,
+      href: "/design-solutions",
+      color: "bg-gradient-to-r from-blue-500 to-purple-600"
+    },
+    {
+      title: "خدمات تطوير الويب",
+      description: "مواقع ويب متطورة وسريعة",
+      icon: <Globe className="h-6 w-6" />,
+      href: "/development",
+      color: "bg-gradient-to-r from-green-500 to-teal-600"
+    },
+    {
+      title: "خدمات الأعمال",
+      description: "استشارات وحلول تجارية",
+      icon: <Briefcase className="h-6 w-6" />,
+      href: "/business-services",
+      color: "bg-gradient-to-r from-orange-500 to-red-600"
+    },
+    {
+      title: "إنتاج المحتوى",
+      description: "محتوى مميز لعلامتك التجارية",
+      icon: <PenTool className="h-6 w-6" />,
+      href: "/content-creation",
+      color: "bg-gradient-to-r from-purple-500 to-pink-600"
     }
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* إحصائيات سريعة */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <Card key={index} className="relative overflow-hidden">
+          <Card key={index} className="relative overflow-hidden shadow-corporate hover:shadow-glow transition-all duration-300 hover:scale-105 animate-fade-in border-none" style={{ animationDelay: `${index * 0.1}s` }}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className="text-3xl font-bold">{stat.value}</p>
+                  <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                  <div className="flex items-center gap-1">
+                    <TrendingUp className="h-3 w-3" />
+                    <span className={`text-xs ${stat.changeColor}`}>{stat.change}</span>
+                  </div>
                 </div>
-                <div className={stat.color}>
-                  {stat.icon}
+                <div className={`p-3 rounded-xl ${stat.bgColor}`}>
+                  <div className={stat.color}>
+                    {stat.icon}
+                  </div>
                 </div>
               </div>
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent"></div>
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      {/* إجراءات سريعة */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+          <Zap className="h-6 w-6 text-primary" />
+          إجراءات سريعة
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {quickActions.map((action, index) => (
+            <Card key={index} className="group cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 border-none" onClick={() => window.location.href = action.href}>
+              <CardContent className="p-4">
+                <div className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center text-white mb-3 group-hover:scale-110 transition-transform`}>
+                  {action.icon}
+                </div>
+                <h4 className="font-semibold text-foreground mb-1">{action.title}</h4>
+                <p className="text-xs text-muted-foreground">{action.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -404,59 +504,159 @@ const OverviewTab = ({ data }: { data: DashboardData }) => {
   );
 };
 
-const ServicesTab = ({ data, onRefresh }: { data: DashboardData, onRefresh: () => void }) => {
+const ServicesTab = ({ data, onRefresh, activeSubTab, getServiceIcon, getStatusBadge }: { 
+  data: DashboardData, 
+  onRefresh: () => void, 
+  activeSubTab: string,
+  getServiceIcon: (serviceType: string) => JSX.Element,
+  getStatusBadge: (status: string) => { label: string, variant: any }
+}) => {
+  const serviceCategories = [
+    {
+      key: "digital-services",
+      title: "الخدمات الرقمية",
+      icon: <Monitor className="h-5 w-5" />,
+      services: ["تطوير المواقع", "تطبيقات الهاتف", "التسويق الرقمي", "تحليل البيانات"]
+    },
+    {
+      key: "design-services", 
+      title: "خدمات التصميم",
+      icon: <Palette className="h-5 w-5" />,
+      services: ["تصميم الهوية البصرية", "تصميم المواقع", "تصميم الطباعة", "تصميم الإعلانات"]
+    },
+    {
+      key: "business-services",
+      title: "الخدمات التجارية", 
+      icon: <Briefcase className="h-5 w-5" />,
+      services: ["الاستشارات", "دراسات الجدوى", "إدارة المشاريع", "التخطيط الاستراتيجي"]
+    },
+    {
+      key: "content-services",
+      title: "إنتاج المحتوى",
+      icon: <PenTool className="h-5 w-5" />,
+      services: ["كتابة المحتوى", "إنتاج الفيديو", "التصوير الفوتوغرافي", "إدارة وسائل التواصل"]
+    }
+  ];
+
+  const filteredRequests = activeSubTab === "services" 
+    ? data.serviceRequests 
+    : data.serviceRequests.filter(req => {
+        switch(activeSubTab) {
+          case "digital-services": return req.service_type === "digital";
+          case "design-services": return req.service_type === "design";
+          case "business-services": return req.service_type === "business";
+          case "content-services": return req.service_type === "content";
+          default: return true;
+        }
+      });
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">طلبات الخدمات</h2>
-        <Button onClick={() => window.location.href = '/current-offers'}>
-          طلب خدمة جديدة
-        </Button>
+        <h2 className="text-2xl font-bold text-gradient-primary">
+          {activeSubTab === "services" ? "جميع الخدمات" : serviceCategories.find(cat => cat.key === activeSubTab)?.title || "الخدمات"}
+        </h2>
+        <div className="flex gap-3">
+          <Button onClick={() => window.location.href = '/current-offers'} className="animate-pulse">
+            <Package className="h-4 w-4 ml-2" />
+            طلب خدمة جديدة
+          </Button>
+          <Button variant="outline" onClick={onRefresh}>
+            <RefreshCw className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
+      {/* عرض فئات الخدمات إذا كان في التبويب الرئيسي */}
+      {activeSubTab === "services" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {serviceCategories.map((category, index) => (
+            <Card key={category.key} className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group border-none shadow-corporate" 
+                  style={{ animationDelay: `${index * 0.1}s` }}>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                    {category.icon}
+                  </div>
+                  <h3 className="font-bold text-foreground">{category.title}</h3>
+                </div>
+                <div className="space-y-2">
+                  {category.services.map((service, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="w-2 h-2 rounded-full bg-accent"></div>
+                      {service}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
       <div className="grid gap-6">
-        {data.serviceRequests.map((request) => (
-          <Card key={request.id}>
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Package className="h-5 w-5" />
-                    {request.title}
-                  </CardTitle>
-                  <CardDescription>{request.description}</CardDescription>
-                </div>
-                <Badge variant={request.status === 'completed' ? 'default' : 'secondary'}>
-                  {request.status === 'completed' ? 'مكتمل' : 'معلق'}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">نوع الخدمة</p>
-                  <p className="font-medium">{request.service_type}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">الأولوية</p>
-                  <p className="font-medium">{request.priority}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">تاريخ الإنشاء</p>
-                  <p className="font-medium">
-                    {new Date(request.created_at).toLocaleDateString('ar-SA')}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">التكلفة المقدرة</p>
-                  <p className="font-medium">
-                    {request.estimated_cost ? `${request.estimated_cost} ريال` : 'غير محدد'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
+        {filteredRequests.length === 0 ? (
+          <Card className="p-8 text-center">
+            <div className="space-y-4">
+              <Package className="h-16 w-16 mx-auto text-muted-foreground" />
+              <h3 className="text-lg font-semibold">لا توجد طلبات حالياً</h3>
+              <p className="text-muted-foreground">ابدأ بطلب خدمة جديدة لرؤيتها هنا</p>
+              <Button onClick={() => window.location.href = '/current-offers'}>
+                طلب خدمة الآن
+              </Button>
+            </div>
           </Card>
-        ))}
+        ) : (
+          filteredRequests.map((request, index) => (
+            <Card key={request.id} className="hover:shadow-lg transition-all duration-300 border-none shadow-corporate animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <CardTitle className="flex items-center gap-2 text-foreground">
+                      {getServiceIcon(request.service_type)}
+                      {request.title}
+                    </CardTitle>
+                    <CardDescription>{request.description}</CardDescription>
+                  </div>
+                  <div className="space-y-2">
+                    <Badge variant={request.status === 'completed' ? 'default' : 'secondary'} className="animate-pulse">
+                      {getStatusBadge(request.status).label}
+                    </Badge>
+                    {request.priority === 'high' && (
+                      <Badge variant="destructive" className="text-xs">
+                        عاجل
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground">نوع الخدمة</p>
+                    <p className="font-medium text-foreground">{request.service_type}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground">الأولوية</p>
+                    <p className="font-medium text-foreground">{request.priority}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground">تاريخ الإنشاء</p>
+                    <p className="font-medium text-foreground">
+                      {new Date(request.created_at).toLocaleDateString('ar-SA')}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground">التكلفة المقدرة</p>
+                    <p className="font-medium text-primary">
+                      {request.estimated_cost ? `${request.estimated_cost} ريال` : 'غير محدد'}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );
