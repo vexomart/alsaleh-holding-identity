@@ -342,6 +342,30 @@ const Navigation = () => {
                 </Button>
               </div>
               
+              {/* Authentication/Dashboard Links */}
+              <div className="hidden lg:flex items-center gap-2">
+                <Button 
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-3 text-xs text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                  asChild
+                >
+                  <a href="/auth">
+                    تسجيل الدخول
+                  </a>
+                </Button>
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-3 text-xs border-purple-500 text-purple-600 hover:bg-purple-50"
+                  asChild
+                >
+                  <a href="/dashboard">
+                    لوحة التحكم
+                  </a>
+                </Button>
+              </div>
+              
               {/* Main CTA - Responsive */}
               <Button 
                 size="sm"

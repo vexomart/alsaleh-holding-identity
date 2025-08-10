@@ -183,7 +183,7 @@ const App = () => {
           <Route path="/department/:id" element={<DepartmentDetails />} />
           <Route path="/user-guide" element={<UserGuide />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<ClientDashboard />} />
           <Route path="/client-dashboard" element={<ClientDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/start-with-us" element={<StartWithUs />} />
