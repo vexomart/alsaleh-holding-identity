@@ -81,6 +81,13 @@ export function TicketsSection() {
         return;
       }
 
+      // الحصول على بيانات المستخدم
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('user_id', user.id)
+        .single();
+
       const { data, error } = await supabase
         .from('tickets')
         .insert({
@@ -94,6 +101,27 @@ export function TicketsSection() {
         .single();
 
       if (error) throw error;
+      
+      // إرسال إشعار للإدارة
+      try {
+        await supabase.functions.invoke('service-notifications', {
+          body: {
+            type: 'ticket_created',
+            ticketId: data.id,
+            data: {
+              ticketNumber: data.ticket_number,
+              title: data.title,
+              description: data.description,
+              category: data.category,
+              priority: data.priority,
+              customerName: profile?.full_name || user.email || 'غير محدد',
+              customerEmail: user.email
+            }
+          }
+        });
+      } catch (notificationError) {
+        console.error('Error sending notification:', notificationError);
+      }
       
       setTickets([data, ...tickets]);
       setNewTicket({ title: '', description: '', priority: 'medium', category: 'general' });
@@ -148,6 +176,26 @@ export function TicketsSection() {
         .single();
 
       if (error) throw error;
+      
+      // إرسال رد للإدارة إذا كان من العميل
+      try {
+        const selectedTicketData = tickets.find(t => t.id === selectedTicket);
+        if (selectedTicketData) {
+          await supabase.functions.invoke('service-notifications', {
+            body: {
+              type: 'ticket_reply',
+              ticketId: selectedTicket,
+              data: {
+                ticketNumber: selectedTicketData.ticket_number,
+                message: newMessage,
+                customerEmail: user.email
+              }
+            }
+          });
+        }
+      } catch (notificationError) {
+        console.error('Error sending notification:', notificationError);
+      }
       
       setMessages([...messages, data]);
       setNewMessage('');
