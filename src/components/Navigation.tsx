@@ -110,15 +110,15 @@ const Navigation = () => {
 
       {/* Main Corporate Navigation */}
       <nav className="fixed top-0 lg:top-[48px] w-full z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50 mobile-tap">
-        <div className="container-fluid">
-          <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center h-14 sm:h-16">
             
-            {/* Logo & Company Name - Enhanced Responsive */}
-            <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
-              <a href="/" className="flex items-center gap-1 sm:gap-2 group touch-target">
+            {/* Centered Logo & Company Name */}
+            <div className="flex flex-col items-center justify-center text-center">
+              <a href="/" className="flex flex-col items-center group touch-target">
                 {/* Logo */}
-                <div className="relative">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300">
+                <div className="relative mb-1">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 mx-auto">
                     <img 
                       src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
                       alt="ASH Holdings" 
@@ -127,12 +127,12 @@ const Navigation = () => {
                   </div>
                 </div>
                 
-                {/* Company Name - Hidden on mobile, visible on tablet+ */}
-                <div className="hidden md:block">
-                  <h1 className="text-base lg:text-lg font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
+                {/* Company Name - Always centered */}
+                <div className="text-center">
+                  <h1 className="text-sm md:text-base lg:text-lg font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
                     شركة علي صالح الشهري القابضة
                   </h1>
-                  <div className="flex items-center gap-1.5 mt-0.5">
+                  <div className="flex items-center justify-center gap-1.5 mt-0.5">
                     <div className="flex items-center gap-0.5">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-2 h-2 lg:w-2.5 lg:h-2.5 text-amber-400 fill-current" />
@@ -143,18 +143,14 @@ const Navigation = () => {
                     </span>
                   </div>
                 </div>
-                
-                {/* Mobile Company Name - Visible only on mobile */}
-                <div className="block md:hidden">
-                  <h1 className="text-sm font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
-                    علي الشهري القابضة
-                  </h1>
-                </div>
               </a>
             </div>
 
-            {/* Navigation Menu - Center */}
-            <div className="hidden lg:flex items-center gap-6">
+          </div>
+
+          {/* Navigation Menu - Below Logo, Centered */}
+          <div className="flex justify-center items-center pb-2">
+            <div className="flex items-center gap-6 flex-wrap justify-center">
               <a 
                 href="/" 
                 className="relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group"
@@ -314,57 +310,56 @@ const Navigation = () => {
                 <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
               </a>
             </div>
+          </div>
 
-            {/* Action Buttons - Responsive */}
-            <div className="flex items-center gap-1 sm:gap-2">
-              {/* Contact Buttons - Hidden on mobile, visible on larger screens */}
-              <div className="hidden lg:flex items-center gap-2">
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-green-500 text-green-600 hover:bg-green-50"
-                  asChild
-                >
-                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-3 h-3" />
-                    <span className="hidden xl:block">واتساب</span>
-                  </a>
-                </Button>
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-blue-500 text-blue-600 hover:bg-blue-50"
-                  asChild
-                >
-                  <a href="tel:0555812567">
-                    <Phone className="w-3 h-3" />
-                    <span className="hidden xl:block">اتصال</span>
-                  </a>
-                </Button>
-              </div>
-              
-              
-              {/* Main CTA - Responsive */}
+          {/* Action Buttons - Below Menu */}
+          <div className="flex justify-center items-center gap-1 sm:gap-2 pb-2">
+            {/* Contact Buttons - Hidden on mobile, visible on larger screens */}
+            <div className="hidden lg:flex items-center gap-2">
               <Button 
+                variant="outline"
                 size="sm"
-                className="h-8 px-2 sm:px-4 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-green-500 text-green-600 hover:bg-green-50"
                 asChild
               >
-                <a href="/start-with-us">
-                  <span className="hidden sm:block">ابدأ معنا</span>
-                  <span className="sm:hidden">ابدأ</span>
-                  <Zap className="w-3 h-3 mr-1 sm:mr-1.5" />
+                <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="w-3 h-3" />
+                  <span className="hidden xl:block">واتساب</span>
                 </a>
               </Button>
-              
-              {/* Mobile Menu Button */}
-              <button
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                onClick={() => setIsOpen(!isOpen)}
+              <Button 
+                variant="outline"
+                size="sm"
+                className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-blue-500 text-blue-600 hover:bg-blue-50"
+                asChild
               >
-                {isOpen ? <X size={18} /> : <Menu size={18} />}
-              </button>
+                <a href="tel:0555812567">
+                  <Phone className="w-3 h-3" />
+                  <span className="hidden xl:block">اتصال</span>
+                </a>
+              </Button>
             </div>
+            
+            {/* Main CTA - Responsive */}
+            <Button 
+              size="sm"
+              className="h-8 px-2 sm:px-4 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              asChild
+            >
+              <a href="/start-with-us">
+                <span className="hidden sm:block">ابدأ معنا</span>
+                <span className="sm:hidden">ابدأ</span>
+                <Zap className="w-3 h-3 mr-1 sm:mr-1.5" />
+              </a>
+            </Button>
+            
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
           </div>
           
           {/* Mobile Menu - Enhanced Responsive Design */}
