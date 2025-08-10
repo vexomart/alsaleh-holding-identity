@@ -10,7 +10,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { PaymentDialog } from "@/components/ui/PaymentDialog";
 import brandIdentityImg from "@/assets/brand-identity-service.jpg";
 import marketingDesignsImg from "@/assets/marketing-designs-service.jpg";
 import socialMediaImg from "@/assets/social-media-service.jpg";
@@ -106,8 +105,10 @@ const whatsappNumber = "966555812567";
 export default function DesignCategory() {
   const { slug } = useParams<{ slug: CatalogKey }>();
   const { toast } = useToast();
-  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<{ name: string; price: number } | null>(null);
+  const [customer, setCustomer] = useState({ name: "", email: "", phone: "" });
+  const [loading, setLoading] = useState(false);
 
   // Appointment dialog state
   const [apptOpen, setApptOpen] = useState(false);
@@ -186,9 +187,40 @@ export default function DesignCategory() {
     canonical.href = window.location.origin + `/design-solutions/${slug}`;
   }, [slug, data.title, data.description]);
 
-  const handleQuickPayment = (service: { name: string; price: number }) => {
-    setSelected(service);
-    setPaymentOpen(true);
+  const startPayment = async () => {
+    if (!selected) return;
+    if (!customer.name || !customer.email) {
+      toast({ title: "البيانات مطلوبة", description: "يرجى إدخال الاسم والبريد الإلكتروني.", variant: "destructive" });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data: resp, error } = await supabase.functions.invoke("paylink-payment", {
+        body: {
+          amount: selected.price,
+          currency: "SAR",
+          customer_name: customer.name,
+          customer_email: customer.email,
+          customer_phone: customer.phone,
+          offer_title: selected.name,
+          description: `${data.title} - ${selected.name}`,
+          success_url: window.location.origin,
+        },
+      });
+
+      if (error) throw error;
+      if (!resp?.payment_url) throw new Error("تعذر إنشاء رابط الدفع");
+
+      toast({ title: "إعادة التوجيه للدفع", description: "سيتم فتح صفحة Paylink لإتمام العملية." });
+      window.open(resp.payment_url, "_blank");
+      setOpen(false);
+    } catch (e: any) {
+      console.error(e);
+      toast({ title: "فشل الدفع", description: e.message || "حدث خطأ غير متوقع", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const bookAppointment = () => {
@@ -289,15 +321,42 @@ export default function DesignCategory() {
 
                     {/* Actions */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                      {/* Quick Pay Button */}
-                      <Button
-                        size="lg"
-                        className="w-full bg-gradient-to-r from-success to-success/80 hover:from-success/90 hover:to-success text-white font-bold transition-all duration-300"
-                        onClick={() => handleQuickPayment({ name: it.name, price: it.price })}
-                      >
-                        <CreditCard className="w-5 h-5 ml-2" /> ادفع الآن
-                        <ArrowRight className="w-5 h-5 mr-2" />
-                      </Button>
+                    {/* Pay Now */}
+                    <Dialog open={open && selected?.name === it.name} onOpenChange={(o) => { setOpen(o); if (!o) setSelected(null); }}>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="lg"
+                          className="w-full bg-gradient-to-r from-success to-success/80 hover:from-success/90 hover:to-success text-white font-bold"
+                          onClick={() => { setSelected({ name: it.name, price: it.price }); setOpen(true); }}
+                        >
+                          <CreditCard className="w-5 h-5 ml-2" /> ادفع الآن
+                          <ArrowRight className="w-5 h-5 mr-2" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle className="text-lg">الدفع لخدمة: {it.name}</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="name">الاسم الكامل</Label>
+                            <Input id="name" placeholder="مثال: أحمد محمد" value={customer.name} onChange={(e) => setCustomer((s) => ({ ...s, name: e.target.value }))} />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="email">البريد الإلكتروني</Label>
+                            <Input id="email" type="email" placeholder="example@mail.com" value={customer.email} onChange={(e) => setCustomer((s) => ({ ...s, email: e.target.value }))} />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="phone">رقم الجوال (اختياري)</Label>
+                            <Input id="phone" placeholder="05XXXXXXXX" value={customer.phone} onChange={(e) => setCustomer((s) => ({ ...s, phone: e.target.value }))} />
+                          </div>
+                          <Button onClick={startPayment} disabled={loading} className="w-full">
+                            {loading ? <><Loader2 className="w-4 h-4 ml-2 animate-spin" /> جاري إنشاء رابط الدفع</> : <><Lock className="w-4 h-4 ml-2" /> إتمام الدفع الآن ({it.price.toLocaleString()} ر.س)</>}
+                          </Button>
+                          <p className="text-xs text-muted-foreground">🔒 الدفع آمن عبر Paylink. سيتم فتح صفحة الدفع في تبويب جديد.</p>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
 
                     {/* Book Appointment */}
                     <Dialog open={apptOpen} onOpenChange={setApptOpen}>
@@ -362,23 +421,7 @@ export default function DesignCategory() {
       </main>
 
       <Footer />
-
-      {/* Enhanced Payment Dialog */}
-      {selected && (
-        <PaymentDialog
-          open={paymentOpen}
-          onOpenChange={setPaymentOpen}
-          service={{
-            name: selected.name,
-            price: selected.price,
-            category: data.title
-          }}
-          onSuccess={() => {
-            setSelected(null);
-            setPaymentOpen(false);
-          }}
-        />
-      )}
+      
     </div>
   );
 }

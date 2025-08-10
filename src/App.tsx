@@ -57,6 +57,18 @@ import Subsidiaries from "./pages/Subsidiaries";
 import PaymentMethods from "./pages/PaymentMethods";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
+import Dashboard from "./pages/Dashboard";
+import Partnerships from "./pages/Partnerships";
+import AffiliateMarketing from "./pages/AffiliateMarketing";
+import BusinessServices from "./pages/BusinessServices";
+import BusinessConsulting from "./pages/business-services/BusinessConsulting";
+import DigitalTransformation from "./pages/business-services/DigitalTransformation";
+import FinancialPlanning from "./pages/business-services/FinancialPlanning";
+import DepartmentDetails from "./pages/DepartmentDetails";
+import UserGuide from "./pages/UserGuide";
+import Auth from "./pages/Auth";
+import ClientDashboard from "./pages/ClientDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import StartWithUs from "./pages/StartWithUs";
 import BookConsultation from "./pages/BookConsultation";
@@ -162,7 +174,18 @@ const App = () => {
               <Route path="/payment-methods" element={<PaymentMethods />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/payment-cancel" element={<PaymentCancel />} />
-          
+          <Route path="/partnerships" element={<Partnerships />} />
+          <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
+          <Route path="/business-services" element={<BusinessServices />} />
+          <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
+          <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
+          <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
+          <Route path="/department/:id" element={<DepartmentDetails />} />
+          <Route path="/user-guide" element={<UserGuide />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/client-dashboard" element={<ClientDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/start-with-us" element={<StartWithUs />} />
               <Route path="/book-consultation" element={<BookConsultation />} />
               <Route path="/hosting-services" element={<HostingServices />} />
@@ -193,9 +216,9 @@ const App = () => {
               
               <Route path="/car-fleet" element={<CarFleet />} />
               <Route path="/car-booking" element={<CarBooking />} />
-               <Route path="/email-test" element={<EmailTest />} />
-               <Route path="/invoice-admin" element={<InvoiceAdmin />} />
-               <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
+              <Route path="/email-test" element={<EmailTest />} />
+              <Route path="/invoice-admin" element={<InvoiceAdmin />} />
+              <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

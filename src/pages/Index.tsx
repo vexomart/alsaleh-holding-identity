@@ -193,7 +193,6 @@ const Index = () => {
         </div>
       </main>
 
-
       {/* Footer with Enhanced Styling */}
       <footer className="relative z-10 mt-8">
         <div className="absolute inset-0 bg-gradient-to-t from-background via-primary/5 to-transparent"></div>

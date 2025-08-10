@@ -1,32 +1,30 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard,
-  FileText,
-  CreditCard,
-  Bell,
-  Settings,
-  LogOut,
-  Package,
-  MessageSquare,
-  BarChart3,
-  User,
-  ChevronDown,
-  ChevronRight,
   Home,
-  Briefcase,
-  Palette,
+  Building2,
   Globe,
+  Zap,
+  Phone,
+  Mail,
+  MessageCircle,
+  Gift,
+  Settings,
   PenTool,
-  Activity,
-  Monitor,
-  Smartphone,
-  Image,
-  Video,
+  Palette,
+  Users,
+  Award,
+  Heart,
   TrendingUp,
+  Eye,
+  Briefcase,
   Target,
-  Headphones,
-  Building
+  Menu,
+  X,
+  Clock,
+  MapPin,
+  Star,
+  BarChart3
 } from "lucide-react";
 
 import {
@@ -38,255 +36,235 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 
-interface AppSidebarProps {
-  user: any;
-  profile: any;
-  onSignOut: () => void;
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-}
-
-const sidebarItems = [
-  {
-    title: "نظرة عامة",
-    icon: LayoutDashboard,
-    key: "overview"
-  },
-  {
-    title: "الخدمات",
-    icon: Package,
-    key: "services",
-    subItems: [
-      { title: "جميع الطلبات", key: "services", icon: Package },
-      { title: "الخدمات الرقمية", key: "digital-services", icon: Monitor },
-      { title: "خدمات التصميم", key: "design-services", icon: Palette },
-      { title: "الخدمات التجارية", key: "business-services", icon: Briefcase },
-      { title: "إنتاج المحتوى", key: "content-services", icon: PenTool }
-    ]
-  },
-  {
-    title: "الفواتير والمالية",
-    icon: FileText,
-    key: "invoices",
-    subItems: [
-      { title: "جميع الفواتير", key: "invoices", icon: FileText },
-      { title: "الفواتير المدفوعة", key: "paid-invoices", icon: CreditCard },
-      { title: "الفواتير المعلقة", key: "pending-invoices", icon: Bell }
-    ]
-  },
-  {
-    title: "المدفوعات",
-    icon: CreditCard,
-    key: "payments"
-  },
-  {
-    title: "الدعم الفني",
-    icon: Headphones,
-    key: "tickets"
-  },
-  {
-    title: "الإشعارات",
-    icon: Bell,
-    key: "notifications"
-  },
-  {
-    title: "الملف الشخصي",
-    icon: User,
-    key: "profile"
-  }
+const mainNavItems = [
+  { title: "الرئيسية", url: "/", icon: Home },
+  // { title: "لوحة التحكم", url: "/dashboard", icon: BarChart3 }, // Hidden as requested
+  { title: "من نحن", url: "/about", icon: Building2 },
+  { title: "رؤيتنا", url: "/vision", icon: Eye },
+  { title: "شركاتنا", url: "/subsidiaries", icon: Briefcase },
+  { title: "منتجاتنا", url: "/ready-projects", icon: Target },
+  { title: "تواصل معنا", url: "/contact", icon: Phone },
 ];
 
-const quickActions = [
-  {
-    title: "طلب خدمة جديدة",
-    icon: Package,
-    href: "/current-offers",
-    color: "text-primary",
-    bgColor: "bg-primary/10"
-  },
-  {
-    title: "إنشاء تذكرة دعم",
-    icon: Headphones,
-    href: "/support", 
-    color: "text-green-600",
-    bgColor: "bg-green-100 dark:bg-green-900/20"
-  },
-  {
-    title: "عرض العروض الحالية",
-    icon: TrendingUp,
-    href: "/current-offers",
-    color: "text-purple-600",
-    bgColor: "bg-purple-100 dark:bg-purple-900/20"
-  },
-  {
-    title: "اتصل بنا",
-    icon: Building,
-    href: "/contact",
-    color: "text-orange-600", 
-    bgColor: "bg-orange-100 dark:bg-orange-900/20"
-  }
+const servicesItems = [
+  { title: "العروض الحالية", url: "/current-offers", icon: Gift },
+  { title: "خدماتنا الاحترافية", url: "/professional-services", icon: Settings },
+  { title: "صناعة المحتوى", url: "/content-creation", icon: PenTool },
+  { title: "حلول التصميم", url: "/design-solutions", icon: Palette },
+  { title: "الاستثمار التقني", url: "/tech-investment", icon: Zap },
+  { title: "التطوير والابتكار", url: "/development", icon: Building2 },
+  { title: "الاستشارات الإستراتيجية", url: "/strategic-consulting", icon: Users },
+  { title: "الحلول المتكاملة", url: "/integrated-solutions", icon: Award }
 ];
 
-export function AppSidebar({ user, profile, onSignOut, activeTab, onTabChange }: AppSidebarProps) {
-  const sidebar = useSidebar();
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['services']);
+const otherItems = [
+  { title: "طرق الدفع", url: "/payment-methods", icon: Phone },
+  { title: "رحلة الإبداع والتميز", url: "/story", icon: Heart },
+  { title: "قيمنا وثقافتنا", url: "/about", icon: TrendingUp },
+];
 
-  const toggleGroup = (key: string) => {
-    setExpandedGroups(prev =>
-      prev.includes(key)
-        ? prev.filter(item => item !== key)
-        : [...prev, key]
-    );
-  };
+export function AppSidebar() {
+  const { state } = useSidebar();
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const collapsed = state === "collapsed";
 
-  const isActive = (key: string) => activeTab === key;
-  const isExpanded = (key: string) => expandedGroups.includes(key);
-  const isCollapsed = sidebar.state === 'collapsed';
+  const isActive = (path: string) => currentPath === path;
+  const getNavCls = (path: string) =>
+    isActive(path) 
+      ? "bg-slate-100 text-slate-900 font-medium" 
+      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50";
 
   return (
-    <Sidebar className="w-80 sidebar-gradient" variant="sidebar" collapsible="icon" dir="rtl">
-      <SidebarContent className="bg-sidebar-background text-sidebar-foreground border-sidebar-border border-l shadow-xl">
-        {/* Header */}
-        <div className="p-6 border-b border-sidebar-border">
-          {!isCollapsed && (
-            <div className="flex items-center gap-4 animate-fade-in">
-              <Avatar className="h-12 w-12 ring-2 ring-sidebar-primary">
-                <AvatarImage src="" />
-                <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground font-bold">
-                  {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'ع'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-base font-bold truncate text-sidebar-foreground">
-                  {profile?.full_name || 'مستخدم'}
-                </p>
-                <p className="text-sm text-sidebar-foreground/70 truncate">
-                  {profile?.client_id || 'عميل جديد'}
-                </p>
-                <Badge variant="outline" className="mt-1 text-xs border-sidebar-primary text-sidebar-primary">
-                  عضو مميز
-                </Badge>
-              </div>
-            </div>
-          )}
-          {isCollapsed && (
-            <div className="flex justify-center">
-              <Avatar className="h-10 w-10 ring-2 ring-sidebar-primary">
-                <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-sm font-bold">
-                  {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'ع'}
-                </AvatarFallback>
-              </Avatar>
+    <Sidebar
+      className={`bg-white border-r border-slate-200 transition-all duration-300 ease-in-out
+                  lg:static lg:translate-x-0 lg:w-72
+                  fixed inset-y-0 left-0 z-50 w-80
+                  ${collapsed ? '-translate-x-full' : 'translate-x-0'}
+                  lg:${collapsed ? 'w-16' : 'w-72'}
+                  flex flex-col h-full shadow-lg lg:shadow-none`}
+      collapsible="icon"
+    >
+      {/* Header */}
+      <SidebarHeader className="p-4 lg:p-6 border-b border-slate-100 flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="relative flex-shrink-0">
+            <img 
+              src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+              alt="ASH Holdings" 
+              className="h-10 w-10 rounded-lg object-cover"
+            />
+          </div>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <h1 className="text-slate-900 font-semibold text-base leading-tight truncate">
+                شركة علي صالح الشهري القابضة
+              </h1>
+              <span className="text-slate-500 text-sm">شركة رائدة منذ 2016</span>
             </div>
           )}
         </div>
+      </SidebarHeader>
 
-        {/* Navigation */}
-        <SidebarGroup className="px-4">
-          {!isCollapsed && <SidebarGroupLabel className="text-sidebar-foreground/70 font-bold text-sm">القائمة الرئيسية</SidebarGroupLabel>}
+      <SidebarContent className="flex-1 overflow-y-auto px-3 lg:px-4 py-4" 
+                       style={{ 
+                         WebkitOverflowScrolling: 'touch',
+                         scrollbarWidth: 'thin'
+                       }}>
+        {/* التنقل الرئيسي */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-slate-500 font-medium text-xs uppercase tracking-wide mb-4 px-2">
+            {!collapsed && "التنقل الرئيسي"}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
-              {sidebarItems.map((item, index) => (
-                <SidebarMenuItem key={item.key} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                  {item.subItems ? (
-                    <div>
-                      <SidebarMenuButton
-                        onClick={() => !isCollapsed && toggleGroup(item.key)}
-                        className={`w-full justify-between transition-all duration-300 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg p-3 ${
-                          item.subItems.some(sub => isActive(sub.key)) ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-lg' : 'text-sidebar-foreground hover:scale-105'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <item.icon className="h-5 w-5" />
-                          {!isCollapsed && <span className="font-medium">{item.title}</span>}
-                        </div>
-                        {!isCollapsed && (
-                          isExpanded(item.key) ? 
-                            <ChevronDown className="h-4 w-4 transition-transform" /> : 
-                            <ChevronRight className="h-4 w-4 transition-transform" />
-                        )}
-                      </SidebarMenuButton>
-                      
-                      {!isCollapsed && isExpanded(item.key) && (
-                        <div className="mr-8 mt-2 space-y-1 animate-slide-in-right">
-                          {item.subItems.map((subItem) => (
-                            <SidebarMenuButton
-                              key={subItem.key}
-                              onClick={() => onTabChange(subItem.key)}
-                              className={`text-sm transition-all duration-200 hover:bg-sidebar-accent/50 rounded-md p-2 flex items-center gap-2 ${
-                                isActive(subItem.key) ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-md' : 'text-sidebar-foreground/80 hover:text-sidebar-foreground'
-                              }`}
-                            >
-                              {subItem.icon && <subItem.icon className="h-4 w-4" />}
-                              {subItem.title}
-                            </SidebarMenuButton>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <SidebarMenuButton
-                      onClick={() => onTabChange(item.key)}
-                      className={`w-full transition-all duration-300 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg p-3 ${
-                        isActive(item.key) ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-lg scale-105' : 'text-sidebar-foreground hover:scale-105'
-                      }`}
+            <SidebarMenu className="space-y-1">
+              {mainNavItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <NavLink 
+                      to={item.url} 
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-200 ${getNavCls(item.url)}`}
                     >
-                      <div className="flex items-center gap-3">
-                        <item.icon className="h-5 w-5" />
-                        {!isCollapsed && <span className="font-medium">{item.title}</span>}
-                      </div>
-                    </SidebarMenuButton>
-                  )}
+                      <item.icon className="w-5 h-5" />
+                      {!collapsed && (
+                        <span className="text-sm">
+                          {item.title}
+                        </span>
+                      )}
+                    </NavLink>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Quick Actions */}
-        {!isCollapsed && (
-          <SidebarGroup className="px-4">
-            <SidebarGroupLabel className="text-sidebar-foreground/70 font-bold text-sm">إجراءات سريعة</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu className="space-y-2">
-                {quickActions.map((action, index) => (
-                  <SidebarMenuItem key={index} className="animate-fade-in" style={{ animationDelay: `${(index + 4) * 0.1}s` }}>
-                    <SidebarMenuButton asChild>
-                      <a 
-                        href={action.href}
-                        className="flex items-center gap-3 text-sm transition-all duration-300 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg p-3 group"
-                      >
-                        <div className={`p-2 rounded-md ${action.bgColor} group-hover:scale-110 transition-transform`}>
-                          <action.icon className={`h-4 w-4 ${action.color}`} />
-                        </div>
-                        <span className="font-medium text-sidebar-foreground group-hover:text-sidebar-accent-foreground">{action.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
+        {/* الخدمات */}
+        <SidebarGroup className="mt-6">
+          <SidebarGroupLabel className="text-slate-500 font-medium text-xs uppercase tracking-wide mb-4 px-2">
+            {!collapsed && "خدماتنا"}
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {servicesItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <NavLink 
+                      to={item.url} 
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-200 ${getNavCls(item.url)}`}
+                    >
+                      <item.icon className="w-5 h-5" />
+                      {!collapsed && (
+                        <span className="text-sm">
+                          {item.title}
+                        </span>
+                      )}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-        {/* Sign Out */}
-        <div className="mt-auto p-4 border-t border-sidebar-border">
-          <Button
-            variant="ghost"
-            onClick={onSignOut}
-            className={`w-full transition-all duration-300 hover:bg-destructive hover:text-destructive-foreground rounded-lg p-3 text-sidebar-foreground ${isCollapsed ? 'px-2' : 'justify-start'}`}
-          >
-            <LogOut className="h-5 w-5" />
-            {!isCollapsed && <span className="mr-3 font-medium">تسجيل الخروج</span>}
-          </Button>
-        </div>
+        {/* أخرى */}
+        <SidebarGroup className="mt-6">
+          <SidebarGroupLabel className="text-slate-500 font-medium text-xs uppercase tracking-wide mb-4 px-2">
+            {!collapsed && "قصتنا"}
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {otherItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <NavLink 
+                      to={item.url} 
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-200 ${getNavCls(item.url)}`}
+                    >
+                      <item.icon className="w-5 h-5" />
+                      {!collapsed && (
+                        <span className="text-sm">
+                          {item.title}
+                        </span>
+                      )}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
+
+      {/* Footer */}
+      <SidebarFooter className="p-4 lg:p-6 border-t border-slate-100 flex-shrink-0">
+        {!collapsed && (
+          <div className="space-y-4">
+            {/* Contact Info */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-slate-500">
+                <Clock className="w-4 h-4" />
+                <span className="text-xs">الأحد - الخميس 8:00 ص - 6:00 م</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-500">
+                <MapPin className="w-4 h-4" />
+                <span className="text-xs">المملكة العربية السعودية</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-2">
+              <a 
+                href="https://wa.me/966555812567"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 p-2.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors duration-200 text-sm"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>واتساب</span>
+              </a>
+              <a 
+                href="tel:+966555812567"
+                className="flex items-center gap-2 p-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors duration-200 text-sm"
+              >
+                <Phone className="w-4 h-4" />
+                <span>0555812567</span>
+              </a>
+              <a 
+                href="mailto:info@ash.holdings"
+                className="flex items-center gap-2 p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg transition-colors duration-200 text-sm"
+              >
+                <Mail className="w-4 h-4" />
+                <span>info@ash.holdings</span>
+              </a>
+            </div>
+          </div>
+        )}
+        {collapsed && (
+          <div className="flex flex-col items-center space-y-2">
+            <a 
+              href="https://wa.me/966555812567" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-2 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors"
+            >
+              <MessageCircle className="w-4 h-4" />
+            </a>
+            <a 
+              href="tel:+966555812567"
+              className="p-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors"
+            >
+              <Phone className="w-4 h-4" />
+            </a>
+          </div>
+        )}
+      </SidebarFooter>
     </Sidebar>
   );
 }
