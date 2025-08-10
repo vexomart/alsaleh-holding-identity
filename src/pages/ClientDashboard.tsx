@@ -238,93 +238,202 @@ const ClientDashboard = () => {
   }
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" dir="rtl">
-        <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
-        
-        <AppSidebar 
-          user={user}
-          profile={data.profile}
-          onSignOut={handleSignOut}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-        
-        <main className="flex-1 overflow-hidden relative z-10">
-          <header className="border-b bg-card/80 backdrop-blur-lg shadow-sm">
-            <div className="flex items-center justify-between px-6 py-4">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger />
-                <div className="animate-fade-in">
-                  <h1 className="text-2xl font-bold text-gradient-primary">
-                    مرحباً، {data.profile?.full_name || user?.email}
-                  </h1>
-                  <p className="text-muted-foreground">
-                    لوحة التحكم الشخصية - شركة الصالح
-                  </p>
-                </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white" dir="rtl">
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-80 bg-slate-800/50 backdrop-blur-sm border-l border-slate-700 min-h-screen">
+          {/* User Profile Header */}
+          <div className="p-6 border-b border-slate-700">
+            <div className="text-center">
+              <h2 className="text-xl font-bold mb-1">مرحباً، {user?.email}</h2>
+              <p className="text-slate-300 text-sm">لوحة التحكم الشخصية - شركة الصالح</p>
+            </div>
+          </div>
+
+          {/* Navigation Menu */}
+          <div className="p-4">
+            <div className="space-y-2">
+              <div 
+                onClick={() => setActiveTab("overview")}
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
+                  activeTab === "overview" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                <LayoutDashboard className="h-5 w-5" />
+                <span>جميع الطلبات</span>
               </div>
               
-              <div className="flex items-center gap-3">
-                <Badge variant="outline" className="flex items-center gap-2 animate-glow">
-                  <CheckCircle className="h-3 w-3 text-success" />
-                  متصل
-                </Badge>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => setActiveTab("notifications")}
-                  className="relative hover:scale-105 transition-transform"
-                >
-                  <Bell className="h-5 w-5" />
-                  {data.notifications.length > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center animate-pulse">
-                      {data.notifications.length}
-                    </span>
-                  )}
-                </Button>
+              <div 
+                onClick={() => setActiveTab("services")}
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
+                  activeTab === "services" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                <Monitor className="h-5 w-5" />
+                <span>الخدمات الرقمية</span>
               </div>
             </div>
-          </header>
-
-          <div className="p-6 space-y-6 overflow-auto">
-            {activeTab === "overview" && (
-              <OverviewTab data={data} />
-            )}
-            
-            {(activeTab === "services" || activeTab === "digital-services" || activeTab === "design-services" || activeTab === "business-services" || activeTab === "content-services") && (
-              <ServicesTab 
-                data={data} 
-                onRefresh={() => loadDashboardData(user.id)} 
-                activeSubTab={activeTab}
-                getServiceIcon={getServiceIcon}
-                getStatusBadge={getStatusBadge}
-              />
-            )}
-            
-            {activeTab === "invoices" && (
-              <InvoicesTab data={data} />
-            )}
-            
-            {activeTab === "payments" && (
-              <PaymentsTab data={data} />
-            )}
-            
-            {activeTab === "tickets" && (
-              <TicketsTab data={data} onRefresh={() => loadDashboardData(user.id)} />
-            )}
-            
-            {activeTab === "profile" && (
-              <ProfileTab data={data} user={user} onRefresh={() => loadDashboardData(user.id)} />
-            )}
-            
-            {activeTab === "notifications" && (
-              <NotificationsTab data={data} />
-            )}
           </div>
-        </main>
+
+          {/* Quick Actions */}
+          <div className="p-4 mt-8">
+            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+              <Zap className="h-5 w-5" />
+              إجراءات سريعة
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-purple-600 p-4 rounded-xl cursor-pointer hover:bg-purple-700 transition-colors text-center">
+                <PenTool className="h-6 w-6 mx-auto mb-2" />
+                <p className="text-xs font-medium">إنتاج المحتوى</p>
+                <p className="text-xs opacity-80">محتوى إبداعي لعلامتك التجارية</p>
+              </div>
+              
+              <div className="bg-orange-600 p-4 rounded-xl cursor-pointer hover:bg-orange-700 transition-colors text-center">
+                <Briefcase className="h-6 w-6 mx-auto mb-2" />
+                <p className="text-xs font-medium">خدمات الأعمال</p>
+                <p className="text-xs opacity-80">استشارات وحلول تجارية</p>
+              </div>
+              
+              <div className="bg-green-600 p-4 rounded-xl cursor-pointer hover:bg-green-700 transition-colors text-center">
+                <Globe className="h-6 w-6 mx-auto mb-2" />
+                <p className="text-xs font-medium">خدمات تطوير الويب</p>
+                <p className="text-xs opacity-80">مواقع ويب متطورة وسريعة</p>
+              </div>
+              
+              <div className="bg-blue-600 p-4 rounded-xl cursor-pointer hover:bg-blue-700 transition-colors text-center">
+                <Palette className="h-6 w-6 mx-auto mb-2" />
+                <p className="text-xs font-medium">طلب خدمة تصميم</p>
+                <p className="text-xs opacity-80">احصل على تصميمات احترافية</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Support Actions */}
+          <div className="p-4 mt-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:bg-slate-700 cursor-pointer transition-all">
+                <Headphones className="h-5 w-5" />
+                <span>إنشاء تذكرة دعم</span>
+              </div>
+              
+              <div className="flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:bg-slate-700 cursor-pointer transition-all">
+                <TrendingUp className="h-5 w-5" />
+                <span>عرض العروض الحالية</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 p-6">
+          {/* Top Stats Cards */}
+          <div className="grid grid-cols-4 gap-6 mb-8">
+            {/* تذاكر الدعم */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <Headphones className="h-6 w-6 text-orange-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">تذاكر الدعم</h3>
+                  <p className="text-3xl font-bold text-white mt-2">{data.tickets.length}</p>
+                  <p className="text-orange-400 text-sm mt-1">3% ↗</p>
+                </div>
+              </div>
+            </div>
+
+            {/* المدفوعات */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <CreditCard className="h-6 w-6 text-purple-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">المدفوعات</h3>
+                  <p className="text-3xl font-bold text-white mt-2">{data.paymentHistory.length}</p>
+                  <p className="text-purple-400 text-sm mt-1">15% ↗</p>
+                </div>
+              </div>
+            </div>
+
+            {/* الفواتير */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <FileText className="h-6 w-6 text-green-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">الفواتير</h3>
+                  <p className="text-3xl font-bold text-white mt-2">{data.invoices.length}</p>
+                  <p className="text-green-400 text-sm mt-1">8% ↗</p>
+                </div>
+              </div>
+            </div>
+
+            {/* طلبات الخدمات */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <Package className="h-6 w-6 text-blue-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">طلبات الخدمات</h3>
+                  <p className="text-3xl font-bold text-white mt-2">{data.serviceRequests.length}</p>
+                  <p className="text-blue-400 text-sm mt-1">12% ↗</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Section */}
+          <div className="grid grid-cols-2 gap-8">
+            {/* سجل الأنشطة */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-center gap-2 mb-6">
+                <Activity className="h-5 w-5 text-blue-400" />
+                <h3 className="text-xl font-semibold text-white">سجل الأنشطة</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  <div>
+                    <p className="text-white text-sm">دفع ناجح لخدمة عرض الموقع الإحترافي الكامل</p>
+                    <p className="text-slate-400 text-xs">11 يناير 1447 هـ</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <div>
+                    <p className="text-white text-sm">تم إنشاء تذكرة جديدة TK25000001</p>
+                    <p className="text-slate-400 text-xs">11 يناير 1447 هـ</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* آخر طلبات الخدمات */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-center gap-2 mb-6">
+                <Package className="h-5 w-5 text-green-400" />
+                <h3 className="text-xl font-semibold text-white">آخر طلبات الخدمات</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-white/5 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-white font-medium">عرض الموقع الإحترافي الكامل</p>
+                    <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">معلق</Badge>
+                  </div>
+                  <p className="text-slate-400 text-sm">payment_based</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 
