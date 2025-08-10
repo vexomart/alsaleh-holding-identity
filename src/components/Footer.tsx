@@ -488,60 +488,68 @@ const Footer = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-10">
+          {/* Enhanced Responsive Footer Grid */}
+          <div className="grid grid-cols-1 gap-8 space-y-8 md:space-y-0 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 auto-rows-fr">
             
-            {/* Column 1: Company Info & Contact */}
-            <div className="space-y-8 animate-fade-in lg:col-span-2">
-              <div className="space-y-4">
+            {/* Company Info Card - Enhanced */}
+            <div className="space-y-6 animate-fade-in md:col-span-2 xl:col-span-1 2xl:col-span-2">
+              <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-6 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
                 <h3 className="text-xl font-bold text-white mb-4 group hover:text-blue-400 transition-colors duration-300">
                   شركة علي صالح الشهري القابضة
                 </h3>
-                <p className="text-slate-300 leading-relaxed text-sm">
+                <p className="text-slate-300 leading-relaxed text-sm mb-6">
                   شركة قابضة رائدة في الاستثمار التقني والإعلامي، نساهم في بناء مستقبل أفضل 
                   من خلال دعم الابتكار والشركات الناشئة.
                 </p>
-              </div>
 
-              {/* Contact Information */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-blue-400 animate-pulse" />
-                  معلومات التواصل
-                </h4>
-                <div className="space-y-3">
-                  {contactInfo.map((info, index) => {
-                    const IconComponent = info.icon;
-                    return (
-                      <div key={index} className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-blue-500/30 transition-all duration-300">
-                        <IconComponent className="w-4 h-4 text-blue-400" />
-                        <div>
-                          <div className="text-xs text-slate-400">{info.label}</div>
-                          <div className="text-sm text-white font-medium">{info.value}</div>
+                {/* Contact Information - Compact */}
+                <div className="space-y-3 mb-6">
+                  <h4 className="text-md font-semibold text-white flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-blue-400 animate-pulse" />
+                    معلومات التواصل
+                  </h4>
+                  <div className="grid grid-cols-1 gap-2">
+                    {contactInfo.map((info, index) => {
+                      const IconComponent = info.icon;
+                      return (
+                        <div key={index} className="flex items-center gap-3 p-2 bg-slate-800/40 rounded-lg border border-slate-700/30 hover:border-blue-500/30 transition-all duration-300">
+                          <IconComponent className="w-3 h-3 text-blue-400 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs text-slate-400">{info.label}</div>
+                            <div className="text-sm text-white font-medium truncate">{info.value}</div>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl border border-blue-500/20 text-center">
-                  <div className="text-2xl font-bold text-blue-400 mb-1">100+</div>
-                  <div className="text-xs text-slate-300">مشروع ناجح</div>
-                </div>
-                <div className="p-4 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-500/20 text-center">
-                  <div className="text-2xl font-bold text-emerald-400 mb-1">10+</div>
-                  <div className="text-xs text-slate-300">سنوات خبرة</div>
+                {/* Quick Stats - Responsive */}
+                <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-2 gap-3">
+                  <div className="p-3 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl border border-blue-500/20 text-center">
+                    <div className="text-lg font-bold text-blue-400 mb-1">100+</div>
+                    <div className="text-xs text-slate-300">مشروع ناجح</div>
+                  </div>
+                  <div className="p-3 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-500/20 text-center">
+                    <div className="text-lg font-bold text-emerald-400 mb-1">10+</div>
+                    <div className="text-xs text-slate-300">سنوات خبرة</div>
+                  </div>
+                  <div className="p-3 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl border border-orange-500/20 text-center">
+                    <div className="text-lg font-bold text-orange-400 mb-1">6</div>
+                    <div className="text-xs text-slate-300">مكاتب عالمية</div>
+                  </div>
+                  <div className="p-3 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl border border-purple-500/20 text-center">
+                    <div className="text-lg font-bold text-purple-400 mb-1">24/7</div>
+                    <div className="text-xs text-slate-300">دعم مستمر</div>
+                  </div>
                 </div>
               </div>
             </div>
             
-            {/* Column 2: Services */}
+            {/* Services & Solutions Column */}
             <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-              {/* Main Services */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <div className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-5 rounded-xl border border-slate-700/30 backdrop-blur-sm">
+                <h4 className="text-md font-bold text-white mb-4 flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-blue-400 animate-pulse" />
                   خدماتنا الرئيسية
                 </h4>
@@ -552,10 +560,10 @@ const Footer = () => {
                       <li key={index}>
                         <a 
                           href={service.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                          className="flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-all duration-300 group hover:translate-x-1 text-sm py-1"
                         >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                          <span className="group-hover:font-medium transition-all duration-300 truncate">
                             {service.name}
                           </span>
                         </a>
@@ -565,64 +573,9 @@ const Footer = () => {
                 </ul>
               </div>
 
-              {/* Digital Solutions */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-yellow-400 animate-pulse" />
-                  الحلول الرقمية
-                </h4>
-                <ul className="space-y-2">
-                  {digitalSolutions.map((solution, index) => {
-                    const IconComponent = solution.icon;
-                    return (
-                      <li key={index}>
-                        <a 
-                          href={solution.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-yellow-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                        >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {solution.name}
-                          </span>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-
-            {/* Column 3: Company Updates */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              {/* Company Updates */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-purple-400 animate-pulse" />
-                  أخبار الشركة
-                </h4>
-                <ul className="space-y-2">
-                  {companyUpdates.map((update, index) => {
-                    const IconComponent = update.icon;
-                    return (
-                      <li key={index}>
-                        <a 
-                          href={update.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-purple-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                        >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {update.name}
-                          </span>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
               {/* Quick Links */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <div className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-5 rounded-xl border border-slate-700/30 backdrop-blur-sm">
+                <h4 className="text-md font-bold text-white mb-4 flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-blue-400 animate-pulse" />
                   روابط سريعة
                 </h4>
@@ -633,10 +586,10 @@ const Footer = () => {
                       <li key={index}>
                         <a 
                           href={link.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                          className="flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-all duration-300 group hover:translate-x-1 text-sm py-1"
                         >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                          <span className="group-hover:font-medium transition-all duration-300 truncate">
                             {link.name}
                           </span>
                         </a>
@@ -645,10 +598,37 @@ const Footer = () => {
                   })}
                 </ul>
               </div>
+            </div>
 
-              {/* Ready Projects */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            {/* Digital Solutions & Projects */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              <div className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-5 rounded-xl border border-slate-700/30 backdrop-blur-sm">
+                <h4 className="text-md font-bold text-white mb-4 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-yellow-400 animate-pulse" />
+                  الحلول الرقمية
+                </h4>
+                <ul className="space-y-2">
+                  {digitalSolutions.slice(0, 4).map((solution, index) => {
+                    const IconComponent = solution.icon;
+                    return (
+                      <li key={index}>
+                        <a 
+                          href={solution.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-yellow-400 transition-all duration-300 group hover:translate-x-1 text-sm py-1"
+                        >
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                          <span className="group-hover:font-medium transition-all duration-300 truncate">
+                            {solution.name}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-5 rounded-xl border border-slate-700/30 backdrop-blur-sm">
+                <h4 className="text-md font-bold text-white mb-4 flex items-center gap-2">
                   <Code className="w-4 h-4 text-orange-400 animate-pulse" />
                   المشاريع الجاهزة
                 </h4>
@@ -659,10 +639,10 @@ const Footer = () => {
                       <li key={index}>
                         <a 
                           href={project.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                          className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-all duration-300 group hover:translate-x-1 text-sm py-1"
                         >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                          <span className="group-hover:font-medium transition-all duration-300 truncate">
                             {project.name}
                           </span>
                         </a>
@@ -673,66 +653,10 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 4: Contracts */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              {/* Contracts */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-indigo-400 animate-pulse" />
-                  العقود
-                </h4>
-                <ul className="space-y-2">
-                  {contracts.map((contract, index) => {
-                    const IconComponent = contract.icon;
-                    return (
-                      <li key={index}>
-                        <a 
-                          href={contract.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-indigo-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                        >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {contract.name}
-                          </span>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
-              {/* Careers */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-green-400 animate-pulse" />
-                  الوظائف والفرص
-                </h4>
-                <ul className="space-y-2">
-                  {careersAndOpportunities.map((link, index) => {
-                    const IconComponent = link.icon;
-                    return (
-                      <li key={index}>
-                        <a 
-                          href={link.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                        >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {link.name}
-                          </span>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-
-            {/* Column 5: Support & Help */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.5s" }}>
-              {/* Help & Support */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            {/* Support & Contracts */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+              <div className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-5 rounded-xl border border-slate-700/30 backdrop-blur-sm">
+                <h4 className="text-md font-bold text-white mb-4 flex items-center gap-2">
                   <HeadphonesIcon className="w-4 h-4 text-red-400 animate-pulse" />
                   المساعدة والدعم
                 </h4>
@@ -743,16 +667,16 @@ const Footer = () => {
                       <li key={index}>
                         <a 
                           href={link.href} 
-                          className="flex items-center justify-between text-slate-300 hover:text-red-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                          className="flex items-center justify-between text-slate-300 hover:text-red-400 transition-all duration-300 group hover:translate-x-1 text-sm py-1"
                         >
-                          <div className="flex items-center gap-2">
-                            <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                            <span className="group-hover:font-medium transition-all duration-300">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                            <span className="group-hover:font-medium transition-all duration-300 truncate">
                               {link.name}
                             </span>
                           </div>
                           {link.badge && (
-                            <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">
+                            <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs ml-2 flex-shrink-0">
                               {link.badge}
                             </Badge>
                           )}
@@ -762,60 +686,24 @@ const Footer = () => {
                   })}
                 </ul>
               </div>
-            </div>
 
-            {/* Column 6: Company Updates */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
-              {/* Company Updates */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-emerald-400 animate-pulse" />
-                  تحديثات الشركة
+              <div className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-5 rounded-xl border border-slate-700/30 backdrop-blur-sm">
+                <h4 className="text-md font-bold text-white mb-4 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-indigo-400 animate-pulse" />
+                  العقود
                 </h4>
                 <ul className="space-y-2">
-                  <li>
-                    <a 
-                      href="/company-updates" 
-                      className="flex items-center gap-2 text-slate-300 hover:text-emerald-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                    >
-                      <ChevronRight className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                      <span className="group-hover:font-medium transition-all duration-300">
-                        تحديثات الشركة الداخلية
-                      </span>
-                    </a>
-                  </li>
-                  <li>
-                    <a 
-                      href="/company-news" 
-                      className="flex items-center gap-2 text-slate-300 hover:text-emerald-400 transition-all duration-300 group hover:translate-x-1 text-sm"
-                    >
-                      <ChevronRight className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                      <span className="group-hover:font-medium transition-all duration-300">
-                        أخبار الشركة
-                      </span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Current Projects */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Code className="w-4 h-4 text-orange-400 animate-pulse" />
-                  مشاريعنا الحالية
-                </h4>
-                <ul className="space-y-2">
-                  {currentProjects.map((project, index) => {
-                    const IconComponent = project.icon;
+                  {contracts.slice(0, 4).map((contract, index) => {
+                    const IconComponent = contract.icon;
                     return (
                       <li key={index}>
                         <a 
-                          href={project.href} 
-                          className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-all duration-300 group hover:translate-x-1 text-sm"
+                          href={contract.href} 
+                          className="flex items-center gap-2 text-slate-300 hover:text-indigo-400 transition-all duration-300 group hover:translate-x-1 text-sm py-1"
                         >
-                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="group-hover:font-medium transition-all duration-300">
-                            {project.name}
+                          <IconComponent className="w-3 h-3 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                          <span className="group-hover:font-medium transition-all duration-300 truncate">
+                            {contract.name}
                           </span>
                         </a>
                       </li>
@@ -825,61 +713,107 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 7: Newsletter & Social Media */}
-            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
-              {/* Newsletter Subscription */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            {/* Newsletter & Social Media - Enhanced */}
+            <div className="space-y-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              {/* Newsletter Subscription - Compact */}
+              <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 p-5 rounded-xl border border-slate-700/40 backdrop-blur-sm">
+                <h4 className="text-md font-bold text-white mb-3 flex items-center gap-2">
                   <Mail className="w-4 h-4 text-purple-400 animate-pulse" />
                   النشرة الإخبارية
                 </h4>
-                <div className="p-4 bg-slate-800/30 rounded-xl border border-slate-700/30">
-                  <p className="text-slate-300 text-xs mb-3 leading-relaxed">
-                    اشترك في نشرتنا الإخبارية لتحصل على أحدث الأخبار والتطورات
-                  </p>
-                  <form onSubmit={handleNewsletterSubmit} className="space-y-3">
-                    <Input
-                      type="text"
-                      placeholder="الاسم (اختياري)"
-                      value={newsletterName}
-                      onChange={(e) => setNewsletterName(e.target.value)}
-                      className="bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400 text-sm"
-                    />
-                    <Input
-                      type="email"
-                      placeholder="بريدك الإلكتروني"
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      className="bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400 text-sm"
-                      required
-                    />
-                    <Button 
-                      type="submit" 
-                      disabled={isSubscribing}
-                      className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white border-0 text-sm"
-                    >
-                      {isSubscribing ? "جاري الاشتراك..." : "اشتراك"}
-                    </Button>
-                  </form>
+                <p className="text-slate-300 text-xs mb-4 leading-relaxed">
+                  اشترك لتحصل على أحدث الأخبار والتطورات
+                </p>
+                <form onSubmit={handleNewsletterSubmit} className="space-y-3">
+                  <Input
+                    type="text"
+                    placeholder="الاسم (اختياري)"
+                    value={newsletterName}
+                    onChange={(e) => setNewsletterName(e.target.value)}
+                    className="bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400 text-sm h-9"
+                  />
+                  <Input
+                    type="email"
+                    placeholder="بريدك الإلكتروني"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    className="bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400 text-sm h-9"
+                    required
+                  />
+                  <Button 
+                    type="submit" 
+                    disabled={isSubscribing}
+                    className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white border-0 text-sm h-9"
+                  >
+                    {isSubscribing ? "جاري الاشتراك..." : "اشتراك"}
+                  </Button>
+                </form>
+              </div>
+
+              {/* Company Updates & Careers */}
+              <div className="grid grid-cols-1 gap-4">
+                <div className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-4 rounded-xl border border-slate-700/30 backdrop-blur-sm">
+                  <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                    <Users className="w-3 h-3 text-green-400 animate-pulse" />
+                    الوظائف والفرص
+                  </h4>
+                  <ul className="space-y-1">
+                    {careersAndOpportunities.slice(0, 3).map((link, index) => {
+                      const IconComponent = link.icon;
+                      return (
+                        <li key={index}>
+                          <a 
+                            href={link.href} 
+                            className="flex items-center gap-2 text-slate-300 hover:text-green-400 transition-all duration-300 group hover:translate-x-1 text-xs py-1"
+                          >
+                            <IconComponent className="w-2 h-2 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                            <span className="group-hover:font-medium transition-all duration-300 truncate">
+                              {link.name}
+                            </span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+
+                <div className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 p-4 rounded-xl border border-slate-700/30 backdrop-blur-sm">
+                  <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                    <Globe className="w-3 h-3 text-purple-400 animate-pulse" />
+                    أخبار الشركة
+                  </h4>
+                  <ul className="space-y-1">
+                    {companyUpdates.slice(0, 3).map((update, index) => {
+                      const IconComponent = update.icon;
+                      return (
+                        <li key={index}>
+                          <a 
+                            href={update.href} 
+                            className="flex items-center gap-2 text-slate-300 hover:text-purple-400 transition-all duration-300 group hover:translate-x-1 text-xs py-1"
+                          >
+                            <IconComponent className="w-2 h-2 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                            <span className="group-hover:font-medium transition-all duration-300 truncate">
+                              {update.name}
+                            </span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               </div>
 
-              {/* Social Media Links with Enhanced Animation */}
-              <div>
-                <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-                  <Heart className="w-5 h-5 text-pink-400 animate-bounce" />
+              {/* Social Media Links - Responsive Grid */}
+              <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 p-5 rounded-xl border border-slate-700/40 backdrop-blur-sm">
+                <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-pink-400 animate-bounce" />
                   <span className="relative">
-                    تابعنا على وسائل التواصل
+                    تابعنا
                     <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 animate-pulse"></div>
                   </span>
-                  <div className="flex gap-1">
-                    <div className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"></div>
-                    <div className="w-1 h-1 bg-green-400 rounded-full animate-ping" style={{ animationDelay: '0.3s' }}></div>
-                    <div className="w-1 h-1 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '0.6s' }}></div>
-                  </div>
                 </h4>
-                <div className="grid grid-cols-2 gap-3">
-                  {socialLinks.map((social, index) => {
+                <div className="grid grid-cols-4 gap-2">
+                  {socialLinks.slice(0, 8).map((social, index) => {
                     const IconComponent = social.icon;
                     return (
                       <a
@@ -887,29 +821,12 @@ const Footer = () => {
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`relative overflow-hidden flex flex-col items-center gap-2 p-3 bg-slate-800/40 rounded-xl border border-slate-700/50 transition-all duration-500 group hover:scale-110 hover:-translate-y-1 hover:shadow-xl ${social.color} ${social.bgColor} ${social.borderColor}`}
+                        className={`relative overflow-hidden flex items-center justify-center p-2 bg-slate-800/40 rounded-lg border border-slate-700/50 transition-all duration-500 group hover:scale-110 hover:-translate-y-1 hover:shadow-lg ${social.color} ${social.bgColor} ${social.borderColor}`}
                         style={{ animationDelay: `${index * 0.1}s` }}
+                        title={social.name}
                       >
-                        {/* Background Animation */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
-                        
-                        {/* Icon with Pulse Animation */}
-                        <div className="relative z-10 p-2 rounded-full transition-all duration-300 group-hover:rotate-[360deg]">
-                          <IconComponent className="w-5 h-5 group-hover:scale-125 transition-all duration-300 drop-shadow-lg" />
-                        </div>
-                        
-                        {/* Name with Glow Effect */}
-                        <span className="relative z-10 text-xs font-medium text-slate-300 group-hover:text-white transition-all duration-300 group-hover:drop-shadow-lg">
-                          {social.name}
-                        </span>
-                        
-                        {/* Ripple Effect */}
-                        <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="absolute inset-0 rounded-xl animate-ping bg-current opacity-20"></div>
-                        </div>
-                        
-                        {/* Bottom Border Animation */}
-                        <div className="absolute bottom-0 left-0 w-0 h-1 bg-current group-hover:w-full transition-all duration-500 rounded-full"></div>
+                        <IconComponent className="w-4 h-4 group-hover:scale-125 transition-all duration-300" />
+                        <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-current group-hover:w-full transition-all duration-300"></div>
                       </a>
                     );
                   })}
