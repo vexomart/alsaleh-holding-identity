@@ -37,15 +37,27 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     if (action === "generate") {
-      // التحقق من وجود المستخدم
-      const { data: user, error: userError } = await supabaseClient
+      // التحقق من وجود المستخدم بالبحث عن البروفايل
+      const { data: profile, error: profileError } = await supabaseClient
         .from('profiles')
-        .select('full_name')
-        .eq('user_id', (await supabaseClient.auth.getUserByEmail(email)).data.user?.id)
+        .select('full_name, user_id')
+        .eq('email', email)
         .single();
 
-      if (userError && userError.code !== 'PGRST116') {
-        throw new Error('خطأ في التحقق من المستخدم');
+      // إذا لم يجد البروفايل، نبحث في auth.users
+      let userName = '';
+      if (profileError || !profile) {
+        // البحث في auth.users للتأكد من وجود المستخدم
+        const { data: authUsers, error: authError } = await supabaseClient.auth.admin.listUsers();
+        const user = authUsers?.users?.find(u => u.email === email);
+        
+        if (!user) {
+          throw new Error('المستخدم غير موجود');
+        }
+        
+        userName = user.user_metadata?.full_name || '';
+      } else {
+        userName = profile.full_name || '';
       }
 
       // توليد OTP جديد
@@ -66,7 +78,7 @@ const handler = async (req: Request): Promise<Response> => {
           subject: "رمز التحقق لتسجيل الدخول",
           type: "otp_verification",
           data: {
-            name: user?.full_name || '',
+            name: userName,
             otp: newOTP
           }
         }
