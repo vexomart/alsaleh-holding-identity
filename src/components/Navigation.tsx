@@ -367,21 +367,11 @@ const Navigation = () => {
                 </Button>
               </div>
               
-              {/* Authentication/Dashboard Links */}
+              {/* Authentication Links */}
               <div className="hidden lg:flex items-center gap-2">
                 {user ? (
                   <>
                     <span className="text-xs text-gray-500">مرحباً {user.email}</span>
-                    <Button 
-                      variant="outline"
-                      size="sm"
-                      className="h-8 px-3 text-xs border-purple-500 text-purple-600 hover:bg-purple-50"
-                      asChild
-                    >
-                      <a href="/dashboard">
-                        لوحة التحكم
-                      </a>
-                    </Button>
                     <Button 
                       variant="ghost"
                       size="sm"

@@ -28,14 +28,14 @@ const Auth = () => {
     // التحقق من حالة تسجيل الدخول
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
-        navigate("/dashboard");
+        navigate("/");
       }
     });
 
     // التحقق من الجلسة الحالية
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
-        navigate("/dashboard");
+        navigate("/");
       }
     });
 
@@ -51,7 +51,7 @@ const Auth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             full_name: fullName,
             phone,

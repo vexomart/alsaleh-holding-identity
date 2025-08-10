@@ -193,20 +193,6 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Quick Admin Access */}
-      <div className="fixed bottom-4 left-4 z-50">
-        <Link to="/admin-dashboard">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="bg-background/95 backdrop-blur-sm border-primary/20 hover:bg-primary/10"
-            onClick={() => console.log('Admin button clicked')}
-          >
-            <Shield className="h-4 w-4 mr-2" />
-            لوحة الإدارة
-          </Button>
-        </Link>
-      </div>
 
       {/* Footer with Enhanced Styling */}
       <footer className="relative z-10 mt-8">
