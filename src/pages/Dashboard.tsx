@@ -41,14 +41,20 @@ import {
   Activity,
   Zap,
   Heart,
-  Globe
+  Globe,
+  MessageCircle,
+  Shield
 } from "lucide-react";
+import { TicketsSection } from '@/components/ui/tickets-section';
+import { PaymentHistorySection } from '@/components/ui/payment-history-section';
+import { ActivityLogSection } from '@/components/ui/activity-log-section';
 
 interface Profile {
   id: string;
   full_name: string | null;
   phone: string | null;
   company: string | null;
+  client_id?: string | null;
 }
 
 interface ServiceRequest {
@@ -414,7 +420,7 @@ const Dashboard = () => {
 
         {/* Main Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-sm" dir="rtl">
+          <TabsList className="grid w-full grid-cols-7 bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-sm" dir="rtl">
             <TabsTrigger value="overview" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
               <BarChart3 className="h-4 w-4 rtl-flip" />
               نظرة عامة
@@ -426,6 +432,18 @@ const Dashboard = () => {
             <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
               <CreditCard className="h-4 w-4 rtl-flip" />
               الفواتير
+            </TabsTrigger>
+            <TabsTrigger value="tickets" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
+              <MessageCircle className="h-4 w-4 rtl-flip" />
+              التذاكر
+            </TabsTrigger>
+            <TabsTrigger value="payments" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
+              <DollarSign className="h-4 w-4 rtl-flip" />
+              المدفوعات
+            </TabsTrigger>
+            <TabsTrigger value="activity" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
+              <Activity className="h-4 w-4 rtl-flip" />
+              النشاط
             </TabsTrigger>
             <TabsTrigger value="profile" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white" dir="rtl">
               <Settings className="h-4 w-4 rtl-flip" />
@@ -663,21 +681,39 @@ const Dashboard = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="tickets">
+            <TicketsSection />
+          </TabsContent>
+
+          <TabsContent value="payments">
+            <PaymentHistorySection />
+          </TabsContent>
+
+          <TabsContent value="activity">
+            <ActivityLogSection />
+          </TabsContent>
+
           <TabsContent value="profile">
-            <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50 shadow-lg">
+            <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50 shadow-lg animate-fade-in">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <UserIcon className="w-5 h-5 text-purple-500" />
                   الملف الشخصي
+                  {profile?.client_id && (
+                    <Badge className="bg-purple-100 text-purple-800 text-xs">
+                      <Shield className="w-3 h-3 mr-1" />
+                      رقم العميل: {profile.client_id}
+                    </Badge>
+                  )}
                 </CardTitle>
                 <CardDescription>معلوماتك الشخصية وإعدادات الحساب</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100 hover-scale">
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <UserIcon className="w-4 h-4" />
+                        <UserIcon className="w-4 h-4 text-blue-600" />
                         الاسم الكامل
                       </label>
                       <p className="text-lg font-semibold text-gray-800">
@@ -685,9 +721,9 @@ const Dashboard = () => {
                       </p>
                     </div>
                     
-                    <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg border border-green-100 hover-scale">
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
+                        <Mail className="w-4 h-4 text-green-600" />
                         البريد الإلكتروني
                       </label>
                       <p className="text-lg font-semibold text-gray-800">{user?.email}</p>
@@ -695,9 +731,9 @@ const Dashboard = () => {
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-100 hover-scale">
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <Phone className="w-4 h-4" />
+                        <Phone className="w-4 h-4 text-orange-600" />
                         رقم الهاتف
                       </label>
                       <p className="text-lg font-semibold text-gray-800">
@@ -705,9 +741,9 @@ const Dashboard = () => {
                       </p>
                     </div>
                     
-                    <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-100 hover-scale">
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <Building className="w-4 h-4" />
+                        <Building className="w-4 h-4 text-purple-600" />
                         الشركة
                       </label>
                       <p className="text-lg font-semibold text-gray-800">
@@ -718,10 +754,16 @@ const Dashboard = () => {
                 </div>
                 
                 <div className="pt-6 border-t">
-                  <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
-                    <Settings className="w-4 h-4 mr-2" />
-                    تحديث الملف الشخصي
-                  </Button>
+                  <div className="flex flex-wrap gap-3">
+                    <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover-scale">
+                      <Settings className="w-4 h-4 mr-2" />
+                      تحديث الملف الشخصي
+                    </Button>
+                    <Button variant="outline" className="border-gray-300 hover:bg-gray-50">
+                      <Eye className="w-4 h-4 mr-2" />
+                      عرض التفاصيل
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
