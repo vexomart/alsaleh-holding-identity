@@ -270,7 +270,7 @@ const ClientDashboard = () => {
 
           {/* Navigation Menu */}
           <div className="p-4">
-            <div className="space-y-2">
+          <div className="space-y-2">
               <div 
                 onClick={() => setActiveTab("overview")}
                 className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-100 ${
@@ -278,12 +278,42 @@ const ClientDashboard = () => {
                 }`}
               >
                 <LayoutDashboard className="h-5 w-5 transition-transform duration-200" />
-                <span>جميع الطلبات</span>
+                <span>نظرة عامة</span>
               </div>
               
               <div 
-                onClick={() => setActiveTab("digital-services")}
+                onClick={() => setActiveTab("orders")}
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-150 ${
+                  activeTab === "orders" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                <Package className="h-5 w-5 transition-transform duration-200" />
+                <span>سجل الطلبات</span>
+              </div>
+              
+              <div 
+                onClick={() => setActiveTab("payments")}
                 className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-200 ${
+                  activeTab === "payments" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                <CreditCard className="h-5 w-5 transition-transform duration-200" />
+                <span>سجل المدفوعات</span>
+              </div>
+              
+              <div 
+                onClick={() => setActiveTab("tickets")}
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-250 ${
+                  activeTab === "tickets" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                <MessageSquare className="h-5 w-5 transition-transform duration-200" />
+                <span>تذاكر الدعم</span>
+              </div>
+
+              <div 
+                onClick={() => setActiveTab("digital-services")}
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-300 ${
                   activeTab === "digital-services" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
                 }`}
               >
@@ -293,7 +323,7 @@ const ClientDashboard = () => {
               
               <div 
                 onClick={() => setActiveTab("design-services")}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-300 ${
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-350 ${
                   activeTab === "design-services" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
                 }`}
               >
@@ -313,7 +343,7 @@ const ClientDashboard = () => {
               
               <div 
                 onClick={() => setActiveTab("content-services")}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-500 ${
+                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 hover-scale animate-fade-in delay-450 ${
                   activeTab === "content-services" ? "bg-blue-600 text-white shadow-glow" : "text-slate-300 hover:bg-slate-700"
                 }`}
               >
@@ -393,6 +423,9 @@ const ClientDashboard = () => {
         {/* Main Content */}
         <div className="flex-1 p-6">
           {activeTab === "overview" && <OverviewContent data={data} />}
+          {activeTab === "orders" && <OrdersContent data={data} />}
+          {activeTab === "payments" && <PaymentsContent data={data} />}
+          {activeTab === "tickets" && <TicketsContent data={data} />}
           {activeTab === "digital-services" && <DigitalServicesContent data={data} />}
           {activeTab === "design-services" && <DesignServicesContent data={data} />}
           {activeTab === "business-services" && <BusinessServicesContent data={data} />}
@@ -528,6 +561,582 @@ const OverviewContent = ({ data }: { data: DashboardData }) => (
     </div>
   </div>
 );
+
+// مكون سجل الطلبات
+const OrdersContent = ({ data }: { data: DashboardData }) => {
+  
+  const getServiceIcon = (serviceType: string) => {
+    const icons = {
+      'design': <Package className="h-4 w-4" />,
+      'business': <Building className="h-4 w-4" />,
+      'digital': <BarChart3 className="h-4 w-4" />,
+      'content': <FileText className="h-4 w-4" />
+    };
+    return icons[serviceType as keyof typeof icons] || <Package className="h-4 w-4" />;
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      pending: { label: "معلق", variant: "secondary" as const },
+      completed: { label: "مكتمل", variant: "default" as const },
+      cancelled: { label: "ملغي", variant: "destructive" as const },
+      in_progress: { label: "قيد التنفيذ", variant: "default" as const },
+      paid: { label: "مدفوع", variant: "default" as const },
+      unpaid: { label: "غير مدفوع", variant: "destructive" as const },
+      open: { label: "مفتوح", variant: "default" as const },
+      closed: { label: "مغلق", variant: "secondary" as const }
+    };
+    
+    return statusConfig[status as keyof typeof statusConfig] || { label: status, variant: "secondary" as const };
+  };
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold text-white">سجل الطلبات</h2>
+        <div className="flex gap-4">
+          <Button 
+            onClick={() => window.location.href = '/design-solutions'} 
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            طلب خدمة جديدة
+          </Button>
+        </div>
+      </div>
+
+      {/* إحصائيات سريعة */}
+      <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Package className="h-6 w-6 text-blue-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">إجمالي الطلبات</h3>
+            <p className="text-3xl font-bold text-white mt-2">{data.serviceRequests.length}</p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Clock className="h-6 w-6 text-yellow-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">معلقة</h3>
+            <p className="text-3xl font-bold text-white mt-2">
+              {data.serviceRequests.filter(req => req.status === 'pending').length}
+            </p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <RefreshCw className="h-6 w-6 text-blue-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">قيد التنفيذ</h3>
+            <p className="text-3xl font-bold text-white mt-2">
+              {data.serviceRequests.filter(req => req.status === 'in_progress').length}
+            </p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-6 w-6 text-green-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">مكتملة</h3>
+            <p className="text-3xl font-bold text-white mt-2">
+              {data.serviceRequests.filter(req => req.status === 'completed').length}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* قائمة الطلبات */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+        <h3 className="text-xl font-semibold text-white mb-6">جميع طلبات الخدمات</h3>
+        
+        {data.serviceRequests.length > 0 ? (
+          <div className="space-y-4">
+            {data.serviceRequests.map((request) => (
+              <div key={request.id} className="p-6 bg-white/5 rounded-lg border border-white/10 hover:border-blue-400/30 transition-all">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                      {getServiceIcon(request.service_type)}
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold text-lg">{request.title}</h4>
+                      <p className="text-slate-300 text-sm">
+                        {request.service_type === 'design' ? 'خدمات التصميم' :
+                         request.service_type === 'business' ? 'الخدمات التجارية' :
+                         request.service_type === 'digital' ? 'الخدمات الرقمية' :
+                         request.service_type === 'content' ? 'إنتاج المحتوى' : request.service_type}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <Badge 
+                      variant={getStatusBadge(request.status).variant}
+                      className={`${
+                        request.status === 'completed' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
+                        request.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
+                        request.status === 'in_progress' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
+                        'bg-red-500/20 text-red-400 border-red-500/30'
+                      }`}
+                    >
+                      {getStatusBadge(request.status).label}
+                    </Badge>
+                    <p className="text-slate-400 text-xs mt-2">
+                      {new Date(request.created_at).toLocaleDateString('ar-SA')}
+                    </p>
+                  </div>
+                </div>
+                
+                {request.description && (
+                  <p className="text-slate-300 text-sm mb-4">{request.description}</p>
+                )}
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 text-sm text-slate-400">
+                    {request.estimated_cost && (
+                      <span>التكلفة المقدرة: {request.estimated_cost} ريال</span>
+                    )}
+                    {request.estimated_delivery_date && (
+                      <span>تاريخ التسليم المقدر: {new Date(request.estimated_delivery_date).toLocaleDateString('ar-SA')}</span>
+                    )}
+                  </div>
+                  <Button size="sm" variant="outline" className="text-white border-white/20">
+                    <Eye className="h-4 w-4 ml-2" />
+                    تفاصيل
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <Package className="h-24 w-24 text-slate-400 mx-auto mb-6" />
+            <h3 className="text-xl text-white mb-4">لا توجد طلبات خدمات حالياً</h3>
+            <p className="text-slate-400 mb-6">ابدأ بطلب خدمة جديدة لرؤية طلباتك هنا</p>
+            <Button onClick={() => window.location.href = '/design-solutions'} className="bg-blue-600 hover:bg-blue-700">
+              طلب خدمة جديدة
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// مكون سجل المدفوعات
+const PaymentsContent = ({ data }: { data: DashboardData }) => {
+  const totalPaid = data.paymentHistory.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+  const successfulPayments = data.paymentHistory.filter(payment => payment.status === 'completed');
+  const pendingPayments = data.paymentHistory.filter(payment => payment.status === 'pending');
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold text-white">سجل المدفوعات</h2>
+        <Button onClick={() => window.location.href = '/current-offers'} className="bg-green-600 hover:bg-green-700">
+          عرض الفواتير
+        </Button>
+      </div>
+
+      {/* إحصائيات المدفوعات */}
+      <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <DollarSign className="h-6 w-6 text-green-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">إجمالي المدفوعات</h3>
+            <p className="text-3xl font-bold text-white mt-2">{totalPaid.toLocaleString()} ريال</p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <CreditCard className="h-6 w-6 text-blue-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">عدد المعاملات</h3>
+            <p className="text-3xl font-bold text-white mt-2">{data.paymentHistory.length}</p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-6 w-6 text-green-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">مدفوعات ناجحة</h3>
+            <p className="text-3xl font-bold text-white mt-2">{successfulPayments.length}</p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Clock className="h-6 w-6 text-yellow-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">معلقة</h3>
+            <p className="text-3xl font-bold text-white mt-2">{pendingPayments.length}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* قائمة المدفوعات */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+        <h3 className="text-xl font-semibold text-white mb-6">تاريخ المدفوعات</h3>
+        
+        {data.paymentHistory.length > 0 ? (
+          <div className="space-y-4">
+            {data.paymentHistory.map((payment) => (
+              <div key={payment.id} className="p-6 bg-white/5 rounded-lg border border-white/10 hover:border-green-400/30 transition-all">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
+                      <CreditCard className="h-6 w-6 text-green-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold text-lg">{payment.amount} {payment.currency || 'ريال'}</h4>
+                      <p className="text-slate-300 text-sm">{payment.payment_method || 'طريقة دفع غير محددة'}</p>
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <Badge 
+                      className={`${
+                        payment.status === 'completed' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
+                        payment.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
+                        'bg-red-500/20 text-red-400 border-red-500/30'
+                      }`}
+                    >
+                      {payment.status === 'completed' ? 'مكتمل' : 
+                       payment.status === 'pending' ? 'معلق' : 
+                       payment.status === 'failed' ? 'فاشل' : payment.status}
+                    </Badge>
+                    <p className="text-slate-400 text-xs mt-2">
+                      {new Date(payment.payment_date || payment.created_at).toLocaleDateString('ar-SA')}
+                    </p>
+                  </div>
+                </div>
+                
+                {payment.notes && (
+                  <p className="text-slate-300 text-sm mb-4">{payment.notes}</p>
+                )}
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 text-sm text-slate-400">
+                    {payment.reference_number && (
+                      <span>المرجع: {payment.reference_number}</span>
+                    )}
+                    {payment.invoice_id && (
+                      <span>الفاتورة: {payment.invoice_id}</span>
+                    )}
+                  </div>
+                  <Button size="sm" variant="outline" className="text-white border-white/20">
+                    <Download className="h-4 w-4 ml-2" />
+                    إيصال
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <CreditCard className="h-24 w-24 text-slate-400 mx-auto mb-6" />
+            <h3 className="text-xl text-white mb-4">لا توجد مدفوعات حالياً</h3>
+            <p className="text-slate-400 mb-6">ستظهر مدفوعاتك هنا بعد إجراء أول عملية دفع</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// مكون نظام التذاكر
+const TicketsContent = ({ data }: { data: DashboardData }) => {
+  const [showCreateTicket, setShowCreateTicket] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<any>(null);
+  const [newTicket, setNewTicket] = useState({
+    title: '',
+    description: '',
+    category: 'general',
+    priority: 'medium'
+  });
+  const [newMessage, setNewMessage] = useState('');
+  const { toast } = useToast();
+
+  const createTicket = async () => {
+    try {
+      toast({
+        title: "قيد الإنشاء",
+        description: "جارٍ إنشاء تذكرة الدعم...",
+      });
+
+      setShowCreateTicket(false);
+      setNewTicket({ title: '', description: '', category: 'general', priority: 'medium' });
+      
+      // إعادة تحميل البيانات
+      window.location.reload();
+      
+    } catch (error: any) {
+      toast({
+        title: "خطأ",
+        description: "فشل في إنشاء التذكرة",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!selectedTicket || !newMessage.trim()) return;
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from('ticket_messages')
+        .insert({
+          ticket_id: selectedTicket.id,
+          user_id: user.id,
+          message: newMessage,
+          is_internal: false
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "تم إرسال الرسالة",
+        description: "تم إرسال رسالتك بنجاح",
+      });
+
+      setNewMessage('');
+      
+    } catch (error: any) {
+      toast({
+        title: "خطأ",
+        description: "فشل في إرسال الرسالة",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const openTickets = data.tickets.filter(ticket => ticket.status === 'open');
+  const closedTickets = data.tickets.filter(ticket => ticket.status === 'closed');
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold text-white">تذاكر الدعم</h2>
+        <Button 
+          onClick={() => setShowCreateTicket(true)} 
+          className="bg-orange-600 hover:bg-orange-700"
+        >
+          <MessageSquare className="h-4 w-4 ml-2" />
+          إنشاء تذكرة جديدة
+        </Button>
+      </div>
+
+      {/* إحصائيات التذاكر */}
+      <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <MessageSquare className="h-6 w-6 text-blue-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">إجمالي التذاكر</h3>
+            <p className="text-3xl font-bold text-white mt-2">{data.tickets.length}</p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-6 w-6 text-green-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">مفتوحة</h3>
+            <p className="text-3xl font-bold text-white mt-2">{openTickets.length}</p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-gray-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Shield className="h-6 w-6 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">مغلقة</h3>
+            <p className="text-3xl font-bold text-white mt-2">{closedTickets.length}</p>
+          </div>
+        </div>
+        
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover-scale">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Clock className="h-6 w-6 text-orange-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">متوسط الاستجابة</h3>
+            <p className="text-3xl font-bold text-white mt-2">2 ساعة</p>
+          </div>
+        </div>
+      </div>
+
+      {/* نموذج إنشاء تذكرة */}
+      {showCreateTicket && (
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 mb-8">
+          <h3 className="text-xl font-semibold text-white mb-6">إنشاء تذكرة دعم جديدة</h3>
+          
+          <div className="grid grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block text-white font-medium mb-2">عنوان التذكرة</label>
+              <input
+                type="text"
+                value={newTicket.title}
+                onChange={(e) => setNewTicket({...newTicket, title: e.target.value})}
+                className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-slate-400"
+                placeholder="اكتب عنوان المشكلة..."
+              />
+            </div>
+            
+            <div>
+              <label className="block text-white font-medium mb-2">الفئة</label>
+              <select
+                value={newTicket.category}
+                onChange={(e) => setNewTicket({...newTicket, category: e.target.value})}
+                className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
+              >
+                <option value="general">عام</option>
+                <option value="technical">تقني</option>
+                <option value="billing">مالي</option>
+                <option value="support">دعم</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="mb-6">
+            <label className="block text-white font-medium mb-2">الأولوية</label>
+            <select
+              value={newTicket.priority}
+              onChange={(e) => setNewTicket({...newTicket, priority: e.target.value})}
+              className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
+            >
+              <option value="low">منخفضة</option>
+              <option value="medium">متوسطة</option>
+              <option value="high">عالية</option>
+              <option value="urgent">عاجلة</option>
+            </select>
+          </div>
+          
+          <div className="mb-6">
+            <label className="block text-white font-medium mb-2">وصف المشكلة</label>
+            <textarea
+              value={newTicket.description}
+              onChange={(e) => setNewTicket({...newTicket, description: e.target.value})}
+              rows={4}
+              className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-slate-400"
+              placeholder="اشرح المشكلة بالتفصيل..."
+            />
+          </div>
+          
+          <div className="flex gap-4">
+            <Button onClick={createTicket} className="bg-orange-600 hover:bg-orange-700">
+              إنشاء التذكرة
+            </Button>
+            <Button 
+              onClick={() => setShowCreateTicket(false)} 
+              variant="outline" 
+              className="text-white border-white/20"
+            >
+              إلغاء
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* قائمة التذاكر */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+        <h3 className="text-xl font-semibold text-white mb-6">تذاكر الدعم</h3>
+        
+        {data.tickets.length > 0 ? (
+          <div className="space-y-4">
+            {data.tickets.map((ticket) => (
+              <div key={ticket.id} className="p-6 bg-white/5 rounded-lg border border-white/10 hover:border-orange-400/30 transition-all cursor-pointer"
+                   onClick={() => setSelectedTicket(selectedTicket?.id === ticket.id ? null : ticket)}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
+                      <MessageSquare className="h-6 w-6 text-orange-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold text-lg">{ticket.title}</h4>
+                      <p className="text-slate-300 text-sm">#{ticket.ticket_number}</p>
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <Badge 
+                      className={`${
+                        ticket.status === 'open' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
+                        'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                      }`}
+                    >
+                      {ticket.status === 'open' ? 'مفتوحة' : 'مغلقة'}
+                    </Badge>
+                    <p className="text-slate-400 text-xs mt-2">
+                      {new Date(ticket.created_at).toLocaleDateString('ar-SA')}
+                    </p>
+                  </div>
+                </div>
+                
+                <p className="text-slate-300 text-sm mb-4">{ticket.description}</p>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 text-sm text-slate-400">
+                    <span>الفئة: {ticket.category}</span>
+                    <span>الأولوية: {ticket.priority}</span>
+                  </div>
+                </div>
+
+                {/* تفاصيل التذكرة المتوسعة */}
+                {selectedTicket?.id === ticket.id && (
+                  <div className="mt-6 pt-6 border-t border-white/10">
+                    <div className="mb-4">
+                      <h5 className="text-white font-medium mb-4">إرسال رسالة</h5>
+                      <div className="flex gap-4">
+                        <textarea
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          rows={3}
+                          className="flex-1 p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-slate-400"
+                          placeholder="اكتب رسالتك هنا..."
+                        />
+                        <Button onClick={sendMessage} className="bg-orange-600 hover:bg-orange-700 self-end">
+                          إرسال
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <MessageSquare className="h-24 w-24 text-slate-400 mx-auto mb-6" />
+            <h3 className="text-xl text-white mb-4">لا توجد تذاكر دعم حالياً</h3>
+            <p className="text-slate-400 mb-6">أنشئ تذكرة دعم جديدة للحصول على المساعدة</p>
+            <Button onClick={() => setShowCreateTicket(true)} className="bg-orange-600 hover:bg-orange-700">
+              إنشاء تذكرة دعم
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 // مكونات أقسام الخدمات
 const DigitalServicesContent = ({ data }: { data: DashboardData }) => {
