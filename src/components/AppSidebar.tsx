@@ -132,7 +132,7 @@ export function AppSidebar({ user, profile, onSignOut, activeTab, onTabChange }:
       <SidebarContent className="bg-card border-r">
         {/* Header */}
         <div className="p-4 border-b">
-          {!collapsed && (
+          {!isCollapsed && (
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
                 <AvatarImage src="" />
@@ -150,7 +150,7 @@ export function AppSidebar({ user, profile, onSignOut, activeTab, onTabChange }:
               </div>
             </div>
           )}
-          {collapsed && (
+          {isCollapsed && (
             <div className="flex justify-center">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs">
@@ -163,7 +163,7 @@ export function AppSidebar({ user, profile, onSignOut, activeTab, onTabChange }:
 
         {/* Navigation */}
         <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel>القائمة الرئيسية</SidebarGroupLabel>}
+          {!isCollapsed && <SidebarGroupLabel>القائمة الرئيسية</SidebarGroupLabel>}
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.map((item) => (
@@ -171,23 +171,23 @@ export function AppSidebar({ user, profile, onSignOut, activeTab, onTabChange }:
                   {item.subItems ? (
                     <div>
                       <SidebarMenuButton
-                        onClick={() => !collapsed && toggleGroup(item.key)}
+                        onClick={() => !isCollapsed && toggleGroup(item.key)}
                         className={`w-full justify-between ${
                           item.subItems.some(sub => isActive(sub.key)) ? 'bg-accent text-accent-foreground' : ''
                         }`}
                       >
                         <div className="flex items-center gap-2">
                           <item.icon className="h-4 w-4" />
-                          {!collapsed && <span>{item.title}</span>}
+                          {!isCollapsed && <span>{item.title}</span>}
                         </div>
-                        {!collapsed && (
+                        {!isCollapsed && (
                           isExpanded(item.key) ? 
                             <ChevronDown className="h-4 w-4" /> : 
                             <ChevronRight className="h-4 w-4" />
                         )}
                       </SidebarMenuButton>
                       
-                      {!collapsed && isExpanded(item.key) && (
+                      {!isCollapsed && isExpanded(item.key) && (
                         <div className="mr-6 mt-1 space-y-1">
                           {item.subItems.map((subItem) => (
                             <SidebarMenuButton
@@ -211,7 +211,7 @@ export function AppSidebar({ user, profile, onSignOut, activeTab, onTabChange }:
                       }`}
                     >
                       <item.icon className="h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {!isCollapsed && <span>{item.title}</span>}
                     </SidebarMenuButton>
                   )}
                 </SidebarMenuItem>
@@ -221,7 +221,7 @@ export function AppSidebar({ user, profile, onSignOut, activeTab, onTabChange }:
         </SidebarGroup>
 
         {/* Quick Actions */}
-        {!collapsed && (
+        {!isCollapsed && (
           <SidebarGroup>
             <SidebarGroupLabel>إجراءات سريعة</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -249,10 +249,10 @@ export function AppSidebar({ user, profile, onSignOut, activeTab, onTabChange }:
           <Button
             variant="ghost"
             onClick={onSignOut}
-            className={`w-full ${collapsed ? 'px-2' : 'justify-start'}`}
+            className={`w-full ${isCollapsed ? 'px-2' : 'justify-start'}`}
           >
             <LogOut className="h-4 w-4" />
-            {!collapsed && <span className="mr-2">تسجيل الخروج</span>}
+            {!isCollapsed && <span className="mr-2">تسجيل الخروج</span>}
           </Button>
         </div>
       </SidebarContent>

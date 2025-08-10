@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { SidebarLayout } from '@/components/SidebarLayout';
+// سيتم تحديث AdminDashboard لاحقاً
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <SidebarLayout>
+    <div className="min-h-screen bg-background p-6">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -400,6 +400,6 @@ export default function AdminDashboard() {
           </TabsContent>
         </Tabs>
       </div>
-    </SidebarLayout>
+    </div>
   );
 }
