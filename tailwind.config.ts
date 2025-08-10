@@ -29,7 +29,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        'arabic': ['Cairo', 'Amiri', 'Segoe UI', 'Tahoma', 'sans-serif'],
+        'arabic': ['Cairo', 'Almarai', 'Segoe UI', 'Tahoma', 'sans-serif'],
         'amiri': ['Amiri', 'serif'],
         'cairo': ['Cairo', 'sans-serif'],
       },
@@ -118,6 +118,10 @@ export default {
           "0%": { opacity: "0", transform: "translateX(20px)" },
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
+        "slide-in-left": {
+          "0%": { opacity: "0", transform: "translateX(-20px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
         "float": {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-10px)" },
@@ -141,6 +145,7 @@ export default {
         "fade-in": "fade-in 0.6s ease-out",
         "scale-in": "scale-in 0.5s ease-out",
         "slide-in-right": "slide-in-right 0.7s ease-out",
+        "slide-in-left": "slide-in-left 0.7s ease-out",
         "float": "float 6s ease-in-out infinite",
         "float-delayed": "float-delayed 6s ease-in-out infinite 2s",
         "bounce-gentle": "bounce-gentle 2s ease-in-out infinite",
@@ -193,6 +198,39 @@ export default {
         },
         '.delay-500': {
           'animation-delay': '500ms',
+        },
+        // RTL utilities
+        '.rtl-flip': {
+          'transform': 'scaleX(-1)',
+        },
+        '.rtl-space-x-reverse': {
+          '--tw-space-x-reverse': '1',
+        },
+        '.rtl-space-x-reverse > * + *': {
+          'margin-right': 'var(--tw-space-x-reverse, 0)',
+          'margin-left': 'calc(1rem * calc(1 - var(--tw-space-x-reverse, 0)))',
+        },
+        '.rtl-ml-auto': {
+          'margin-right': 'auto',
+          'margin-left': '0',
+        },
+        '.rtl-mr-auto': {
+          'margin-left': 'auto',
+          'margin-right': '0',
+        },
+        '.rtl-text-right': {
+          'text-align': 'right',
+        },
+        '.rtl-text-left': {
+          'text-align': 'left',
+        },
+        '.rtl-pr-4': {
+          'padding-left': '1rem',
+          'padding-right': '0',
+        },
+        '.rtl-pl-4': {
+          'padding-right': '1rem',
+          'padding-left': '0',
         },
       });
     }
