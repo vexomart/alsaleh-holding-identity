@@ -60,6 +60,9 @@ const handler = async (req: Request): Promise<Response> => {
       // إشعار إنشاء تذكرة جديدة
       const { ticketId, data } = requestData;
       
+      console.log('معلومات التذكرة:', data);
+      console.log('RESEND_API_KEY موجود:', !!Deno.env.get("RESEND_API_KEY"));
+      
       const emailResponse = await resend.emails.send({
         from: "نظام التذاكر <support@alsalehholding.com>",
         to: ["admin@alsalehholding.com"],
@@ -81,8 +84,17 @@ const handler = async (req: Request): Promise<Response> => {
         `,
       });
 
+      console.log('استجابة Resend:', emailResponse);
+
       if (emailResponse.error) {
         console.error('خطأ في إرسال إشعار التذكرة:', emailResponse.error);
+        return new Response(JSON.stringify({
+          success: false,
+          error: emailResponse.error
+        }), {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders }
+        });
       }
 
       return new Response(JSON.stringify({
