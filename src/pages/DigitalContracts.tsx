@@ -86,7 +86,7 @@ const COMPANY_SERVICES: Service[] = [
   // الخدمات الاستشارية
   { id: '9', name: 'استشارات تقنية', description: 'دراسة وتحليل المشاريع', basePrice: 5000, category: 'consulting' },
   { id: '10', name: 'التدريب التقني', description: 'دورات وورش عمل', basePrice: 3000, category: 'training' },
-  { id: '11', name: 'الدعم التقني', description: 'دعم شهري أو سنوي', basePrice: 2000, category: 'support' },
+  { id: '11', name: 'الدعم التقني', description: 'دعم شهري أو سنوي', basePrice: 100, category: 'support' },
   { id: '12', name: 'تحليل البيانات', description: 'Business Intelligence', basePrice: 18000, category: 'analytics' }
 ];
 
