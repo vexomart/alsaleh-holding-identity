@@ -360,82 +360,92 @@ const DigitalContracts = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto px-4 py-8">
-        <Card className="max-w-4xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center">نظام التعاقد الإلكتروني</CardTitle>
+      <main className="container mx-auto px-4 py-12" dir="rtl">
+        <Card className="max-w-4xl mx-auto shadow-xl">
+          <CardHeader className="text-center space-y-4 pb-8">
+            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto">
+              <span className="text-primary-foreground font-bold text-xl">ASH</span>
+            </div>
+            <CardTitle className="text-3xl font-bold text-primary">نظام التعاقد الإلكتروني</CardTitle>
+            <p className="text-muted-foreground">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</p>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="clientName">اسم العميل</Label>
+          <CardContent className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="clientName" className="text-right block font-semibold">اسم العميل</Label>
                 <Input
                   id="clientName"
                   value={formData.clientName}
                   onChange={(e) => handleInputChange('clientName', e.target.value)}
                   placeholder="أدخل اسم العميل الكامل"
+                  className="text-right"
                 />
               </div>
               
-              <div>
-                <Label htmlFor="clientPhone">رقم الجوال</Label>
+              <div className="space-y-2">
+                <Label htmlFor="clientPhone" className="text-right block font-semibold">رقم الجوال</Label>
                 <Input
                   id="clientPhone"
                   value={formData.clientPhone}
                   onChange={(e) => handleInputChange('clientPhone', e.target.value)}
                   placeholder="أدخل رقم الجوال"
+                  className="text-right"
                 />
               </div>
               
-              <div>
-                <Label htmlFor="clientEmail">البريد الإلكتروني</Label>
+              <div className="space-y-2">
+                <Label htmlFor="clientEmail" className="text-right block font-semibold">البريد الإلكتروني</Label>
                 <Input
                   id="clientEmail"
                   type="email"
                   value={formData.clientEmail}
                   onChange={(e) => handleInputChange('clientEmail', e.target.value)}
                   placeholder="أدخل البريد الإلكتروني"
+                  className="text-right"
                 />
               </div>
               
-              <div>
-                <Label htmlFor="selectedOffer">الخدمة المطلوبة</Label>
+              <div className="space-y-2">
+                <Label htmlFor="selectedOffer" className="text-right block font-semibold">الخدمة المطلوبة</Label>
                 <Input
                   id="selectedOffer"
                   value={formData.selectedOffer}
                   onChange={(e) => handleInputChange('selectedOffer', e.target.value)}
                   placeholder="أدخل نوع الخدمة المطلوبة"
+                  className="text-right"
                 />
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="projectDescription">وصف المشروع</Label>
+            <div className="space-y-2">
+              <Label htmlFor="projectDescription" className="text-right block font-semibold">وصف المشروع</Label>
               <Textarea
                 id="projectDescription"
                 value={formData.projectDescription}
                 onChange={(e) => handleInputChange('projectDescription', e.target.value)}
                 placeholder="أدخل وصف تفصيلي للمشروع"
                 rows={4}
+                className="text-right resize-none"
               />
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-center space-x-3 space-x-reverse">
               <Checkbox 
                 id="terms" 
                 checked={formData.agreeToTerms}
                 onCheckedChange={(checked) => handleInputChange('agreeToTerms', !!checked)}
               />
-              <Label htmlFor="terms">أوافق على الشروط والأحكام</Label>
+              <Label htmlFor="terms" className="text-sm font-medium cursor-pointer">أوافق على الشروط والأحكام</Label>
             </div>
 
-            <div className="flex gap-4 justify-center">
+            <div className="flex justify-center pt-6">
               <Button 
                 onClick={handleDownloadPDF} 
-                className="flex items-center gap-2"
+                className="flex items-center gap-3 px-8 py-3"
                 size="lg"
+                disabled={!formData.agreeToTerms}
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-5 h-5" />
                 تحميل العقد PDF
               </Button>
             </div>
