@@ -229,7 +229,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <h3 style="color: #0284c7; margin: 0 0 15px 0; font-size: 18px;">📞 تحتاج مساعدة؟</h3>
                   <p style="color: #0c4a6e; margin: 0; font-size: 14px; line-height: 1.6;">
                     في حال كان لديكم أي استفسار، يمكنكم التواصل معنا عبر:
-                    <br><strong>واتساب:</strong> +966-XX-XXX-XXXX
+                    <br><strong>واتساب:</strong> 0555812567
                     <br><strong>إيميل:</strong> support@alialshehriholding.com
                   </p>
                 </div>
@@ -410,7 +410,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <h3 style="color: #0284c7; margin: 0 0 15px 0; font-size: 18px;">📞 تحتاج مساعدة؟</h3>
                   <p style="color: #0c4a6e; margin: 0; font-size: 14px; line-height: 1.6;">
                     في حال كان لديكم أي استفسار حول طلب الاسترداد:
-                    <br><strong>واتساب:</strong> +966-XX-XXX-XXXX
+                    <br><strong>واتساب:</strong> 0555812567
                     <br><strong>إيميل:</strong> support@alialshehriholding.com
                   </p>
                 </div>

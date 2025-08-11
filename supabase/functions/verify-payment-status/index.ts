@@ -260,7 +260,7 @@ serve(async (req) => {
                     <li>رقم المرجع: <code>${trxNo}</code></li>
                   </ul>
                   <p>يمكنك إعادة المحاولة من صفحة العروض أو التواصل معنا للمساعدة.</p>
-                  <p style="color:#666">الدعم: info@alialshehriholding.com — 920033442</p>
+                  <p style="color:#666">الدعم: info@alialshehriholding.com — 0555812567</p>
                 </div>
               `;
 

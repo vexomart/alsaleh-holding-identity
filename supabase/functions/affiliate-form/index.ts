@@ -270,7 +270,7 @@ const handler = async (req: Request): Promise<Response> => {
                     <p style="margin: 0; font-size: 14px;">
                         هذه رسالة تلقائية من نظام التسويق بالعمولة<br>
                         شركة علي صالح الشهري القابضة<br>
-                        <strong>📧 affiliate@alialshehriholding.com | 📱 +966 555 812 567</strong>
+                        <strong>📧 affiliate@alialshehriholding.com | 📱 0555812567</strong>
                     </p>
                 </div>
             </div>

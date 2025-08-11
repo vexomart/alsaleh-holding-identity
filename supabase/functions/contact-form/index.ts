@@ -217,12 +217,12 @@ const handler = async (req: Request): Promise<Response> => {
                 <div style="display: flex; align-items: center; background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                   <span style="font-size: 18px; margin-left: 10px;">📞</span>
                   <span style="color: #374151; margin-left: 8px; font-weight: 500;">الهاتف:</span>
-                  <a href="tel:+966555812567" style="color: #10b981; text-decoration: none; font-weight: 600;">+966 555 812 567</a>
+                  <a href="tel:+966555812567" style="color: #10b981; text-decoration: none; font-weight: 600;">0555812567</a>
                 </div>
                 <div style="display: flex; align-items: center; background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                   <span style="font-size: 18px; margin-left: 10px;">💬</span>
                   <span style="color: #374151; margin-left: 8px; font-weight: 500;">واتساب:</span>
-                  <a href="https://wa.me/966555812567" style="color: #059669; text-decoration: none; font-weight: 600;">+966 555 812 567</a>
+                  <a href="https://wa.me/966555812567" style="color: #059669; text-decoration: none; font-weight: 600;">0555812567</a>
                 </div>
               </div>
             </div>

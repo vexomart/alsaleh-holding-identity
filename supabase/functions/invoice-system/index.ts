@@ -285,7 +285,7 @@ function generatePaidInvoiceEmail(invoice: any): string {
             
             <div class="footer">
                 <p>شركة علي صالح الشهري القابضة</p>
-                <p>للاستفسارات: info@alialshehriholding.com | 920033442</p>
+                <p>للاستفسارات: info@alialshehriholding.com | 0555812567</p>
             </div>
         </div>
     </body>
@@ -412,7 +412,7 @@ function generateUnpaidInvoiceEmail(invoice: any): string {
             
             <div class="footer">
                 <p>شركة علي صالح الشهري القابضة</p>
-                <p>للاستفسارات: info@alialshehriholding.com | 920033442</p>
+                <p>للاستفسارات: info@alialshehriholding.com | 0555812567</p>
             </div>
         </div>
     </body>
@@ -544,7 +544,7 @@ function generatePendingInvoiceEmail(invoice: any): string {
             
             <div class="footer">
                 <p>شركة علي صالح الشهري القابضة</p>
-                <p>للاستفسارات: info@alialshehriholding.com | 920033442</p>
+                <p>للاستفسارات: info@alialshehriholding.com | 0555812567</p>
             </div>
         </div>
     </body>

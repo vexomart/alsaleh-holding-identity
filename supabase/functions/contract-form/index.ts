@@ -275,7 +275,7 @@ const handler = async (req: Request): Promise<Response> => {
               <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; margin: 25px 0;">
                 <h3 style="color: #065f46; margin-top: 0; font-size: 16px;">للاستفسارات والتواصل</h3>
                 <p style="margin: 8px 0; color: #065f46;"><strong>البريد الإلكتروني:</strong> info@alialshehriholding.com</p>
-                <p style="margin: 8px 0; color: #065f46;"><strong>الهاتف:</strong> +966 555 812 567</p>
+                <p style="margin: 8px 0; color: #065f46;"><strong>الهاتف:</strong> 0555812567</p>
                 <p style="margin: 8px 0; color: #065f46;"><strong>ساعات العمل:</strong> الأحد - الخميس من 9 صباحاً حتى 6 مساءً</p>
               </div>
             </div>

@@ -206,7 +206,7 @@ const handler = async (req: Request): Promise<Response> => {
           
             <div style="margin-top: 20px; text-align: center;">
               <p style="color: #666; font-size: 14px;">
-                للتواصل معنا: info@alialshehriholding.com | +966 555 812 567
+                للتواصل معنا: info@alialshehriholding.com | 0555812567
               </p>
             </div>
         </div>
