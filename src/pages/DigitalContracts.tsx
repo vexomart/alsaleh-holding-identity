@@ -306,31 +306,48 @@ const DigitalContracts = () => {
           </div>
         </div>
         
-        <!-- الشروط والأحكام -->
+        <!-- الشروط والأحكام المحدثة -->
         <div style="margin-bottom: 15pt;">
           <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
-            الشروط والأحكام
+            الشروط والأحكام العامة
           </h3>
           <div style="border: 1px solid #d1d5db; padding: 12pt;">
             <div style="margin-bottom: 10pt;">
-              <strong>المادة الأولى - مدة العقد:</strong><br>
-              يبدأ العقد من تاريخ التوقيع ويستمر حتى تسليم المشروع كاملاً وفق المواصفات المتفق عليها.
+              <strong style="color: #1e3a8a;">المادة الأولى - بداية العقد وصلاحيته:</strong><br>
+              يعتبر هذا العقد ساري المفعول من تاريخ سداد الدفعة المقدمة الأولى (50% من القيمة الإجمالية). العقد غير معتمد ولا يبدأ العمل إلا بعد استلام الدفعة المقدمة.
             </div>
             <div style="margin-bottom: 10pt;">
-              <strong>المادة الثانية - الالتزامات:</strong><br>
-              يلتزم الطرف الأول بتقديم الخدمة وفق أعلى معايير الجودة، ويلتزم الطرف الثاني بتوفير المتطلبات اللازمة والسداد في المواعيد المحددة.
+              <strong style="color: #1e3a8a;">المادة الثانية - مدة التنفيذ:</strong><br>
+              يتم تحديد مدة تنفيذ المشروع حسب طبيعة الخدمات المطلوبة، ويبدأ احتساب المدة من تاريخ استلام الدفعة المقدمة وجميع المتطلبات اللازمة من العميل.
             </div>
             <div style="margin-bottom: 10pt;">
-              <strong>المادة الثالثة - الضمان:</strong><br>
-              تضمن الشركة سلامة العمل لمدة ستة أشهر من تاريخ التسليم النهائي مع توفير الدعم التقني المجاني.
+              <strong style="color: #1e3a8a;">المادة الثالثة - التزامات الطرف الأول (الشركة):</strong><br>
+              • تقديم الخدمة وفق أعلى معايير الجودة والمواصفات المتفق عليها<br>
+              • الالتزام بالمواعيد المحددة شريطة توفر جميع المتطلبات من العميل<br>
+              • تقديم الدعم التقني لمدة ستة أشهر من تاريخ التسليم النهائي
             </div>
             <div style="margin-bottom: 10pt;">
-              <strong>المادة الرابعة - السرية:</strong><br>
-              يتعهد الطرفان بالحفاظ على سرية جميع المعلومات المتبادلة وعدم إفشائها لأي طرف ثالث.
+              <strong style="color: #1e3a8a;">المادة الرابعة - التزامات الطرف الثاني (العميل):</strong><br>
+              • سداد الدفعة المقدمة (50%) لاعتماد العقد وبدء العمل<br>
+              • توفير جميع المتطلبات والبيانات اللازمة في الوقت المحدد<br>
+              • سداد الدفعة الثانية (50%) عند الانتهاء من المشروع وقبل التسليم النهائي<br>
+              • عدم تأخير المراجعات والموافقات على مراحل العمل
+            </div>
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة الخامسة - الضمان والصيانة:</strong><br>
+              تضمن الشركة سلامة العمل وجودته لمدة ستة أشهر من تاريخ التسليم النهائي، مع توفير الدعم التقني المجاني خلال فترة الضمان.
+            </div>
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة السادسة - السرية وحقوق الملكية:</strong><br>
+              يتعهد الطرفان بالحفاظ على سرية جميع المعلومات المتبادلة. حقوق الملكية الفكرية للعمل تنتقل للعميل بعد سداد كامل المبلغ المستحق.
+            </div>
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة السابعة - التأخير وإيقاف العمل:</strong><br>
+              في حالة تأخير العميل في سداد المستحقات، يحق للشركة إيقاف العمل وتطبيق غرامة تأخير قدرها 2% من المبلغ المستحق أسبوعياً.
             </div>
             <div>
-              <strong>المادة الخامسة - حل النزاعات:</strong><br>
-              في حالة نشوء أي نزاع، يتم حله ودياً، وإلا فيحال للتحكيم وفق الأنظمة السعودية المعمول بها.
+              <strong style="color: #1e3a8a;">المادة الثامنة - حل النزاعات:</strong><br>
+              في حالة نشوء أي نزاع، يتم حله ودياً أولاً، وإن لم يتم التوصل لحل يحال للتحكيم وفق الأنظمة السعودية المعمول بها في المملكة العربية السعودية.
             </div>
           </div>
         </div>
@@ -358,8 +375,12 @@ const DigitalContracts = () => {
               <td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; font-weight: bold;">${(formData.totalPrice * 1.15).toLocaleString()} ريال</td>
             </tr>
           </table>
-          <div style="margin-top: 10pt; padding: 8pt; background: #f0f9ff; border: 1px solid #3b82f6; border-radius: 4pt;">
-            <strong>طريقة السداد:</strong> يتم السداد على دفعات متفق عليها، مع دفعة مقدمة قدرها 50% عند بداية العمل والباقي عند التسليم النهائي.
+          <div style="margin-top: 10pt; padding: 12pt; background: #fef2f2; border: 2px solid #dc2626; border-radius: 4pt;">
+            <div style="text-align: center; font-weight: bold; color: #dc2626; font-size: 12pt; margin-bottom: 8pt;">⚠️ شروط الدفع والاعتماد الإلزامية ⚠️</div>
+            <div style="color: #dc2626; font-weight: bold; margin-bottom: 6pt;">• العقد غير معتمد إلا بسداد الدفعة المقدمة الأولى (50%)</div>
+            <div style="color: #dc2626; font-weight: bold; margin-bottom: 6pt;">• الدفعة الثانية (50%) تستحق عند الانتهاء من المشروع وقبل التسليم النهائي</div>
+            <div style="color: #dc2626; font-weight: bold; margin-bottom: 6pt;">• لا يتم تسليم العمل إلا بعد سداد كامل المبلغ المستحق</div>
+            <div style="color: #dc2626; font-weight: bold;">• تأخير الدفع يؤدي إلى إيقاف العمل وتطبيق غرامة تأخير 2% أسبوعياً</div>
           </div>
         </div>
         
@@ -403,12 +424,32 @@ const DigitalContracts = () => {
           </table>
         </div>
         
-        <!-- ختم الصفحة -->
-        <div style="text-align: center; margin-top: 20pt; padding-top: 15pt; border-top: 1px solid #d1d5db; font-size: 9pt; color: #64748b;">
-          تم إنشاء هذا العقد إلكترونياً بتاريخ ${contractDate} - شركة علي صالح الشهري القابضة
+        <!-- إقرار واعتماد العقد -->
+        <div style="margin-top: 20pt; padding: 15pt; background: #f0f9ff; border: 2px solid #1e3a8a; border-radius: 6pt;">
+          <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; text-align: center;">
+            إقرار واعتماد العقد
+          </h3>
+          <div style="text-align: center; line-height: 1.6;">
+            <p style="margin: 0 0 8pt 0; font-weight: bold; color: #1e3a8a;">
+              بتوقيع هذا العقد، يقر الطرفان بما يلي:
+            </p>
+            <div style="text-align: right; margin: 10pt 0;">
+              ✓ تم الاطلاع على جميع بنود العقد والموافقة عليها<br>
+              ✓ العقد ساري المفعول من تاريخ سداد الدفعة المقدمة<br>
+              ✓ الالتزام بجميع الشروط والأحكام المذكورة أعلاه<br>
+              ✓ تطبيق الأنظمة واللوائح السعودية على هذا العقد
+            </div>
+            <div style="background: #fef2f2; border: 1px solid #dc2626; padding: 8pt; margin-top: 10pt; border-radius: 4pt;">
+              <strong style="color: #dc2626;">تنبيه هام:</strong> هذا العقد ملزم قانونياً للطرفين ولا يجوز التراجع عنه إلا بموافقة كتابية من الطرفين
+            </div>
+          </div>
         </div>
         
-      </div>
+        <!-- ختم الصفحة -->
+        <div style="text-align: center; margin-top: 20pt; padding-top: 15pt; border-top: 1px solid #d1d5db; font-size: 9pt; color: #64748b;">
+          تم إنشاء هذا العقد إلكترونياً بتاريخ ${contractDate} - شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية<br>
+          العقد ساري المفعول من تاريخ سداد الدفعة المقدمة المتفق عليها
+        </div>
     `;
 
     return contractElement;
