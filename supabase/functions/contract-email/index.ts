@@ -94,7 +94,7 @@ serve(async (req) => {
     `;
 
     const emailRes = await resend.emails.send({
-      from: 'نظام العقود <contracts@resend.dev>',
+      from: 'نظام العقود <info@alialshehriholding.com>',
       to: [to],
       bcc: ['info@alialshehriholding.com'],
       reply_to: 'info@alialshehriholding.com',

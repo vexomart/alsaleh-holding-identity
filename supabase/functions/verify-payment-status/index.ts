@@ -281,7 +281,7 @@ serve(async (req) => {
             // deno-lint-ignore no-explicit-any
             const ER: any = (globalThis as any).EdgeRuntime;
             const sendPromise = resend.emails.send({
-              from: 'نظام المدفوعات <payments@resend.dev>',
+              from: 'نظام المدفوعات <info@alialshehriholding.com>',
               to: [to],
               bcc: ['info@alialshehriholding.com'],
               reply_to: 'info@alialshehriholding.com',
