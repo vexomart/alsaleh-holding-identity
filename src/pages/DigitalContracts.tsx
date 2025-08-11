@@ -46,6 +46,7 @@ import jsPDF from 'jspdf';
 
 import SignatureCanvas from 'react-signature-canvas';
 import SEO from "@/components/SEO";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Service {
   id: string;
@@ -216,6 +217,57 @@ const DigitalContracts = () => {
     
     const completedFields = fields.filter(Boolean).length;
     return (completedFields / fields.length) * 100;
+  };
+
+  // بدء الدفع للدفعة المقدمة 50%
+  const handlePayDeposit = async () => {
+    if (!isFormValid()) {
+      toast.error('يرجى إكمال جميع الحقول المطلوبة وحفظ التوقيع قبل المتابعة');
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      const depositAmount = Math.round(formData.totalPrice * 0.5);
+
+      const description = `دفعة مقدمة 50% لعقد خدمات: ${formData.selectedServices.map(s => s.name).join('، ') || 'خدمات تقنية'} — إجمالي العقد: ${formData.totalPrice.toLocaleString()} SAR`;
+
+      const contract_data = {
+        clientName: formData.clientName,
+        clientEmail: formData.clientEmail,
+        clientPhone: formData.clientPhone,
+        clientID: formData.clientID,
+        projectDescription: formData.projectDescription,
+        totalPrice: formData.totalPrice,
+        contractFormType: contractFormType,
+        selectedServices: formData.selectedServices.map(s => ({ id: s.id, name: s.name, description: s.description, basePrice: s.basePrice })),
+      };
+
+      const { data: resp, error } = await supabase.functions.invoke('paylink-payment', {
+        body: {
+          amount: depositAmount,
+          currency: 'SAR',
+          customer_name: formData.clientName,
+          customer_email: formData.clientEmail,
+          customer_phone: formData.clientPhone,
+          offer_title: 'عقد خدمات تقنية',
+          description,
+          success_url: window.location.origin,
+          contract_data,
+        },
+      });
+
+      if (error) throw error;
+      if (resp?.payment_url) {
+        toast.success('سيتم تحويلك لصفحة Paylink لإتمام الدفعة المقدمة');
+        window.location.href = resp.payment_url;
+      } else {
+        throw new Error('تعذر إنشاء جلسة الدفع');
+      }
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message || 'حدث خطأ أثناء بدء عملية الدفع');
+      setIsSubmitting(false);
+    }
   };
 
   // دالة إنشاء الختم الرقمي للشركة
@@ -1169,6 +1221,18 @@ const DigitalContracts = () => {
                           <span className="font-medium">{payment.name}</span>
                         </div>
                       ))}
+                    </div>
+                    <div className="pt-2">
+                      <Button
+                        className="w-full"
+                        disabled={!isFormValid() || isSubmitting}
+                        onClick={handlePayDeposit}
+                      >
+                        ادفع الدفعة المقدمة 50% عبر Paylink
+                      </Button>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        🔒 الدفع آمن عبر Paylink. سيتم إصدار العقد تلقائياً بعد نجاح الدفع وإشعار الطرفين عبر البريد.
+                      </p>
                     </div>
                   </CardContent>
                 </Card>

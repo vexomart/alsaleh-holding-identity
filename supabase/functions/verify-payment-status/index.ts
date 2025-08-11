@@ -148,15 +148,10 @@ serve(async (req) => {
 
               if (invoiceResponse.data?.success) {
                 console.log('تم إنشاء الفاتورة بنجاح:', invoiceResponse.data.invoice);
-                
                 // إرسال الفاتورة بالإيميل
                 const sendResponse = await supabaseClient.functions.invoke('invoice-system', {
-                  body: {
-                    transactionId: transactionId,
-                    action: 'send'
-                  }
+                  body: { transactionId: transactionId, action: 'send' }
                 });
-
                 if (sendResponse.data?.success) {
                   console.log('تم إرسال الفاتورة بالإيميل بنجاح');
                 } else {
@@ -165,8 +160,66 @@ serve(async (req) => {
               } else {
                 console.error('خطأ في إنشاء الفاتورة:', invoiceResponse.error);
               }
+
+              // إصدار العقد تلقائياً بعد نجاح الدفع (إن لم يكن مُصدَراً)
+              const { data: freshTx } = await supabaseClient
+                .from('payment_transactions')
+                .select('*')
+                .eq('id', transactionId)
+                .maybeSingle();
+
+              const tx = freshTx || transaction;
+              // deno-lint-ignore no-explicit-any
+              const cd: any = (tx as any).contract_data || {};
+
+              if (!tx?.contract_id) {
+                // جلب رقم عقد جديد
+                const { data: contract_no, error: genErr } = await supabaseClient.rpc('generate_contract_number');
+                if (genErr || !contract_no) {
+                  console.error('تعذر توليد رقم العقد:', genErr);
+                } else {
+                  // بناء بيانات العقد
+                  const services = Array.isArray(cd.selectedServices) ? cd.selectedServices : [];
+                  const servicesNames = services.map((s: any) => s.name).join('، ');
+                  const servicesDesc = services.map((s: any) => `- ${s.name}: ${s.description}`).join('\n');
+                  const fullDesc = `${cd.projectDescription || ''}\n${servicesDesc}`.trim();
+
+                  const { data: contract, error: insertErr } = await supabaseClient
+                    .from('contracts')
+                    .insert({
+                      contract_number: contract_no as string,
+                      client_name: tx.customer_name,
+                      client_email: tx.customer_email,
+                      client_phone: tx.customer_phone,
+                      client_id_number: cd.clientID || null,
+                      client_type: cd.contractFormType || 'individual',
+                      service_type: servicesNames || 'خدمات تقنية',
+                      service_description: fullDesc || null,
+                      service_price: cd.totalPrice || tx.amount,
+                      currency: tx.currency || 'SAR',
+                      payment_terms: 'دفعة مقدمة 50% ثم 50% قبل التسليم',
+                      status: 'active',
+                      company_approved: true,
+                      client_approved: true,
+                    })
+                    .select()
+                    .single();
+
+                  if (insertErr) {
+                    console.error('خطأ في إدراج العقد:', insertErr);
+                  } else if (contract) {
+                    // ربط العقد بالمعاملة
+                    const { error: linkErr } = await supabaseClient
+                      .from('payment_transactions')
+                      .update({ contract_id: contract.id })
+                      .eq('id', transactionId);
+                    if (linkErr) console.error('تعذر ربط العقد بالمعاملة:', linkErr);
+                    else console.log('تم إصدار العقد وربطه:', contract.contract_number);
+                  }
+                }
+              }
             } catch (invoiceError) {
-              console.error('خطأ في معالجة الفاتورة:', invoiceError);
+              console.error('خطأ في معالجة الفاتورة/العقد:', invoiceError);
             }
           }
 

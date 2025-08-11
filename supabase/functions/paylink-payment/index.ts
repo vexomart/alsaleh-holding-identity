@@ -15,7 +15,9 @@ interface PayLinkPaymentRequest {
   offer_title: string;
   description: string;
   success_url?: string;
+  contract_data?: Record<string, unknown>;
 }
+
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -142,6 +144,7 @@ serve(async (req) => {
         paylink_transaction_no: paylinkResult.transactionNo,
         status: "INITIATED",
         payment_method: "paylink",
+        contract_data: requestData.contract_data || {},
       })
       .select()
       .single();

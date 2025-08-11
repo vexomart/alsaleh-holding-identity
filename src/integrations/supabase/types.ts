@@ -116,6 +116,7 @@ export type Database = {
       invoices: {
         Row: {
           amount: number
+          client_id: string | null
           created_at: string
           currency: string | null
           customer_email: string
@@ -132,9 +133,11 @@ export type Database = {
           status: string
           transaction_id: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           amount: number
+          client_id?: string | null
           created_at?: string
           currency?: string | null
           customer_email: string
@@ -151,9 +154,11 @@ export type Database = {
           status?: string
           transaction_id?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           amount?: number
+          client_id?: string | null
           created_at?: string
           currency?: string | null
           customer_email?: string
@@ -170,6 +175,7 @@ export type Database = {
           status?: string
           transaction_id?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -259,9 +265,71 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_history: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          id: string
+          invoice_id: string | null
+          notes: string | null
+          payment_date: string | null
+          payment_method: string
+          reference_number: string | null
+          status: string
+          transaction_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          payment_date?: string | null
+          payment_method: string
+          reference_number?: string | null
+          status: string
+          transaction_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          payment_date?: string | null
+          payment_method?: string
+          reference_number?: string | null
+          status?: string
+          transaction_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_history_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_history_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "payment_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_transactions: {
         Row: {
           amount: number
+          contract_data: Json | null
+          contract_id: string | null
           created_at: string
           currency: string
           customer_email: string
@@ -281,6 +349,8 @@ export type Database = {
         }
         Insert: {
           amount: number
+          contract_data?: Json | null
+          contract_id?: string | null
           created_at?: string
           currency?: string
           customer_email: string
@@ -300,6 +370,8 @@ export type Database = {
         }
         Update: {
           amount?: number
+          contract_data?: Json | null
+          contract_id?: string | null
           created_at?: string
           currency?: string
           customer_email?: string
@@ -321,6 +393,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          client_id: string | null
           company: string | null
           created_at: string | null
           full_name: string | null
@@ -330,6 +403,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          client_id?: string | null
           company?: string | null
           created_at?: string | null
           full_name?: string | null
@@ -339,12 +413,189 @@ export type Database = {
           user_id: string
         }
         Update: {
+          client_id?: string | null
           company?: string | null
           created_at?: string | null
           full_name?: string | null
           id?: string
           phone?: string | null
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      service_requests: {
+        Row: {
+          actual_cost: number | null
+          actual_delivery_date: string | null
+          admin_notes: string | null
+          attachments: Json | null
+          client_id: string | null
+          created_at: string | null
+          description: string | null
+          estimated_cost: number | null
+          estimated_delivery_date: string | null
+          id: string
+          notes: string | null
+          priority: string | null
+          service_type: string
+          status: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          actual_cost?: number | null
+          actual_delivery_date?: string | null
+          admin_notes?: string | null
+          attachments?: Json | null
+          client_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_delivery_date?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          service_type: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          actual_cost?: number | null
+          actual_delivery_date?: string | null
+          admin_notes?: string | null
+          attachments?: Json | null
+          client_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          estimated_delivery_date?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          service_type?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ticket_messages: {
+        Row: {
+          attachments: Json | null
+          created_at: string | null
+          id: string
+          is_internal: boolean | null
+          message: string
+          ticket_id: string
+          user_id: string
+        }
+        Insert: {
+          attachments?: Json | null
+          created_at?: string | null
+          id?: string
+          is_internal?: boolean | null
+          message: string
+          ticket_id: string
+          user_id: string
+        }
+        Update: {
+          attachments?: Json | null
+          created_at?: string | null
+          id?: string
+          is_internal?: boolean | null
+          message?: string
+          ticket_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tickets: {
+        Row: {
+          assigned_to: string | null
+          category: string
+          created_at: string | null
+          description: string
+          id: string
+          priority: string
+          resolved_at: string | null
+          status: string
+          ticket_number: string
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          category?: string
+          created_at?: string | null
+          description: string
+          id?: string
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          ticket_number: string
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          category?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          ticket_number?: string
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_activity_logs: {
+        Row: {
+          activity_type: string
+          created_at: string | null
+          description: string | null
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: []
@@ -375,11 +626,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_client_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_contract_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
       generate_invoice_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_ticket_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
