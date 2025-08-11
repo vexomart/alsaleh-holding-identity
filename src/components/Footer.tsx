@@ -722,7 +722,7 @@ const Footer = () => {
               <a href="/terms" className="hover:text-white transition-colors duration-200">
                 شروط الاستخدام
               </a>
-              <a href="/cookies" className="hover:text-white transition-colors duration-200">
+              <a href="/cookie-policy" className="hover:text-white transition-colors duration-200">
                 سياسة ملفات تعريف الارتباط
               </a>
             </div>
