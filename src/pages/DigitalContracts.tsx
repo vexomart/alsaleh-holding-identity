@@ -43,7 +43,7 @@ import {
   Zap
 } from 'lucide-react';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+
 import SignatureCanvas from 'react-signature-canvas';
 import SEO from "@/components/SEO";
 
@@ -387,13 +387,13 @@ const DigitalContracts = () => {
         </div>
         
         <!-- موضوع العقد والخدمات -->
-        <div style="margin-bottom: 15pt;">
+        <div style="margin-bottom: 15pt; page-break-inside: avoid; break-inside: avoid;">
           <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
             موضوع العقد والخدمات المطلوبة
           </h3>
-          <div style="border: 1px solid #d1d5db; padding: 12pt; background: #f9fafb;">
+          <div style="border: 1px solid #d1d5db; padding: 12pt; background: #f9fafb; page-break-inside: avoid; break-inside: avoid;">
             <p style="margin: 0 0 12pt 0; font-weight: bold; color: #1e3a8a;">الخدمات المتفق عليها:</p>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15pt;">
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15pt; page-break-inside: avoid; break-inside: avoid;">
               <tr style="background: #1e3a8a; color: white;">
                 <th style="padding: 8pt; border: 1px solid #d1d5db; text-align: center; font-size: 10pt;">م</th>
                 <th style="padding: 8pt; border: 1px solid #d1d5db; text-align: center; font-size: 10pt;">الخدمة</th>
@@ -442,8 +442,8 @@ const DigitalContracts = () => {
         </div>
         
         <!-- التوقيعات والأختام -->
-        <div style="margin-top: 30pt;">
-          <table style="width: 100%; border-collapse: collapse;">
+        <div style="margin-top: 30pt; page-break-inside: avoid; break-inside: avoid;">
+          <table style="width: 100%; border-collapse: collapse; page-break-inside: avoid; break-inside: avoid;">
             <tr>
               <td style="width: 50%; padding: 20pt; text-align: center; border: 1px solid #d1d5db;">
                 <div style="margin-bottom: 15pt;">
@@ -490,33 +490,17 @@ const DigitalContracts = () => {
     document.body.appendChild(contractElement);
 
     try {
-      const canvas = await html2canvas(contractElement, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        width: contractElement.offsetWidth,
-        height: contractElement.offsetHeight
-      });
-
-      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      const imgWidth = 210;
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
+      await pdf.html(contractElement as unknown as HTMLElement, {
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+        },
+        margin: [10, 10, 10, 10],
+        autoPaging: 'text',
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+      } as any);
 
       const contractNumber = `ASH-${Date.now().toString().slice(-8)}`;
       pdf.save(`عقد-${contractNumber}.pdf`);
