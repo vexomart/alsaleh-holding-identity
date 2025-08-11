@@ -328,8 +328,8 @@ const DigitalContracts = () => {
         color: #000;
         position: fixed; /* keep in flow for layout */
         top: 0;
-        left: 0;
-        opacity: 0; /* invisible but renderable */
+        left: -10000px; /* move off-screen but keep opacity for rendering */
+        opacity: 1;
         pointer-events: none;
         box-sizing: border-box;
         margin: 0;
