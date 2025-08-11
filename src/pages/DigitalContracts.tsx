@@ -1381,20 +1381,20 @@ const DigitalContracts = () => {
                     {/* أزرار الإجراءات الرئيسية */}
                     <div className="flex flex-col sm:flex-row gap-4 pt-8">
                       <Button
-                        onClick={handleSubmit}
+                        onClick={handlePayDeposit}
                         disabled={isSubmitting || !isFormValid()}
                         size="lg"
-                        className="flex-1 h-16 text-xl font-bold"
+                        className="flex-1 h-16 text-xl font-bold hover-scale"
                       >
                         {isSubmitting ? (
                           <>
                             <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin ml-2"></div>
-                            جاري إرسال العقد...
+                            جاري التحويل للدفع...
                           </>
                         ) : (
                           <>
                             <FileSignature className="w-6 h-6 ml-2" />
-                            إرسال العقد للمراجعة
+                            الدفع وإصدار العقد
                           </>
                         )}
                       </Button>
