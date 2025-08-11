@@ -101,6 +101,7 @@ import EmailTest from "./pages/EmailTest";
 import EnhancedDesignCategory from "./pages/EnhancedDesignCategory";
 import InvoiceAdmin from "./pages/InvoiceAdmin";
 import InvoiceViewer from "./pages/InvoiceViewer";
+import TechEcosystem from "./pages/TechEcosystem";
 import CookiePolicy from "./pages/CookiePolicy";
 const queryClient = new QueryClient();
 
@@ -221,6 +222,7 @@ const App = () => {
               <Route path="/email-test" element={<EmailTest />} />
               <Route path="/invoice-admin" element={<InvoiceAdmin />} />
               <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
+              <Route path="/tech-ecosystem" element={<TechEcosystem />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

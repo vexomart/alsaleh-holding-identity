@@ -63,7 +63,8 @@ const Navigation = () => {
     { name: "الاستثمار التقني", href: "/tech-investment", icon: Zap },
     { name: "التطوير والابتكار", href: "/development", icon: Building2 },
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Users },
-    { name: "الحلول المتكاملة", href: "/integrated-solutions", icon: Award }
+    { name: "الحلول المتكاملة", href: "/integrated-solutions", icon: Award },
+    { name: "المنظومة التقنية المتكاملة", href: "/tech-ecosystem", icon: Zap }
   ];
 
   const othersItems = [
