@@ -13,6 +13,10 @@ import { Download, PenTool, Stamp } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import SignatureCanvas from 'react-signature-canvas';
+import SEO from "@/components/SEO";
+import ContractHero from "@/components/contract/ContractHero";
+import ContractSteps from "@/components/contract/ContractSteps";
+import CurrentOffersSection from "@/components/CurrentOffersSection";
 
 interface Service {
   id: string;
@@ -73,6 +77,38 @@ const DigitalContracts = () => {
   const [showServices, setShowServices] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const signatureRef = useRef<SignatureCanvas>(null);
+
+  // SEO structured data for services
+  const servicesJsonLd = COMPANY_SERVICES.map((s) => ({
+    "@type": "Service",
+    name: s.name,
+    description: s.description,
+    areaServed: "SA",
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "SAR",
+      price: s.basePrice,
+      availability: "https://schema.org/InStock"
+    }
+  }));
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "نظام التعاقد الإلكتروني",
+      description: "عقد إلكتروني احترافي يشمل جميع الخدمات مع توقيع وختم رقمي وتنبيهات الدفع.",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      itemListElement: servicesJsonLd.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item,
+      })),
+    },
+  ];
 
   const addService = (service: Service) => {
     if (!formData.selectedServices.find(s => s.id === service.id)) {
@@ -532,7 +568,16 @@ const DigitalContracts = () => {
       <Navigation />
       
       <main className="container mx-auto px-4 py-12" dir="rtl">
+        <SEO
+          title="نظام التعاقد الإلكتروني | خدمات وعروض الشركة"
+          description="نظام تعاقد إلكتروني بمعايير عالمية يشمل جميع خدمات الشركة مع توقيع وختم رقمي وقسم العروض الحالية."
+          canonicalUrl={typeof window !== 'undefined' ? window.location.href : undefined}
+          jsonLd={jsonLd as any}
+        />
+        <ContractHero />
+        <ContractSteps />
         <Card className="max-w-6xl mx-auto shadow-xl">
+
           <CardHeader className="text-center space-y-4 pb-8">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto">
               <span className="text-primary-foreground font-bold text-xl">ASH</span>
@@ -541,7 +586,12 @@ const DigitalContracts = () => {
             <p className="text-muted-foreground">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</p>
           </CardHeader>
           <CardContent className="space-y-8">
+            <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-destructive text-right">
+              <div className="font-bold mb-1">تنبيه مهم بشأن الدفعات</div>
+              <p className="text-sm">العقد غير مُعتمد ولا يبدأ التنفيذ إلا بعد سداد الدفعة الأولى (50%). الدفعة النهائية (50%) تُسدد عند اكتمال المشروع وقبل التسليم.</p>
+            </div>
             {/* بيانات العميل */}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="clientName" className="text-right block font-semibold">اسم العميل الكامل</Label>
@@ -590,7 +640,7 @@ const DigitalContracts = () => {
             </div>
 
             {/* اختيار الخدمات */}
-            <div className="space-y-4">
+            <div id="services" className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold text-primary">اختيار الخدمات</h3>
                 <Button 
@@ -605,10 +655,10 @@ const DigitalContracts = () => {
               {showServices && (
                 <div className="space-y-4">
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full z-10">
                       <SelectValue placeholder="اختر فئة الخدمات" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-50 bg-popover">
                       <SelectItem value="all">جميع الخدمات</SelectItem>
                       <SelectItem value="design">خدمات التصميم</SelectItem>
                       <SelectItem value="web">تطوير المواقع</SelectItem>
@@ -743,6 +793,7 @@ const DigitalContracts = () => {
             </div>
           </CardContent>
         </Card>
+        <CurrentOffersSection />
       </main>
 
       <Footer />
