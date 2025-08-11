@@ -301,6 +301,71 @@ const DigitalContracts = () => {
     return canvas.toDataURL();
   };
 
+  // ختم رقمي رسمي (SVG كسلسلة)
+  const getOfficialStampSVG = (opts?: {
+    companyNameAr?: string;
+    companyNameEn?: string;
+    crNumber?: string;
+    vatNumber?: string;
+    city?: string;
+    contractNumber?: string;
+    date?: string;
+    status?: 'approved' | 'preview';
+    size?: number;
+  }) => {
+    const {
+      companyNameAr = "شركة علي صالح الشهري القابضة",
+      companyNameEn = "Alsaleh Holding Company",
+      crNumber = "4030554749",
+      vatNumber = "—",
+      city = "جدة",
+      contractNumber,
+      date,
+      status = "preview",
+      size = 140,
+    } = opts || {};
+    return `
+  <svg width="${size}" height="${size}" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-label="الختم الرقمي" role="img" style="color: rgba(30,64,175,0.8);">
+    <circle cx="120" cy="120" r="112" fill="none" stroke="currentColor" stroke-width="4" />
+    <circle cx="120" cy="120" r="95" fill="none" stroke="currentColor" stroke-width="2" />
+    <circle cx="120" cy="120" r="78" fill="none" stroke="currentColor" stroke-width="1.5" />
+    <path id="topArc" d="M 35 120 A 85 85 0 0 1 205 120" fill="none" />
+    <text font-size="12" font-weight="700" fill="currentColor" text-anchor="middle" direction="rtl">
+      <textPath href="#topArc" startOffset="50%">${companyNameAr}</textPath>
+    </text>
+    <path id="bottomArc" d="M 205 120 A 85 85 0 0 1 35 120" fill="none" />
+    <text font-size="11" fill="currentColor" text-anchor="middle">
+      <textPath href="#bottomArc" startOffset="50%">${companyNameEn}</textPath>
+    </text>
+    <text x="120" y="105" text-anchor="middle" font-size="16" font-weight="800" fill="currentColor" direction="rtl">
+      ${status === 'approved' ? "ختم إلكتروني" : "غير معتمد"}
+    </text>
+    <text x="120" y="122" text-anchor="middle" font-size="10" fill="currentColor">
+      ${status === 'approved' ? "Digital E-Stamp" : "Not Approved"}
+    </text>
+    <text x="120" y="142" text-anchor="middle" font-size="10" fill="currentColor" direction="rtl">
+      ${crNumber ? `السجل التجاري: ${crNumber}` : "السجل التجاري: —"}
+    </text>
+    <text x="120" y="158" text-anchor="middle" font-size="10" fill="currentColor" direction="rtl">
+      ${vatNumber ? `الرقم الضريبي: ${vatNumber}` : "الرقم الضريبي: —"}
+    </text>
+    <text x="120" y="176" text-anchor="middle" font-size="9" fill="currentColor" direction="rtl">
+      ${city ? `${city} • المملكة العربية السعودية` : "المملكة العربية السعودية"}
+    </text>
+    <text x="120" y="192" text-anchor="middle" font-size="9" fill="currentColor" direction="rtl">
+      ${contractNumber ? `رقم العقد: ${contractNumber} • التاريخ: ${date || ""}` : `التاريخ: ${date || ""}`}
+    </text>
+    ${status === 'preview' ? `
+      <g opacity="0.18">
+        <rect x="-20" y="108" width="280" height="24" fill="currentColor" transform="rotate(-20 120 120)" rx="4" />
+        <text x="120" y="124" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff" transform="rotate(-20 120 120)">
+          غير معتمد إلا بعد الدفع
+        </text>
+      </g>` : ''}
+  </svg>
+  `;
+  };
+
   // دالة إنشاء HTML للعقد
   const createContractHTML = (showWatermark: boolean = true) => {
     const contractDate = new Date().toLocaleDateString('ar-SA', {
@@ -314,6 +379,8 @@ const DigitalContracts = () => {
       month: 'long',
       day: 'numeric'
     });
+
+    const contractId = `ASH-${Date.now().toString().slice(-8)}`;
 
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
@@ -379,7 +446,7 @@ const DigitalContracts = () => {
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
               <td style="width: 50%; padding: 8pt; border: 1px solid #d1d5db; background: white; font-weight: bold;">
-                رقم العقد: ASH-${Date.now().toString().slice(-8)}
+                رقم العقد: ${contractId}
               </td>
               <td style="width: 50%; padding: 8pt; border: 1px solid #d1d5db; background: white;">
                 التاريخ الميلادي: ${contractDate}
@@ -654,7 +721,17 @@ const DigitalContracts = () => {
                   <strong>الطرف الأول (الشركة)</strong>
                 </div>
                 <div style="margin-bottom: 40pt;">
-                  <img src="${createDigitalStamp()}" style="width: 80pt; height: 80pt;" />
+                  ${getOfficialStampSVG({
+                    companyNameAr: "شركة علي صالح الشهري القابضة",
+                    companyNameEn: "Alsaleh Holding Company",
+                    crNumber: "4030554749",
+                    vatNumber: "—",
+                    city: "جدة",
+                    contractNumber: contractId,
+                    date: contractDate,
+                    status: showWatermark ? 'preview' : 'approved',
+                    size: 128
+                  })}
                 </div>
                 <div style="border-top: 1px solid #000; padding-top: 8pt;">
                   <strong>علي صالح الشهري</strong><br>
@@ -890,7 +967,7 @@ const DigitalContracts = () => {
             <div className="grid lg:grid-cols-3 gap-8">
               {/* نموذج التعاقد الرئيسي */}
               <div className="lg:col-span-2">
-                <Card className="shadow-2xl border-0 bg-card/95 backdrop-blur overflow-hidden">
+                <Card className="shadow-2xl border-0 bg-card/95 backdrop-blur overflow-hidden animate-fade-in">
                   <CardHeader className="bg-gradient-to-l from-primary to-primary/80 text-primary-foreground p-8">
                     <CardTitle className="text-2xl font-bold text-right flex items-center gap-3">
                       <FileSignature className="w-8 h-8" />
