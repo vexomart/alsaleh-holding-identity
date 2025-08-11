@@ -302,7 +302,7 @@ const DigitalContracts = () => {
   };
 
   // دالة إنشاء HTML للعقد
-  const createContractHTML = () => {
+  const createContractHTML = (showWatermark: boolean = true) => {
     const contractDate = new Date().toLocaleDateString('ar-SA', {
       year: 'numeric',
       month: 'long',
@@ -337,7 +337,10 @@ const DigitalContracts = () => {
     `;
 
     contractElement.innerHTML = `
-      <div style="width: 100%; height: 100%; background: white;">
+      <div style="position: relative; width: 100%; height: 100%; background: white;">
+        ${showWatermark ? `<div style="position:absolute; inset:0; z-index:9999; pointer-events:none; display:grid; grid-template-columns:repeat(3,1fr); gap:40px; transform: rotate(-25deg); transform-origin:center; opacity:0.12;">
+          ${Array(18).fill('<div style="font-size:28pt; font-weight:800; text-align:center; color:#ef4444; letter-spacing:1px;">غير معتمد إلا بعد الدفع</div>').join('')}
+        </div>` : ''}
         
         <!-- الترويسة الرسمية -->
         <div style="border: 2px solid #1e3a8a; padding: 20pt; margin-bottom: 15pt; text-align: center; background: #f8fafc;">
@@ -540,7 +543,9 @@ const DigitalContracts = () => {
   };
 
   const handleDownloadPDF = async () => {
-    const contractElement = createContractHTML();
+    const params = new URLSearchParams(window.location.search);
+    const isPaid = params.get('paid') === 'true';
+    const contractElement = createContractHTML(!isPaid);
     document.body.appendChild(contractElement);
 
     try {
@@ -1180,6 +1185,9 @@ const DigitalContracts = () => {
                         <Eye className="w-6 h-6 ml-2" />
                         معاينة العقد
                       </Button>
+                    </div>
+                    <div className="pt-2 text-sm text-destructive/80 text-right">
+                      تنبيه: هذا العقد غير معتمد إلا بعد الدفع
                     </div>
                   </CardContent>
                 </Card>
