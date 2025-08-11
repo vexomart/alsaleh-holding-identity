@@ -18,7 +18,7 @@ import ContractHero from "@/components/contract/ContractHero";
 import ContractSteps from "@/components/contract/ContractSteps";
 import CurrentOffersSection from "@/components/CurrentOffersSection";
 import { currentOffers } from "@/data/offers";
-import { Slider } from "@/components/ui/slider";
+
 
 interface Service {
   id: string;
@@ -80,7 +80,7 @@ const DigitalContracts = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const signatureRef = useRef<SignatureCanvas>(null);
   const [penColor, setPenColor] = useState<string>("#0F172A");
-  const [lineWidth, setLineWidth] = useState<number>(2);
+  
 
   // SEO structured data for services
   const servicesJsonLd = COMPANY_SERVICES.map((s) => ({
@@ -768,7 +768,7 @@ const DigitalContracts = () => {
                 <PenTool className="w-5 h-5" />
                 التوقيع الرقمي
               </h3>
-              <div className="border-2 border-dashed border-muted-foreground rounded-lg p-4">
+              <div className="relative border-2 border-dashed border-border rounded-xl p-4 bg-muted/30">
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-sm">لون القلم</span>
@@ -780,13 +780,6 @@ const DigitalContracts = () => {
                       aria-label="اختيار لون القلم"
                     />
                   </div>
-                  <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <span className="text-sm whitespace-nowrap">السُمك</span>
-                    <div className="w-40">
-                      <Slider value={[lineWidth]} min={1} max={6} step={1} onValueChange={(v) => setLineWidth(v[0])} />
-                    </div>
-                    <span className="text-xs text-muted-foreground">{lineWidth}px</span>
-                  </div>
                   <div className="flex gap-2 ml-auto">
                     <Button onClick={undoSignature} variant="outline" size="sm">تراجع</Button>
                     <Button onClick={clearSignature} variant="outline" size="sm">مسح</Button>
@@ -796,8 +789,8 @@ const DigitalContracts = () => {
                 <SignatureCanvas
                   ref={signatureRef}
                   penColor={penColor}
-                  minWidth={lineWidth}
-                  maxWidth={lineWidth}
+                  minWidth={2.5}
+                  maxWidth={2.5}
                   canvasProps={{
                     width: 500,
                     height: 200,
