@@ -315,15 +315,6 @@ const Footer = () => {
     { name: "التقنيات والأنظمة الأساسية", href: "/technologies", icon: Code }
   ];
 
-  const hrSystemInfo = [
-    { name: "إدارة الموظفين", href: "/hr/employees", icon: Users },
-    { name: "الأقسام والمناصب", href: "/hr/departments", icon: Building2 },
-    { name: "إدارة العقود", href: "/hr/contracts", icon: FileText },
-    { name: "الإجازات والمغادرات", href: "/hr/leaves", icon: Calendar },
-    { name: "نظام الرواتب", href: "/hr/payroll", icon: TrendingUp },
-    { name: "التقارير والإحصائيات", href: "/hr/reports", icon: Eye }
-  ];
-
   const contracts = [
     { name: "طريقة التعاقد", href: "/contracts", icon: FileText },
     { name: "شروط التعاقد", href: "/contracts#requirements", icon: Shield },
@@ -584,32 +575,8 @@ const Footer = () => {
           </div>
 
           {/* Additional Sections Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 pb-8 border-b border-white/10">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 pb-8 border-b border-white/10">
             
-            {/* HR Management System */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                نظام الموارد البشرية
-              </h4>
-              <ul className="space-y-3">
-                {hrSystemInfo.map((item, index) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={item.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{item.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
             {/* Current Projects */}
             <div>
               <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
