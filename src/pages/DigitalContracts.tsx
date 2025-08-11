@@ -8,15 +8,39 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { toast } from 'sonner';
-import { Download, PenTool, Stamp } from 'lucide-react';
+import { 
+  Download, 
+  PenTool, 
+  Stamp, 
+  FileText, 
+  Users, 
+  CreditCard, 
+  CheckCircle2, 
+  Building2,
+  FileCheck,
+  Shield,
+  AlertTriangle,
+  Info,
+  User,
+  Mail,
+  Phone,
+  IdCard,
+  FileSignature,
+  Plus,
+  Minus,
+  Eye,
+  Trash2,
+  Save,
+  Undo2,
+  Eraser
+} from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import SignatureCanvas from 'react-signature-canvas';
 import SEO from "@/components/SEO";
-import ContractHero from "@/components/contract/ContractHero";
-import ContractSteps from "@/components/contract/ContractSteps";
-import CurrentOffersSection from "@/components/CurrentOffersSection";
 import { currentOffers } from "@/data/offers";
 
 
@@ -75,11 +99,13 @@ const DigitalContracts = () => {
     digitalSignature: '',
   });
 
+  const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const signatureRef = useRef<SignatureCanvas>(null);
-  const [penColor, setPenColor] = useState<string>("#0F172A");
+  const [penColor, setPenColor] = useState<string>("#1e40af");
+  const [contractFormType, setContractFormType] = useState<'individual' | 'institution' | 'company'>('individual');
   
 
   // SEO structured data for services
@@ -600,10 +626,8 @@ const DigitalContracts = () => {
           canonicalUrl={typeof window !== 'undefined' ? window.location.href : undefined}
           jsonLd={jsonLd as any}
         />
-        <ContractHero />
-        <ContractSteps />
+        
         <Card className="max-w-6xl mx-auto shadow-xl">
-
           <CardHeader className="text-center space-y-4 pb-8">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto">
               <span className="text-primary-foreground font-bold text-xl">ASH</span>
@@ -836,7 +860,7 @@ const DigitalContracts = () => {
             </div>
           </CardContent>
         </Card>
-        <CurrentOffersSection />
+        
       </main>
 
       <Footer />
