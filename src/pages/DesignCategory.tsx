@@ -169,7 +169,7 @@ export default function DesignCategory() {
     const title = `${data.title} | حلول التصميم`;
     document.title = title;
 
-    const desc = `${data.description} — تسعير بالريال السعودي وطرق دفع آمنة عبر Paylink.`;
+    const desc = `${data.description} — تسعير بالريال السعودي وطرق دفع آمنة بالبطاقة الائتمانية.`;
     let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!meta) {
       meta = document.createElement("meta");
@@ -212,7 +212,7 @@ export default function DesignCategory() {
       if (error) throw error;
       if (!resp?.payment_url) throw new Error("تعذر إنشاء رابط الدفع");
 
-      toast({ title: "إعادة التوجيه للدفع", description: "سيتم فتح صفحة Paylink لإتمام العملية." });
+      toast({ title: "إعادة التوجيه للدفع", description: "سيتم فتح صفحة الدفع لإتمام العملية." });
       window.open(resp.payment_url, "_blank");
       setOpen(false);
     } catch (e: any) {
@@ -353,7 +353,7 @@ export default function DesignCategory() {
                           <Button onClick={startPayment} disabled={loading} className="w-full">
                             {loading ? <><Loader2 className="w-4 h-4 ml-2 animate-spin" /> جاري إنشاء رابط الدفع</> : <><Lock className="w-4 h-4 ml-2" /> إتمام الدفع الآن ({it.price.toLocaleString()} ر.س)</>}
                           </Button>
-                          <p className="text-xs text-muted-foreground">🔒 الدفع آمن عبر Paylink. سيتم فتح صفحة الدفع في تبويب جديد.</p>
+                          <p className="text-xs text-muted-foreground">🔒 الدفع آمن بالبطاقة الائتمانية. سيتم فتح صفحة الدفع في تبويب جديد.</p>
                         </div>
                       </DialogContent>
                     </Dialog>
@@ -411,7 +411,7 @@ export default function DesignCategory() {
 
           <div className="mt-8 text-center text-xs text-muted-foreground">
             <Sparkles className="inline-block w-4 h-4 ml-1 align-[-2px] text-success" />
-            الأسعار بالريال السعودي (SAR) وتشمل ربط الدفع عبر Paylink.
+            الأسعار بالريال السعودي (SAR) وتشمل ربط الدفع بالبطاقة الائتمانية.
           </div>
 
           <div className="mt-6 text-center">

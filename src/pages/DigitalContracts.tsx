@@ -259,7 +259,7 @@ const DigitalContracts = () => {
 
       if (error) throw error;
       if (resp?.payment_url) {
-        toast.success('سيتم تحويلك لصفحة Paylink لإتمام الدفعة المقدمة');
+        toast.success('سيتم تحويلك لصفحة الدفع لإتمام الدفعة المقدمة');
         window.location.href = resp.payment_url;
       } else {
         throw new Error('تعذر إنشاء جلسة الدفع');
@@ -1482,10 +1482,10 @@ const DigitalContracts = () => {
                         disabled={!isFormValid() || isSubmitting}
                         onClick={handlePayDeposit}
                       >
-                        ادفع الدفعة المقدمة 50% عبر Paylink
+                        ادفع الدفعة المقدمة 50% بالبطاقة الائتمانية
                       </Button>
                       <p className="text-xs text-muted-foreground mt-2">
-                        🔒 الدفع آمن عبر Paylink. سيتم إصدار العقد تلقائياً بعد نجاح الدفع وإشعار الطرفين عبر البريد.
+                        🔒 الدفع آمن بالبطاقة الائتمانية. سيتم إصدار العقد تلقائياً بعد نجاح الدفع وإشعار الطرفين عبر البريد.
                       </p>
                     </div>
                   </CardContent>
