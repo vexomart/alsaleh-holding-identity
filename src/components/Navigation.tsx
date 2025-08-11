@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,9 @@ const Navigation = () => {
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
   const location = useLocation();
+  const servicesHideRef = useRef<number | undefined>(undefined);
+  const productsHideRef = useRef<number | undefined>(undefined);
+  const othersHideRef = useRef<number | undefined>(undefined);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -172,8 +175,8 @@ const Navigation = () => {
               {/* Services Dropdown */}
               <div 
                 className="relative group"
-                onMouseEnter={() => setShowServices(true)}
-                onMouseLeave={() => setShowServices(false)}
+                onMouseEnter={() => { if (servicesHideRef.current) clearTimeout(servicesHideRef.current); setShowServices(true); }}
+                onMouseLeave={() => { servicesHideRef.current = window.setTimeout(() => setShowServices(false), 200); }}
               >
                 <button 
                   className="relative flex items-center gap-1 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300"
@@ -184,7 +187,10 @@ const Navigation = () => {
                 </button>
                 
                 {showServices && (
-                  <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
+                  <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-lg shadow-xl border border-gray-100 z-[60] max-h-[70vh] overflow-y-auto overscroll-contain"
+                    onMouseEnter={() => { if (servicesHideRef.current) clearTimeout(servicesHideRef.current); setShowServices(true); }}
+                    onMouseLeave={() => { servicesHideRef.current = window.setTimeout(() => setShowServices(false), 200); }}
+                  >
                     <div className="p-3">
                       <div className="grid grid-cols-2 gap-2">
                         {services.map((service, index) => {
@@ -211,8 +217,8 @@ const Navigation = () => {
               {/* Others Dropdown */}
               <div 
                 className="relative group"
-                onMouseEnter={() => setShowOthers(true)}
-                onMouseLeave={() => setShowOthers(false)}
+                onMouseEnter={() => { if (othersHideRef.current) clearTimeout(othersHideRef.current); setShowOthers(true); }}
+                onMouseLeave={() => { othersHideRef.current = window.setTimeout(() => setShowOthers(false), 200); }}
               >
                 <button 
                   className="relative flex items-center gap-1 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300"
@@ -223,7 +229,10 @@ const Navigation = () => {
                 </button>
                 
                 {showOthers && (
-                  <div className="absolute top-full left-0 mt-2 w-60 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
+                  <div className="absolute top-full left-0 mt-1 w-60 bg-white rounded-lg shadow-xl border border-gray-100 z-[60] max-h-[70vh] overflow-y-auto overscroll-contain"
+                    onMouseEnter={() => { if (othersHideRef.current) clearTimeout(othersHideRef.current); setShowOthers(true); }}
+                    onMouseLeave={() => { othersHideRef.current = window.setTimeout(() => setShowOthers(false), 200); }}
+                  >
                     <div className="p-3">
                       <div className="space-y-1">
                         {othersItems.map((item, index) => {
@@ -266,8 +275,8 @@ const Navigation = () => {
               {/* Products Dropdown */}
               <div 
                 className="relative group"
-                onMouseEnter={() => setShowProducts(true)}
-                onMouseLeave={() => setShowProducts(false)}
+                onMouseEnter={() => { if (productsHideRef.current) clearTimeout(productsHideRef.current); setShowProducts(true); }}
+                onMouseLeave={() => { productsHideRef.current = window.setTimeout(() => setShowProducts(false), 200); }}
               >
                 <button 
                   className="relative flex items-center gap-1 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300"
@@ -278,7 +287,10 @@ const Navigation = () => {
                 </button>
                 
                 {showProducts && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50">
+                  <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-xl border border-gray-100 z-[60] max-h-[70vh] overflow-y-auto overscroll-contain"
+                    onMouseEnter={() => { if (productsHideRef.current) clearTimeout(productsHideRef.current); setShowProducts(true); }}
+                    onMouseLeave={() => { productsHideRef.current = window.setTimeout(() => setShowProducts(false), 200); }}
+                  >
                     <div className="p-3">
                       <a
                         href="/ready-projects"
