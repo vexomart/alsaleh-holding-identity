@@ -474,26 +474,173 @@ const DigitalContracts = () => {
         <!-- الشروط والأحكام -->
         <div style="margin-bottom: 15pt;">
           <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
-            الشروط والأحكام العامة
+            الشروط والأحكام العامة (وفق أفضل الممارسات العالمية)
           </h3>
           <div style="border: 1px solid #d1d5db; padding: 12pt;">
+            <!-- تمهيد وتعريفات -->
             <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الأولى - بداية العقد وصلاحيته:</strong><br>
-              يعتبر هذا العقد ساري المفعول من تاريخ سداد الدفعة المقدمة الأولى (50% من القيمة الإجمالية). العقد غير معتمد ولا يبدأ العمل إلا بعد استلام الدفعة المقدمة.
+              <strong style="color: #1e3a8a;">المادة الأولى - التمهيد والتعريفات:</strong><br>
+              يُعد التمهيد وما ورد أعلاه جزءاً لا يتجزأ من هذا العقد. يُقصد بـ "الطرف الأول" شركة علي صالح الشهري القابضة، وبـ "الطرف الثاني" العميل الموضّحة بياناته أعلاه، وبـ "الخدمات" الأعمال الواردة في جدول نطاق العمل ومخرجاته.
             </div>
+
+            <!-- بدء السريان -->
             <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثانية - المبلغ الإجمالي ونظام الدفع:</strong><br>
-              المبلغ الإجمالي للعقد: ${formData.totalPrice.toLocaleString()} ريال سعودي<br>
-              الدفعة الأولى (50%): ${Math.round(formData.totalPrice * 0.5).toLocaleString()} ريال سعودي - مستحقة فور التوقيع<br>
-              الدفعة الثانية (50%): ${Math.round(formData.totalPrice * 0.5).toLocaleString()} ريال سعودي - مستحقة قبل التسليم النهائي
+              <strong style="color: #1e3a8a;">المادة الثانية - بدء السريان واعتماد العقد:</strong><br>
+              يبدأ سريان العقد ويلتزم الطرفان به عند سداد الدفعة المقدمة الأولى وقدرها 50% من قيمة العقد. ولا يُعد هذا العقد نافذاً قبل ذلك.
             </div>
+
+            <!-- نطاق العمل ومخرجاته -->
             <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثالثة - الضمان:</strong><br>
-              تلتزم الشركة بضمان شامل لمدة 6 أشهر من تاريخ التسليم النهائي، مع دعم فني مجاني خلال فترة الضمان.
+              <strong style="color: #1e3a8a;">المادة الثالثة - نطاق العمل ومخرجاته:</strong><br>
+              يلتزم الطرف الأول بتنفيذ الخدمات وفق نطاق العمل التالي ومخرجاته المتفق عليها:
+              <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
+                <tr style="background:#f3f4f6;">
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">#</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">المخرج</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الوصف</th>
+                </tr>
+                ${formData.selectedServices.map((s, i) => `
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">${i+1}</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">${s.name}</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">${s.description}</td>
+                </tr>`).join('')}
+              </table>
             </div>
+
+            <!-- الجدول الزمني والمعالم -->
             <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الرابعة - الالتزامات:</strong><br>
-              يلتزم الطرف الأول بتنفيذ الخدمات وفق أعلى معايير الجودة والأداء. يلتزم الطرف الثاني بتوفير جميع المتطلبات والمعلومات اللازمة.
+              <strong style="color: #1e3a8a;">المادة الرابعة - الجدول الزمني والمعالم الرئيسية:</strong><br>
+              يلتزم الطرف الأول بالجدول الزمني التالي على أن يتم التحديث كتابةً عند أي تغيير متفق عليه:
+              <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
+                <tr style="background:#f3f4f6;">
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">المعلم</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الوصف</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">المدة المتوقعة</th>
+                </tr>
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">التحليل والمواءمة</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">جمع المتطلبات وتوثيقها ومراجعتها</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">5 - 10 أيام عمل</td>
+                </tr>
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">التنفيذ والتطوير</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">بناء الحلول وفق المواصفات المعتمدة</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">15 - 30 يوم عمل</td>
+                </tr>
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الاختبارات والتسليم</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">اختبارات القبول والتسليم النهائي</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">5 - 10 أيام عمل</td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- الدفعات وجدول السداد -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة الخامسة - الدفعات وجدول السداد:</strong><br>
+              القيمة الإجمالية للعقد: ${formData.totalPrice.toLocaleString()} ريال سعودي.
+              <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
+                <tr style="background:#f3f4f6;">
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الدفعة</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">النسبة</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">القيمة</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">موعد الاستحقاق</th>
+                </tr>
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">دفعة مقدمة</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">50%</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">${Math.round(formData.totalPrice * 0.5).toLocaleString()}</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">عند توقيع العقد</td>
+                </tr>
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الدفعة النهائية</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">50%</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">${Math.round(formData.totalPrice * 0.5).toLocaleString()}</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">قبل التسليم النهائي</td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- التغييرات والنطاق -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة السادسة - إدارة التغييرات:</strong><br>
+              أي تعديل على نطاق العمل أو المخرجات يكون عبر طلب تغيير مكتوب يوضح الأثر الزمني والمالي ويُعتمد من الطرفين قبل التنفيذ.
+            </div>
+
+            <!-- السرية والبيانات -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة السابعة - السرية وحماية البيانات (سياسة الخصوصية):</strong><br>
+              يلتزم الطرفان بالحفاظ على سرية جميع المعلومات والبيانات المتبادلة وعدم الإفصاح عنها لأي طرف ثالث إلا بموافقة كتابية مسبقة، مع الالتزام بالأنظمة السعودية لحماية البيانات.
+            </div>
+
+            <!-- الملكية الفكرية -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة الثامنة - الملكية الفكرية:</strong><br>
+              تنتقل ملكية المخرجات النهائية للطرف الثاني بعد السداد الكامل لكافة المستحقات، ويحتفظ الطرف الأول بحقوقه في الأدوات والمنهجيات والمواد العامة غير الخاصة بالمشروع.
+            </div>
+
+            <!-- الضمان والمسؤولية -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة التاسعة - الضمان وحدود المسؤولية:</strong><br>
+              يوفر الطرف الأول ضماناً لمدة 6 أشهر على المخرجات ضد العيوب الفنية، ولا يسأل عن أي أضرار غير مباشرة أو تبعية. يقتصر التعويض - إن ثبت - على ما لا يتجاوز مجموع المبالغ المدفوعة.
+            </div>
+
+            <!-- الإنهاء -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة العاشرة - الإنهاء:</strong><br>
+              يجوز لأي طرف إنهاء العقد بإشعار خطي مسبق (15) يوماً عند إخلال الطرف الآخر بالتزاماته الجوهرية وعدم معالجتها خلال مدة معقولة. تُسوى المستحقات حتى تاريخ الإنهاء.
+            </div>
+
+            <!-- القوة القاهرة -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة الحادية عشرة - القوة القاهرة:</strong><br>
+              لا يتحمل أي طرف المسؤولية عن التأخير أو التقصير الناتج عن أحداث خارجة عن الإرادة مثل الكوارث أو القرارات السيادية أو الأعطال العامة.
+            </div>
+
+            <!-- القبول ومعايير التسليم -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة الثانية عشرة - القبول ومعايير التسليم:</strong><br>
+              يُعد التسليم نهائياً بعد اجتياز اختبارات القبول (UAT) وإقرار الطرف الثاني خلال (5) أيام عمل، وإلا اعتُبر القبول ضمنياً مع معالجة الملاحظات المتفق عليها.
+            </div>
+
+            <!-- مستوى الخدمة (SLA) -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة الثالثة عشرة - مستوى الخدمة (SLA):</strong><br>
+              أوقات العمل الرسمية: الأحد - الخميس من 9 صباحاً حتى 6 مساءً. أزمنة الاستجابة للحالات: حرجة 4 ساعات، عالية 1 يوم عمل، متوسطة 2 يوم عمل.
+              <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
+                <tr style="background:#f3f4f6;">
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الأولوية</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">وقت الاستجابة</th>
+                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">وقت المعالجة المبدئي</th>
+                </tr>
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">حرجة</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 4 ساعات</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 1 يوم</td>
+                </tr>
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">عالية</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 1 يوم</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 2 يوم</td>
+                </tr>
+                <tr>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">متوسطة</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 2 يوم</td>
+                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 3 يوم</td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- القانون والاختصاص -->
+            <div style="margin-bottom: 10pt;">
+              <strong style="color: #1e3a8a;">المادة الرابعة عشرة - القانون والاختصاص:</strong><br>
+              يخضع هذا العقد للأنظمة واللوائح المعمول بها في المملكة العربية السعودية، ويكون الاختصاص القضائي لمحاكم مدينة جدة ما لم يُتفق خلاف ذلك.
+            </div>
+
+            <!-- ملاحظات عامة -->
+            <div style="margin-bottom: 0; background:#fff7ed; border:1px dashed #f59e0b; padding:10pt;">
+              <strong style="color:#92400e;">ملاحظة:</strong> يُعد هذا العقد صارماً ويلتزم بمعايير الشركات العالمية في الحوكمة وإدارة المشاريع، وأي استثناءات يجب أن تُوثّق كتابياً.
             </div>
           </div>
         </div>
