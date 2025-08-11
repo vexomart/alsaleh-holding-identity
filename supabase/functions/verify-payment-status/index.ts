@@ -138,27 +138,39 @@ serve(async (req) => {
           // إنشاء وإرسال الفاتورة إذا كان الدفع ناجحاً
           if (newStatus === 'PAID') {
             try {
-              // إنشاء الفاتورة
+              // إنشاء الفاتورة مع تمرير بيانات العميل والمعاملة
               const invoiceResponse = await supabaseClient.functions.invoke('invoice-system', {
                 body: {
+                  action: 'generate',
                   transactionId: transactionId,
-                  action: 'generate'
-                }
+                  customer: {
+                    name: transaction.customer_name,
+                    email: transaction.customer_email,
+                    phone: transaction.customer_phone,
+                  },
+                  invoice: {
+                    amount: Number(transaction.amount),
+                    currency: transaction.currency || 'SAR',
+                    offer_title: transaction.offer_title,
+                    notes: `إنشاء تلقائي عبر التحقق من الدفع للمعاملة ${transactionId}`,
+                  },
+                },
               });
 
-              if (invoiceResponse.data?.success) {
+              if (invoiceResponse.data?.success && invoiceResponse.data?.invoice?.id) {
+                const createdInvoiceId = invoiceResponse.data.invoice.id as string;
                 console.log('تم إنشاء الفاتورة بنجاح:', invoiceResponse.data.invoice);
-                // إرسال الفاتورة بالإيميل
+                // إرسال الفاتورة بالإيميل باستخدام معرف الفاتورة
                 const sendResponse = await supabaseClient.functions.invoke('invoice-system', {
-                  body: { transactionId: transactionId, action: 'send' }
+                  body: { action: 'send', invoiceId: createdInvoiceId },
                 });
                 if (sendResponse.data?.success) {
                   console.log('تم إرسال الفاتورة بالإيميل بنجاح');
                 } else {
-                  console.error('خطأ في إرسال الفاتورة:', sendResponse.error);
+                  console.error('خطأ في إرسال الفاتورة:', sendResponse.error || sendResponse.data);
                 }
               } else {
-                console.error('خطأ في إنشاء الفاتورة:', invoiceResponse.error);
+                console.error('خطأ في إنشاء الفاتورة:', invoiceResponse.error || invoiceResponse.data);
               }
 
               // إصدار العقد تلقائياً بعد نجاح الدفع (إن لم يكن مُصدَراً)
