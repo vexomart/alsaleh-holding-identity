@@ -17,6 +17,8 @@ import SEO from "@/components/SEO";
 import ContractHero from "@/components/contract/ContractHero";
 import ContractSteps from "@/components/contract/ContractSteps";
 import CurrentOffersSection from "@/components/CurrentOffersSection";
+import { currentOffers } from "@/data/offers";
+import { Slider } from "@/components/ui/slider";
 
 interface Service {
   id: string;
@@ -77,6 +79,8 @@ const DigitalContracts = () => {
   const [showServices, setShowServices] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const signatureRef = useRef<SignatureCanvas>(null);
+  const [penColor, setPenColor] = useState<string>("#0F172A");
+  const [lineWidth, setLineWidth] = useState<number>(2);
 
   // SEO structured data for services
   const servicesJsonLd = COMPANY_SERVICES.map((s) => ({
@@ -142,9 +146,31 @@ const DigitalContracts = () => {
     }
   };
 
-  const filteredServices = selectedCategory === 'all' 
-    ? COMPANY_SERVICES 
-    : COMPANY_SERVICES.filter(service => service.category === selectedCategory);
+  // تراجع عن آخر ضربة قلم
+  const undoSignature = () => {
+    if (!signatureRef.current) return;
+    const data = signatureRef.current.toData();
+    if (!data || data.length === 0) return;
+    data.pop();
+    signatureRef.current.fromData(data);
+  };
+
+  // دمج خدمات العروض الحالية ضمن الخدمات
+  const ALL_SERVICES: Service[] = [
+    ...COMPANY_SERVICES,
+    ...currentOffers.map((o) => ({
+      id: `offer-${o.id}`,
+      name: o.title,
+      description: `عرض خاص: ${o.description}`,
+      basePrice: o.currentPriceSAR,
+      category: 'offers',
+    }))
+  ];
+
+  const filteredServices = selectedCategory === 'all'
+    ? ALL_SERVICES
+    : ALL_SERVICES.filter(service => service.category === selectedCategory);
+
 
   // دالة إنشاء الختم الرقمي للشركة
   const createDigitalStamp = () => {
@@ -660,6 +686,7 @@ const DigitalContracts = () => {
                     </SelectTrigger>
                     <SelectContent className="z-50 bg-popover">
                       <SelectItem value="all">جميع الخدمات</SelectItem>
+                      <SelectItem value="offers">العروض الحالية</SelectItem>
                       <SelectItem value="design">خدمات التصميم</SelectItem>
                       <SelectItem value="web">تطوير المواقع</SelectItem>
                       <SelectItem value="mobile">تطبيقات الجوال</SelectItem>
@@ -742,18 +769,41 @@ const DigitalContracts = () => {
                 التوقيع الرقمي
               </h3>
               <div className="border-2 border-dashed border-muted-foreground rounded-lg p-4">
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">لون القلم</span>
+                    <input
+                      type="color"
+                      value={penColor}
+                      onChange={(e) => setPenColor(e.target.value)}
+                      className="h-9 w-9 rounded border border-input bg-background cursor-pointer"
+                      aria-label="اختيار لون القلم"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                    <span className="text-sm whitespace-nowrap">السُمك</span>
+                    <div className="w-40">
+                      <Slider value={[lineWidth]} min={1} max={6} step={1} onValueChange={(v) => setLineWidth(v[0])} />
+                    </div>
+                    <span className="text-xs text-muted-foreground">{lineWidth}px</span>
+                  </div>
+                  <div className="flex gap-2 ml-auto">
+                    <Button onClick={undoSignature} variant="outline" size="sm">تراجع</Button>
+                    <Button onClick={clearSignature} variant="outline" size="sm">مسح</Button>
+                    <Button onClick={saveSignature} size="sm">حفظ</Button>
+                  </div>
+                </div>
                 <SignatureCanvas
                   ref={signatureRef}
+                  penColor={penColor}
+                  minWidth={lineWidth}
+                  maxWidth={lineWidth}
                   canvasProps={{
                     width: 500,
                     height: 200,
-                    className: 'signature-canvas w-full border rounded'
+                    className: 'signature-canvas w-full border rounded bg-background'
                   }}
                 />
-                <div className="flex gap-2 mt-2">
-                  <Button onClick={clearSignature} variant="outline" size="sm">مسح التوقيع</Button>
-                  <Button onClick={saveSignature} size="sm">حفظ التوقيع</Button>
-                </div>
               </div>
             </div>
 

@@ -10,71 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Clock, Star, Zap, Gift, ArrowRight, Timer, CheckCircle, Phone, Send, CreditCard, Loader2 } from "lucide-react";
 import OfferRequestForm from "./OfferRequestForm";
 
-const currentOffers = [
-  {
-    id: 1,
-    title: "باقة المواقع الكاملة",
-    description: "موقع إلكتروني احترافي مع لوحة تحكم ونظام إدارة محتوى متكامل",
-    originalPrice: "15,000",
-    currentPrice: "10",
-    discount: "99%",
-    timeLeft: "15 يوم",
-    features: [
-      "تصميم مخصص احترافي",
-      "استضافة مجانية لسنة كاملة", 
-      "دعم فني 24/7",
-      "تحسين محركات البحث SEO",
-      "إدارة ومتابعة لمدة 6 شهور",
-      "دعم فني شامل"
-    ],
-    badge: "الأكثر طلباً",
-    icon: Zap,
-    color: "from-blue-500 to-purple-600",
-    bgGradient: "from-blue-50 to-purple-50"
-  },
-  {
-    id: 2,
-    title: "باقة التسويق الرقمي",
-    description: "خطة تسويقية شاملة لوسائل التواصل الاجتماعي مع إدارة احترافية",
-    originalPrice: "8,000",
-    currentPrice: "5,999",
-    discount: "25%",
-    timeLeft: "10 أيام",
-    features: [
-      "إدارة 5 منصات اجتماعية",
-      "محتوى إبداعي شهري",
-      "تقارير أداء تفصيلية",
-      "استشارة تسويقية مجانية",
-      "إدارة ومتابعة لمدة 6 شهور",
-      "دعم فني متواصل"
-    ],
-    badge: "عرض محدود",
-    icon: Star,
-    color: "from-pink-500 to-red-600",
-    bgGradient: "from-pink-50 to-red-50"
-  },
-  {
-    id: 3,
-    title: "متجر إلكتروني متكامل",
-    description: "متجر إلكتروني بأحدث التقنيات وأنظمة الدفع المتطورة",
-    originalPrice: "25,000",
-    currentPrice: "18,999",
-    discount: "24%",
-    timeLeft: "20 يوم",
-    features: [
-      "تطبيق جوال iOS & Android",
-      "أنظمة دفع متعددة آمنة",
-      "إدارة مخزون ذكية",
-      "تقارير مبيعات متقدمة",
-      "إدارة ومتابعة لمدة 6 شهور",
-      "دعم فني كامل"
-    ],
-    badge: "جديد",
-    icon: Gift,
-    color: "from-green-500 to-teal-600",
-    bgGradient: "from-green-50 to-teal-50"
-  }
-];
+import { currentOffers } from "@/data/offers";
 
 const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -105,7 +41,7 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
 
     setIsLoading(true);
     try {
-      const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
+      const amount = offer.currentPriceSAR;
       
       const { data, error } = await supabase.functions.invoke('tap-payment', {
         body: {
@@ -162,7 +98,7 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
             <h3 className="font-bold text-lg mb-2">{offer.title}</h3>
             <div className="flex justify-between items-center">
               <span className="text-2xl font-bold text-green-600">
-                {offer.currentPrice} ر.س
+                {offer.currentPriceSAR.toLocaleString()} ر.س
               </span>
               <Badge variant="destructive">خصم {offer.discount}</Badge>
             </div>
@@ -224,7 +160,7 @@ const TapPaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.React
             ) : (
               <>
                 <CreditCard className="w-5 h-5 ml-2" />
-                ادفع {offer.currentPrice} ر.س
+                ادفع {offer.currentPriceSAR.toLocaleString()} ر.س
               </>
             )}
           </Button>
@@ -329,7 +265,7 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
                   <div className="flex items-center gap-4 mb-4">
                     <div 
                       className={`p-4 rounded-2xl bg-gradient-to-br ${offer.color} cursor-pointer hover:scale-110 transition-transform duration-300 shadow-lg relative z-20`}
-                      onClick={() => openWhatsApp(offer.title, offer.currentPrice, offer.originalPrice, offer.discount, offer.timeLeft, offer.features)}
+                      onClick={() => openWhatsApp(offer.title, offer.currentPriceSAR.toLocaleString(), offer.originalPriceSAR.toLocaleString(), offer.discount, offer.timeLeft, offer.features)}
                       title="تواصل عبر الواتساب"
                     >
                       <IconComponent className="w-8 h-8 text-white" />
@@ -350,17 +286,17 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
                     <div className="relative z-10">
                       <div className="flex items-center justify-center gap-3 mb-3">
                         <span className="text-4xl font-black bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                          {offer.currentPrice} ر.س
+                          {offer.currentPriceSAR.toLocaleString()} ر.س
                         </span>
                         <Badge variant="destructive" className="text-lg px-3 py-1 animate-bounce">
                           خصم {offer.discount}
                         </Badge>
                       </div>
                       <span className="text-xl text-muted-foreground line-through font-medium">
-                        بدلاً من {offer.originalPrice} ر.س
+                        بدلاً من {offer.originalPriceSAR.toLocaleString()} ر.س
                       </span>
                       <div className="mt-2 text-sm text-green-600 font-semibold">
-                        وفر {parseInt(offer.originalPrice) - parseInt(offer.currentPrice)} ريال
+                        وفر {(offer.originalPriceSAR - offer.currentPriceSAR).toLocaleString()} ريال
                       </div>
                     </div>
                   </div>
@@ -387,7 +323,7 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
                           size="lg"
                         >
                           <CreditCard className="w-5 h-5 ml-2" />
-                          ادفع الآن - {offer.currentPrice} ر.س
+                          ادفع الآن - {offer.currentPriceSAR.toLocaleString()} ر.س
                           <ArrowRight className="w-5 h-5 mr-2" />
                         </Button>
                       }
@@ -395,7 +331,11 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
                     
                     {/* Request Form Button */}
                     <OfferRequestForm
-                      offer={offer}
+                      offer={{
+                        ...offer,
+                        currentPrice: offer.currentPriceSAR.toLocaleString(),
+                        originalPrice: offer.originalPriceSAR.toLocaleString(),
+                      }}
                       trigger={
                         <Button 
                           variant="outline"
