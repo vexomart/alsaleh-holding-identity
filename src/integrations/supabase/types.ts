@@ -113,6 +113,27 @@ export type Database = {
         }
         Relationships: []
       }
+      invoice_counters: {
+        Row: {
+          counter: number
+          created_at: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          counter?: number
+          created_at?: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          counter?: number
+          created_at?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
       invoices: {
         Row: {
           amount: number
