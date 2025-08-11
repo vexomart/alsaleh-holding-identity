@@ -101,6 +101,7 @@ import EmailTest from "./pages/EmailTest";
 import EnhancedDesignCategory from "./pages/EnhancedDesignCategory";
 import InvoiceAdmin from "./pages/InvoiceAdmin";
 import InvoiceViewer from "./pages/InvoiceViewer";
+import CookiePolicy from "./pages/CookiePolicy";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -129,6 +130,7 @@ const App = () => {
               <Route path="/contact" element={<Contact />} />
               <Route path="/support" element={<Support />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/jobs" element={<Careers />} />
