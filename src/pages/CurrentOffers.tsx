@@ -147,7 +147,7 @@ const currentOffers = [
 const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<'tap' | 'paylink' | 'stc_pay'>('tap');
+  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<'paylink' | 'stc_pay'>('paylink');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -187,9 +187,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
       
       // Choose payment function based on selected gateway
-      const paymentFunction = selectedPaymentGateway === 'tap' ? 'tap-payment' : 
-                             selectedPaymentGateway === 'paylink' ? 'paylink-payment' : 
-                             'stc-pay';
+      const paymentFunction = selectedPaymentGateway === 'paylink' ? 'paylink-payment' : 'stc-pay';
       
       const payload = {
         amount: amount,
@@ -350,7 +348,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
           toast({
             title: "تم إنشاء رابط الدفع بنجاح",
             description: `سيتم فتح صفحة الدفع الآن عبر ${
-              selectedPaymentGateway === 'tap' ? 'Tap' : 'مدى/فيزا/أبل باي'
+              selectedPaymentGateway === 'paylink' ? 'مدى/فيزا/أبل باي' : 'STC Pay'
             }`,
           });
           
@@ -457,14 +455,6 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
             {/* Active Payment Methods - Premium Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { 
-                  id: 'tap', 
-                  name: 'Tap Payments', 
-                  description: 'دفع آمن ومضمون',
-                  features: ['✓ حماية متقدمة', '✓ دفع فوري', '✓ دعم العملات المختلفة'],
-                  gradient: 'from-blue-500/20 to-indigo-500/20',
-                  borderGradient: 'from-blue-500 to-indigo-500'
-                },
                 { 
                   id: 'paylink', 
                   name: 'الدفع عن طريق مدى أو فيزا أو أبل باي', 
@@ -644,7 +634,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
                   <span>
                     {selectedPaymentGateway === 'stc_pay' ? 
                       `ادفع عبر STC Pay - ${offer.currentPrice} ر.س` :
-                      `ادفع عبر ${selectedPaymentGateway === 'tap' ? 'Tap Payments' : 'مدى/فيزا/أبل باي'} - ${offer.currentPrice} ر.س`
+                      `ادفع عبر ${selectedPaymentGateway === 'paylink' ? 'مدى/فيزا/أبل باي' : 'STC Pay'} - ${offer.currentPrice} ر.س`
                     }
                   </span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

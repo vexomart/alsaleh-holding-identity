@@ -57,13 +57,6 @@ const SoftwareProducts = () => {
       description: 'الدفع عبر Paylink (مدى/فيزا/أبل باي)'
     },
     {
-      id: 'tap',
-      name: 'Tap',
-      icon: Banknote,
-      color: 'from-green-500 to-green-600',
-      description: 'دفع سريع عبر Tap'
-    },
-    {
       id: 'tamara',
       name: 'تمارا',
       icon: Wallet,
@@ -110,18 +103,6 @@ const SoftwareProducts = () => {
             offer_title: productName,
             description: `شراء منتج: ${productName}`,
             success_url: window.location.origin
-          };
-          break;
-        case 'tap':
-          functionName = 'tap-payment';
-          paymentData = {
-            amount: 4999,
-            currency: 'SAR',
-            customer_name: 'عميل',
-            customer_email: 'customer@example.com',
-            customer_phone: '966500000000',
-            offer_title: productName,
-            description: `شراء منتج: ${productName}`
           };
           break;
         case 'tamara':

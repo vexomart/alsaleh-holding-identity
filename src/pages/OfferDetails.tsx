@@ -220,7 +220,7 @@ const OfferDetails = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('tap');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('paylink');
   const [paymentData, setPaymentData] = useState({
     name: "",
     email: "",
@@ -277,9 +277,6 @@ const OfferDetails = () => {
       };
 
       switch (selectedPaymentMethod) {
-        case 'tap':
-          functionName = 'tap-payment';
-          break;
         case 'paylink':
           functionName = 'paylink-payment';
           break;
@@ -290,7 +287,7 @@ const OfferDetails = () => {
           functionName = 'stc-pay';
           break;
         default:
-          functionName = 'tap-payment';
+          functionName = 'paylink-payment';
       }
       
       const { data, error } = await supabase.functions.invoke(functionName, {
@@ -498,20 +495,6 @@ const OfferDetails = () => {
                       <div className="space-y-3">
                         <h4 className="font-bold text-lg">طرق الدفع المتاحة:</h4>
                         <div className="grid grid-cols-2 gap-3">
-                          <button
-                            onClick={() => setSelectedPaymentMethod('tap')}
-                            className={`p-4 border-2 rounded-lg transition-all duration-200 ${
-                              selectedPaymentMethod === 'tap'
-                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
-                                : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                          >
-                            <div className="text-center">
-                              <CreditCard className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                              <div className="font-bold text-sm">Tap</div>
-                              <div className="text-xs text-muted-foreground">فيزا، ماستركارد</div>
-                            </div>
-                          </button>
                           
                           <button
                             onClick={() => setSelectedPaymentMethod('paylink')}

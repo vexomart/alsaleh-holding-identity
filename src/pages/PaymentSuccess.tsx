@@ -22,7 +22,7 @@ const PaymentSuccess = () => {
       // Get transaction details from URL parameters
       const chargeId =
         // Direct gateway params
-        searchParams.get("tap_id") ||
+        
         searchParams.get("paylink_id") ||
         searchParams.get("tamara_id") ||
         searchParams.get("stc_id") ||
@@ -45,7 +45,7 @@ const PaymentSuccess = () => {
         const { data: transaction, error } = await supabase
           .from('payment_transactions')
           .select('*')
-          .or(`tap_charge_id.eq.${chargeId},paylink_transaction_no.eq.${chargeId},tamara_order_id.eq.${chargeId},stc_pay_reference.eq.${chargeId}`)
+          .or(`paylink_transaction_no.eq.${chargeId},tamara_order_id.eq.${chargeId},stc_pay_reference.eq.${chargeId}`)
           .maybeSingle();
 
         if (error) {
@@ -183,7 +183,7 @@ const PaymentSuccess = () => {
         const { data: fetched } = await supabase
           .from('payment_transactions')
           .select('*')
-          .or(`tap_charge_id.eq.${tx.chargeId},paylink_transaction_no.eq.${tx.chargeId},tamara_order_id.eq.${tx.chargeId},stc_pay_reference.eq.${tx.chargeId}`)
+          .or(`paylink_transaction_no.eq.${tx.chargeId},tamara_order_id.eq.${tx.chargeId},stc_pay_reference.eq.${tx.chargeId}`)
           .maybeSingle();
         if (fetched) currentTx = fetched;
       }
