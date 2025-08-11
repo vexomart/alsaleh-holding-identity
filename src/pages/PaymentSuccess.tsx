@@ -46,7 +46,7 @@ const PaymentSuccess = () => {
           .from('payment_transactions')
           .select('*')
           .or(`tap_charge_id.eq.${chargeId},paylink_transaction_no.eq.${chargeId},tamara_order_id.eq.${chargeId},stc_pay_reference.eq.${chargeId}`)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error('Error fetching transaction:', error);
