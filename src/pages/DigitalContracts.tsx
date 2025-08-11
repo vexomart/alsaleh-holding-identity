@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -35,14 +35,17 @@ import {
   Trash2,
   Save,
   Undo2,
-  Eraser
+  Eraser,
+  Calendar,
+  Clock,
+  Star,
+  Award,
+  Zap
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import SignatureCanvas from 'react-signature-canvas';
 import SEO from "@/components/SEO";
-import { currentOffers } from "@/data/offers";
-
 
 interface Service {
   id: string;
@@ -99,14 +102,12 @@ const DigitalContracts = () => {
     digitalSignature: '',
   });
 
-  const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const signatureRef = useRef<SignatureCanvas>(null);
   const [penColor, setPenColor] = useState<string>("#1e40af");
   const [contractFormType, setContractFormType] = useState<'individual' | 'institution' | 'company'>('individual');
-  
 
   // SEO structured data for services
   const servicesJsonLd = COMPANY_SERVICES.map((s) => ({
@@ -181,22 +182,41 @@ const DigitalContracts = () => {
     signatureRef.current.fromData(data);
   };
 
-  // دمج خدمات العروض الحالية ضمن الخدمات
-  const ALL_SERVICES: Service[] = [
-    ...COMPANY_SERVICES,
-    ...currentOffers.map((o) => ({
-      id: `offer-${o.id}`,
-      name: o.title,
-      description: `عرض خاص: ${o.description}`,
-      basePrice: o.currentPriceSAR,
-      category: 'offers',
-    }))
-  ];
-
   const filteredServices = selectedCategory === 'all'
-    ? ALL_SERVICES
-    : ALL_SERVICES.filter(service => service.category === selectedCategory);
+    ? COMPANY_SERVICES
+    : COMPANY_SERVICES.filter(service => service.category === selectedCategory);
 
+  // دالة التحقق من صحة النموذج
+  const isFormValid = () => {
+    return (
+      formData.clientName &&
+      formData.clientEmail &&
+      formData.clientPhone &&
+      formData.clientID &&
+      formData.selectedServices.length > 0 &&
+      formData.agreeToTerms &&
+      formData.agreeToPrivacy &&
+      formData.digitalSignature
+    );
+  };
+
+  // دالة حساب نسبة إكمال النموذج
+  const getFormProgress = () => {
+    const fields = [
+      formData.clientName,
+      formData.clientEmail,
+      formData.clientPhone,
+      formData.clientID,
+      formData.selectedServices.length > 0,
+      formData.projectDescription,
+      formData.agreeToTerms,
+      formData.agreeToPrivacy,
+      formData.digitalSignature
+    ];
+    
+    const completedFields = fields.filter(Boolean).length;
+    return (completedFields / fields.length) * 100;
+  };
 
   // دالة إنشاء الختم الرقمي للشركة
   const createDigitalStamp = () => {
@@ -394,7 +414,7 @@ const DigitalContracts = () => {
           </div>
         </div>
         
-        <!-- الشروط والأحكام المحدثة -->
+        <!-- الشروط والأحكام -->
         <div style="margin-bottom: 15pt;">
           <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
             الشروط والأحكام العامة
@@ -405,466 +425,820 @@ const DigitalContracts = () => {
               يعتبر هذا العقد ساري المفعول من تاريخ سداد الدفعة المقدمة الأولى (50% من القيمة الإجمالية). العقد غير معتمد ولا يبدأ العمل إلا بعد استلام الدفعة المقدمة.
             </div>
             <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثانية - مدة التنفيذ:</strong><br>
-              يتم تحديد مدة تنفيذ المشروع حسب طبيعة الخدمات المطلوبة، ويبدأ احتساب المدة من تاريخ استلام الدفعة المقدمة وجميع المتطلبات اللازمة من العميل.
+              <strong style="color: #1e3a8a;">المادة الثانية - المبلغ الإجمالي ونظام الدفع:</strong><br>
+              المبلغ الإجمالي للعقد: ${formData.totalPrice.toLocaleString()} ريال سعودي<br>
+              الدفعة الأولى (50%): ${Math.round(formData.totalPrice * 0.5).toLocaleString()} ريال سعودي - مستحقة فور التوقيع<br>
+              الدفعة الثانية (50%): ${Math.round(formData.totalPrice * 0.5).toLocaleString()} ريال سعودي - مستحقة قبل التسليم النهائي
             </div>
             <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثالثة - التزامات الطرف الأول (الشركة):</strong><br>
-              • تقديم الخدمة وفق أعلى معايير الجودة والمواصفات المتفق عليها<br>
-              • الالتزام بالمواعيد المحددة شريطة توفر جميع المتطلبات من العميل<br>
-              • تقديم الدعم التقني لمدة ستة أشهر من تاريخ التسليم النهائي
+              <strong style="color: #1e3a8a;">المادة الثالثة - الضمان:</strong><br>
+              تلتزم الشركة بضمان شامل لمدة 6 أشهر من تاريخ التسليم النهائي، مع دعم فني مجاني خلال فترة الضمان.
             </div>
             <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الرابعة - التزامات الطرف الثاني (العميل):</strong><br>
-              • سداد الدفعة المقدمة (50%) لاعتماد العقد وبدء العمل<br>
-              • توفير جميع المتطلبات والبيانات اللازمة في الوقت المحدد<br>
-              • سداد الدفعة الثانية (50%) عند الانتهاء من المشروع وقبل التسليم النهائي<br>
-              • عدم تأخير المراجعات والموافقات على مراحل العمل
-            </div>
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الخامسة - الضمان والصيانة:</strong><br>
-              تضمن الشركة سلامة العمل وجودته لمدة ستة أشهر من تاريخ التسليم النهائي، مع توفير الدعم التقني المجاني خلال فترة الضمان.
-            </div>
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة السادسة - السرية وحقوق الملكية:</strong><br>
-              يتعهد الطرفان بالحفاظ على سرية جميع المعلومات المتبادلة. حقوق الملكية الفكرية للعمل تنتقل للعميل بعد سداد كامل المبلغ المستحق.
-            </div>
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة السابعة - التأخير وإيقاف العمل:</strong><br>
-              في حالة تأخير العميل في سداد المستحقات، يحق للشركة إيقاف العمل وتطبيق غرامة تأخير قدرها 2% من المبلغ المستحق أسبوعياً.
-            </div>
-            <div>
-              <strong style="color: #1e3a8a;">المادة الثامنة - حل النزاعات:</strong><br>
-              في حالة نشوء أي نزاع، يتم حله ودياً أولاً، وإن لم يتم التوصل لحل يحال للتحكيم وفق الأنظمة السعودية المعمول بها في المملكة العربية السعودية.
+              <strong style="color: #1e3a8a;">المادة الرابعة - الالتزامات:</strong><br>
+              يلتزم الطرف الأول بتنفيذ الخدمات وفق أعلى معايير الجودة والأداء. يلتزم الطرف الثاني بتوفير جميع المتطلبات والمعلومات اللازمة.
             </div>
           </div>
         </div>
         
-        <!-- القيمة المالية -->
-        <div style="margin-bottom: 15pt;">
-          <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
-            القيمة المالية وطريقة السداد
-          </h3>
-          <table style="width: 100%; border-collapse: collapse; border: 1px solid #d1d5db;">
-            <tr style="background: #f3f4f6;">
-              <th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">البيان</th>
-              <th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">القيمة</th>
-            </tr>
-            <tr>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold;">قيمة الخدمات الأساسية</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">${formData.totalPrice.toLocaleString()} ريال</td>
-            </tr>
-            <tr>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold;">ضريبة القيمة المضافة (15%)</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">${(formData.totalPrice * 0.15).toLocaleString()} ريال</td>
-            </tr>
-            <tr style="background: #f3f4f6;">
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold;">القيمة الإجمالية شاملة الضريبة</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; font-weight: bold;">${(formData.totalPrice * 1.15).toLocaleString()} ريال</td>
-            </tr>
-          </table>
-          <div style="margin-top: 10pt; padding: 12pt; background: #fef2f2; border: 2px solid #dc2626; border-radius: 4pt;">
-            <div style="text-align: center; font-weight: bold; color: #dc2626; font-size: 12pt; margin-bottom: 8pt;">⚠️ شروط الدفع والاعتماد الإلزامية ⚠️</div>
-            <div style="color: #dc2626; font-weight: bold; margin-bottom: 6pt;">• العقد غير معتمد إلا بسداد الدفعة المقدمة الأولى (50%)</div>
-            <div style="color: #dc2626; font-weight: bold; margin-bottom: 6pt;">• الدفعة الثانية (50%) تستحق عند الانتهاء من المشروع وقبل التسليم النهائي</div>
-            <div style="color: #dc2626; font-weight: bold; margin-bottom: 6pt;">• لا يتم تسليم العمل إلا بعد سداد كامل المبلغ المستحق</div>
-            <div style="color: #dc2626; font-weight: bold;">• تأخير الدفع يؤدي إلى إيقاف العمل وتطبيق غرامة تأخير 2% أسبوعياً</div>
-          </div>
-        </div>
-        
-        <!-- التوقيعات والأختام الرقمية -->
+        <!-- التوقيعات والأختام -->
         <div style="margin-top: 30pt;">
-          <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 15pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
-            التوقيعات والأختام الرقمية
-          </h3>
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td style="width: 50%; padding: 20pt; border: 1px solid #d1d5db; text-align: center; vertical-align: top;">
+              <td style="width: 50%; padding: 20pt; text-align: center; border: 1px solid #d1d5db;">
                 <div style="margin-bottom: 15pt;">
-                  <img src="${createDigitalStamp()}" style="width: 120pt; height: 120pt;" alt="ختم الشركة الرقمي">
+                  <strong>الطرف الأول (الشركة)</strong>
                 </div>
-                <strong>الطرف الأول</strong><br>
-                شركة علي صالح الشهري القابضة<br>
-                الأستاذ / علي صالح الشهري<br>
-                المدير العام<br>
-                <div style="margin-top: 8pt; font-size: 9pt; color: #64748b;">
-                  الختم الرقمي المعتمد
+                <div style="margin-bottom: 40pt;">
+                  <img src="${createDigitalStamp()}" style="width: 80pt; height: 80pt;" />
+                </div>
+                <div style="border-top: 1px solid #000; padding-top: 8pt;">
+                  <strong>علي صالح الشهري</strong><br>
+                  المدير العام
                 </div>
               </td>
-              <td style="width: 50%; padding: 20pt; border: 1px solid #d1d5db; text-align: center; vertical-align: top;">
-                ${formData.digitalSignature ? `
-                  <div style="margin-bottom: 15pt; border: 1px solid #d1d5db; padding: 10pt;">
-                    <img src="${formData.digitalSignature}" style="width: 150pt; height: 80pt;" alt="توقيع العميل الرقمي">
-                  </div>
-                ` : `
-                  <div style="border: 1px solid #d1d5db; height: 100pt; margin-bottom: 15pt; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
-                    <span style="color: #64748b; font-size: 10pt;">منطقة التوقيع الرقمي</span>
-                  </div>
-                `}
-                <strong>الطرف الثاني</strong><br>
-                ${formData.clientName || 'العميل المحترم'}<br>
-                ${formData.clientID ? `رقم الهوية: ${formData.clientID}` : 'رقم الهوية: ______'}<br>
-                <div style="margin-top: 8pt; font-size: 9pt; color: #64748b;">
-                  التوقيع الرقمي المعتمد
+              <td style="width: 50%; padding: 20pt; text-align: center; border: 1px solid #d1d5db;">
+                <div style="margin-bottom: 15pt;">
+                  <strong>الطرف الثاني (العميل)</strong>
+                </div>
+                <div style="margin-bottom: 40pt;">
+                  ${formData.digitalSignature ? `<img src="${formData.digitalSignature}" style="max-width: 150pt; max-height: 80pt;" />` : 'التوقيع الرقمي'}
+                </div>
+                <div style="border-top: 1px solid #000; padding-top: 8pt;">
+                  <strong>${formData.clientName || 'اسم العميل'}</strong><br>
+                  التوقيع والختم
                 </div>
               </td>
             </tr>
           </table>
         </div>
         
-        <!-- إقرار واعتماد العقد -->
-        <div style="margin-top: 20pt; padding: 15pt; background: #f0f9ff; border: 2px solid #1e3a8a; border-radius: 6pt;">
-          <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; text-align: center;">
-            إقرار واعتماد العقد
-          </h3>
-          <div style="text-align: center; line-height: 1.6;">
-            <p style="margin: 0 0 8pt 0; font-weight: bold; color: #1e3a8a;">
-              بتوقيع هذا العقد، يقر الطرفان بما يلي:
-            </p>
-            <div style="text-align: right; margin: 10pt 0;">
-              ✓ تم الاطلاع على جميع بنود العقد والموافقة عليها<br>
-              ✓ العقد ساري المفعول من تاريخ سداد الدفعة المقدمة<br>
-              ✓ الالتزام بجميع الشروط والأحكام المذكورة أعلاه<br>
-              ✓ تطبيق الأنظمة واللوائح السعودية على هذا العقد
-            </div>
-            <div style="background: #fef2f2; border: 1px solid #dc2626; padding: 8pt; margin-top: 10pt; border-radius: 4pt;">
-              <strong style="color: #dc2626;">تنبيه هام:</strong> هذا العقد ملزم قانونياً للطرفين ولا يجوز التراجع عنه إلا بموافقة كتابية من الطرفين
-            </div>
-          </div>
+        <!-- تذييل قانوني -->
+        <div style="margin-top: 20pt; padding: 15pt; border: 1px solid #d1d5db; background: #f8fafc; text-align: center; font-size: 9pt;">
+          <p style="margin: 0 0 8pt 0;">هذا العقد محرر ومؤرخ في جدة بالمملكة العربية السعودية</p>
+          <p style="margin: 0 0 8pt 0;">ويخضع للأنظمة واللوائح المعمول بها في المملكة العربية السعودية</p>
+          <p style="margin: 0;">العقد الإلكتروني موثق رقمياً ومعتمد قانونياً</p>
         </div>
-        
-        <!-- ختم الصفحة -->
-        <div style="text-align: center; margin-top: 20pt; padding-top: 15pt; border-top: 1px solid #d1d5db; font-size: 9pt; color: #64748b;">
-          تم إنشاء هذا العقد إلكترونياً بتاريخ ${contractDate} - شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية<br>
-          العقد ساري المفعول من تاريخ سداد الدفعة المقدمة المتفق عليها
-        </div>
+      </div>
     `;
 
     return contractElement;
   };
 
-  // إنشاء وإرجاع PDF للعقد
-  const generateContractPDF = () => {
-    return new Promise<jsPDF>((resolve, reject) => {
-      try {
-        const contractElement = createContractHTML();
-        document.body.appendChild(contractElement);
-        
-        setTimeout(() => {
-          html2canvas(contractElement, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#ffffff'
-          }).then((canvas) => {
-            document.body.removeChild(contractElement);
-            
-            const pdf = new jsPDF({
-              orientation: 'portrait',
-              unit: 'mm',
-              format: 'a4'
-            });
-
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 210;
-            const pageHeight = 295;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-
-            let position = 0;
-
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            while (heightLeft >= 0) {
-              position = heightLeft - imgHeight;
-              pdf.addPage();
-              pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-              heightLeft -= pageHeight;
-            }
-
-            resolve(pdf);
-          }).catch((error) => {
-            if (document.body.contains(contractElement)) {
-              document.body.removeChild(contractElement);
-            }
-            reject(error);
-          });
-        }, 100);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
-
   const handleDownloadPDF = async () => {
+    const contractElement = createContractHTML();
+    document.body.appendChild(contractElement);
+
     try {
-      const pdfDoc = await generateContractPDF();
-      (pdfDoc as any).save(`contract-${formData.clientName || 'client'}-${Date.now()}.pdf`);
+      const canvas = await html2canvas(contractElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: contractElement.offsetWidth,
+        height: contractElement.offsetHeight
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
       
-      toast.success('تم تحميل العقد بنجاح');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const contractNumber = `ASH-${Date.now().toString().slice(-8)}`;
+      pdf.save(`عقد-${contractNumber}.pdf`);
+      toast.success('تم تحميل العقد بصيغة PDF بنجاح!');
     } catch (error) {
-      toast.error('حدث خطأ أثناء إنشاء ملف PDF');
+      console.error('Error generating PDF:', error);
+      toast.error('حدث خطأ في إنشاء ملف PDF');
+    } finally {
+      document.body.removeChild(contractElement);
     }
   };
 
-  const handleInputChange = (field: keyof FormData, value: string | boolean | number | Service[]) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleSubmit = async () => {
+    if (!isFormValid()) {
+      toast.error('يرجى ملء جميع الحقول المطلوبة والموافقة على الشروط');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      
+      const response = await fetch('/api/contract-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          formType: contractFormType, 
+          ...formData,
+          contractNumber: `ASH-${Date.now().toString().slice(-8)}`,
+          createdAt: new Date().toISOString()
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('✅ تم إرسال العقد بنجاح! ستصلك رسالة تأكيد عبر البريد الإلكتروني');
+        
+        // إعادة تعيين النموذج
+        setFormData({
+          clientName: '',
+          clientEmail: '',
+          clientPhone: '',
+          clientID: '',
+          selectedServices: [],
+          projectDescription: '',
+          totalPrice: 0,
+          agreeToTerms: false,
+          agreeToPrivacy: false,
+          digitalSignature: '',
+        });
+        setContractFormType('individual');
+        clearSignature();
+        setShowServices(false);
+        setSelectedCategory('all');
+      } else {
+        const errorData = await response.json();
+        toast.error(`❌ حدث خطأ في إرسال العقد: ${errorData.message || 'يرجى المحاولة مرة أخرى'}`);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('❌ حدث خطأ في الشبكة. يرجى التحقق من اتصالك بالإنترنت');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const generateContract = async () => {
+    try {
+      await handleDownloadPDF();
+    } catch (error) {
+      toast.error('حدث خطأ في إنشاء العقد');
+    }
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <SEO
+        title="نظام التعاقد الإلكتروني المتقدم - شركة علي صالح الشهري القابضة"
+        description="عقد إلكتروني احترافي يشمل جميع الخدمات مع توقيع وختم رقمي وتنبيهات الدفع. تجربة تعاقد موثوقة وآمنة."
+        jsonLd={jsonLd}
+      />
       <Navigation />
       
-      <main className="container mx-auto px-4 py-12" dir="rtl">
-        <SEO
-          title="نظام التعاقد الإلكتروني | خدمات وعروض الشركة"
-          description="نظام تعاقد إلكتروني بمعايير عالمية يشمل جميع خدمات الشركة مع توقيع وختم رقمي وقسم العروض الحالية."
-          canonicalUrl={typeof window !== 'undefined' ? window.location.href : undefined}
-          jsonLd={jsonLd as any}
-        />
+      {/* Hero Section */}
+      <section className="relative min-h-screen bg-gradient-to-br from-primary via-primary/90 to-primary/80 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.05)_50%,transparent_75%)]"></div>
+        </div>
         
-        <Card className="max-w-6xl mx-auto shadow-xl">
-          <CardHeader className="text-center space-y-4 pb-8">
-            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto">
-              <span className="text-primary-foreground font-bold text-xl">ASH</span>
+        <div className="relative z-10 container mx-auto px-4 py-16">
+          {/* Hero Content */}
+          <div className="text-center text-white mb-16" dir="rtl">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/90 text-sm font-medium mb-6">
+              <Stamp className="w-4 h-4 ml-2" />
+              نظام التعاقد الإلكتروني المتقدم
             </div>
-            <CardTitle className="text-3xl font-bold text-primary">نظام التعاقد الإلكتروني المتقدم</CardTitle>
-            <p className="text-muted-foreground">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</p>
-          </CardHeader>
-          <CardContent className="space-y-8">
-            <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-destructive text-right">
-              <div className="font-bold mb-1">تنبيه مهم بشأن الدفعات</div>
-              <p className="text-sm">العقد غير مُعتمد ولا يبدأ التنفيذ إلا بعد سداد الدفعة الأولى (50%). الدفعة النهائية (50%) تُسدد عند اكتمال المشروع وقبل التسليم.</p>
-            </div>
-            {/* بيانات العميل */}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="clientName" className="text-right block font-semibold">اسم العميل الكامل</Label>
-                <Input
-                  id="clientName"
-                  value={formData.clientName}
-                  onChange={(e) => handleInputChange('clientName', e.target.value)}
-                  placeholder="أدخل اسم العميل الكامل"
-                  className="text-right"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="clientID" className="text-right block font-semibold">رقم الهوية / السجل التجاري</Label>
-                <Input
-                  id="clientID"
-                  value={formData.clientID}
-                  onChange={(e) => handleInputChange('clientID', e.target.value)}
-                  placeholder="أدخل رقم الهوية أو السجل التجاري"
-                  className="text-right"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="clientPhone" className="text-right block font-semibold">رقم الجوال</Label>
-                <Input
-                  id="clientPhone"
-                  value={formData.clientPhone}
-                  onChange={(e) => handleInputChange('clientPhone', e.target.value)}
-                  placeholder="أدخل رقم الجوال"
-                  className="text-right"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="clientEmail" className="text-right block font-semibold">البريد الإلكتروني</Label>
-                <Input
-                  id="clientEmail"
-                  type="email"
-                  value={formData.clientEmail}
-                  onChange={(e) => handleInputChange('clientEmail', e.target.value)}
-                  placeholder="أدخل البريد الإلكتروني"
-                  className="text-right"
-                />
-              </div>
-            </div>
-
-            {/* اختيار الخدمات */}
-            <div id="services" className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-bold text-primary">اختيار الخدمات</h3>
-                <Button 
-                  onClick={() => setShowServices(!showServices)}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  {showServices ? 'إخفاء الخدمات' : 'عرض الخدمات'}
-                </Button>
-              </div>
-
-              {showServices && (
-                <div className="space-y-4">
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-full z-10">
-                      <SelectValue placeholder="اختر فئة الخدمات" />
-                    </SelectTrigger>
-                    <SelectContent className="z-50 bg-popover">
-                      <SelectItem value="all">جميع الخدمات</SelectItem>
-                      <SelectItem value="offers">العروض الحالية</SelectItem>
-                      <SelectItem value="design">خدمات التصميم</SelectItem>
-                      <SelectItem value="web">تطوير المواقع</SelectItem>
-                      <SelectItem value="mobile">تطبيقات الجوال</SelectItem>
-                      <SelectItem value="systems">الأنظمة</SelectItem>
-                      <SelectItem value="cloud">الحلول السحابية</SelectItem>
-                      <SelectItem value="security">أمن المعلومات</SelectItem>
-                      <SelectItem value="ai">الذكاء الاصطناعي</SelectItem>
-                      <SelectItem value="consulting">الاستشارات</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
-                    {filteredServices.map(service => (
-                      <Card key={service.id} className="cursor-pointer hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <h4 className="font-semibold text-sm mb-2">{service.name}</h4>
-                          <p className="text-xs text-muted-foreground mb-3">{service.description}</p>
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-primary">{service.basePrice.toLocaleString()} ريال</span>
-                            <Button 
-                              size="sm"
-                              onClick={() => addService(service)}
-                              disabled={formData.selectedServices.some(s => s.id === service.id)}
-                            >
-                              {formData.selectedServices.some(s => s.id === service.id) ? 'مُضافة' : 'إضافة'}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+            
+            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-l from-white via-white to-white/80 bg-clip-text text-transparent">
+              عقد إلكتروني بمعايير عالمية
+              <br />
+              وموثوقية سعودية
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+              تجربة تعاقد احترافية تشمل كل خدماتنا وختم وتوقيع رقمي، مع تنبيهات دفع واضحة لضمان حقوق الطرفين
+            </p>
+            
+            {/* Steps Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
+              {[
+                { icon: FileCheck, title: "اختيار الخدمات", desc: "حدد ما تحتاجه" },
+                { icon: FileSignature, title: "إدخال البيانات", desc: "املأ النموذج" },
+                { icon: CreditCard, title: "سداد الدفعة", desc: "50% مقدم" },
+                { icon: CheckCircle2, title: "التنفيذ", desc: "تسليم احترافي" }
+              ].map((step, idx) => (
+                <div key={idx} className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur border border-white/10">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
+                    <step.icon className="w-8 h-8 text-white" />
                   </div>
+                  <h3 className="font-bold text-lg mb-2">{step.title}</h3>
+                  <p className="text-white/80 text-sm">{step.desc}</p>
                 </div>
-              )}
-
-              {/* الخدمات المختارة */}
-              {formData.selectedServices.length > 0 && (
-                <div className="space-y-4">
-                  <h4 className="font-semibold">الخدمات المختارة:</h4>
-                  <div className="space-y-2">
-                    {formData.selectedServices.map(service => (
-                      <div key={service.id} className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                        <div>
-                          <span className="font-medium">{service.name}</span>
-                          <span className="text-sm text-muted-foreground mr-2">- {service.basePrice.toLocaleString()} ريال</span>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          variant="destructive"
-                          onClick={() => removeService(service.id)}
-                        >
-                          حذف
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-lg font-bold text-primary text-center p-4 bg-primary/10 rounded-lg">
-                    المجموع: {formData.totalPrice.toLocaleString()} ريال (شامل الضريبة: {(formData.totalPrice * 1.15).toLocaleString()} ريال)
-                  </div>
-                </div>
-              )}
+              ))}
             </div>
-
-            {/* وصف المشروع */}
-            <div className="space-y-2">
-              <Label htmlFor="projectDescription" className="text-right block font-semibold">وصف إضافي للمشروع</Label>
-              <Textarea
-                id="projectDescription"
-                value={formData.projectDescription}
-                onChange={(e) => handleInputChange('projectDescription', e.target.value)}
-                placeholder="أدخل أي متطلبات إضافية أو تفاصيل خاصة بالمشروع"
-                rows={4}
-                className="text-right resize-none"
-              />
-            </div>
-
-            {/* التوقيع الرقمي */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-primary flex items-center gap-2">
-                <PenTool className="w-5 h-5" />
-                التوقيع الرقمي
-              </h3>
-              <div className="relative border-2 border-dashed border-border rounded-xl p-4 bg-muted/30">
-                <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">لون القلم</span>
-                    <input
-                      type="color"
-                      value={penColor}
-                      onChange={(e) => setPenColor(e.target.value)}
-                      className="h-9 w-9 rounded border border-input bg-background cursor-pointer"
-                      aria-label="اختيار لون القلم"
-                    />
-                  </div>
-                  <div className="flex gap-2 ml-auto">
-                    <Button onClick={undoSignature} variant="outline" size="sm">تراجع</Button>
-                    <Button onClick={clearSignature} variant="outline" size="sm">مسح</Button>
-                    <Button onClick={saveSignature} size="sm">حفظ</Button>
-                  </div>
-                </div>
-                <SignatureCanvas
-                  ref={signatureRef}
-                  penColor={penColor}
-                  minWidth={2.5}
-                  maxWidth={2.5}
-                  canvasProps={{
-                    width: 500,
-                    height: 200,
-                    className: 'signature-canvas w-full border rounded bg-background'
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* الموافقات */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-center space-x-3 space-x-reverse">
-                <Checkbox 
-                  id="terms" 
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => handleInputChange('agreeToTerms', !!checked)}
-                />
-                <Label htmlFor="terms" className="text-sm font-medium cursor-pointer">أوافق على الشروط والأحكام</Label>
-              </div>
-
-              <div className="flex items-center justify-center space-x-3 space-x-reverse">
-                <Checkbox 
-                  id="privacy" 
-                  checked={formData.agreeToPrivacy}
-                  onCheckedChange={(checked) => handleInputChange('agreeToPrivacy', !!checked)}
-                />
-                <Label htmlFor="privacy" className="text-sm font-medium cursor-pointer">أوافق على سياسة الخصوصية</Label>
-              </div>
-            </div>
-
-            {/* إنشاء العقد */}
-            <div className="flex justify-center pt-6">
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
-                onClick={handleDownloadPDF} 
-                className="flex items-center gap-3 px-8 py-3"
-                size="lg"
-                disabled={!formData.agreeToTerms || !formData.agreeToPrivacy || formData.selectedServices.length === 0}
+                onClick={() => document.getElementById('contract-form')?.scrollIntoView({ behavior: 'smooth' })}
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto"
               >
-                <Download className="w-5 h-5" />
-                <Stamp className="w-5 h-5" />
-                إنشاء العقد الرقمي PDF
+                ابدأ التعاقد الآن
+                <FileSignature className="w-5 h-5 mr-2" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="border-white/20 text-white hover:bg-white/10 text-lg px-8 py-6 h-auto bg-transparent"
+              >
+                استعراض الخدمات
+                <Eye className="w-5 h-5 mr-2" />
               </Button>
             </div>
-          </CardContent>
-        </Card>
-        
-      </main>
+          </div>
+        </div>
+      </section>
 
+      {/* Main Contract Form Section */}
+      <section id="contract-form" className="py-20 bg-gradient-to-br from-background via-muted/30 to-accent/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16" dir="rtl">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">نظام التعاقد الإلكتروني المتطور</h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                عقد موثق رقمياً يضمن حقوق جميع الأطراف مع أعلى معايير الأمان والشفافية
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* نموذج التعاقد الرئيسي */}
+              <div className="lg:col-span-2">
+                <Card className="shadow-2xl border-0 bg-card/95 backdrop-blur overflow-hidden">
+                  <CardHeader className="bg-gradient-to-l from-primary to-primary/80 text-primary-foreground p-8">
+                    <CardTitle className="text-2xl font-bold text-right flex items-center gap-3">
+                      <FileSignature className="w-8 h-8" />
+                      نموذج التعاقد الإلكتروني
+                    </CardTitle>
+                    <p className="text-primary-foreground/90 text-right mt-2">
+                      املأ جميع البيانات المطلوبة لإنشاء عقد موثق قانونياً
+                    </p>
+                  </CardHeader>
+                  
+                  <CardContent className="p-8 space-y-8" dir="rtl">
+                    {/* مؤشر التقدم */}
+                    <div className="mb-8">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-sm font-medium">التقدم في النموذج</span>
+                        <span className="text-sm text-muted-foreground">{Math.round(getFormProgress())}%</span>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2">
+                        <div 
+                          className="bg-primary h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${getFormProgress()}%` }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    {/* اختيار نوع العقد */}
+                    <div className="space-y-4">
+                      <Label className="text-xl font-bold flex items-center gap-2">
+                        <Building2 className="w-6 h-6 text-primary" />
+                        نوع التعاقد
+                      </Label>
+                      <div className="grid grid-cols-3 gap-4">
+                        {[
+                          { type: 'individual', label: 'عقد فردي', icon: User, desc: 'للأفراد والمستقلين' },
+                          { type: 'institution', label: 'عقد مؤسسة', icon: Building2, desc: 'للمؤسسات الصغيرة' },
+                          { type: 'company', label: 'عقد شركة', icon: Users, desc: 'للشركات الكبيرة' }
+                        ].map((contract) => (
+                          <div
+                            key={contract.type}
+                            onClick={() => setContractFormType(contract.type as any)}
+                            className={`p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-md ${
+                              contractFormType === contract.type
+                                ? 'border-primary bg-primary/5 shadow-lg'
+                                : 'border-border hover:border-primary/50'
+                            }`}
+                          >
+                            <div className="text-center space-y-2">
+                              <contract.icon className={`w-8 h-8 mx-auto ${
+                                contractFormType === contract.type ? 'text-primary' : 'text-muted-foreground'
+                              }`} />
+                              <div className="font-medium">{contract.label}</div>
+                              <div className="text-xs text-muted-foreground">{contract.desc}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator className="my-8" />
+
+                    {/* بيانات العميل */}
+                    <div className="space-y-6">
+                      <Label className="text-xl font-bold flex items-center gap-2">
+                        <User className="w-6 h-6 text-primary" />
+                        بيانات {contractFormType === 'individual' ? 'العميل' : contractFormType === 'institution' ? 'المؤسسة' : 'الشركة'}
+                      </Label>
+                      
+                      <div className="grid gap-6">
+                        <div className="space-y-3">
+                          <Label htmlFor="clientName" className="text-lg flex items-center gap-2">
+                            <IdCard className="w-5 h-5 text-primary" />
+                            {contractFormType === 'individual' ? 'الاسم الكامل' : contractFormType === 'institution' ? 'اسم المؤسسة' : 'اسم الشركة'}
+                          </Label>
+                          <Input
+                            id="clientName"
+                            value={formData.clientName}
+                            onChange={(e) => setFormData(prev => ({...prev, clientName: e.target.value}))}
+                            className="text-right h-12 text-lg"
+                            placeholder={`أدخل ${contractFormType === 'individual' ? 'الاسم الكامل' : contractFormType === 'institution' ? 'اسم المؤسسة' : 'اسم الشركة'}`}
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-3">
+                            <Label htmlFor="clientEmail" className="text-lg flex items-center gap-2">
+                              <Mail className="w-5 h-5 text-primary" />
+                              البريد الإلكتروني
+                            </Label>
+                            <Input
+                              id="clientEmail"
+                              type="email"
+                              value={formData.clientEmail}
+                              onChange={(e) => setFormData(prev => ({...prev, clientEmail: e.target.value}))}
+                              className="text-right h-12 text-lg"
+                              placeholder="example@domain.com"
+                            />
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label htmlFor="clientPhone" className="text-lg flex items-center gap-2">
+                              <Phone className="w-5 h-5 text-primary" />
+                              رقم الجوال
+                            </Label>
+                            <Input
+                              id="clientPhone"
+                              value={formData.clientPhone}
+                              onChange={(e) => setFormData(prev => ({...prev, clientPhone: e.target.value}))}
+                              className="text-right h-12 text-lg"
+                              placeholder="05XXXXXXXX"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <Label htmlFor="clientID" className="text-lg flex items-center gap-2">
+                            <IdCard className="w-5 h-5 text-primary" />
+                            {contractFormType === 'individual' ? 'رقم الهوية الوطنية' : 'رقم السجل التجاري'}
+                          </Label>
+                          <Input
+                            id="clientID"
+                            value={formData.clientID}
+                            onChange={(e) => setFormData(prev => ({...prev, clientID: e.target.value}))}
+                            className="text-right h-12 text-lg"
+                            placeholder={contractFormType === 'individual' ? '1XXXXXXXXX' : '4XXXXXXXXX'}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator className="my-8" />
+
+                    {/* اختيار الخدمات */}
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xl font-bold flex items-center gap-2">
+                          <FileCheck className="w-6 h-6 text-primary" />
+                          اختيار الخدمات المطلوبة
+                        </Label>
+                        <Button
+                          onClick={() => setShowServices(!showServices)}
+                          variant="outline"
+                          className="flex items-center gap-2"
+                        >
+                          {showServices ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                          {showServices ? 'إخفاء' : 'إظهار'} قائمة الخدمات
+                        </Button>
+                      </div>
+
+                      {/* فلترة الخدمات */}
+                      {showServices && (
+                        <div className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                              <SelectTrigger className="h-12 text-lg">
+                                <SelectValue placeholder="اختر فئة الخدمات" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background border shadow-xl z-50 max-h-80">
+                                <SelectItem value="all">🔧 جميع الخدمات</SelectItem>
+                                <SelectItem value="design">🎨 خدمات التصميم</SelectItem>
+                                <SelectItem value="web">🌐 تطوير المواقع</SelectItem>
+                                <SelectItem value="mobile">📱 تطبيقات الجوال</SelectItem>
+                                <SelectItem value="systems">⚙️ الأنظمة</SelectItem>
+                                <SelectItem value="cloud">☁️ الحلول السحابية</SelectItem>
+                                <SelectItem value="security">🔐 أمن المعلومات</SelectItem>
+                                <SelectItem value="ai">🤖 الذكاء الاصطناعي</SelectItem>
+                                <SelectItem value="ecommerce">🛒 التجارة الإلكترونية</SelectItem>
+                                <SelectItem value="consulting">💼 الاستشارات</SelectItem>
+                                <SelectItem value="training">📚 التدريب</SelectItem>
+                                <SelectItem value="support">🛠️ الدعم التقني</SelectItem>
+                                <SelectItem value="analytics">📊 تحليل البيانات</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            
+                            <div className="text-center">
+                              <Badge variant="secondary" className="text-lg px-4 py-2">
+                                {filteredServices.length} خدمة متاحة
+                              </Badge>
+                            </div>
+                          </div>
+
+                          {/* عرض الخدمات */}
+                          <div className="grid gap-4 max-h-96 overflow-y-auto pr-2">
+                            {filteredServices.map((service) => (
+                              <div
+                                key={service.id}
+                                className={`p-6 border-2 rounded-xl transition-all hover:shadow-lg ${
+                                  formData.selectedServices.some(s => s.id === service.id)
+                                    ? 'border-primary bg-primary/5 shadow-lg'
+                                    : 'border-border hover:border-primary/50'
+                                }`}
+                              >
+                                <div className="flex items-start justify-between gap-4">
+                                  <div className="flex-1 text-right space-y-2">
+                                    <h4 className="font-bold text-lg">{service.name}</h4>
+                                    <p className="text-muted-foreground">{service.description}</p>
+                                    <div className="text-2xl font-bold text-primary">
+                                      {service.basePrice.toLocaleString()} ريال
+                                    </div>
+                                  </div>
+                                  
+                                  <Button
+                                    onClick={() => {
+                                      const isSelected = formData.selectedServices.some(s => s.id === service.id);
+                                      if (isSelected) {
+                                        removeService(service.id);
+                                      } else {
+                                        addService(service);
+                                      }
+                                    }}
+                                    size="lg"
+                                    variant={formData.selectedServices.some(s => s.id === service.id) ? "secondary" : "default"}
+                                    className="min-w-[120px]"
+                                  >
+                                    {formData.selectedServices.some(s => s.id === service.id) ? (
+                                      <>
+                                        <CheckCircle2 className="w-5 h-5 ml-2" />
+                                        مختارة
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Plus className="w-5 h-5 ml-2" />
+                                        اختيار
+                                      </>
+                                    )}
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* ملخص الخدمات المختارة */}
+                      {formData.selectedServices.length > 0 && (
+                        <div className="space-y-4">
+                          <Label className="text-xl font-bold">
+                            الخدمات المختارة ({formData.selectedServices.length})
+                          </Label>
+                          
+                          <div className="space-y-3 max-h-60 overflow-y-auto">
+                            {formData.selectedServices.map((service) => (
+                              <div key={service.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-xl border">
+                                <div className="text-right flex-1">
+                                  <div className="font-bold">{service.name}</div>
+                                  <div className="text-sm text-muted-foreground">{service.description}</div>
+                                  <div className="text-lg font-bold text-primary">{service.basePrice.toLocaleString()} ريال</div>
+                                </div>
+                                <Button
+                                  onClick={() => removeService(service.id)}
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                >
+                                  <Trash2 className="w-5 h-5" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <div className="p-6 bg-gradient-to-l from-primary/10 to-primary/5 rounded-xl border border-primary/20">
+                            <div className="flex justify-between items-center">
+                              <div className="text-right">
+                                <div className="text-sm text-muted-foreground">المجموع الكلي</div>
+                                <div className="text-3xl font-bold text-primary">{formData.totalPrice.toLocaleString()} ريال</div>
+                                <div className="text-sm text-muted-foreground">
+                                  الدفعة المقدمة: {Math.round(formData.totalPrice * 0.5).toLocaleString()} ريال
+                                </div>
+                              </div>
+                              <div className="text-center">
+                                <CreditCard className="w-12 h-12 text-primary mx-auto mb-2" />
+                                <div className="text-xs text-muted-foreground">مطلوب للبدء</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <Separator className="my-8" />
+
+                    {/* وصف المشروع */}
+                    <div className="space-y-4">
+                      <Label htmlFor="projectDescription" className="text-xl font-bold flex items-center gap-2">
+                        <FileText className="w-6 h-6 text-primary" />
+                        وصف المشروع والمتطلبات الإضافية
+                      </Label>
+                      <Textarea
+                        id="projectDescription"
+                        value={formData.projectDescription}
+                        onChange={(e) => setFormData(prev => ({...prev, projectDescription: e.target.value}))}
+                        className="min-h-40 text-right text-lg"
+                        placeholder="اكتب وصفاً تفصيلياً للمشروع ومتطلباته الخاصة، الجدول الزمني المتوقع، وأي ملاحظات أخرى مهمة..."
+                      />
+                    </div>
+
+                    <Separator className="my-8" />
+
+                    {/* التوقيع الرقمي */}
+                    <div className="space-y-6">
+                      <Label className="text-xl font-bold flex items-center gap-2">
+                        <PenTool className="w-6 h-6 text-primary" />
+                        التوقيع الرقمي الموثق
+                      </Label>
+                      
+                      <div className="p-6 border-2 border-dashed border-primary/30 rounded-2xl bg-gradient-to-br from-primary/5 to-accent/5">
+                        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                          <div className="flex items-center gap-4">
+                            <Label className="font-medium">لون القلم:</Label>
+                            <div className="flex items-center gap-2">
+                              {[
+                                { color: '#1e40af', name: 'أزرق' },
+                                { color: '#dc2626', name: 'أحمر' },
+                                { color: '#059669', name: 'أخضر' },
+                                { color: '#7c3aed', name: 'بنفسجي' },
+                                { color: '#ea580c', name: 'برتقالي' }
+                              ].map((pen) => (
+                                <button
+                                  key={pen.color}
+                                  onClick={() => setPenColor(pen.color)}
+                                  className={`w-10 h-10 rounded-full border-3 transition-all hover:scale-110 ${
+                                    penColor === pen.color ? 'border-foreground shadow-lg scale-110' : 'border-border'
+                                  }`}
+                                  style={{ backgroundColor: pen.color }}
+                                  title={pen.name}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <div className="flex gap-3">
+                            <Button onClick={undoSignature} variant="outline" size="sm" className="flex items-center gap-2">
+                              <Undo2 className="w-4 h-4" />
+                              تراجع
+                            </Button>
+                            <Button onClick={clearSignature} variant="outline" size="sm" className="flex items-center gap-2">
+                              <Eraser className="w-4 h-4" />
+                              مسح الكل
+                            </Button>
+                            <Button onClick={saveSignature} variant="default" size="sm" className="flex items-center gap-2">
+                              <Save className="w-4 h-4" />
+                              حفظ التوقيع
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-white rounded-xl border-2 border-dashed border-primary/20 p-4 shadow-inner">
+                          <SignatureCanvas
+                            ref={signatureRef}
+                            penColor={penColor}
+                            minWidth={2.5}
+                            maxWidth={2.5}
+                            canvasProps={{
+                              width: 600,
+                              height: 250,
+                              className: 'signature-canvas w-full h-48 md:h-60 rounded-lg'
+                            }}
+                          />
+                        </div>
+                        
+                        <div className="mt-4 text-center">
+                          <p className="text-sm text-muted-foreground">
+                            🖋️ وقّع بالماوس أو باللمس في المنطقة البيضاء أعلاه
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            التوقيع سيتم تشفيره وحفظه بشكل آمن مع العقد
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator className="my-8" />
+
+                    {/* الموافقات والإقرارات */}
+                    <div className="space-y-6">
+                      <Label className="text-xl font-bold flex items-center gap-2">
+                        <Shield className="w-6 h-6 text-primary" />
+                        الموافقات والإقرارات القانونية
+                      </Label>
+                      
+                      <div className="space-y-4 p-6 bg-muted/30 rounded-xl border">
+                        <div className="flex items-start gap-4">
+                          <Checkbox
+                            id="agreeToTerms"
+                            checked={formData.agreeToTerms}
+                            onCheckedChange={(checked) =>
+                              setFormData(prev => ({...prev, agreeToTerms: checked as boolean}))
+                            }
+                            className="mt-1 w-5 h-5"
+                          />
+                          <Label htmlFor="agreeToTerms" className="text-lg leading-relaxed cursor-pointer">
+                            أوافق على <strong className="text-primary">الشروط والأحكام العامة</strong> للخدمات التقنية والاستشارية المقدمة من شركة علي صالح الشهري القابضة
+                          </Label>
+                        </div>
+
+                        <div className="flex items-start gap-4">
+                          <Checkbox
+                            id="agreeToPrivacy"
+                            checked={formData.agreeToPrivacy}
+                            onCheckedChange={(checked) =>
+                              setFormData(prev => ({...prev, agreeToPrivacy: checked as boolean}))
+                            }
+                            className="mt-1 w-5 h-5"
+                          />
+                          <Label htmlFor="agreeToPrivacy" className="text-lg leading-relaxed cursor-pointer">
+                            أوافق على <strong className="text-primary">سياسة الخصوصية</strong> وحماية البيانات الشخصية وفقاً للأنظمة السعودية
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* أزرار الإجراءات الرئيسية */}
+                    <div className="flex flex-col sm:flex-row gap-4 pt-8">
+                      <Button
+                        onClick={handleSubmit}
+                        disabled={isSubmitting || !isFormValid()}
+                        size="lg"
+                        className="flex-1 h-16 text-xl font-bold"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin ml-2"></div>
+                            جاري إرسال العقد...
+                          </>
+                        ) : (
+                          <>
+                            <FileSignature className="w-6 h-6 ml-2" />
+                            إرسال العقد للمراجعة
+                          </>
+                        )}
+                      </Button>
+                      
+                      <Button
+                        onClick={generateContract}
+                        variant="outline"
+                        disabled={!isFormValid()}
+                        size="lg"
+                        className="h-16 px-8 text-lg font-bold"
+                      >
+                        <Eye className="w-6 h-6 ml-2" />
+                        معاينة العقد
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* لوحة المعلومات الجانبية */}
+              <div className="space-y-6">
+                {/* معلومات مهمة */}
+                <Card className="border-warning/20 bg-warning/5 shadow-lg">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg font-bold text-right flex items-center gap-2 text-warning">
+                      <AlertTriangle className="w-6 h-6" />
+                      معلومات مهمة حول التعاقد
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4" dir="rtl">
+                    <div className="flex items-start gap-3 p-3 bg-white/50 rounded-lg">
+                      <Info className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">بداية العقد</p>
+                        <p className="text-sm text-muted-foreground">العقد يصبح معتمداً فقط بعد سداد الدفعة المقدمة (50% من القيمة الإجمالية)</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3 p-3 bg-white/50 rounded-lg">
+                      <CreditCard className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">نظام الدفع</p>
+                        <p className="text-sm text-muted-foreground">دفعة أولى 50% للبدء + المتبقي عند التسليم النهائي</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3 p-3 bg-white/50 rounded-lg">
+                      <Shield className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">الضمان الشامل</p>
+                        <p className="text-sm text-muted-foreground">ضمان شامل لمدة 6 أشهر على جميع الخدمات مع دعم مجاني</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* طرق الدفع المتاحة */}
+                <Card className="shadow-lg">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg font-bold text-right flex items-center gap-2">
+                      <CreditCard className="w-6 h-6 text-primary" />
+                      طرق الدفع المتاحة
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4" dir="rtl">
+                    <div className="grid grid-cols-1 gap-3">
+                      {[
+                        { name: 'البطاقات الائتمانية', icon: CreditCard, color: 'text-blue-600', bg: 'bg-blue-50' },
+                        { name: 'التحويل البنكي', icon: Building2, color: 'text-green-600', bg: 'bg-green-50' },
+                        { name: 'STC Pay', icon: Phone, color: 'text-purple-600', bg: 'bg-purple-50' },
+                        { name: 'تابي - تمارا', icon: CheckCircle2, color: 'text-orange-600', bg: 'bg-orange-50' }
+                      ].map((payment, idx) => (
+                        <div key={idx} className={`flex items-center gap-3 p-4 ${payment.bg} rounded-lg border`}>
+                          <payment.icon className={`w-6 h-6 ${payment.color}`} />
+                          <span className="font-medium">{payment.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* إحصائيات وثقة */}
+                <Card className="shadow-lg">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg font-bold text-right">الثقة والإنجازات</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 gap-4" dir="rtl">
+                    {[
+                      { value: '500+', label: 'عقد مكتمل', color: 'text-primary', bg: 'bg-primary/10' },
+                      { value: '99%', label: 'رضا العملاء', color: 'text-green-600', bg: 'bg-green-50' },
+                      { value: '24/7', label: 'دعم مستمر', color: 'text-blue-600', bg: 'bg-blue-50' },
+                      { value: '6', label: 'أشهر ضمان', color: 'text-orange-600', bg: 'bg-orange-50' }
+                    ].map((stat, idx) => (
+                      <div key={idx} className={`text-center p-4 ${stat.bg} rounded-xl border`}>
+                        <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+                        <div className="text-sm text-muted-foreground">{stat.label}</div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                {/* دعم العملاء */}
+                <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20 shadow-lg">
+                  <CardContent className="p-6 text-center" dir="rtl">
+                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Phone className="w-8 h-8 text-primary" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">هل تحتاج مساعدة؟</h3>
+                    <p className="text-muted-foreground text-sm mb-4">
+                      فريق الدعم متاح 24/7 لمساعدتك في إتمام التعاقد
+                    </p>
+                    <div className="space-y-2">
+                      <Button variant="outline" size="sm" className="w-full">
+                        <Phone className="w-4 h-4 ml-2" />
+                        0555812567
+                      </Button>
+                      <Button variant="outline" size="sm" className="w-full">
+                        <Mail className="w-4 h-4 ml-2" />
+                        تواصل معنا
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       <Footer />
-    </div>
+    </>
   );
 };
 
