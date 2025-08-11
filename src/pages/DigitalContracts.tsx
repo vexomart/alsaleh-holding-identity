@@ -43,6 +43,7 @@ import {
   Zap
 } from 'lucide-react';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 import SignatureCanvas from 'react-signature-canvas';
 import SEO from "@/components/SEO";
@@ -542,17 +543,37 @@ const DigitalContracts = () => {
     document.body.appendChild(contractElement);
 
     try {
+      // توليد صورة من العقد باستخدام html2canvas
+      const canvas = await html2canvas(contractElement as unknown as HTMLElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+
+      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      await pdf.html(contractElement as unknown as HTMLElement, {
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: '#ffffff',
-        },
-        margin: [10, 10, 10, 10],
-        autoPaging: 'text',
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
-      } as any);
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      // حساب أبعاد الصورة داخل PDF مع الحفاظ على التناسب
+      const imgProps = pdf.getImageProperties(imgData as any);
+      const imgWidth = pdfWidth; // ملء عرض الصفحة
+      const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+      heightLeft -= pdfHeight;
+
+      while (heightLeft > 0) {
+        pdf.addPage();
+        position = -(imgHeight - heightLeft);
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+        heightLeft -= pdfHeight;
+      }
 
       const contractNumber = `ASH-${Date.now().toString().slice(-8)}`;
       pdf.save(`عقد-${contractNumber}.pdf`);
