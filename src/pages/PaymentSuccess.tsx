@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { CheckCircle, ArrowRight, Home, Receipt, Clock, AlertCircle } from "lucide-react";
+import { CheckCircle, ArrowRight, Home, Receipt, Clock, AlertCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [transactionDetails, setTransactionDetails] = useState<any>(null);
   const [paymentStatus, setPaymentStatus] = useState<'checking' | 'success' | 'pending' | 'failed'>('checking');
   const [loading, setLoading] = useState(true);
-
+  const [contractUrl, setContractUrl] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
   const checkPaymentStatus = async () => {
     try {
       // Get transaction details from URL parameters
@@ -105,6 +107,111 @@ const PaymentSuccess = () => {
     checkPaymentStatus();
   }, [searchParams]);
 
+  // إنشاء عنصر HTML مبسّط للعقد لاستخدامه في توليد PDF
+  const buildContractElement = (contract: any, tx: any) => {
+    const el = document.createElement('div');
+    el.style.cssText = `width:794px;padding:32px;background:#fff;color:#000;direction:rtl;text-align:right;font-family:Tahoma,Arial,sans-serif;position:fixed;left:-10000px;top:0;`;
+    el.innerHTML = `
+      <div style="border:2px solid #1e3a8a;padding:16px;background:#f8fafc;text-align:center">
+        <h1 style="margin:0 0 6px 0;color:#1e3a8a">شركة علي صالح الشهري القابضة</h1>
+        <div style="color:#475569">عقد إلكتروني رقم: <b>${contract.contract_number || ''}</b></div>
+      </div>
+      <div style="border:1px solid #e5e7eb;margin-top:12px;padding:12px;background:#fff">
+        <div><b>اسم العميل:</b> ${contract.client_name || ''}</div>
+        <div><b>البريد:</b> ${contract.client_email || ''} — <b>الهاتف:</b> ${contract.client_phone || ''}</div>
+        <div><b>الخدمة:</b> ${contract.service_type || tx.offer_title || 'خدمات تقنية'}</div>
+        <div><b>الوصف:</b> ${contract.service_description || ''}</div>
+        <div><b>القيمة:</b> ${contract.service_price || tx.amount} ${contract.currency || tx.currency || 'SAR'}</div>
+        <div><b>تاريخ الإصدار:</b> ${new Date().toLocaleDateString('ar-SA')}</div>
+      </div>
+    `;
+    return el;
+  };
+
+  const generateAndUploadContractPDF = async (contract: any, tx: any) => {
+    try {
+      setGenerating(true);
+      const el = buildContractElement(contract, tx);
+      document.body.appendChild(el);
+      const canvas = await html2canvas(el as unknown as HTMLElement, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth - 48; // margins
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 24, 24, imgWidth, Math.min(imgHeight, pageHeight - 48));
+      const blob = pdf.output('blob');
+
+      const path = `${contract.id}/contract-${contract.contract_number || 'document'}.pdf`;
+      const { error: upErr } = await supabase.storage.from('contracts').upload(path, blob, { upsert: true, contentType: 'application/pdf' });
+      if (upErr) throw upErr;
+
+      const { data: pub } = await supabase.storage.from('contracts').getPublicUrl(path);
+      const publicUrl = pub.publicUrl;
+
+      await supabase.from('contracts').update({ contract_pdf_url: publicUrl }).eq('id', contract.id);
+      setContractUrl(publicUrl);
+
+      // إرسال بريد بالعقد
+      await supabase.functions.invoke('contract-email', {
+        body: {
+          to: contract.client_email,
+          customerName: contract.client_name,
+          contractNumber: contract.contract_number,
+          pdfUrl: publicUrl,
+          amount: contract.service_price,
+          currency: contract.currency || 'SAR',
+          offerTitle: tx.offer_title,
+          paymentStatus: 'paid',
+        },
+      });
+    } catch (e) {
+      console.error('Contract PDF generation/upload failed:', e);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const prepareContract = async () => {
+    try {
+      const tx = transactionDetails;
+      if (!tx) return;
+      // احصل على أحدث المعاملة لتأكيد وجود contract_id
+      let currentTx = tx;
+      if (!currentTx.id) {
+        const { data: fetched } = await supabase
+          .from('payment_transactions')
+          .select('*')
+          .or(`tap_charge_id.eq.${tx.chargeId},paylink_transaction_no.eq.${tx.chargeId},tamara_order_id.eq.${tx.chargeId},stc_pay_reference.eq.${tx.chargeId}`)
+          .maybeSingle();
+        if (fetched) currentTx = fetched;
+      }
+      if (!currentTx?.contract_id) return;
+
+      const { data: contract } = await supabase
+        .from('contracts')
+        .select('*')
+        .eq('id', currentTx.contract_id)
+        .maybeSingle();
+
+      if (!contract) return;
+      if (contract.contract_pdf_url) {
+        setContractUrl(contract.contract_pdf_url);
+        return;
+      }
+      await generateAndUploadContractPDF(contract, currentTx);
+    } catch (e) {
+      console.error('prepareContract error:', e);
+    }
+  };
+
+  useEffect(() => {
+    if (paymentStatus === 'success') {
+      prepareContract();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paymentStatus, transactionDetails]);
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]">
       <Navigation />
@@ -214,9 +321,29 @@ const PaymentSuccess = () => {
                   سيتم التواصل معك خلال 24 ساعة لتأكيد تفاصيل الخدمة وبدء العمل
                 </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                {generating && (
+                  <Button disabled className="flex items-center gap-2 hover-scale">
+                    <Clock className="w-4 h-4 animate-spin" />
+                    جاري تجهيز العقد...
+                  </Button>
+                )}
+                {!generating && contractUrl && (
+                  <a href={contractUrl} target="_blank" rel="noopener noreferrer" className="hover-scale">
+                    <Button className="flex items-center gap-2">
+                      <Download className="w-4 h-4" />
+                      تحميل العقد PDF
+                    </Button>
+                  </a>
+                )}
+                {!generating && !contractUrl && (
+                  <Button disabled className="flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    يتم تجهيز العقد
+                  </Button>
+                )}
                 <Button 
                   onClick={() => navigate("/")}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 hover-scale"
                 >
                   <Home className="w-4 h-4" />
                   العودة للرئيسية
@@ -224,7 +351,7 @@ const PaymentSuccess = () => {
                 <Button 
                   variant="outline"
                   onClick={() => navigate("/current-offers")}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 hover-scale"
                 >
                   <ArrowRight className="w-4 h-4" />
                   مشاهدة العروض الأخرى
