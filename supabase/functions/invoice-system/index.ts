@@ -120,6 +120,8 @@ const handler = async (req: Request): Promise<Response> => {
       const emailResult = await resend.emails.send({
         from: "نظام الفواتير <invoices@resend.dev>",
         to: [invoice.customer_email],
+        bcc: ["info@alialshehriholding.com"],
+        reply_to: "info@alialshehriholding.com",
         subject: emailSubject,
         html: emailContent,
       });

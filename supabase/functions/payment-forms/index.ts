@@ -51,7 +51,7 @@ const handler = async (req: Request): Promise<Response> => {
       // Send email to company
       const companyEmailResponse = await resend.emails.send({
         from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-        to: ["finance@alialshehriholding.com", "admin@alialshehriholding.com"],
+        to: ["info@alialshehriholding.com", "finance@alialshehriholding.com", "admin@alialshehriholding.com"],
         bcc: ["info@alialshehriholding.com"],
         html: `
           <!DOCTYPE html>
@@ -258,7 +258,7 @@ const handler = async (req: Request): Promise<Response> => {
       // Send email to company
       const companyEmailResponse = await resend.emails.send({
         from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-        to: ["finance@alialshehriholding.com", "admin@alialshehriholding.com"],
+        to: ["info@alialshehriholding.com", "finance@alialshehriholding.com", "admin@alialshehriholding.com"],
         bcc: ["info@alialshehriholding.com"],
         html: `
           <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 0;">
