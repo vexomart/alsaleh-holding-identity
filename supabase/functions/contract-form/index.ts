@@ -214,21 +214,24 @@ const handler = async (req: Request): Promise<Response> => {
       `;
     }
 
-    // Send email to company
-    const companyEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
-      bcc: ["info@alialshehriholding.com"],
-      subject: subject,
-      html: emailHtml,
-    });
+    // Start background email sending without blocking response
+    EdgeRuntime.waitUntil((async () => {
+      try {
+        // Send email to company
+        const companyEmailResponse = await resend.emails.send({
+          from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+          to: ["info@alialshehriholding.com"],
+          bcc: ["info@alialshehriholding.com"],
+          subject: subject,
+          html: emailHtml,
+        });
 
-    // Send confirmation email to client
-    const clientEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: data.clientEmail,
-      bcc: ["info@alialshehriholding.com"],
-      html: `
+        // Send confirmation email to client
+        const clientEmailResponse = await resend.emails.send({
+          from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+          to: data.clientEmail,
+          bcc: ["info@alialshehriholding.com"],
+          html: `
         <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc;">
           <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
             <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 30px; text-align: center;">
@@ -237,7 +240,6 @@ const handler = async (req: Request): Promise<Response> => {
               </h1>
               <p style="color: #bfdbfe; margin: 10px 0 0 0;">شكراً لثقتك في خدماتنا</p>
             </div>
-            
             <div style="padding: 30px; text-align: center;">
               <div style="background: #dcfce7; padding: 25px; border-radius: 12px; margin: 20px 0;">
                 <div style="background: #22c55e; width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
@@ -246,7 +248,6 @@ const handler = async (req: Request): Promise<Response> => {
                 <h2 style="color: #15803d; margin: 0 0 10px 0; font-size: 20px;">تم استلام طلبك بنجاح!</h2>
                 <p style="color: #166534; margin: 0; font-size: 16px;">عزيزنا ${data.clientName}</p>
               </div>
-
               <div style="text-align: right; margin: 25px 0;">
                 <p style="color: #374151; line-height: 1.6; margin: 0 0 15px 0;">
                   نشكرك على تقديم طلب التعاقد معنا. لقد تم استلام طلبك وسيتم مراجعته من قبل فريقنا المختص.
@@ -255,7 +256,6 @@ const handler = async (req: Request): Promise<Response> => {
                   <strong style="color: #1e40af;">سيتم التواصل معك خلال 24 ساعة كحد أقصى</strong> لمناقشة تفاصيل العقد وإجراءات التنفيذ.
                 </p>
               </div>
-
               <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: right;">
                 <h3 style="color: #92400e; margin-top: 0; font-size: 16px;">⚠️ ملاحظة مهمة</h3>
                 <p style="color: #92400e; margin: 0; line-height: 1.5;">
@@ -263,7 +263,6 @@ const handler = async (req: Request): Promise<Response> => {
                   سيتم اعتماد العقد نهائياً بعد الدفع عن طريق التحويل البنكي لحساب الشركة.
                 </p>
               </div>
-
               <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: right;">
                 <h3 style="color: #1e40af; margin-top: 0; font-size: 16px;">الخطوات التالية:</h3>
                 <div style="text-align: right;">
@@ -273,7 +272,6 @@ const handler = async (req: Request): Promise<Response> => {
                   <p style="margin: 8px 0; color: #374151;">✓ البدء في تنفيذ المشروع بعد الدفع</p>
                 </div>
               </div>
-
               <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; margin: 25px 0;">
                 <h3 style="color: #065f46; margin-top: 0; font-size: 16px;">للاستفسارات والتواصل</h3>
                 <p style="margin: 8px 0; color: #065f46;"><strong>البريد الإلكتروني:</strong> info@alialshehriholding.com</p>
@@ -281,7 +279,6 @@ const handler = async (req: Request): Promise<Response> => {
                 <p style="margin: 8px 0; color: #065f46;"><strong>ساعات العمل:</strong> الأحد - الخميس من 9 صباحاً حتى 6 مساءً</p>
               </div>
             </div>
-
             <div style="background: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
               <p style="color: #6b7280; margin: 0; font-size: 14px;">
                 شركة علي صالح الشهري القابضة<br>
@@ -292,14 +289,19 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
         </div>
       `,
-    });
+        });
 
-    console.log("Emails sent successfully:", { companyEmailResponse, clientEmailResponse });
+        console.log("Emails sent successfully:", { companyEmailResponse, clientEmailResponse });
+      } catch (e) {
+        console.error("Background email send failed:", e);
+      }
+    })());
 
+    // Return immediate response while emails are being sent in background
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "تم إرسال طلب التعاقد بنجاح" 
+        message: "تم استلام طلب التعاقد وسيتم إرسال التأكيد عبر البريد" 
       }), 
       {
         status: 200,
@@ -309,22 +311,3 @@ const handler = async (req: Request): Promise<Response> => {
         },
       }
     );
-  } catch (error: any) {
-    console.error("Error in contract-form function:", error);
-    return new Response(
-      JSON.stringify({ 
-        error: "حدث خطأ أثناء إرسال النموذج",
-        details: error.message 
-      }),
-      {
-        status: 500,
-        headers: { 
-          "Content-Type": "application/json", 
-          ...corsHeaders 
-        },
-      }
-    );
-  }
-};
-
-serve(handler);
