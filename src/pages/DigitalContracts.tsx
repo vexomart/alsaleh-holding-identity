@@ -317,9 +317,8 @@ const DigitalContracts = () => {
 
     const contractElement = document.createElement('div');
     contractElement.style.cssText = `
-        width: 210mm;
-        min-height: 297mm;
-        padding: 15mm;
+        width: 794px; /* A4 width at ~96 DPI */
+        padding: 40px;
         background: white;
         font-family: 'Arial', 'Tahoma', sans-serif;
         font-size: 11pt;
@@ -327,9 +326,11 @@ const DigitalContracts = () => {
         direction: rtl;
         text-align: right;
         color: #000;
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
+        position: fixed; /* keep in flow for layout */
+        top: 0;
+        left: 0;
+        opacity: 0; /* invisible but renderable */
+        pointer-events: none;
         box-sizing: border-box;
         margin: 0;
         page-break-inside: avoid;
