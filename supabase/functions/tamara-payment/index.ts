@@ -26,8 +26,8 @@ serve(async (req) => {
     const tamaraApiKey = Deno.env.get("TAMARA_API_KEY");
     const tamaraNotificationToken = Deno.env.get("TAMARA_NOTIFICATION_TOKEN");
     
-    console.log("Tamara API Key check:", tamaraApiKey ? `Key exists (length: ${tamaraApiKey.length})` : "Key not found");
-    console.log("Tamara Notification Token check:", tamaraNotificationToken ? `Token exists (length: ${tamaraNotificationToken.length})` : "Token not found");
+    console.log("Tamara API Key check:", tamaraApiKey ? "Key exists" : "Key not found");
+    console.log("Tamara Notification Token check:", tamaraNotificationToken ? "Token exists" : "Token not found");
     
     if (!tamaraApiKey) {
       throw new Error("TAMARA_API_KEY not configured");

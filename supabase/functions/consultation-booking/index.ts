@@ -62,8 +62,6 @@ serve(async (req: Request) => {
 
     // Check RESEND_API_KEY
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    console.log("RESEND_API_KEY exists:", !!resendApiKey);
-    console.log("RESEND_API_KEY length:", resendApiKey?.length || 0);
     
     if (!resendApiKey) {
       console.error("RESEND_API_KEY not found");

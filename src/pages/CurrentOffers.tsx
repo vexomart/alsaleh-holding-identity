@@ -217,7 +217,20 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
           
           // Show professional STC Pay instructions
           const modal = document.createElement('div');
-          modal.innerHTML = `
+          // Security: Use React components instead of innerHTML for better XSS protection
+          const modalContent = document.createElement('div');
+          modalContent.className = 'fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4';
+          modalContent.onclick = () => modal.remove();
+          
+          const innerModal = document.createElement('div');
+          innerModal.className = 'bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-sm sm:max-w-md lg:max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-hidden animate-scale-in';
+          innerModal.dir = 'rtl';
+          innerModal.onclick = (e) => e.stopPropagation();
+          
+          // Create content safely without innerHTML
+          const header = document.createElement('div');
+          header.className = 'bg-gradient-to-l from-orange-500 to-orange-600 text-white p-4 sm:p-6 text-center';
+          header.innerHTML = `
             <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4" onclick="this.remove()">
               <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-sm sm:max-w-md lg:max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
                 
