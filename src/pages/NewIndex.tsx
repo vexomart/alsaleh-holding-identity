@@ -57,6 +57,37 @@ const Index = () => {
     }
   ];
 
+  const otherServices = [
+    {
+      title: "الخدمات المالية",
+      description: "حلول مالية متطورة وأنظمة محاسبية شاملة",
+      icon: BarChart3,
+      features: ["أنظمة المحاسبة", "إدارة المدفوعات", "تقارير مالية"],
+      badge: "جديد"
+    },
+    {
+      title: "خدمات الترجمة",
+      description: "ترجمة احترافية متعددة اللغات بدقة عالية",
+      icon: Globe,
+      features: ["ترجمة فورية", "مستندات رسمية", "تدقيق لغوي"],
+      badge: "متعدد اللغات"
+    },
+    {
+      title: "التدريب والتطوير",
+      description: "برامج تدريبية متخصصة لتطوير مهارات فريقك",
+      icon: Users,
+      features: ["تدريب تقني", "ورش عمل", "شهادات معتمدة"],
+      badge: "تطوير المهارات"
+    },
+    {
+      title: "الاستشارات القانونية",
+      description: "استشارات قانونية متخصصة وخدمات التوثيق",
+      icon: Building,
+      features: ["عقود ذكية", "استشارات قانونية", "توثيق رقمي"],
+      badge: "قانوني"
+    }
+  ];
+
   const stats = [
     { value: "500+", label: "عميل راضي", icon: Users },
     { value: "1000+", label: "مشروع مكتمل", icon: CheckCircle },
@@ -140,6 +171,34 @@ const Index = () => {
                 badge={service.badge}
                 className={`animate-fade-in delay-${(index + 1) * 100}`}
                 onClick={() => navigate('/services')}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Other Services Section */}
+        <section className="animate-fade-in delay-350">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 bg-gradient-to-r from-secondary to-accent text-white">
+              خدمات إضافية
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent mb-4">
+              خدماتنا الأخرى
+            </h2>
+            <p className="text-xl text-muted-foreground">مجموعة متنوعة من الخدمات المتخصصة لتلبية جميع احتياجاتك</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {otherServices.map((service, index) => (
+              <ServiceCard
+                key={index}
+                title={service.title}
+                description={service.description}
+                icon={service.icon}
+                features={service.features}
+                badge={service.badge}
+                className={`animate-fade-in delay-${(index + 1) * 100} border-secondary/20 hover:border-secondary/40`}
+                onClick={() => navigate('/professional-services')}
               />
             ))}
           </div>
