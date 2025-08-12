@@ -31,70 +31,114 @@ const DigitalMarketing = () => {
 
   const handlePayment = async (service: any) => {
     setIsLoading(true);
-    console.log('بدء عملية الدفع للخدمة:', service.title);
     
     try {
-      console.log('إرسال طلب الدفع إلى Tamara...');
+      const amount = 1499;
       
-      const { data, error } = await supabase.functions.invoke('tamara-payment', {
+      // استخدام Paylink كطريقة دفع أساسية
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
         body: {
-          amount: 1499,
+          amount: amount,
           currency: 'SAR',
-          customerName: 'عميل محتمل',
-          customerEmail: 'customer@example.com',
-          customerPhone: '966500000000',
-          offerTitle: service.title,
-          offerDescription: service.description
+          customer_name: 'عميل محتمل',
+          customer_email: 'customer@example.com',
+          customer_phone: '966500000000',
+          offer_title: service.title,
+          description: `دفع خدمة: ${service.title}`,
+          success_url: window.location.origin
         }
       });
 
-      console.log('استجابة Tamara:', { data, error });
-
       if (error) {
-        console.error('خطأ في استدعاء دالة الدفع:', error);
-        
-        // جرب STC Pay كبديل
-        console.log('جاري تجربة STC Pay...');
-        const stcResponse = await supabase.functions.invoke('stc-pay', {
-          body: {
-            amount: 1499,
-            currency: 'SAR',
-            customerName: 'عميل محتمل',
-            customerEmail: 'customer@example.com',
-            customerPhone: '966500000000',
-            offerTitle: service.title,
-            offerDescription: service.description
-          }
-        });
-
-        console.log('استجابة STC Pay:', stcResponse);
-
-        if (stcResponse.data && stcResponse.data.success) {
-          toast({
-            title: "تعليمات الدفع",
-            description: `يرجى إرسال ${service.price} ريال إلى رقم التاجر: ${stcResponse.data.merchantNumber} برقم المرجع: ${stcResponse.data.paymentReference}`,
-          });
-          return;
-        }
-        
-        throw error;
+        console.error('Supabase error:', error);
+        throw new Error(error.message || 'فشل في الاتصال بالخدمة');
       }
 
-      if (data && data.success && data.paymentUrl) {
-        console.log('تم إنشاء رابط الدفع بنجاح:', data.paymentUrl);
-        window.open(data.paymentUrl, '_blank');
-        toast({
-          title: "تم توجيهك لصفحة الدفع",
-          description: "يرجى إكمال عملية الدفع في التبويب الجديد",
-        });
+      console.log('Payment response:', data);
+
+      if (data?.success) {
+        if (data.paymentUrl) {
+          // فتح صفحة الدفع في تبويب جديد
+          window.open(data.paymentUrl, '_blank');
+          toast({
+            title: "تم توجيهك لصفحة الدفع",
+            description: "يرجى إكمال عملية الدفع في التبويب الجديد",
+          });
+        }
       } else {
-        console.error('فشل في إنشاء رابط الدفع:', data);
         throw new Error('فشل في إنشاء رابط الدفع');
       }
     } catch (error) {
       console.error('خطأ في عملية الدفع:', error);
       
-      // كحل أخير، أظهر معلومات الدفع اليدوي
+      // في حالة فشل Paylink، جرب STC Pay
+      try {
+        const { data: stcData, error: stcError } = await supabase.functions.invoke('stc-pay', {
+          body: {
+            amount: 1499,
+            currency: 'SAR',
+            customer_name: 'عميل محتمل',
+            customer_email: 'customer@example.com',
+            customer_phone: '966500000000',
+            offer_title: service.title,
+            description: `دفع خدمة: ${service.title}`
+          }
+        });
+
+        if (!stcError && stcData?.success) {
+          // عرض تعليمات STC Pay
+          const modal = document.createElement('div');
+          modal.innerHTML = `
+            <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
+              <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
+                <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white text-center">
+                  <h3 class="text-2xl font-bold mb-2">تعليمات الدفع - STC Pay</h3>
+                  <p class="text-green-100">معاملة آمنة ومحمية</p>
+                </div>
+                <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                  <div class="bg-blue-50 rounded-xl p-4 border-2 border-blue-100">
+                    <h4 class="font-bold text-blue-800 mb-2">1. افتح تطبيق STC Pay</h4>
+                  </div>
+                  <div class="bg-green-50 rounded-xl p-4 border-2 border-green-100">
+                    <h4 class="font-bold text-green-800 mb-2">2. اختر "إرسال أموال"</h4>
+                  </div>
+                  <div class="bg-purple-50 rounded-xl p-4 border-2 border-purple-100">
+                    <h4 class="font-bold text-purple-800 mb-2">3. أرسل المبلغ:</h4>
+                    <div class="bg-white rounded-lg p-4 border-2 border-purple-200 text-center">
+                      <div class="text-3xl font-bold text-purple-600">${stcData.amount}</div>
+                      <div class="text-lg text-purple-500">${stcData.currency}</div>
+                      <div class="mt-2 text-sm text-gray-600">إلى الرقم</div>
+                      <div class="text-xl font-bold text-gray-800 mt-2 font-mono bg-gray-50 rounded p-2">${stcData.merchant_number}</div>
+                    </div>
+                  </div>
+                  <div class="bg-orange-50 rounded-xl p-4 border-2 border-orange-100">
+                    <h4 class="font-bold text-orange-800 mb-2">4. استخدم المرجع:</h4>
+                    <div class="bg-white rounded-lg p-3 border-2 border-orange-200 text-center">
+                      <div class="text-lg font-bold text-gray-800 font-mono bg-gray-50 rounded p-2">${stcData.reference}</div>
+                      <button onclick="navigator.clipboard.writeText('${stcData.reference}'); this.innerHTML='✓ تم النسخ!'" 
+                              class="mt-2 bg-orange-100 hover:bg-orange-200 text-orange-800 text-sm font-medium py-2 px-4 rounded-lg">
+                        نسخ المرجع
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-6 bg-gray-50 border-t">
+                  <button onclick="this.closest('.fixed').remove()" 
+                          class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl">
+                    إغلاق
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(modal);
+          return;
+        }
+      } catch (stcError) {
+        console.error('STC Pay error:', stcError);
+      }
+      
+      // كحل أخير
       toast({
         title: "يمكنك الدفع يدوياً",
         description: "يرجى التواصل معنا على الواتساب لإتمام عملية الدفع: +966500000000",
@@ -102,7 +146,6 @@ const DigitalMarketing = () => {
       });
     } finally {
       setIsLoading(false);
-      console.log('انتهت عملية الدفع');
     }
   };
 
