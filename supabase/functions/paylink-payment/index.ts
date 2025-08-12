@@ -174,7 +174,7 @@ serve(async (req) => {
         description,
         payment_method: 'paylink',
         status: 'pending',
-        payment_url: invoiceResult.url,
+        paylink_transaction_no: invoiceResult.transactionNo,
         order_number: orderNumber
       });
 
