@@ -74,16 +74,26 @@ const DigitalMarketing = () => {
         if (method === 'stc-pay') {
           // عرض تعليمات STC Pay
           showSTCPayInstructions(data);
-        } else if (data.paymentUrl) {
-          // فتح صفحة الدفع للطرق الأخرى
-          window.open(data.paymentUrl, '_blank');
-          toast({
-            title: "تم توجيهك لصفحة الدفع",
-            description: "يرجى إكمال عملية الدفع في التبويب الجديد",
-          });
+        } else if (data.url || data.paymentUrl) {
+          // استخدام الرابط المناسب
+          const paymentUrl = data.url || data.paymentUrl;
+          
+          if (method === 'paylink') {
+            // فتح Paylink في نفس التبويب
+            window.location.href = paymentUrl;
+          } else {
+            // فتح باقي الطرق في تبويب جديد
+            window.open(paymentUrl, '_blank');
+            toast({
+              title: "تم توجيهك لصفحة الدفع",
+              description: "يرجى إكمال عملية الدفع في التبويب الجديد",
+            });
+          }
+        } else {
+          throw new Error('لم يتم إرجاع رابط الدفع من الخدمة');
         }
       } else {
-        throw new Error('فشل في إنشاء رابط الدفع');
+        throw new Error(data?.error || 'فشل في إنشاء رابط الدفع');
       }
     } catch (error) {
       console.error(`خطأ في ${method}:`, error);
