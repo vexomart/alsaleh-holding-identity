@@ -256,6 +256,23 @@ const SoftwareProducts = () => {
       tags: ["Global", "Construction", "Animated", "Multilingual"],
       isNew: true,
       isFeatured: true
+    },
+    {
+      id: 3,
+      name: "منصة التسويق الإلكتروني المتكاملة",
+      description: "موقع متخصص في التسويق الإلكتروني والتجارة الرقمية مع أدوات تحليل متقدمة وحلول تسويقية شاملة",
+      category: "التسويق الرقمي",
+      icon: Globe,
+      features: ["أدوات تحليل متقدمة", "إدارة الحملات الإعلانية", "التسويق عبر وسائل التواصل", "تحليل المنافسين", "تقارير مفصلة", "دعم فني متخصص"],
+      price: "5999 ريال",
+      rating: 4.9,
+      downloads: "0",
+      status: "متاح الآن",
+      color: "from-purple-500 to-pink-500",
+      demoUrl: "/digital-marketing-website",
+      tags: ["Marketing", "Analytics", "Social Media", "E-commerce"],
+      isNew: true,
+      isFeatured: true
     }
   ];
 
@@ -264,7 +281,7 @@ const SoftwareProducts = () => {
   const stats = [
     {
       title: "إجمالي المنتجات",
-      value: "2",
+      value: "3",
       icon: Package,
       color: "from-blue-500 to-blue-600",
       bgColor: "from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20",
@@ -274,7 +291,7 @@ const SoftwareProducts = () => {
     },
     {
       title: "المنتجات المتاحة",
-      value: "2",
+      value: "3",
       icon: Zap,
       color: "from-green-500 to-green-600",
       bgColor: "from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20",
@@ -284,7 +301,7 @@ const SoftwareProducts = () => {
     },
     {
       title: "المبيعات",
-      value: "11999 ر.س",
+      value: "17998 ر.س",
       icon: TrendingUp,
       color: "from-purple-500 to-purple-600",
       bgColor: "from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20",

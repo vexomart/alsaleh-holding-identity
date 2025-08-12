@@ -104,6 +104,7 @@ import InvoiceViewer from "./pages/InvoiceViewer";
 import TechEcosystem from "./pages/TechEcosystem";
 import CookiePolicy from "./pages/CookiePolicy";
 import ConstructionWebsite from "./pages/ConstructionWebsite";
+import DigitalMarketingWebsite from "./pages/DigitalMarketingWebsite";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -196,6 +197,7 @@ const App = () => {
               <Route path="/company-updates" element={<CompanyUpdates />} />
               <Route path="/software-products" element={<SoftwareProducts />} />
               <Route path="/construction-website" element={<ConstructionWebsite />} />
+              <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
               <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
               <Route path="/car-rental-landing" element={<CarRentalLanding />} />
               <Route path="/car-rental" element={<CarRentalLanding />} />
