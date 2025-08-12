@@ -1,8 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ServiceCard } from "@/components/ui/service-card";
-import OtherServicesSection from "@/components/OtherServicesSection";
 import { 
   Code, 
   Megaphone, 
@@ -560,7 +558,7 @@ ${service.technologies.slice(0, 3).map((tech: string, index: number) => `${index
           })}
         </div>
 
-        <OtherServicesSection />
+        
 
         {/* Premium CTA Section */}
         <div className="text-center bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-12 text-white shadow-2xl border border-slate-700">
