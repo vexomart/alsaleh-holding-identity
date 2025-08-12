@@ -252,7 +252,7 @@ const SoftwareProducts = () => {
       downloads: "0",
       status: "متاح الآن",
       color: "from-emerald-500 to-teal-500",
-      demoUrl: "#",
+      demoUrl: "/construction-website",
       tags: ["Global", "Construction", "Animated", "Multilingual"],
       isNew: true,
       isFeatured: true
