@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
+import OtherServicesSection from "@/components/OtherServicesSection";
 
 
 
@@ -167,6 +168,19 @@ const Index = () => {
             
             <div className="relative z-10">
               <DepartmentsSection />
+            </div>
+          </section>
+
+          {/* Our Services Wrapper - includes Other Services subsection */}
+          <section id="our-services" className="relative py-20 lg:py-28 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-background to-accent/10"></div>
+            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-10">
+                <Badge className="mb-4 bg-gradient-to-r from-secondary to-accent text-white">خدماتنا</Badge>
+                <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-3">خدماتنا</h2>
+                <p className="text-lg text-muted-foreground">اكتشف أقسام خدماتنا بما في ذلك قسم خدماتنا الأخرى</p>
+              </div>
+              <OtherServicesSection />
             </div>
           </section>
 
