@@ -19,8 +19,10 @@ import {
   MousePointer,
   Eye,
   Heart,
-  Rocket
+  Rocket,
+  Building2
 } from "lucide-react";
+import { AnimatedCounter } from "./AnimatedCounter";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -39,15 +41,15 @@ const HeroSection = () => {
   const achievements = [
     { 
       icon: Calendar, 
-      number: "2016", 
+      number: 2016, 
       title: "سنة التأسيس", 
       titleEn: "Foundation Year",
       color: "from-blue-600 to-cyan-600",
       description: "بداية رحلة النجاح"
     },
     { 
-      icon: Star, 
-      number: "2024", 
+      icon: Building2, 
+      number: 2024, 
       title: "شركة قابضة", 
       titleEn: "Holding Company",
       color: "from-purple-600 to-pink-600",
@@ -55,7 +57,8 @@ const HeroSection = () => {
     },
     { 
       icon: Trophy, 
-      number: "2,846", 
+      number: 2848, 
+      suffix: "+",
       title: "مشروع ناجح", 
       titleEn: "Successful Projects",
       color: "from-emerald-600 to-teal-600",
@@ -63,7 +66,8 @@ const HeroSection = () => {
     },
     { 
       icon: Users, 
-      number: "1,744", 
+      number: 1760, 
+      suffix: "+",
       title: "عميل راضٍ", 
       titleEn: "Satisfied Clients",
       color: "from-orange-600 to-red-600",
@@ -246,7 +250,11 @@ const HeroSection = () => {
                 
                 <div className="space-y-1 sm:space-y-2">
                   <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gradient-primary mb-2 sm:mb-3 group-hover:scale-125 transition-transform duration-500">
-                    {achievement.number}
+                    <AnimatedCounter 
+                      end={achievement.number} 
+                      suffix={achievement.suffix || ""} 
+                      duration={2000}
+                    />
                   </div>
                   <div className="text-lg sm:text-xl font-bold text-primary-foreground group-hover:text-secondary transition-colors duration-300">
                     {achievement.title}
