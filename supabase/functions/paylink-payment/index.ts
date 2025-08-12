@@ -1,13 +1,8 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-const log = (message: string, data?: any) => {
-  console.log(`[PAYLINK] ${message}`, data ? JSON.stringify(data, null, 2) : '');
 };
 
 serve(async (req) => {
@@ -17,67 +12,93 @@ serve(async (req) => {
   }
 
   try {
-    log("Starting payment request");
+    console.log("🚀 Starting Paylink payment request");
 
-    // Parse request
-    const body = await req.json();
-    log("Request body received", body);
+    // Get request body safely
+    let body;
+    try {
+      const text = await req.text();
+      console.log("📝 Raw request body:", text);
+      body = JSON.parse(text);
+    } catch (parseError) {
+      console.log("❌ Failed to parse request body:", parseError.message);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "خطأ في تحليل البيانات المرسلة" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400
+      });
+    }
 
-    const {
-      amount = 1499,
-      currency = 'SAR',
-      customer_name = 'عميل محتمل',
-      customer_email = 'customer@example.com',
-      customer_phone = '966500000000',
-      offer_title = 'خدمة تسويقية',
-      description = 'دفع خدمة تسويقية',
-      success_url = 'https://preview--alsaleh-holding-identity.lovable.app'
-    } = body;
+    console.log("✅ Parsed body:", body);
 
-    log("Processed data", {
+    // Extract data with defaults
+    const amount = body?.amount || 1499;
+    const customer_name = body?.customer_name || "عميل محتمل";
+    const customer_email = body?.customer_email || "customer@example.com";
+    const customer_phone = body?.customer_phone || "966500000000";
+    const offer_title = body?.offer_title || "خدمة تسويقية";
+    const description = body?.description || "دفع خدمة تسويقية";
+
+    console.log("📊 Processing payment:", {
       amount,
-      currency,
       customer_name,
       customer_email,
-      customer_phone,
       offer_title
     });
 
-    // Get credentials
+    // Get Paylink credentials
     const apiId = Deno.env.get('PAYLINK_API_ID');
     const apiKey = Deno.env.get('PAYLINK_API_KEY');
 
+    console.log("🔑 Checking credentials:", {
+      hasApiId: !!apiId,
+      hasApiKey: !!apiKey
+    });
+
     if (!apiId || !apiKey) {
-      log("Missing credentials");
+      console.log("❌ Missing Paylink credentials");
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Missing Paylink credentials" 
+        error: "إعدادات الدفع غير مكتملة" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
     }
 
-    log("Credentials found, authenticating...");
+    // Authenticate with Paylink
+    console.log("🔐 Authenticating with Paylink...");
+    
+    const authPayload = {
+      apiId: apiId,
+      secretKey: apiKey,
+      persistToken: false
+    };
 
-    // Authenticate
+    console.log("📡 Auth payload prepared");
+
     const authResponse = await fetch('https://restapi.paylink.sa/api/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        apiId,
-        secretKey: apiKey,
-        persistToken: false
-      })
+      body: JSON.stringify(authPayload)
     });
 
+    console.log("📡 Auth response status:", authResponse.status);
+
     if (!authResponse.ok) {
-      log("Auth failed", { status: authResponse.status });
+      const errorText = await authResponse.text();
+      console.log("❌ Paylink auth failed:", {
+        status: authResponse.status,
+        statusText: authResponse.statusText,
+        error: errorText
+      });
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Authentication failed" 
+        error: "فشل في الاتصال مع خدمة الدفع" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
@@ -85,13 +106,13 @@ serve(async (req) => {
     }
 
     const authData = await authResponse.json();
-    log("Authentication successful");
+    console.log("✅ Authentication successful, token length:", authData.id_token?.length);
 
     if (!authData.id_token) {
-      log("No token received", authData);
+      console.log("❌ No token in auth response:", authData);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "No auth token" 
+        error: "لم يتم الحصول على رمز التوثيق" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
@@ -99,13 +120,13 @@ serve(async (req) => {
     }
 
     // Create invoice
-    log("Creating invoice...");
+    console.log("📄 Creating invoice...");
     const orderNumber = `ORD-${Date.now()}`;
     
-    const invoiceData = {
+    const invoicePayload = {
       amount: Number(amount),
-      orderNumber,
-      callBackUrl: success_url,
+      orderNumber: orderNumber,
+      callBackUrl: "https://preview--alsaleh-holding-identity.lovable.app/payment-success",
       clientEmail: customer_email,
       clientName: customer_name,
       clientMobile: customer_phone.toString().replace(/^\+?966/, "0"),
@@ -119,10 +140,10 @@ serve(async (req) => {
         isDigital: true
       }],
       supportedCardBrands: ["mada", "visaMastercard"],
-      currency
+      currency: "SAR"
     };
 
-    log("Invoice data prepared", invoiceData);
+    console.log("📦 Invoice payload:", invoicePayload);
 
     const invoiceResponse = await fetch('https://restapi.paylink.sa/api/addInvoice', {
       method: 'POST',
@@ -130,81 +151,70 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authData.id_token}`
       },
-      body: JSON.stringify(invoiceData)
+      body: JSON.stringify(invoicePayload)
     });
 
-    log("Invoice response status", invoiceResponse.status);
+    console.log("📄 Invoice response status:", invoiceResponse.status);
 
     if (!invoiceResponse.ok) {
       const errorText = await invoiceResponse.text();
-      log("Invoice creation failed", { status: invoiceResponse.status, error: errorText });
+      console.log("❌ Invoice creation failed:", {
+        status: invoiceResponse.status,
+        statusText: invoiceResponse.statusText,
+        error: errorText
+      });
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Failed to create invoice" 
+        error: "فشل في إنشاء فاتورة الدفع" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
     }
 
-    const result = await invoiceResponse.json();
-    log("Invoice creation result", result);
+    const invoiceResult = await invoiceResponse.json();
+    console.log("✅ Invoice created successfully:", {
+      success: invoiceResult.success,
+      hasUrl: !!invoiceResult.url,
+      transactionNo: invoiceResult.transactionNo
+    });
 
-    if (!result.success || !result.url) {
-      log("Invalid result", result);
+    if (!invoiceResult.success || !invoiceResult.url) {
+      console.log("❌ Invalid invoice result:", invoiceResult);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Invalid payment response" 
+        error: "استجابة غير صحيحة من خدمة الدفع" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
-    }
-
-    // Save to database (optional, don't fail if it doesn't work)
-    try {
-      const supabase = createClient(
-        Deno.env.get('SUPABASE_URL') ?? "",
-        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ""
-      );
-
-      await supabase.from('payment_transactions').insert({
-        offer_title,
-        amount: Number(amount),
-        currency,
-        customer_name,
-        customer_email,
-        customer_phone,
-        status: 'INITIATED',
-        payment_method: 'paylink',
-        paylink_transaction_no: result.transactionNo
-      });
-      
-      log("Database record saved");
-    } catch (dbError) {
-      log("Database save failed (continuing anyway)", dbError);
     }
 
     // Return success
-    const response = {
+    const successResponse = {
       success: true,
-      url: result.url,
-      payment_url: result.url,
-      transaction_no: result.transactionNo
+      url: invoiceResult.url,
+      payment_url: invoiceResult.url,
+      transaction_no: invoiceResult.transactionNo
     };
 
-    log("Returning success", response);
+    console.log("🎉 Payment created successfully!", successResponse);
 
-    return new Response(JSON.stringify(response), {
+    return new Response(JSON.stringify(successResponse), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200
     });
 
   } catch (error) {
-    log("Unexpected error", { message: error.message, stack: error.stack });
+    console.log("💥 Unexpected error:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    
     return new Response(JSON.stringify({ 
       success: false, 
-      error: error.message || "Unknown error" 
+      error: `خطأ غير متوقع: ${error.message}` 
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500
