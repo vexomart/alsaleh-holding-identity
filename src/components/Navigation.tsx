@@ -58,7 +58,7 @@ const Navigation = () => {
     { name: "خدمات الأعمال", href: "/business-services", icon: Building2 },
     { name: "الاستضافات و الخوادم", href: "/hosting-services", icon: Globe },
     { name: "خدماتنا الاحترافية", href: "/professional-services", icon: Settings },
-    { name: "خدماتنا الأخرى", href: "#", icon: Package, disabled: true },
+    { name: "خدماتنا الأخرى", href: "/services-catalog", icon: Package },
     { name: "صناعة المحتوى", href: "/content-creation", icon: PenTool },
     { name: "حلول التصميم", href: "/design-solutions", icon: Palette },
     { name: "الاستثمار التقني", href: "/tech-investment", icon: Zap },
@@ -201,15 +201,12 @@ const Navigation = () => {
                             <a
                               key={index}
                               href={service.href}
-                              onClick={(e) => { if (service.disabled) { e.preventDefault(); } }}
-                              aria-disabled={service.disabled ? true : undefined}
-                              title={service.disabled ? "قريباً" : undefined}
-                              className={`flex items-center gap-2 p-2 transition-colors rounded-lg group hover:bg-gray-50 ${service.disabled ? 'cursor-not-allowed opacity-60' : ''}`}
+                              className="flex items-center gap-2 p-2 hover:bg-gray-50 transition-colors rounded-lg group"
                             >
-                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${service.disabled ? 'bg-gray-100' : 'bg-blue-100 group-hover:bg-blue-600'}`}>
-                                <IconComponent className={`w-4 h-4 ${service.disabled ? 'text-gray-400' : 'text-blue-600 group-hover:text-white'}`} />
+                              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                                <IconComponent className="w-4 h-4 text-blue-600 group-hover:text-white" />
                               </div>
-                              <span className={`text-xs font-medium ${service.disabled ? 'text-gray-500' : 'text-gray-700 group-hover:text-blue-600'}`}>{service.name}</span>
+                              <span className="text-xs font-medium text-gray-700 group-hover:text-blue-600">{service.name}</span>
                             </a>
                           );
                         })}
@@ -432,15 +429,13 @@ const Navigation = () => {
                           <a
                             key={index}
                             href={service.href}
-                            onClick={(e) => { if (service.disabled) { e.preventDefault(); } else { setIsOpen(false); } }}
-                            aria-disabled={service.disabled ? true : undefined}
-                            title={service.disabled ? "قريباً" : undefined}
-                            className={`flex items-center gap-3 p-3 transition-colors rounded-lg text-sm hover:bg-gray-50 ${service.disabled ? 'cursor-not-allowed opacity-60' : ''}`}
+                            className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-lg text-sm"
+                            onClick={() => setIsOpen(false)}
                           >
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${service.disabled ? 'bg-gray-100' : 'bg-blue-100'}`}>
-                              <IconComponent className={`w-4 h-4 ${service.disabled ? 'text-gray-400' : 'text-blue-600'}`} />
+                            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <IconComponent className="w-4 h-4 text-blue-600" />
                             </div>
-                            <span className={`leading-tight ${service.disabled ? 'text-gray-500' : 'text-gray-700'}`}>{service.name}</span>
+                            <span className="text-gray-700 leading-tight">{service.name}</span>
                           </a>
                         );
                       })}

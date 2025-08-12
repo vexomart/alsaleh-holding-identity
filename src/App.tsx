@@ -106,6 +106,8 @@ import CookiePolicy from "./pages/CookiePolicy";
 import ConstructionWebsite from "./pages/ConstructionWebsite";
 import DigitalMarketingWebsite from "./pages/DigitalMarketingWebsite";
 
+import ServicesCatalog from "./pages/ServicesCatalog";
+
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -229,6 +231,7 @@ const App = () => {
               <Route path="/invoice-admin" element={<InvoiceAdmin />} />
               <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
               <Route path="/tech-ecosystem" element={<TechEcosystem />} />
+              <Route path="/services-catalog" element={<ServicesCatalog />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
