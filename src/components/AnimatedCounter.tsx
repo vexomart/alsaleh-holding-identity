@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { NumberFormatter } from "./NumberFormatter";
 
 interface AnimatedCounterProps {
   end: number;
@@ -70,7 +71,11 @@ export const AnimatedCounter = ({
       id={`counter-${end}`}
       className={`font-bold ${className} transition-all duration-300`}
     >
-      {prefix}{count.toLocaleString()}{suffix}
+      {prefix}
+      <NumberFormatter 
+        number={count} 
+        suffix={suffix}
+      />
     </span>
   );
 };
