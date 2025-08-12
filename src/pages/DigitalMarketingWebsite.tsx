@@ -349,10 +349,17 @@ const DigitalMarketingWebsite = () => {
                     <span className="text-xl sm:text-2xl font-bold text-purple-600">{service.price}</span>
                      <Button 
                        className={`bg-gradient-to-r ${service.bgColor} hover:shadow-lg w-full sm:w-auto text-sm sm:text-base`}
-                       onClick={() => handlePayment(service, 'home')}
+                       onClick={() => {
+                         console.log('HOME BUTTON CLICKED for:', service.title);
+                         handlePayment(service, 'home');
+                       }}
                        disabled={processingServiceId === `home-${service.title}`}
                      >
-                       {processingServiceId === `home-${service.title}` ? "جاري المعالجة..." : "ادفع الآن"}
+                       {(() => {
+                         const isProcessing = processingServiceId === `home-${service.title}`;
+                         console.log('HOME BUTTON RENDER:', service.title, 'isProcessing:', isProcessing, 'processingServiceId:', processingServiceId);
+                         return isProcessing ? "جاري المعالجة..." : "ادفع الآن";
+                       })()}
                      </Button>
                   </div>
                 </CardContent>
@@ -528,13 +535,20 @@ const DigitalMarketingWebsite = () => {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-3xl font-bold text-purple-600">{service.price}</span>
-                <Button 
-                  size="lg" 
-                  className={`bg-gradient-to-r ${service.bgColor}`}
-                   onClick={() => handlePayment(service, 'services')}
+                 <Button 
+                   size="lg" 
+                   className={`bg-gradient-to-r ${service.bgColor}`}
+                   onClick={() => {
+                     console.log('SERVICES PAGE BUTTON CLICKED for:', service.title);
+                     handlePayment(service, 'services');
+                   }}
                    disabled={processingServiceId === `services-${service.title}`}
                  >
-                   {processingServiceId === `services-${service.title}` ? "جاري المعالجة..." : "ادفع الآن"}
+                   {(() => {
+                     const isProcessing = processingServiceId === `services-${service.title}`;
+                     console.log('SERVICES PAGE BUTTON RENDER:', service.title, 'isProcessing:', isProcessing, 'processingServiceId:', processingServiceId);
+                     return isProcessing ? "جاري المعالجة..." : "ادفع الآن";
+                   })()}
                  </Button>
               </div>
             </Card>
