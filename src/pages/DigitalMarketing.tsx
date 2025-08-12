@@ -31,7 +31,11 @@ const DigitalMarketing = () => {
 
   const handlePayment = async (service: any) => {
     setIsLoading(true);
+    console.log('بدء عملية الدفع للخدمة:', service.title);
+    
     try {
+      console.log('إرسال طلب الدفع إلى Paylink...');
+      
       const { data, error } = await supabase.functions.invoke('paylink-payment', {
         body: {
           amount: 1499,
@@ -44,25 +48,35 @@ const DigitalMarketing = () => {
         }
       });
 
-      if (error) throw error;
+      console.log('استجابة Paylink:', { data, error });
 
-      if (data.success && data.paymentUrl) {
+      if (error) {
+        console.error('خطأ في استدعاء دالة الدفع:', error);
+        throw error;
+      }
+
+      if (data && data.success && data.paymentUrl) {
+        console.log('تم إنشاء رابط الدفع بنجاح:', data.paymentUrl);
         // فتح صفحة الدفع في تبويب جديد
         window.open(data.paymentUrl, '_blank');
         toast({
           title: "تم توجيهك لصفحة الدفع",
           description: "يرجى إكمال عملية الدفع في التبويب الجديد",
         });
+      } else {
+        console.error('فشل في إنشاء رابط الدفع:', data);
+        throw new Error('فشل في إنشاء رابط الدفع');
       }
     } catch (error) {
-      console.error('Payment error:', error);
+      console.error('خطأ في عملية الدفع:', error);
       toast({
         title: "خطأ في الدفع",
-        description: "حدث خطأ أثناء توجيهك لصفحة الدفع. يرجى المحاولة مرة أخرى.",
+        description: error instanceof Error ? error.message : "حدث خطأ أثناء توجيهك لصفحة الدفع. يرجى المحاولة مرة أخرى.",
         variant: "destructive",
       });
     } finally {
       setIsLoading(false);
+      console.log('انتهت عملية الدفع');
     }
   };
 
