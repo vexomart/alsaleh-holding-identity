@@ -318,14 +318,15 @@ const DigitalMarketing = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="text-sm text-muted-foreground">
+                  <div className="flex flex-col gap-4">
+                    <div className="text-sm text-muted-foreground text-center">
                       يشمل ضمان المراجعة والتعديل
                     </div>
-                    <div className="flex flex-col gap-3">
+                    
+                    <div className="flex justify-center">
                       <Button 
                         variant="outline"
-                        className="border-primary text-primary hover:bg-primary hover:text-white"
+                        className="border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover-scale"
                         asChild
                       >
                         <a href="/start-with-us">
@@ -333,61 +334,128 @@ const DigitalMarketing = () => {
                           استشارة مجانية
                         </a>
                       </Button>
+                    </div>
                       
-                      {/* Payment Methods */}
-                      <div className="flex flex-col gap-2">
-                        <div className="text-sm font-semibold text-center">طرق الدفع المتاحة:</div>
-                        <div className="grid grid-cols-3 gap-2">
-                          {/* Paylink Payment */}
+                    {/* Payment Methods Section */}
+                    <div className="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl p-6 border-2 border-gray-100 dark:border-gray-700">
+                      <div className="text-center mb-4">
+                        <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">اختر طريقة الدفع</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">جميع المعاملات آمنة ومحمية</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {/* Paylink Payment */}
+                        <div className="group relative">
                           <Button 
-                            size="sm"
-                            className="bg-blue-500 hover:bg-blue-600 text-white flex flex-col items-center py-3 h-auto"
+                            className="w-full h-20 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in relative overflow-hidden"
                             onClick={() => handlePaymentMethod(service, 'paylink')}
                             disabled={isLoading}
+                            style={{ animationDelay: '100ms' }}
                           >
-                            {isLoading ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <>
-                                <CreditCard className="w-4 h-4 mb-1" />
-                                <span className="text-xs">Paylink</span>
-                              </>
-                            )}
+                            {/* Background Animation */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            
+                            <div className="relative z-10 flex flex-col items-center justify-center space-y-2">
+                              {isLoading ? (
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                              ) : (
+                                <>
+                                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <CreditCard className="w-5 h-5" />
+                                  </div>
+                                  <span className="font-semibold text-sm">Paylink</span>
+                                  <span className="text-xs text-blue-100">فيزا • ماستركارد • مدى</span>
+                                </>
+                              )}
+                            </div>
+                            
+                            {/* Shine Effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.6s_ease-out]" />
+                            </div>
                           </Button>
-                          
-                          {/* STC Pay */}
+                        </div>
+                        
+                        {/* STC Pay */}
+                        <div className="group relative">
                           <Button 
-                            size="sm"
-                            className="bg-orange-500 hover:bg-orange-600 text-white flex flex-col items-center py-3 h-auto"
+                            className="w-full h-20 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in relative overflow-hidden"
                             onClick={() => handlePaymentMethod(service, 'stc-pay')}
                             disabled={isLoading}
+                            style={{ animationDelay: '200ms' }}
                           >
-                            {isLoading ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <>
-                                <Smartphone className="w-4 h-4 mb-1" />
-                                <span className="text-xs">STC Pay</span>
-                              </>
-                            )}
+                            {/* Background Animation */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            
+                            <div className="relative z-10 flex flex-col items-center justify-center space-y-2">
+                              {isLoading ? (
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                              ) : (
+                                <>
+                                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <Smartphone className="w-5 h-5" />
+                                  </div>
+                                  <span className="font-semibold text-sm">STC Pay</span>
+                                  <span className="text-xs text-orange-100">دفع فوري وآمن</span>
+                                </>
+                              )}
+                            </div>
+                            
+                            {/* Pulse Ring Effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100">
+                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 border-2 border-white/30 rounded-full animate-[scale-in_0.4s_ease-out] group-hover:animate-pulse" />
+                            </div>
+                            
+                            {/* Shine Effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.6s_ease-out]" />
+                            </div>
                           </Button>
-                          
-                          {/* Tamara Payment */}
+                        </div>
+                        
+                        {/* Tamara Payment */}
+                        <div className="group relative">
                           <Button 
-                            size="sm"
-                            className="bg-purple-500 hover:bg-purple-600 text-white flex flex-col items-center py-3 h-auto"
+                            className="w-full h-20 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in relative overflow-hidden"
                             onClick={() => handlePaymentMethod(service, 'tamara')}
                             disabled={isLoading}
+                            style={{ animationDelay: '300ms' }}
                           >
-                            {isLoading ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <>
-                                <Wallet className="w-4 h-4 mb-1" />
-                                <span className="text-xs">Tamara</span>
-                              </>
-                            )}
+                            {/* Background Animation */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            
+                            <div className="relative z-10 flex flex-col items-center justify-center space-y-2">
+                              {isLoading ? (
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                              ) : (
+                                <>
+                                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <Wallet className="w-5 h-5" />
+                                  </div>
+                                  <span className="font-semibold text-sm">Tamara</span>
+                                  <span className="text-xs text-purple-100">اشتري الآن ادفع لاحقاً</span>
+                                </>
+                              )}
+                            </div>
+                            
+                            {/* Shine Effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.6s_ease-out]" />
+                            </div>
                           </Button>
+                        </div>
+                      </div>
+                      
+                      {/* Security Badge */}
+                      <div className="flex items-center justify-center mt-4 space-x-2 space-x-reverse">
+                        <div className="flex items-center space-x-1 space-x-reverse text-green-600 dark:text-green-400">
+                          <CheckCircle className="w-4 h-4" />
+                          <span className="text-xs font-medium">محمي بتشفير SSL</span>
+                        </div>
+                        <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                        <div className="flex items-center space-x-1 space-x-reverse text-blue-600 dark:text-blue-400">
+                          <Star className="w-4 h-4" />
+                          <span className="text-xs font-medium">معتمد من البنك المركزي</span>
                         </div>
                       </div>
                     </div>
