@@ -80,7 +80,7 @@ const Navigation = () => {
   return (
     <>
       {/* Corporate Top Bar */}
-      <div className="hidden lg:block bg-gray-900 border-b border-gray-800">
+      <div className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-gray-900 border-b border-gray-800">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center gap-6 text-sm text-gray-300">
@@ -535,6 +535,7 @@ const Navigation = () => {
           )}
         </div>
       </nav>
+      <div className="h-14 sm:h-16 lg:h-[112px]" aria-hidden="true" />
     </>
   );
 };
