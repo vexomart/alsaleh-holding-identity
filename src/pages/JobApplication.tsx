@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { 
   ArrowRight, 
   Upload, 
-  User, 
+  User as UserIcon, 
   Mail, 
   Phone, 
   MapPin, 
@@ -31,16 +31,20 @@ import {
   Eye,
   ArrowLeft,
   Calendar,
-  Building2
+  Building2,
+  LogIn
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { JobApplicationSteps } from "@/components/JobApplicationSteps";
 import { supabase } from "@/integrations/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 const JobApplication = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -70,6 +74,48 @@ const JobApplication = () => {
   
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.user) {
+        toast({
+          title: "مطلوب تسجيل الدخول",
+          description: "يرجى تسجيل الدخول أولاً للتقدم للوظائف",
+          variant: "destructive"
+        });
+        navigate('/auth');
+        return;
+      }
+      
+      setUser(session.user);
+      // Pre-fill email from user profile
+      setFormData(prev => ({
+        ...prev,
+        email: session.user.email || ""
+      }));
+      setLoading(false);
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session?.user) {
+        navigate('/auth');
+      } else {
+        setUser(session.user);
+        setFormData(prev => ({
+          ...prev,
+          email: session.user.email || ""
+        }));
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, toast]);
 
   const handleInputChange = (field: string, value: string | string[]) => {
     setFormData(prev => ({
@@ -180,7 +226,7 @@ const JobApplication = () => {
       // Upload CV file if provided
       if (formData.cv) {
         const fileExt = formData.cv.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
+        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
         
         const { error: uploadError } = await supabase.storage
           .from('cvs')
@@ -203,66 +249,56 @@ const JobApplication = () => {
         message: formData.coverLetter
       };
 
-      // Submit to Supabase edge function
-      const response = await fetch(
-        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/job-application",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(submitData),
-        }
-      );
+      // Use proper Supabase client method with authentication
+      const { data: result, error } = await supabase.functions.invoke('submit-job-application', {
+        body: submitData
+      });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: "🎉 تم إرسال الطلب بنجاح!",
-          description: "سنتواصل معك خلال 3-5 أيام عمل. تم إرسال رسالة تأكيد إلى بريدك الإلكتروني.",
-        });
-
-        // Reset form and go back to step 1
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          city: "",
-          position: "",
-          experience: "",
-          education: "",
-          coverLetter: "",
-          cv: null,
-          skills: "",
-          portfolio: "",
-          linkedIn: "",
-          expectedSalary: "",
-          availableDate: "",
-          workType: "",
-          languages: []
-        });
-        setCurrentStep(1);
-
-        // Reset file input
-        const fileInput = document.getElementById('cv') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';
-        }
-        
-        // Redirect to careers page after 3 seconds
-        setTimeout(() => {
-          navigate('/careers');
-        }, 3000);
-        
-      } else {
-        throw new Error(result.error || "حدث خطأ أثناء الإرسال");
+      if (error) {
+        throw error;
       }
+
+      toast({
+        title: "🎉 تم إرسال الطلب بنجاح!",
+        description: "سنتواصل معك خلال 3-5 أيام عمل. تم إرسال رسالة تأكيد إلى بريدك الإلكتروني.",
+      });
+
+      // Reset form and go back to step 1
+      setFormData({
+        fullName: "",
+        email: user.email || "",
+        phone: "",
+        city: "",
+        position: "",
+        experience: "",
+        education: "",
+        coverLetter: "",
+        cv: null,
+        skills: "",
+        portfolio: "",
+        linkedIn: "",
+        expectedSalary: "",
+        availableDate: "",
+        workType: "",
+        languages: []
+      });
+      setCurrentStep(1);
+
+      // Reset file input
+      const fileInput = document.getElementById('cv') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = '';
+      }
+      
+      // Redirect to careers page after 3 seconds
+      setTimeout(() => {
+        navigate('/careers');
+      }, 3000);
     } catch (error) {
       console.error("Submission error:", error);
       toast({
         title: "خطأ في الإرسال",
-        description: error instanceof Error ? error.message : "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
+        description: error instanceof Error ? error.message : "حدث خطأ أثناء إرسال الطلب. يرجى التأكد من تسجيل الدخول والمحاولة مرة أخرى.",
         variant: "destructive"
       });
     } finally {
@@ -290,7 +326,7 @@ const JobApplication = () => {
   const renderPersonalInfo = () => (
     <div className="space-y-6 animate-fade-in">
       <div className="text-center mb-6">
-        <User className="w-16 h-16 mx-auto text-blue-500 mb-4" />
+        <UserIcon className="w-16 h-16 mx-auto text-blue-500 mb-4" />
         <h3 className="text-2xl font-bold text-primary mb-2">البيانات الشخصية</h3>
         <p className="text-muted-foreground">أدخل بياناتك الشخصية الأساسية</p>
       </div>
@@ -298,7 +334,7 @@ const JobApplication = () => {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="fullName" className="text-primary font-semibold flex items-center">
-            <User className="w-4 h-4 ml-2" />
+            <UserIcon className="w-4 h-4 ml-2" />
             الاسم الكامل *
           </Label>
           <Input
@@ -651,7 +687,7 @@ const JobApplication = () => {
         <Card className="border-l-4 border-l-blue-500">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-blue-600">
-              <User className="w-5 h-5" />
+              <UserIcon className="w-5 h-5" />
               البيانات الشخصية
             </CardTitle>
           </CardHeader>
@@ -727,6 +763,21 @@ const JobApplication = () => {
       </div>
     </div>
   );
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50">
+        <Navigation />
+        <div className="pt-20 flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">جاري التحقق من تسجيل الدخول...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50">
