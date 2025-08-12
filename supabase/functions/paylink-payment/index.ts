@@ -2,184 +2,265 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface PayLinkPaymentRequest {
-  amount: number;
-  currency: string;
-  customer_name: string;
-  customer_email: string;
-  customer_phone?: string;
-  offer_title: string;
-  description: string;
-  success_url?: string;
-  contract_data?: Record<string, unknown>;
-}
-
+// Helper function for better logging
+const logStep = (step: string, data?: any) => {
+  const message = data ? `${step}: ${JSON.stringify(data)}` : step;
+  console.log(`[PAYLINK] ${message}`);
+};
 
 serve(async (req) => {
   // Handle CORS preflight requests
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const paylinkApiKey = Deno.env.get("PAYLINK_API_KEY");
-    const paylinkApiId = Deno.env.get("PAYLINK_API_ID");
-    if (!paylinkApiKey) {
-      throw new Error("PAYLINK_API_KEY not configured");
-    }
-    // Create Supabase client for database operations
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    logStep("Starting Paylink payment process");
 
-    const requestData: PayLinkPaymentRequest = await req.json();
-    
-    console.log("Creating Paylink payment for:", requestData);
-
-    // Get user if authenticated
-    let userId = null;
+    // Parse request body
+    let requestBody;
     try {
-      const authHeader = req.headers.get("Authorization");
-      if (authHeader) {
-        const token = authHeader.replace("Bearer ", "");
-        const { data } = await supabaseClient.auth.getUser(token);
-        userId = data.user?.id || null;
-      }
-    } catch (error) {
-      console.log("No authenticated user, proceeding as guest");
-    }
-
-    // Create invoice with Paylink (per docs: orderNumber, products, etc.)
-    const origin = requestData.success_url || req.headers.get("origin") || new URL(req.url).origin;
-    const orderNumber = `ORD-${Date.now()}`;
-    const rawPhone = (requestData.customer_phone || "0500000000").replace(/[^\d]/g, "");
-    const normalizedPhone = rawPhone.startsWith("05")
-      ? rawPhone
-      : rawPhone.startsWith("9665")
-        ? `0${rawPhone.slice(3)}`
-        : rawPhone.startsWith("5")
-          ? `0${rawPhone}`
-          : rawPhone || "0500000000";
-
-    const paylinkPayload = {
-      orderNumber,
-      amount: requestData.amount,
-      callBackUrl: `${origin}/payment-success`,
-      cancelUrl: `${origin}/payment-cancel`,
-      clientName: requestData.customer_name,
-      clientEmail: requestData.customer_email,
-      clientMobile: normalizedPhone,
-      currency: requestData.currency || "SAR",
-      products: [
-        {
-          title: requestData.offer_title || "خدمة",
-          price: requestData.amount,
-          qty: 1,
-          description: requestData.description || "",
-          isDigital: true
-        }
-      ],
-      supportedCardBrands: ["mada", "visaMastercard"],
-      note: requestData.description,
-    };
-
-    console.log("Authenticating with Paylink...");
-    let token = Deno.env.get("PAYLINK_ACCESS_TOKEN") || "";
-    if (!token) {
-      if (!paylinkApiId || !paylinkApiKey) {
-        throw new Error("PAYLINK_API_ID and PAYLINK_API_KEY are required to fetch token");
-      }
-      const authResp = await fetch("https://restapi.paylink.sa/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({ apiId: paylinkApiId, secretKey: paylinkApiKey, persistToken: "true" })
+      requestBody = await req.json();
+      logStep("Request body parsed", requestBody);
+    } catch (parseError) {
+      logStep("Error parsing request body", parseError.message);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Invalid request body" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400
       });
-      const authJson = await authResp.json();
-      console.log("Paylink auth status:", authResp.status);
-      if (!authResp.ok || !authJson.id_token) {
-        console.error("Paylink auth error:", authJson);
-        throw new Error("Failed to authenticate with Paylink");
-      }
-      token = authJson.id_token;
     }
 
-    console.log("Creating invoice on Paylink...");
-    const headers: Record<string, string> = {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    };
+    const {
+      amount,
+      currency = 'SAR',
+      customer_name,
+      customer_email,
+      customer_phone,
+      offer_title,
+      description,
+      success_url
+    } = requestBody;
 
-    const paylinkResponse = await fetch("https://restapi.paylink.sa/api/addInvoice", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(paylinkPayload),
+    // Validate required fields
+    if (!amount || !customer_name || !customer_email || !customer_phone || !offer_title) {
+      logStep("Missing required fields", { amount, customer_name, customer_email, customer_phone, offer_title });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Missing required fields" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400
+      });
+    }
+
+    logStep("Creating Paylink payment for", {
+      amount,
+      currency,
+      customer_name,
+      customer_email,
+      customer_phone,
+      offer_title,
+      description,
+      success_url
     });
 
-    const paylinkResult = await paylinkResponse.json();
-    
-    console.log("Paylink API response:", paylinkResult);
+    // Get Paylink API credentials
+    const paylinkApiId = Deno.env.get('PAYLINK_API_ID');
+    const paylinkApiKey = Deno.env.get('PAYLINK_API_KEY');
 
-    if (!paylinkResponse.ok || !paylinkResult.success) {
-      console.error("Paylink API error:", paylinkResult);
-      throw new Error(paylinkResult.detail || "Failed to create payment");
+    if (!paylinkApiId || !paylinkApiKey) {
+      logStep("Missing Paylink credentials");
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Paylink credentials not configured" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500
+      });
     }
 
-    // Store transaction in database
-    const { data: transaction, error: dbError } = await supabaseClient
-      .from("payment_transactions")
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      logStep("Missing Supabase credentials");
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Database connection not configured" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500
+      });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Authenticate with Paylink
+    logStep("Authenticating with Paylink...");
+    const authResponse = await fetch('https://restapi.paylink.sa/api/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        apiId: paylinkApiId,
+        secretKey: paylinkApiKey,
+        persistToken: false
+      })
+    });
+
+    if (!authResponse.ok) {
+      logStep("Paylink auth failed", { status: authResponse.status, statusText: authResponse.statusText });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Failed to authenticate with Paylink" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500
+      });
+    }
+
+    const authData = await authResponse.json();
+    logStep("Paylink auth status", authResponse.status);
+
+    if (!authData.id_token) {
+      logStep("No auth token received", authData);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Failed to get Paylink auth token" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500
+      });
+    }
+
+    // Create invoice on Paylink
+    logStep("Creating invoice on Paylink...");
+    const orderNumber = `ORD-${Date.now()}`;
+    
+    const invoiceData = {
+      amount: amount,
+      orderNumber: orderNumber,
+      callBackUrl: success_url || "https://preview--alsaleh-holding-identity.lovable.app/payment-success",
+      clientEmail: customer_email,
+      clientName: customer_name,
+      clientMobile: customer_phone.replace(/^\+?966/, "0"),
+      note: description,
+      cancelUrl: "https://preview--alsaleh-holding-identity.lovable.app/payment-cancel",
+      products: [{
+        title: offer_title,
+        price: amount,
+        qty: 1,
+        description: description,
+        isDigital: true,
+        imageSrc: null,
+        specificVat: null,
+        productCost: null
+      }],
+      supportedCardBrands: ["mada", "visaMastercard"],
+      currency: currency,
+      smsMessage: null,
+      displayPending: null,
+      receivers: null,
+      partnerPortion: null,
+      metadata: null
+    };
+
+    const invoiceResponse = await fetch('https://restapi.paylink.sa/api/addInvoice', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authData.id_token}`
+      },
+      body: JSON.stringify(invoiceData)
+    });
+
+    if (!invoiceResponse.ok) {
+      logStep("Invoice creation failed", { status: invoiceResponse.status, statusText: invoiceResponse.statusText });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Failed to create payment invoice" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500
+      });
+    }
+
+    const paylinkResult = await invoiceResponse.json();
+    logStep("Paylink API response", paylinkResult);
+
+    if (!paylinkResult.success || !paylinkResult.url) {
+      logStep("Invalid Paylink response", paylinkResult);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Invalid payment response from Paylink" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500
+      });
+    }
+
+    // Record transaction in database
+    logStep("Recording transaction in database...");
+    const { data: transaction, error: dbError } = await supabase
+      .from('payment_transactions')
       .insert({
-        user_id: userId,
-        offer_title: requestData.offer_title,
-        amount: requestData.amount,
-        currency: requestData.currency,
-        customer_name: requestData.customer_name,
-        customer_email: requestData.customer_email,
-        customer_phone: requestData.customer_phone,
+        offer_title: offer_title,
+        amount: amount,
+        currency: currency,
+        customer_name: customer_name,
+        customer_email: customer_email,
+        customer_phone: customer_phone,
+        status: 'INITIATED',
+        payment_method: 'paylink',
         paylink_transaction_no: paylinkResult.transactionNo,
-        status: "INITIATED",
-        payment_method: "paylink",
-        contract_data: requestData.contract_data || {},
+        contract_data: {}
       })
       .select()
       .single();
 
     if (dbError) {
+      logStep("Database error", dbError);
+      // Don't fail the entire request if database recording fails
       console.error("Database error:", dbError);
-      throw new Error("Failed to record transaction");
+    } else {
+      logStep("Transaction recorded", transaction);
     }
 
-    console.log("Transaction recorded:", transaction);
+    // Return successful response
+    const response = {
+      success: true,
+      transaction_no: paylinkResult.transactionNo,
+      payment_url: paylinkResult.url,
+      url: paylinkResult.url, // Also include 'url' for compatibility
+      transaction_id: transaction?.id || null,
+    };
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        transaction_no: paylinkResult.transactionNo,
-        payment_url: paylinkResult.url,
-        transaction_id: transaction.id,
-      }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      }
-    );
+    logStep("Returning successful response", response);
+
+    return new Response(JSON.stringify(response), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
 
   } catch (error) {
+    logStep("Unexpected error", { message: error.message, stack: error.stack });
     console.error("Error in paylink-payment function:", error);
-    return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message 
-      }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      }
-    );
+    
+    return new Response(JSON.stringify({ 
+      success: false, 
+      error: error.message || "Internal server error" 
+    }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
   }
 });
