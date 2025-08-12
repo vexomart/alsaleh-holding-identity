@@ -1,170 +1,159 @@
-import { useState, useEffect } from "react";
-import { Building, Users, Briefcase, Globe } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Users, Trophy, Building2, Calendar, Star, TrendingUp, Globe, Award } from "lucide-react";
+import { AnimatedCounter } from "./AnimatedCounter";
 
 const StatsSection = () => {
-  const [counters, setCounters] = useState({
-    projects: 0,
-    clients: 0,
-    countries: 0,
-    years: 0
-  });
-
   const stats = [
     {
-      icon: Briefcase,
-      number: 14883,
-      label: "مشروع منجز",
-      description: "مشاريع متنوعة عبر جميع الشركات الفرعية",
-      color: "from-blue-600 to-purple-600"
-    },
-    {
       icon: Users,
-      number: 9512,
-      label: "عميل راضي",
-      description: "ثقة عملائنا هي أولويتنا",
-      color: "from-green-600 to-teal-600"
+      number: 1760,
+      suffix: "+",
+      title: "عميل راضٍ",
+      subtitle: "Satisfied Clients",
+      description: "عملاء راضون ومتفاعلون مع خدماتنا",
+      gradient: "from-orange-500 to-red-500",
+      bgGradient: "from-orange-500/10 to-red-500/10",
+      glowColor: "shadow-orange-500/20"
     },
     {
-      icon: Globe,
-      number: 45,
-      label: "دولة حول العالم",
-      description: "انتشار عالمي واسع",
-      color: "from-orange-600 to-red-600"
+      icon: Trophy,
+      number: 2848,
+      suffix: "+",
+      title: "مشروع ناجح", 
+      subtitle: "Successful Projects",
+      description: "مشاريع منجزة بأعلى معايير الجودة",
+      gradient: "from-green-500 to-emerald-500",
+      bgGradient: "from-green-500/10 to-emerald-500/10",
+      glowColor: "shadow-green-500/20"
     },
     {
-      icon: Building,
-      number: 15,
-      label: "سنة من الخبرة",
-      description: "تجربة راسخة في السوق",
-      color: "from-indigo-600 to-blue-600"
+      icon: Building2,
+      number: 2024,
+      title: "شركة قابضة",
+      subtitle: "Holding Company", 
+      description: "التطوير والنمو المستمر",
+      gradient: "from-purple-500 to-pink-500",
+      bgGradient: "from-purple-500/10 to-pink-500/10",
+      glowColor: "shadow-purple-500/20"
+    },
+    {
+      icon: Calendar,
+      number: 2016,
+      title: "سنة التأسيس",
+      subtitle: "Foundation Year",
+      description: "خبرة طويلة في السوق",
+      gradient: "from-blue-500 to-cyan-500", 
+      bgGradient: "from-blue-500/10 to-cyan-500/10",
+      glowColor: "shadow-blue-500/20"
     }
   ];
 
-  useEffect(() => {
-    const animateCounters = () => {
-      const duration = 2000; // 2 seconds
-      const steps = 60;
-      const stepDuration = duration / steps;
-
-      let currentStep = 0;
-      const interval = setInterval(() => {
-        currentStep++;
-        const progress = currentStep / steps;
-        
-        setCounters({
-          projects: Math.floor(14883 * progress),
-          clients: Math.floor(9512 * progress),
-          countries: Math.floor(45 * progress),
-          years: Math.floor(15 * progress)
-        });
-
-        if (currentStep >= steps) {
-          clearInterval(interval);
-          setCounters({
-            projects: 14883,
-            clients: 9512,
-            countries: 45,
-            years: 15
-          });
-        }
-      }, stepDuration);
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          animateCounters();
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    const element = document.getElementById('stats-section');
-    if (element) {
-      observer.observe(element);
+  const achievements = [
+    {
+      icon: TrendingUp,
+      text: "قائد السوق العالمي",
+      bgColor: "bg-gradient-to-r from-orange-500 to-red-500"
+    },
+    {
+      icon: Star,
+      text: "معدل رضا العملاء 99.8%",
+      bgColor: "bg-gradient-to-r from-green-500 to-emerald-500"
+    },
+    {
+      icon: Award,
+      text: "أفضل شركة قابضة 2024",
+      bgColor: "bg-gradient-to-r from-purple-500 to-pink-500"
     }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const getCounterValue = (index: number) => {
-    switch (index) {
-      case 0: return counters.projects;
-      case 1: return counters.clients;
-      case 2: return counters.countries;
-      case 3: return counters.years;
-      default: return 0;
-    }
-  };
+  ];
 
   return (
-    <section id="stats-section" className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-slate-900 dark:via-gray-900 dark:to-zinc-900">
-      {/* Modern Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-100/40 via-transparent to-gray-100/40"></div>
-      <div className="absolute top-0 left-1/4 w-64 h-64 bg-gradient-to-br from-slate-400/10 to-gray-400/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tr from-gray-400/10 to-zinc-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-            إنجازاتنا بالأرقام
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mb-8 shadow-2xl animate-pulse">
+            <TrendingUp className="w-10 h-10 text-white" />
+          </div>
+          <Badge className="bg-gradient-to-r from-primary to-secondary text-white border-0 text-lg px-8 py-4 shadow-xl mb-6">
+            إحصائياتنا المذهلة
+          </Badge>
+          <h2 className="text-5xl lg:text-7xl font-bold mb-8 gradient-text leading-tight">
+            أرقام تتحدث عن نفسها
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            نفخر بما حققناه من إنجازات وثقة عملائنا حول العالم
+          <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            نفخر بإنجازاتنا وثقة عملائنا، هذه الأرقام تعكس التزامنا بالتميز والجودة في كل ما نقدمه
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={index}
-                className="group relative bg-white dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-500`} />
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {stats.map((stat, index) => (
+            <Card 
+              key={index}
+              className="group relative overflow-hidden border-0 bg-background/50 backdrop-blur-xl hover:shadow-2xl transition-all duration-500 hover:scale-105"
+              style={{ animationDelay: `${index * 0.2}s` }}
+            >
+              {/* Animated Background */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+              
+              {/* Glow Effect */}
+              <div className={`absolute inset-0 ${stat.glowColor} shadow-2xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 blur-xl`}></div>
+              
+              <CardContent className="relative p-8 text-center">
+                {/* Icon with Animation */}
+                <div className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${stat.gradient} rounded-2xl mb-6 shadow-lg group-hover:shadow-xl transform group-hover:rotate-12 transition-all duration-500`}>
+                  <stat.icon className="w-10 h-10 text-white" />
+                </div>
                 
-                {/* Icon with gradient background */}
-                <div className={`relative w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-br ${stat.color} p-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon className="w-full h-full text-white" />
-                </div>
-
                 {/* Animated Number */}
-                <div className="text-center">
-                  <div className={`text-4xl md:text-5xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300`}>
-                    {getCounterValue(index).toLocaleString('ar-SA')}
-                    {index === 0 && "+"}
-                    {index === 1 && "+"}
-                  </div>
-                  <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-2">
-                    {stat.label}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {stat.description}
-                  </p>
+                <div className={`text-6xl lg:text-7xl font-black mb-4 bg-gradient-to-br ${stat.gradient} bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-500`}>
+                  <AnimatedCounter 
+                    end={stat.number} 
+                    suffix={stat.suffix || ""} 
+                    duration={2500}
+                  />
                 </div>
-
-                {/* Decorative Elements */}
-                <div className="absolute top-4 right-4 w-8 h-8 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-4 left-4 w-6 h-6 bg-gradient-to-br from-green-100 to-teal-100 dark:from-green-900/20 dark:to-teal-900/20 rounded-full opacity-30 group-hover:opacity-70 transition-opacity duration-300" />
-              </div>
-            );
-          })}
+                
+                {/* Title */}
+                <h3 className="text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
+                  {stat.title}
+                </h3>
+                
+                {/* Subtitle */}
+                <p className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">
+                  {stat.subtitle}
+                </p>
+                
+                {/* Description */}
+                <p className="text-muted-foreground leading-relaxed">
+                  {stat.description}
+                </p>
+                
+                {/* Decorative Line */}
+                <div className={`w-16 h-1 bg-gradient-to-r ${stat.gradient} mx-auto mt-6 rounded-full group-hover:w-24 transition-all duration-500`}></div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* Bottom Decorative Section */}
-        <div className="mt-16 text-center animate-fade-in" style={{ animationDelay: "0.5s" }}>
-          <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full px-6 py-3 border border-slate-200 dark:border-slate-700 shadow-lg">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-              نواصل النمو والتطور يومياً
-            </span>
-          </div>
+        {/* Achievement Badges */}
+        <div className="flex flex-wrap justify-center gap-6">
+          {achievements.map((achievement, index) => (
+            <div 
+              key={index}
+              className={`inline-flex items-center gap-3 ${achievement.bgColor} text-white px-8 py-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 font-bold text-lg`}
+              style={{ animationDelay: `${(index + 4) * 0.2}s` }}
+            >
+              <achievement.icon className="w-6 h-6" />
+              {achievement.text}
+              {index === 1 && <Star className="w-5 h-5 text-yellow-300" />}
+              {index === 2 && <Trophy className="w-5 h-5 text-yellow-300" />}
+            </div>
+          ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
