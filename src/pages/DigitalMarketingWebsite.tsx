@@ -344,7 +344,7 @@ const DigitalMarketingWebsite = () => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 sm:gap-12">
-            [
+            {[
               { city: "دبي", country: "الإمارات", clients: "150+ عميل", icon: Building2 },
               { city: "الرياض", country: "السعودية", clients: "200+ عميل", icon: Building2 },
               { city: "لندن", country: "المملكة المتحدة", clients: "100+ عميل", icon: Building2 }
@@ -357,7 +357,7 @@ const DigitalMarketingWebsite = () => {
                 <p className="text-muted-foreground mb-2 sm:mb-4 text-base sm:text-lg">{office.country}</p>
                 <Badge variant="secondary" className="text-sm sm:text-base px-3 sm:px-4 py-1 sm:py-2">{office.clients}</Badge>
               </Card>
-            ))
+            ))}
           </div>
         </div>
       </section>
