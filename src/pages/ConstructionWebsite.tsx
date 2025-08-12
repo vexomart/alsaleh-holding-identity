@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Building2, Award, Truck, CheckCircle2, Star, Users, Clock, Phone, Mail, MapPin, Calendar } from "lucide-react";
+import { Building2, Award, Truck, CheckCircle2, Star, Users, Clock, Phone, Mail, MapPin, Calendar, Shield, Zap, Globe, Wrench, Quote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 import ConstructionHeader from "@/components/construction/ConstructionHeader";
 import ConstructionHero from "@/components/construction/ConstructionHero";
@@ -101,14 +102,387 @@ const ConstructionWebsite = () => {
               isPreview={true} 
               onViewAll={() => setCurrentPage("services")}
             />
+            <CertificationsSection />
             <ConstructionProjects 
               projects={projects} 
               isPreview={true} 
               onViewAll={() => setCurrentPage("projects")}
             />
+            <TechnologiesSection />
+            <TeamSection />
+            <TestimonialsSection />
+            <PartnersSection />
           </>
         );
     }
+  };
+
+  // Certifications Section
+  const CertificationsSection = () => {
+    const certifications = [
+      {
+        name: "ISO 9001:2015",
+        description: "نظام إدارة الجودة",
+        icon: Shield,
+        image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "ISO 45001",
+        description: "إدارة الصحة والسلامة المهنية",
+        icon: CheckCircle2,
+        image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "ISO 14001",
+        description: "نظام الإدارة البيئية",
+        icon: Globe,
+        image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        name: "LEED معتمد",
+        description: "البناء الأخضر والاستدامة",
+        icon: Award,
+        image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=800&q=80"
+      }
+    ];
+
+    return (
+      <section className="py-20 bg-gradient-to-b from-slate-100 to-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-green-100 text-green-800">🏅 شهاداتنا واعتماداتنا</Badge>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-800 to-green-700 bg-clip-text text-transparent">
+              معايير عالمية للجودة والتميز
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              نحن معتمدون من أرقى المؤسسات العالمية ونلتزم بأعلى معايير الجودة والسلامة في جميع مشاريعنا
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {certifications.map((cert, index) => (
+              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-500 hover-scale group">
+                <div className="aspect-square relative overflow-hidden">
+                  <img 
+                    src={cert.image} 
+                    alt={cert.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <cert.icon className="h-8 w-8 mb-2 text-green-400" />
+                  </div>
+                </div>
+                <CardContent className="p-6 text-center">
+                  <h3 className="text-xl font-bold mb-2 text-slate-800">{cert.name}</h3>
+                  <p className="text-slate-600">{cert.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Technologies Section
+  const TechnologiesSection = () => {
+    const technologies = [
+      {
+        name: "BIM Technology",
+        description: "نمذجة معلومات البناء",
+        image: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80",
+        icon: Building2
+      },
+      {
+        name: "Drones & AI",
+        description: "طائرات مسيرة وذكاء اصطناعي",
+        image: "https://images.unsplash.com/photo-1508444845599-5c89863c80c8?auto=format&fit=crop&w=800&q=80",
+        icon: Zap
+      },
+      {
+        name: "3D Printing",
+        description: "الطباعة ثلاثية الأبعاد",
+        image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+        icon: Wrench
+      },
+      {
+        name: "Smart Materials",
+        description: "مواد البناء الذكية",
+        image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80",
+        icon: Star
+      }
+    ];
+
+    return (
+      <section className="py-20 bg-gradient-to-b from-white to-blue-50/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-purple-100 text-purple-800">🚀 التقنيات المتطورة</Badge>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-800 to-purple-700 bg-clip-text text-transparent">
+              نواكب أحدث التقنيات العالمية
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              نستخدم أحدث التقنيات والأدوات المتطورة لضمان تنفيذ مشاريع بجودة عالية وكفاءة استثنائية
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {technologies.map((tech, index) => (
+              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-500 hover-scale group bg-white border-0 shadow-lg">
+                <div className="aspect-[4/3] relative overflow-hidden">
+                  <img 
+                    src={tech.image} 
+                    alt={tech.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-4 left-4">
+                    <div className="bg-white/20 backdrop-blur-sm p-3 rounded-lg">
+                      <tech.icon className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </div>
+                <CardContent className="p-6 text-center">
+                  <h3 className="text-xl font-bold mb-2 text-slate-800">{tech.name}</h3>
+                  <p className="text-slate-600">{tech.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Team Section
+  const TeamSection = () => {
+    const teamMembers = [
+      {
+        name: "م. أحمد العبدالله",
+        position: "المدير التنفيذي",
+        experience: "20+ سنة خبرة",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+        specialization: "إدارة المشاريع الكبرى"
+      },
+      {
+        name: "م. فاطمة الشهري",
+        position: "مديرة الهندسة المعمارية",
+        experience: "15+ سنة خبرة",
+        image: "https://images.unsplash.com/photo-1494790108755-2616b612b372?auto=format&fit=crop&w=800&q=80",
+        specialization: "التصميم المعماري المستدام"
+      },
+      {
+        name: "م. خالد القحطاني",
+        position: "مدير الهندسة المدنية",
+        experience: "18+ سنة خبرة",
+        image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80",
+        specialization: "الهياكل والأسس"
+      },
+      {
+        name: "م. نورا الدوسري",
+        position: "مديرة ضمان الجودة",
+        experience: "12+ سنة خبرة",
+        image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80",
+        specialization: "معايير الجودة العالمية"
+      }
+    ];
+
+    return (
+      <section className="py-20 bg-gradient-to-b from-blue-50/30 to-slate-100">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-blue-100 text-blue-800">👨‍💼 فريق الخبراء</Badge>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-800 to-blue-700 bg-clip-text text-transparent">
+              خبرات متراكمة وقيادة متميزة
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              يقود شركتنا نخبة من أمهر المهندسين والخبراء في مجال البناء والتشييد
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member, index) => (
+              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-500 hover-scale group">
+                <div className="aspect-[3/4] relative overflow-hidden">
+                  <img 
+                    src={member.image} 
+                    alt={member.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold mb-1">{member.name}</h3>
+                    <p className="text-blue-200 text-sm">{member.position}</p>
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <p className="text-sm text-primary font-medium mb-2">{member.experience}</p>
+                    <p className="text-slate-600 text-sm">{member.specialization}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Testimonials Section
+  const TestimonialsSection = () => {
+    const testimonials = [
+      {
+        name: "م. سعد الغامدي",
+        position: "مدير مشروع برج الرياض",
+        company: "شركة الرياض للتطوير",
+        content: "شركة المقاولات العالمية نفذت مشروعنا بأعلى معايير الجودة وفي الوقت المحدد. فريق العمل محترف ومتعاون.",
+        image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=800&q=80",
+        rating: 5
+      },
+      {
+        name: "د. منى الزهراني",
+        position: "مديرة المشاريع",
+        company: "مؤسسة الإسكان التنموي",
+        content: "تعاملنا معهم في عدة مشاريع سكنية وكانت النتائج مذهلة. الالتزام بالمواعيد والجودة العالية هما أبرز ما يميزهم.",
+        image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80",
+        rating: 5
+      },
+      {
+        name: "أ. محمد الحربي",
+        position: "رئيس قسم المشاريع",
+        company: "شركة التطوير الحضري",
+        content: "أسلوبهم المتطور في إدارة المشاريع واستخدام أحدث التقنيات جعل مشروعنا نموذجاً يحتذى به في المنطقة.",
+        image: "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?auto=format&fit=crop&w=800&q=80",
+        rating: 5
+      }
+    ];
+
+    return (
+      <section className="py-20 bg-gradient-to-b from-slate-100 to-amber-50/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-amber-100 text-amber-800">💬 آراء عملائنا</Badge>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-800 to-amber-700 bg-clip-text text-transparent">
+              ثقة العملاء هي أغلى إنجازاتنا
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              نفخر بثقة عملائنا وشهاداتهم التي تعكس جودة عملنا والتزامنا بالتميز
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="p-8 hover:shadow-xl transition-all duration-500 hover-scale bg-white border-0 shadow-lg">
+                <div className="flex items-center mb-6">
+                  <img 
+                    src={testimonial.image} 
+                    alt={testimonial.name}
+                    className="w-16 h-16 rounded-full object-cover mr-4"
+                  />
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-800">{testimonial.name}</h3>
+                    <p className="text-sm text-primary">{testimonial.position}</p>
+                    <p className="text-xs text-muted-foreground">{testimonial.company}</p>
+                  </div>
+                </div>
+                
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-amber-400 fill-current" />
+                  ))}
+                </div>
+                
+                <Quote className="h-8 w-8 text-amber-400 mb-4" />
+                <p className="text-slate-600 leading-relaxed italic">"{testimonial.content}"</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // Partners Section
+  const PartnersSection = () => {
+    const partners = [
+      {
+        name: "أرامكو السعودية",
+        logo: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=400&q=80",
+        category: "شريك استراتيجي"
+      },
+      {
+        name: "شركة سابك",
+        logo: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&q=80",
+        category: "شريك تجاري"
+      },
+      {
+        name: "مجموعة بن لادن",
+        logo: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80",
+        category: "شريك تنفيذي"
+      },
+      {
+        name: "شركة إعمار",
+        logo: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=400&q=80",
+        category: "شريك تطوير"
+      },
+      {
+        name: "مؤسسة محمد الراجحي",
+        logo: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=400&q=80",
+        category: "شريك استثماري"
+      },
+      {
+        name: "شركة أكوا باور",
+        logo: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=400&q=80",
+        category: "شريك طاقة"
+      }
+    ];
+
+    return (
+      <section className="py-20 bg-gradient-to-b from-amber-50/30 to-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-slate-100 text-slate-800">🤝 شركاؤنا</Badge>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+              شراكات استراتيجية مع كبرى الشركات
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              نتعاون مع أبرز الشركات والمؤسسات لتقديم حلول متكاملة ومتطورة
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {partners.map((partner, index) => (
+              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-500 hover-scale group bg-white border-0 shadow-lg">
+                <div className="aspect-[16/10] relative overflow-hidden">
+                  <img 
+                    src={partner.logo} 
+                    alt={partner.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold mb-1">{partner.name}</h3>
+                    <Badge className="bg-white/20 text-white text-xs">{partner.category}</Badge>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-slate-600 to-slate-800 hover:from-slate-700 hover:to-slate-900 text-white px-8 py-4"
+            >
+              انضم كشريك معنا
+              <ArrowRight className="mr-2 h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </section>
+    );
   };
 
   const AboutPage = () => (
