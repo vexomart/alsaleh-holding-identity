@@ -58,6 +58,7 @@ const Navigation = () => {
     { name: "خدمات الأعمال", href: "/business-services", icon: Building2 },
     { name: "الاستضافات و الخوادم", href: "/hosting-services", icon: Globe },
     { name: "خدماتنا الاحترافية", href: "/professional-services", icon: Settings },
+    { name: "خدماتنا الأخرى", href: "/professional-services#other-services-title", icon: Package },
     { name: "صناعة المحتوى", href: "/content-creation", icon: PenTool },
     { name: "حلول التصميم", href: "/design-solutions", icon: Palette },
     { name: "الاستثمار التقني", href: "/tech-investment", icon: Zap },
@@ -170,7 +171,7 @@ const Navigation = () => {
                 className="relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group"
               >
                 من نحن
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
+                <div className="absolute bottom-0 left-0 w-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
               </a>
               
               {/* Services Dropdown */}
