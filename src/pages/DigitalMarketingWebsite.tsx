@@ -74,10 +74,15 @@ const DigitalMarketingWebsite = () => {
   ];
 
   // Payment handler
-  const handlePayment = async (service: any) => {
-    if (processingServiceId === service.title) return;
+  const handlePayment = async (service: any, context = 'default') => {
+    const serviceKey = `${context}-${service.title}`;
+    console.log('Payment clicked for service:', serviceKey);
+    console.log('Current processingServiceId:', processingServiceId);
     
-    setProcessingServiceId(service.title);
+    if (processingServiceId === serviceKey) return;
+    
+    setProcessingServiceId(serviceKey);
+    console.log('Set processingServiceId to:', serviceKey);
     
     try {
       // Extract numeric value from price string and convert to SAR cents
@@ -120,6 +125,7 @@ const DigitalMarketingWebsite = () => {
       console.error('Payment error:', error);
       alert('حدث خطأ في عملية الدفع. يرجى المحاولة مرة أخرى.');
     } finally {
+      console.log('Clearing processingServiceId');
       setProcessingServiceId(null);
     }
   };
@@ -341,9 +347,13 @@ const DigitalMarketingWebsite = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <span className="text-xl sm:text-2xl font-bold text-purple-600">{service.price}</span>
-                    <Button className={`bg-gradient-to-r ${service.bgColor} hover:shadow-lg w-full sm:w-auto text-sm sm:text-base`}>
-                      اطلب عرض سعر
-                    </Button>
+                     <Button 
+                       className={`bg-gradient-to-r ${service.bgColor} hover:shadow-lg w-full sm:w-auto text-sm sm:text-base`}
+                       onClick={() => handlePayment(service, 'home')}
+                       disabled={processingServiceId === `home-${service.title}`}
+                     >
+                       {processingServiceId === `home-${service.title}` ? "جاري المعالجة..." : "ادفع الآن"}
+                     </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -521,11 +531,11 @@ const DigitalMarketingWebsite = () => {
                 <Button 
                   size="lg" 
                   className={`bg-gradient-to-r ${service.bgColor}`}
-                  onClick={() => handlePayment(service)}
-                  disabled={processingServiceId === service.title}
-                >
-                  {processingServiceId === service.title ? "جاري المعالجة..." : "ادفع الآن"}
-                </Button>
+                   onClick={() => handlePayment(service, 'services')}
+                   disabled={processingServiceId === `services-${service.title}`}
+                 >
+                   {processingServiceId === `services-${service.title}` ? "جاري المعالجة..." : "ادفع الآن"}
+                 </Button>
               </div>
             </Card>
           ))}
