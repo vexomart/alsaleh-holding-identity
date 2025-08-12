@@ -100,32 +100,41 @@ export const ContractForms = () => {
       // Get the current session for authentication
       const { data: { session } } = await supabase.auth.getSession();
       
-      const response = await fetch('https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/contract-form', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI'}`
-        },
-        body: JSON.stringify({ ...data, formType }),
+      // Check if user is authenticated
+      if (!session?.access_token) {
+        toast({
+          title: "❌ مطلوب تسجيل الدخول",
+          description: "يرجى تسجيل الدخول أولاً لتتمكن من إرسال طلب التعاقد",
+          variant: "destructive",
+        });
+        // Redirect to auth page if needed
+        window.location.href = '/auth';
+        return;
+      }
+
+      // Use proper Supabase client method instead of direct fetch
+      const { data: result, error } = await supabase.functions.invoke('contract-form', {
+        body: { ...data, formType }
       });
 
-      if (response.ok) {
-        toast({
-          title: "✅ تم إرسال الطلب بنجاح",
-          description: "سيتم مراجعة طلبكم والتواصل معكم خلال 24 ساعة عمل",
-        });
-        
-        // Reset the appropriate form
-        if (formType === 'individual') individualForm.reset();
-        else if (formType === 'institution') institutionForm.reset();
-        else companyForm.reset();
-      } else {
-        throw new Error('فشل في إرسال النموذج');
+      if (error) {
+        throw error;
       }
+
+      toast({
+        title: "✅ تم إرسال الطلب بنجاح",
+        description: "سيتم مراجعة طلبكم والتواصل معكم خلال 24 ساعة عمل",
+      });
+      
+      // Reset the appropriate form
+      if (formType === 'individual') individualForm.reset();
+      else if (formType === 'institution') institutionForm.reset();
+      else companyForm.reset();
     } catch (error) {
+      console.error('Contract form submission error:', error);
       toast({
         title: "❌ حدث خطأ في الإرسال",
-        description: "يرجى التحقق من الاتصال بالإنترنت والمحاولة مرة أخرى",
+        description: "يرجى التحقق من تسجيل الدخول والمحاولة مرة أخرى",
         variant: "destructive",
       });
     } finally {
