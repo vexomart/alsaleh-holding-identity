@@ -46,6 +46,7 @@ export type Database = {
           status: string
           tax_number: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           authorized_person?: string | null
@@ -78,6 +79,7 @@ export type Database = {
           status?: string
           tax_number?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           authorized_person?: string | null
@@ -110,6 +112,7 @@ export type Database = {
           status?: string
           tax_number?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }

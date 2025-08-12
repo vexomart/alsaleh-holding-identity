@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { Resend } from "npm:resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -21,8 +22,53 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Get user from authorization header
+    const authHeader = req.headers.get('Authorization');
+    let userId = null;
+    
+    if (authHeader) {
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user } } = await supabase.auth.getUser(token);
+      userId = user?.id;
+    }
+
     const formData: ContractFormRequest = await req.json();
     const { formType, ...data } = formData;
+
+    // Store contract in database if user is authenticated
+    let contractId = null;
+    if (userId) {
+      const contractData = {
+        user_id: userId,
+        client_type: formType,
+        client_name: data.fullName || data.institutionName || data.companyName,
+        client_email: data.email,
+        client_phone: data.phone,
+        client_id_number: data.nationalId,
+        client_address: data.address || data.city,
+        service_type: data.serviceType,
+        service_description: data.projectDescription,
+        service_price: 0, // Will be set later during negotiation
+        status: 'draft'
+      };
+
+      const { data: contract, error } = await supabase
+        .from('contracts')
+        .insert(contractData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating contract:', error);
+      } else {
+        contractId = contract.id;
+      }
+    }
 
     // Generate email content based on form type
     const contractDate = new Date().toLocaleDateString('ar-SA', {
