@@ -105,7 +105,7 @@ import TechEcosystem from "./pages/TechEcosystem";
 import CookiePolicy from "./pages/CookiePolicy";
 import ConstructionWebsite from "./pages/ConstructionWebsite";
 import DigitalMarketingWebsite from "./pages/DigitalMarketingWebsite";
-import OtherServices from "./pages/OtherServices";
+
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -173,7 +173,7 @@ const App = () => {
               <Route path="/current-offers" element={<CurrentOffers />} />
               <Route path="/offer-details/:id" element={<OfferDetails />} />
               <Route path="/professional-services" element={<ProfessionalServices />} />
-              <Route path="/other-services" element={<OtherServices />} />
+              
               <Route path="/content-creation" element={<ContentCreation />} />
               <Route path="/design-solutions" element={<DesignSolutions />} />
               <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
