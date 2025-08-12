@@ -650,6 +650,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_recent_job_application: {
+        Args: { applicant_email: string }
+        Returns: boolean
+      }
+      check_recent_newsletter_subscription: {
+        Args: { subscriber_email: string }
+        Returns: boolean
+      }
       generate_client_id: {
         Args: Record<PropertyKey, never>
         Returns: string
