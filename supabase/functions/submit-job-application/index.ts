@@ -38,7 +38,44 @@ const handler = async (req: Request): Promise<Response> => {
 
     const jobData: JobApplicationData = await req.json();
 
-    console.log("Received job application:", jobData);
+    console.log("Received job application:", { email: jobData.email, position: jobData.position });
+
+    // Security: Input validation and sanitization
+    if (!jobData.fullName?.trim() || !jobData.email?.trim() || !jobData.phone?.trim() || !jobData.position?.trim()) {
+      throw new Error("Missing required fields");
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(jobData.email)) {
+      throw new Error("Invalid email format");
+    }
+
+    // Rate limiting check
+    const { data: rateLimitData, error: rateLimitError } = await supabaseClient
+      .rpc('check_rate_limit', {
+        p_identifier: jobData.email,
+        p_action_type: 'job_application',
+        p_limit: 3,
+        p_window_minutes: 1440 // 24 hours
+      });
+
+    if (rateLimitError || !rateLimitData) {
+      console.error("Rate limit check failed:", rateLimitError);
+      throw new Error("Too many applications. Please try again later.");
+    }
+
+    // Log security event
+    await supabaseClient.from('user_activity_logs').insert({
+      user_id: null, // Anonymous submission
+      activity_type: 'job_application_submitted',
+      description: 'Anonymous job application submitted',
+      metadata: {
+        email: jobData.email,
+        position: jobData.position,
+        timestamp: new Date().toISOString()
+      }
+    });
 
     // Generate application number starting from 3885
     const applicationNumber = 3885 + Math.floor(Math.random() * 9000);

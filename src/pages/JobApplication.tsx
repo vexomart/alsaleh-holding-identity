@@ -40,6 +40,7 @@ import Footer from "@/components/Footer";
 import { JobApplicationSteps } from "@/components/JobApplicationSteps";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import { useSecurityAudit } from "@/hooks/useSecurityAudit";
 
 const JobApplication = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -74,6 +75,7 @@ const JobApplication = () => {
   
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { logSecurityEvent } = useSecurityAudit();
 
   // Check authentication status
   useEffect(() => {
@@ -223,10 +225,35 @@ const JobApplication = () => {
       let cvUrl = null;
       let cvFileName = null;
 
-      // Upload CV file if provided
+      // Upload CV file if provided with enhanced security
       if (formData.cv) {
-        const fileExt = formData.cv.name.split('.').pop();
-        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+        // Security: Validate file type and size
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        const maxSize = 5 * 1024 * 1024; // 5MB limit
+
+        if (!allowedTypes.includes(formData.cv.type)) {
+          throw new Error('نوع الملف غير مدعوم. يرجى استخدام PDF أو Word');
+        }
+
+        if (formData.cv.size > maxSize) {
+          throw new Error('حجم الملف كبير جداً. الحد الأقصى 5MB');
+        }
+
+        // Security: Use user-specific path and sanitized filename
+        const fileExt = formData.cv.name.split('.').pop()?.toLowerCase();
+        const sanitizedName = formData.cv.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const fileName = `${user.id}/${Date.now()}_${sanitizedName}`;
+        
+        // Log file upload attempt
+        await logSecurityEvent({
+          eventType: 'sensitive_data_access',
+          description: 'CV file upload attempt',
+          metadata: {
+            fileName: sanitizedName,
+            fileSize: formData.cv.size,
+            fileType: formData.cv.type
+          }
+        });
         
         const { error: uploadError } = await supabase.storage
           .from('cvs')
