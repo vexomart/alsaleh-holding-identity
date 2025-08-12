@@ -61,8 +61,10 @@ const DigitalMarketingWebsite = () => {
 
   // Payment handlers for each section
   const handleHomePayment = async (service: any, index: number) => {
+    console.log('🏠 HOME Payment clicked for index:', index, 'Current processingHomeService:', processingHomeService);
     if (processingHomeService === index) return;
     
+    console.log('🏠 HOME Setting processingHomeService to:', index);
     setProcessingHomeService(index);
     
     try {
@@ -93,13 +95,16 @@ const DigitalMarketingWebsite = () => {
       console.error('Payment error:', error);
       toast.error('حدث خطأ في عملية الدفع');
     } finally {
+      console.log('🏠 HOME Clearing processingHomeService');
       setProcessingHomeService(null);
     }
   };
 
   const handleServicesPayment = async (service: any, index: number) => {
+    console.log('🛠️ SERVICES Payment clicked for index:', index, 'Current processingServicesService:', processingServicesService);
     if (processingServicesService === index) return;
     
+    console.log('🛠️ SERVICES Setting processingServicesService to:', index);
     setProcessingServicesService(index);
     
     try {
@@ -319,9 +324,13 @@ const DigitalMarketingWebsite = () => {
                        className={`bg-gradient-to-r ${service.bgColor} hover:shadow-lg w-full sm:w-auto text-sm sm:text-base`}
                        onClick={() => handleHomePayment(service, index)}
                        disabled={processingHomeService === index}
-                     >
-                       {processingHomeService === index ? "جاري المعالجة..." : "ادفع الآن"}
-                     </Button>
+                      >
+                        {(() => {
+                          const isProcessing = processingHomeService === index;
+                          console.log('🏠 HOME Button render - index:', index, 'isProcessing:', isProcessing, 'processingHomeService:', processingHomeService);
+                          return isProcessing ? "جاري المعالجة..." : "ادفع الآن";
+                        })()}
+                      </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -503,9 +512,13 @@ const DigitalMarketingWebsite = () => {
                     className={`bg-gradient-to-r ${service.bgColor}`}
                     onClick={() => handleServicesPayment(service, index)}
                     disabled={processingServicesService === index}
-                  >
-                    {processingServicesService === index ? "جاري المعالجة..." : "ادفع الآن"}
-                  </Button>
+                   >
+                     {(() => {
+                       const isProcessing = processingServicesService === index;
+                       console.log('🛠️ SERVICES Button render - index:', index, 'isProcessing:', isProcessing, 'processingServicesService:', processingServicesService);
+                       return isProcessing ? "جاري المعالجة..." : "ادفع الآن";
+                     })()}
+                   </Button>
                 </div>
               </Card>
             ))}
