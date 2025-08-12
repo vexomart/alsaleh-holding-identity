@@ -7,54 +7,18 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
+    console.log("✅ OPTIONS request handled");
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    console.log("🔥 REQUEST START - Method:", req.method);
-
-    // Get raw body text first for debugging
-    const rawBody = await req.text();
-    console.log("📝 Raw body received:", rawBody);
-    console.log("📏 Body length:", rawBody.length);
-
-    // Check if body is empty
-    if (!rawBody || rawBody.trim() === '') {
-      console.log("❌ Empty body received");
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "No request body provided" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400
-      });
-    }
-
-    // Parse JSON
-    let body;
-    try {
-      body = JSON.parse(rawBody);
-    } catch (parseError) {
-      console.log("❌ JSON parsing failed:", parseError.message);
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "Invalid JSON in request body" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400
-      });
-    }
-
-    console.log("📦 Parsed request data:", body);
-
-    // Log request headers for debugging
-    const headers: Record<string, string> = {};
-    req.headers.forEach((value, key) => {
-      headers[key] = value;
-    });
-    console.log("📋 Request headers:", JSON.stringify(headers, null, 2));
+    console.log("🚀 Paylink payment started");
+    
+    // Parse request body properly
+    const body = await req.json();
+    console.log("📦 Request data:", body);
 
     // Extract payment data with defaults
     const {
@@ -75,7 +39,7 @@ serve(async (req) => {
       offer_title
     });
 
-    // Get Paylink credentials
+    // Get Paylink credentials from secrets
     const apiId = Deno.env.get('PAYLINK_API_ID');
     const apiKey = Deno.env.get('PAYLINK_API_KEY');
 
@@ -92,7 +56,7 @@ serve(async (req) => {
 
     console.log("🔐 Credentials found, authenticating...");
 
-    // Authenticate with Paylink
+    // Step 1: Authenticate with Paylink
     const authResponse = await fetch('https://restapi.paylink.sa/api/auth', {
       method: 'POST',
       headers: {
@@ -130,7 +94,7 @@ serve(async (req) => {
       });
     }
 
-    // Create invoice
+    // Step 2: Create invoice
     console.log("📄 Creating invoice...");
     const orderNumber = `ORD-${Date.now()}`;
     
@@ -204,7 +168,7 @@ serve(async (req) => {
       });
     }
 
-    // Save transaction to database (optional, non-blocking)
+    // Step 3: Save transaction to database (optional, non-blocking)
     try {
       const supabase = createClient(
         Deno.env.get('SUPABASE_URL') ?? "",
