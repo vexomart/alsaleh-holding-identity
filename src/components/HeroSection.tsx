@@ -44,16 +44,18 @@ const HeroSection = () => {
       number: 2016, 
       title: "سنة التأسيس", 
       titleEn: "Foundation Year",
-      color: "from-blue-600 to-cyan-600",
-      description: "بداية رحلة النجاح"
+      color: "from-amber-600 to-amber-800",
+      description: "بداية رحلة النجاح",
+      textColor: "text-amber-100"
     },
     { 
       icon: Building2, 
       number: 2024, 
       title: "شركة قابضة", 
       titleEn: "Holding Company",
-      color: "from-purple-600 to-pink-600",
-      description: "التطور والنمو"
+      color: "from-purple-600 to-purple-800",
+      description: "التطور والنمو",
+      textColor: "text-purple-100"
     },
     { 
       icon: Trophy, 
@@ -61,8 +63,9 @@ const HeroSection = () => {
       suffix: "+",
       title: "مشروع ناجح", 
       titleEn: "Successful Projects",
-      color: "from-emerald-600 to-teal-600",
-      description: "إنجازات متميزة"
+      color: "from-emerald-600 to-emerald-800",
+      description: "إنجازات متميزة",
+      textColor: "text-emerald-100"
     },
     { 
       icon: Users, 
@@ -70,8 +73,9 @@ const HeroSection = () => {
       suffix: "+",
       title: "عميل راضٍ", 
       titleEn: "Satisfied Clients",
-      color: "from-orange-600 to-red-600",
-      description: "ثقة العملاء"
+      color: "from-blue-600 to-blue-800",
+      description: "ثقة العملاء",
+      textColor: "text-blue-100"
     }
   ];
 
@@ -249,7 +253,7 @@ const HeroSection = () => {
                 </div>
                 
                 <div className="space-y-1 sm:space-y-2">
-                  <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gradient-primary mb-2 sm:mb-3 group-hover:scale-125 transition-transform duration-500">
+                  <div className={`text-3xl sm:text-4xl lg:text-6xl font-black mb-2 sm:mb-3 group-hover:scale-125 transition-transform duration-500 drop-shadow-lg ${achievement.textColor || 'text-white'}`}>
                     <AnimatedCounter 
                       end={achievement.number} 
                       suffix={achievement.suffix || ""} 

@@ -12,9 +12,10 @@ const StatsSection = () => {
       title: "عميل راضٍ",
       subtitle: "Satisfied Clients",
       description: "عملاء راضون ومتفاعلون مع خدماتنا",
-      gradient: "from-orange-500 to-red-500",
-      bgGradient: "from-orange-500/10 to-red-500/10",
-      glowColor: "shadow-orange-500/20"
+      gradient: "from-blue-600 to-blue-800",
+      bgGradient: "from-blue-600/15 to-blue-800/15",
+      glowColor: "shadow-blue-600/30",
+      textColor: "text-blue-700 dark:text-blue-300"
     },
     {
       icon: Trophy,
@@ -23,9 +24,10 @@ const StatsSection = () => {
       title: "مشروع ناجح", 
       subtitle: "Successful Projects",
       description: "مشاريع منجزة بأعلى معايير الجودة",
-      gradient: "from-green-500 to-emerald-500",
-      bgGradient: "from-green-500/10 to-emerald-500/10",
-      glowColor: "shadow-green-500/20"
+      gradient: "from-emerald-600 to-emerald-800",
+      bgGradient: "from-emerald-600/15 to-emerald-800/15",
+      glowColor: "shadow-emerald-600/30",
+      textColor: "text-emerald-700 dark:text-emerald-300"
     },
     {
       icon: Building2,
@@ -33,9 +35,10 @@ const StatsSection = () => {
       title: "شركة قابضة",
       subtitle: "Holding Company", 
       description: "التطوير والنمو المستمر",
-      gradient: "from-purple-500 to-pink-500",
-      bgGradient: "from-purple-500/10 to-pink-500/10",
-      glowColor: "shadow-purple-500/20"
+      gradient: "from-purple-600 to-purple-800",
+      bgGradient: "from-purple-600/15 to-purple-800/15",
+      glowColor: "shadow-purple-600/30",
+      textColor: "text-purple-700 dark:text-purple-300"
     },
     {
       icon: Calendar,
@@ -43,9 +46,10 @@ const StatsSection = () => {
       title: "سنة التأسيس",
       subtitle: "Foundation Year",
       description: "خبرة طويلة في السوق",
-      gradient: "from-blue-500 to-cyan-500", 
-      bgGradient: "from-blue-500/10 to-cyan-500/10",
-      glowColor: "shadow-blue-500/20"
+      gradient: "from-amber-600 to-amber-800", 
+      bgGradient: "from-amber-600/15 to-amber-800/15",
+      glowColor: "shadow-amber-600/30",
+      textColor: "text-amber-700 dark:text-amber-300"
     }
   ];
 
@@ -53,17 +57,17 @@ const StatsSection = () => {
     {
       icon: TrendingUp,
       text: "قائد السوق العالمي",
-      bgColor: "bg-gradient-to-r from-orange-500 to-red-500"
+      bgColor: "bg-gradient-to-r from-blue-600 to-blue-800"
     },
     {
       icon: Star,
       text: "معدل رضا العملاء 99.8%",
-      bgColor: "bg-gradient-to-r from-green-500 to-emerald-500"
+      bgColor: "bg-gradient-to-r from-emerald-600 to-emerald-800"
     },
     {
       icon: Award,
       text: "أفضل شركة قابضة 2024",
-      bgColor: "bg-gradient-to-r from-purple-500 to-pink-500"
+      bgColor: "bg-gradient-to-r from-purple-600 to-purple-800"
     }
   ];
 
@@ -106,8 +110,8 @@ const StatsSection = () => {
                   <stat.icon className="w-10 h-10 text-white" />
                 </div>
                 
-                {/* Animated Number */}
-                <div className={`text-6xl lg:text-7xl font-black mb-4 bg-gradient-to-br ${stat.gradient} bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-500`}>
+                {/* Animated Number with Better Contrast */}
+                <div className={`text-6xl lg:text-8xl font-black mb-4 drop-shadow-lg group-hover:scale-110 transition-transform duration-500 ${stat.textColor || 'text-foreground'}`}>
                   <AnimatedCounter 
                     end={stat.number} 
                     suffix={stat.suffix || ""} 
