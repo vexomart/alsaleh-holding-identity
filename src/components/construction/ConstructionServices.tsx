@@ -15,9 +15,10 @@ interface ConstructionServicesProps {
   isPreview?: boolean;
   onViewAll?: () => void;
   onPayment?: (service: Service) => void;
+  processingServiceId?: string | null;
 }
 
-const ConstructionServices = ({ services, isPreview = false, onViewAll, onPayment }: ConstructionServicesProps) => {
+const ConstructionServices = ({ services, isPreview = false, onViewAll, onPayment, processingServiceId }: ConstructionServicesProps) => {
   const displayServices = isPreview ? services.slice(0, 4) : services;
 
   return (
@@ -68,8 +69,9 @@ const ConstructionServices = ({ services, isPreview = false, onViewAll, onPaymen
                   <Button 
                     className="w-full bg-gradient-to-r from-blue-500 to-indigo-600"
                     onClick={() => onPayment(service)}
+                    disabled={processingServiceId === service.title}
                   >
-                    احجز الآن
+                    {processingServiceId === service.title ? "جاري المعالجة..." : "احجز الآن"}
                   </Button>
                 ) : !isPreview ? (
                   <Button variant="outline" className="w-full">

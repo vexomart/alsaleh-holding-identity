@@ -13,7 +13,7 @@ import ConstructionFooter from "@/components/construction/ConstructionFooter";
 
 const ConstructionWebsite = () => {
   const [currentPage, setCurrentPage] = useState("home");
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [processingServiceId, setProcessingServiceId] = useState<string | null>(null);
 
   const projects = [
     {
@@ -78,9 +78,9 @@ const ConstructionWebsite = () => {
 
   // Payment handler
   const handlePayment = async (service: any) => {
-    if (isProcessingPayment) return;
+    if (processingServiceId === service.title) return;
     
-    setIsProcessingPayment(true);
+    setProcessingServiceId(service.title);
     
     try {
       // Extract numeric value from price string
@@ -122,7 +122,7 @@ const ConstructionWebsite = () => {
       console.error('Payment error:', error);
       alert('حدث خطأ في عملية الدفع. يرجى المحاولة مرة أخرى.');
     } finally {
-      setIsProcessingPayment(false);
+      setProcessingServiceId(null);
     }
   };
 
@@ -142,6 +142,7 @@ const ConstructionWebsite = () => {
               services={services} 
               isPreview={false} 
               onPayment={handlePayment}
+              processingServiceId={processingServiceId}
             />
           </div>
         );
@@ -166,6 +167,7 @@ const ConstructionWebsite = () => {
               isPreview={true} 
               onViewAll={() => setCurrentPage("services")}
               onPayment={handlePayment}
+              processingServiceId={processingServiceId}
             />
             <CertificationsSection />
             <ConstructionProjects 

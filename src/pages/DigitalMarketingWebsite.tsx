@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 const DigitalMarketingWebsite = () => {
   const [currentPage, setCurrentPage] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [processingServiceId, setProcessingServiceId] = useState<string | null>(null);
 
   const navigationItems = [
     { id: "home", label: "الرئيسية", icon: Home },
@@ -75,9 +75,9 @@ const DigitalMarketingWebsite = () => {
 
   // Payment handler
   const handlePayment = async (service: any) => {
-    if (isProcessingPayment) return;
+    if (processingServiceId === service.title) return;
     
-    setIsProcessingPayment(true);
+    setProcessingServiceId(service.title);
     
     try {
       // Extract numeric value from price string and convert to SAR cents
@@ -120,7 +120,7 @@ const DigitalMarketingWebsite = () => {
       console.error('Payment error:', error);
       alert('حدث خطأ في عملية الدفع. يرجى المحاولة مرة أخرى.');
     } finally {
-      setIsProcessingPayment(false);
+      setProcessingServiceId(null);
     }
   };
 
@@ -522,8 +522,9 @@ const DigitalMarketingWebsite = () => {
                   size="lg" 
                   className={`bg-gradient-to-r ${service.bgColor}`}
                   onClick={() => handlePayment(service)}
+                  disabled={processingServiceId === service.title}
                 >
-                  ادفع الآن
+                  {processingServiceId === service.title ? "جاري المعالجة..." : "ادفع الآن"}
                 </Button>
               </div>
             </Card>
