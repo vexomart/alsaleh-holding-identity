@@ -6,15 +6,18 @@ interface Service {
   icon: any;
   title: string;
   description: string;
+  price?: string;
+  features?: string[];
 }
 
 interface ConstructionServicesProps {
   services: Service[];
   isPreview?: boolean;
   onViewAll?: () => void;
+  onPayment?: (service: Service) => void;
 }
 
-const ConstructionServices = ({ services, isPreview = false, onViewAll }: ConstructionServicesProps) => {
+const ConstructionServices = ({ services, isPreview = false, onViewAll, onPayment }: ConstructionServicesProps) => {
   const displayServices = isPreview ? services.slice(0, 4) : services;
 
   return (
@@ -43,11 +46,36 @@ const ConstructionServices = ({ services, isPreview = false, onViewAll }: Constr
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-slate-800">{service.title}</h3>
                 <p className="text-slate-600 leading-relaxed text-lg mb-6">{service.description}</p>
-                {!isPreview && (
+                
+                {service.features && (
+                  <div className="space-y-2 mb-6">
+                    {service.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center text-sm text-slate-600">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {service.price && (
+                  <div className="mb-6">
+                    <span className="text-2xl font-bold text-blue-600">{service.price}</span>
+                  </div>
+                )}
+                
+                {!isPreview && onPayment && service.price ? (
+                  <Button 
+                    className="w-full bg-gradient-to-r from-blue-500 to-indigo-600"
+                    onClick={() => onPayment(service)}
+                  >
+                    احجز الآن
+                  </Button>
+                ) : !isPreview ? (
                   <Button variant="outline" className="w-full">
                     اعرف المزيد
                   </Button>
-                )}
+                ) : null}
               </CardContent>
             </Card>
           ))}

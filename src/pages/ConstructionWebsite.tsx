@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Building2, Award, Truck, CheckCircle2, Star, Users, Clock, Phone, Mail, MapPin, Calendar, Shield, Zap, Globe, Wrench, Quote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import ConstructionFooter from "@/components/construction/ConstructionFooter";
 
 const ConstructionWebsite = () => {
   const [currentPage, setCurrentPage] = useState("home");
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const projects = [
     {
@@ -47,24 +49,82 @@ const ConstructionWebsite = () => {
     {
       icon: Building2,
       title: "البناء والتشييد",
-      description: "تنفيذ مشاريع البناء السكنية والتجارية والصناعية بأعلى معايير الجودة والسلامة العالمية"
+      description: "تنفيذ مشاريع البناء السكنية والتجارية والصناعية بأعلى معايير الجودة والسلامة العالمية",
+      price: "ابتداءً من 250,000 ر.س",
+      features: ["تصميم معماري", "تنفيذ شامل", "ضمان 10 سنوات", "صيانة دورية"]
     },
     {
       icon: Award,
       title: "الاستشارات الهندسية",
-      description: "خدمات استشارية متخصصة في التصميم والتخطيط الهندسي من قبل فريق من أمهر المهندسين"
+      description: "خدمات استشارية متخصصة في التصميم والتخطيط الهندسي من قبل فريق من أمهر المهندسين",
+      price: "ابتداءً من 15,000 ر.س",
+      features: ["دراسات جدوى", "تصميمات تفصيلية", "إشراف هندسي", "مراجعة فنية"]
     },
     {
       icon: Truck,
       title: "إدارة المشاريع",
-      description: "إدارة شاملة للمشاريع من مرحلة التخطيط والتصميم حتى التسليم النهائي والصيانة"
+      description: "إدارة شاملة للمشاريع من مرحلة التخطيط والتصميم حتى التسليم النهائي والصيانة",
+      price: "ابتداءً من 50,000 ر.س",
+      features: ["تخطيط زمني", "إدارة الموارد", "مراقبة الجودة", "تقارير دورية"]
     },
     {
       icon: CheckCircle2,
       title: "ضمان الجودة",
-      description: "نظام شامل لضمان الجودة ومراقبة جميع مراحل التنفيذ وفق المعايير العالمية"
+      description: "نظام شامل لضمان الجودة ومراقبة جميع مراحل التنفيذ وفق المعايير العالمية",
+      price: "ابتداءً من 25,000 ر.س",
+      features: ["فحص شامل", "تقارير تقنية", "شهادات معتمدة", "متابعة مستمرة"]
     }
   ];
+
+  // Payment handler
+  const handlePayment = async (service: any) => {
+    if (isProcessingPayment) return;
+    
+    setIsProcessingPayment(true);
+    
+    try {
+      // Extract numeric value from price string
+      const priceMatch = service.price.match(/(\d+,?\d*)/);
+      if (!priceMatch) {
+        throw new Error('Invalid price format');
+      }
+      
+      const priceInSAR = parseInt(priceMatch[1].replace(',', ''));
+      
+      const paymentData = {
+        amount: priceInSAR,
+        currency: 'SAR',
+        customer_name: 'عميل',
+        customer_email: 'customer@example.com',
+        customer_phone: '966500000000',
+        offer_title: service.title,
+        description: `شراء خدمة: ${service.title}`,
+        success_url: window.location.origin
+      };
+
+      // Use Paylink as primary payment gateway
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: paymentData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.success && data.url) {
+        // Redirect to payment page
+        window.location.href = data.url;
+      } else {
+        throw new Error('فشل في إنشاء رابط الدفع');
+      }
+
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('حدث خطأ في عملية الدفع. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
 
   const stats = [
     { number: "200+", label: "مشروع مكتمل", icon: Building2 },
@@ -78,7 +138,11 @@ const ConstructionWebsite = () => {
       case "services":
         return (
           <div className="pt-24">
-            <ConstructionServices services={services} isPreview={false} />
+            <ConstructionServices 
+              services={services} 
+              isPreview={false} 
+              onPayment={handlePayment}
+            />
           </div>
         );
       case "projects":
@@ -101,6 +165,7 @@ const ConstructionWebsite = () => {
               services={services} 
               isPreview={true} 
               onViewAll={() => setCurrentPage("services")}
+              onPayment={handlePayment}
             />
             <CertificationsSection />
             <ConstructionProjects 
