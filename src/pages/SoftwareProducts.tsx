@@ -239,6 +239,23 @@ const SoftwareProducts = () => {
       tags: ["React", "TypeScript", "Responsive"],
       isNew: true,
       isFeatured: true
+    },
+    {
+      id: 2,
+      name: "موقع شركة المقاولات العالمية",
+      description: "موقع تعريفي متكامل لشركة مقاولات عالمية مع عرض احترافي للمشاريع والخدمات وصفحات مرتبة بأنيميشن متطور",
+      category: "المواقع التعريفية",
+      icon: Globe,
+      features: ["تصميم عالمي احترافي", "عرض المشاريع التفاعلي", "أنيميشن متطور", "متعدد اللغات", "نظام إدارة المحتوى", "معرض أعمال ديناميكي"],
+      price: "7000 ريال",
+      rating: 5.0,
+      downloads: "0",
+      status: "متاح الآن",
+      color: "from-emerald-500 to-teal-500",
+      demoUrl: "#",
+      tags: ["Global", "Construction", "Animated", "Multilingual"],
+      isNew: true,
+      isFeatured: true
     }
   ];
 
@@ -247,7 +264,7 @@ const SoftwareProducts = () => {
   const stats = [
     {
       title: "إجمالي المنتجات",
-      value: "1",
+      value: "2",
       icon: Package,
       color: "from-blue-500 to-blue-600",
       bgColor: "from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20",
@@ -257,7 +274,7 @@ const SoftwareProducts = () => {
     },
     {
       title: "المنتجات المتاحة",
-      value: "1",
+      value: "2",
       icon: Zap,
       color: "from-green-500 to-green-600",
       bgColor: "from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20",
@@ -267,7 +284,7 @@ const SoftwareProducts = () => {
     },
     {
       title: "المبيعات",
-      value: "4999 ر.س",
+      value: "11999 ر.س",
       icon: TrendingUp,
       color: "from-purple-500 to-purple-600",
       bgColor: "from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20",
@@ -277,7 +294,7 @@ const SoftwareProducts = () => {
     },
     {
       title: "متوسط التقييم",
-      value: "4.9",
+      value: "4.95",
       icon: Star,
       color: "from-orange-500 to-orange-600",
       bgColor: "from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20",
