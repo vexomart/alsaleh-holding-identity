@@ -6,7 +6,7 @@ verify_jwt = false
 [functions.domain-email]
 verify_jwt = false
 
-# Make edge functions public (no JWT required)
+# Public functions (no JWT required)
 [functions.contact-form]
 verify_jwt = false
 
@@ -16,23 +16,33 @@ verify_jwt = false
 [functions.job-application]
 verify_jwt = false
 
-[functions.tap-payment]
-verify_jwt = false
-
 [functions.consultation-booking]
-verify_jwt = false
-
-[functions.paylink-payment]
 verify_jwt = false
 
 [functions.email-test]
 verify_jwt = false
 
+# Secure payment and sensitive functions - require authentication
+[functions.paylink-payment]
+verify_jwt = true
+
+[functions.tamara-payment]
+verify_jwt = true
+
+[functions.stc-pay]
+verify_jwt = true
+
+[functions.tap-payment]
+verify_jwt = true
+
 [functions.invoice-system]
-verify_jwt = false
+verify_jwt = true
 
 [functions.verify-payment-status]
-verify_jwt = false
+verify_jwt = true
 
 [functions.contract-email]
-verify_jwt = false
+verify_jwt = true
+
+[functions.contract-form]
+verify_jwt = true
