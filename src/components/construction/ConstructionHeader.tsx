@@ -27,7 +27,7 @@ const ConstructionHeader = ({ currentPage, onPageChange }: ConstructionHeaderPro
       <Alert className="border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 border-b rounded-none">
         <AlertTriangle className="h-5 w-5 text-amber-600" />
         <AlertDescription className="text-amber-800 font-medium text-center">
-          🚧 هذا موقع تجريبي للمعاينة فقط - تم تطويره بواسطة شركة إمكان للتقنيات المتقدمة
+          🚧 هذا موقع تجريبي للمعاينة فقط - تم تطويره بواسطة شركة علي صالح الشهري القابضة
         </AlertDescription>
       </Alert>
 

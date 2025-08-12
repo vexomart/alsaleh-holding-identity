@@ -58,7 +58,7 @@ const ConstructionFooter = () => {
         <div className="border-t border-slate-700 mt-12 pt-8 text-center">
           <p className="text-slate-400">
             &copy; 2024 شركة المقاولات العالمية. جميع الحقوق محفوظة. 
-            <span className="text-blue-400"> | موقع تجريبي بواسطة إمكان للتقنيات</span>
+            <span className="text-blue-400"> | موقع تجريبي بواسطة شركة علي صالح الشهري القابضة</span>
           </p>
         </div>
       </div>
