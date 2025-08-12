@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { TrendingUp, BarChart3, Target, Users, Mail, Phone, MapPin, Calendar, CheckCircle2, ArrowRight, Star, Globe, Zap, Shield, Award, Eye, MousePointer, Search, MessageSquare, AlertTriangle, Menu, X, Home, Briefcase, FileText, Building2, ChevronRight, PlayCircle, Rocket, Trophy, Heart, Lightbulb, DollarSign, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 const DigitalMarketingWebsite = () => {
   const [currentPage, setCurrentPage] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const navigationItems = [
     { id: "home", label: "الرئيسية", icon: Home },
@@ -70,6 +72,57 @@ const DigitalMarketingWebsite = () => {
       bgColor: "from-violet-500 to-purple-500"
     }
   ];
+
+  // Payment handler
+  const handlePayment = async (service: any) => {
+    if (isProcessingPayment) return;
+    
+    setIsProcessingPayment(true);
+    
+    try {
+      // Extract numeric value from price string and convert to SAR cents
+      const priceMatch = service.price.match(/\$(\d+)/);
+      if (!priceMatch) {
+        throw new Error('Invalid price format');
+      }
+      
+      const priceInUSD = parseInt(priceMatch[1]);
+      const priceInSAR = Math.round(priceInUSD * 3.75); // Convert USD to SAR
+      
+      const paymentData = {
+        amount: priceInSAR,
+        currency: 'SAR',
+        customer_name: 'عميل',
+        customer_email: 'customer@example.com',
+        customer_phone: '966500000000',
+        offer_title: service.title,
+        description: `شراء خدمة: ${service.title}`,
+        success_url: window.location.origin
+      };
+
+      // Use Paylink as primary payment gateway
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: paymentData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.success && data.url) {
+        // Redirect to payment page
+        window.location.href = data.url;
+      } else {
+        throw new Error('فشل في إنشاء رابط الدفع');
+      }
+
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('حدث خطأ في عملية الدفع. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
 
   const globalStats = [
     { number: "2000+", label: "عميل في 50 دولة", icon: Globe },
@@ -465,8 +518,12 @@ const DigitalMarketingWebsite = () => {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-3xl font-bold text-purple-600">{service.price}</span>
-                <Button size="lg" className={`bg-gradient-to-r ${service.bgColor}`}>
-                  اطلب استشارة مجانية
+                <Button 
+                  size="lg" 
+                  className={`bg-gradient-to-r ${service.bgColor}`}
+                  onClick={() => handlePayment(service)}
+                >
+                  ادفع الآن
                 </Button>
               </div>
             </Card>
