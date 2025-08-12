@@ -35,6 +35,12 @@ const DigitalMarketing = () => {
   const handlePaymentMethod = async (service: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
     setLoadingMethod(method);
     
+    // إشعار فوري للمستخدم
+    toast({
+      title: "جاري معالجة طلب الدفع...",
+      description: "يرجى الانتظار قليلاً"
+    });
+    
     try {
       const amount = 1499;
       let functionName = '';
@@ -61,16 +67,63 @@ const DigitalMarketing = () => {
           break;
       }
 
-      const { data, error } = await supabase.functions.invoke(functionName, {
-        body: payload
-      });
+      console.log(`استدعاء ${functionName} مع البيانات:`, payload);
 
-      if (error) {
-        console.error(`${method} error:`, error);
-        throw new Error(error.message || 'فشل في الاتصال بالخدمة');
+      // تحسين استدعاء Edge Function مع retry logic
+      let data, error;
+      let attempts = 0;
+      const maxAttempts = 3;
+      
+      while (attempts < maxAttempts) {
+        attempts++;
+        console.log(`محاولة ${attempts} من ${maxAttempts}`);
+        
+        try {
+          const result: any = await Promise.race([
+            supabase.functions.invoke(functionName, {
+              body: payload,
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 30000)
+            )
+          ]);
+          
+          data = result.data;
+          error = result.error;
+          
+          if (!error && data) {
+            console.log(`نجحت المحاولة ${attempts}:`, data);
+            break;
+          }
+          
+          if (attempts < maxAttempts) {
+            console.log(`فشلت المحاولة ${attempts}، سيتم إعادة المحاولة...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (attemptError) {
+          console.error(`خطأ في المحاولة ${attempts}:`, attemptError);
+          if (attempts === maxAttempts) {
+            throw attemptError;
+          }
+        }
       }
 
-      if (data?.success) {
+      if (error) {
+        console.error(`${method} error after ${attempts} attempts:`, error);
+        throw new Error(error.message || 'فشل في الاتصال بالخدمة بعد عدة محاولات');
+      }
+
+      console.log(`${functionName} response:`, data);
+
+      if (data?.success || data?.url) {
+        toast({
+          title: "تم إنشاء رابط الدفع بنجاح",
+          description: "سيتم توجيهك إلى صفحة الدفع"
+        });
+
         if (method === 'stc-pay') {
           // عرض تعليمات STC Pay
           showSTCPayInstructions(data);
@@ -78,28 +131,45 @@ const DigitalMarketing = () => {
           // استخدام الرابط المناسب
           const paymentUrl = data.url || data.paymentUrl;
           
-          if (method === 'paylink') {
-            // فتح Paylink في نفس التبويب
-            window.location.href = paymentUrl;
-          } else {
-            // فتح باقي الطرق في تبويب جديد
-            window.open(paymentUrl, '_blank');
-            toast({
-              title: "تم توجيهك لصفحة الدفع",
-              description: "يرجى إكمال عملية الدفع في التبويب الجديد",
-            });
-          }
+          setTimeout(() => {
+            if (method === 'paylink') {
+              // فتح Paylink في نفس التبويب
+              window.location.href = paymentUrl;
+            } else {
+              // فتح باقي الطرق في تبويب جديد
+              window.open(paymentUrl, '_blank');
+              toast({
+                title: "تم توجيهك لصفحة الدفع",
+                description: "يرجى إكمال عملية الدفع في التبويب الجديد",
+              });
+            }
+          }, 500);
         } else {
           throw new Error('لم يتم إرجاع رابط الدفع من الخدمة');
         }
       } else {
-        throw new Error(data?.error || 'فشل في إنشاء رابط الدفع');
+        const errorMsg = data?.error || data?.message || 'فشل في إنشاء رابط الدفع';
+        console.error('خطأ في البيانات المرجعة:', data);
+        throw new Error(errorMsg);
       }
     } catch (error) {
-      console.error(`خطأ في ${method}:`, error);
+      console.error(`خطأ نهائي في ${method}:`, error);
+      
+      let errorMessage = "حدث خطأ أثناء عملية الدفع";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('timeout') || error.message.includes('انتهت مهلة')) {
+          errorMessage = "انتهت مهلة الاتصال. يرجى المحاولة مرة أخرى";
+        } else if (error.message.includes('Network') || error.message.includes('Failed to fetch')) {
+          errorMessage = "مشكلة في الاتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: "خطأ في الدفع",
-        description: error instanceof Error ? error.message : "حدث خطأ أثناء عملية الدفع",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
