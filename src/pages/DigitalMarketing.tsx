@@ -18,7 +18,10 @@ import {
   BarChart3,
   Lightbulb,
   CreditCard,
-  Loader2
+  Loader2,
+  Smartphone,
+  Banknote,
+  Wallet
 } from "lucide-react";
 
 const DigitalMarketing = () => {
@@ -29,36 +32,50 @@ const DigitalMarketing = () => {
   const description = "خدمات التسويق الرقمي الاحترافية - بناء خطط تسويقية متكاملة وحلول رقمية مبتكرة لنمو أعمالك";
   const canonical = `${window.location.origin}/digital-marketing`;
 
-  const handlePayment = async (service: any) => {
+  const handlePaymentMethod = async (service: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
     setIsLoading(true);
     
     try {
       const amount = 1499;
-      
-      // استخدام Paylink كطريقة دفع أساسية
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
-        body: {
-          amount: amount,
-          currency: 'SAR',
-          customer_name: 'عميل محتمل',
-          customer_email: 'customer@example.com',
-          customer_phone: '966500000000',
-          offer_title: service.title,
-          description: `دفع خدمة: ${service.title}`,
-          success_url: window.location.origin
-        }
+      let functionName = '';
+      let payload: any = {
+        amount: amount,
+        currency: 'SAR',
+        customer_name: 'عميل محتمل',
+        customer_email: 'customer@example.com',
+        customer_phone: '966500000000',
+        offer_title: service.title,
+        description: `دفع خدمة: ${service.title}`
+      };
+
+      switch (method) {
+        case 'paylink':
+          functionName = 'paylink-payment';
+          payload.success_url = window.location.origin;
+          break;
+        case 'stc-pay':
+          functionName = 'stc-pay';
+          break;
+        case 'tamara':
+          functionName = 'tamara-payment';
+          break;
+      }
+
+      const { data, error } = await supabase.functions.invoke(functionName, {
+        body: payload
       });
 
       if (error) {
-        console.error('Supabase error:', error);
+        console.error(`${method} error:`, error);
         throw new Error(error.message || 'فشل في الاتصال بالخدمة');
       }
 
-      console.log('Payment response:', data);
-
       if (data?.success) {
-        if (data.paymentUrl) {
-          // فتح صفحة الدفع في تبويب جديد
+        if (method === 'stc-pay') {
+          // عرض تعليمات STC Pay
+          showSTCPayInstructions(data);
+        } else if (data.paymentUrl) {
+          // فتح صفحة الدفع للطرق الأخرى
           window.open(data.paymentUrl, '_blank');
           toast({
             title: "تم توجيهك لصفحة الدفع",
@@ -69,84 +86,68 @@ const DigitalMarketing = () => {
         throw new Error('فشل في إنشاء رابط الدفع');
       }
     } catch (error) {
-      console.error('خطأ في عملية الدفع:', error);
-      
-      // في حالة فشل Paylink، جرب STC Pay
-      try {
-        const { data: stcData, error: stcError } = await supabase.functions.invoke('stc-pay', {
-          body: {
-            amount: 1499,
-            currency: 'SAR',
-            customer_name: 'عميل محتمل',
-            customer_email: 'customer@example.com',
-            customer_phone: '966500000000',
-            offer_title: service.title,
-            description: `دفع خدمة: ${service.title}`
-          }
-        });
-
-        if (!stcError && stcData?.success) {
-          // عرض تعليمات STC Pay
-          const modal = document.createElement('div');
-          modal.innerHTML = `
-            <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
-              <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
-                <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white text-center">
-                  <h3 class="text-2xl font-bold mb-2">تعليمات الدفع - STC Pay</h3>
-                  <p class="text-green-100">معاملة آمنة ومحمية</p>
-                </div>
-                <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
-                  <div class="bg-blue-50 rounded-xl p-4 border-2 border-blue-100">
-                    <h4 class="font-bold text-blue-800 mb-2">1. افتح تطبيق STC Pay</h4>
-                  </div>
-                  <div class="bg-green-50 rounded-xl p-4 border-2 border-green-100">
-                    <h4 class="font-bold text-green-800 mb-2">2. اختر "إرسال أموال"</h4>
-                  </div>
-                  <div class="bg-purple-50 rounded-xl p-4 border-2 border-purple-100">
-                    <h4 class="font-bold text-purple-800 mb-2">3. أرسل المبلغ:</h4>
-                    <div class="bg-white rounded-lg p-4 border-2 border-purple-200 text-center">
-                      <div class="text-3xl font-bold text-purple-600">${stcData.amount}</div>
-                      <div class="text-lg text-purple-500">${stcData.currency}</div>
-                      <div class="mt-2 text-sm text-gray-600">إلى الرقم</div>
-                      <div class="text-xl font-bold text-gray-800 mt-2 font-mono bg-gray-50 rounded p-2">${stcData.merchant_number}</div>
-                    </div>
-                  </div>
-                  <div class="bg-orange-50 rounded-xl p-4 border-2 border-orange-100">
-                    <h4 class="font-bold text-orange-800 mb-2">4. استخدم المرجع:</h4>
-                    <div class="bg-white rounded-lg p-3 border-2 border-orange-200 text-center">
-                      <div class="text-lg font-bold text-gray-800 font-mono bg-gray-50 rounded p-2">${stcData.reference}</div>
-                      <button onclick="navigator.clipboard.writeText('${stcData.reference}'); this.innerHTML='✓ تم النسخ!'" 
-                              class="mt-2 bg-orange-100 hover:bg-orange-200 text-orange-800 text-sm font-medium py-2 px-4 rounded-lg">
-                        نسخ المرجع
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="p-6 bg-gray-50 border-t">
-                  <button onclick="this.closest('.fixed').remove()" 
-                          class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl">
-                    إغلاق
-                  </button>
-                </div>
-              </div>
-            </div>
-          `;
-          document.body.appendChild(modal);
-          return;
-        }
-      } catch (stcError) {
-        console.error('STC Pay error:', stcError);
-      }
-      
-      // كحل أخير
+      console.error(`خطأ في ${method}:`, error);
       toast({
-        title: "يمكنك الدفع يدوياً",
-        description: "يرجى التواصل معنا على الواتساب لإتمام عملية الدفع: +966500000000",
-        variant: "default",
+        title: "خطأ في الدفع",
+        description: error instanceof Error ? error.message : "حدث خطأ أثناء عملية الدفع",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const showSTCPayInstructions = (data: any) => {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+      <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
+          <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white text-center">
+            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9M19 9H14V4H19V9Z"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">تعليمات الدفع - STC Pay</h3>
+            <p class="text-orange-100">معاملة آمنة ومحمية</p>
+          </div>
+          <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+            <div class="bg-blue-50 rounded-xl p-4 border-2 border-blue-100">
+              <h4 class="font-bold text-blue-800 mb-2">1. افتح تطبيق STC Pay</h4>
+            </div>
+            <div class="bg-green-50 rounded-xl p-4 border-2 border-green-100">
+              <h4 class="font-bold text-green-800 mb-2">2. اختر "إرسال أموال"</h4>
+            </div>
+            <div class="bg-purple-50 rounded-xl p-4 border-2 border-purple-100">
+              <h4 class="font-bold text-purple-800 mb-2">3. أرسل المبلغ:</h4>
+              <div class="bg-white rounded-lg p-4 border-2 border-purple-200 text-center">
+                <div class="text-3xl font-bold text-purple-600">${data.amount}</div>
+                <div class="text-lg text-purple-500">${data.currency}</div>
+                <div class="mt-2 text-sm text-gray-600">إلى الرقم</div>
+                <div class="text-xl font-bold text-gray-800 mt-2 font-mono bg-gray-50 rounded p-2">${data.merchant_number || data.merchantNumber}</div>
+              </div>
+            </div>
+            <div class="bg-orange-50 rounded-xl p-4 border-2 border-orange-100">
+              <h4 class="font-bold text-orange-800 mb-2">4. استخدم المرجع:</h4>
+              <div class="bg-white rounded-lg p-3 border-2 border-orange-200 text-center">
+                <div class="text-lg font-bold text-gray-800 font-mono bg-gray-50 rounded p-2">${data.reference || data.paymentReference}</div>
+                <button onclick="navigator.clipboard.writeText('${data.reference || data.paymentReference}'); this.innerHTML='✓ تم النسخ!'" 
+                        class="mt-2 bg-orange-100 hover:bg-orange-200 text-orange-800 text-sm font-medium py-2 px-4 rounded-lg">
+                  نسخ المرجع
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="p-6 bg-gray-50 border-t">
+            <button onclick="this.closest('.fixed').remove()" 
+                    class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl">
+              إغلاق
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
   };
 
   const jsonLd = {
@@ -321,7 +322,7 @@ const DigitalMarketing = () => {
                     <div className="text-sm text-muted-foreground">
                       يشمل ضمان المراجعة والتعديل
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-col gap-3">
                       <Button 
                         variant="outline"
                         className="border-primary text-primary hover:bg-primary hover:text-white"
@@ -332,18 +333,63 @@ const DigitalMarketing = () => {
                           استشارة مجانية
                         </a>
                       </Button>
-                      <Button 
-                        className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white"
-                        onClick={() => handlePayment(service)}
-                        disabled={isLoading}
-                      >
-                        {isLoading ? (
-                          <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-                        ) : (
-                          <CreditCard className="w-4 h-4 ml-2" />
-                        )}
-                        {isLoading ? 'جاري التحويل...' : 'ادفع الآن'}
-                      </Button>
+                      
+                      {/* Payment Methods */}
+                      <div className="flex flex-col gap-2">
+                        <div className="text-sm font-semibold text-center">طرق الدفع المتاحة:</div>
+                        <div className="grid grid-cols-3 gap-2">
+                          {/* Paylink Payment */}
+                          <Button 
+                            size="sm"
+                            className="bg-blue-500 hover:bg-blue-600 text-white flex flex-col items-center py-3 h-auto"
+                            onClick={() => handlePaymentMethod(service, 'paylink')}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <>
+                                <CreditCard className="w-4 h-4 mb-1" />
+                                <span className="text-xs">Paylink</span>
+                              </>
+                            )}
+                          </Button>
+                          
+                          {/* STC Pay */}
+                          <Button 
+                            size="sm"
+                            className="bg-orange-500 hover:bg-orange-600 text-white flex flex-col items-center py-3 h-auto"
+                            onClick={() => handlePaymentMethod(service, 'stc-pay')}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <>
+                                <Smartphone className="w-4 h-4 mb-1" />
+                                <span className="text-xs">STC Pay</span>
+                              </>
+                            )}
+                          </Button>
+                          
+                          {/* Tamara Payment */}
+                          <Button 
+                            size="sm"
+                            className="bg-purple-500 hover:bg-purple-600 text-white flex flex-col items-center py-3 h-auto"
+                            onClick={() => handlePaymentMethod(service, 'tamara')}
+                            disabled={isLoading}
+                          >
+                            {isLoading ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <>
+                                <Wallet className="w-4 h-4 mb-1" />
+                                <span className="text-xs">Tamara</span>
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
