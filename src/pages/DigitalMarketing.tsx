@@ -118,7 +118,7 @@ const DigitalMarketing = () => {
 
       console.log(`${functionName} response:`, data);
 
-      if (data?.success || data?.url) {
+      if (data?.success || data?.url || data?.payment_url) {
         toast({
           title: "تم إنشاء رابط الدفع بنجاح",
           description: "سيتم توجيهك إلى صفحة الدفع"
@@ -127,9 +127,9 @@ const DigitalMarketing = () => {
         if (method === 'stc-pay') {
           // عرض تعليمات STC Pay
           showSTCPayInstructions(data);
-        } else if (data.url || data.paymentUrl) {
-          // استخدام الرابط المناسب
-          const paymentUrl = data.url || data.paymentUrl;
+        } else if (data.url || data.paymentUrl || data.payment_url) {
+          // استخدام الرابط المناسب - تحقق من جميع الأشكال المحتملة
+          const paymentUrl = data.url || data.paymentUrl || data.payment_url;
           
           setTimeout(() => {
             if (method === 'paylink') {
@@ -145,6 +145,7 @@ const DigitalMarketing = () => {
             }
           }, 500);
         } else {
+          console.log("البيانات المرجعة من الخدمة:", data);
           throw new Error('لم يتم إرجاع رابط الدفع من الخدمة');
         }
       } else {
