@@ -74,9 +74,9 @@ const DigitalMarketingWebsite = () => {
   ];
 
   // Payment handler
-  const handlePayment = async (service: any, context = 'default') => {
-    const serviceKey = `${context}-${service.title}`;
-    console.log('Payment clicked for service:', serviceKey);
+  const handlePayment = async (service: any, context = 'default', index = 0) => {
+    const serviceKey = `${context}-${index}`;
+    console.log('Payment clicked for service:', serviceKey, 'title:', service.title);
     console.log('Current processingServiceId:', processingServiceId);
     
     if (processingServiceId === serviceKey) return;
@@ -350,14 +350,14 @@ const DigitalMarketingWebsite = () => {
                      <Button 
                        className={`bg-gradient-to-r ${service.bgColor} hover:shadow-lg w-full sm:w-auto text-sm sm:text-base`}
                        onClick={() => {
-                         console.log('HOME BUTTON CLICKED for:', service.title);
-                         handlePayment(service, 'home');
+                         console.log('HOME BUTTON CLICKED for:', index);
+                         handlePayment(service, 'home', index);
                        }}
-                       disabled={processingServiceId === `home-${service.title}`}
+                       disabled={processingServiceId === `home-${index}`}
                      >
                        {(() => {
-                         const isProcessing = processingServiceId === `home-${service.title}`;
-                         console.log('HOME BUTTON RENDER:', service.title, 'isProcessing:', isProcessing, 'processingServiceId:', processingServiceId);
+                         const isProcessing = processingServiceId === `home-${index}`;
+                         console.log('HOME BUTTON RENDER:', index, 'isProcessing:', isProcessing, 'processingServiceId:', processingServiceId);
                          return isProcessing ? "جاري المعالجة..." : "ادفع الآن";
                        })()}
                      </Button>
@@ -539,14 +539,14 @@ const DigitalMarketingWebsite = () => {
                    size="lg" 
                    className={`bg-gradient-to-r ${service.bgColor}`}
                    onClick={() => {
-                     console.log('SERVICES PAGE BUTTON CLICKED for:', service.title);
-                     handlePayment(service, 'services');
+                     console.log('SERVICES PAGE BUTTON CLICKED for:', index);
+                     handlePayment(service, 'services', index);
                    }}
-                   disabled={processingServiceId === `services-${service.title}`}
+                   disabled={processingServiceId === `services-${index}`}
                  >
                    {(() => {
-                     const isProcessing = processingServiceId === `services-${service.title}`;
-                     console.log('SERVICES PAGE BUTTON RENDER:', service.title, 'isProcessing:', isProcessing, 'processingServiceId:', processingServiceId);
+                     const isProcessing = processingServiceId === `services-${index}`;
+                     console.log('SERVICES PAGE BUTTON RENDER:', index, 'isProcessing:', isProcessing, 'processingServiceId:', processingServiceId);
                      return isProcessing ? "جاري المعالجة..." : "ادفع الآن";
                    })()}
                  </Button>
