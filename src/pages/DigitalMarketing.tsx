@@ -3,6 +3,9 @@ import { PageContainer } from "@/components/ui/page-container";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import { 
   Megaphone, 
   ArrowRight,
@@ -13,13 +16,55 @@ import {
   TrendingUp,
   Target,
   BarChart3,
-  Lightbulb
+  Lightbulb,
+  CreditCard,
+  Loader2
 } from "lucide-react";
 
 const DigitalMarketing = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  
   const title = "التسويق الرقمي | شركة علي الشهري القابضة";
   const description = "خدمات التسويق الرقمي الاحترافية - بناء خطط تسويقية متكاملة وحلول رقمية مبتكرة لنمو أعمالك";
   const canonical = `${window.location.origin}/digital-marketing`;
+
+  const handlePayment = async (service: any) => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: {
+          amount: 1499,
+          currency: 'SAR',
+          customerName: 'عميل محتمل',
+          customerEmail: 'customer@example.com',
+          customerPhone: '966500000000',
+          offerTitle: service.title,
+          offerDescription: service.description
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.success && data.paymentUrl) {
+        // فتح صفحة الدفع في تبويب جديد
+        window.open(data.paymentUrl, '_blank');
+        toast({
+          title: "تم توجيهك لصفحة الدفع",
+          description: "يرجى إكمال عملية الدفع في التبويب الجديد",
+        });
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast({
+        title: "خطأ في الدفع",
+        description: "حدث خطأ أثناء توجيهك لصفحة الدفع. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -189,19 +234,34 @@ const DigitalMarketing = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="text-sm text-muted-foreground">
                       يشمل ضمان المراجعة والتعديل
                     </div>
-                    <Button 
-                      className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white"
-                      asChild
-                    >
-                      <a href="/start-with-us">
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                        اطلب الآن
-                      </a>
-                    </Button>
+                    <div className="flex gap-3">
+                      <Button 
+                        variant="outline"
+                        className="border-primary text-primary hover:bg-primary hover:text-white"
+                        asChild
+                      >
+                        <a href="/start-with-us">
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                          استشارة مجانية
+                        </a>
+                      </Button>
+                      <Button 
+                        className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white"
+                        onClick={() => handlePayment(service)}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                        ) : (
+                          <CreditCard className="w-4 h-4 ml-2" />
+                        )}
+                        {isLoading ? 'جاري التحويل...' : 'ادفع الآن'}
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
