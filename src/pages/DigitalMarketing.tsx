@@ -337,41 +337,49 @@ const DigitalMarketing = () => {
                     </div>
                       
                     {/* Payment Methods Section */}
-                    <div className="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 rounded-2xl p-6 border-2 border-gray-100 dark:border-gray-700">
-                      <div className="text-center mb-4">
-                        <h4 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">اختر طريقة الدفع</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">جميع المعاملات آمنة ومحمية</p>
+                    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-800 dark:via-blue-900/20 dark:to-purple-900/20 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 shadow-lg">
+                      <div className="text-center mb-8">
+                        <h4 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-3">اختر طريقة الدفع</h4>
+                        <p className="text-gray-600 dark:text-gray-400 text-lg">جميع المعاملات آمنة ومحمية</p>
                       </div>
                       
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                         {/* Paylink Payment */}
                         <div className="group relative">
                           <Button 
-                            className="w-full h-20 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in relative overflow-hidden"
+                            className="w-full h-32 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
                             onClick={() => handlePaymentMethod(service, 'paylink')}
                             disabled={isLoading}
                             style={{ animationDelay: '100ms' }}
                           >
-                            {/* Background Animation */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            {/* Background Pattern */}
+                            <div className="absolute inset-0 opacity-10">
+                              <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16" />
+                              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12" />
+                            </div>
                             
-                            <div className="relative z-10 flex flex-col items-center justify-center space-y-2">
+                            {/* Background Animation */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            
+                            <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
                               {isLoading ? (
-                                <Loader2 className="w-6 h-6 animate-spin" />
+                                <Loader2 className="w-8 h-8 animate-spin" />
                               ) : (
                                 <>
-                                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                    <CreditCard className="w-5 h-5" />
+                                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                                    <CreditCard className="w-8 h-8" />
                                   </div>
-                                  <span className="font-semibold text-sm">Paylink</span>
-                                  <span className="text-xs text-blue-100">فيزا • ماستركارد • مدى</span>
+                                  <div className="text-center">
+                                    <span className="font-bold text-xl block">Paylink</span>
+                                    <span className="text-sm text-blue-100 block mt-1">فيزا • ماستركارد • مدى</span>
+                                  </div>
                                 </>
                               )}
                             </div>
                             
                             {/* Shine Effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.6s_ease-out]" />
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.8s_ease-out]" />
                             </div>
                           </Button>
                         </div>
@@ -379,36 +387,45 @@ const DigitalMarketing = () => {
                         {/* STC Pay */}
                         <div className="group relative">
                           <Button 
-                            className="w-full h-20 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in relative overflow-hidden"
+                            className="w-full h-32 bg-gradient-to-br from-orange-500 via-orange-600 to-red-500 hover:from-orange-600 hover:via-orange-700 hover:to-red-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
                             onClick={() => handlePaymentMethod(service, 'stc-pay')}
                             disabled={isLoading}
                             style={{ animationDelay: '200ms' }}
                           >
-                            {/* Background Animation */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            {/* Background Pattern */}
+                            <div className="absolute inset-0 opacity-10">
+                              <div className="absolute top-0 left-0 w-28 h-28 bg-white rounded-full -translate-y-14 -translate-x-14" />
+                              <div className="absolute bottom-0 right-0 w-20 h-20 bg-white rounded-full translate-y-10 translate-x-10" />
+                            </div>
                             
-                            <div className="relative z-10 flex flex-col items-center justify-center space-y-2">
+                            {/* Background Animation */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            
+                            <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
                               {isLoading ? (
-                                <Loader2 className="w-6 h-6 animate-spin" />
+                                <Loader2 className="w-8 h-8 animate-spin" />
                               ) : (
                                 <>
-                                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                    <Smartphone className="w-5 h-5" />
+                                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300 shadow-lg">
+                                    <Smartphone className="w-8 h-8" />
                                   </div>
-                                  <span className="font-semibold text-sm">STC Pay</span>
-                                  <span className="text-xs text-orange-100">دفع فوري وآمن</span>
+                                  <div className="text-center">
+                                    <span className="font-bold text-xl block">STC Pay</span>
+                                    <span className="text-sm text-orange-100 block mt-1">دفع فوري وآمن</span>
+                                  </div>
                                 </>
                               )}
                             </div>
                             
                             {/* Pulse Ring Effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100">
-                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 border-2 border-white/30 rounded-full animate-[scale-in_0.4s_ease-out] group-hover:animate-pulse" />
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-30">
+                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 border-2 border-white rounded-full animate-pulse" />
+                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-white rounded-full animate-pulse animation-delay-300" />
                             </div>
                             
                             {/* Shine Effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.6s_ease-out]" />
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.8s_ease-out]" />
                             </div>
                           </Button>
                         </div>
@@ -416,46 +433,57 @@ const DigitalMarketing = () => {
                         {/* Tamara Payment */}
                         <div className="group relative">
                           <Button 
-                            className="w-full h-20 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in relative overflow-hidden"
+                            className="w-full h-32 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 hover:from-purple-600 hover:via-purple-700 hover:to-pink-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
                             onClick={() => handlePaymentMethod(service, 'tamara')}
                             disabled={isLoading}
                             style={{ animationDelay: '300ms' }}
                           >
-                            {/* Background Animation */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            {/* Background Pattern */}
+                            <div className="absolute inset-0 opacity-10">
+                              <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-full -translate-y-12 translate-x-12" />
+                              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full translate-y-16 -translate-x-16" />
+                            </div>
                             
-                            <div className="relative z-10 flex flex-col items-center justify-center space-y-2">
+                            {/* Background Animation */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            
+                            <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
                               {isLoading ? (
-                                <Loader2 className="w-6 h-6 animate-spin" />
+                                <Loader2 className="w-8 h-8 animate-spin" />
                               ) : (
                                 <>
-                                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                    <Wallet className="w-5 h-5" />
+                                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                                    <Wallet className="w-8 h-8" />
                                   </div>
-                                  <span className="font-semibold text-sm">Tamara</span>
-                                  <span className="text-xs text-purple-100">اشتري الآن ادفع لاحقاً</span>
+                                  <div className="text-center">
+                                    <span className="font-bold text-xl block">Tamara</span>
+                                    <span className="text-sm text-purple-100 block mt-1">اشتري الآن ادفع لاحقاً</span>
+                                  </div>
                                 </>
                               )}
                             </div>
                             
                             {/* Shine Effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.6s_ease-out]" />
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.8s_ease-out]" />
                             </div>
                           </Button>
                         </div>
                       </div>
                       
-                      {/* Security Badge */}
-                      <div className="flex items-center justify-center mt-4 space-x-2 space-x-reverse">
-                        <div className="flex items-center space-x-1 space-x-reverse text-green-600 dark:text-green-400">
-                          <CheckCircle className="w-4 h-4" />
-                          <span className="text-xs font-medium">محمي بتشفير SSL</span>
+                      {/* Security Badges */}
+                      <div className="flex flex-wrap items-center justify-center mt-8 gap-6">
+                        <div className="flex items-center space-x-2 space-x-reverse text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-full">
+                          <CheckCircle className="w-5 h-5" />
+                          <span className="text-sm font-semibold">محمي بتشفير SSL</span>
                         </div>
-                        <div className="w-1 h-1 bg-gray-400 rounded-full" />
-                        <div className="flex items-center space-x-1 space-x-reverse text-blue-600 dark:text-blue-400">
-                          <Star className="w-4 h-4" />
-                          <span className="text-xs font-medium">معتمد من البنك المركزي</span>
+                        <div className="flex items-center space-x-2 space-x-reverse text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-full">
+                          <Star className="w-5 h-5" />
+                          <span className="text-sm font-semibold">معتمد من البنك المركزي</span>
+                        </div>
+                        <div className="flex items-center space-x-2 space-x-reverse text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-full">
+                          <Banknote className="w-5 h-5" />
+                          <span className="text-sm font-semibold">ضمان الاسترداد</span>
                         </div>
                       </div>
                     </div>
