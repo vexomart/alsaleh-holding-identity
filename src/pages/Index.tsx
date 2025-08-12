@@ -1,5 +1,5 @@
 import Navigation from "@/components/Navigation";
-import HeroCarousel from "@/components/HeroCarousel";
+import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,7 @@ import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative mobile-scroll">
+    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
       <Navigation />
       
       {/* Animated Background Elements */}
@@ -42,7 +42,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/8"></div>
           <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent"></div>
           <div className="relative z-10">
-            <HeroCarousel />
+            <HeroSection />
           </div>
         </section>
 

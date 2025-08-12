@@ -80,7 +80,7 @@ const Navigation = () => {
   return (
     <>
       {/* Corporate Top Bar */}
-      <div className="hidden lg:block fixed top-0 left-0 right-0 z-50 bg-gray-900 border-b border-gray-800">
+      <div className="hidden lg:block bg-gray-900 border-b border-gray-800">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center gap-6 text-sm text-gray-300">
@@ -113,12 +113,8 @@ const Navigation = () => {
       </div>
 
       {/* Main Corporate Navigation */}
-      <nav
-        className={`fixed top-0 lg:top-[48px] w-full z-50 backdrop-blur-xl border-b border-gray-200/50 transition-all duration-300 ${
-          isScrolled ? 'bg-white/95 shadow-xl' : 'bg-white/80 shadow-md'
-        } animate-fade-in`}
-      >
-        <div className="container mx-auto px-4">
+      <nav className="fixed top-0 lg:top-[48px] w-full z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50 mobile-tap">
+        <div className="container-fluid">
           <div className="flex items-center justify-between h-14 sm:h-16">
             
             {/* Logo & Company Name - Enhanced Responsive */}
@@ -539,7 +535,6 @@ const Navigation = () => {
           )}
         </div>
       </nav>
-      <div className="h-14 sm:h-16 lg:h-[112px]" aria-hidden="true" />
     </>
   );
 };
