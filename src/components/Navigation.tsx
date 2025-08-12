@@ -113,8 +113,12 @@ const Navigation = () => {
       </div>
 
       {/* Main Corporate Navigation */}
-      <nav className="fixed top-0 lg:top-[48px] w-full z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50 mobile-tap">
-        <div className="container-fluid">
+      <nav
+        className={`fixed top-0 lg:top-[48px] w-full z-50 backdrop-blur-xl border-b border-gray-200/50 transition-all duration-300 ${
+          isScrolled ? 'bg-white/95 shadow-xl' : 'bg-white/80 shadow-md'
+        } animate-fade-in`}
+      >
+        <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-14 sm:h-16">
             
             {/* Logo & Company Name - Enhanced Responsive */}
