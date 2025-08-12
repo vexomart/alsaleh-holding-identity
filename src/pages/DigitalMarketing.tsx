@@ -34,9 +34,9 @@ const DigitalMarketing = () => {
     console.log('بدء عملية الدفع للخدمة:', service.title);
     
     try {
-      console.log('إرسال طلب الدفع إلى Paylink...');
+      console.log('إرسال طلب الدفع إلى Tamara...');
       
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+      const { data, error } = await supabase.functions.invoke('tamara-payment', {
         body: {
           amount: 1499,
           currency: 'SAR',
@@ -48,16 +48,40 @@ const DigitalMarketing = () => {
         }
       });
 
-      console.log('استجابة Paylink:', { data, error });
+      console.log('استجابة Tamara:', { data, error });
 
       if (error) {
         console.error('خطأ في استدعاء دالة الدفع:', error);
+        
+        // جرب STC Pay كبديل
+        console.log('جاري تجربة STC Pay...');
+        const stcResponse = await supabase.functions.invoke('stc-pay', {
+          body: {
+            amount: 1499,
+            currency: 'SAR',
+            customerName: 'عميل محتمل',
+            customerEmail: 'customer@example.com',
+            customerPhone: '966500000000',
+            offerTitle: service.title,
+            offerDescription: service.description
+          }
+        });
+
+        console.log('استجابة STC Pay:', stcResponse);
+
+        if (stcResponse.data && stcResponse.data.success) {
+          toast({
+            title: "تعليمات الدفع",
+            description: `يرجى إرسال ${service.price} ريال إلى رقم التاجر: ${stcResponse.data.merchantNumber} برقم المرجع: ${stcResponse.data.paymentReference}`,
+          });
+          return;
+        }
+        
         throw error;
       }
 
       if (data && data.success && data.paymentUrl) {
         console.log('تم إنشاء رابط الدفع بنجاح:', data.paymentUrl);
-        // فتح صفحة الدفع في تبويب جديد
         window.open(data.paymentUrl, '_blank');
         toast({
           title: "تم توجيهك لصفحة الدفع",
@@ -69,10 +93,12 @@ const DigitalMarketing = () => {
       }
     } catch (error) {
       console.error('خطأ في عملية الدفع:', error);
+      
+      // كحل أخير، أظهر معلومات الدفع اليدوي
       toast({
-        title: "خطأ في الدفع",
-        description: error instanceof Error ? error.message : "حدث خطأ أثناء توجيهك لصفحة الدفع. يرجى المحاولة مرة أخرى.",
-        variant: "destructive",
+        title: "يمكنك الدفع يدوياً",
+        description: "يرجى التواصل معنا على الواتساب لإتمام عملية الدفع: +966500000000",
+        variant: "default",
       });
     } finally {
       setIsLoading(false);
