@@ -2,7 +2,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Globe, ChevronDown, Heart, Shield, Award, Building2, Users } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
+
 
 export default function HeroCarousel() {
   return (
@@ -15,19 +15,19 @@ export default function HeroCarousel() {
           {/* Slide 1 */}
           <CarouselItem>
             <div className="relative min-h-[75vh] md:min-h-[85vh] w-full">
-              <img src={heroBg} alt="الهوية المؤسسية لشركة قابضة" className="absolute inset-0 w-full h-full object-cover" loading="eager" />
-              <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/30" />
-              <div className="absolute inset-0 bg-grid-pattern opacity-20" />
-              <div className="absolute top-1/4 left-8 w-24 h-24 bg-secondary/30 rounded-full blur-2xl animate-float" />
-              <div className="absolute bottom-1/4 right-8 w-32 h-32 bg-accent/25 rounded-full blur-3xl animate-float-delayed" />
+              <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary))_0%,transparent_60%)] opacity-20" />
+                <div className="absolute inset-0 bg-grid-pattern opacity-15" />
+              </div>
               <div className="relative z-10 h-full container mx-auto px-4 flex items-center">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 w-full">
                   {/* Left: Headline & CTAs */}
                   <div className="max-w-2xl text-white animate-enter">
                     <div className="flex items-center gap-3 mb-5">
                       <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-                      <Badge className="bg-white/15 text-white border-white/30">شركة قابضة رسمية</Badge>
-                      <Badge className="bg-white/10 text-white border-white/20">معايير حوكمة عالية</Badge>
+                      <Badge className="bg-white text-slate-900 border border-slate-200">شركة قابضة رسمية</Badge>
+                      <Badge className="bg-white/95 text-slate-900 border border-slate-200">معايير حوكمة عالية</Badge>
                     </div>
 
                     <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
@@ -67,33 +67,33 @@ export default function HeroCarousel() {
 
                   {/* Right: Corporate Stats */}
                   <div className="grid grid-cols-2 gap-4 lg:gap-6 self-center animate-fade-in" style={{ animationDelay: '0.15s' }}>
-                    <div className="glass-effect rounded-2xl border border-white/20 p-5 backdrop-blur-md hover:shadow-glow transition-all duration-300">
+                    <div className="bg-white/95 dark:bg-slate-900/90 rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-lg hover:shadow-xl transition-all duration-300 text-slate-900 dark:text-white">
                       <div className="flex items-center gap-3 mb-2">
                         <Building2 className="w-5 h-5 text-secondary" />
-                        <span className="text-sm text-white/80">سنة التأسيس</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">سنة التأسيس</span>
                       </div>
-                      <div className="text-3xl font-black">2016</div>
+                      <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">2016</div>
                     </div>
-                    <div className="glass-effect rounded-2xl border border-white/20 p-5 backdrop-blur-md hover:shadow-glow transition-all duration-300">
+                    <div className="bg-white/95 dark:bg-slate-900/90 rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-lg hover:shadow-xl transition-all duration-300 text-slate-900 dark:text-white">
                       <div className="flex items-center gap-3 mb-2">
                         <Users className="w-5 h-5 text-accent" />
-                        <span className="text-sm text-white/80">عملاء وشركاء</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">عملاء وشركاء</span>
                       </div>
-                      <div className="text-3xl font-black">+1700</div>
+                      <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">+1700</div>
                     </div>
-                    <div className="glass-effect rounded-2xl border border-white/20 p-5 backdrop-blur-md hover:shadow-glow transition-all duration-300">
+                    <div className="bg-white/95 dark:bg-slate-900/90 rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-lg hover:shadow-xl transition-all duration-300 text-slate-900 dark:text-white">
                       <div className="flex items-center gap-3 mb-2">
                         <Award className="w-5 h-5 text-primary" />
-                        <span className="text-sm text-white/80">مشاريع منجزة</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">مشاريع منجزة</span>
                       </div>
-                      <div className="text-3xl font-black">+2800</div>
+                      <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">+2800</div>
                     </div>
-                    <div className="glass-effect rounded-2xl border border-white/20 p-5 backdrop-blur-md hover:shadow-glow transition-all duration-300">
+                    <div className="bg-white/95 dark:bg-slate-900/90 rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-lg hover:shadow-xl transition-all duration-300 text-slate-900 dark:text-white">
                       <div className="flex items-center gap-3 mb-2">
                         <Shield className="w-5 h-5 text-secondary" />
-                        <span className="text-sm text-white/80">التزام بالحوكمة</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">التزام بالحوكمة</span>
                       </div>
-                      <div className="text-3xl font-black">عالي</div>
+                      <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">عالي</div>
                     </div>
                   </div>
                 </div>
