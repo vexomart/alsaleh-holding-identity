@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,84 +13,100 @@ serve(async (req) => {
   }
 
   try {
-    console.log("🚀 Starting Paylink payment");
+    console.log("🚀 Starting Paylink payment integration");
     
     const body = await req.json();
-    console.log("📦 Body:", body);
+    console.log("📦 Request body received:", JSON.stringify(body, null, 2));
 
-    const amount = body.amount || 1499;
-    const customer_name = body.customer_name || 'عميل محتمل';
-    const customer_email = body.customer_email || 'customer@example.com';
-    const customer_phone = body.customer_phone || '966500000000';
-    const offer_title = body.offer_title || 'خدمة تسويقية';
-    const description = body.description || 'دفع خدمة';
+    // Extract payment details
+    const {
+      amount = 1499,
+      customer_name = 'عميل محتمل',
+      customer_email = 'customer@example.com',
+      customer_phone = '966500000000',
+      offer_title = 'خدمة تسويقية',
+      description = 'دفع خدمة'
+    } = body;
 
-    console.log("💰 Payment for:", offer_title, "Amount:", amount);
+    console.log(`💰 Processing payment - Amount: ${amount} SAR, Customer: ${customer_name}`);
 
     // Get API credentials
-    const apiId = Deno.env.get('PAYLINK_API_ID');
-    const apiKey = Deno.env.get('PAYLINK_API_KEY');
+    const paylinkApiId = Deno.env.get('PAYLINK_API_ID');
+    const paylinkApiKey = Deno.env.get('PAYLINK_API_KEY');
 
-    if (!apiId || !apiKey) {
-      console.log("❌ Missing API credentials");
+    console.log("🔐 Checking API credentials...");
+    if (!paylinkApiId || !paylinkApiKey) {
+      console.error("❌ Missing Paylink API credentials");
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "API credentials missing" 
+        error: "Missing Paylink API credentials" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
     }
 
-    console.log("🔐 API credentials found");
+    console.log("✅ API credentials found, proceeding with authentication");
 
-    // Auth with Paylink
-    const authRes = await fetch('https://restapi.paylink.sa/api/auth', {
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Authenticate with Paylink
+    console.log("🔑 Authenticating with Paylink API...");
+    const authResponse = await fetch('https://restapi.paylink.sa/api/auth', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify({
-        apiId: apiId,
-        secretKey: apiKey,
+        apiId: paylinkApiId,
+        secretKey: paylinkApiKey,
         persistToken: false
       })
     });
 
-    if (!authRes.ok) {
-      console.log("❌ Auth failed");
+    console.log(`🔍 Auth response status: ${authResponse.status}`);
+    
+    if (!authResponse.ok) {
+      const errorText = await authResponse.text();
+      console.error("❌ Paylink authentication failed:", errorText);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Authentication failed" 
+        error: "Failed to authenticate with Paylink" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
     }
 
-    const authData = await authRes.json();
-    console.log("✅ Auth success");
+    const authData = await authResponse.json();
+    console.log("✅ Paylink authentication successful");
 
     if (!authData.id_token) {
-      console.log("❌ No token");
+      console.error("❌ No authentication token received from Paylink");
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "No token received" 
+        error: "No authentication token received" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
     }
 
-    // Create invoice
-    const orderNumber = `ORD-${Date.now()}`;
-    const invoiceData = {
+    // Prepare invoice data
+    const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const invoicePayload = {
       amount: Number(amount),
       orderNumber: orderNumber,
       callBackUrl: 'https://preview--alsaleh-holding-identity.lovable.app/payment-success',
+      cancelUrl: 'https://preview--alsaleh-holding-identity.lovable.app/payment-cancel',
       clientEmail: customer_email,
       clientName: customer_name,
       clientMobile: customer_phone.toString().replace(/^\+?966/, "0"),
       note: description,
-      cancelUrl: "https://preview--alsaleh-holding-identity.lovable.app/payment-cancel",
       products: [{
         title: offer_title,
         price: Number(amount),
@@ -101,59 +118,91 @@ serve(async (req) => {
       currency: "SAR"
     };
 
-    console.log("📄 Creating invoice...");
+    console.log("📄 Creating invoice with Paylink:", JSON.stringify(invoicePayload, null, 2));
 
-    const invoiceRes = await fetch('https://restapi.paylink.sa/api/addInvoice', {
+    // Create invoice
+    const invoiceResponse = await fetch('https://restapi.paylink.sa/api/addInvoice', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Authorization': `Bearer ${authData.id_token}`
       },
-      body: JSON.stringify(invoiceData)
+      body: JSON.stringify(invoicePayload)
     });
 
-    if (!invoiceRes.ok) {
-      console.log("❌ Invoice failed");
+    console.log(`🔍 Invoice response status: ${invoiceResponse.status}`);
+
+    if (!invoiceResponse.ok) {
+      const errorText = await invoiceResponse.text();
+      console.error("❌ Invoice creation failed:", errorText);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Invoice creation failed" 
+        error: "Failed to create payment invoice" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
     }
 
-    const result = await invoiceRes.json();
-    console.log("📄 Invoice result:", result);
+    const invoiceResult = await invoiceResponse.json();
+    console.log("📋 Invoice creation result:", JSON.stringify(invoiceResult, null, 2));
 
-    if (!result.success || !result.url) {
-      console.log("❌ No payment URL");
+    if (!invoiceResult.success || !invoiceResult.url) {
+      console.error("❌ Invalid invoice response - no payment URL");
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "No payment URL received" 
+        error: "Invalid payment response - no URL received" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
     }
 
-    console.log("🎉 Success! URL:", result.url);
+    // Save transaction to database
+    console.log("💾 Saving transaction to database...");
+    const { error: dbError } = await supabase
+      .from('payment_transactions')
+      .insert({
+        transaction_id: invoiceResult.transactionNo || orderNumber,
+        amount: Number(amount),
+        currency: 'SAR',
+        customer_name,
+        customer_email,
+        customer_phone,
+        offer_title,
+        description,
+        payment_method: 'paylink',
+        status: 'pending',
+        payment_url: invoiceResult.url,
+        order_number: orderNumber
+      });
+
+    if (dbError) {
+      console.error("⚠️ Database save failed:", dbError);
+      // Continue anyway since payment URL was created successfully
+    } else {
+      console.log("✅ Transaction saved to database");
+    }
+
+    console.log("🎉 Payment URL created successfully:", invoiceResult.url);
 
     return new Response(JSON.stringify({
       success: true,
-      payment_url: result.url,
-      url: result.url,
-      transaction_no: result.transactionNo
+      payment_url: invoiceResult.url,
+      url: invoiceResult.url,
+      transaction_no: invoiceResult.transactionNo,
+      order_number: orderNumber
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200
     });
 
   } catch (error) {
-    console.log("💥 Error:", error.message);
+    console.error("💥 Unexpected error in Paylink payment:", error);
     return new Response(JSON.stringify({ 
       success: false, 
-      error: error.message 
+      error: `Payment processing failed: ${error.message}` 
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500
