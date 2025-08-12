@@ -52,9 +52,8 @@ const OtherServices = () => {
         </div>
       </PageHeader>
 
-      {/* Other Services Section */}
-      <section aria-labelledby="other-services-title" className="relative">
-        <h2 id="other-services-title" className="sr-only">خدماتنا الأخرى</h2>
+      <section aria-labelledby="page-other-services-title" className="relative">
+        <h2 id="page-other-services-title" className="sr-only">خدماتنا الأخرى</h2>
         <OtherServicesSection />
       </section>
     </PageContainer>

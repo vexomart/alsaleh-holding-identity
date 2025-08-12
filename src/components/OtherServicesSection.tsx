@@ -50,7 +50,7 @@ const OtherServicesSection = () => {
     <section aria-labelledby="other-services-title" className="mt-16">
       <div className="text-center mb-12">
         <Badge className="mb-4 bg-gradient-to-r from-secondary to-accent text-white">خدمات إضافية</Badge>
-        <h3 id="other-services-title" className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent mb-4">
+        <h3 id="other-services-title" className="scroll-mt-28 lg:scroll-mt-40 text-3xl md:text-4xl font-bold bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent mb-4">
           خدماتنا الأخرى
         </h3>
         <p className="text-xl text-muted-foreground">مجموعة متنوعة من الخدمات المساندة لتلبية جميع احتياجاتك</p>
