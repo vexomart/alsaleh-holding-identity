@@ -16,14 +16,14 @@ serve(async (req) => {
   try {
     console.log("🚀 Paylink payment started");
     
-    // Parse request body properly
+    // Parse request body
     const body = await req.json();
-    console.log("📦 Request data:", body);
+    console.log("📦 Request data received:", JSON.stringify(body, null, 2));
 
-    // Extract payment data with defaults
+    // Extract payment data with validation
     const {
       amount = 1499,
-      currency = 'SAR',
+      currency = 'SAR', 
       customer_name = 'عميل محتمل',
       customer_email = 'customer@example.com',
       customer_phone = '966500000000',
@@ -32,19 +32,36 @@ serve(async (req) => {
       success_url = 'https://preview--alsaleh-holding-identity.lovable.app/payment-success'
     } = body;
 
-    console.log("💰 Payment details:", {
+    // Validate required fields
+    if (!amount || amount <= 0) {
+      console.log("❌ Invalid amount:", amount);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Invalid amount provided" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400
+      });
+    }
+
+    console.log("💰 Processing payment:", {
       amount,
+      currency,
       customer_name,
-      customer_email,
       offer_title
     });
 
-    // Get Paylink credentials from secrets
+    // Get credentials from environment
     const apiId = Deno.env.get('PAYLINK_API_ID');
     const apiKey = Deno.env.get('PAYLINK_API_KEY');
 
+    console.log("🔑 Checking credentials...");
+    console.log("API ID exists:", !!apiId);
+    console.log("API Key exists:", !!apiKey);
+
     if (!apiId || !apiKey) {
       console.log("❌ Missing Paylink credentials");
+      console.log("Available env vars:", Object.keys(Deno.env.toObject()));
       return new Response(JSON.stringify({ 
         success: false, 
         error: "Paylink credentials not configured" 
@@ -54,26 +71,33 @@ serve(async (req) => {
       });
     }
 
-    console.log("🔐 Credentials found, authenticating...");
+    console.log("🔐 Authenticating with Paylink API...");
 
-    // Step 1: Authenticate with Paylink
+    // Authenticate with Paylink
+    const authPayload = {
+      apiId: apiId,
+      secretKey: apiKey,
+      persistToken: false
+    };
+
+    console.log("📡 Sending auth request to Paylink...");
+
     const authResponse = await fetch('https://restapi.paylink.sa/api/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        apiId: apiId,
-        secretKey: apiKey,
-        persistToken: false
-      })
+      body: JSON.stringify(authPayload)
     });
 
+    console.log("📡 Auth response status:", authResponse.status);
+
     if (!authResponse.ok) {
-      console.log("❌ Authentication failed:", authResponse.status);
+      const errorText = await authResponse.text();
+      console.log("❌ Authentication failed:", authResponse.status, errorText);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Failed to authenticate with Paylink" 
+        error: `Authentication failed: ${authResponse.status}` 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
@@ -81,10 +105,10 @@ serve(async (req) => {
     }
 
     const authData = await authResponse.json();
-    console.log("✅ Authentication successful");
+    console.log("✅ Authentication successful, token received:", !!authData.id_token);
 
     if (!authData.id_token) {
-      console.log("❌ No token received");
+      console.log("❌ No token in auth response:", JSON.stringify(authData, null, 2));
       return new Response(JSON.stringify({ 
         success: false, 
         error: "No authentication token received" 
@@ -94,9 +118,12 @@ serve(async (req) => {
       });
     }
 
-    // Step 2: Create invoice
+    // Create invoice
     console.log("📄 Creating invoice...");
     const orderNumber = `ORD-${Date.now()}`;
+    
+    // Clean phone number
+    const cleanPhone = customer_phone.toString().replace(/^\+?966/, "0");
     
     const invoiceData = {
       amount: Number(amount),
@@ -104,7 +131,7 @@ serve(async (req) => {
       callBackUrl: success_url,
       clientEmail: customer_email,
       clientName: customer_name,
-      clientMobile: customer_phone.toString().replace(/^\+?966/, "0"),
+      clientMobile: cleanPhone,
       note: description,
       cancelUrl: "https://preview--alsaleh-holding-identity.lovable.app/payment-cancel",
       products: [{
@@ -126,7 +153,7 @@ serve(async (req) => {
       metadata: null
     };
 
-    console.log("📋 Invoice payload prepared");
+    console.log("📋 Invoice data prepared:", JSON.stringify(invoiceData, null, 2));
 
     const invoiceResponse = await fetch('https://restapi.paylink.sa/api/addInvoice', {
       method: 'POST',
@@ -137,13 +164,14 @@ serve(async (req) => {
       body: JSON.stringify(invoiceData)
     });
 
+    console.log("📄 Invoice response status:", invoiceResponse.status);
+
     if (!invoiceResponse.ok) {
-      console.log("❌ Invoice creation failed:", invoiceResponse.status);
       const errorText = await invoiceResponse.text();
-      console.log("Error details:", errorText);
+      console.log("❌ Invoice creation failed:", invoiceResponse.status, errorText);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Failed to create payment invoice" 
+        error: `Invoice creation failed: ${invoiceResponse.status}` 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
@@ -151,31 +179,27 @@ serve(async (req) => {
     }
 
     const paylinkResult = await invoiceResponse.json();
-    console.log("📄 Invoice created:", {
-      success: paylinkResult.success,
-      transactionNo: paylinkResult.transactionNo,
-      hasUrl: !!paylinkResult.url
-    });
+    console.log("📄 Invoice created successfully:", JSON.stringify(paylinkResult, null, 2));
 
     if (!paylinkResult.success || !paylinkResult.url) {
-      console.log("❌ Invalid Paylink response:", paylinkResult);
+      console.log("❌ Invalid Paylink response");
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Invalid response from Paylink" 
+        error: "Invalid response from Paylink API" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500
       });
     }
 
-    // Step 3: Save transaction to database (optional, non-blocking)
+    // Try to save to database (non-blocking)
     try {
       const supabase = createClient(
         Deno.env.get('SUPABASE_URL') ?? "",
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ""
       );
 
-      await supabase.from('payment_transactions').insert({
+      const { error: dbError } = await supabase.from('payment_transactions').insert({
         offer_title: offer_title,
         amount: Number(amount),
         currency: currency,
@@ -188,21 +212,24 @@ serve(async (req) => {
         contract_data: {}
       });
 
-      console.log("💾 Transaction saved to database");
+      if (dbError) {
+        console.log("⚠️ Database save error (continuing):", dbError.message);
+      } else {
+        console.log("💾 Transaction saved to database");
+      }
     } catch (dbError) {
       console.log("⚠️ Database save failed (continuing):", dbError.message);
     }
 
-    // Return success response
+    // Success response
     const response = {
       success: true,
       transaction_no: paylinkResult.transactionNo,
       payment_url: paylinkResult.url,
-      url: paylinkResult.url, // For compatibility
-      transaction_id: null
+      url: paylinkResult.url
     };
 
-    console.log("🎉 Payment created successfully!");
+    console.log("🎉 Payment URL created successfully!");
 
     return new Response(JSON.stringify(response), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -211,9 +238,10 @@ serve(async (req) => {
 
   } catch (error) {
     console.log("💥 Unexpected error:", error.message);
+    console.log("💥 Error stack:", error.stack);
     return new Response(JSON.stringify({ 
       success: false, 
-      error: error.message || "Unexpected error occurred" 
+      error: `Server error: ${error.message}` 
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500
