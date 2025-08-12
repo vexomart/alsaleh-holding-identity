@@ -5,6 +5,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useRef } from "react";
 
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -108,12 +109,16 @@ import DigitalMarketingWebsite from "./pages/DigitalMarketingWebsite";
 
 import ServicesCatalog from "./pages/ServicesCatalog";
 
-const queryClient = new QueryClient();
+
 
 const App = () => {
+  const queryClientRef = useRef<QueryClient | null>(null);
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient();
+  }
   console.log('App component rendering...');
   return (
-  <QueryClientProvider client={queryClient}>
+  <QueryClientProvider client={queryClientRef.current!}>
     <TooltipProvider>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         {/* Subtle pattern overlay */}
