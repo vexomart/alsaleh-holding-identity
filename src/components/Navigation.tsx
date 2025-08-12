@@ -57,7 +57,7 @@ const Navigation = () => {
     { name: "العروض الحالية", href: "/current-offers", icon: Gift },
     { name: "خدمات الأعمال", href: "/business-services", icon: Building2 },
     { name: "الاستضافات و الخوادم", href: "/hosting-services", icon: Globe },
-    { name: "خدماتنا الاحترافية", href: "/professional-services", icon: Settings },
+    { name: "خدماتنا الاحترافية", href: "/professional-services#professional-services", icon: Settings },
     { name: "خدماتنا الأخرى", href: "/professional-services#other-services-title", icon: Package },
     { name: "صناعة المحتوى", href: "/content-creation", icon: PenTool },
     { name: "حلول التصميم", href: "/design-solutions", icon: Palette },
