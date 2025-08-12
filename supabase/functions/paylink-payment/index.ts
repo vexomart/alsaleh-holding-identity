@@ -13,11 +13,48 @@ serve(async (req) => {
   }
 
   try {
-    console.log("🚀 Paylink payment started");
+    console.log("🔥 REQUEST START - Method:", req.method);
 
-    // Parse request body
-    const body = await req.json();
-    console.log("📦 Request data:", body);
+    // Get raw body text first for debugging
+    const rawBody = await req.text();
+    console.log("📝 Raw body received:", rawBody);
+    console.log("📏 Body length:", rawBody.length);
+
+    // Check if body is empty
+    if (!rawBody || rawBody.trim() === '') {
+      console.log("❌ Empty body received");
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "No request body provided" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400
+      });
+    }
+
+    // Parse JSON
+    let body;
+    try {
+      body = JSON.parse(rawBody);
+    } catch (parseError) {
+      console.log("❌ JSON parsing failed:", parseError.message);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Invalid JSON in request body" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400
+      });
+    }
+
+    console.log("📦 Parsed request data:", body);
+
+    // Log request headers for debugging
+    const headers: Record<string, string> = {};
+    req.headers.forEach((value, key) => {
+      headers[key] = value;
+    });
+    console.log("📋 Request headers:", JSON.stringify(headers, null, 2));
 
     // Extract payment data with defaults
     const {
