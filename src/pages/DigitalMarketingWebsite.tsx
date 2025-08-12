@@ -10,8 +10,7 @@ import { toast } from "sonner";
 const DigitalMarketingWebsite = () => {
   const [currentPage, setCurrentPage] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [processingHomeService, setProcessingHomeService] = useState<number | null>(null);
-  const [processingServicesService, setProcessingServicesService] = useState<number | null>(null);
+  const [processingServiceId, setProcessingServiceId] = useState<string | null>(null);
 
   const navigationItems = [
     { id: "home", label: "الرئيسية", icon: Home },
@@ -26,111 +25,93 @@ const DigitalMarketingWebsite = () => {
 
   const services = [
     {
+      id: "seo-global",
       icon: Search,
       title: "تحسين محركات البحث العالمية",
       description: "استراتيجيات SEO متقدمة للوصول لأعلى النتائج في جوجل وبينغ ياهو عالمياً",
       features: ["تحليل الكلمات المفتاحية المتقدم", "تحسين تقني شامل", "بناء روابط عالية الجودة", "تقارير مفصلة أسبوعية"],
-      price: "ابتداءً من 2000$",
-      bgColor: "from-blue-500 to-cyan-500"
+      price: "4999",
+      displayPrice: "4999 ريال",
+      bgColor: "from-blue-500 to-cyan-500",
+      customerEmail: "seo@alsalehholding.com"
     },
     {
+      id: "digital-ads",
       icon: MousePointer,
       title: "إعلانات رقمية متعددة المنصات",
       description: "حملات إعلانية احترافية على جوجل، فيسبوك، إنستقرام، تيك توك، لينكد إن",
       features: ["إدارة الحملات الذكية", "استهداف دقيق للجمهور", "تحسين معدلات التحويل", "تتبع ROI في الوقت الفعلي"],
-      price: "ابتداءً من 3000$",
-      bgColor: "from-purple-500 to-pink-500"
+      price: "7000",
+      displayPrice: "7000 ريال",
+      bgColor: "from-purple-500 to-pink-500",
+      customerEmail: "ads@alsalehholding.com"
     },
     {
+      id: "social-media",
       icon: MessageSquare,
       title: "إدارة وسائل التواصل الاجتماعي",
       description: "بناء حضور قوي ومؤثر على جميع منصات التواصل الاجتماعي العالمية",
       features: ["استراتيجية المحتوى", "تصميم إبداعي احترافي", "إدارة المجتمع", "تحليل التفاعل المتقدم"],
-      price: "ابتداءً من 1500$",
-      bgColor: "from-green-500 to-emerald-500"
+      price: "5999",
+      displayPrice: "5999 ريال",
+      bgColor: "from-green-500 to-emerald-500",
+      customerEmail: "social@alsalehholding.com"
     },
     {
+      id: "analytics",
       icon: BarChart3,
       title: "التحليل والذكاء التجاري",
       description: "حلول تحليلية متطورة لفهم سلوك العملاء وتحسين الأداء التسويقي",
       features: ["تحليل البيانات المتقدم", "لوحات تحكم تفاعلية", "تقارير أداء شاملة", "تحليل المنافسين"],
-      price: "ابتداءً من 2500$",
-      bgColor: "from-orange-500 to-red-500"
+      price: "6500",
+      displayPrice: "6500 ريال",
+      bgColor: "from-orange-500 to-red-500",
+      customerEmail: "analytics@alsalehholding.com"
     }
   ];
 
-  // Payment handlers for each section
-  const handleHomePayment = async (service: any, index: number) => {
-    if (processingHomeService === index) return;
+  // Single payment handler for all services
+  const handlePayment = async (service: any, context: string = '') => {
+    const serviceId = `${context}-${service.id}`;
     
-    setProcessingHomeService(index);
+    if (processingServiceId === serviceId) return;
+    
+    setProcessingServiceId(serviceId);
     
     try {
       const { data, error } = await supabase.functions.invoke('paylink-payment', {
         body: {
-          amount: parseInt(service.price.replace(/[^\d]/g, '')),
+          amount: parseInt(service.price),
           currency: 'SAR',
-          customer_name: 'عميل',
-          customer_email: 'customer@example.com',
+          customer_name: 'عميل التسويق الرقمي',
+          customer_email: service.customerEmail || 'customer@alsalehholding.com',
           customer_phone: '966500000000',
           offer_title: service.title,
-          description: `شراء منتج: ${service.title}`,
-          success_url: window.location.origin
+          description: `شراء خدمة: ${service.title} - التسويق الرقمي`,
+          success_url: window.location.origin + '/payment-success',
+          cancel_url: window.location.origin + '/payment-cancel'
         }
       });
 
       if (error) {
         console.error('Payment error:', error);
-        toast.error('حدث خطأ في عملية الدفع');
+        toast.error('حدث خطأ في عملية الدفع. يرجى المحاولة مرة أخرى.');
         return;
       }
 
       if (data?.url) {
-        window.open(data.url, '_blank');
-        toast.success('تم توجيهك لصفحة الدفع');
+        // Open payment page in current window for better UX
+        window.location.href = data.url;
+        toast.success('جاري توجيهك لصفحة الدفع الآمنة...');
       }
     } catch (error) {
       console.error('Payment error:', error);
-      toast.error('حدث خطأ في عملية الدفع');
+      toast.error('حدث خطأ في عملية الدفع. يرجى المحاولة مرة أخرى.');
     } finally {
-      setProcessingHomeService(null);
-    }
-  };
-
-  const handleServicesPayment = async (service: any, index: number) => {
-    if (processingServicesService === index) return;
-    
-    setProcessingServicesService(index);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
-        body: {
-          amount: parseInt(service.price.replace(/[^\d]/g, '')),
-          currency: 'SAR',
-          customer_name: 'عميل',
-          customer_email: 'customer@example.com',
-          customer_phone: '966500000000',
-          offer_title: service.title,
-          description: `شراء منتج: ${service.title}`,
-          success_url: window.location.origin
-        }
-      });
-
-      if (error) {
-        console.error('Payment error:', error);
-        toast.error('حدث خطأ في عملية الدفع');
-        return;
-      }
-
-      if (data?.url) {
-        window.open(data.url, '_blank');
-        toast.success('تم توجيهك لصفحة الدفع');
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      toast.error('حدث خطأ في عملية الدفع');
-    } finally {
-      setProcessingServicesService(null);
+      // Clear processing state after 3 seconds to handle any edge cases
+      setTimeout(() => {
+        setProcessingServiceId(null);
+      }, 3000);
     }
   };
 
@@ -313,16 +294,16 @@ const DigitalMarketingWebsite = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <span className="text-xl sm:text-2xl font-bold text-purple-600">{service.price}</span>
-                     <Button 
-                       className={`bg-gradient-to-r ${service.bgColor} hover:shadow-lg w-full sm:w-auto text-sm sm:text-base`}
-                       onClick={() => handleHomePayment(service, index)}
-                       disabled={processingHomeService === index}
-                      >
-                        {processingHomeService === index ? "جاري المعالجة..." : "ادفع الآن"}
-                      </Button>
-                  </div>
+                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                     <span className="text-xl sm:text-2xl font-bold text-purple-600">{service.displayPrice}</span>
+                      <Button 
+                        className={`bg-gradient-to-r ${service.bgColor} hover:shadow-lg w-full sm:w-auto text-sm sm:text-base`}
+                        onClick={() => handlePayment(service, 'home')}
+                        disabled={processingServiceId === `home-${service.id}`}
+                       >
+                         {processingServiceId === `home-${service.id}` ? "جاري المعالجة..." : "ادفع الآن"}
+                       </Button>
+                   </div>
                 </CardContent>
               </Card>
             ))}
@@ -496,17 +477,17 @@ const DigitalMarketingWebsite = () => {
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-3xl font-bold text-purple-600">{service.price}</span>
-                  <Button 
-                    size="lg" 
-                    className={`bg-gradient-to-r ${service.bgColor}`}
-                    onClick={() => handleServicesPayment(service, index)}
-                    disabled={processingServicesService === index}
-                   >
-                     {processingServicesService === index ? "جاري المعالجة..." : "ادفع الآن"}
-                   </Button>
-                </div>
+                 <div className="flex items-center justify-between">
+                   <span className="text-3xl font-bold text-purple-600">{service.displayPrice}</span>
+                   <Button 
+                     size="lg" 
+                     className={`bg-gradient-to-r ${service.bgColor}`}
+                     onClick={() => handlePayment(service, 'services')}
+                     disabled={processingServiceId === `services-${service.id}`}
+                    >
+                     {processingServiceId === `services-${service.id}` ? "جاري المعالجة..." : "ادفع الآن"}
+                    </Button>
+                 </div>
               </Card>
             ))}
           </div>
