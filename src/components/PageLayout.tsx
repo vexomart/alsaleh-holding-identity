@@ -11,7 +11,7 @@ export function PageLayout({ children }: PageLayoutProps) {
   return (
     <PageContainer>
       <Navigation />
-      <main className="animate-fade-in">
+      <main className="animate-fade-in pt-[48px] lg:pt-[112px]">
         {children}
       </main>
       <Footer />

@@ -113,7 +113,7 @@ const Navigation = () => {
       </div>
 
       {/* Main Corporate Navigation */}
-      <nav className="fixed top-0 lg:top-[48px] w-full z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50 mobile-tap">
+      <nav className={`fixed ${isScrolled ? 'top-0' : 'top-0 lg:top-[48px]'} w-full z-50 bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50 mobile-tap`}>
         <div className="container-fluid">
           <div className="flex items-center justify-between h-14 sm:h-16">
             
