@@ -15,7 +15,11 @@ import {
   Phone,
   TrendingUp,
   Award,
-  Clock
+  Clock,
+  PieChart,
+  FileText,
+  Globe,
+  Shield
 } from "lucide-react";
 
 const services = [
@@ -173,6 +177,136 @@ const services = [
       "تتبع GPS",
       "دفع آمن",
       "نظام تقييم"
+    ]
+  },
+  {
+    id: 7,
+    title: "الخدمات المالية",
+    description: "حلول مالية متطورة وأنظمة محاسبية شاملة لإدارة أموالك بذكاء",
+    icon: PieChart,
+    color: "from-yellow-500 to-orange-500",
+    bgGradient: "from-yellow-50 to-orange-50",
+    services: [
+      "أنظمة المحاسبة المتقدمة",
+      "إدارة الفواتير والمدفوعات",
+      "تحليل الأرباح والخسائر",
+      "التخطيط المالي الاستراتيجي",
+      "تقارير مالية تفصيلية"
+    ],
+    technologies: ["QuickBooks", "SAP", "Oracle", "Custom ERP", "Financial Analytics", "Blockchain"],
+    startingPrice: "4,500",
+    rating: 4.8,
+    projectsCount: 95,
+    deliveryTime: "3-5 أسابيع",
+    features: [
+      "أمان مالي عالي",
+      "تقارير دقيقة",
+      "توافق ضريبي",
+      "تحليلات ذكية"
+    ]
+  },
+  {
+    id: 8,
+    title: "الاستشارات القانونية",
+    description: "استشارات قانونية متخصصة وخدمات التوثيق والعقود الإلكترونية",
+    icon: FileText,
+    color: "from-gray-600 to-slate-600",
+    bgGradient: "from-gray-50 to-slate-50",
+    services: [
+      "صياغة العقود الذكية",
+      "الاستشارات القانونية العامة",
+      "توثيق المعاملات الرقمية",
+      "حماية الملكية الفكرية",
+      "التحكيم والوساطة"
+    ],
+    technologies: ["Legal Management Systems", "Smart Contracts", "Digital Signatures", "Blockchain", "Legal Analytics"],
+    startingPrice: "3,500",
+    rating: 4.7,
+    projectsCount: 110,
+    deliveryTime: "1-3 أسابيع",
+    features: [
+      "توثيق رسمي",
+      "حماية قانونية",
+      "عقود ذكية",
+      "استشارة فورية"
+    ]
+  },
+  {
+    id: 9,
+    title: "خدمات الترجمة",
+    description: "خدمات ترجمة احترافية متعددة اللغات بدقة عالية وسرعة في التسليم",
+    icon: Globe,
+    color: "from-indigo-500 to-purple-500",
+    bgGradient: "from-indigo-50 to-purple-50",
+    services: [
+      "الترجمة الفورية المتقدمة",
+      "ترجمة المستندات الرسمية",
+      "الترجمة الصوتية والمرئية",
+      "التدقيق اللغوي المتخصص",
+      "الترجمة التقنية والطبية"
+    ],
+    technologies: ["AI Translation", "CAT Tools", "Voice Recognition", "Natural Language Processing", "Quality Assurance"],
+    startingPrice: "2,000",
+    rating: 4.9,
+    projectsCount: 250,
+    deliveryTime: "1-2 أسابيع",
+    features: [
+      "دقة عالية",
+      "سرعة التسليم",
+      "متعدد اللغات",
+      "تدقيق مهني"
+    ]
+  },
+  {
+    id: 10,
+    title: "التدريب والتطوير",
+    description: "برامج تدريبية متخصصة وورش عمل لتطوير مهارات فريقك وزيادة الإنتاجية",
+    icon: Award,
+    color: "from-rose-500 to-pink-500",
+    bgGradient: "from-rose-50 to-pink-50",
+    services: [
+      "التدريب التقني المتقدم",
+      "تطوير المهارات القيادية",
+      "ورش العمل التفاعلية",
+      "برامج التأهيل المهني",
+      "التدريب الرقمي عن بُعد"
+    ],
+    technologies: ["Learning Management Systems", "Virtual Reality", "Gamification", "Assessment Tools", "Video Conferencing"],
+    startingPrice: "3,000",
+    rating: 4.8,
+    projectsCount: 160,
+    deliveryTime: "2-4 أسابيع",
+    features: [
+      "برامج مخصصة",
+      "تدريب تفاعلي",
+      "شهادات معتمدة",
+      "متابعة مستمرة"
+    ]
+  },
+  {
+    id: 11,
+    title: "الأمن السيبراني",
+    description: "حلول أمنية متطورة لحماية بياناتك ومعلوماتك من التهديدات الإلكترونية",
+    icon: Shield,
+    color: "from-red-500 to-orange-500",
+    bgGradient: "from-red-50 to-orange-50",
+    services: [
+      "تقييم الأمان الشامل",
+      "حماية البيانات المتقدمة",
+      "مراقبة التهديدات الفورية",
+      "التدريب على الأمان",
+      "خطط الطوارئ والاستجابة"
+    ],
+    technologies: ["Firewalls", "Encryption", "Vulnerability Assessment", "SIEM", "Threat Intelligence", "Penetration Testing"],
+    startingPrice: "5,500",
+    rating: 4.9,
+    projectsCount: 75,
+    deliveryTime: "3-6 أسابيع",
+    features: [
+      "حماية متقدمة",
+      "مراقبة 24/7",
+      "استجابة سريعة",
+      "تقارير أمنية"
     ]
   }
 ];
