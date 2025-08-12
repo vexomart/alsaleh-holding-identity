@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 
 const DigitalMarketing = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
   const { toast } = useToast();
   
   const title = "التسويق الرقمي | شركة علي الشهري القابضة";
@@ -33,7 +33,7 @@ const DigitalMarketing = () => {
   const canonical = `${window.location.origin}/digital-marketing`;
 
   const handlePaymentMethod = async (service: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
-    setIsLoading(true);
+    setLoadingMethod(method);
     
     try {
       const amount = 1499;
@@ -93,7 +93,7 @@ const DigitalMarketing = () => {
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setLoadingMethod(null);
     }
   };
 
@@ -349,7 +349,7 @@ const DigitalMarketing = () => {
                           <Button 
                             className="w-full h-32 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
                             onClick={() => handlePaymentMethod(service, 'paylink')}
-                            disabled={isLoading}
+                            disabled={loadingMethod === 'paylink'}
                             style={{ animationDelay: '100ms' }}
                           >
                             {/* Background Pattern */}
@@ -362,7 +362,7 @@ const DigitalMarketing = () => {
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             
                             <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
-                              {isLoading ? (
+                              {loadingMethod === 'paylink' ? (
                                 <Loader2 className="w-8 h-8 animate-spin" />
                               ) : (
                                 <>
@@ -389,7 +389,7 @@ const DigitalMarketing = () => {
                           <Button 
                             className="w-full h-32 bg-gradient-to-br from-orange-500 via-orange-600 to-red-500 hover:from-orange-600 hover:via-orange-700 hover:to-red-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
                             onClick={() => handlePaymentMethod(service, 'stc-pay')}
-                            disabled={isLoading}
+                            disabled={loadingMethod === 'stc-pay'}
                             style={{ animationDelay: '200ms' }}
                           >
                             {/* Background Pattern */}
@@ -402,7 +402,7 @@ const DigitalMarketing = () => {
                             <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             
                             <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
-                              {isLoading ? (
+                              {loadingMethod === 'stc-pay' ? (
                                 <Loader2 className="w-8 h-8 animate-spin" />
                               ) : (
                                 <>
@@ -435,7 +435,7 @@ const DigitalMarketing = () => {
                           <Button 
                             className="w-full h-32 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 hover:from-purple-600 hover:via-purple-700 hover:to-pink-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
                             onClick={() => handlePaymentMethod(service, 'tamara')}
-                            disabled={isLoading}
+                            disabled={loadingMethod === 'tamara'}
                             style={{ animationDelay: '300ms' }}
                           >
                             {/* Background Pattern */}
@@ -448,7 +448,7 @@ const DigitalMarketing = () => {
                             <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             
                             <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
-                              {isLoading ? (
+                              {loadingMethod === 'tamara' ? (
                                 <Loader2 className="w-8 h-8 animate-spin" />
                               ) : (
                                 <>
