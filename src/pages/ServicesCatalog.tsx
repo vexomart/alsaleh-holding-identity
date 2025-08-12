@@ -169,14 +169,17 @@ const ServicesCatalog = () => {
                       <div className="text-sm text-muted-foreground">
                         التفاصيل والأسعار قريباً
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className={`group-hover:bg-gradient-to-r group-hover:${category.gradient} group-hover:text-white transition-all duration-300`}
-                      >
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className={`group-hover:bg-gradient-to-r group-hover:${category.gradient} group-hover:text-white transition-all duration-300`}
+                      asChild
+                    >
+                      <a href={category.id === 1 ? "/digital-marketing" : "#"}>
                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                         استكشف
-                      </Button>
+                      </a>
+                    </Button>
                     </div>
                   </CardContent>
                 </Card>
