@@ -48,17 +48,37 @@ serve(async (req) => {
       success_url
     } = requestBody;
 
-    // Validate required fields
-    if (!amount || !customer_name || !customer_email || !customer_phone || !offer_title) {
-      logStep("Missing required fields", { amount, customer_name, customer_email, customer_phone, offer_title });
+    // Validate required fields with more flexible checking
+    if (!amount || amount <= 0) {
+      logStep("Invalid amount", { amount });
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Missing required fields" 
+        error: "مبلغ غير صحيح" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400
       });
     }
+
+    if (!customer_name || !customer_email || !offer_title) {
+      logStep("Missing critical fields", { 
+        customer_name: !!customer_name, 
+        customer_email: !!customer_email, 
+        offer_title: !!offer_title 
+      });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "بيانات العميل أو العرض مفقودة" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400
+      });
+    }
+
+    // Set default values for optional fields
+    const cleanedPhone = customer_phone ? customer_phone.replace(/^\+?966/, "0") : "0500000000";
+    const cleanedDescription = description || `دفع خدمة: ${offer_title}`;
+    const cleanedSuccessUrl = success_url || "https://preview--alsaleh-holding-identity.lovable.app/payment-success";
 
     logStep("Creating Paylink payment for", {
       amount,
@@ -149,17 +169,17 @@ serve(async (req) => {
     const invoiceData = {
       amount: amount,
       orderNumber: orderNumber,
-      callBackUrl: success_url || "https://preview--alsaleh-holding-identity.lovable.app/payment-success",
+      callBackUrl: cleanedSuccessUrl,
       clientEmail: customer_email,
       clientName: customer_name,
-      clientMobile: customer_phone.replace(/^\+?966/, "0"),
-      note: description,
+      clientMobile: cleanedPhone,
+      note: cleanedDescription,
       cancelUrl: "https://preview--alsaleh-holding-identity.lovable.app/payment-cancel",
       products: [{
         title: offer_title,
         price: amount,
         qty: 1,
-        description: description,
+        description: cleanedDescription,
         isDigital: true,
         imageSrc: null,
         specificVat: null,
@@ -218,7 +238,7 @@ serve(async (req) => {
         currency: currency,
         customer_name: customer_name,
         customer_email: customer_email,
-        customer_phone: customer_phone,
+        customer_phone: cleanedPhone,
         status: 'INITIATED',
         payment_method: 'paylink',
         paylink_transaction_no: paylinkResult.transactionNo,
