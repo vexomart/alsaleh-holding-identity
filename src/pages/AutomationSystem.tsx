@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Bot,
   Settings, 
@@ -26,7 +28,10 @@ import {
   Layers,
   ChevronRight,
   RefreshCw,
-  Save
+  Save,
+  CreditCard,
+  Crown,
+  CheckCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -53,11 +58,140 @@ const AutomationSystem = () => {
   const [selectedAction, setSelectedAction] = useState('');
   const [emailContent, setEmailContent] = useState('');
   const [emailSubject, setEmailSubject] = useState('');
+  const [subscriptionPlans, setSubscriptionPlans] = useState([]);
+  const [loadingPlans, setLoadingPlans] = useState(true);
+  const [processingPayment, setProcessingPayment] = useState(null);
+  const [user, setUser] = useState(null);
+  const [currentSubscription, setCurrentSubscription] = useState(null);
+  const { toast } = useToast();
   const [automatedTasks, setAutomatedTasks] = useState([
     { id: 1, name: "معالجة البيانات", status: "active", lastRun: "منذ 5 دقائق", efficiency: 95 },
     { id: 2, name: "إرسال التقارير", status: "active", lastRun: "منذ ساعة", efficiency: 88 },
     { id: 3, name: "تحديث المخزون", status: "paused", lastRun: "منذ 3 ساعات", efficiency: 92 }
   ]);
+
+  useEffect(() => {
+    fetchSubscriptionPlans();
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+    
+    if (user) {
+      await checkCurrentSubscription(user.id);
+    }
+  };
+
+  const checkCurrentSubscription = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from('subscriptions')
+        .select(`
+          *,
+          subscription_plans (*)
+        `)
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .gt('current_period_end', new Date().toISOString())
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error checking subscription:', error);
+        return;
+      }
+
+      setCurrentSubscription(data);
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+    }
+  };
+
+  const fetchSubscriptionPlans = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('subscription_plans')
+        .select('*')
+        .eq('is_active', true)
+        .order('price', { ascending: true });
+
+      if (error) throw error;
+      setSubscriptionPlans(data || []);
+    } catch (error) {
+      console.error('Error fetching plans:', error);
+      toast({
+        title: "خطأ",
+        description: "فشل في تحميل خطط الاشتراك",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingPlans(false);
+    }
+  };
+
+  const handleSubscribe = async (plan) => {
+    if (!user) {
+      toast({
+        title: "تسجيل الدخول مطلوب",
+        description: "يرجى تسجيل الدخول أولاً للاشتراك",
+        variant: "destructive",
+      });
+      window.location.href = '/auth';
+      return;
+    }
+
+    if (currentSubscription) {
+      toast({
+        title: "لديك اشتراك نشط",
+        description: "لديك اشتراك نشط بالفعل",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setProcessingPayment(plan.id);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('paylink-subscription', {
+        body: {
+          plan_id: plan.id,
+          return_url: `${window.location.origin}/payment-success`
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.success && data.payment_url) {
+        window.open(data.payment_url, '_blank');
+        
+        toast({
+          title: "تم إنشاء رابط الدفع",
+          description: "سيتم فتح صفحة الدفع في نافذة جديدة",
+        });
+      } else {
+        throw new Error(data.error || 'فشل في إنشاء رابط الدفع');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast({
+        title: "خطأ في الدفع",
+        description: error.message || "فشل في معالجة الدفع",
+        variant: "destructive",
+      });
+    } finally {
+      setProcessingPayment(null);
+    }
+  };
+
+  const getPlanIcon = (planName) => {
+    if (planName.includes('Basic') || planName.includes('الأساسية')) return Star;
+    if (planName.includes('Professional') || planName.includes('المتقدمة')) return Zap;
+    if (planName.includes('Enterprise') || planName.includes('الشركات')) return Crown;
+    return Settings;
+  };
 
   const automationTemplates = [
     {
@@ -106,7 +240,11 @@ const AutomationSystem = () => {
 
   const handleCreateWorkflow = async () => {
     if (!workflowName || !selectedTrigger || !selectedAction) {
-      toast.error("يرجى ملء جميع الحقول المطلوبة");
+      toast({
+        title: "خطأ",
+        description: "يرجى ملء جميع الحقول المطلوبة",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -125,7 +263,9 @@ const AutomationSystem = () => {
     for (let i = 0; i < steps.length; i++) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setProgress((i + 1) * 20);
-      toast.info(steps[i]);
+      toast({
+        description: steps[i],
+      });
     }
 
     // إضافة سير العمل الجديد
@@ -141,7 +281,10 @@ const AutomationSystem = () => {
     setProcessing(false);
     setProgress(100);
     
-    toast.success("تم إنشاء سير العمل بنجاح!");
+    toast({
+      title: "نجح",
+      description: "تم إنشاء سير العمل بنجاح!",
+    });
     
     // إعادة تعيين النموذج
     setWorkflowName('');
@@ -152,7 +295,11 @@ const AutomationSystem = () => {
 
   const handleEmailAutomation = async () => {
     if (!emailSubject || !emailContent) {
-      toast.error("يرجى ملء موضوع ومحتوى البريد الإلكتروني");
+      toast({
+        title: "خطأ",
+        description: "يرجى ملء موضوع ومحتوى البريد الإلكتروني",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -161,7 +308,10 @@ const AutomationSystem = () => {
     // محاكاة إرسال البريد الإلكتروني التلقائي
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    toast.success("تم إعداد نظام الإرسال التلقائي للبريد الإلكتروني!");
+    toast({
+      title: "نجح",
+      description: "تم إعداد نظام الإرسال التلقائي للبريد الإلكتروني!",
+    });
     setProcessing(false);
     setEmailSubject('');
     setEmailContent('');
@@ -170,7 +320,9 @@ const AutomationSystem = () => {
   const handleTemplateSelect = (template: any) => {
     setWorkflowName(template.name);
     setWorkflowDescription(template.description);
-    toast.info(`تم تحديد قالب: ${template.name}`);
+    toast({
+      description: `تم تحديد قالب: ${template.name}`,
+    });
   };
 
   const toggleTaskStatus = (taskId: number) => {
@@ -181,7 +333,9 @@ const AutomationSystem = () => {
           : task
       )
     );
-    toast.success("تم تحديث حالة المهمة");
+    toast({
+      description: "تم تحديث حالة المهمة",
+    });
   };
 
   return (
@@ -256,7 +410,7 @@ const AutomationSystem = () => {
         <section className="py-20">
           <div className="container mx-auto px-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto" dir="rtl">
-              <TabsList className="grid w-full grid-cols-4 mb-8">
+              <TabsList className="grid w-full grid-cols-5 mb-8">
                 <TabsTrigger value="workflow" className="flex items-center gap-2 text-right">
                   <Workflow className="w-4 h-4" />
                   إنشاء سير عمل
@@ -268,6 +422,10 @@ const AutomationSystem = () => {
                 <TabsTrigger value="automation" className="flex items-center gap-2 text-right">
                   <Mail className="w-4 h-4" />
                   أتمتة الإيميل
+                </TabsTrigger>
+                <TabsTrigger value="pricing" className="flex items-center gap-2 text-right">
+                  <Crown className="w-4 h-4" />
+                  الباقات والأسعار
                 </TabsTrigger>
                 <TabsTrigger value="monitor" className="flex items-center gap-2 text-right">
                   <BarChart3 className="w-4 h-4" />
@@ -478,6 +636,146 @@ const AutomationSystem = () => {
                     </Button>
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              {/* الباقات والأسعار */}
+              <TabsContent value="pricing" className="space-y-6">
+                <div className="text-center mb-8">
+                  <Badge className="mb-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-0">
+                    <Crown className="w-4 h-4 ml-2" />
+                    باقات الأتمتة الذكية
+                  </Badge>
+                  <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                    اختر باقة الأتمتة المناسبة
+                  </h2>
+                  <p className="text-slate-600 max-w-2xl mx-auto">
+                    باقات مرنة تناسب جميع أحجام الأعمال مع إمكانيات أتمتة متقدمة
+                  </p>
+                  
+                  {currentSubscription && (
+                    <Alert className="max-w-2xl mx-auto mt-6">
+                      <Shield className="h-4 w-4" />
+                      <AlertDescription className="text-right">
+                        لديك اشتراك نشط في خطة "{currentSubscription.subscription_plans.name_ar}" 
+                        صالح حتى {new Date(currentSubscription.current_period_end).toLocaleDateString('ar-SA')}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+
+                {loadingPlans ? (
+                  <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600"></div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto" dir="rtl">
+                    {subscriptionPlans.map((plan, index) => {
+                      const IconComponent = getPlanIcon(plan.name);
+                      const isCurrentPlan = currentSubscription?.plan_id === plan.id;
+                      const isProfessional = plan.name.includes('Professional') || plan.name.includes('المتقدمة');
+                      
+                      return (
+                        <motion.div
+                          key={plan.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: index * 0.1 }}
+                          className={`relative ${isProfessional ? 'md:-mt-4 md:mb-4' : ''}`}
+                        >
+                          <Card className={`h-full bg-white/90 backdrop-blur-sm transition-all duration-300 hover:shadow-xl ${
+                            isProfessional ? 'border-indigo-500 shadow-lg' : 'border-slate-200'
+                          } ${
+                            isCurrentPlan ? 'ring-2 ring-green-500 shadow-green-500/20' : ''
+                          }`}>
+                            {isProfessional && (
+                              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                                <Badge className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-1">
+                                  الأكثر شعبية
+                                </Badge>
+                              </div>
+                            )}
+                            
+                            {isCurrentPlan && (
+                              <div className="absolute -top-4 right-4">
+                                <Badge className="bg-green-500 text-white px-3 py-1">
+                                  خطتك الحالية
+                                </Badge>
+                              </div>
+                            )}
+
+                            <CardHeader className="text-center pt-8">
+                              <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
+                                isProfessional 
+                                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600' 
+                                  : 'bg-gradient-to-r from-slate-500 to-slate-600'
+                              }`}>
+                                <IconComponent className="w-8 h-8 text-white" />
+                              </div>
+                              
+                              <CardTitle className="text-2xl font-bold text-slate-900 mb-2">
+                                {plan.name_ar}
+                              </CardTitle>
+                              
+                              <div className="mb-4">
+                                <span className="text-4xl font-bold text-slate-900">
+                                  {plan.price.toLocaleString('ar-SA')}
+                                </span>
+                                <span className="text-slate-600 mr-2">{plan.currency}/شهر</span>
+                              </div>
+                              
+                              <CardDescription className="text-slate-600">
+                                {plan.description_ar}
+                              </CardDescription>
+                            </CardHeader>
+
+                            <CardContent className="space-y-6">
+                              <div className="space-y-3">
+                                {plan.features && typeof plan.features === 'object' && Array.isArray(plan.features) && 
+                                  plan.features.map((feature, featureIndex) => (
+                                    <div key={featureIndex} className="flex items-center gap-3">
+                                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                      <span className="text-slate-600 text-sm">{feature}</span>
+                                    </div>
+                                  ))
+                                }
+                              </div>
+
+                              <div className="pt-4">
+                                <Button
+                                  onClick={() => handleSubscribe(plan)}
+                                  disabled={processingPayment === plan.id || isCurrentPlan || !user}
+                                  className={`w-full ${
+                                    isProfessional 
+                                      ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700' 
+                                      : 'bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700'
+                                  } text-white`}
+                                  size="lg"
+                                >
+                                  {processingPayment === plan.id ? (
+                                    <div className="flex items-center gap-2">
+                                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                                      جاري المعالجة...
+                                    </div>
+                                  ) : isCurrentPlan ? (
+                                    'خطتك الحالية'
+                                  ) : !user ? (
+                                    'تسجيل الدخول مطلوب'
+                                  ) : (
+                                    <div className="flex items-center gap-2">
+                                      <CreditCard className="w-5 h-5" />
+                                      اشترك الآن
+                                      <ArrowRight className="w-4 h-4" />
+                                    </div>
+                                  )}
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                )}
               </TabsContent>
 
               {/* مراقبة المهام */}
