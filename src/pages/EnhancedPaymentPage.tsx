@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, CreditCard, CheckCircle, ArrowLeft, Sparkles, Shield } from 'lucide-react';
+import { Loader2, CheckCircle, ArrowLeft, Sparkles, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -42,7 +42,6 @@ const EnhancedPaymentPage = () => {
       transition: { duration: 0.4 }
     }
   };
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -146,7 +145,6 @@ const EnhancedPaymentPage = () => {
     }
   };
 
-
   const getStepIcon = (stepNumber: number) => {
     if (completedSteps.includes(stepNumber)) {
       return <CheckCircle className="w-6 h-6 text-white" />;
@@ -237,6 +235,28 @@ const EnhancedPaymentPage = () => {
                 ))}
               </CardContent>
             </Card>
+
+            {/* Security Features */}
+            <motion.div variants={itemVariants} className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
+              <h3 className="font-bold text-green-800 mb-4 flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                ضمانات الأمان
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span className="text-sm text-green-700">تشفير SSL 256-bit</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span className="text-sm text-green-700">حماية بيانات PCI DSS</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span className="text-sm text-green-700">مراقبة 24/7</span>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
 
           {/* Payment Form */}

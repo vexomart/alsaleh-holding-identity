@@ -411,7 +411,7 @@ const DigitalMarketing = () => {
                         asChild
                       >
                         <a href="/enhanced-payment">
-                          ابدأ الآن - واجهة متطورة
+                          ادفع الان بكل سهوله
                           <ArrowRight className="w-4 h-4 mr-2" />
                         </a>
                       </Button>
