@@ -300,7 +300,36 @@ const SoftwareProducts = () => {
     },
     {
       id: 4,
-      name: "🛍️ متجر إلكتروني ذكي",
+      name: "🛍️ متجر البطاقات الإلكترونية الذكي",
+      description: "متجر إلكتروني متطور لبيع البطاقات الرقمية مع نظام تحويل للواتساب وتصميم متجاوب وأنيميشن احترافي",
+      category: "التجارة الإلكترونية",
+      icon: ShoppingCart,
+      features: [
+        "🎮 مجموعة متنوعة من البطاقات الرقمية",
+        "💬 تحويل تلقائي لواتساب للطلبات",
+        "📱 تصميم متجاوب 100% مع جميع الأجهزة",
+        "✨ أنيميشن وحركات احترافية متطورة",
+        "🔍 نظام بحث وفلترة ذكي",
+        "📊 إحصائيات تفاعلية ولوحة معلومات"
+      ],
+      price: "3999 ريال",
+      originalPrice: "5999 ريال",
+      rating: 4.9,
+      downloads: "89",
+      status: "متاح الآن",
+      color: "from-green-500 to-emerald-500",
+      demoUrl: "/electronic-cards-store",
+      tags: ["E-commerce", "Cards", "WhatsApp", "Responsive"],
+      isNew: true,
+      isFeatured: true,
+      isExclusive: true,
+      emoji: "🛍️",
+      discount: "33%",
+      estimatedDelivery: "فوري"
+    },
+    {
+      id: 5,
+      name: "🛒 متجر إلكتروني ذكي",
       description: "متجر إلكتروني متكامل مع نظام إدارة المخزون والطلبات وبوابات دفع متعددة وذكاء اصطناعي",
       category: "التجارة الإلكترونية",
       icon: ShoppingCart,
@@ -323,12 +352,12 @@ const SoftwareProducts = () => {
       isNew: true,
       isFeatured: false,
       isExclusive: true,
-      emoji: "🛍️",
+      emoji: "🛒",
       discount: "30%",
       estimatedDelivery: "خلال أسبوع"
     },
     {
-      id: 5,
+      id: 6,
       name: "🎨 منصة التصميم الإبداعي",
       description: "منصة متكاملة للتصميم الجرافيكي والإبداعي مع أدوات ذكية وقوالب حصرية",
       category: "التصميم والإبداع",
@@ -357,7 +386,7 @@ const SoftwareProducts = () => {
       estimatedDelivery: "خلال أسبوعين"
     },
     {
-      id: 6,
+      id: 7,
       name: "📊 نظام إدارة الأعمال الذكي",
       description: "نظام إدارة شامل للأعمال مع لوحة تحكم ذكية وتقارير تفاعلية وذكاء اصطناعي",
       category: "أنظمة الإدارة",
@@ -390,7 +419,7 @@ const SoftwareProducts = () => {
   const categories = [
     { name: "جميع المنتجات", emoji: "🛍️", count: products.length },
     { name: "المواقع التعريفية", emoji: "🌐", count: 2 },
-    { name: "التجارة الإلكترونية", emoji: "🛒", count: 1 },
+    { name: "التجارة الإلكترونية", emoji: "🛒", count: 2 },
     { name: "التسويق الرقمي", emoji: "📈", count: 1 },
     { name: "التصميم والإبداع", emoji: "🎨", count: 1 },
     { name: "أنظمة الإدارة", emoji: "⚙️", count: 1 }
@@ -421,7 +450,7 @@ const SoftwareProducts = () => {
     },
     {
       title: "القيمة الإجمالية",
-      value: "46996 ر.س",
+      value: "49995 ر.س",
       icon: TrendingUp,
       color: "from-purple-500 to-purple-600",
       bgColor: "from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20",

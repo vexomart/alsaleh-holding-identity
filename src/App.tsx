@@ -117,6 +117,7 @@ import TechEcosystem from "./pages/TechEcosystem";
 import CookiePolicy from "./pages/CookiePolicy";
 import ConstructionWebsite from "./pages/ConstructionWebsite";
 import DigitalMarketingWebsite from "./pages/DigitalMarketingWebsite";
+import ElectronicCardsStore from "./pages/ElectronicCardsStore";
 
 import ServicesCatalog from "./pages/ServicesCatalog";
 import DigitalMarketing from "./pages/DigitalMarketing";
@@ -235,6 +236,7 @@ const App = () => {
                 <Route path="/software-products" element={<SoftwareProducts />} />
                 <Route path="/construction-website" element={<ConstructionWebsite />} />
                 <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
+                <Route path="/electronic-cards-store" element={<ElectronicCardsStore />} />
                 <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
                 <Route path="/car-rental-landing" element={<CarRentalLanding />} />
                 <Route path="/car-rental" element={<CarRentalLanding />} />
