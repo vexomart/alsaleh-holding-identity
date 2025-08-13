@@ -701,13 +701,13 @@ const SoftwareProducts = () => {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex gap-3 pt-4">
+                      <div className="flex flex-col sm:flex-row gap-2 pt-4">
                         {product.demoUrl !== "#" && (
                           <Button 
                             variant="outline" 
                             size="sm" 
                             onClick={() => window.open(product.demoUrl, '_blank')}
-                            className="flex-1 rounded-xl font-bold hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 hover:scale-105"
+                            className="w-full sm:flex-1 rounded-xl font-bold hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 hover:scale-105 py-3"
                           >
                             <Eye className="w-4 h-4 ml-1 animate-pulse" />
                             👁️ معاينة مباشرة
@@ -718,7 +718,7 @@ const SoftwareProducts = () => {
                           size="sm" 
                           onClick={() => handlePurchase(product)}
                           disabled={product.status === "تحت التطوير" || isProductLoading}
-                          className={`flex-1 rounded-xl font-bold transition-all duration-300 hover:scale-105 ${
+                          className={`w-full sm:flex-1 rounded-xl font-bold transition-all duration-300 hover:scale-105 py-3 ${
                             product.status === "متاح الآن" 
                               ? "bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 shadow-2xl text-white" 
                               : product.status === "قريباً"
