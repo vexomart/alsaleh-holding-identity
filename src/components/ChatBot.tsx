@@ -7,11 +7,17 @@ import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2 } from 'lucide-
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
+interface ChatButton {
+  text: string;
+  url: string;
+}
+
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  buttons?: ChatButton[];
 }
 
 interface ChatBotProps {
@@ -25,8 +31,13 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
     {
       id: '1',
       role: 'assistant',
-      content: 'مرحباً بك في شركة آل الشهري القابضة! 👋\n\nأنا هنا لمساعدتك في:\n• معرفة خدماتنا المتنوعة\n• توجيهك للقسم المناسب\n• الإجابة على استفساراتك\n• حجز استشارة مجانية\n\nكيف يمكنني مساعدتك اليوم؟',
-      timestamp: new Date()
+      content: 'حياك الله وأهلاً وسهلاً فيك! 😊\n\nأنا من فريق خدمة العملاء في شركة آل الشهري القابضة، وأنا هنا عشان أساعدك في:\n• معرفة خدماتنا المميزة\n• أوجهك للقسم اللي يناسبك\n• أجاوب على استفساراتك\n• أساعدك تحجز استشارة مجانية\n\nإيش اللي تحتاجه اليوم؟ نورت! ✨',
+      timestamp: new Date(),
+      buttons: [
+        { text: 'شاهد خدماتنا 🛍️', url: '/departments' },
+        { text: 'العروض الحالية 🎁', url: '/current-offers' },
+        { text: 'احجز استشارة 📞', url: '/book-consultation' }
+      ]
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
@@ -79,11 +90,27 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
 
       if (error) throw error;
 
+      // Parse response for buttons
+      const responseText = data.response || 'عذراً، لم أتمكن من فهم سؤالك. يرجى إعادة صياغته أو التواصل معنا مباشرة.';
+      const buttonRegex = /\[BUTTON:(.*?):(.*?)\]/g;
+      const buttons: ChatButton[] = [];
+      let cleanedContent = responseText;
+
+      let match;
+      while ((match = buttonRegex.exec(responseText)) !== null) {
+        buttons.push({
+          text: match[1],
+          url: match[2]
+        });
+        cleanedContent = cleanedContent.replace(match[0], '');
+      }
+
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response || 'عذراً، لم أتمكن من فهم سؤالك. يرجى إعادة صياغته أو التواصل معنا مباشرة.',
-        timestamp: new Date()
+        content: cleanedContent.trim(),
+        timestamp: new Date(),
+        buttons: buttons.length > 0 ? buttons : undefined
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -166,7 +193,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h3 className="font-semibold text-sm">مساعد آل الشهري</h3>
+              <h3 className="font-semibold text-sm">خدمة العملاء</h3>
               <p className="text-xs opacity-90">متاح الآن للمساعدة</p>
             </div>
           </div>
@@ -224,6 +251,24 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                       }`}>
                         {message.role === 'assistant' ? formatMessage(message.content) : message.content}
                       </div>
+                      
+                      {/* Display buttons if they exist */}
+                      {message.buttons && message.buttons.length > 0 && (
+                        <div className="mt-3 flex flex-col gap-2">
+                          {message.buttons.map((button, index) => (
+                            <Button
+                              key={index}
+                              onClick={() => window.open(button.url, '_blank')}
+                              variant="outline"
+                              size="sm"
+                              className="text-xs h-8 bg-primary/10 hover:bg-primary/20 border-primary/30 text-primary hover:text-primary/90 transition-all duration-200"
+                            >
+                              {button.text}
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                      
                       <p className="text-xs text-muted-foreground mt-1">
                         {message.timestamp.toLocaleTimeString('ar-SA', { 
                           hour: '2-digit', 
