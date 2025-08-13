@@ -735,8 +735,8 @@ const SoftwareProducts = () => {
                             <>
                               {product.status === "متاح الآن" && (
                                 <>
-                                  <CreditCard className="w-4 h-4 ml-1 animate-pulse" />
-                                  💳 اشتري الآن
+                                  <Banknote className="w-4 h-4 ml-1 animate-bounce" />
+                                  💰 ادفع الآن
                                 </>
                               )}
                               {product.status === "قريباً" && (
@@ -776,20 +776,20 @@ const SoftwareProducts = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 rounded-3xl p-12 text-center text-white shadow-2xl">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-pulse">
+        <div className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 rounded-3xl p-6 md:p-12 text-center text-white shadow-2xl">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 animate-pulse">
             🚀 هل تحتاج حلاً مخصصاً؟
           </h2>
-          <p className="text-xl mb-8 opacity-90">
+          <p className="text-lg md:text-xl mb-6 md:mb-8 opacity-90 max-w-3xl mx-auto">
             💡 نقوم بتطوير حلول برمجية مخصصة تماماً لاحتياجات عملك الفريدة
           </p>
           <Button 
             size="lg" 
             variant="secondary"
-            className="bg-white text-primary hover:bg-white/90 shadow-2xl text-lg px-8 py-4 rounded-2xl font-bold transform hover:scale-105 transition-all duration-300"
+            className="bg-white text-primary hover:bg-white/90 shadow-2xl text-base md:text-lg px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold transform hover:scale-105 transition-all duration-300 w-full sm:w-auto"
           >
             📞 تواصل معنا للحصول على عرض مخصص
-            <ArrowRight className="w-5 h-5 mr-2 animate-pulse" />
+            <ArrowRight className="w-4 md:w-5 h-4 md:h-5 mr-2 animate-pulse" />
           </Button>
         </div>
       </div>
