@@ -122,16 +122,22 @@ serve(async (req) => {
     const subscriptionEndDate = new Date();
     subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1); // 1 month subscription
 
+    const subscriptionData: any = {
+      plan_id: plan.id,
+      status: 'pending',
+      current_period_start: new Date().toISOString(),
+      current_period_end: subscriptionEndDate.toISOString(),
+      payment_status: 'pending'
+    };
+
+    // Only add user_id if user is authenticated
+    if (user?.id) {
+      subscriptionData.user_id = user.id;
+    }
+
     const { data: subscription, error: createSubError } = await supabaseClient
       .from('subscriptions')
-      .insert({
-        user_id: user?.id || null,
-        plan_id: plan.id,
-        status: 'pending',
-        current_period_start: new Date().toISOString(),
-        current_period_end: subscriptionEndDate.toISOString(),
-        payment_status: 'pending'
-      })
+      .insert(subscriptionData)
       .select()
       .single();
 

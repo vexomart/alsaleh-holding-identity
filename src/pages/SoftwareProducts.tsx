@@ -44,7 +44,7 @@ import {
 const SoftwareProducts = () => {
   const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState("جميع المنتجات");
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingProducts, setLoadingProducts] = useState<{[key: number]: boolean}>({});
   const [showPaymentMethods, setShowPaymentMethods] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
@@ -83,7 +83,7 @@ const SoftwareProducts = () => {
       description: "يتم تحضير صفحة الدفع",
     });
 
-    setIsLoading(true);
+    setLoadingProducts(prev => ({ ...prev, [product.id]: true }));
     
     // استخراج المبلغ من السعر (إزالة "ريال" وتحويل إلى رقم)
     const priceAmount = parseInt(product.price.replace(/[^\d]/g, ''));
@@ -216,7 +216,7 @@ const SoftwareProducts = () => {
         variant: "destructive"
       });
     } finally {
-      setIsLoading(false);
+      setLoadingProducts(prev => ({ ...prev, [product.id]: false }));
     }
   };
 
@@ -569,18 +569,18 @@ const SoftwareProducts = () => {
                         <Button 
                           size="sm" 
                           onClick={() => handlePurchase(product)}
-                          disabled={product.status !== "متاح الآن" || isLoading}
+                          disabled={product.status !== "متاح الآن" || loadingProducts[product.id]}
                           className={`${product.status === "متاح الآن" 
                             ? "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg" 
                             : "opacity-50 cursor-not-allowed"
                           }`}
                         >
-                          {isLoading ? (
+                          {loadingProducts[product.id] ? (
                             <Clock className="w-4 h-4 ml-1 animate-spin" />
                           ) : (
                             <TrendingUp className="w-4 h-4 ml-1" />
                           )}
-                          {product.status === "متاح الآن" ? (isLoading ? "جاري المعالجة..." : "ادفع الآن") : "قريباً"}
+                          {product.status === "متاح الآن" ? (loadingProducts[product.id] ? "جاري المعالجة..." : "ادفع الآن") : "قريباً"}
                         </Button>
                       </div>
                       
@@ -684,7 +684,7 @@ const SoftwareProducts = () => {
                     key={method.id}
                     variant="outline"
                     onClick={() => handlePaymentMethodSelect(method.id, selectedProduct)}
-                    disabled={isLoading}
+                    disabled={loadingProducts[selectedProduct?.id] || false}
                     className="w-full p-4 h-auto flex items-center justify-between hover:bg-primary/5 hover:border-primary/20 transition-all duration-200"
                   >
                     <div className="flex items-center gap-3">
