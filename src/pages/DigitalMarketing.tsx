@@ -261,6 +261,24 @@ const DigitalMarketing = () => {
       ],
       badge: "الأكثر طلباً",
       featured: true
+    },
+    {
+      id: 2,
+      title: "رفع الدومين اثورتي MOZ بأقوي 100 باك لينكس",
+      description: "100 باك لينك يدوية وآمنة من مواقع عالية الجودة لرفع قوة الدومين اثورتي",
+      price: "٧٩٩",
+      currency: "ريال",
+      duration: "٣-٤ أسابيع",
+      features: [
+        "100 باك لينك يدوية 100%",
+        "من مواقع عالية الجودة DA 50+",
+        "روابط آمنة ومتنوعة",
+        "تقرير مفصل بالروابط",
+        "ضمان عدم الانخفاض",
+        "متابعة شهرية للنتائج"
+      ],
+      badge: "جديد",
+      featured: false
     }
   ];
 
@@ -410,7 +428,7 @@ const DigitalMarketing = () => {
                         className="border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover-scale"
                         asChild
                       >
-                        <a href="/enhanced-payment">
+                        <a href={`/enhanced-payment?service=${service.id}&title=${encodeURIComponent(service.title)}&price=${service.price}`}>
                           ادفع الان بكل سهوله
                           <ArrowRight className="w-4 h-4 mr-2" />
                         </a>

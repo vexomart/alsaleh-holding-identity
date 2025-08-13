@@ -12,11 +12,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 const EnhancedPaymentPage = () => {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // استخراج معلومات الخدمة من URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const serviceId = urlParams.get('service') || '1';
+  const serviceTitle = urlParams.get('title') || 'خدمة تسويقية';
+  const servicePrice = urlParams.get('price') || '1499';
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    amount: '1499' // سعر ثابت للخدمة
+    amount: servicePrice,
+    serviceId: serviceId,
+    serviceTitle: serviceTitle
   });
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const { toast } = useToast();
@@ -99,8 +108,8 @@ const EnhancedPaymentPage = () => {
         customer_name: formData.name,
         customer_email: formData.email,
         customer_phone: formData.phone || '966500000000',
-        offer_title: 'خدمة تسويقية متقدمة',
-        description: 'دفع خدمة تسويقية احترافية'
+        offer_title: formData.serviceTitle,
+        description: `دفع ${formData.serviceTitle}`
       };
 
       console.log("🚀 بدء عملية الدفع: paylink");
@@ -202,7 +211,7 @@ const EnhancedPaymentPage = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { number: 1, title: "تأكيد الخدمة", desc: "خدمة التسويق الرقمي - ١٤٩٩ ريال" },
+                  { number: 1, title: "تأكيد الخدمة", desc: `${formData.serviceTitle} - ${formData.amount} ريال` },
                   { number: 2, title: "البيانات الشخصية", desc: "أدخل بياناتك الأساسية" },
                   { number: 3, title: "تأكيد الدفع", desc: "راجع وأكد العملية" }
                 ].map((stepItem) => (
@@ -274,7 +283,7 @@ const EnhancedPaymentPage = () => {
                   {step === 3 && "تأكيد الدفع"}
                 </CardTitle>
                 <CardDescription>
-                  {step === 1 && "خدمة التسويق الرقمي الاحترافية"}
+                  {step === 1 && formData.serviceTitle}
                   {step === 2 && "أدخل بياناتك الشخصية"}
                   {step === 3 && "راجع البيانات وأكد الدفع"}
                 </CardDescription>
@@ -295,16 +304,16 @@ const EnhancedPaymentPage = () => {
                         <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                           <CheckCircle className="w-10 h-10 text-primary" />
                         </div>
-                        <h3 className="text-xl font-bold mb-2">خدمة التسويق الرقمي</h3>
-                        <p className="text-muted-foreground">خدمة شاملة لبناء استراتيجية تسويقية متكاملة</p>
+                        <h3 className="text-xl font-bold mb-2">{formData.serviceTitle}</h3>
+                        <p className="text-muted-foreground">خدمة متخصصة لتحقيق أهدافك</p>
                       </div>
 
                       <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl border border-primary/20">
                         <div className="text-center mb-6">
                           <div className="text-4xl font-bold text-primary mb-2">
-                            ١٤٩٩ ريال
+                            {formData.amount} ريال
                           </div>
-                          <p className="text-sm text-muted-foreground">سعر ثابت شامل ضريبة القيمة المضافة</p>
+                          <p className="text-sm text-muted-foreground">سعر شامل ضريبة القيمة المضافة</p>
                         </div>
                         
                         <div className="space-y-4">
@@ -313,13 +322,20 @@ const EnhancedPaymentPage = () => {
                             ما تحصل عليه:
                           </h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {[
+                            {formData.serviceId === '1' ? [
                               "تحليل السوق والمنافسين",
                               "تحديد الجمهور المستهدف", 
                               "وضع الأهداف والاستراتيجيات",
                               "خطة المحتوى والحملات",
                               "جدولة زمنية للتنفيذ",
                               "مؤشرات الأداء KPIs"
+                            ] : [
+                              "100 باك لينك يدوية 100%",
+                              "من مواقع عالية الجودة DA 50+",
+                              "روابط آمنة ومتنوعة",
+                              "تقرير مفصل بالروابط",
+                              "ضمان عدم الانخفاض",
+                              "متابعة شهرية للنتائج"
                             ].map((feature, index) => (
                               <div 
                                 key={index}
@@ -334,7 +350,7 @@ const EnhancedPaymentPage = () => {
 
                         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                           <p className="text-sm text-blue-800 text-center">
-                            ⏱️ مدة التسليم: ٢-٣ أسابيع + ضمان المراجعة والتعديل
+                            ⏱️ مدة التسليم: {formData.serviceId === '1' ? '٢-٣ أسابيع' : '٣-٤ أسابيع'} + ضمان المراجعة والتعديل
                           </p>
                         </div>
                       </div>
