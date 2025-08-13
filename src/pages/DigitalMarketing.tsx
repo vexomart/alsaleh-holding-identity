@@ -345,260 +345,130 @@ const DigitalMarketing = () => {
       </section>
 
       {/* Services Section */}
-      <section className="container-fluid py-20 -mt-10 relative z-20">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative py-20 -mt-10 z-20 overflow-hidden">
+        {/* Marketing Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-br from-pink-400/20 to-red-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
+        
+        <div className="container-fluid relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">خدماتنا المتاحة</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">خدماتنا المتاحة</h2>
             <p className="text-lg text-muted-foreground">اختر الخدمة المناسبة لاحتياجاتك</p>
           </div>
 
-          <div className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {services.map((service, index) => (
               <Card 
                 key={service.id} 
-                className={`group relative overflow-hidden border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 animate-fade-in ${
-                  service.featured ? 'bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20' : 'bg-white dark:bg-gray-900'
+                className={`group relative overflow-hidden border-0 shadow-2xl hover:shadow-3xl transition-all duration-700 hover:scale-105 hover:-translate-y-2 animate-fade-in ${
+                  service.featured 
+                    ? 'bg-gradient-to-br from-pink-50 via-rose-50 to-red-50 dark:from-pink-900/20 dark:via-rose-900/20 dark:to-red-900/20 ring-2 ring-pink-200 dark:ring-pink-800' 
+                    : 'bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-indigo-900/20'
                 }`}
-                style={{ animationDelay: `${index * 200}ms` }}
+                style={{ animationDelay: `${index * 300}ms` }}
               >
+                {/* Animated Background Elements */}
+                <div className="absolute inset-0 opacity-30">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-current to-transparent rounded-full blur-2xl animate-pulse" />
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-current to-transparent rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }} />
+                </div>
+
                 {/* Featured Badge */}
                 {service.featured && (
                   <div className="absolute top-4 left-4 z-10">
-                    <Badge className="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
+                    <Badge className="bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg animate-pulse">
+                      <Star className="w-3 h-3 ml-1" />
                       {service.badge}
                     </Badge>
                   </div>
                 )}
 
-                <CardHeader className="relative z-10">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
-                        {service.title}
-                      </CardTitle>
-                      
-                      <CardDescription className="text-base text-muted-foreground mb-4">
-                        {service.description}
-                      </CardDescription>
+                {!service.featured && (
+                  <div className="absolute top-4 left-4 z-10">
+                    <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg">
+                      <Lightbulb className="w-3 h-3 ml-1" />
+                      {service.badge}
+                    </Badge>
+                  </div>
+                )}
 
-                      <div className="flex items-center gap-6 mb-4">
-                        <div className="text-center">
-                          <div className="text-3xl font-bold text-primary">
-                            {service.price}
-                          </div>
-                          <div className="text-sm text-muted-foreground">{service.currency}</div>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Clock className="w-4 h-4" />
-                          <span>مدة التسليم: {service.duration}</span>
-                        </div>
+                <CardHeader className="relative z-10 pb-4">
+                  <CardTitle className="text-xl font-bold mb-3 group-hover:text-primary transition-colors duration-300">
+                    {service.title}
+                  </CardTitle>
+                  
+                  <CardDescription className="text-base text-muted-foreground mb-4 line-clamp-2">
+                    {service.description}
+                  </CardDescription>
+
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                        {service.price}
                       </div>
+                      <div className="text-sm text-muted-foreground">{service.currency}</div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground bg-white/50 dark:bg-gray-800/50 px-3 py-1 rounded-full">
+                      <Clock className="w-4 h-4" />
+                      <span>{service.duration}</span>
                     </div>
                   </div>
                 </CardHeader>
 
-                <CardContent className="relative z-10">
+                <CardContent className="relative z-10 pt-0">
                   <div className="mb-6">
-                    <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <Lightbulb className="w-4 h-4 text-primary" />
-                      ما يشمله العرض:
+                    <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      مميزات الخدمة:
                     </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {service.features.map((feature, featureIndex) => (
+                    <div className="space-y-2">
+                      {service.features.slice(0, 4).map((feature, featureIndex) => (
                         <div 
                           key={featureIndex}
-                          className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800"
+                          className="flex items-center gap-2 text-sm p-2 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
                         >
-                          <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                          <span className="text-sm">{feature}</span>
+                          <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
+                          <span>{feature}</span>
                         </div>
                       ))}
+                      {service.features.length > 4 && (
+                        <div className="text-xs text-muted-foreground text-center mt-2">
+                          +{service.features.length - 4} مميزات إضافية
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-4">
-                    <div className="text-sm text-muted-foreground text-center">
-                      يشمل ضمان المراجعة والتعديل
-                    </div>
-                    
-                    <div className="flex justify-center">
-                      <Button 
-                        variant="outline"
-                        className="border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover-scale"
-                        asChild
-                      >
-                        <a href={`/enhanced-payment?service=${service.id}&title=${encodeURIComponent(service.title)}&price=${service.price}`}>
-                          ادفع الان بكل سهوله
-                          <ArrowRight className="w-4 h-4 mr-2" />
-                        </a>
-                      </Button>
-                    </div>
-                    
-                    <div className="flex justify-center">
-                      <Button 
-                        variant="secondary"
-                        className="bg-secondary hover:bg-secondary-dark transition-all duration-300"
-                        asChild
-                      >
-                        <a href="/start-with-us">
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                          استشارة مجانية
-                        </a>
-                      </Button>
-                    </div>
-                      
-                    {/* Payment Methods Section */}
-                    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-gray-800 dark:via-blue-900/20 dark:to-purple-900/20 rounded-3xl p-8 border border-gray-200 dark:border-gray-700 shadow-lg">
-                      <div className="text-center mb-8">
-                        <h4 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-3">اختر طريقة الدفع</h4>
-                        <p className="text-gray-600 dark:text-gray-400 text-lg">جميع المعاملات آمنة ومحمية</p>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                        {/* Paylink Payment */}
-                        <div className="group relative">
-                          <Button 
-                            className="w-full h-32 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
-                            onClick={() => handlePaymentMethod(service, 'paylink')}
-                            disabled={loadingMethod === 'paylink'}
-                            style={{ animationDelay: '100ms' }}
-                          >
-                            {/* Background Pattern */}
-                            <div className="absolute inset-0 opacity-10">
-                              <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16" />
-                              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12" />
-                            </div>
-                            
-                            {/* Background Animation */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            
-                            <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
-                              {loadingMethod === 'paylink' ? (
-                                <Loader2 className="w-8 h-8 animate-spin" />
-                              ) : (
-                                <>
-                                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                                    <CreditCard className="w-8 h-8" />
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="font-bold text-xl block">Paylink</span>
-                                    <span className="text-sm text-blue-100 block mt-1">فيزا • ماستركارد • مدى</span>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                            
-                            {/* Shine Effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.8s_ease-out]" />
-                            </div>
-                          </Button>
-                        </div>
-                        
-                        {/* STC Pay */}
-                        <div className="group relative">
-                          <Button 
-                            className="w-full h-32 bg-gradient-to-br from-orange-500 via-orange-600 to-red-500 hover:from-orange-600 hover:via-orange-700 hover:to-red-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
-                            onClick={() => handlePaymentMethod(service, 'stc-pay')}
-                            disabled={loadingMethod === 'stc-pay'}
-                            style={{ animationDelay: '200ms' }}
-                          >
-                            {/* Background Pattern */}
-                            <div className="absolute inset-0 opacity-10">
-                              <div className="absolute top-0 left-0 w-28 h-28 bg-white rounded-full -translate-y-14 -translate-x-14" />
-                              <div className="absolute bottom-0 right-0 w-20 h-20 bg-white rounded-full translate-y-10 translate-x-10" />
-                            </div>
-                            
-                            {/* Background Animation */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            
-                            <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
-                              {loadingMethod === 'stc-pay' ? (
-                                <Loader2 className="w-8 h-8 animate-spin" />
-                              ) : (
-                                <>
-                                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300 shadow-lg">
-                                    <Smartphone className="w-8 h-8" />
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="font-bold text-xl block">STC Pay</span>
-                                    <span className="text-sm text-orange-100 block mt-1">دفع فوري وآمن</span>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                            
-                            {/* Pulse Ring Effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-30">
-                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 border-2 border-white rounded-full animate-pulse" />
-                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-white rounded-full animate-pulse animation-delay-300" />
-                            </div>
-                            
-                            {/* Shine Effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.8s_ease-out]" />
-                            </div>
-                          </Button>
-                        </div>
-                        
-                        {/* Tamara Payment */}
-                        <div className="group relative">
-                          <Button 
-                            className="w-full h-32 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 hover:from-purple-600 hover:via-purple-700 hover:to-pink-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale animate-fade-in relative overflow-hidden rounded-2xl"
-                            onClick={() => handlePaymentMethod(service, 'tamara')}
-                            disabled={loadingMethod === 'tamara'}
-                            style={{ animationDelay: '300ms' }}
-                          >
-                            {/* Background Pattern */}
-                            <div className="absolute inset-0 opacity-10">
-                              <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-full -translate-y-12 translate-x-12" />
-                              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full translate-y-16 -translate-x-16" />
-                            </div>
-                            
-                            {/* Background Animation */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            
-                            <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-3">
-                              {loadingMethod === 'tamara' ? (
-                                <Loader2 className="w-8 h-8 animate-spin" />
-                              ) : (
-                                <>
-                                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                                    <Wallet className="w-8 h-8" />
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="font-bold text-xl block">Tamara</span>
-                                    <span className="text-sm text-purple-100 block mt-1">اشتري الآن ادفع لاحقاً</span>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                            
-                            {/* Shine Effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                              <div className="absolute top-0 -left-full h-full w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover:animate-[slide-in-right_0.8s_ease-out]" />
-                            </div>
-                          </Button>
-                        </div>
-                      </div>
-                      
-                      {/* Security Badges */}
-                      <div className="flex flex-wrap items-center justify-center mt-8 gap-6">
-                        <div className="flex items-center space-x-2 space-x-reverse text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-full">
-                          <CheckCircle className="w-5 h-5" />
-                          <span className="text-sm font-semibold">محمي بتشفير SSL</span>
-                        </div>
-                        <div className="flex items-center space-x-2 space-x-reverse text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-full">
-                          <Star className="w-5 h-5" />
-                          <span className="text-sm font-semibold">معتمد من البنك المركزي</span>
-                        </div>
-                        <div className="flex items-center space-x-2 space-x-reverse text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-full">
-                          <Banknote className="w-5 h-5" />
-                          <span className="text-sm font-semibold">ضمان الاسترداد</span>
-                        </div>
-                      </div>
-                    </div>
+                  {/* Single Payment Button */}
+                  <div className="space-y-3">
+                    <Button
+                      onClick={() => {
+                        const serviceParams = new URLSearchParams({
+                          service: service.id.toString(),
+                          title: service.title,
+                          price: service.price,
+                          currency: service.currency,
+                          duration: service.duration,
+                          features: service.features.join('|')
+                        });
+                        window.location.href = `/enhanced-payment?${serviceParams}`;
+                      }}
+                      className={`w-full group relative overflow-hidden bg-gradient-to-r ${
+                        service.featured 
+                          ? 'from-pink-500 via-rose-500 to-red-500 hover:from-pink-600 hover:via-rose-600 hover:to-red-600' 
+                          : 'from-blue-500 via-purple-500 to-indigo-500 hover:from-blue-600 hover:via-purple-600 hover:to-indigo-600'
+                      } text-white border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105`}
+                      size="lg"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                      <CreditCard className="w-4 h-4 ml-2" />
+                      ادفع الآن بكل سهولة
+                      <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
