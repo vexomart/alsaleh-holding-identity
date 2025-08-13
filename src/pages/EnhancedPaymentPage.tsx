@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,7 +44,6 @@ const EnhancedPaymentPage = () => {
       transition: { duration: 0.4 }
     }
   };
-
 
   const paymentMethods = [
     {
@@ -299,28 +298,6 @@ const EnhancedPaymentPage = () => {
                 ))}
               </CardContent>
             </Card>
-
-            {/* Security Features */}
-            <motion.div variants={itemVariants} className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
-              <h3 className="font-bold text-green-800 mb-4 flex items-center gap-2">
-                <Shield className="w-5 h-5" />
-                ضمانات الأمان
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-green-700">تشفير SSL 256-bit</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-green-700">حماية بيانات PCI DSS</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-green-700">مراقبة 24/7</span>
-                </div>
-              </div>
-            </motion.div>
           </motion.div>
 
           {/* Payment Form */}
