@@ -776,20 +776,22 @@ const SoftwareProducts = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 rounded-3xl p-6 md:p-12 text-center text-white shadow-2xl">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 animate-pulse">
+        <div className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 rounded-2xl md:rounded-3xl p-4 md:p-8 lg:p-12 text-center text-white shadow-2xl mx-2 md:mx-0">
+          <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-3 md:mb-4 animate-pulse leading-tight">
             🚀 هل تحتاج حلاً مخصصاً؟
           </h2>
-          <p className="text-lg md:text-xl mb-6 md:mb-8 opacity-90 max-w-3xl mx-auto">
+          <p className="text-sm md:text-base lg:text-lg xl:text-xl mb-4 md:mb-6 lg:mb-8 opacity-90 max-w-3xl mx-auto leading-relaxed px-2">
             💡 نقوم بتطوير حلول برمجية مخصصة تماماً لاحتياجات عملك الفريدة
           </p>
           <Button 
             size="lg" 
             variant="secondary"
-            className="bg-white text-primary hover:bg-white/90 shadow-2xl text-base md:text-lg px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold transform hover:scale-105 transition-all duration-300 w-full sm:w-auto"
+            className="bg-white text-primary hover:bg-white/90 shadow-2xl text-sm md:text-base lg:text-lg px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4 rounded-xl md:rounded-2xl font-bold transform hover:scale-105 transition-all duration-300 w-full max-w-md mx-auto"
           >
-            📞 تواصل معنا للحصول على عرض مخصص
-            <ArrowRight className="w-4 md:w-5 h-4 md:h-5 mr-2 animate-pulse" />
+            <span className="flex items-center justify-center gap-1 md:gap-2">
+              📞 تواصل معنا للحصول على عرض مخصص
+              <ArrowRight className="w-3 md:w-4 lg:w-5 h-3 md:h-4 lg:h-5 animate-pulse flex-shrink-0" />
+            </span>
           </Button>
         </div>
       </div>
