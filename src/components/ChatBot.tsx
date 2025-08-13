@@ -231,26 +231,33 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
   };
 
   const formatMessage = (content: string) => {
+    // Process the content to handle markdown-like formatting
+    let processedContent = content;
+    
+    // Convert **text** to bold spans
+    processedContent = processedContent.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>');
+    
+    // Convert ✅ checkmarks to styled elements
+    processedContent = processedContent.replace(/✅/g, '<span class="inline-flex items-center justify-center w-5 h-5 bg-green-100 text-green-600 rounded-full text-xs mr-2">✓</span>');
+    
+    // Convert ### headers to styled headers
+    processedContent = processedContent.replace(/### (.*?)$/gm, '<h3 class="text-lg font-bold text-primary mt-4 mb-2 border-r-4 border-primary pr-3">$1</h3>');
+    
+    // Convert ** standalone headers to styled headers
+    processedContent = processedContent.replace(/^\*\*(.*?)\*\*$/gm, '<h4 class="font-bold text-secondary-foreground mt-3 mb-1 bg-secondary/20 px-2 py-1 rounded">$1</h4>');
+    
+    // Convert - bullet points to styled list items
+    processedContent = processedContent.replace(/^- (.*?)$/gm, '<div class="flex items-start gap-2 my-1"><span class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span><span>$1</span></div>');
+    
     // Convert links to clickable elements
     const linkRegex = /(\/[\w-]+(?:\/[\w-]+)*)/g;
-    const parts = content.split(linkRegex);
+    processedContent = processedContent.replace(linkRegex, '<a href="$1" class="text-primary hover:underline font-medium" target="_blank" rel="noopener noreferrer">$1</a>');
     
-    return parts.map((part, index) => {
-      if (part.match(linkRegex)) {
-        return (
-          <a
-            key={index}
-            href={part}
-            className="text-primary hover:underline font-medium"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {part}
-          </a>
-        );
-      }
-      return part;
-    });
+    // Convert line breaks to proper spacing
+    processedContent = processedContent.replace(/\n\n/g, '<br><br>');
+    processedContent = processedContent.replace(/\n/g, '<br>');
+    
+    return <div dangerouslySetInnerHTML={{ __html: processedContent }} />;
   };
 
   if (!isOpen) {
