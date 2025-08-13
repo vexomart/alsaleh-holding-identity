@@ -5,20 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, CreditCard, Smartphone, Banknote, Shield, CheckCircle, ArrowLeft, Sparkles } from 'lucide-react';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Loader2, CreditCard, CheckCircle, ArrowLeft, Sparkles, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const EnhancedPaymentPage = () => {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('paylink');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    amount: '1499'
+    amount: '1499' // سعر ثابت للخدمة
   });
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const { toast } = useToast();
@@ -45,32 +43,6 @@ const EnhancedPaymentPage = () => {
     }
   };
 
-  const paymentMethods = [
-    {
-      id: 'paylink',
-      name: 'Paylink',
-      description: 'فيزا • ماستركارد • مدى',
-      icon: CreditCard,
-      color: 'from-blue-500 to-indigo-600',
-      badge: 'الأسرع'
-    },
-    {
-      id: 'stc_pay',
-      name: 'STC Pay',
-      description: 'دفع فوري وآمن',
-      icon: Smartphone,
-      color: 'from-orange-500 to-red-500',
-      badge: 'سهل'
-    },
-    {
-      id: 'tamara',
-      name: 'Tamara',
-      description: 'اشتري الآن وادفع لاحقاً',
-      icon: Banknote,
-      color: 'from-green-500 to-emerald-600',
-      badge: 'مرونة'
-    }
-  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -82,11 +54,9 @@ const EnhancedPaymentPage = () => {
   const validateStep = (stepNumber: number) => {
     switch (stepNumber) {
       case 1:
-        return formData.amount && parseFloat(formData.amount) > 0;
+        return true; // السعر ثابت دائماً
       case 2:
         return formData.name && formData.email;
-      case 3:
-        return paymentMethod;
       default:
         return false;
     }
@@ -112,19 +82,10 @@ const EnhancedPaymentPage = () => {
   };
 
   const handlePayment = async () => {
-    if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
+    if (!validateStep(1) || !validateStep(2)) {
       toast({
         title: "خطأ في البيانات",
         description: "يرجى التأكد من جميع البيانات",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (paymentMethod === 'stc_pay' && !formData.phone) {
-      toast({
-        title: "خطأ في البيانات", 
-        description: "رقم الجوال مطلوب للدفع عبر STC Pay",
         variant: "destructive",
       });
       return;
@@ -143,23 +104,11 @@ const EnhancedPaymentPage = () => {
         description: 'دفع خدمة تسويقية احترافية'
       };
 
-      console.log("🚀 بدء عملية الدفع:", paymentMethod);
+      console.log("🚀 بدء عملية الدفع: paylink");
       console.log("📦 البيانات المرسلة:", payload);
 
-      let functionName = '';
-      switch (paymentMethod) {
-        case 'paylink':
-          functionName = 'paylink-payment';
-          break;
-        case 'stc_pay':
-          functionName = 'stc-pay';
-          break;
-        case 'tamara':
-          functionName = 'tamara-payment';
-          break;
-      }
-      
-      const { data, error } = await supabase.functions.invoke(functionName, {
+      // استخدام Paylink كطريقة الدفع الافتراضية
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
         body: payload
       });
 
@@ -171,9 +120,7 @@ const EnhancedPaymentPage = () => {
       }
 
       if (data?.success) {
-        if (paymentMethod === 'stc_pay') {
-          showSTCPayInstructions(data);
-        } else if (data?.payment_url || data?.url) {
+        if (data?.payment_url || data?.url) {
           toast({
             title: "✅ تم إنشاء رابط الدفع",
             description: "سيتم توجيهك لصفحة الدفع الآمنة",
@@ -199,13 +146,6 @@ const EnhancedPaymentPage = () => {
     }
   };
 
-  const showSTCPayInstructions = (data: any) => {
-    toast({
-      title: "تم إنشاء طلب الدفع",
-      description: "يرجى اتباع التعليمات لإتمام الدفع عبر STC Pay",
-      duration: 5000,
-    });
-  };
 
   const getStepIcon = (stepNumber: number) => {
     if (completedSteps.includes(stepNumber)) {
@@ -264,10 +204,9 @@ const EnhancedPaymentPage = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { number: 1, title: "تحديد المبلغ", desc: "حدد المبلغ المطلوب دفعه" },
+                  { number: 1, title: "تأكيد الخدمة", desc: "خدمة التسويق الرقمي - ١٤٩٩ ريال" },
                   { number: 2, title: "البيانات الشخصية", desc: "أدخل بياناتك الأساسية" },
-                  { number: 3, title: "طريقة الدفع", desc: "اختر الطريقة المناسبة" },
-                  { number: 4, title: "تأكيد الدفع", desc: "راجع وأكد العملية" }
+                  { number: 3, title: "تأكيد الدفع", desc: "راجع وأكد العملية" }
                 ].map((stepItem) => (
                   <div
                     key={stepItem.number}
@@ -306,26 +245,24 @@ const EnhancedPaymentPage = () => {
               <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 relative">
                 <div className="absolute top-2 right-2">
                   <Badge variant="secondary" className="bg-white/50">
-                    الخطوة {step} من 4
+                    الخطوة {step} من 3
                   </Badge>
                 </div>
                 <CardTitle className="text-2xl">
-                  {step === 1 && "تحديد المبلغ"}
+                  {step === 1 && "تأكيد الخدمة"}
                   {step === 2 && "البيانات الشخصية"}
-                  {step === 3 && "طريقة الدفع"}
-                  {step === 4 && "تأكيد الدفع"}
+                  {step === 3 && "تأكيد الدفع"}
                 </CardTitle>
                 <CardDescription>
-                  {step === 1 && "حدد المبلغ المطلوب دفعه"}
+                  {step === 1 && "خدمة التسويق الرقمي الاحترافية"}
                   {step === 2 && "أدخل بياناتك الشخصية"}
-                  {step === 3 && "اختر طريقة الدفع المناسبة"}
-                  {step === 4 && "راجع البيانات وأكد الدفع"}
+                  {step === 3 && "راجع البيانات وأكد الدفع"}
                 </CardDescription>
               </CardHeader>
               
               <CardContent className="p-8">
                 <AnimatePresence mode="wait">
-                  {/* Step 1: Amount */}
+                  {/* Step 1: Service Confirmation */}
                   {step === 1 && (
                     <motion.div
                       key="step1"
@@ -336,50 +273,49 @@ const EnhancedPaymentPage = () => {
                     >
                       <div className="text-center">
                         <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Banknote className="w-10 h-10 text-primary" />
+                          <CheckCircle className="w-10 h-10 text-primary" />
                         </div>
-                        <h3 className="text-xl font-bold mb-2">المبلغ المطلوب</h3>
-                        <p className="text-muted-foreground">حدد قيمة الخدمة التي تريد دفعها</p>
+                        <h3 className="text-xl font-bold mb-2">خدمة التسويق الرقمي</h3>
+                        <p className="text-muted-foreground">خدمة شاملة لبناء استراتيجية تسويقية متكاملة</p>
                       </div>
 
-                      <div className="space-y-4">
-                        <Label htmlFor="amount" className="text-lg font-semibold">المبلغ (ريال سعودي)</Label>
-                        <div className="relative">
-                          <Input
-                            id="amount"
-                            name="amount"
-                            type="number"
-                            value={formData.amount}
-                            onChange={handleInputChange}
-                            className="text-2xl font-bold text-center h-16 text-primary"
-                            min="1"
-                            step="0.01"
-                          />
-                          <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                            ريال
+                      <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl border border-primary/20">
+                        <div className="text-center mb-6">
+                          <div className="text-4xl font-bold text-primary mb-2">
+                            ١٤٩٩ ريال
                           </div>
+                          <p className="text-sm text-muted-foreground">سعر ثابت شامل ضريبة القيمة المضافة</p>
                         </div>
                         
-                        <div className="bg-primary/5 p-4 rounded-lg">
-                          <h4 className="font-semibold mb-2">خدمة التسويق الرقمي تشمل:</h4>
-                          <div className="grid grid-cols-2 gap-2 text-sm">
-                            <div className="flex items-center gap-2">
-                              <CheckCircle className="w-3 h-3 text-green-500" />
-                              <span>تحليل السوق</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <CheckCircle className="w-3 h-3 text-green-500" />
-                              <span>خطة تسويقية</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <CheckCircle className="w-3 h-3 text-green-500" />
-                              <span>استراتيجية المحتوى</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <CheckCircle className="w-3 h-3 text-green-500" />
-                              <span>دعم مستمر</span>
-                            </div>
+                        <div className="space-y-4">
+                          <h4 className="font-semibold mb-3 flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-primary" />
+                            ما تحصل عليه:
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {[
+                              "تحليل السوق والمنافسين",
+                              "تحديد الجمهور المستهدف", 
+                              "وضع الأهداف والاستراتيجيات",
+                              "خطة المحتوى والحملات",
+                              "جدولة زمنية للتنفيذ",
+                              "مؤشرات الأداء KPIs"
+                            ].map((feature, index) => (
+                              <div 
+                                key={index}
+                                className="flex items-center gap-3 p-3 rounded-lg bg-white/50"
+                              >
+                                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                <span className="text-sm">{feature}</span>
+                              </div>
+                            ))}
                           </div>
+                        </div>
+
+                        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                          <p className="text-sm text-blue-800 text-center">
+                            ⏱️ مدة التسليم: ٢-٣ أسابيع + ضمان المراجعة والتعديل
+                          </p>
                         </div>
                       </div>
                     </motion.div>
@@ -445,68 +381,10 @@ const EnhancedPaymentPage = () => {
                     </motion.div>
                   )}
 
-                  {/* Step 3: Payment Method */}
+                  {/* Step 3: Confirmation */}
                   {step === 3 && (
                     <motion.div
                       key="step3"
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -50 }}
-                      className="space-y-6"
-                    >
-                      <div className="text-center">
-                        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <CreditCard className="w-10 h-10 text-primary" />
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">طريقة الدفع</h3>
-                        <p className="text-muted-foreground">اختر الطريقة التي تناسبك</p>
-                      </div>
-
-                      <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-4">
-                        {paymentMethods.map((method) => (
-                          <motion.div
-                            key={method.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: paymentMethods.indexOf(method) * 0.1 }}
-                            className={`relative overflow-hidden rounded-xl border-2 transition-all duration-300 hover:shadow-lg ${
-                              paymentMethod === method.id 
-                                ? 'border-primary bg-primary/5 shadow-lg scale-105' 
-                                : 'border-gray-200 hover:border-primary/50'
-                            }`}
-                          >
-                            <div className={`absolute inset-0 bg-gradient-to-r ${method.color} opacity-5`} />
-                            <div className="relative p-6">
-                              <div className="flex items-center space-x-4 space-x-reverse">
-                                <RadioGroupItem value={method.id} id={method.id} className="scale-125" />
-                                <Label htmlFor={method.id} className="flex-1 cursor-pointer">
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-4">
-                                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${method.color} flex items-center justify-center`}>
-                                        <method.icon className="w-6 h-6 text-white" />
-                                      </div>
-                                      <div>
-                                        <div className="font-bold text-lg">{method.name}</div>
-                                        <div className="text-sm text-muted-foreground">{method.description}</div>
-                                      </div>
-                                    </div>
-                                    <Badge variant="secondary" className="bg-white/80">
-                                      {method.badge}
-                                    </Badge>
-                                  </div>
-                                </Label>
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </RadioGroup>
-                    </motion.div>
-                  )}
-
-                  {/* Step 4: Confirmation */}
-                  {step === 4 && (
-                    <motion.div
-                      key="step4"
                       initial={{ opacity: 0, x: 50 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -50 }}
@@ -535,7 +413,7 @@ const EnhancedPaymentPage = () => {
                         </div>
                         <div className="flex justify-between items-center py-2">
                           <span className="font-medium">طريقة الدفع:</span>
-                          <span>{paymentMethods.find(m => m.id === paymentMethod)?.name}</span>
+                          <span>Paylink (فيزا • ماستركارد • مدى)</span>
                         </div>
                       </div>
 
@@ -563,7 +441,7 @@ const EnhancedPaymentPage = () => {
 
                   <div className="flex-1" />
 
-                  {step < 4 ? (
+                  {step < 3 ? (
                     <Button
                       onClick={nextStep}
                       disabled={!validateStep(step)}
