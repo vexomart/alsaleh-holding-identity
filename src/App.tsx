@@ -40,6 +40,8 @@ import GenerativeAI from "./pages/ai-services/GenerativeAI";
 import ComputerVision from "./pages/ai-services/ComputerVision";
 import NaturalLanguageProcessing from "./pages/ai-services/NaturalLanguageProcessing";
 import PredictiveAnalytics from "./pages/ai-services/PredictiveAnalytics";
+import SmartAutomation from "./pages/ai-services/SmartAutomation";
+import SmartSecurity from "./pages/ai-services/SmartSecurity";
 import IoTSolutions from "./pages/IoTSolutions";
 import CloudSolutions from "./pages/CloudSolutions";
 import SecuritySolutions from "./pages/SecuritySolutions";
@@ -48,7 +50,7 @@ import ComputerVisionPage from "./pages/ComputerVision";
 import MachineLearning from "./pages/MachineLearning";
 import SmartAssistants from "./pages/SmartAssistants";
 import SmartAnalytics from "./pages/SmartAnalytics";
-import SmartAutomation from "./pages/SmartAutomation";
+
 import GlobalPresence from "./pages/GlobalPresence";
 import Careers from "./pages/Careers";
 import TechProjects from "./pages/TechProjects";
@@ -179,6 +181,8 @@ const App = () => {
                 <Route path="/ai-services/computer-vision" element={<ComputerVision />} />
                 <Route path="/ai-services/natural-language-processing" element={<NaturalLanguageProcessing />} />
                 <Route path="/ai-services/predictive-analytics" element={<PredictiveAnalytics />} />
+                <Route path="/ai-services/smart-automation" element={<SmartAutomation />} />
+                <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
                 <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
@@ -188,7 +192,7 @@ const App = () => {
                 <Route path="/machine-learning" element={<MachineLearning />} />
                 <Route path="/smart-assistants" element={<SmartAssistants />} />
                 <Route path="/smart-analytics" element={<SmartAnalytics />} />
-                <Route path="/smart-automation" element={<SmartAutomation />} />
+                
                 <Route path="/global-presence" element={<GlobalPresence />} />
                 <Route path="/tech-projects" element={<TechProjects />} />
                 <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
