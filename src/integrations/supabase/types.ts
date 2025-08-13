@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      automation_usage: {
+        Row: {
+          automation_type: string
+          created_at: string | null
+          id: string
+          subscription_id: string | null
+          usage_count: number | null
+          usage_date: string | null
+          user_id: string
+        }
+        Insert: {
+          automation_type: string
+          created_at?: string | null
+          id?: string
+          subscription_id?: string | null
+          usage_count?: number | null
+          usage_date?: string | null
+          user_id: string
+        }
+        Update: {
+          automation_type?: string
+          created_at?: string | null
+          id?: string
+          subscription_id?: string | null
+          usage_count?: number | null
+          usage_date?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_usage_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
           authorized_person: string | null
@@ -577,6 +615,116 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_plans: {
+        Row: {
+          billing_interval: string
+          created_at: string | null
+          currency: string
+          custom_integrations: boolean | null
+          description: string | null
+          description_ar: string | null
+          features: Json
+          id: string
+          is_active: boolean | null
+          max_automations: number | null
+          max_workflows: number | null
+          name: string
+          name_ar: string
+          price: number
+          priority_support: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          billing_interval?: string
+          created_at?: string | null
+          currency?: string
+          custom_integrations?: boolean | null
+          description?: string | null
+          description_ar?: string | null
+          features?: Json
+          id?: string
+          is_active?: boolean | null
+          max_automations?: number | null
+          max_workflows?: number | null
+          name: string
+          name_ar: string
+          price: number
+          priority_support?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          billing_interval?: string
+          created_at?: string | null
+          currency?: string
+          custom_integrations?: boolean | null
+          description?: string | null
+          description_ar?: string | null
+          features?: Json
+          id?: string
+          is_active?: boolean | null
+          max_automations?: number | null
+          max_workflows?: number | null
+          name?: string
+          name_ar?: string
+          price?: number
+          priority_support?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          cancelled_at: string | null
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          paylink_transaction_id: string | null
+          payment_status: string | null
+          plan_id: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean | null
+          cancelled_at?: string | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          paylink_transaction_id?: string | null
+          payment_status?: string | null
+          plan_id: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean | null
+          cancelled_at?: string | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          paylink_transaction_id?: string | null
+          payment_status?: string | null
+          plan_id?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ticket_messages: {
         Row: {
           attachments: Json | null
@@ -719,6 +867,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_automation_limit: {
+        Args: { p_user_id: string; p_automation_type: string }
+        Returns: boolean
+      }
       check_contract_rate_limit: {
         Args: { p_user_id: string }
         Returns: boolean
@@ -798,6 +950,10 @@ export type Database = {
       mask_phone: {
         Args: { phone_input: string; user_requesting?: string }
         Returns: string
+      }
+      record_automation_usage: {
+        Args: { p_user_id: string; p_automation_type: string; p_count?: number }
+        Returns: undefined
       }
     }
     Enums: {
