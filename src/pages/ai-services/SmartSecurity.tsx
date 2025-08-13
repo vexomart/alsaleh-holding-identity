@@ -124,6 +124,7 @@ const SmartSecurity = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
+                  onClick={() => window.location.href = '/contact'}
                 >
                   <Play className="w-6 h-6 mr-2" />
                   فعّل الحماية الآن
@@ -133,6 +134,7 @@ const SmartSecurity = () => {
                   variant="outline" 
                   size="lg" 
                   className="border-2 border-red-400 text-red-400 hover:bg-red-400 hover:text-white px-8 py-4 text-lg rounded-full"
+                  onClick={() => window.location.href = '/book-consultation'}
                 >
                   <Download className="w-6 h-6 mr-2" />
                   دليل الأمان
@@ -282,6 +284,7 @@ const SmartSecurity = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
+                  onClick={() => window.location.href = '/contact'}
                 >
                   <ArrowRight className="w-6 h-6 mr-2" />
                   فعّل النظام الأمني
@@ -291,6 +294,7 @@ const SmartSecurity = () => {
                   variant="outline" 
                   size="lg" 
                   className="border-2 border-pink-400 text-pink-400 hover:bg-pink-400 hover:text-white px-8 py-4 text-lg rounded-full"
+                  onClick={() => window.location.href = '/book-consultation'}
                 >
                   <Star className="w-6 h-6 mr-2" />
                   تقييم أمني مجاني

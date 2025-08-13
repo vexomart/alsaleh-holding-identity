@@ -120,6 +120,7 @@ const GenerativeAI = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
+                  onClick={() => window.location.href = '/contact'}
                 >
                   <Play className="w-6 h-6 mr-2" />
                   جرب الآن مجاناً
@@ -129,6 +130,7 @@ const GenerativeAI = () => {
                   variant="outline" 
                   size="lg" 
                   className="border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-8 py-4 text-lg rounded-full"
+                  onClick={() => window.location.href = '/book-consultation'}
                 >
                   <Download className="w-6 h-6 mr-2" />
                   تحميل الدليل
@@ -278,6 +280,7 @@ const GenerativeAI = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
+                  onClick={() => window.location.href = '/contact'}
                 >
                   <ArrowRight className="w-6 h-6 mr-2" />
                   ابدأ التجربة المجانية
@@ -287,6 +290,7 @@ const GenerativeAI = () => {
                   variant="outline" 
                   size="lg" 
                   className="border-2 border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white px-8 py-4 text-lg rounded-full"
+                  onClick={() => window.location.href = '/book-consultation'}
                 >
                   <Star className="w-6 h-6 mr-2" />
                   احجز عرض توضيحي

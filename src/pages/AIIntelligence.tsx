@@ -245,6 +245,7 @@ const AIIntelligence = () => {
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300"
+                onClick={() => window.location.href = '/contact'}
               >
                 <Sparkles className="w-6 h-6 mr-2" />
                 اكتشف الحلول الذكية
@@ -254,6 +255,7 @@ const AIIntelligence = () => {
                 variant="outline" 
                 size="lg" 
                 className="border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-8 py-4 text-lg rounded-full transition-all duration-300"
+                onClick={() => window.location.href = '/book-consultation'}
               >
                 <MessageSquare className="w-6 h-6 mr-2" />
                 تحدث مع الذكاء الاصطناعي
@@ -470,6 +472,7 @@ const AIIntelligence = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
+                  onClick={() => window.location.href = '/book-consultation'}
                 >
                   <Star className="w-6 h-6 mr-2" />
                   احجز استشارة مجانية
@@ -479,6 +482,7 @@ const AIIntelligence = () => {
                   variant="outline" 
                   size="lg" 
                   className="border-2 border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white px-8 py-4 text-lg rounded-full"
+                  onClick={() => window.location.href = '/contact'}
                 >
                   <FileText className="w-6 h-6 mr-2" />
                   تحميل النشرة التفصيلية

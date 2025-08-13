@@ -120,6 +120,7 @@ const SmartAutomation = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
+                  onClick={() => window.location.href = '/contact'}
                 >
                   <Play className="w-6 h-6 mr-2" />
                   ابدأ الأتمتة الآن
@@ -129,6 +130,7 @@ const SmartAutomation = () => {
                   variant="outline" 
                   size="lg" 
                   className="border-2 border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white px-8 py-4 text-lg rounded-full"
+                  onClick={() => window.location.href = '/book-consultation'}
                 >
                   <Download className="w-6 h-6 mr-2" />
                   دليل الأتمتة
@@ -278,6 +280,7 @@ const SmartAutomation = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
+                  onClick={() => window.location.href = '/contact'}
                 >
                   <ArrowRight className="w-6 h-6 mr-2" />
                   ابدأ مشروع الأتمتة
@@ -287,6 +290,7 @@ const SmartAutomation = () => {
                   variant="outline" 
                   size="lg" 
                   className="border-2 border-pink-400 text-pink-400 hover:bg-pink-400 hover:text-white px-8 py-4 text-lg rounded-full"
+                  onClick={() => window.location.href = '/book-consultation'}
                 >
                   <Star className="w-6 h-6 mr-2" />
                   استشارة مجانية
