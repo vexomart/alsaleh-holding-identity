@@ -1,0 +1,291 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
+
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
+interface ChatBotProps {
+  className?: string;
+}
+
+const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: '1',
+      role: 'assistant',
+      content: 'مرحباً بك في شركة آل الشهري القابضة! 👋\n\nأنا هنا لمساعدتك في:\n• معرفة خدماتنا المتنوعة\n• توجيهك للقسم المناسب\n• الإجابة على استفساراتك\n• حجز استشارة مجانية\n\nكيف يمكنني مساعدتك اليوم؟',
+      timestamp: new Date()
+    }
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    if (isOpen && !isMinimized && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen, isMinimized]);
+
+  const sendMessage = async () => {
+    if (!inputMessage.trim() || isLoading) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: inputMessage,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputMessage('');
+    setIsLoading(true);
+
+    try {
+      // Prepare conversation history
+      const conversationHistory = messages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+
+      const { data, error } = await supabase.functions.invoke('chatbot', {
+        body: {
+          message: inputMessage,
+          conversationHistory
+        }
+      });
+
+      if (error) throw error;
+
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: data.response || 'عذراً، لم أتمكن من فهم سؤالك. يرجى إعادة صياغته أو التواصل معنا مباشرة.',
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+
+    } catch (error: any) {
+      console.error('Chat error:', error);
+      
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'أعتذر، حدث خطأ تقني. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة عبر صفحة الاتصال.',
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
+      
+      toast({
+        title: "خطأ في الاتصال",
+        description: "يرجى المحاولة مرة أخرى",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const formatMessage = (content: string) => {
+    // Convert links to clickable elements
+    const linkRegex = /(\/[\w-]+(?:\/[\w-]+)*)/g;
+    const parts = content.split(linkRegex);
+    
+    return parts.map((part, index) => {
+      if (part.match(linkRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            className="text-primary hover:underline font-medium"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
+  if (!isOpen) {
+    return (
+      <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="h-14 w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+          size="icon"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+      <Card className={`w-96 transition-all duration-300 shadow-2xl border-primary/20 ${
+        isMinimized ? 'h-16' : 'h-[600px]'
+      }`}>
+        <CardHeader className="flex flex-row items-center justify-between p-4 bg-gradient-to-r from-primary to-primary/80 text-white rounded-t-lg">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Bot className="h-6 w-6" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            </div>
+            <div>
+              <h3 className="font-semibold text-sm">مساعد آل الشهري</h3>
+              <p className="text-xs opacity-90">متاح الآن للمساعدة</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMinimized(!isMinimized)}
+              className="h-8 w-8 text-white hover:bg-white/20"
+            >
+              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(false)}
+              className="h-8 w-8 text-white hover:bg-white/20"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+
+        {!isMinimized && (
+          <CardContent className="p-0 flex flex-col h-[536px]">
+            <ScrollArea className="flex-1 p-4">
+              <div className="space-y-4">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex items-start gap-3 ${
+                      message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
+                    }`}
+                  >
+                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                      message.role === 'user' 
+                        ? 'bg-secondary' 
+                        : 'bg-primary text-white'
+                    }`}>
+                      {message.role === 'user' ? (
+                        <User className="h-4 w-4" />
+                      ) : (
+                        <Bot className="h-4 w-4" />
+                      )}
+                    </div>
+                    
+                    <div className={`flex-1 max-w-[280px] ${
+                      message.role === 'user' ? 'text-right' : 'text-right'
+                    }`}>
+                      <div className={`p-3 rounded-lg whitespace-pre-wrap text-sm leading-relaxed ${
+                        message.role === 'user'
+                          ? 'bg-secondary text-secondary-foreground'
+                          : 'bg-muted text-muted-foreground'
+                      }`}>
+                        {message.role === 'assistant' ? formatMessage(message.content) : message.content}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {message.timestamp.toLocaleTimeString('ar-SA', { 
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                
+                {isLoading && (
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                      <Bot className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 max-w-[280px]">
+                      <div className="p-3 rounded-lg bg-muted">
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-primary/60 rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-primary/60 rounded-full animate-pulse delay-100"></div>
+                          <div className="w-2 h-2 bg-primary/60 rounded-full animate-pulse delay-200"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                <div ref={messagesEndRef} />
+              </div>
+            </ScrollArea>
+
+            <div className="p-4 border-t bg-background">
+              <div className="flex gap-2">
+                <Input
+                  ref={inputRef}
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="اكتب رسالتك هنا..."
+                  disabled={isLoading}
+                  className="flex-1 text-right"
+                  dir="rtl"
+                />
+                <Button
+                  onClick={sendMessage}
+                  disabled={isLoading || !inputMessage.trim()}
+                  size="icon"
+                  className="flex-shrink-0"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                مدعوم بالذكاء الاصطناعي • شركة آل الشهري القابضة
+              </p>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+    </div>
+  );
+};
+
+export default ChatBot;

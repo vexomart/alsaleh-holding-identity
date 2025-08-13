@@ -9,6 +9,7 @@ import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
 
 import Footer from "@/components/Footer";
+import ChatBot from "@/components/ChatBot";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
@@ -182,6 +183,9 @@ const Index = () => {
           <Footer />
         </div>
       </footer>
+
+      {/* ChatBot Component */}
+      <ChatBot />
     </div>
   );
 };
