@@ -388,7 +388,7 @@ const SmartAutomation = () => {
                 className="bg-white text-indigo-600 hover:bg-slate-100 border-0"
                 asChild
               >
-                <Link to="/contact">
+                <Link to="/automation-system">
                   <Workflow className="w-5 h-5 mr-2" />
                   ابدأ رحلة الأتمتة
                 </Link>

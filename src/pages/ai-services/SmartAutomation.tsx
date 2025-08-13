@@ -120,7 +120,7 @@ const SmartAutomation = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
-                  onClick={() => window.location.href = '/contact'}
+                  onClick={() => window.location.href = '/automation-system'}
                 >
                   <Play className="w-6 h-6 mr-2" />
                   ابدأ الأتمتة الآن
@@ -280,7 +280,7 @@ const SmartAutomation = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-8 py-4 text-lg rounded-full shadow-2xl"
-                  onClick={() => window.location.href = '/contact'}
+                  onClick={() => window.location.href = '/automation-system'}
                 >
                   <ArrowRight className="w-6 h-6 mr-2" />
                   ابدأ مشروع الأتمتة

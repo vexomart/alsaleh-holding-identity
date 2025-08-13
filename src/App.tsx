@@ -81,6 +81,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import StartWithUs from "./pages/StartWithUs";
 import BookConsultation from "./pages/BookConsultation";
+import AutomationSystem from "./pages/AutomationSystem";
 import HostingServices from "./pages/HostingServices";
 import CompanyUpdates from "./pages/CompanyUpdates";
 import SoftwareProducts from "./pages/SoftwareProducts";
@@ -185,6 +186,7 @@ const App = () => {
                 <Route path="/ai-services/smart-automation" element={<SmartAutomation />} />
                  <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
                  <Route path="/free-trial" element={<FreeTrial />} />
+                 <Route path="/automation-system" element={<AutomationSystem />} />
                 <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
