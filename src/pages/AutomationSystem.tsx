@@ -31,7 +31,8 @@ import {
   Save,
   CreditCard,
   Crown,
-  CheckCircle
+  CheckCircle,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,6 +44,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from "sonner";
 import SEO from '@/components/SEO';
 import Navigation from '@/components/Navigation';
@@ -63,6 +65,13 @@ const AutomationSystem = () => {
   const [processingPayment, setProcessingPayment] = useState(null);
   const [user, setUser] = useState(null);
   const [currentSubscription, setCurrentSubscription] = useState(null);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [customerData, setCustomerData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
   const { toast } = useToast();
   const [automatedTasks, setAutomatedTasks] = useState([
     { id: 1, name: "معالجة البيانات", status: "active", lastRun: "منذ 5 دقائق", efficiency: 95 },
@@ -133,16 +142,7 @@ const AutomationSystem = () => {
   };
 
   const handleSubscribe = async (plan) => {
-    if (!user) {
-      toast({
-        title: "تسجيل الدخول مطلوب",
-        description: "يرجى تسجيل الدخول أولاً للاشتراك",
-        variant: "destructive",
-      });
-      window.location.href = '/auth';
-      return;
-    }
-
+    // Check if user already has active subscription
     if (currentSubscription) {
       toast({
         title: "لديك اشتراك نشط",
@@ -152,14 +152,37 @@ const AutomationSystem = () => {
       return;
     }
 
-    setProcessingPayment(plan.id);
+    // Show payment form for guest or authenticated users
+    setSelectedPlan(plan);
+    setShowPaymentForm(true);
+  };
+
+  const handlePaymentSubmit = async () => {
+    if (!selectedPlan) return;
+
+    // Validate customer data
+    if (!customerData.email || !customerData.name) {
+      toast({
+        title: "بيانات مطلوبة",
+        description: "يرجى ملء الاسم والبريد الإلكتروني",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setProcessingPayment(selectedPlan.id);
 
     try {
+      const requestBody = {
+        plan_id: selectedPlan.id,
+        return_url: `${window.location.origin}/payment-success`,
+        customer_name: customerData.name,
+        customer_email: customerData.email,
+        customer_phone: customerData.phone
+      };
+
       const { data, error } = await supabase.functions.invoke('paylink-subscription', {
-        body: {
-          plan_id: plan.id,
-          return_url: `${window.location.origin}/payment-success`
-        }
+        body: requestBody
       });
 
       if (error) throw error;
@@ -171,6 +194,10 @@ const AutomationSystem = () => {
           title: "تم إنشاء رابط الدفع",
           description: "سيتم فتح صفحة الدفع في نافذة جديدة",
         });
+        
+        setShowPaymentForm(false);
+        setSelectedPlan(null);
+        setCustomerData({ name: '', email: '', phone: '' });
       } else {
         throw new Error(data.error || 'فشل في إنشاء رابط الدفع');
       }
@@ -743,7 +770,7 @@ const AutomationSystem = () => {
                               <div className="pt-4">
                                 <Button
                                   onClick={() => handleSubscribe(plan)}
-                                  disabled={processingPayment === plan.id || isCurrentPlan || !user}
+                                  disabled={processingPayment === plan.id || isCurrentPlan}
                                   className={`w-full ${
                                     isProfessional 
                                       ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700' 
@@ -758,8 +785,6 @@ const AutomationSystem = () => {
                                     </div>
                                   ) : isCurrentPlan ? (
                                     'خطتك الحالية'
-                                  ) : !user ? (
-                                    'تسجيل الدخول مطلوب'
                                   ) : (
                                     <div className="flex items-center gap-2">
                                       <CreditCard className="w-5 h-5" />
@@ -869,6 +894,92 @@ const AutomationSystem = () => {
           </div>
         </section>
       </div>
+
+      {/* Payment Form Dialog */}
+      <Dialog open={showPaymentForm} onOpenChange={setShowPaymentForm}>
+        <DialogContent className="sm:max-w-[425px]" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="text-right">بيانات الاشتراك</DialogTitle>
+            <DialogDescription className="text-right">
+              يرجى ملء البيانات التالية لإتمام عملية الاشتراك في خطة {selectedPlan?.name_ar}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label htmlFor="customer-name" className="text-right block mb-2">الاسم الكامل *</Label>
+              <Input
+                id="customer-name"
+                placeholder="أدخل اسمك الكامل"
+                value={customerData.name}
+                onChange={(e) => setCustomerData(prev => ({ ...prev, name: e.target.value }))}
+                className="text-right"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="customer-email" className="text-right block mb-2">البريد الإلكتروني *</Label>
+              <Input
+                id="customer-email"
+                type="email"
+                placeholder="example@domain.com"
+                value={customerData.email}
+                onChange={(e) => setCustomerData(prev => ({ ...prev, email: e.target.value }))}
+                className="text-left"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="customer-phone" className="text-right block mb-2">رقم الهاتف</Label>
+              <Input
+                id="customer-phone"
+                placeholder="966XXXXXXXXX"
+                value={customerData.phone}
+                onChange={(e) => setCustomerData(prev => ({ ...prev, phone: e.target.value }))}
+                className="text-left"
+              />
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg">
+              <h4 className="font-semibold text-slate-900 mb-2 text-right">ملخص الاشتراك</h4>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600">{selectedPlan?.name_ar}</span>
+                <span className="font-bold text-slate-900">
+                  {selectedPlan?.price?.toLocaleString('ar-SA')} {selectedPlan?.currency}/شهر
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex gap-3 mt-6">
+            <Button
+              variant="outline"
+              onClick={() => setShowPaymentForm(false)}
+              className="flex-1"
+            >
+              <X className="w-4 h-4 ml-2" />
+              إلغاء
+            </Button>
+            <Button
+              onClick={handlePaymentSubmit}
+              disabled={processingPayment}
+              className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+            >
+              {processingPayment ? (
+                <div className="flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                  جاري المعالجة...
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <CreditCard className="w-4 h-4" />
+                  متابعة الدفع
+                </div>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </>

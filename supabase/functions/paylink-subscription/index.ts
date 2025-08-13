@@ -9,6 +9,9 @@ const corsHeaders = {
 interface PaymentRequest {
   plan_id: string;
   return_url?: string;
+  customer_name?: string;
+  customer_email?: string;
+  customer_phone?: string;
 }
 
 const logStep = (step: string, details?: any) => {
@@ -41,25 +44,28 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     );
 
-    // Authenticate user
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      throw new Error("No authorization header provided");
-    }
-
-    const token = authHeader.replace("Bearer ", "");
-    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError) throw new Error(`Authentication error: ${userError.message}`);
-    const user = userData.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
-    logStep("User authenticated", { userId: user.id, email: user.email });
-
-    // Parse request body
-    const { plan_id, return_url }: PaymentRequest = await req.json();
+    // Parse request body first
+    const { plan_id, return_url, customer_name, customer_email, customer_phone }: PaymentRequest = await req.json();
     if (!plan_id) {
       throw new Error("Plan ID is required");
     }
-    logStep("Request parsed", { plan_id, return_url });
+    
+    if (!customer_email) {
+      throw new Error("Customer email is required");
+    }
+    logStep("Request parsed", { plan_id, return_url, customer_email, customer_name });
+
+    // Authenticate user (optional for guest checkout)
+    let user = null;
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader) {
+      const token = authHeader.replace("Bearer ", "");
+      const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+      if (userData?.user?.email) {
+        user = userData.user;
+        logStep("User authenticated", { userId: user.id, email: user.email });
+      }
+    }
 
     // Get subscription plan details
     const { data: plan, error: planError } = await supabaseClient
@@ -74,38 +80,43 @@ serve(async (req) => {
     }
     logStep("Plan found", { planName: plan.name_ar, price: plan.price });
 
-    // Check if user already has an active subscription
-    const { data: existingSubscription, error: subError } = await supabaseClient
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .gt('current_period_end', new Date().toISOString())
-      .maybeSingle();
+    // Check if user already has an active subscription (only for authenticated users)
+    if (user) {
+      const { data: existingSubscription, error: subError } = await supabaseClient
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .gt('current_period_end', new Date().toISOString())
+        .maybeSingle();
 
-    if (subError) {
-      logStep("Error checking existing subscription", { error: subError.message });
+      if (subError) {
+        logStep("Error checking existing subscription", { error: subError.message });
+      }
+
+      if (existingSubscription) {
+        logStep("User already has active subscription");
+        return new Response(JSON.stringify({ 
+          error: "لديك اشتراك نشط بالفعل",
+          existing_subscription: existingSubscription 
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        });
+      }
     }
 
-    if (existingSubscription) {
-      logStep("User already has active subscription");
-      return new Response(JSON.stringify({ 
-        error: "لديك اشتراك نشط بالفعل",
-        existing_subscription: existingSubscription 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      });
+    // Get client name (from request or user profile)
+    let clientName = customer_name || 'عميل';
+    if (user) {
+      const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('full_name')
+        .eq('user_id', user.id)
+        .single();
+      
+      clientName = profile?.full_name || customer_name || user.email || 'عميل';
     }
-
-    // Get user profile for client name
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('full_name')
-      .eq('user_id', user.id)
-      .single();
-
-    const clientName = profile?.full_name || user.email;
 
     // Create subscription record with pending status
     const subscriptionEndDate = new Date();
@@ -114,7 +125,7 @@ serve(async (req) => {
     const { data: subscription, error: createSubError } = await supabaseClient
       .from('subscriptions')
       .insert({
-        user_id: user.id,
+        user_id: user?.id || null,
         plan_id: plan.id,
         status: 'pending',
         current_period_start: new Date().toISOString(),
@@ -138,8 +149,8 @@ serve(async (req) => {
       amount: plan.price,
       callBackUrl: successUrl,
       cancelUrl: cancelUrl,
-      clientEmail: user.email,
-      clientMobile: "966500000000", // Default mobile, should be updated with real user mobile
+      clientEmail: customer_email,
+      clientMobile: customer_phone || "966500000000",
       clientName: clientName,
       note: `اشتراك ${plan.name_ar} - ${plan.description_ar}`,
       orderNumber: subscription.id,
