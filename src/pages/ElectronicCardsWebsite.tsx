@@ -38,7 +38,6 @@ import {
   HelpCircle,
   Eye,
   Users,
-  Filter,
   ArrowUp,
   Repeat,
   ShieldCheck,
@@ -64,12 +63,12 @@ const ElectronicCardsWebsite = () => {
   }, []);
 
   const handlePurchase = (card: any) => {
-    const whatsappMessage = `🛍️ مرحباً! أريد شراء البطاقة التالية: 📝 اسم البطاقة: ${card.name} 💰 السعر: ${card.price} 🏷️ التصنيف: ${card.category} شكراً لكم!`;
+    const whatsappMessage = `مرحباً! أريد شراء البطاقة: ${card.name} بسعر ${card.price}`;
     const whatsappUrl = `https://wa.me/966500000000?text=${encodeURIComponent(whatsappMessage)}`;
     
     toast({
       title: "🎉 تمت إضافة البطاقة بنجاح!",
-      description: "سيتم تحويلك للواتساب لإتمام عملية الشراء الآمنة",
+      description: "سيتم تحويلك للواتساب لإتمام الشراء",
     });
     
     setTimeout(() => {
@@ -378,10 +377,14 @@ const ElectronicCardsWebsite = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Developer Header */}
       <div className="bg-gradient-to-r from-slate-900 via-gray-900 to-black text-white py-3 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Ccircle cx=\"3\" cy=\"3\" r=\"1\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] animate-pulse"></div>
+        <div className="absolute inset-0 opacity-20">
+          <div className="w-2 h-2 bg-white rounded-full absolute top-2 left-4 animate-pulse"></div>
+          <div className="w-1 h-1 bg-blue-400 rounded-full absolute top-6 left-8 animate-bounce"></div>
+          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full absolute top-4 right-12 animate-pulse"></div>
+        </div>
         <div className="container mx-auto text-center relative">
           <p className="text-xs md:text-sm font-medium flex items-center justify-center gap-2 animate-fade-in">
             <Building className="w-3 md:w-4 h-3 md:h-4 animate-pulse text-blue-400" />
@@ -432,7 +435,7 @@ const ElectronicCardsWebsite = () => {
             <div className="hidden md:flex items-center gap-4">
               <Button 
                 onClick={() => {
-                  const whatsappUrl = "https://wa.me/966500000000?text=🛍️ مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
+                  const whatsappUrl = "https://wa.me/966500000000?text=مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
                   window.open(whatsappUrl, '_blank');
                 }}
                 className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group"
@@ -476,7 +479,7 @@ const ElectronicCardsWebsite = () => {
                 <div className="pt-4 px-4">
                   <Button 
                     onClick={() => {
-                      const whatsappUrl = "https://wa.me/966500000000?text=🛍️ مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
+                      const whatsappUrl = "https://wa.me/966500000000?text=مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
                       window.open(whatsappUrl, '_blank');
                       setIsMenuOpen(false);
                     }}
@@ -497,7 +500,10 @@ const ElectronicCardsWebsite = () => {
         {/* Animated Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-indigo-600/10 animate-pulse"></div>
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23000000\" fill-opacity=\"0.02\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]"></div>
+          <div className="absolute inset-0 opacity-10">
+            <div className="w-64 h-64 bg-blue-400 rounded-full blur-3xl absolute top-10 left-10 animate-bounce"></div>
+            <div className="w-96 h-96 bg-purple-400 rounded-full blur-3xl absolute bottom-10 right-10 animate-pulse"></div>
+          </div>
         </div>
         
         <div className="relative container mx-auto px-4 lg:px-6 text-center">
@@ -511,7 +517,6 @@ const ElectronicCardsWebsite = () => {
             🛍️ متجر البطاقات{" "}
             <span className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent animate-pulse relative">
               الإلكترونية الحصري
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
             </span>
           </h1>
           
@@ -541,7 +546,7 @@ const ElectronicCardsWebsite = () => {
               size="lg" 
               variant="outline" 
               onClick={() => {
-                const whatsappUrl = "https://wa.me/966500000000?text=🛍️ مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
+                const whatsappUrl = "https://wa.me/966500000000?text=مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
                 window.open(whatsappUrl, '_blank');
               }}
               className="border-2 border-primary/30 hover:bg-gradient-to-r hover:from-primary/5 hover:to-blue-500/5 text-lg px-8 py-4 rounded-xl font-bold transform hover:scale-105 transition-all duration-300 backdrop-blur-sm group relative overflow-hidden"
@@ -622,33 +627,31 @@ const ElectronicCardsWebsite = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {stats.map((stat, index) => {
-              return (
-                <Card 
-                  key={index}
-                  className="hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 backdrop-blur-sm animate-fade-in bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-slate-900/90 dark:to-slate-800/90 group cursor-pointer relative overflow-hidden"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                  <CardContent className="p-4 md:p-6 relative z-10">
-                    <div className="flex flex-col items-center text-center">
-                      <div className={`w-12 md:w-14 h-12 md:h-14 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center mb-3 shadow-2xl group-hover:scale-110 transition-transform duration-300`}>
-                        <span className="text-2xl md:text-3xl">{stat.emoji}</span>
-                      </div>
-                      <p className="text-xs md:text-sm font-medium mb-1 text-slate-600 dark:text-slate-400">
-                        {stat.title}
-                      </p>
-                      <p className="text-xl md:text-3xl font-bold text-primary group-hover:scale-110 transition-transform">
-                        {stat.value}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        {stat.description}
-                      </p>
+            {stats.map((stat, index) => (
+              <Card 
+                key={index}
+                className="hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 backdrop-blur-sm animate-fade-in bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-slate-900/90 dark:to-slate-800/90 group cursor-pointer relative overflow-hidden"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                <CardContent className="p-4 md:p-6 relative z-10">
+                  <div className="flex flex-col items-center text-center">
+                    <div className={`w-12 md:w-14 h-12 md:h-14 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center mb-3 shadow-2xl group-hover:scale-110 transition-transform duration-300`}>
+                      <span className="text-2xl md:text-3xl">{stat.emoji}</span>
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    <p className="text-xs md:text-sm font-medium mb-1 text-slate-600 dark:text-slate-400">
+                      {stat.title}
+                    </p>
+                    <p className="text-xl md:text-3xl font-bold text-primary group-hover:scale-110 transition-transform">
+                      {stat.value}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {stat.description}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -850,10 +853,7 @@ const ElectronicCardsWebsite = () => {
                         variant="outline" 
                         size="sm"
                         onClick={() => {
-                          const shareText = `🎫 اكتشف هذه البطاقة الرائعة: ${card.name} بسعر ${card.price} فقط! 
-
-🛍️ متجر البطاقات الإلكترونية 
-${window.location.href}`;
+                          const shareText = `🎫 اكتشف هذه البطاقة الرائعة: ${card.name} بسعر ${card.price} فقط! متجر البطاقات الإلكترونية ${window.location.href}`;
                           if (navigator.share) {
                             navigator.share({ text: shareText });
                           } else {
@@ -951,7 +951,7 @@ ${window.location.href}`;
                   <p className="text-slate-600 dark:text-slate-400 mb-4">تواصل معنا عبر الواتساب</p>
                   <Button 
                     onClick={() => {
-                      const whatsappUrl = "https://wa.me/966500000000?text=🛍️ مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
+                      const whatsappUrl = "https://wa.me/966500000000?text=مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
                       window.open(whatsappUrl, '_blank');
                     }}
                     className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white w-full"
