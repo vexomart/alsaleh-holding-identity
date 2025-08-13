@@ -114,16 +114,30 @@ const Index = () => {
                   </Card>
                 </div>
                 
-                <Link to="/current-offers">
-                  <Button 
-                    size="lg" 
-                    className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
-                  >
-                    <Gift className="w-6 h-6 ml-2" />
-                    شاهد جميع العروض الحالية
-                    <ArrowRight className="w-6 h-6 mr-2" />
-                  </Button>
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to="/current-offers">
+                    <Button 
+                      size="lg" 
+                      className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
+                    >
+                      <Gift className="w-6 h-6 ml-2" />
+                      شاهد جميع العروض الحالية
+                      <ArrowRight className="w-6 h-6 mr-2" />
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/pricing">
+                    <Button 
+                      size="lg" 
+                      variant="outline"
+                      className="border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold px-12 py-6 text-xl transition-all duration-300 hover-scale"
+                    >
+                      <Star className="w-6 h-6 ml-2" />
+                      الباقات والأسعار
+                      <ArrowRight className="w-6 h-6 mr-2" />
+                    </Button>
+                  </Link>
+                </div>
                 
                 <div className="mt-6 text-muted-foreground">
                   <div className="inline-flex items-center bg-background/50 backdrop-blur-sm px-6 py-3 rounded-full border border-border/50">
