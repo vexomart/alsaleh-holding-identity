@@ -262,82 +262,82 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
 
   if (!isOpen) {
     return (
-      <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+      <div className={`fixed bottom-4 right-4 z-50 ${className}`}>
         <Button
           onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+          className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
           size="icon"
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
         </Button>
       </div>
     );
   }
 
   return (
-    <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
-      <Card className={`w-96 transition-all duration-300 shadow-2xl border-primary/20 ${
-        isMinimized ? 'h-16' : 'h-[600px]'
+    <div className={`fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 ${className}`}>
+      <Card className={`w-full sm:w-96 transition-all duration-300 shadow-2xl border-primary/20 ${
+        isMinimized ? 'h-16' : 'h-[70vh] sm:h-[600px] max-h-[600px]'
       }`}>
-        <CardHeader className="flex flex-row items-center justify-between p-4 bg-gradient-to-r from-primary to-primary/80 text-white rounded-t-lg">
-          <div className="flex items-center gap-3">
+        <CardHeader className="flex flex-row items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-primary to-primary/80 text-white rounded-t-lg">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative">
-              <Bot className="h-6 w-6" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <Bot className="h-5 w-5 sm:h-6 sm:w-6" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h3 className="font-semibold text-sm">خدمة العملاء</h3>
+              <h3 className="font-semibold text-xs sm:text-sm">خدمة العملاء</h3>
               <p className="text-xs opacity-90">متاح الآن للمساعدة</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsMinimized(!isMinimized)}
-              className="h-8 w-8 text-white hover:bg-white/20"
+              className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20"
             >
-              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+              {isMinimized ? <Maximize2 className="h-3 w-3 sm:h-4 sm:w-4" /> : <Minimize2 className="h-3 w-3 sm:h-4 sm:w-4" />}
             </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(false)}
-              className="h-8 w-8 text-white hover:bg-white/20"
+              className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </CardHeader>
 
         {!isMinimized && (
-          <CardContent className="p-0 flex flex-col h-[536px]">
-            <ScrollArea className="flex-1 p-4">
-              <div className="space-y-4">
+          <CardContent className="p-0 flex flex-col h-[calc(70vh-4rem)] sm:h-[536px]">
+            <ScrollArea className="flex-1 p-3 sm:p-4">
+              <div className="space-y-3 sm:space-y-4">
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex items-start gap-3 ${
+                    className={`flex items-start gap-2 sm:gap-3 ${
                       message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
                     }`}
                   >
-                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    <div className={`flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
                       message.role === 'user' 
                         ? 'bg-secondary' 
                         : 'bg-primary text-white'
                     }`}>
                       {message.role === 'user' ? (
-                        <User className="h-4 w-4" />
+                        <User className="h-3 w-3 sm:h-4 sm:w-4" />
                       ) : (
-                        <Bot className="h-4 w-4" />
+                        <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
                       )}
                     </div>
                     
-                    <div className={`flex-1 max-w-[280px] ${
+                    <div className={`flex-1 max-w-[calc(100%-3rem)] sm:max-w-[280px] ${
                       message.role === 'user' ? 'text-right' : 'text-right'
                     }`}>
-                      <div className={`p-3 rounded-lg whitespace-pre-wrap text-sm leading-relaxed ${
+                      <div className={`p-2 sm:p-3 rounded-lg text-xs sm:text-sm leading-relaxed ${
                         message.role === 'user'
                           ? 'bg-secondary text-secondary-foreground'
                           : 'bg-muted text-muted-foreground'
@@ -347,14 +347,14 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                       
                       {/* Display buttons if they exist */}
                       {message.buttons && message.buttons.length > 0 && (
-                        <div className="mt-3 flex flex-col gap-2">
+                        <div className="mt-2 sm:mt-3 flex flex-col gap-1 sm:gap-2">
                           {message.buttons.map((button, index) => (
                             <Button
                               key={index}
                               onClick={() => handleButtonClick(button)}
                               variant="outline"
                               size="sm"
-                              className="text-xs h-8 bg-primary/10 hover:bg-primary/20 border-primary/30 text-primary hover:text-primary/90 transition-all duration-200"
+                              className="text-xs h-7 sm:h-8 bg-primary/10 hover:bg-primary/20 border-primary/30 text-primary hover:text-primary/90 transition-all duration-200"
                             >
                               {button.text}
                             </Button>
@@ -373,12 +373,12 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                 ))}
                 
                 {isLoading && (
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
-                      <Bot className="h-4 w-4" />
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                      <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
                     </div>
-                    <div className="flex-1 max-w-[280px]">
-                      <div className="p-3 rounded-lg bg-muted">
+                    <div className="flex-1 max-w-[calc(100%-3rem)] sm:max-w-[280px]">
+                      <div className="p-2 sm:p-3 rounded-lg bg-muted">
                         <div className="flex gap-1">
                           <div className="w-2 h-2 bg-primary/60 rounded-full animate-pulse"></div>
                           <div className="w-2 h-2 bg-primary/60 rounded-full animate-pulse delay-100"></div>
@@ -393,7 +393,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
               </div>
             </ScrollArea>
 
-            <div className="p-4 border-t bg-background">
+            <div className="p-3 sm:p-4 border-t bg-background">
               <div className="flex gap-2">
                 <Input
                   ref={inputRef}
@@ -402,16 +402,16 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                   onKeyPress={handleKeyPress}
                   placeholder="اكتب رسالتك هنا..."
                   disabled={isLoading}
-                  className="flex-1 text-right"
+                  className="flex-1 text-right text-sm"
                   dir="rtl"
                 />
                 <Button
                   onClick={sendMessage}
                   disabled={isLoading || !inputMessage.trim()}
                   size="icon"
-                  className="flex-shrink-0"
+                  className="flex-shrink-0 h-9 w-9 sm:h-10 sm:w-10"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </div>
               
