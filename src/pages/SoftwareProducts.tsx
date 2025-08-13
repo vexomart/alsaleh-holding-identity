@@ -458,6 +458,8 @@ const SoftwareProducts = () => {
           ) : (
             filteredProducts.map((product, index) => {
               const IconComponent = product.icon;
+              const isProductLoading = loadingProducts[product.id] || false;
+              
               return (
                 <Card 
                   key={product.id} 
@@ -569,18 +571,18 @@ const SoftwareProducts = () => {
                         <Button 
                           size="sm" 
                           onClick={() => handlePurchase(product)}
-                          disabled={product.status !== "متاح الآن" || loadingProducts[product.id]}
+                          disabled={product.status !== "متاح الآن" || isProductLoading}
                           className={`${product.status === "متاح الآن" 
                             ? "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg" 
                             : "opacity-50 cursor-not-allowed"
                           }`}
                         >
-                          {loadingProducts[product.id] ? (
+                          {isProductLoading ? (
                             <Clock className="w-4 h-4 ml-1 animate-spin" />
                           ) : (
                             <TrendingUp className="w-4 h-4 ml-1" />
                           )}
-                          {product.status === "متاح الآن" ? (loadingProducts[product.id] ? "جاري المعالجة..." : "ادفع الآن") : "قريباً"}
+                          {product.status === "متاح الآن" ? (isProductLoading ? "جاري المعالجة..." : "ادفع الآن") : "قريباً"}
                         </Button>
                       </div>
                       
@@ -679,12 +681,14 @@ const SoftwareProducts = () => {
             <div className="grid grid-cols-1 gap-3">
               {paymentMethods.map((method) => {
                 const IconComponent = method.icon;
+                const isMethodLoading = selectedProduct ? (loadingProducts[selectedProduct.id] || false) : false;
+                
                 return (
                   <Button
                     key={method.id}
                     variant="outline"
                     onClick={() => handlePaymentMethodSelect(method.id, selectedProduct)}
-                    disabled={loadingProducts[selectedProduct?.id] || false}
+                    disabled={isMethodLoading}
                     className="w-full p-4 h-auto flex items-center justify-between hover:bg-primary/5 hover:border-primary/20 transition-all duration-200"
                   >
                     <div className="flex items-center gap-3">
