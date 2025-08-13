@@ -17,7 +17,7 @@ serve(async (req) => {
     console.log("📦 Request Body:", JSON.stringify(body, null, 2));
 
     const {
-      amount = 1499,
+      amount,
       customer_name = 'عميل محتمل', 
       customer_email = 'customer@example.com',
       customer_phone = '966500000000',
@@ -25,6 +25,10 @@ serve(async (req) => {
       description = 'دفع خدمة',
       currency = 'SAR'
     } = body;
+
+    // Validate and process amount
+    const processedAmount = amount && amount > 0 ? Number(amount) : 1499;
+    console.log("💰 Processing amount:", { received: amount, processed: processedAmount });
 
     // Get API credentials
     const apiId = Deno.env.get('PAYLINK_API_ID');
@@ -84,7 +88,7 @@ serve(async (req) => {
     const orderNumber = `PAY-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
     const invoiceData = {
-      amount: Number(amount),
+      amount: processedAmount,
       orderNumber: orderNumber,
       callBackUrl: 'https://preview--alsaleh-holding-identity.lovable.app/payment-success',
       cancelUrl: 'https://preview--alsaleh-holding-identity.lovable.app/payment-cancel',
@@ -94,7 +98,7 @@ serve(async (req) => {
       note: description,
       products: [{
         title: offer_title,
-        price: Number(amount),
+        price: processedAmount,
         qty: 1,
         description: description,
         isDigital: true
@@ -151,7 +155,7 @@ serve(async (req) => {
       .from('payment_transactions')
       .insert({
         offer_title,
-        amount: Number(amount),
+        amount: processedAmount,
         currency,
         customer_name,
         customer_email,
