@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface ChatButton {
   text: string;
@@ -265,7 +265,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
       <div className={`fixed bottom-4 right-4 z-50 ${className}`}>
         <Button
           onClick={() => setIsOpen(true)}
-          className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+          className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse mobile-tap"
           size="icon"
         >
           <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -276,7 +276,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
 
   return (
     <div className={`fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 ${className}`}>
-      <Card className={`w-full sm:w-96 transition-all duration-300 shadow-2xl border-primary/20 ${
+      <Card className={`w-full sm:w-96 transition-all duration-300 shadow-2xl border-primary/20 mobile-scroll ${
         isMinimized ? 'h-16' : 'h-[70vh] sm:h-[600px] max-h-[600px]'
       }`}>
         <CardHeader className="flex flex-row items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-primary to-primary/80 text-white rounded-t-lg">
@@ -296,7 +296,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
               variant="ghost"
               size="icon"
               onClick={() => setIsMinimized(!isMinimized)}
-              className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20"
+              className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20 mobile-tap"
             >
               {isMinimized ? <Maximize2 className="h-3 w-3 sm:h-4 sm:w-4" /> : <Minimize2 className="h-3 w-3 sm:h-4 sm:w-4" />}
             </Button>
@@ -304,7 +304,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(false)}
-              className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20"
+              className="h-7 w-7 sm:h-8 sm:w-8 text-white hover:bg-white/20 mobile-tap"
             >
               <X className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
@@ -313,7 +313,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
 
         {!isMinimized && (
           <CardContent className="p-0 flex flex-col h-[calc(70vh-4rem)] sm:h-[536px]">
-            <ScrollArea className="flex-1 p-3 sm:p-4">
+            <ScrollArea className="flex-1 p-3 sm:p-4 mobile-scroll">
               <div className="space-y-3 sm:space-y-4">
                 {messages.map((message) => (
                   <div
@@ -354,7 +354,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                               onClick={() => handleButtonClick(button)}
                               variant="outline"
                               size="sm"
-                              className="text-xs h-7 sm:h-8 bg-primary/10 hover:bg-primary/20 border-primary/30 text-primary hover:text-primary/90 transition-all duration-200"
+                              className="text-xs h-7 sm:h-8 bg-primary/10 hover:bg-primary/20 border-primary/30 text-primary hover:text-primary/90 transition-all duration-200 mobile-tap"
                             >
                               {button.text}
                             </Button>
@@ -402,14 +402,14 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                   onKeyPress={handleKeyPress}
                   placeholder="اكتب رسالتك هنا..."
                   disabled={isLoading}
-                  className="flex-1 text-right text-sm"
+                  className="flex-1 text-right text-sm mobile-tap"
                   dir="rtl"
                 />
                 <Button
                   onClick={sendMessage}
                   disabled={isLoading || !inputMessage.trim()}
                   size="icon"
-                  className="flex-shrink-0 h-9 w-9 sm:h-10 sm:w-10"
+                  className="flex-shrink-0 h-9 w-9 sm:h-10 sm:w-10 mobile-tap"
                 >
                   <Send className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>

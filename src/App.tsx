@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRef } from "react";
+import { MobileOptimizer } from "@/components/MobileOptimizer";
 
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -125,134 +126,136 @@ const App = () => {
   return (
   <QueryClientProvider client={queryClientRef.current!}>
     <TooltipProvider>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
-        
-        {/* Main content */}
-        <div className="relative z-10">
+      <MobileOptimizer>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
+          {/* Subtle pattern overlay */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
           
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <ScrollToTop />
+          {/* Main content with mobile optimizations */}
+          <div className="relative z-10 mobile-tap mobile-scroll">
             
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/story" element={<Story />} />
-              <Route path="/team" element={<Team />} />
-              <Route path="/vision" element={<Vision />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/jobs" element={<Careers />} />
-              <Route path="/job-application" element={<JobApplication />} />
-              <Route path="/tech-investment" element={<TechInvestment />} />
-              <Route path="/development" element={<Development />} />
-              <Route path="/strategic-consulting" element={<StrategicConsulting />} />
-              <Route path="/integrated-solutions" element={<IntegratedSolutions />} />
-              <Route path="/training" element={<Training />} />
-              <Route path="/volunteer" element={<Volunteer />} />
-              <Route path="/contracts" element={<Contracts />} />
-              <Route path="/development-program" element={<DevelopmentProgram />} />
-              <Route path="/company-news" element={<CompanyNews />} />
-              <Route path="/press-releases" element={<PressReleases />} />
-              <Route path="/upcoming-events" element={<UpcomingEvents />} />
-              <Route path="/annual-reports" element={<AnnualReports />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/digital-contracts" element={<DigitalContracts />} />
-              <Route path="/ready-projects" element={<ReadyProjects />} />
-              <Route path="/remote-work" element={<RemoteWork />} />
-              <Route path="/project/:projectId" element={<ProjectDetails />} />
-              <Route path="/ai-solutions" element={<AISolutions />} />
-              <Route path="/iot-solutions" element={<IoTSolutions />} />
-              <Route path="/cloud-solutions" element={<CloudSolutions />} />
-              <Route path="/security-solutions" element={<SecuritySolutions />} />
-              <Route path="/nlp-solutions" element={<NLPSolutions />} />
-              <Route path="/computer-vision" element={<ComputerVision />} />
-              <Route path="/machine-learning" element={<MachineLearning />} />
-              <Route path="/smart-assistants" element={<SmartAssistants />} />
-              <Route path="/smart-analytics" element={<SmartAnalytics />} />
-              <Route path="/smart-automation" element={<SmartAutomation />} />
-              <Route path="/global-presence" element={<GlobalPresence />} />
-              <Route path="/tech-projects" element={<TechProjects />} />
-              <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
-              <Route path="/technologies" element={<Technologies />} />
-              <Route path="/current-offers" element={<CurrentOffers />} />
-              <Route path="/offer-details/:id" element={<OfferDetails />} />
-              <Route path="/professional-services" element={<ProfessionalServices />} />
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <ScrollToTop />
               
-              <Route path="/content-creation" element={<ContentCreation />} />
-              <Route path="/design-solutions" element={<DesignSolutions />} />
-              <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
-              <Route path="/subsidiaries" element={<Subsidiaries />} />
-              <Route path="/payment-methods" element={<PaymentMethods />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-              <Route path="/payment-cancel" element={<PaymentCancel />} />
-          <Route path="/partnerships" element={<Partnerships />} />
-          <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
-          <Route path="/business-services" element={<BusinessServices />} />
-          <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
-          <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
-          <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
-          <Route path="/department/:id" element={<DepartmentDetails />} />
-          <Route path="/user-guide" element={<UserGuide />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/client-dashboard" element={<ClientDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/start-with-us" element={<StartWithUs />} />
-              <Route path="/book-consultation" element={<BookConsultation />} />
-              <Route path="/hosting-services" element={<HostingServices />} />
-              <Route path="/company-updates" element={<CompanyUpdates />} />
-              <Route path="/software-products" element={<SoftwareProducts />} />
-              <Route path="/construction-website" element={<ConstructionWebsite />} />
-              <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
-              <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
-              <Route path="/car-rental-landing" element={<CarRentalLanding />} />
-              <Route path="/car-rental" element={<CarRentalLanding />} />
-              <Route path="/car-rental-landing" element={<CarRentalLanding />} />
-              <Route path="/car-rental-website" element={<CarRentalWebsite />} />
-              <Route path="/car-rental/about" element={<AboutUs />} />
-              <Route path="/car-rental/faq" element={<CarRentalFAQ />} />
-              <Route path="/car-rental/terms" element={<CarRentalTerms />} />
-              <Route path="/car-rental/privacy" element={<CarRentalPrivacy />} />
-              <Route path="/car-rental/guide" element={<CarRentalUserGuide />} />
-              <Route path="/car-rental/insurance" element={<CarRentalInsurancePolicy />} />
-              <Route path="/car-rental/news" element={<CarRentalCompanyNews />} />
-              <Route path="/car-rental/services" element={<CarRentalServices />} />
-              <Route path="/car-rental/contact" element={<CarRentalContactUs />} />
-              <Route path="/car-rental/sub-services" element={<CarRentalSubServices />} />
-              <Route path="/car-rental/services/economy" element={<CarRentalEconomyCars />} />
-              <Route path="/car-rental/services/luxury" element={<CarRentalLuxuryCars />} />
-              <Route path="/car-rental/services/electric" element={<CarRentalElectricCars />} />
-              <Route path="/car-rental/services/family" element={<CarRentalFamilyCars />} />
-              <Route path="/car-rental/contact/branches" element={<CarRentalBranches />} />
-              <Route path="/car-rental/contact/complaints" element={<CarRentalComplaints />} />
-              <Route path="/car-rental/careers" element={<CareersPage />} />
-              
-              <Route path="/car-fleet" element={<CarFleet />} />
-              <Route path="/car-booking" element={<CarBooking />} />
-              <Route path="/email-test" element={<EmailTest />} />
-              <Route path="/invoice-admin" element={<InvoiceAdmin />} />
-              <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
-              <Route path="/tech-ecosystem" element={<TechEcosystem />} />
-              <Route path="/services-catalog" element={<ServicesCatalog />} />
-              <Route path="/digital-marketing" element={<DigitalMarketing />} />
-        <Route path="/payment" element={<PaymentPage />} />
-        <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
-              <Route path="/google-merchant" element={<GoogleMerchantAPIIntegration />} />
-              <Route path="/google-merchant-setup" element={<QuickSetupGuide />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/story" element={<Story />} />
+                <Route path="/team" element={<Team />} />
+                <Route path="/vision" element={<Vision />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/jobs" element={<Careers />} />
+                <Route path="/job-application" element={<JobApplication />} />
+                <Route path="/tech-investment" element={<TechInvestment />} />
+                <Route path="/development" element={<Development />} />
+                <Route path="/strategic-consulting" element={<StrategicConsulting />} />
+                <Route path="/integrated-solutions" element={<IntegratedSolutions />} />
+                <Route path="/training" element={<Training />} />
+                <Route path="/volunteer" element={<Volunteer />} />
+                <Route path="/contracts" element={<Contracts />} />
+                <Route path="/development-program" element={<DevelopmentProgram />} />
+                <Route path="/company-news" element={<CompanyNews />} />
+                <Route path="/press-releases" element={<PressReleases />} />
+                <Route path="/upcoming-events" element={<UpcomingEvents />} />
+                <Route path="/annual-reports" element={<AnnualReports />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/digital-contracts" element={<DigitalContracts />} />
+                <Route path="/ready-projects" element={<ReadyProjects />} />
+                <Route path="/remote-work" element={<RemoteWork />} />
+                <Route path="/project/:projectId" element={<ProjectDetails />} />
+                <Route path="/ai-solutions" element={<AISolutions />} />
+                <Route path="/iot-solutions" element={<IoTSolutions />} />
+                <Route path="/cloud-solutions" element={<CloudSolutions />} />
+                <Route path="/security-solutions" element={<SecuritySolutions />} />
+                <Route path="/nlp-solutions" element={<NLPSolutions />} />
+                <Route path="/computer-vision" element={<ComputerVision />} />
+                <Route path="/machine-learning" element={<MachineLearning />} />
+                <Route path="/smart-assistants" element={<SmartAssistants />} />
+                <Route path="/smart-analytics" element={<SmartAnalytics />} />
+                <Route path="/smart-automation" element={<SmartAutomation />} />
+                <Route path="/global-presence" element={<GlobalPresence />} />
+                <Route path="/tech-projects" element={<TechProjects />} />
+                <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
+                <Route path="/technologies" element={<Technologies />} />
+                <Route path="/current-offers" element={<CurrentOffers />} />
+                <Route path="/offer-details/:id" element={<OfferDetails />} />
+                <Route path="/professional-services" element={<ProfessionalServices />} />
+                
+                <Route path="/content-creation" element={<ContentCreation />} />
+                <Route path="/design-solutions" element={<DesignSolutions />} />
+                <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
+                <Route path="/subsidiaries" element={<Subsidiaries />} />
+                <Route path="/payment-methods" element={<PaymentMethods />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-cancel" element={<PaymentCancel />} />
+            <Route path="/partnerships" element={<Partnerships />} />
+            <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
+            <Route path="/business-services" element={<BusinessServices />} />
+            <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
+            <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
+            <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
+            <Route path="/department/:id" element={<DepartmentDetails />} />
+            <Route path="/user-guide" element={<UserGuide />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/client-dashboard" element={<ClientDashboard />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/start-with-us" element={<StartWithUs />} />
+                <Route path="/book-consultation" element={<BookConsultation />} />
+                <Route path="/hosting-services" element={<HostingServices />} />
+                <Route path="/company-updates" element={<CompanyUpdates />} />
+                <Route path="/software-products" element={<SoftwareProducts />} />
+                <Route path="/construction-website" element={<ConstructionWebsite />} />
+                <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
+                <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
+                <Route path="/car-rental-landing" element={<CarRentalLanding />} />
+                <Route path="/car-rental" element={<CarRentalLanding />} />
+                <Route path="/car-rental-landing" element={<CarRentalLanding />} />
+                <Route path="/car-rental-website" element={<CarRentalWebsite />} />
+                <Route path="/car-rental/about" element={<AboutUs />} />
+                <Route path="/car-rental/faq" element={<CarRentalFAQ />} />
+                <Route path="/car-rental/terms" element={<CarRentalTerms />} />
+                <Route path="/car-rental/privacy" element={<CarRentalPrivacy />} />
+                <Route path="/car-rental/guide" element={<CarRentalUserGuide />} />
+                <Route path="/car-rental/insurance" element={<CarRentalInsurancePolicy />} />
+                <Route path="/car-rental/news" element={<CarRentalCompanyNews />} />
+                <Route path="/car-rental/services" element={<CarRentalServices />} />
+                <Route path="/car-rental/contact" element={<CarRentalContactUs />} />
+                <Route path="/car-rental/sub-services" element={<CarRentalSubServices />} />
+                <Route path="/car-rental/services/economy" element={<CarRentalEconomyCars />} />
+                <Route path="/car-rental/services/luxury" element={<CarRentalLuxuryCars />} />
+                <Route path="/car-rental/services/electric" element={<CarRentalElectricCars />} />
+                <Route path="/car-rental/services/family" element={<CarRentalFamilyCars />} />
+                <Route path="/car-rental/contact/branches" element={<CarRentalBranches />} />
+                <Route path="/car-rental/contact/complaints" element={<CarRentalComplaints />} />
+                <Route path="/car-rental/careers" element={<CareersPage />} />
+                
+                <Route path="/car-fleet" element={<CarFleet />} />
+                <Route path="/car-booking" element={<CarBooking />} />
+                <Route path="/email-test" element={<EmailTest />} />
+                <Route path="/invoice-admin" element={<InvoiceAdmin />} />
+                <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
+                <Route path="/tech-ecosystem" element={<TechEcosystem />} />
+                <Route path="/services-catalog" element={<ServicesCatalog />} />
+                <Route path="/digital-marketing" element={<DigitalMarketing />} />
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
+                <Route path="/google-merchant" element={<GoogleMerchantAPIIntegration />} />
+                <Route path="/google-merchant-setup" element={<QuickSetupGuide />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </div>
         </div>
-      </div>
+      </MobileOptimizer>
     </TooltipProvider>
   </QueryClientProvider>
   );
