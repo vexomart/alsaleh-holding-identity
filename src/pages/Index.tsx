@@ -9,7 +9,7 @@ import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
 
 import Footer from "@/components/Footer";
-import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, ShoppingCart, Settings } from "lucide-react";
+import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
 
@@ -191,63 +191,6 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Google Merchant Center Quick Access */}
-          <section className="relative py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 via-blue-50/30 to-purple-50/40"></div>
-            
-            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="max-w-4xl mx-auto text-center">
-                <div className="mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-full mb-6 shadow-lg">
-                    <ShoppingCart className="w-8 h-8 text-white" />
-                  </div>
-                  <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-                    ربط متجرك مع Google Merchant Center
-                  </h2>
-                  <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                    اربط منتجاتك مع Google للوصول لملايين المتسوقين واحصل على مبيعات أكثر
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <Link to="/google-merchant">
-                    <Card className="h-full border border-green-200 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                      <CardContent className="p-6 text-center">
-                        <Settings className="w-12 h-12 text-green-600 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                        <h3 className="text-xl font-semibold mb-2">نظام الإدارة المتقدم</h3>
-                        <p className="text-muted-foreground">إدارة ومزامنة شاملة للمنتجات</p>
-                      </CardContent>
-                    </Card>
-                  </Link>
-
-                  <Link to="/google-merchant-setup">
-                    <Card className="h-full border border-blue-200 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                      <CardContent className="p-6 text-center">
-                        <Star className="w-12 h-12 text-blue-600 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                        <h3 className="text-xl font-semibold mb-2">دليل الإعداد السريع</h3>
-                        <p className="text-muted-foreground">خطوات مبسطة لبدء الربط</p>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/google-merchant">
-                    <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white">
-                      <ShoppingCart className="w-5 h-5 ml-2" />
-                      بدء الإعداد الآن
-                    </Button>
-                  </Link>
-                  <Link to="/google-merchant-setup">
-                    <Button size="lg" variant="outline">
-                      <Settings className="w-5 h-5 ml-2" />
-                      مشاهدة الدليل
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
 
         </div>
       </main>
