@@ -355,6 +355,18 @@ const AIIntelligence = () => {
                       <Button 
                         className="w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
                         size="sm"
+                        onClick={() => {
+                          const serviceRoutes: { [key: string]: string } = {
+                            'الذكاء الاصطناعي التوليدي': '/ai-services/generative-ai',
+                            'الرؤية الحاسوبية': '/ai-services/computer-vision',
+                            'معالجة اللغات الطبيعية': '/ai-services/natural-language-processing',
+                            'التحليلات التنبؤية': '/ai-services/predictive-analytics',
+                            'الأتمتة الذكية': '/ai-services/smart-automation',
+                            'الأمان الذكي': '/ai-services/smart-security'
+                          };
+                          const route = serviceRoutes[service.title];
+                          if (route) window.location.href = route;
+                        }}
                       >
                         <ArrowRight className="w-4 h-4 mr-2" />
                         تعرف على المزيد

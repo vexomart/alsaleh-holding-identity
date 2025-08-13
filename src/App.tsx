@@ -36,11 +36,15 @@ import ReadyProjects from "./pages/ReadyProjects";
 import RemoteWork from "./pages/RemoteWork";
 import ProjectDetails from "./pages/ProjectDetails";
 import AIIntelligence from "./pages/AIIntelligence";
+import GenerativeAI from "./pages/ai-services/GenerativeAI";
+import ComputerVision from "./pages/ai-services/ComputerVision";
+import NaturalLanguageProcessing from "./pages/ai-services/NaturalLanguageProcessing";
+import PredictiveAnalytics from "./pages/ai-services/PredictiveAnalytics";
 import IoTSolutions from "./pages/IoTSolutions";
 import CloudSolutions from "./pages/CloudSolutions";
 import SecuritySolutions from "./pages/SecuritySolutions";
 import NLPSolutions from "./pages/NLPSolutions";
-import ComputerVision from "./pages/ComputerVision";
+import ComputerVisionPage from "./pages/ComputerVision";
 import MachineLearning from "./pages/MachineLearning";
 import SmartAssistants from "./pages/SmartAssistants";
 import SmartAnalytics from "./pages/SmartAnalytics";
@@ -171,12 +175,16 @@ const App = () => {
                 <Route path="/remote-work" element={<RemoteWork />} />
                 <Route path="/project/:projectId" element={<ProjectDetails />} />
                 <Route path="/ai-intelligence" element={<AIIntelligence />} />
+                <Route path="/ai-services/generative-ai" element={<GenerativeAI />} />
+                <Route path="/ai-services/computer-vision" element={<ComputerVision />} />
+                <Route path="/ai-services/natural-language-processing" element={<NaturalLanguageProcessing />} />
+                <Route path="/ai-services/predictive-analytics" element={<PredictiveAnalytics />} />
                 <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
                 <Route path="/security-solutions" element={<SecuritySolutions />} />
                 <Route path="/nlp-solutions" element={<NLPSolutions />} />
-                <Route path="/computer-vision" element={<ComputerVision />} />
+                <Route path="/computer-vision" element={<ComputerVisionPage />} />
                 <Route path="/machine-learning" element={<MachineLearning />} />
                 <Route path="/smart-assistants" element={<SmartAssistants />} />
                 <Route path="/smart-analytics" element={<SmartAnalytics />} />
