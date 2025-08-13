@@ -374,7 +374,12 @@ const ElectronicCardsWebsite = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in [animation-delay:600ms]">
             <Button 
               size="lg" 
-              onClick={() => document.getElementById('cards-section')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => {
+                const cardsSection = document.getElementById('cards-section');
+                if (cardsSection) {
+                  cardsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
               className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 hover:from-primary/90 hover:via-blue-600/90 hover:to-purple-600/90 shadow-2xl text-lg px-8 py-4 rounded-xl font-bold transform hover:scale-105 transition-all duration-300"
             >
               🛒 تصفح البطاقات الآن
@@ -479,101 +484,115 @@ const ElectronicCardsWebsite = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-          {filteredCards.map((card, index) => (
-            <Card 
-              key={card.id} 
-              className="group hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-slate-900/90 dark:to-slate-800/90 backdrop-blur-xl animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              {card.isPopular && (
-                <div className="absolute top-3 md:top-4 left-3 md:left-4 z-10">
-                  <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-2 md:px-3 py-1 rounded-lg md:rounded-xl font-bold shadow-lg animate-pulse text-xs md:text-sm">
-                    🔥 الأكثر طلباً
-                  </Badge>
-                </div>
-              )}
-              
-              {card.discount && (
-                <div className="absolute top-3 md:top-4 right-3 md:right-4 z-10">
-                  <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-2 md:px-3 py-1 rounded-lg md:rounded-xl font-bold shadow-lg animate-bounce text-xs md:text-sm">
-                    💸 خصم {card.discount}
-                  </Badge>
-                </div>
-              )}
-
-              <CardHeader className="relative pb-3 md:pb-4">
-                <div className={`w-16 md:w-20 h-16 md:h-20 bg-gradient-to-r ${card.color} rounded-2xl md:rounded-3xl flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-2xl mx-auto animate-bounce`}>
-                  <span className="text-2xl md:text-3xl">{card.image}</span>
-                </div>
-                <CardTitle className="text-lg md:text-xl font-bold text-center group-hover:text-primary transition-colors duration-300">
-                  {card.name}
-                </CardTitle>
-                <CardDescription className="text-center text-slate-600 dark:text-slate-400 leading-relaxed text-sm md:text-base">
-                  {card.description}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="pt-0 space-y-4 md:space-y-6">
-                {/* Price & Rating */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xl md:text-2xl font-bold text-primary">{card.price}</span>
-                      {card.originalPrice && (
-                        <span className="text-base md:text-lg text-slate-400 line-through">{card.originalPrice}</span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 md:w-4 h-3 md:h-4 text-yellow-500 fill-current animate-pulse" />
-                      <span className="text-xs md:text-sm font-medium">{card.rating}</span>
-                    </div>
+        {filteredCards.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="w-32 h-32 bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse">
+              <Package className="w-16 h-16 text-slate-400 dark:text-slate-500" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-600 dark:text-slate-400 mb-2">
+              😔 لا توجد بطاقات متاحة
+            </h3>
+            <p className="text-slate-500 dark:text-slate-500">
+              🔍 جرب البحث بكلمات مفتاحية أخرى أو تصفح فئة مختلفة
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            {filteredCards.map((card, index) => (
+              <Card 
+                key={card.id} 
+                className="group hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-slate-900/90 dark:to-slate-800/90 backdrop-blur-xl animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {card.isPopular && (
+                  <div className="absolute top-3 md:top-4 left-3 md:left-4 z-10">
+                    <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-2 md:px-3 py-1 rounded-lg md:rounded-xl font-bold shadow-lg animate-pulse text-xs md:text-sm">
+                      🔥 الأكثر طلباً
+                    </Badge>
                   </div>
-                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 md:px-3 py-1 rounded-lg md:rounded-xl font-bold animate-pulse text-xs md:text-sm">
-                    ✅ {card.availability}
-                  </Badge>
-                </div>
+                )}
+                
+                {card.discount && (
+                  <div className="absolute top-3 md:top-4 right-3 md:right-4 z-10">
+                    <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-2 md:px-3 py-1 rounded-lg md:rounded-xl font-bold shadow-lg animate-bounce text-xs md:text-sm">
+                      💸 خصم {card.discount}
+                    </Badge>
+                  </div>
+                )}
 
-                {/* Purchase Actions */}
-                <div className="flex flex-col gap-2 md:gap-3 pt-2 md:pt-4">
-                  <Button 
-                    onClick={() => handlePurchase(card)}
-                    className="w-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 shadow-2xl text-white rounded-xl font-bold transition-all duration-300 hover:scale-105 py-2 md:py-3 text-sm md:text-base"
-                  >
-                    <Banknote className="w-3 md:w-4 h-3 md:h-4 ml-1 animate-bounce" />
-                    💰 اشتري عبر الواتساب
-                  </Button>
-                  
-                  <Button 
-                    variant="outline"
-                    onClick={() => {
-                      toast({
-                        title: "📋 تم نسخ معلومات البطاقة",
-                        description: "يمكنك الآن مشاركة هذه البطاقة مع الآخرين",
-                      });
-                    }}
-                    className="w-full rounded-xl font-bold hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 hover:scale-105 py-2 md:py-3 text-sm md:text-base"
-                  >
-                    <Share2 className="w-3 md:w-4 h-3 md:h-4 ml-1 animate-pulse" />
-                    📤 مشاركة البطاقة
-                  </Button>
-                </div>
+                <CardHeader className="relative pb-3 md:pb-4">
+                  <div className={`w-16 md:w-20 h-16 md:h-20 bg-gradient-to-r ${card.color} rounded-2xl md:rounded-3xl flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-2xl mx-auto animate-bounce`}>
+                    <span className="text-2xl md:text-3xl">{card.image}</span>
+                  </div>
+                  <CardTitle className="text-lg md:text-xl font-bold text-center group-hover:text-primary transition-colors duration-300">
+                    {card.name}
+                  </CardTitle>
+                  <CardDescription className="text-center text-slate-600 dark:text-slate-400 leading-relaxed text-sm md:text-base">
+                    {card.description}
+                  </CardDescription>
+                </CardHeader>
 
-                {/* Features */}
-                <div className="flex items-center justify-between text-xs text-slate-500 border-t pt-2 md:pt-3 mt-2 md:mt-3">
-                  <span className="flex items-center gap-1">
-                    <CheckCircle className="w-3 h-3 text-green-500 animate-pulse" />
-                    ✅ توصيل فوري
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Heart className="w-3 h-3 text-red-500 animate-pulse" />
-                    💯 ضمان أصلي
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <CardContent className="pt-0 space-y-4 md:space-y-6">
+                  {/* Price & Rating */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xl md:text-2xl font-bold text-primary">{card.price}</span>
+                        {card.originalPrice && (
+                          <span className="text-base md:text-lg text-slate-400 line-through">{card.originalPrice}</span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 md:w-4 h-3 md:h-4 text-yellow-500 fill-current animate-pulse" />
+                        <span className="text-xs md:text-sm font-medium">{card.rating}</span>
+                      </div>
+                    </div>
+                    <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 md:px-3 py-1 rounded-lg md:rounded-xl font-bold animate-pulse text-xs md:text-sm">
+                      ✅ {card.availability}
+                    </Badge>
+                  </div>
+
+                  {/* Purchase Actions */}
+                  <div className="flex flex-col gap-2 md:gap-3 pt-2 md:pt-4">
+                    <Button 
+                      onClick={() => handlePurchase(card)}
+                      className="w-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 shadow-2xl text-white rounded-xl font-bold transition-all duration-300 hover:scale-105 py-2 md:py-3 text-sm md:text-base"
+                    >
+                      <Banknote className="w-3 md:w-4 h-3 md:h-4 ml-1 animate-bounce" />
+                      💰 اشتري عبر الواتساب
+                    </Button>
+                    
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        toast({
+                          title: "📋 تم نسخ معلومات البطاقة",
+                          description: "يمكنك الآن مشاركة هذه البطاقة مع الآخرين",
+                        });
+                      }}
+                      className="w-full rounded-xl font-bold hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 hover:scale-105 py-2 md:py-3 text-sm md:text-base"
+                    >
+                      <Share2 className="w-3 md:w-4 h-3 md:h-4 ml-1 animate-pulse" />
+                      📤 مشاركة البطاقة
+                    </Button>
+                  </div>
+
+                  {/* Features */}
+                  <div className="flex items-center justify-between text-xs text-slate-500 border-t pt-2 md:pt-3 mt-2 md:mt-3">
+                    <span className="flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3 text-green-500 animate-pulse" />
+                      ✅ توصيل فوري
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-3 h-3 text-red-500 animate-pulse" />
+                      💯 ضمان أصلي
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Contact Section */}
