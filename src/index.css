@@ -527,7 +527,7 @@
     min-height: 44px;
     min-width: 44px;
   }
-}
+  }
   
   .mobile-center {
     @apply text-center;
@@ -536,7 +536,6 @@
   .mobile-hide {
     @apply hidden;
   }
-}
 
 @media (min-width: 641px) and (max-width: 768px) {
   .tablet-only {
