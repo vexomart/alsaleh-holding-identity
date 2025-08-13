@@ -193,7 +193,7 @@ const AutomationSystem = () => {
 
       <Navigation />
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100" dir="rtl">
         {/* Hero Section */}
         <section className="relative pt-32 pb-20 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-purple-600/5 to-blue-600/10" />
@@ -255,21 +255,21 @@ const AutomationSystem = () => {
         {/* Main Automation System */}
         <section className="py-20">
           <div className="container mx-auto px-6">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto" dir="rtl">
               <TabsList className="grid w-full grid-cols-4 mb-8">
-                <TabsTrigger value="workflow" className="flex items-center gap-2">
+                <TabsTrigger value="workflow" className="flex items-center gap-2 text-right">
                   <Workflow className="w-4 h-4" />
                   إنشاء سير عمل
                 </TabsTrigger>
-                <TabsTrigger value="templates" className="flex items-center gap-2">
+                <TabsTrigger value="templates" className="flex items-center gap-2 text-right">
                   <Layers className="w-4 h-4" />
                   القوالب الجاهزة
                 </TabsTrigger>
-                <TabsTrigger value="automation" className="flex items-center gap-2">
+                <TabsTrigger value="automation" className="flex items-center gap-2 text-right">
                   <Mail className="w-4 h-4" />
                   أتمتة الإيميل
                 </TabsTrigger>
-                <TabsTrigger value="monitor" className="flex items-center gap-2">
+                <TabsTrigger value="monitor" className="flex items-center gap-2 text-right">
                   <BarChart3 className="w-4 h-4" />
                   مراقبة المهام
                 </TabsTrigger>
@@ -277,13 +277,13 @@ const AutomationSystem = () => {
 
               {/* إنشاء سير العمل */}
               <TabsContent value="workflow" className="space-y-6">
-                <Card className="bg-white/70 border-slate-200/50 backdrop-blur-sm">
+                <Card className="bg-white/70 border-slate-200/50 backdrop-blur-sm" dir="rtl">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-2xl text-slate-900">
+                    <CardTitle className="flex items-center gap-2 text-2xl text-slate-900 text-right">
                       <Workflow className="w-6 h-6 text-indigo-600" />
                       إنشاء سير عمل مخصص
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-right">
                       أنشئ سير عمل تلقائي مخصص لاحتياجاتك
                     </CardDescription>
                   </CardHeader>
@@ -291,7 +291,7 @@ const AutomationSystem = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="workflow-name">اسم سير العمل</Label>
+                          <Label htmlFor="workflow-name" className="text-right block">اسم سير العمل</Label>
                           <Input 
                             id="workflow-name"
                             placeholder="مثال: أتمتة معالجة الطلبات"
@@ -301,7 +301,7 @@ const AutomationSystem = () => {
                         </div>
                         
                         <div>
-                          <Label htmlFor="workflow-description">الوصف</Label>
+                          <Label htmlFor="workflow-description" className="text-right block">الوصف</Label>
                           <Textarea 
                             id="workflow-description"
                             placeholder="وصف مختصر لما يقوم به سير العمل"
@@ -313,7 +313,7 @@ const AutomationSystem = () => {
                       
                       <div className="space-y-4">
                         <div>
-                          <Label>المحفز (متى يبدأ)</Label>
+                          <Label className="text-right block">المحفز (متى يبدأ)</Label>
                           <Select value={selectedTrigger} onValueChange={setSelectedTrigger}>
                             <SelectTrigger>
                               <SelectValue placeholder="اختر المحفز" />
@@ -332,7 +332,7 @@ const AutomationSystem = () => {
                         </div>
                         
                         <div>
-                          <Label>الإجراء (ماذا يحدث)</Label>
+                          <Label className="text-right block">الإجراء (ماذا يحدث)</Label>
                           <Select value={selectedAction} onValueChange={setSelectedAction}>
                             <SelectTrigger>
                               <SelectValue placeholder="اختر الإجراء" />
@@ -378,7 +378,7 @@ const AutomationSystem = () => {
 
               {/* القوالب الجاهزة */}
               <TabsContent value="templates" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6" dir="rtl">
                   {automationTemplates.map((template, index) => (
                     <Card 
                       key={index}
@@ -391,8 +391,8 @@ const AutomationSystem = () => {
                             <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
                               <template.icon className="w-6 h-6 text-white" />
                             </div>
-                            <div>
-                              <CardTitle className="text-lg text-slate-900">{template.name}</CardTitle>
+                            <div className="text-right">
+                              <CardTitle className="text-lg text-slate-900 text-right">{template.name}</CardTitle>
                               <Badge variant="secondary">{template.category}</Badge>
                             </div>
                           </div>
@@ -400,11 +400,11 @@ const AutomationSystem = () => {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <CardDescription className="mb-4">
+                        <CardDescription className="mb-4 text-right">
                           {template.description}
                         </CardDescription>
                         <div className="space-y-2">
-                          <h4 className="font-semibold text-slate-900 text-sm">خطوات الأتمتة:</h4>
+                          <h4 className="font-semibold text-slate-900 text-sm text-right">خطوات الأتمتة:</h4>
                           {template.steps.map((step, stepIndex) => (
                             <div key={stepIndex} className="flex items-center gap-2 text-sm">
                               <div className="w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xs font-bold">
@@ -422,20 +422,20 @@ const AutomationSystem = () => {
 
               {/* أتمتة الإيميل */}
               <TabsContent value="automation" className="space-y-6">
-                <Card className="bg-white/70 border-slate-200/50 backdrop-blur-sm">
+                <Card className="bg-white/70 border-slate-200/50 backdrop-blur-sm" dir="rtl">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-2xl text-slate-900">
+                    <CardTitle className="flex items-center gap-2 text-2xl text-slate-900 text-right">
                       <Mail className="w-6 h-6 text-indigo-600" />
                       أتمتة البريد الإلكتروني
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-right">
                       إعداد نظام إرسال تلقائي للبريد الإلكتروني
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="email-subject">موضوع البريد الإلكتروني</Label>
+                        <Label htmlFor="email-subject" className="text-right block">موضوع البريد الإلكتروني</Label>
                         <Input 
                           id="email-subject"
                           placeholder="مثال: ترحيب بالعملاء الجدد"
@@ -445,7 +445,7 @@ const AutomationSystem = () => {
                       </div>
                       
                       <div>
-                        <Label htmlFor="email-content">محتوى البريد الإلكتروني</Label>
+                        <Label htmlFor="email-content" className="text-right block">محتوى البريد الإلكتروني</Label>
                         <Textarea 
                           id="email-content"
                           placeholder="أكتب محتوى البريد الإلكتروني هنا..."
@@ -482,13 +482,13 @@ const AutomationSystem = () => {
 
               {/* مراقبة المهام */}
               <TabsContent value="monitor" className="space-y-6">
-                <Card className="bg-white/70 border-slate-200/50 backdrop-blur-sm">
+                <Card className="bg-white/70 border-slate-200/50 backdrop-blur-sm" dir="rtl">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-2xl text-slate-900">
+                    <CardTitle className="flex items-center gap-2 text-2xl text-slate-900 text-right">
                       <BarChart3 className="w-6 h-6 text-indigo-600" />
                       مراقبة المهام المؤتمتة
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-right">
                       عرض ومراقبة جميع المهام التلقائية النشطة
                     </CardDescription>
                   </CardHeader>
