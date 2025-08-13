@@ -488,7 +488,7 @@
   }
 }
 
-/* Media query specific optimizations */
+/* Enhanced Mobile Optimizations */
 @media (max-width: 640px) {
   .mobile-stack {
     @apply flex-col space-y-2;
@@ -497,6 +497,37 @@
   .mobile-full-width {
     @apply w-full;
   }
+  
+  /* Chatbot mobile optimizations */
+  .mobile-chatbot {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 1rem 1rem 0 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Touch optimization for mobile */
+  button, input, textarea, select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+  
+  /* Improved scroll performance */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Better touch targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
   
   .mobile-center {
     @apply text-center;
