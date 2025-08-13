@@ -31,12 +31,15 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
     {
       id: '1',
       role: 'assistant',
-      content: 'حياك الله وأهلاً وسهلاً فيك! 😊\n\nأنا من فريق خدمة العملاء في شركة علي صالح الشهري القابضة، وأنا هنا عشان أساعدك في:\n• معرفة خدمات شركة علي صالح الشهري القابضة المميزة\n• أوجهك للقسم اللي يناسبك\n• أجاوب على استفساراتك\n• أساعدك تحجز استشارة مجانية مع شركة علي صالح الشهري القابضة\n\nإيش اللي تحتاجه اليوم من شركة علي صالح الشهري القابضة؟ نورت! ✨',
+      content: 'حياك الله وأهلاً وسهلاً فيك! 😊\n\n🏢 **شركة علي صالح الشهري القابضة**\n*رائدة في الحلول التقنية والتجارية المتكاملة*\n\nأنا من فريق خدمة العملاء وأنا هنا لمساعدتك في:\n• استكشاف خدماتنا المتميزة مع التفاصيل والأسعار\n• الحصول على استشارة مجانية متخصصة\n• التوجيه للحلول المناسبة لاحتياجاتك\n• الإجابة على جميع استفساراتك\n\n**اختر الخدمة اللي تهمك واكتشف التفاصيل كاملة:**',
       timestamp: new Date(),
       buttons: [
-        { text: 'شاهد خدمات شركة علي صالح الشهري القابضة 🛍️', url: '/departments' },
-        { text: 'العروض الحالية من شركة علي صالح الشهري القابضة 🎁', url: '/current-offers' },
-        { text: 'احجز استشارة مع شركة علي صالح الشهري القابضة 📞', url: '/book-consultation' }
+        { text: 'الحلول التصميمية 🎨', url: 'design-info' },
+        { text: 'الخدمات التجارية 💼', url: 'business-info' },
+        { text: 'التقنيات المتقدمة 🚀', url: 'tech-info' },
+        { text: 'تطوير البرمجيات 💻', url: 'dev-info' },
+        { text: 'التسويق الرقمي 📱', url: 'marketing-info' },
+        { text: 'احجز استشارة مجانية 📞', url: '/book-consultation' }
       ]
     }
   ]);
@@ -134,6 +137,89 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleButtonClick = async (button: ChatButton) => {
+    // Check if it's a service info request (internal action)
+    if (button.url.endsWith('-info')) {
+      const serviceRequests: { [key: string]: string } = {
+        'design-info': 'أريد معرفة تفاصيل خدمات التصميم والأسعار والباقات المتاحة',
+        'business-info': 'أريد معرفة تفاصيل الخدمات التجارية والاستشارات والأسعار',
+        'tech-info': 'أريد معرفة تفاصيل التقنيات المتقدمة والذكاء الاصطناعي والأسعار',
+        'dev-info': 'أريد معرفة تفاصيل تطوير البرمجيات والمواقع والتطبيقات والأسعار',
+        'marketing-info': 'أريد معرفة تفاصيل خدمات التسويق الرقمي والباقات والأسعار'
+      };
+
+      const serviceRequest = serviceRequests[button.url];
+      if (serviceRequest) {
+        // Simulate user asking about the service
+        const userMessage: ChatMessage = {
+          id: Date.now().toString(),
+          role: 'user',
+          content: button.text,
+          timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, userMessage]);
+        setIsLoading(true);
+
+        try {
+          const { data, error } = await supabase.functions.invoke('chatbot', {
+            body: {
+              message: serviceRequest,
+              conversationHistory: messages.map(msg => ({
+                role: msg.role,
+                content: msg.content
+              }))
+            }
+          });
+
+          if (error) throw error;
+
+          // Parse response for buttons
+          const responseText = data.response || 'عذراً، لم أتمكن من جلب المعلومات. يرجى المحاولة مرة أخرى.';
+          const buttonRegex = /\[BUTTON:(.*?):(.*?)\]/g;
+          const buttons: ChatButton[] = [];
+          let cleanedContent = responseText;
+
+          let match;
+          while ((match = buttonRegex.exec(responseText)) !== null) {
+            buttons.push({
+              text: match[1],
+              url: match[2]
+            });
+            cleanedContent = cleanedContent.replace(match[0], '');
+          }
+
+          const assistantMessage: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: cleanedContent.trim(),
+            timestamp: new Date(),
+            buttons: buttons.length > 0 ? buttons : undefined
+          };
+
+          setMessages(prev => [...prev, assistantMessage]);
+
+        } catch (error: any) {
+          console.error('Chat error:', error);
+          
+          const errorMessage: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: 'أعتذر، حدث خطأ في جلب المعلومات. يرجى المحاولة مرة أخرى.',
+            timestamp: new Date()
+          };
+
+          setMessages(prev => [...prev, errorMessage]);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    } else {
+      // External link - open in new tab
+      window.open(button.url, '_blank');
     }
   };
 
@@ -258,7 +344,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                           {message.buttons.map((button, index) => (
                             <Button
                               key={index}
-                              onClick={() => window.open(button.url, '_blank')}
+                              onClick={() => handleButtonClick(button)}
                               variant="outline"
                               size="sm"
                               className="text-xs h-8 bg-primary/10 hover:bg-primary/20 border-primary/30 text-primary hover:text-primary/90 transition-all duration-200"
