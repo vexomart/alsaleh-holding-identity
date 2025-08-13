@@ -35,7 +35,7 @@ import DigitalContracts from "./pages/DigitalContracts";
 import ReadyProjects from "./pages/ReadyProjects";
 import RemoteWork from "./pages/RemoteWork";
 import ProjectDetails from "./pages/ProjectDetails";
-import AISolutions from "./pages/AISolutions";
+import AIIntelligence from "./pages/AIIntelligence";
 import IoTSolutions from "./pages/IoTSolutions";
 import CloudSolutions from "./pages/CloudSolutions";
 import SecuritySolutions from "./pages/SecuritySolutions";
@@ -170,7 +170,8 @@ const App = () => {
                 <Route path="/ready-projects" element={<ReadyProjects />} />
                 <Route path="/remote-work" element={<RemoteWork />} />
                 <Route path="/project/:projectId" element={<ProjectDetails />} />
-                <Route path="/ai-solutions" element={<AISolutions />} />
+                <Route path="/ai-intelligence" element={<AIIntelligence />} />
+                <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
                 <Route path="/security-solutions" element={<SecuritySolutions />} />
