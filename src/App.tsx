@@ -111,6 +111,7 @@ import ServicesCatalog from "./pages/ServicesCatalog";
 import DigitalMarketing from "./pages/DigitalMarketing";
 import PaymentPage from "./pages/PaymentPage";
 import EnhancedPaymentPage from "./pages/EnhancedPaymentPage";
+import { GoogleMerchantAPIIntegration } from "@/components/GoogleMerchantAPIIntegration";
 
 
 
@@ -243,6 +244,7 @@ const App = () => {
               <Route path="/digital-marketing" element={<DigitalMarketing />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
+              <Route path="/google-merchant" element={<GoogleMerchantAPIIntegration />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
