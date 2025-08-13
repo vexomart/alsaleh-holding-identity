@@ -574,187 +574,204 @@ const SoftwareProducts = () => {
           </div>
         </div>
 
+        {/* Products Section Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
+              🛍️ جميع المنتجات الحصرية
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400">
+              استكشف مجموعتنا المتنوعة من الحلول البرمجية المبتكرة
+            </p>
+          </div>
+          <div className="hidden md:flex items-center gap-2">
+            <Badge variant="secondary" className="bg-primary/10 text-primary px-4 py-2 rounded-xl font-bold">
+              {filteredProducts.length} منتج متاح
+            </Badge>
+          </div>
+        </div>
+
         {/* Products Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="space-y-8">
           {filteredProducts.length === 0 ? (
-            <div className="col-span-full">
-              <Card className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 border-2 border-slate-200 dark:border-slate-800 rounded-3xl">
-                <CardContent className="p-16 text-center">
-                  <div className="flex flex-col items-center justify-center space-y-6">
-                    <div className="w-32 h-32 bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 rounded-full flex items-center justify-center animate-pulse">
-                      <Package className="w-16 h-16 text-slate-400 dark:text-slate-500" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-slate-600 dark:text-slate-400 mb-2">
-                        😔 لا توجد منتجات متاحة
-                      </h3>
-                      <p className="text-slate-500 dark:text-slate-500">
-                        🔍 جرب البحث بكلمات مفتاحية أخرى أو تصفح فئة مختلفة
-                      </p>
-                    </div>
+            <Card className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 border-2 border-slate-200 dark:border-slate-800 rounded-3xl">
+              <CardContent className="p-16 text-center">
+                <div className="flex flex-col items-center justify-center space-y-6">
+                  <div className="w-32 h-32 bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 rounded-full flex items-center justify-center animate-pulse">
+                    <Package className="w-16 h-16 text-slate-400 dark:text-slate-500" />
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-slate-600 dark:text-slate-400 mb-2">
+                      😔 لا توجد منتجات متاحة
+                    </h3>
+                    <p className="text-slate-500 dark:text-slate-500">
+                      🔍 جرب البحث بكلمات مفتاحية أخرى أو تصفح فئة مختلفة
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ) : (
-            filteredProducts.map((product, index) => {
-              const IconComponent = product.icon;
-              const isProductLoading = loadingProducts[product.id] || false;
-              
-              return (
-                <Card 
-                  key={product.id} 
-                  className={`group hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 rounded-3xl overflow-hidden bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-slate-900/90 dark:to-slate-800/90 backdrop-blur-xl animate-fade-in ${
-                    product.isFeatured ? 'ring-4 ring-primary/20' : ''
-                  }`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  {product.isExclusive && (
-                    <div className="absolute top-4 left-4 z-10">
-                      <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-xl font-bold shadow-lg animate-pulse">
-                        👑 حصري
-                      </Badge>
-                    </div>
-                  )}
-                  
-                  {product.discount && (
-                    <div className="absolute top-4 right-4 z-10">
-                      <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-xl font-bold shadow-lg animate-bounce">
-                        🔥 خصم {product.discount}
-                      </Badge>
-                    </div>
-                  )}
-
-                  <CardHeader className="relative pb-4">
-                    <div className={`w-20 h-20 bg-gradient-to-r ${product.color} rounded-3xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-2xl mx-auto animate-bounce`}>
-                      <span className="text-3xl">{product.emoji}</span>
-                      <IconComponent className="w-8 h-8 text-white absolute" />
-                    </div>
-                    <CardTitle className="text-xl font-bold text-center group-hover:text-primary transition-colors duration-300">
-                      {product.name}
-                    </CardTitle>
-                    <CardDescription className="text-center text-slate-600 dark:text-slate-400 leading-relaxed">
-                      {product.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="pt-0 space-y-6">
-                    {/* Features */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 animate-pulse" />
-                        ✨ المميزات الحصرية:
-                      </h4>
-                      <ul className="space-y-1 text-sm">
-                        {product.features.slice(0, 4).map((feature, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-                            <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Price & Delivery */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-2xl font-bold text-primary">{product.price}</span>
-                          {product.originalPrice && (
-                            <span className="text-lg text-slate-400 line-through">{product.originalPrice}</span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                          <Clock className="w-4 h-4 text-blue-500 animate-pulse" />
-                          <span>🚚 التسليم خلال 25 يوم</span>
-                        </div>
-                      </div>
-                      <Badge className={`${getStatusColor(product.status)} px-3 py-1 rounded-xl font-bold animate-pulse`}>
-                        <span className="mr-1">{getStatusEmoji(product.status)}</span>
-                        {product.status}
-                      </Badge>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2">
-                      {product.tags.slice(0, 3).map((tag, idx) => (
-                        <Badge key={idx} variant="outline" className="text-xs px-2 py-1 rounded-lg bg-primary/5 border-primary/20 text-primary hover:bg-primary/10 transition-colors duration-300">
-                          #{tag}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProducts.map((product, index) => {
+                const IconComponent = product.icon;
+                const isProductLoading = loadingProducts[product.id] || false;
+                
+                return (
+                  <Card 
+                    key={product.id} 
+                    className={`group hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 rounded-3xl overflow-hidden bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-slate-900/90 dark:to-slate-800/90 backdrop-blur-xl animate-fade-in ${
+                      product.isFeatured ? 'ring-4 ring-primary/20' : ''
+                    }`}
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    {product.isExclusive && (
+                      <div className="absolute top-4 left-4 z-10">
+                        <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-xl font-bold shadow-lg animate-pulse">
+                          👑 حصري
                         </Badge>
-                      ))}
-                    </div>
+                      </div>
+                    )}
+                    
+                    {product.discount && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-xl font-bold shadow-lg animate-bounce">
+                          🔥 خصم {product.discount}
+                        </Badge>
+                      </div>
+                    )}
 
-                    {/* Actions */}
-                    <div className="flex gap-3 pt-4">
-                      {product.demoUrl !== "#" && (
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => window.open(product.demoUrl, '_blank')}
-                          className="flex-1 rounded-xl font-bold hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 hover:scale-105"
-                        >
-                          <Eye className="w-4 h-4 ml-1 animate-pulse" />
-                          👁️ معاينة مباشرة
-                        </Button>
-                      )}
-                      
-                      <Button 
-                        size="sm" 
-                        onClick={() => handlePurchase(product)}
-                        disabled={product.status === "تحت التطوير" || isProductLoading}
-                        className={`flex-1 rounded-xl font-bold transition-all duration-300 hover:scale-105 ${
-                          product.status === "متاح الآن" 
-                            ? "bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 shadow-2xl text-white" 
-                            : product.status === "قريباً"
-                            ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-2xl text-white"
-                            : "opacity-50 cursor-not-allowed bg-gray-400"
-                        }`}
-                      >
-                        {isProductLoading ? (
-                          <>
-                            <Clock className="w-4 h-4 ml-1 animate-spin" />
-                            ⏳ جاري المعالجة...
-                          </>
-                        ) : (
-                          <>
-                            {product.status === "متاح الآن" && (
-                              <>
-                                <CreditCard className="w-4 h-4 ml-1 animate-pulse" />
-                                💳 اشتري الآن
-                              </>
+                    <CardHeader className="relative pb-4">
+                      <div className={`w-20 h-20 bg-gradient-to-r ${product.color} rounded-3xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-2xl mx-auto animate-bounce`}>
+                        <span className="text-3xl">{product.emoji}</span>
+                        <IconComponent className="w-8 h-8 text-white absolute" />
+                      </div>
+                      <CardTitle className="text-xl font-bold text-center group-hover:text-primary transition-colors duration-300">
+                        {product.name}
+                      </CardTitle>
+                      <CardDescription className="text-center text-slate-600 dark:text-slate-400 leading-relaxed">
+                        {product.description}
+                      </CardDescription>
+                    </CardHeader>
+
+                    <CardContent className="pt-0 space-y-6">
+                      {/* Features */}
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500 animate-pulse" />
+                          ✨ المميزات الحصرية:
+                        </h4>
+                        <ul className="space-y-1 text-sm">
+                          {product.features.slice(0, 4).map((feature, idx) => (
+                            <li key={idx} className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                              <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Price & Delivery */}
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-2xl font-bold text-primary">{product.price}</span>
+                            {product.originalPrice && (
+                              <span className="text-lg text-slate-400 line-through">{product.originalPrice}</span>
                             )}
-                            {product.status === "قريباً" && (
-                              <>
-                                <Clock className="w-4 h-4 ml-1 animate-pulse" />
-                                🔜 قريباً
-                              </>
-                            )}
-                            {product.status === "تحت التطوير" && (
-                              <>
-                                <Settings className="w-4 h-4 ml-1 animate-spin" />
-                                🚧 تحت التطوير
-                              </>
-                            )}
-                          </>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                            <Clock className="w-4 h-4 text-blue-500 animate-pulse" />
+                            <span>🚚 التسليم خلال 25 يوم</span>
+                          </div>
+                        </div>
+                        <Badge className={`${getStatusColor(product.status)} px-3 py-1 rounded-xl font-bold animate-pulse`}>
+                          <span className="mr-1">{getStatusEmoji(product.status)}</span>
+                          {product.status}
+                        </Badge>
+                      </div>
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-2">
+                        {product.tags.slice(0, 3).map((tag, idx) => (
+                          <Badge key={idx} variant="outline" className="text-xs px-2 py-1 rounded-lg bg-primary/5 border-primary/20 text-primary hover:bg-primary/10 transition-colors duration-300">
+                            #{tag}
+                          </Badge>
+                        ))}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex gap-3 pt-4">
+                        {product.demoUrl !== "#" && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => window.open(product.demoUrl, '_blank')}
+                            className="flex-1 rounded-xl font-bold hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 hover:scale-105"
+                          >
+                            <Eye className="w-4 h-4 ml-1 animate-pulse" />
+                            👁️ معاينة مباشرة
+                          </Button>
                         )}
-                      </Button>
-                    </div>
+                        
+                        <Button 
+                          size="sm" 
+                          onClick={() => handlePurchase(product)}
+                          disabled={product.status === "تحت التطوير" || isProductLoading}
+                          className={`flex-1 rounded-xl font-bold transition-all duration-300 hover:scale-105 ${
+                            product.status === "متاح الآن" 
+                              ? "bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 shadow-2xl text-white" 
+                              : product.status === "قريباً"
+                              ? "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-2xl text-white"
+                              : "opacity-50 cursor-not-allowed bg-gray-400"
+                          }`}
+                        >
+                          {isProductLoading ? (
+                            <>
+                              <Clock className="w-4 h-4 ml-1 animate-spin" />
+                              ⏳ جاري المعالجة...
+                            </>
+                          ) : (
+                            <>
+                              {product.status === "متاح الآن" && (
+                                <>
+                                  <CreditCard className="w-4 h-4 ml-1 animate-pulse" />
+                                  💳 اشتري الآن
+                                </>
+                              )}
+                              {product.status === "قريباً" && (
+                                <>
+                                  <Clock className="w-4 h-4 ml-1 animate-pulse" />
+                                  🔜 قريباً
+                                </>
+                              )}
+                              {product.status === "تحت التطوير" && (
+                                <>
+                                  <Settings className="w-4 h-4 ml-1 animate-spin" />
+                                  🚧 تحت التطوير
+                                </>
+                              )}
+                            </>
+                          )}
+                        </Button>
+                      </div>
 
-                    {/* Delivery Info */}
-                    <div className="flex items-center justify-between text-xs text-slate-500 border-t pt-3 mt-3">
-                      <span className="flex items-center gap-1">
-                        <Rocket className="w-3 h-3 animate-pulse" />
-                        🚀 التسليم: {product.estimatedDelivery}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Shield className="w-3 h-3 text-green-500" />
-                        🔒 ضمان الجودة
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })
+                      {/* Delivery Info */}
+                      <div className="flex items-center justify-between text-xs text-slate-500 border-t pt-3 mt-3">
+                        <span className="flex items-center gap-1">
+                          <Rocket className="w-3 h-3 animate-pulse" />
+                          🚀 التسليم السريع
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Shield className="w-3 h-3 text-green-500" />
+                          🔒 ضمان الجودة
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           )}
         </div>
 
