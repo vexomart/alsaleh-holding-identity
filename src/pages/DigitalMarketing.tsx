@@ -410,6 +410,19 @@ const DigitalMarketing = () => {
                         className="border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 hover-scale"
                         asChild
                       >
+                        <a href="/enhanced-payment">
+                          ابدأ الآن - واجهة متطورة
+                          <ArrowRight className="w-4 h-4 mr-2" />
+                        </a>
+                      </Button>
+                    </div>
+                    
+                    <div className="flex justify-center">
+                      <Button 
+                        variant="secondary"
+                        className="bg-secondary hover:bg-secondary-dark transition-all duration-300"
+                        asChild
+                      >
                         <a href="/start-with-us">
                           <ArrowRight className="w-4 h-4 ml-2" />
                           استشارة مجانية

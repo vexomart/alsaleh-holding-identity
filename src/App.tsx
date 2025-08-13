@@ -110,6 +110,7 @@ import DigitalMarketingWebsite from "./pages/DigitalMarketingWebsite";
 import ServicesCatalog from "./pages/ServicesCatalog";
 import DigitalMarketing from "./pages/DigitalMarketing";
 import PaymentPage from "./pages/PaymentPage";
+import EnhancedPaymentPage from "./pages/EnhancedPaymentPage";
 
 
 
@@ -240,7 +241,8 @@ const App = () => {
               <Route path="/tech-ecosystem" element={<TechEcosystem />} />
               <Route path="/services-catalog" element={<ServicesCatalog />} />
               <Route path="/digital-marketing" element={<DigitalMarketing />} />
-              <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
