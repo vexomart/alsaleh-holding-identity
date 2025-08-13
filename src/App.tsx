@@ -183,8 +183,8 @@ const App = () => {
                 <Route path="/ai-services/natural-language-processing" element={<NaturalLanguageProcessing />} />
                 <Route path="/ai-services/predictive-analytics" element={<PredictiveAnalytics />} />
                 <Route path="/ai-services/smart-automation" element={<SmartAutomation />} />
-          <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
-          <Route path="/free-trial" element={<FreeTrial />} />
+                 <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
+                 <Route path="/free-trial" element={<FreeTrial />} />
                 <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
