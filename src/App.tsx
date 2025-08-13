@@ -42,6 +42,7 @@ import NaturalLanguageProcessing from "./pages/ai-services/NaturalLanguageProces
 import PredictiveAnalytics from "./pages/ai-services/PredictiveAnalytics";
 import SmartAutomation from "./pages/ai-services/SmartAutomation";
 import SmartSecurity from "./pages/ai-services/SmartSecurity";
+import FreeTrial from "./pages/FreeTrial";
 import IoTSolutions from "./pages/IoTSolutions";
 import CloudSolutions from "./pages/CloudSolutions";
 import SecuritySolutions from "./pages/SecuritySolutions";
@@ -182,7 +183,8 @@ const App = () => {
                 <Route path="/ai-services/natural-language-processing" element={<NaturalLanguageProcessing />} />
                 <Route path="/ai-services/predictive-analytics" element={<PredictiveAnalytics />} />
                 <Route path="/ai-services/smart-automation" element={<SmartAutomation />} />
-                <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
+          <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
+          <Route path="/free-trial" element={<FreeTrial />} />
                 <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
