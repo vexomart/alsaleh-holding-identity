@@ -716,9 +716,114 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      contracts_secure: {
+        Row: {
+          authorized_person: string | null
+          client_address: string | null
+          client_approved: boolean | null
+          client_approved_at: string | null
+          client_email: string | null
+          client_id_number: string | null
+          client_name: string | null
+          client_phone: string | null
+          client_type: string | null
+          commercial_register: string | null
+          company_approved: boolean | null
+          company_approved_at: string | null
+          contract_duration: string | null
+          contract_number: string | null
+          contract_pdf_url: string | null
+          created_at: string | null
+          currency: string | null
+          end_date: string | null
+          id: string | null
+          nafath_request_id: string | null
+          nafath_verified: boolean | null
+          nafath_verified_at: string | null
+          payment_terms: string | null
+          service_description: string | null
+          service_price: number | null
+          service_type: string | null
+          start_date: string | null
+          status: string | null
+          tax_number: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          authorized_person?: string | null
+          client_address?: string | null
+          client_approved?: boolean | null
+          client_approved_at?: string | null
+          client_email?: never
+          client_id_number?: never
+          client_name?: string | null
+          client_phone?: never
+          client_type?: string | null
+          commercial_register?: never
+          company_approved?: boolean | null
+          company_approved_at?: string | null
+          contract_duration?: string | null
+          contract_number?: string | null
+          contract_pdf_url?: string | null
+          created_at?: string | null
+          currency?: string | null
+          end_date?: string | null
+          id?: string | null
+          nafath_request_id?: string | null
+          nafath_verified?: boolean | null
+          nafath_verified_at?: string | null
+          payment_terms?: string | null
+          service_description?: string | null
+          service_price?: number | null
+          service_type?: string | null
+          start_date?: string | null
+          status?: string | null
+          tax_number?: never
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          authorized_person?: string | null
+          client_address?: string | null
+          client_approved?: boolean | null
+          client_approved_at?: string | null
+          client_email?: never
+          client_id_number?: never
+          client_name?: string | null
+          client_phone?: never
+          client_type?: string | null
+          commercial_register?: never
+          company_approved?: boolean | null
+          company_approved_at?: string | null
+          contract_duration?: string | null
+          contract_number?: string | null
+          contract_pdf_url?: string | null
+          created_at?: string | null
+          currency?: string | null
+          end_date?: string | null
+          id?: string | null
+          nafath_request_id?: string | null
+          nafath_verified?: boolean | null
+          nafath_verified_at?: string | null
+          payment_terms?: string | null
+          service_description?: string | null
+          service_price?: number | null
+          service_type?: string | null
+          start_date?: string | null
+          status?: string | null
+          tax_number?: never
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      check_contract_rate_limit: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
           p_identifier: string
@@ -761,12 +866,39 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_user_contracts: {
+        Args: { requesting_user_id?: string }
+        Returns: {
+          id: string
+          contract_number: string
+          client_name: string
+          client_email: string
+          client_phone: string
+          service_type: string
+          service_price: number
+          status: string
+          created_at: string
+          masked_data: boolean
+        }[]
+      }
       has_role: {
         Args: {
           _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
+      }
+      mask_email: {
+        Args: { email_input: string; user_requesting?: string }
+        Returns: string
+      }
+      mask_id_number: {
+        Args: { id_input: string; user_requesting?: string }
+        Returns: string
+      }
+      mask_phone: {
+        Args: { phone_input: string; user_requesting?: string }
+        Returns: string
       }
     }
     Enums: {
