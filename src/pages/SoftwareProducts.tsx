@@ -72,7 +72,7 @@ const SoftwareProducts = () => {
     }
   ];
 
-  const handlePaymentMethodSelect = async (methodId: string, productName: string) => {
+  const handlePaymentMethodSelect = async (methodId: string, product: any) => {
     // إغلاق النافذة فوراً
     setShowPaymentMethods(false);
     setSelectedProduct(null);
@@ -85,7 +85,10 @@ const SoftwareProducts = () => {
 
     setIsLoading(true);
     
-    console.log('بدء عملية الدفع:', methodId, productName);
+    // استخراج المبلغ من السعر (إزالة "ريال" وتحويل إلى رقم)
+    const priceAmount = parseInt(product.price.replace(/[^\d]/g, ''));
+    
+    console.log('بدء عملية الدفع:', methodId, product.name, 'المبلغ:', priceAmount);
 
     try {
       let functionName = '';
@@ -95,13 +98,13 @@ const SoftwareProducts = () => {
         case 'paylink':
           functionName = 'paylink-payment';
           paymentData = {
-            amount: 4999,
+            amount: priceAmount,
             currency: 'SAR',
             customer_name: 'عميل',
             customer_email: 'customer@example.com',
             customer_phone: '966500000000',
-            offer_title: productName,
-            description: `شراء منتج: ${productName}`,
+            offer_title: product.name,
+            description: `شراء منتج: ${product.name}`,
             success_url: window.location.origin
           };
           break;
@@ -110,10 +113,10 @@ const SoftwareProducts = () => {
           paymentData = {
             order_reference_id: `order_${Date.now()}`,
             total_amount: {
-              amount: 4999,
+              amount: priceAmount,
               currency: 'SAR'
             },
-            description: `شراء منتج: ${productName}`,
+            description: `شراء منتج: ${product.name}`,
             country_code: 'SA',
             payment_type: 'PAY_BY_INSTALMENTS',
             instalments: 4,
@@ -130,13 +133,13 @@ const SoftwareProducts = () => {
               notification: `${window.location.origin}/api/tamara-webhook`
             },
             items: [{
-              name: productName,
+              name: product.name,
               type: 'Digital',
               reference_id: `item_${Date.now()}`,
-              sku: 'DIGITAL-001',
+              sku: `DIGITAL-${product.id}`,
               quantity: 1,
               total_amount: {
-                amount: 4999,
+                amount: priceAmount,
                 currency: 'SAR'
               }
             }]
@@ -145,9 +148,9 @@ const SoftwareProducts = () => {
         case 'stc-pay':
           functionName = 'stc-pay';
           paymentData = {
-            amount: 4999,
+            amount: priceAmount,
             currency: 'SAR',
-            description: `شراء منتج: ${productName}`,
+            description: `شراء منتج: ${product.name}`,
             customer_name: 'عميل',
             customer_email: 'customer@example.com',
             customer_phone: '966500000000'
@@ -680,7 +683,7 @@ const SoftwareProducts = () => {
                   <Button
                     key={method.id}
                     variant="outline"
-                    onClick={() => handlePaymentMethodSelect(method.id, selectedProduct?.name)}
+                    onClick={() => handlePaymentMethodSelect(method.id, selectedProduct)}
                     disabled={isLoading}
                     className="w-full p-4 h-auto flex items-center justify-between hover:bg-primary/5 hover:border-primary/20 transition-all duration-200"
                   >
