@@ -318,7 +318,7 @@ const SoftwareProducts = () => {
       downloads: "89",
       status: "متاح الآن",
       color: "from-green-500 to-emerald-500",
-      demoUrl: "/electronic-cards-store",
+      demoUrl: "/cards-store",
       tags: ["E-commerce", "Cards", "WhatsApp", "Responsive"],
       isNew: true,
       isFeatured: true,
