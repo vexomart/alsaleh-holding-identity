@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.12 (cd3cf9e)"
@@ -868,7 +868,7 @@ export type Database = {
     }
     Functions: {
       check_automation_limit: {
-        Args: { p_user_id: string; p_automation_type: string }
+        Args: { p_automation_type: string; p_user_id: string }
         Returns: boolean
       }
       check_contract_rate_limit: {
@@ -877,8 +877,8 @@ export type Database = {
       }
       check_rate_limit: {
         Args: {
-          p_identifier: string
           p_action_type: string
+          p_identifier: string
           p_limit?: number
           p_window_minutes?: number
         }
@@ -894,8 +894,8 @@ export type Database = {
       }
       enhanced_rate_limit_check: {
         Args: {
-          p_identifier: string
           p_action_type: string
+          p_identifier: string
           p_limit?: number
           p_window_minutes?: number
         }
@@ -920,22 +920,22 @@ export type Database = {
       get_user_contracts: {
         Args: { requesting_user_id?: string }
         Returns: {
-          id: string
-          contract_number: string
-          client_name: string
           client_email: string
+          client_name: string
           client_phone: string
-          service_type: string
-          service_price: number
-          status: string
+          contract_number: string
           created_at: string
+          id: string
           masked_data: boolean
+          service_price: number
+          service_type: string
+          status: string
         }[]
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
@@ -952,7 +952,7 @@ export type Database = {
         Returns: string
       }
       record_automation_usage: {
-        Args: { p_user_id: string; p_automation_type: string; p_count?: number }
+        Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
       }
     }
