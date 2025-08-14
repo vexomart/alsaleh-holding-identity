@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, Phone, Crown, Heart, Sparkles, Gift, Users, Clock, Award, ShoppingBag, Eye, ArrowLeft, Plus, Share2, Bookmark } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Import category images
 import categoryLuxuryAbaya from '@/assets/category-luxury-abaya.jpg';
@@ -294,6 +295,7 @@ const KashkhaAbayaStore = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {categories.map((category) => (
+              <Link key={category.value} to={`/kashkha-store/${category.value}`}>
               <Card key={category.value} className="overflow-hidden hover:shadow-xl transition-all duration-500 group cursor-pointer border-0 relative">
                 <div className="relative h-64 md:h-80 overflow-hidden">
                   <img 
@@ -325,6 +327,7 @@ const KashkhaAbayaStore = () => {
                   <div className="absolute top-1/2 right-3 md:right-4 w-1.5 h-1.5 md:w-2 md:h-2 bg-white/40 rounded-full"></div>
                 </div>
               </Card>
+              </Link>
             ))}
           </div>
         </div>
