@@ -8,8 +8,8 @@ import { Crown, Users, Code, TrendingUp, Building2, Shield, Star, Award, Chevron
 const Team = () => {
   const teamMembers = [
     {
-      name: "أ/علي صالح الشهري",
-      nameEn: "Ali Saleh Al-Shahri",
+      name: "أ/أحمد بن عبدالعزيز العتيبي",
+      nameEn: "Ahmed Bin Abdulaziz Al-Otaibi",
       position: "رئيس مجلس الإدارة والمؤسس",
       positionEn: "Chairman & Founder",
       department: "القيادة الاستراتيجية",
@@ -21,8 +21,8 @@ const Team = () => {
       bgEffect: "from-purple-500/10 to-blue-500/10"
     },
     {
-      name: "خالد بن محمد الحارثي",
-      nameEn: "Khalid Bin Mohammed Al-Harthi",
+      name: "م/فهد بن سعد القحطاني",
+      nameEn: "Fahad Bin Saad Al-Qahtani",
       position: "المدير التنفيذي للعمليات",
       positionEn: "Chief Operating Officer",
       department: "العمليات والتطوير",
@@ -34,9 +34,9 @@ const Team = () => {
       bgEffect: "from-emerald-500/10 to-teal-500/10"
     },
     {
-      name: "محمد عبدالله الأحمري",
-      nameEn: "Mohammed Abdullah Al-Ahmari",
-      position: "رئيس قسم الموارد البشرية",
+      name: "د/نوره بنت محمد الغامدي",
+      nameEn: "Dr. Norah Bint Mohammed Al-Ghamdi",
+      position: "رئيسة قسم الموارد البشرية",
       positionEn: "Head of Human Resources",
       department: "تطوير المواهب",
       departmentEn: "Talent Development",
@@ -47,8 +47,8 @@ const Team = () => {
       bgEffect: "from-blue-500/10 to-cyan-500/10"
     },
     {
-      name: "محمود عبد الخالق السعيد",
-      nameEn: "Mahmoud Abdul Khaliq Al-Saeed",
+      name: "م/عبدالله بن يوسف الشمري",
+      nameEn: "Abdullah Bin Youssef Al-Shamri",
       position: "رئيس قسم التقنية والابتكار",
       positionEn: "Chief Technology Officer",
       department: "التقنية والذكاء الاصطناعي",
@@ -60,8 +60,8 @@ const Team = () => {
       bgEffect: "from-indigo-500/10 to-purple-500/10"
     },
     {
-      name: "عبدالرحمن فهد الدوسري",
-      nameEn: "Abdulrahman Fahad Al-Dosari",
+      name: "أ/مشعل بن ناصر المطيري",
+      nameEn: "Meshal Bin Nasser Al-Mutairi",
       position: "مدير الاستثمارات والنمو",
       positionEn: "Investment & Growth Director",
       department: "الاستثمار والتطوير",
@@ -73,9 +73,9 @@ const Team = () => {
       bgEffect: "from-orange-500/10 to-red-500/10"
     },
     {
-      name: "سعود فهد الشمري",
-      nameEn: "Saud Fahad Al-Shamri",
-      position: "مدير الجودة والامتثال",
+      name: "أ/سارة بنت علي الدوسري",
+      nameEn: "Sarah Bint Ali Al-Dosari",
+      position: "مديرة الجودة والامتثال",
       positionEn: "Quality & Compliance Director",
       department: "الجودة والأمان",
       departmentEn: "Quality & Security",
