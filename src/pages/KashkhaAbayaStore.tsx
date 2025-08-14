@@ -135,27 +135,28 @@ const KashkhaAbayaStore = () => {
           <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-white/30 rounded-full"></div>
         </div>
         
-        <div className="relative container mx-auto px-4 py-8">
+        <div className="relative container mx-auto px-4 py-6 md:py-8">
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-purple-600 rounded-full flex items-center justify-center">
-                <Crown className="w-8 h-8 text-white" />
+            <div className="flex items-center gap-3 md:gap-6">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-rose-400 to-purple-600 rounded-full flex items-center justify-center">
+                <Crown className="w-6 h-6 md:w-8 md:h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-rose-200 to-purple-200 bg-clip-text text-transparent">
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-1 md:mb-2 bg-gradient-to-r from-rose-200 to-purple-200 bg-clip-text text-transparent">
                   كشخة للعبايات
                 </h1>
-                <p className="text-lg text-purple-100 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5" />
+                <p className="text-sm md:text-lg text-purple-100 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
                   بيت الأناقة والجمال العربي الأصيل
                 </p>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
-              <Badge className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 text-lg px-6 py-3">
-                <Phone className="w-5 h-5 ml-2" />
-                اطلبي عبر الواتساب
+              <Badge className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 text-sm md:text-lg px-3 py-2 md:px-6 md:py-3">
+                <Phone className="w-4 h-4 md:w-5 md:h-5 ml-2" />
+                <span className="hidden sm:inline">اطلبي عبر الواتساب</span>
+                <span className="sm:hidden">الواتساب</span>
               </Badge>
             </div>
           </div>
@@ -163,43 +164,43 @@ const KashkhaAbayaStore = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-rose-600 via-purple-600 to-pink-600 text-white overflow-hidden">
+      <section className="relative py-12 md:py-20 bg-gradient-to-r from-rose-600 via-purple-600 to-pink-600 text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/30"></div>
         <div className="absolute inset-0">
           {/* Decorative elements */}
-          <div className="absolute top-20 right-20 w-32 h-32 border-2 border-white/20 rounded-full"></div>
-          <div className="absolute bottom-20 left-20 w-24 h-24 border-2 border-white/20 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 border border-white/10 rounded-full"></div>
+          <div className="absolute top-10 md:top-20 right-10 md:right-20 w-16 h-16 md:w-32 md:h-32 border-2 border-white/20 rounded-full"></div>
+          <div className="absolute bottom-10 md:bottom-20 left-10 md:left-20 w-12 h-12 md:w-24 md:h-24 border-2 border-white/20 rounded-full"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-40 md:h-40 border border-white/10 rounded-full"></div>
         </div>
         
         <div className="relative container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
               مجموعة العبايات
               <span className="block bg-gradient-to-r from-yellow-300 to-yellow-200 bg-clip-text text-transparent">
                 الحصرية والمميزة
               </span>
             </h2>
-            <p className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-10 max-w-3xl mx-auto leading-relaxed px-4">
               اكتشفي عالماً من الأناقة والرقي مع مجموعتنا الفريدة من العبايات المصممة خصيصاً 
               للمرأة العربية العصرية التي تقدر الجمال والأصالة
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-lg">
-              <div className="flex flex-col items-center gap-3 p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                <Award className="w-8 h-8 text-yellow-300" />
-                <span className="font-semibold">جودة استثنائية</span>
-                <span className="text-sm text-purple-100">خامات مستوردة فاخرة</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-base md:text-lg">
+              <div className="flex flex-col items-center gap-2 md:gap-3 p-4 md:p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <Award className="w-6 h-6 md:w-8 md:h-8 text-yellow-300" />
+                <span className="font-semibold text-sm md:text-base">جودة استثنائية</span>
+                <span className="text-xs md:text-sm text-purple-100 text-center">خامات مستوردة فاخرة</span>
               </div>
-              <div className="flex flex-col items-center gap-3 p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                <Users className="w-8 h-8 text-yellow-300" />
-                <span className="font-semibold">+1500 عميلة سعيدة</span>
-                <span className="text-sm text-purple-100">ثقة وتقدير من عملائنا</span>
+              <div className="flex flex-col items-center gap-2 md:gap-3 p-4 md:p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <Users className="w-6 h-6 md:w-8 md:h-8 text-yellow-300" />
+                <span className="font-semibold text-sm md:text-base">+1500 عميلة سعيدة</span>
+                <span className="text-xs md:text-sm text-purple-100 text-center">ثقة وتقدير من عملائنا</span>
               </div>
-              <div className="flex flex-col items-center gap-3 p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                <Clock className="w-8 h-8 text-yellow-300" />
-                <span className="font-semibold">توصيل سريع</span>
-                <span className="text-sm text-purple-100">لجميع مناطق المملكة</span>
+              <div className="flex flex-col items-center gap-2 md:gap-3 p-4 md:p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <Clock className="w-6 h-6 md:w-8 md:h-8 text-yellow-300" />
+                <span className="font-semibold text-sm md:text-base">توصيل سريع</span>
+                <span className="text-xs md:text-sm text-purple-100 text-center">لجميع مناطق المملكة</span>
               </div>
             </div>
           </div>
@@ -207,19 +208,19 @@ const KashkhaAbayaStore = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-16 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h3 className="text-4xl font-bold mb-4 text-gray-800">اختاري حسب المناسبة</h3>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <div className="text-center mb-8 md:mb-12">
+            <h3 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 text-gray-800">اختاري حسب المناسبة</h3>
+            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
               لكل مناسبة عباءة تليق بك وتعكس شخصيتك المميزة
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {categories.map((category) => (
               <Card key={category.value} className="overflow-hidden hover:shadow-xl transition-all duration-500 group cursor-pointer border-0 relative">
-                <div className="relative h-80 overflow-hidden">
+                <div className="relative h-64 md:h-80 overflow-hidden">
                   <img 
                     src={category.image} 
                     alt={category.name}
@@ -227,26 +228,26 @@ const KashkhaAbayaStore = () => {
                   />
                   <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-70 group-hover:opacity-80 transition-opacity duration-300`}></div>
                   
-                  <div className="absolute inset-0 p-8 flex flex-col justify-between text-white">
+                  <div className="absolute inset-0 p-4 md:p-8 flex flex-col justify-between text-white">
                     <div className="flex justify-between items-start">
-                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <category.icon className="w-8 h-8 text-white" />
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <category.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                       </div>
-                      <div className="w-12 h-12 border-2 border-white/30 rounded-full"></div>
+                      <div className="w-8 h-8 md:w-12 md:h-12 border-2 border-white/30 rounded-full"></div>
                     </div>
                     
                     <div>
-                      <h4 className="text-3xl font-bold mb-3 group-hover:scale-105 transition-transform duration-300">{category.name}</h4>
-                      <p className="text-lg opacity-90 leading-relaxed">{category.description}</p>
-                      <div className="mt-4 flex items-center gap-2 text-sm">
-                        <Sparkles className="w-4 h-4" />
+                      <h4 className="text-2xl md:text-3xl font-bold mb-2 md:mb-3 group-hover:scale-105 transition-transform duration-300">{category.name}</h4>
+                      <p className="text-sm md:text-lg opacity-90 leading-relaxed">{category.description}</p>
+                      <div className="mt-2 md:mt-4 flex items-center gap-2 text-xs md:text-sm">
+                        <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
                         <span>تصاميم حصرية</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="absolute bottom-4 left-4 w-8 h-8 border-2 border-white/30 rounded-full"></div>
-                  <div className="absolute top-1/2 right-4 w-2 h-2 bg-white/40 rounded-full"></div>
+                  <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 w-6 h-6 md:w-8 md:h-8 border-2 border-white/30 rounded-full"></div>
+                  <div className="absolute top-1/2 right-3 md:right-4 w-1.5 h-1.5 md:w-2 md:h-2 bg-white/40 rounded-full"></div>
                 </div>
               </Card>
             ))}
@@ -255,20 +256,20 @@ const KashkhaAbayaStore = () => {
       </section>
 
       {/* Products */}
-      <section className="py-20 bg-gradient-to-br from-purple-50 to-rose-50">
+      <section className="py-12 md:py-20 bg-gradient-to-br from-purple-50 to-rose-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-5xl font-bold mb-6 text-gray-800">مجموعة العبايات المميزة</h3>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-12 md:mb-16">
+            <h3 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 text-gray-800">مجموعة العبايات المميزة</h3>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               كل قطعة في مجموعتنا مصممة بعناية فائقة وحب كبير لتمنحك إطلالة ساحرة ومميزة
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {abayas.map((abaya) => (
               <Card key={abaya.id} className="overflow-hidden hover:shadow-2xl transition-all duration-500 group bg-white border-0 relative">
-                <div className="absolute top-4 right-4 z-10">
-                  <Badge className="bg-gradient-to-r from-rose-500 to-pink-500 text-white border-0 px-3 py-1">
+                <div className="absolute top-3 md:top-4 right-3 md:right-4 z-10">
+                  <Badge className="bg-gradient-to-r from-rose-500 to-pink-500 text-white border-0 px-2 py-1 md:px-3 md:py-1 text-xs md:text-sm">
                     حصري
                   </Badge>
                 </div>
@@ -277,44 +278,45 @@ const KashkhaAbayaStore = () => {
                   <img 
                     src={abaya.image} 
                     alt={abaya.name}
-                    className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-64 md:h-80 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 
-                <CardContent className="p-6">
-                  <h4 className="text-2xl font-bold mb-3 text-gray-800 group-hover:text-purple-600 transition-colors">
+                <CardContent className="p-4 md:p-6">
+                  <h4 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-gray-800 group-hover:text-purple-600 transition-colors">
                     {abaya.name}
                   </h4>
-                  <p className="text-gray-600 mb-4 leading-relaxed">{abaya.description}</p>
+                  <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 leading-relaxed">{abaya.description}</p>
                   
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-1 md:gap-2 mb-3 md:mb-4">
                     {abaya.features.map((feature, index) => (
-                      <Badge key={index} variant="outline" className="text-xs border-purple-200 text-purple-600">
+                      <Badge key={index} variant="outline" className="text-xs border-purple-200 text-purple-600 px-2 py-1">
                         {feature}
                       </Badge>
                     ))}
                   </div>
                   
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl font-bold text-purple-600">{abaya.price} ريال</span>
-                      <span className="text-lg text-gray-400 line-through">{abaya.originalPrice} ريال</span>
+                  <div className="flex items-center justify-between mb-4 md:mb-6">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <span className="text-2xl md:text-3xl font-bold text-purple-600">{abaya.price} ريال</span>
+                      <span className="text-base md:text-lg text-gray-400 line-through">{abaya.originalPrice} ريال</span>
                     </div>
                     <div className="flex items-center gap-1">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                        <Star key={i} className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 fill-current" />
                       ))}
-                      <span className="text-sm text-gray-500 mr-2">(4.9)</span>
+                      <span className="text-xs md:text-sm text-gray-500 mr-1 md:mr-2">(4.9)</span>
                     </div>
                   </div>
                   
                   <Button 
                     onClick={() => handleWhatsAppOrder(abaya.name, abaya.price)}
-                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 text-lg font-semibold transition-all duration-300 hover:shadow-lg"
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-2 md:py-3 text-base md:text-lg font-semibold transition-all duration-300 hover:shadow-lg"
                   >
-                    <Phone className="w-5 h-5 ml-2" />
-                    اطلبي عبر الواتساب
+                    <Phone className="w-4 h-4 md:w-5 md:h-5 ml-2" />
+                    <span className="hidden sm:inline">اطلبي عبر الواتساب</span>
+                    <span className="sm:hidden">طلب</span>
                   </Button>
                 </CardContent>
               </Card>
