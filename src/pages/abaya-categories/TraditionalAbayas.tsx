@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, Phone, Eye, ArrowLeft, Heart, Share2, Crown, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import AbayaHeader from '@/components/abaya-store/AbayaHeader';
+import AbayaFooter from '@/components/abaya-store/AbayaFooter';
 
 // Import abaya images
 import traditionalBrownAbaya from '@/assets/abaya-traditional-brown.jpg';
@@ -81,7 +83,9 @@ const TraditionalAbayas = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50" dir="rtl">
-      {/* Header */}
+      <AbayaHeader />
+      
+      {/* Hero Section - Updated */}
       <header className="relative bg-gradient-to-r from-amber-900 via-orange-800 to-yellow-800 text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative container mx-auto px-4 py-12">
@@ -315,6 +319,8 @@ const TraditionalAbayas = () => {
           </div>
         </div>
       </section>
+
+      <AbayaFooter />
     </div>
   );
 };
