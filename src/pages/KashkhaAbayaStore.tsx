@@ -505,7 +505,7 @@ const KashkhaAbayaStore = () => {
               </p>
               <p className="text-gray-400 text-sm flex items-center gap-2">
                 تطوير بحب في 
-                <span className="text-purple-300 font-semibold">شركة إمكان التقنية</span>
+                <span className="text-purple-300 font-semibold">شركة علي صالح الشهري القابضة</span>
                 <Heart className="w-4 h-4 text-rose-400" />
               </p>
             </div>
