@@ -85,7 +85,7 @@ const SportsAbayas = () => {
       <header className="relative bg-gradient-to-r from-green-900 via-green-800 to-emerald-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative container mx-auto px-4 py-12">
-          <Link to="/kashkha-store" className="inline-flex items-center gap-2 text-green-200 hover:text-white transition-colors mb-6">
+          <Link to="/abayati-store" className="inline-flex items-center gap-2 text-green-200 hover:text-white transition-colors mb-6">
             <ArrowLeft className="w-5 h-5" />
             العودة للصفحة الرئيسية
           </Link>

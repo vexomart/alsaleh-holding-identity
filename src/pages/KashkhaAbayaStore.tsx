@@ -295,7 +295,7 @@ const KashkhaAbayaStore = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {categories.map((category) => (
-              <Link key={category.value} to={`/kashkha-store/${category.value}`}>
+              <Link key={category.value} to={`/abayati-store/${category.value}`}>
               <Card key={category.value} className="overflow-hidden hover:shadow-xl transition-all duration-500 group cursor-pointer border-0 relative">
                 <div className="relative h-64 md:h-80 overflow-hidden">
                   <img 

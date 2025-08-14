@@ -259,15 +259,15 @@ const App = () => {
                 <Route path="/cards-store/cards" element={<ElectronicCardsWebsite />} />
                 <Route path="/cards-store/privacy" element={<CardsStorePrivacy />} />
                 <Route path="/cards-store/terms" element={<CardsStoreTerms />} />
-                <Route path="/kashkha-store" element={<KashkhaAbayaStore />} />
-                <Route path="/kashkha-store/luxury" element={<LuxuryAbayas />} />
-                <Route path="/kashkha-store/casual" element={<CasualAbayas />} />
-                <Route path="/kashkha-store/formal" element={<FormalAbayas />} />
-                <Route path="/kashkha-store/sports" element={<SportsAbayas />} />
-                <Route path="/kashkha-store/wedding" element={<WeddingAbayas />} />
-                <Route path="/kashkha-store/traditional" element={<TraditionalAbayas />} />
-                <Route path="/kashkha-store/about" element={<AbayaAboutUs />} />
-                <Route path="/kashkha-store/contact" element={<AbayaContactUs />} />
+                <Route path="/abayati-store" element={<KashkhaAbayaStore />} />
+                <Route path="/abayati-store/luxury" element={<LuxuryAbayas />} />
+                <Route path="/abayati-store/casual" element={<CasualAbayas />} />
+                <Route path="/abayati-store/formal" element={<FormalAbayas />} />
+                <Route path="/abayati-store/sports" element={<SportsAbayas />} />
+                <Route path="/abayati-store/wedding" element={<WeddingAbayas />} />
+                <Route path="/abayati-store/traditional" element={<TraditionalAbayas />} />
+                <Route path="/abayati-store/about" element={<AbayaAboutUs />} />
+                <Route path="/abayati-store/contact" element={<AbayaContactUs />} />
                 <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
                 <Route path="/car-rental-landing" element={<CarRentalLanding />} />
                 <Route path="/car-rental" element={<CarRentalLanding />} />

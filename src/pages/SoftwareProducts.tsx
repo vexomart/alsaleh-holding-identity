@@ -436,7 +436,7 @@ const SoftwareProducts = () => {
       downloads: "12",
       status: "متاح الآن",
       color: "from-rose-500 to-pink-600",
-      demoUrl: "/kashkha-store",
+      demoUrl: "/abayati-store",
       tags: ["Fashion", "E-commerce", "WhatsApp", "Luxury", "Abaya"],
       isNew: true,
       isFeatured: true,
