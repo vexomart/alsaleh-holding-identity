@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CardsStoreHeader } from "@/components/cards-store/CardsStoreHeader";
+import { CardsStoreFooter } from "@/components/cards-store/CardsStoreFooter";
+import { motion } from "framer-motion";
 import { 
   Accordion,
   AccordionContent,
@@ -8,8 +11,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { 
-  ArrowLeft, 
-  ShoppingCart, 
   MessageCircle, 
   HelpCircle, 
   Shield, 
@@ -28,8 +29,8 @@ import {
   Gamepad2,
   RefreshCw
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const FAQ = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -214,54 +215,11 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Developer Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-gray-900 to-black text-white py-3 px-4">
-        <div className="container mx-auto text-center">
-          <p className="text-xs md:text-sm font-medium flex items-center justify-center gap-2">
-            <Building className="w-3 md:w-4 h-3 md:h-4 animate-pulse text-blue-400" />
-            🏢 تم تطوير هذا المتجر بواسطة <span className="text-blue-400 font-bold">شركة علي صالح الشهري القابضة</span>
-          </p>
-        </div>
-      </div>
-
-      {/* Header */}
-      <header className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 shadow-xl">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            <Link to="/cards-store" className="flex items-center gap-3 group">
-              <div className="w-10 md:w-12 h-10 md:h-12 bg-gradient-to-r from-primary to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
-                <ShoppingCart className="w-5 md:w-6 h-5 md:h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
-                  🛍️ متجر البطاقات الإلكترونية
-                </h1>
-                <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400">المتجر الأول والأكثر ثقة</p>
-              </div>
-            </Link>
-
-            <div className="flex items-center gap-4">
-              <Button 
-                onClick={() => {
-                  const whatsappUrl = "https://wa.me/966500000000?text=مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
-                  window.open(whatsappUrl, '_blank');
-                }}
-                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg"
-              >
-                <MessageCircle className="w-4 h-4 ml-2" />
-                💬 واتساب
-              </Button>
-              
-              <Link to="/cards-store">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <ArrowLeft className="w-4 h-4" />
-                  العودة للرئيسية
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <CardsStoreHeader 
+        showBackButton={true}
+        title="🛍️ متجر البطاقات الإلكترونية - الأسئلة الشائعة"
+        subtitle="كل ما تريد معرفته عن متجرنا"
+      />
 
       {/* Hero Section */}
       <section className="py-16 md:py-24 relative overflow-hidden">
@@ -466,6 +424,8 @@ const FAQ = () => {
           </div>
         </div>
       </section>
+
+      <CardsStoreFooter />
     </div>
   );
 };

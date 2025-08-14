@@ -4,10 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { CardsStoreHeader } from "@/components/cards-store/CardsStoreHeader";
+import { CardsStoreFooter } from "@/components/cards-store/CardsStoreFooter";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { 
-  ArrowLeft, 
-  ShoppingCart, 
   MessageCircle, 
   Phone, 
   Mail, 
@@ -17,16 +18,12 @@ import {
   Building,
   Headphones,
   Globe,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
   Star,
   Shield,
-  Zap
+  Zap,
+  CheckCircle,
+  ShoppingCart
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -124,11 +121,11 @@ ${formData.message}
   ];
 
   const socialMedia = [
-    { name: "فيسبوك", icon: Facebook, url: "#", color: "bg-blue-600" },
-    { name: "تويتر", icon: Twitter, url: "#", color: "bg-sky-500" },
-    { name: "انستغرام", icon: Instagram, url: "#", color: "bg-gradient-to-r from-purple-500 to-pink-500" },
-    { name: "لينكدإن", icon: Linkedin, url: "#", color: "bg-blue-700" },
-    { name: "يوتيوب", icon: Youtube, url: "#", color: "bg-red-600" }
+    { name: "فيسبوك", icon: MessageCircle, url: "#", color: "bg-blue-600" },
+    { name: "تويتر", icon: MessageCircle, url: "#", color: "bg-sky-500" },
+    { name: "انستغرام", icon: MessageCircle, url: "#", color: "bg-gradient-to-r from-purple-500 to-pink-500" },
+    { name: "لينكدإن", icon: MessageCircle, url: "#", color: "bg-blue-700" },
+    { name: "يوتيوب", icon: MessageCircle, url: "#", color: "bg-red-600" }
   ];
 
   const features = [
@@ -151,54 +148,11 @@ ${formData.message}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Developer Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-gray-900 to-black text-white py-3 px-4">
-        <div className="container mx-auto text-center">
-          <p className="text-xs md:text-sm font-medium flex items-center justify-center gap-2">
-            <Building className="w-3 md:w-4 h-3 md:h-4 animate-pulse text-blue-400" />
-            🏢 تم تطوير هذا المتجر بواسطة <span className="text-blue-400 font-bold">شركة علي صالح الشهري القابضة</span>
-          </p>
-        </div>
-      </div>
-
-      {/* Header */}
-      <header className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 shadow-xl">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            <Link to="/cards-store" className="flex items-center gap-3 group">
-              <div className="w-10 md:w-12 h-10 md:h-12 bg-gradient-to-r from-primary to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
-                <ShoppingCart className="w-5 md:w-6 h-5 md:h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
-                  🛍️ متجر البطاقات الإلكترونية
-                </h1>
-                <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400">المتجر الأول والأكثر ثقة</p>
-              </div>
-            </Link>
-
-            <div className="flex items-center gap-4">
-              <Button 
-                onClick={() => {
-                  const whatsappUrl = "https://wa.me/966500000000?text=مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
-                  window.open(whatsappUrl, '_blank');
-                }}
-                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg"
-              >
-                <MessageCircle className="w-4 h-4 ml-2" />
-                💬 واتساب
-              </Button>
-              
-              <Link to="/cards-store">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <ArrowLeft className="w-4 h-4" />
-                  العودة للرئيسية
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <CardsStoreHeader 
+        showBackButton={true}
+        title="🛍️ متجر البطاقات الإلكترونية - تواصل معنا"
+        subtitle="نحن هنا لمساعدتك في أي وقت"
+      />
 
       {/* Hero Section */}
       <section className="py-16 md:py-24 relative overflow-hidden">
@@ -220,20 +174,34 @@ ${formData.message}
             فريق خدمة العملاء متاح على مدار الساعة للإجابة على جميع استفساراتك ومساعدتك في الحصول على أفضل تجربة تسوق
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
             {features.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <div key={index} className="flex items-center gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-4">
-                  <IconComponent className="w-6 h-6 text-primary" />
+                <motion.div 
+                  key={index} 
+                  className="flex items-center gap-3 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  whileHover={{ y: -5 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                >
+                  <div className="w-10 h-10 bg-gradient-to-r from-primary to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <IconComponent className="w-5 h-5 text-white" />
+                  </div>
                   <div className="text-left">
-                    <p className="font-semibold text-slate-900 dark:text-white text-sm">{feature.title}</p>
+                    <p className="font-bold text-slate-900 dark:text-white text-sm">{feature.title}</p>
                     <p className="text-xs text-slate-600 dark:text-slate-400">{feature.description}</p>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -513,6 +481,8 @@ ${formData.message}
           </div>
         </div>
       </section>
+
+      <CardsStoreFooter />
     </div>
   );
 };

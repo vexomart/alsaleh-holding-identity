@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CardsStoreHeader } from "@/components/cards-store/CardsStoreHeader";
+import { CardsStoreFooter } from "@/components/cards-store/CardsStoreFooter";
+import { motion } from "framer-motion";
 import { 
-  ArrowLeft, 
-  ShoppingCart, 
   Users, 
   Award, 
   Target, 
@@ -11,14 +12,12 @@ import {
   Globe, 
   Zap, 
   Shield,
-  Calendar,
   TrendingUp,
   Star,
   Building,
   MessageCircle,
   Phone
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const About = () => {
   const milestones = [
@@ -104,77 +103,57 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Developer Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-gray-900 to-black text-white py-3 px-4 relative overflow-hidden">
-        <div className="container mx-auto text-center relative">
-          <p className="text-xs md:text-sm font-medium flex items-center justify-center gap-2">
-            <Building className="w-3 md:w-4 h-3 md:h-4 animate-pulse text-blue-400" />
-            🏢 تم تطوير هذا المتجر بواسطة <span className="text-blue-400 font-bold">شركة علي صالح الشهري القابضة</span>
-          </p>
-        </div>
-      </div>
-
-      {/* Header */}
-      <header className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 shadow-xl">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            <Link to="/cards-store" className="flex items-center gap-3 group">
-              <div className="w-10 md:w-12 h-10 md:h-12 bg-gradient-to-r from-primary to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
-                <ShoppingCart className="w-5 md:w-6 h-5 md:h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
-                  🛍️ متجر البطاقات الإلكترونية
-                </h1>
-                <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400">المتجر الأول والأكثر ثقة</p>
-              </div>
-            </Link>
-
-            <div className="flex items-center gap-4">
-              <Button 
-                onClick={() => {
-                  const whatsappUrl = "https://wa.me/966500000000?text=مرحباً! أريد الاستفسار عن البطاقات الإلكترونية";
-                  window.open(whatsappUrl, '_blank');
-                }}
-                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg"
-              >
-                <MessageCircle className="w-4 h-4 ml-2" />
-                💬 واتساب
-              </Button>
-              
-              <Link to="/cards-store">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <ArrowLeft className="w-4 h-4" />
-                  العودة للرئيسية
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <CardsStoreHeader 
+        showBackButton={true}
+        title="🛍️ متجر البطاقات الإلكترونية - عن المتجر"
+        subtitle="تعرف على قصة نجاحنا ورؤيتنا"
+      />
 
       {/* Hero Section */}
-      <section className="py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-indigo-600/10 animate-pulse"></div>
+      <motion.section 
+        className="py-16 md:py-24 relative overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-indigo-600/10"></div>
+        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25"></div>
+        
         <div className="container mx-auto px-4 lg:px-6 text-center relative">
-          <Badge className="bg-gradient-to-r from-primary/10 to-blue-500/10 text-primary mb-6 text-lg px-6 py-3 border border-primary/20">
-            <Building className="w-5 h-5 ml-2" />
-            عن متجر البطاقات الإلكترونية
-          </Badge>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Badge className="bg-gradient-to-r from-primary/10 to-blue-500/10 text-primary mb-6 text-lg px-6 py-3 border border-primary/20 backdrop-blur-sm">
+              <Building className="w-5 h-5 ml-2" />
+              عن متجر البطاقات الإلكترونية المتطور
+            </Badge>
+          </motion.div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6">
+          <motion.h1 
+            className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 leading-tight"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
             قصة نجاح متميزة في عالم 
             <span className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent block">
               البطاقات الإلكترونية
             </span>
-          </h1>
+          </motion.h1>
           
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            منذ تأسيسنا، نسعى لتقديم أفضل الخدمات في مجال البطاقات الإلكترونية والرقمية 
-            بأعلى معايير الجودة والأمان في المملكة العربية السعودية
-          </p>
+          <motion.p 
+            className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            منذ تأسيسنا في عام 2020، نسعى لتقديم أفضل الخدمات في مجال البطاقات الإلكترونية والرقمية 
+            بأعلى معايير الجودة والأمان والابتكار في المملكة العربية السعودية ومنطقة الشرق الأوسط
+          </motion.p>
         </div>
-      </section>
+      </motion.section>
 
       {/* Our Story */}
       <section className="py-16 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
