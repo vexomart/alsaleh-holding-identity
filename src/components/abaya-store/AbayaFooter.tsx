@@ -98,21 +98,33 @@ const AbayaFooter: React.FC = () => {
               خدمة العملاء
             </h5>
             <ul className="space-y-3 text-gray-300">
+              <li>
+                <Link to="/abayati-store/shipping-delivery" className="hover:text-purple-300 transition-colors flex items-center gap-2">
+                  <Truck className="w-4 h-4 text-blue-400" />
+                  الشحن والتوصيل
+                </Link>
+              </li>
+              <li>
+                <Link to="/abayati-store/return-procedures" className="hover:text-purple-300 transition-colors flex items-center gap-2">
+                  <RotateCcw className="w-4 h-4 text-orange-400" />
+                  إجراءات الإرجاع
+                </Link>
+              </li>
+              <li>
+                <Link to="/abayati-store/return-policy" className="hover:text-purple-300 transition-colors flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-purple-400" />
+                  سياسة الإرجاع
+                </Link>
+              </li>
+              <li>
+                <Link to="/abayati-store/help-center" className="hover:text-purple-300 transition-colors flex items-center gap-2">
+                  <Headphones className="w-4 h-4 text-green-400" />
+                  مركز المساعدة
+                </Link>
+              </li>
               <li className="flex items-center gap-2">
                 <CreditCard className="w-4 h-4 text-green-400" />
                 طرق دفع متنوعة وآمنة
-              </li>
-              <li className="flex items-center gap-2">
-                <Truck className="w-4 h-4 text-blue-400" />
-                توصيل مجاني للطلبات +200 ريال
-              </li>
-              <li className="flex items-center gap-2">
-                <RotateCcw className="w-4 h-4 text-orange-400" />
-                إمكانية استبدال خلال 7 أيام
-              </li>
-              <li className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-purple-400" />
-                ضمان جودة المنتج
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-rose-400" />
