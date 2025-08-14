@@ -1,290 +1,267 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Phone, MessageSquare, MapPin, Clock, Mail, ArrowLeft, Heart, Crown, Star } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { 
+  Phone, Mail, MapPin, Clock, MessageCircle, Send, 
+  Instagram, Facebook, Twitter, Heart, Crown, Flower 
+} from 'lucide-react';
+import AbayaHeader from '@/components/abaya-store/AbayaHeader';
+import AbayaFooter from '@/components/abaya-store/AbayaFooter';
 
 const ContactUs = () => {
   const handleWhatsAppContact = () => {
-    const message = `🌟 السلام عليكم ورحمة الله وبركاته
-
-👗 أرغب في التواصل مع فريق متجر عبايتي
-💬 لدي استفسار عن المنتجات والخدمات
-
-شكراً لكم 🌸`;
+    const message = "👗 أرغب في التواصل مع فريق متجر عبايتي";
     const phoneNumber = '966500000000';
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
-  const contactMethods = [
-    {
-      icon: Phone,
-      title: 'الهاتف والواتساب',
-      description: 'تواصلي معنا مباشرة عبر الهاتف أو الواتساب',
-      value: '+966 50 000 0000',
-      action: 'اتصلي الآن',
-      color: 'from-green-600 to-green-700'
-    },
-    {
-      icon: Mail,
-      title: 'البريد الإلكتروني',
-      description: 'راسلينا عبر البريد الإلكتروني للاستفسارات المفصلة',
-      value: 'info@kashkha.com',
-      action: 'أرسلي رسالة',
-      color: 'from-blue-600 to-blue-700'
-    },
-    {
-      icon: MapPin,
-      title: 'موقعنا',
-      description: 'زوري معرضنا في الرياض لمشاهدة المجموعات عن قرب',
-      value: 'الرياض، المملكة العربية السعودية',
-      action: 'اطلبي الموقع',
-      color: 'from-purple-600 to-purple-700'
-    }
-  ];
-
-  const workingHours = [
-    { day: 'الأحد - الخميس', hours: '9:00 صباحاً - 10:00 مساءً' },
-    { day: 'الجمعة - السبت', hours: '2:00 ظهراً - 11:00 مساءً' }
-  ];
-
-  const services = [
-    {
-      icon: Crown,
-      title: 'استشارة شخصية',
-      description: 'احصلي على استشارة مخصصة لاختيار العباءة المناسبة لك'
-    },
-    {
-      icon: Heart,
-      title: 'تصميم حسب الطلب',
-      description: 'اطلبي تصميماً خاصاً يناسب ذوقك وشخصيتك'
-    },
-    {
-      icon: Star,
-      title: 'خدمة ما بعد البيع',
-      description: 'نوفر خدمة متابعة وضمان جودة لجميع منتجاتنا'
-    }
-  ];
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission here
+    console.log('Form submitted');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-rose-50 to-pink-50" dir="rtl">
-      {/* Header */}
-      <header className="relative bg-gradient-to-r from-purple-900 via-purple-800 to-rose-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative container mx-auto px-4 py-12">
-          <Link to="/abayati-store" className="inline-flex items-center gap-2 text-purple-200 hover:text-white transition-colors mb-6">
-            <ArrowLeft className="w-5 h-5" />
-            العودة للصفحة الرئيسية
-          </Link>
-          
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="w-24 h-24 bg-gradient-to-br from-rose-400 to-purple-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-              <MessageSquare className="w-12 h-12 text-white" />
+      <AbayaHeader />
+
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-r from-purple-600 via-rose-600 to-pink-600 text-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-4xl mx-auto animate-fade-in">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <MessageCircle className="w-12 h-12 text-yellow-300 animate-pulse" />
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-yellow-200 to-yellow-100 bg-clip-text text-transparent">
+                تواصلي معنا
+              </h1>
+              <MessageCircle className="w-12 h-12 text-yellow-300 animate-pulse" />
             </div>
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-rose-200 to-purple-200 bg-clip-text text-transparent">
-              تواصلي معنا
-            </h1>
-            <p className="text-xl text-purple-100 leading-relaxed">
-              نحن هنا لمساعدتك وخدمتك في أي وقت. تواصلي معنا بالطريقة التي تناسبك
+            <p className="text-xl md:text-2xl leading-relaxed">
+              نحن هنا لنساعدك في اختيار عباءة أحلامك وللإجابة على جميع استفساراتك
             </p>
           </div>
-        </div>
-      </header>
-
-      {/* Quick Contact */}
-      <section className="py-16 bg-gradient-to-r from-green-600 to-green-700 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">تواصل سريع عبر الواتساب</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            للحصول على رد فوري ومساعدة مباشرة، تواصلي معنا عبر الواتساب
-          </p>
-          <Button 
-            onClick={handleWhatsAppContact}
-            className="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:shadow-lg"
-          >
-            <MessageSquare className="w-6 h-6 ml-2" />
-            ابدئي المحادثة الآن
-          </Button>
         </div>
       </section>
 
       {/* Contact Methods */}
-      <section className="py-20">
+      <section className="py-20 bg-white/50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6 text-gray-800">طرق التواصل</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              اختاري الطريقة الأنسب لك للتواصل معنا. فريقنا جاهز لخدمتك
-            </p>
+          <div className="text-center mb-16 animate-fade-in">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Phone className="w-8 h-8 text-purple-500 animate-pulse" />
+              <h2 className="text-4xl font-bold text-gray-800">طرق التواصل</h2>
+              <Phone className="w-8 h-8 text-rose-500 animate-pulse" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {contactMethods.map((method, index) => (
-              <Card key={index} className="group relative overflow-hidden bg-white rounded-3xl border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                <CardContent className="p-8 text-center">
-                  <div className={`w-20 h-20 bg-gradient-to-br ${method.color} rounded-full mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                    <method.icon className="w-10 h-10 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <Card className="text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in">
+              <CardContent className="p-0">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-600 to-green-800 rounded-full mx-auto mb-6 flex items-center justify-center animate-pulse">
+                  <Phone className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">الواتساب</h3>
+                <p className="text-gray-600 mb-6">تواصلي معنا مباشرة عبر الواتساب للحصول على استشارة فورية</p>
+                <Button 
+                  onClick={handleWhatsAppContact}
+                  className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl"
+                >
+                  <MessageCircle className="w-5 h-5 ml-2" />
+                  تواصلي عبر الواتساب
+                </Button>
+                <p className="text-lg font-semibold mt-4 text-green-600">966500000000+</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center p-8 bg-gradient-to-br from-blue-50 to-blue-100 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <CardContent className="p-0">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full mx-auto mb-6 flex items-center justify-center animate-pulse">
+                  <Mail className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">البريد الإلكتروني</h3>
+                <p className="text-gray-600 mb-6">راسلينا عبر البريد الإلكتروني وسنجيبك في أقرب وقت</p>
+                <p className="text-lg font-semibold text-blue-600">info@abayati.com</p>
+                <p className="text-sm text-gray-500 mt-2">نجيب خلال 24 ساعة</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center p-8 bg-gradient-to-br from-purple-50 to-purple-100 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <CardContent className="p-0">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mx-auto mb-6 flex items-center justify-center animate-pulse">
+                  <MapPin className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">عنواننا</h3>
+                <p className="text-gray-600 mb-4">زورينا في متجرنا الرئيسي</p>
+                <p className="text-lg font-semibold text-purple-600">الرياض</p>
+                <p className="text-gray-600">المملكة العربية السعودية</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Contact Form */}
+          <div className="max-w-2xl mx-auto">
+            <Card className="p-8 bg-white/70 border-0 shadow-xl animate-fade-in" style={{ animationDelay: '0.6s' }}>
+              <CardContent className="p-0">
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <Crown className="w-8 h-8 text-purple-500 animate-pulse" />
+                    <h3 className="text-3xl font-bold text-gray-800">اتركي رسالة</h3>
+                    <Crown className="w-8 h-8 text-rose-500 animate-pulse" />
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-gray-800">{method.title}</h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">{method.description}</p>
-                  <p className="text-lg font-semibold text-purple-600 mb-6">{method.value}</p>
+                  <p className="text-gray-600">سنتواصل معك في أقرب وقت ممكن</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-gray-700 font-semibold mb-2">الاسم الكريم</label>
+                      <Input 
+                        type="text" 
+                        placeholder="اكتبي اسمك هنا"
+                        className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
+                        required 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-semibold mb-2">رقم الهاتف</label>
+                      <Input 
+                        type="tel" 
+                        placeholder="رقم هاتفك"
+                        className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
+                        required 
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-2">البريد الإلكتروني</label>
+                    <Input 
+                      type="email" 
+                      placeholder="بريدك الإلكتروني"
+                      className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
+                      required 
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-2">الموضوع</label>
+                    <Input 
+                      type="text" 
+                      placeholder="موضوع رسالتك"
+                      className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
+                      required 
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-2">الرسالة</label>
+                    <Textarea 
+                      placeholder="اكتبي رسالتك أو استفسارك هنا..."
+                      className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors min-h-32"
+                      required 
+                    />
+                  </div>
+
                   <Button 
-                    onClick={handleWhatsAppContact}
-                    className={`w-full bg-gradient-to-r ${method.color} hover:scale-105 text-white py-3 rounded-xl transition-all duration-300`}
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:shadow-lg"
                   >
-                    {method.action}
+                    <Send className="w-5 h-5 ml-2" />
+                    إرسال الرسالة
                   </Button>
-                </CardContent>
-              </Card>
-            ))}
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Working Hours */}
-      <section className="py-20 bg-white">
+      {/* Working Hours & Social Media */}
+      <section className="py-20 bg-gradient-to-br from-purple-600 via-rose-600 to-pink-600 text-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold mb-8 text-gray-800">أوقات العمل</h2>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                نحن متاحون لخدمتك خلال ساعات العمل التالية. يمكنك التواصل معنا في أي وقت عبر الواتساب للحصول على رد سريع.
-              </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="animate-fade-in">
+              <div className="flex items-center gap-3 mb-8">
+                <Clock className="w-8 h-8 text-yellow-300 animate-pulse" />
+                <h3 className="text-3xl font-bold">أوقات العمل</h3>
+              </div>
               
-              <div className="space-y-4">
-                {workingHours.map((schedule, index) => (
-                  <Card key={index} className="border border-purple-200 hover:shadow-lg transition-shadow duration-300">
-                    <CardContent className="p-6 flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <Clock className="w-6 h-6 text-purple-600" />
-                        <span className="text-lg font-semibold text-gray-800">{schedule.day}</span>
-                      </div>
-                      <Badge className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2">
-                        {schedule.hours}
-                      </Badge>
-                    </CardContent>
-                  </Card>
-                ))}
+              <div className="space-y-4 text-lg">
+                <div className="flex justify-between items-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+                  <span>الأحد - الخميس</span>
+                  <span className="font-semibold">9:00 ص - 10:00 م</span>
+                </div>
+                <div className="flex justify-between items-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+                  <span>الجمعة - السبت</span>
+                  <span className="font-semibold">2:00 ظ - 11:00 م</span>
+                </div>
               </div>
 
-              <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <MessageSquare className="w-6 h-6 text-green-600" />
-                  <h3 className="text-lg font-semibold text-green-800">الواتساب متاح 24/7</h3>
+              <div className="mt-8 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20">
+                <div className="flex items-center gap-2 mb-4">
+                  <Heart className="w-6 h-6 text-rose-300 animate-pulse" />
+                  <p className="text-lg font-semibold">نحن في خدمتك دائماً</p>
                 </div>
-                <p className="text-green-700">
-                  يمكنك إرسال رسالة عبر الواتساب في أي وقت وسنرد عليك في أقرب وقت ممكن
+                <p className="text-white/90">
+                  فريقنا النسائي المتخصص جاهز لمساعدتك في اختيار العباءة المثالية التي تناسب ذوقك وشخصيتك المميزة
                 </p>
               </div>
             </div>
 
-            <div className="relative">
-              <div className="bg-gradient-to-br from-purple-100 to-rose-100 rounded-3xl p-8 h-96">
-                <div className="text-center h-full flex flex-col justify-center">
-                  <Clock className="w-24 h-24 text-purple-600 mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">نحن هنا من أجلك</h3>
-                  <p className="text-gray-600 text-lg">
-                    فريق خدمة العملاء جاهز لمساعدتك وتقديم أفضل الخدمات
-                  </p>
+            <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <div className="flex items-center gap-3 mb-8">
+                <Flower className="w-8 h-8 text-yellow-300 animate-pulse" />
+                <h3 className="text-3xl font-bold">تابعينا على وسائل التواصل</h3>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6">
+                <div className="flex items-center gap-4 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors cursor-pointer">
+                  <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
+                    <Instagram className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold">إنستقرام</h4>
+                    <p className="text-white/80">شاهدي أحدث تصاميمنا وإطلالات عملائنا</p>
+                  </div>
                 </div>
+
+                <div className="flex items-center gap-4 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors cursor-pointer">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                    <Facebook className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold">فيسبوك</h4>
+                    <p className="text-white/80">انضمي لمجتمعنا وشاركي تجربتك</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 p-6 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors cursor-pointer">
+                  <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center">
+                    <Twitter className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold">تويتر</h4>
+                    <p className="text-white/80">آخر الأخبار والعروض الحصرية</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 text-center">
+                <Badge className="bg-white/20 text-white px-6 py-3 text-lg border-0">
+                  <Heart className="w-5 h-5 ml-2 animate-pulse" />
+                  نتطلع لتواصلك معنا
+                </Badge>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services */}
-      <section className="py-20 bg-gradient-to-r from-purple-600 to-rose-600 text-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">خدماتنا المميزة</h2>
-            <p className="text-xl text-purple-100 max-w-2xl mx-auto">
-              نقدم مجموعة من الخدمات المتخصصة لضمان حصولك على أفضل تجربة تسوق
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service, index) => (
-              <Card key={index} className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-all duration-300">
-                <CardContent className="p-8 text-center">
-                  <service.icon className="w-16 h-16 mx-auto mb-6 text-yellow-300" />
-                  <h3 className="text-xl font-bold mb-4">{service.title}</h3>
-                  <p className="text-purple-100 leading-relaxed">{service.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6 text-gray-800">الأسئلة الشائعة</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              إجابات على أكثر الأسئلة التي تردنا من عملائنا الكرام
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto space-y-6">
-            <Card className="border border-purple-200 hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">كم يستغرق تنفيذ الطلب؟</h3>
-                <p className="text-gray-600">
-                  عادة ما يستغرق تنفيذ الطلب من 3-7 أيام عمل حسب نوع العباءة والتخصيصات المطلوبة. سنوافيك بتفاصيل دقيقة عند التأكيد.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-purple-200 hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">هل يمكن تعديل المقاسات؟</h3>
-                <p className="text-gray-600">
-                  نعم، نوفر خدمة تعديل المقاسات مجاناً. كما يمكننا تفصيل عباءة حسب مقاساتك الخاصة.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-purple-200 hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">ما هي طرق الدفع المتاحة؟</h3>
-                <p className="text-gray-600">
-                  نقبل الدفع نقداً عند التسليم، التحويل البنكي، بطاقات الائتمان، والدفع عبر تطبيقات المحافظ الرقمية.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-purple-200 hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">هل تتوفر خدمة التوصيل؟</h3>
-                <p className="text-gray-600">
-                  نعم، نوفر خدمة التوصيل المجاني داخل الرياض وبرسوم رمزية لباقي مناطق المملكة.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-16 bg-gradient-to-r from-green-600 to-green-700 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">ما زلت تحتاجين مساعدة؟</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            فريق خدمة العملاء جاهز للإجابة على جميع استفساراتك ومساعدتك في اختيار العباءة المثالية
-          </p>
-          <Button 
-            onClick={handleWhatsAppContact}
-            className="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:shadow-lg"
-          >
-            <Phone className="w-6 h-6 ml-2" />
-            تواصلي معنا الآن
-          </Button>
-        </div>
-      </section>
+      <AbayaFooter />
     </div>
   );
 };

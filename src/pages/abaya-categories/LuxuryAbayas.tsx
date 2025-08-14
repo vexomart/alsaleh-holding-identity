@@ -2,8 +2,9 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Phone, Crown, ArrowLeft, Heart, Share2, Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Star, Phone, Crown, Heart, Sparkles, Eye, Share2 } from 'lucide-react';
+import AbayaHeader from '@/components/abaya-store/AbayaHeader';
+import AbayaFooter from '@/components/abaya-store/AbayaFooter';
 
 // Import abaya images
 import luxuryBlackAbaya from '@/assets/abaya-luxury-black.jpg';
@@ -67,39 +68,19 @@ const LuxuryAbayas = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-rose-50 to-pink-50" dir="rtl">
-      {/* Header */}
-      <header className="relative bg-gradient-to-r from-purple-900 via-purple-800 to-rose-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative container mx-auto px-4 py-12">
-          <Link to="/abayati-store" className="inline-flex items-center gap-2 text-purple-200 hover:text-white transition-colors mb-6">
-            <ArrowLeft className="w-5 h-5" />
-            العودة للصفحة الرئيسية
-          </Link>
-          
-          <div className="flex items-center gap-6 mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
-              <Crown className="w-10 h-10 text-white" />
-            </div>
-            <div>
-              <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-yellow-200 to-yellow-100 bg-clip-text text-transparent">
-                العبايات الملكية
-              </h1>
-              <p className="text-xl text-purple-100">
-                مجموعة حصرية للمناسبات الفاخرة والاستقبالات الملكية
-              </p>
-            </div>
-          </div>
-        </div>
-      </header>
+      <AbayaHeader />
 
       {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-r from-purple-600 to-rose-600 text-white">
+      <section className="py-20 bg-gradient-to-r from-purple-600 to-rose-600 text-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold mb-6">
-                اكتشفي جمال الأناقة الملكية
-              </h2>
+            <div className="animate-fade-in">
+              <div className="flex items-center gap-3 mb-6">
+                <Crown className="w-12 h-12 text-yellow-300 animate-pulse" />
+                <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-yellow-200 to-yellow-100 bg-clip-text text-transparent">
+                  العبايات الملكية
+                </h1>
+              </div>
               <p className="text-xl leading-relaxed mb-8">
                 مجموعتنا الملكية مصممة خصيصاً للمرأة التي تقدر الفخامة والتميز. 
                 كل قطعة مصنوعة بعناية فائقة من أجود الخامات المستوردة مع تطريز يدوي حصري.
@@ -117,11 +98,11 @@ const LuxuryAbayas = () => {
                 </Badge>
               </div>
             </div>
-            <div className="relative">
+            <div className="relative animate-fade-in" style={{ animationDelay: '0.3s' }}>
               <img 
                 src={categoryLuxuryAbaya} 
                 alt="العبايات الملكية" 
-                className="w-full h-96 object-cover rounded-2xl shadow-2xl"
+                className="w-full h-96 object-cover rounded-2xl shadow-2xl hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent rounded-2xl"></div>
             </div>
@@ -130,10 +111,14 @@ const LuxuryAbayas = () => {
       </section>
 
       {/* Products */}
-      <section className="py-20">
+      <section className="py-20 bg-white/50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold mb-6 text-gray-800">مجموعة العبايات الملكية</h3>
+          <div className="text-center mb-16 animate-fade-in">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Sparkles className="w-8 h-8 text-purple-500 animate-pulse" />
+              <h3 className="text-4xl font-bold text-gray-800">مجموعة العبايات الملكية</h3>
+              <Sparkles className="w-8 h-8 text-rose-500 animate-pulse" />
+            </div>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               قطع فنية راقية تجمع بين الأصالة والعصرية لتمنحك إطلالة ملكية لا تُنسى
             </p>
@@ -262,15 +247,15 @@ const LuxuryAbayas = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gradient-to-br from-purple-50/80 to-rose-50/80">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 animate-fade-in">
             <h3 className="text-3xl font-bold mb-4 text-gray-800">مميزات المجموعة الملكية</h3>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-rose-50 rounded-2xl">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-rose-50 rounded-2xl hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse">
                 <Crown className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-xl font-bold mb-3 text-gray-800">تصاميم حصرية</h4>
@@ -279,8 +264,8 @@ const LuxuryAbayas = () => {
               </p>
             </div>
             
-            <div className="text-center p-6 bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl">
-              <div className="w-16 h-16 bg-gradient-to-br from-rose-600 to-rose-800 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <div className="text-center p-6 bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <div className="w-16 h-16 bg-gradient-to-br from-rose-600 to-rose-800 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse">
                 <Star className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-xl font-bold mb-3 text-gray-800">خامات فاخرة</h4>
@@ -289,8 +274,8 @@ const LuxuryAbayas = () => {
               </p>
             </div>
             
-            <div className="text-center p-6 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl">
-              <div className="w-16 h-16 bg-gradient-to-br from-yellow-600 to-orange-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <div className="text-center p-6 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+              <div className="w-16 h-16 bg-gradient-to-br from-yellow-600 to-orange-600 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse">
                 <Heart className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-xl font-bold mb-3 text-gray-800">تطريز يدوي</h4>
@@ -301,6 +286,8 @@ const LuxuryAbayas = () => {
           </div>
         </div>
       </section>
+
+      <AbayaFooter />
     </div>
   );
 };
