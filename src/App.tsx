@@ -122,6 +122,8 @@ import ElectronicCardsWebsite from "./pages/ElectronicCardsWebsite";
 import CardsStoreAbout from "./pages/cards-store/About";
 import CardsStoreContact from "./pages/cards-store/Contact";
 import CardsStoreFAQ from "./pages/cards-store/FAQ";
+import CardsStorePrivacy from "./pages/cards-store/Privacy";
+import CardsStoreTerms from "./pages/cards-store/Terms";
 
 import ServicesCatalog from "./pages/ServicesCatalog";
 import DigitalMarketing from "./pages/DigitalMarketing";
@@ -242,6 +244,12 @@ const App = () => {
                 <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
                 <Route path="/electronic-cards-store" element={<ElectronicCardsStore />} />
                 <Route path="/cards-store" element={<ElectronicCardsWebsite />} />
+                <Route path="/cards-store/about" element={<CardsStoreAbout />} />
+                <Route path="/cards-store/contact" element={<CardsStoreContact />} />
+                <Route path="/cards-store/faq" element={<CardsStoreFAQ />} />
+                <Route path="/cards-store/cards" element={<ElectronicCardsWebsite />} />
+                <Route path="/cards-store/privacy" element={<CardsStorePrivacy />} />
+                <Route path="/cards-store/terms" element={<CardsStoreTerms />} />
                 <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
                 <Route path="/car-rental-landing" element={<CarRentalLanding />} />
                 <Route path="/car-rental" element={<CarRentalLanding />} />
