@@ -119,6 +119,9 @@ import ConstructionWebsite from "./pages/ConstructionWebsite";
 import DigitalMarketingWebsite from "./pages/DigitalMarketingWebsite";
 import ElectronicCardsStore from "./pages/ElectronicCardsStore";
 import ElectronicCardsWebsite from "./pages/ElectronicCardsWebsite";
+import CardsStoreAbout from "./pages/cards-store/About";
+import CardsStoreContact from "./pages/cards-store/Contact";
+import CardsStoreFAQ from "./pages/cards-store/FAQ";
 
 import ServicesCatalog from "./pages/ServicesCatalog";
 import DigitalMarketing from "./pages/DigitalMarketing";
