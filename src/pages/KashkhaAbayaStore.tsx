@@ -2,7 +2,12 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Phone, Crown, Heart, Sparkles, Gift, Users, Clock, Award, ShoppingBag, Eye, ArrowLeft, Plus, Share2, Bookmark } from 'lucide-react';
+import { 
+  Star, Phone, Crown, Heart, Sparkles, Gift, Users, Clock, Award, 
+  ShoppingBag, Eye, ArrowLeft, Plus, Share2, Bookmark, Instagram,
+  Facebook, Twitter, MessageCircle, Mail, MapPin, CreditCard,
+  Headphones, RotateCcw, Shield, Truck
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Import category images
@@ -201,46 +206,102 @@ const KashkhaAbayaStore = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-purple-50 to-pink-50" dir="rtl">
-      {/* Custom Header for Abaya Store */}
-      <header className="relative bg-gradient-to-r from-purple-900 via-purple-800 to-rose-900 text-white overflow-hidden">
+      {/* Enhanced Header for Abaya Store */}
+      <header className="relative bg-gradient-to-r from-purple-900 via-purple-800 to-rose-900 text-white overflow-hidden shadow-2xl">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0">
-          <div className="absolute top-10 right-10 w-20 h-20 border border-white/20 rounded-full"></div>
-          <div className="absolute bottom-10 left-10 w-16 h-16 border border-white/20 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-white/30 rounded-full"></div>
-          <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-white/30 rounded-full"></div>
+          <div className="absolute top-10 right-10 w-20 h-20 border border-white/20 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-10 left-10 w-16 h-16 border border-white/20 rounded-full animate-pulse"></div>
+          <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
+          <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
         </div>
         
-        <div className="relative container mx-auto px-4 py-6 md:py-8">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-3 md:gap-6">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-rose-400 to-purple-600 rounded-full flex items-center justify-center">
-                <Crown className="w-6 h-6 md:w-8 md:h-8 text-white" />
+        <div className="relative container mx-auto px-4">
+          {/* Top Bar */}
+          <div className="flex items-center justify-between py-3 border-b border-white/10">
+            <div className="flex items-center gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4" />
+                <span>966500000000+</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span>الأحد - الخميس: 9ص - 10م</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <a href="#" className="text-white/80 hover:text-white transition-colors">
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a href="#" className="text-white/80 hover:text-white transition-colors">
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a href="#" className="text-white/80 hover:text-white transition-colors">
+                <Twitter className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Main Header */}
+          <div className="flex items-center justify-between py-6">
+            <div className="flex items-center gap-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                <Crown className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-1 md:mb-2 bg-gradient-to-r from-rose-200 to-purple-200 bg-clip-text text-transparent">
+                <h1 className="text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-rose-200 to-purple-200 bg-clip-text text-transparent">
                   متجر عبايتي
                 </h1>
-                <p className="text-sm md:text-lg text-purple-100 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
+                <p className="text-lg text-purple-100 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" />
                   بيت الأناقة والجمال العربي الأصيل
                 </p>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
-              <Badge className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 text-sm md:text-lg px-3 py-2 md:px-6 md:py-3">
-                <Phone className="w-4 h-4 md:w-5 md:h-5 ml-2" />
-                <span className="hidden sm:inline">اطلبي عبر الواتساب</span>
-                <span className="sm:hidden">الواتساب</span>
-              </Badge>
+              <Button 
+                className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 px-6 py-3"
+                onClick={() => handleStoreOrder()}
+              >
+                <MessageCircle className="w-5 h-5 ml-2" />
+                تواصلي معنا
+              </Button>
+              <Button 
+                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-3 shadow-lg"
+                onClick={() => window.scrollTo({ top: document.getElementById('products')?.offsetTop || 0, behavior: 'smooth' })}
+              >
+                <ShoppingBag className="w-5 h-5 ml-2" />
+                تسوقي الآن
+              </Button>
             </div>
           </div>
+
+          {/* Navigation Menu */}
+          <nav className="pb-4">
+            <div className="flex items-center justify-center gap-8 text-sm">
+              <a href="#hero" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+                الرئيسية
+              </a>
+              <a href="#categories" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+                الأقسام
+              </a>
+              <a href="#products" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+                المنتجات
+              </a>
+              <Link to="/abayati-store/about" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+                من نحن
+              </Link>
+              <Link to="/abayati-store/contact" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+                اتصلي بنا
+              </Link>
+            </div>
+          </nav>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-12 md:py-20 bg-gradient-to-r from-rose-600 via-purple-600 to-pink-600 text-white overflow-hidden">
+      <section id="hero" className="relative py-12 md:py-20 bg-gradient-to-r from-rose-600 via-purple-600 to-pink-600 text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/30"></div>
         <div className="absolute inset-0">
           {/* Decorative elements */}
@@ -284,7 +345,7 @@ const KashkhaAbayaStore = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-12 md:py-16 bg-white">
+      <section id="categories" className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 md:mb-12">
             <h3 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 text-gray-800">اختاري حسب المناسبة</h3>
@@ -334,7 +395,7 @@ const KashkhaAbayaStore = () => {
       </section>
 
       {/* Products */}
-      <section className="py-12 md:py-20 bg-gradient-to-br from-purple-50 to-rose-50">
+      <section id="products" className="py-12 md:py-20 bg-gradient-to-br from-purple-50 to-rose-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 md:mb-16">
             <h3 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 text-gray-800">مجموعة العبايات المميزة</h3>
@@ -589,17 +650,79 @@ const KashkhaAbayaStore = () => {
             
             <div>
               <h5 className="text-xl font-semibold mb-6 text-rose-300 flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                مجموعاتنا المميزة
+                <Crown className="w-5 h-5" />
+                مجموعات العبايات
               </h5>
               <ul className="space-y-3 text-gray-300">
-                <li className="hover:text-rose-300 transition-colors cursor-pointer">👑 العبايات الملكية</li>
-                <li className="hover:text-rose-300 transition-colors cursor-pointer">🌹 العبايات اليومية</li>
-                <li className="hover:text-rose-300 transition-colors cursor-pointer">✨ العبايات الرسمية</li>
-                <li className="hover:text-rose-300 transition-colors cursor-pointer">🏃‍♀️ العبايات الرياضية</li>
-                <li className="hover:text-rose-300 transition-colors cursor-pointer">💒 عبايات الأفراح</li>
-                <li className="hover:text-rose-300 transition-colors cursor-pointer">🏛️ العبايات التراثية</li>
-                <li className="hover:text-rose-300 transition-colors cursor-pointer">🎨 التصاميم حسب الطلب</li>
+                <li>
+                  <Link to="/abayati-store/luxury" className="hover:text-rose-300 transition-colors flex items-center gap-2">
+                    <Crown className="w-4 h-4" />
+                    العبايات الملكية الفاخرة
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/abayati-store/casual" className="hover:text-rose-300 transition-colors flex items-center gap-2">
+                    <Heart className="w-4 h-4" />
+                    العبايات اليومية العملية
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/abayati-store/formal" className="hover:text-rose-300 transition-colors flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    العبايات الرسمية الأنيقة
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/abayati-store/sports" className="hover:text-rose-300 transition-colors flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    العبايات الرياضية النشطة
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/abayati-store/wedding" className="hover:text-rose-300 transition-colors flex items-center gap-2">
+                    <Gift className="w-4 h-4" />
+                    عبايات الأفراح والمناسبات
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/abayati-store/traditional" className="hover:text-rose-300 transition-colors flex items-center gap-2">
+                    <Award className="w-4 h-4" />
+                    العبايات التراثية الأصيلة
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 className="text-xl font-semibold mb-6 text-purple-300 flex items-center gap-2">
+                <Headphones className="w-5 h-5" />
+                خدمة العملاء
+              </h5>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 text-green-400" />
+                  طرق دفع متنوعة وآمنة
+                </li>
+                <li className="flex items-center gap-2">
+                  <Truck className="w-4 h-4 text-blue-400" />
+                  توصيل مجاني للطلبات +200 ريال
+                </li>
+                <li className="flex items-center gap-2">
+                  <RotateCcw className="w-4 h-4 text-orange-400" />
+                  إمكانية استبدال خلال 7 أيام
+                </li>
+                <li className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-purple-400" />
+                  ضمان جودة المنتج
+                </li>
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-rose-400" />
+                  دعم فني 24/7
+                </li>
+                <li className="flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-yellow-400" />
+                  تصاميم حصرية ومميزة
+                </li>
               </ul>
             </div>
             
@@ -620,26 +743,45 @@ const KashkhaAbayaStore = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">@</span>
+                    <Mail className="w-4 h-4 text-white" />
                   </div>
                   <div>
                     <p className="font-semibold">البريد الإلكتروني</p>
-                    <p className="text-sm">info@kashkha.com</p>
+                    <p className="text-sm">info@abayati.com</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">📍</span>
+                    <MapPin className="w-4 h-4 text-white" />
                   </div>
                   <div>
                     <p className="font-semibold">العنوان</p>
                     <p className="text-sm">الرياض، المملكة العربية السعودية</p>
                   </div>
                 </div>
+                
                 <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-                  <p className="text-sm text-purple-200 mb-2">⏰ أوقات العمل</p>
+                  <p className="text-sm text-purple-200 mb-2 flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    أوقات العمل
+                  </p>
                   <p className="text-sm">الأحد - الخميس: 9 صباحاً - 10 مساءً</p>
                   <p className="text-sm">الجمعة - السبت: 2 ظهراً - 11 مساءً</p>
+                </div>
+
+                <div className="mt-4">
+                  <p className="text-sm text-purple-200 mb-3">تابعينا على</p>
+                  <div className="flex gap-3">
+                    <a href="#" className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
+                      <Instagram className="w-4 h-4 text-white" />
+                    </a>
+                    <a href="#" className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                      <Facebook className="w-4 h-4 text-white" />
+                    </a>
+                    <a href="#" className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center hover:bg-cyan-700 transition-colors">
+                      <Twitter className="w-4 h-4 text-white" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
