@@ -172,7 +172,7 @@ const KashkhaAbayaStore = () => {
   const handleWhatsAppOrder = (abayaName: string, price: string) => {
     const message = `✨ السلام عليكم ورحمة الله وبركاته
 
-🌹 أتشرف بطلب ${abayaName} من مجموعة كشخة الحصرية
+🌹 أتشرف بطلب ${abayaName} من مجموعة عبايتي الحصرية
 💎 السعر: ${price} ريال
 🎁 أرغب في معرفة تفاصيل أكثر عن المقاسات المتاحة والألوان
 
@@ -185,7 +185,7 @@ const KashkhaAbayaStore = () => {
   const handleStoreOrder = () => {
     const message = `🌟 السلام عليكم ورحمة الله وبركاته
 
-👗 أرغب في إنشاء متجر العبايات الإلكتروني المتكامل "كشخة"
+👗 أرغب في إنشاء متجر العبايات الإلكتروني المتكامل "عبايتي"
 
 📋 تفاصيل الطلب:
 • السعر: 2000 ريال سعودي
@@ -219,7 +219,7 @@ const KashkhaAbayaStore = () => {
               </div>
               <div>
                 <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-1 md:mb-2 bg-gradient-to-r from-rose-200 to-purple-200 bg-clip-text text-transparent">
-                  كشخة للعبايات
+                  متجر عبايتي
                 </h1>
                 <p className="text-sm md:text-lg text-purple-100 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
@@ -506,7 +506,7 @@ const KashkhaAbayaStore = () => {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h3 className="text-5xl font-bold mb-6 text-gray-800">لماذا تختارين كشخة؟</h3>
+            <h3 className="text-5xl font-bold mb-6 text-gray-800">لماذا تختارين عبايتي؟</h3>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               نحن لسنا مجرد متجر عبايات، بل بيت للأناقة والجمال يحتضن أحلام كل امرأة عربية أصيلة
             </p>
@@ -564,7 +564,7 @@ const KashkhaAbayaStore = () => {
                   <Crown className="w-6 h-6 text-white" />
                 </div>
                 <h4 className="text-3xl font-bold bg-gradient-to-r from-rose-300 to-purple-300 bg-clip-text text-transparent">
-                  كشخة للعبايات
+                  متجر عبايتي
                 </h4>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed text-lg">
@@ -648,7 +648,7 @@ const KashkhaAbayaStore = () => {
           <div className="border-t border-white/10 pt-8 text-center">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-gray-400 text-sm">
-                &copy; 2024 كشخة للعبايات. جميع الحقوق محفوظة.
+                &copy; 2024 متجر عبايتي. جميع الحقوق محفوظة.
               </p>
               <p className="text-gray-400 text-sm flex items-center gap-2">
                 تطوير بحب في 

@@ -21,7 +21,7 @@ const AboutUs = () => {
               <Crown className="w-12 h-12 text-white" />
             </div>
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-rose-200 to-purple-200 bg-clip-text text-transparent">
-              من نحن - كشخة للعبايات
+              من نحن - متجر عبايتي
             </h1>
             <p className="text-xl text-purple-100 leading-relaxed">
               رحلة من الإبداع والأناقة في عالم العبايات العربية الأصيلة
@@ -36,7 +36,7 @@ const AboutUs = () => {
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-8 text-gray-800">قصتنا</h2>
             <p className="text-xl text-gray-600 leading-relaxed mb-8">
-              بدأت رحلة "كشخة" من شغف عميق بالأناقة العربية الأصيلة ورؤية لتطوير عبايات تجمع بين التراث العريق والعصرية الحديثة. 
+              بدأت رحلة "عبايتي" من شغف عميق بالأناقة العربية الأصيلة ورؤية لتطوير عبايات تجمع بين التراث العريق والعصرية الحديثة. 
               منذ انطلاقتنا، كان هدفنا واضحاً: تصميم عبايات تعكس جمال وقوة المرأة العربية، وتمنحها الثقة والأناقة في كل خطوة.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
