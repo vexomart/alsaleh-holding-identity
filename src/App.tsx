@@ -133,6 +133,10 @@ import WeddingAbayas from "./pages/abaya-categories/WeddingAbayas";
 import TraditionalAbayas from "./pages/abaya-categories/TraditionalAbayas";
 import AbayaAboutUs from "./pages/abaya-categories/AboutUs";
 import AbayaContactUs from "./pages/abaya-categories/ContactUs";
+import ShippingDelivery from "./pages/abaya-categories/ShippingDelivery";
+import ReturnProcedures from "./pages/abaya-categories/ReturnProcedures";
+import ReturnPolicy from "./pages/abaya-categories/ReturnPolicy";
+import HelpCenter from "./pages/abaya-categories/HelpCenter";
 
 import ServicesCatalog from "./pages/ServicesCatalog";
 import DigitalMarketing from "./pages/DigitalMarketing";
@@ -268,6 +272,10 @@ const App = () => {
                 <Route path="/abayati-store/traditional" element={<TraditionalAbayas />} />
                 <Route path="/abayati-store/about" element={<AbayaAboutUs />} />
                 <Route path="/abayati-store/contact" element={<AbayaContactUs />} />
+                <Route path="/abayati-store/shipping-delivery" element={<ShippingDelivery />} />
+                <Route path="/abayati-store/return-procedures" element={<ReturnProcedures />} />
+                <Route path="/abayati-store/return-policy" element={<ReturnPolicy />} />
+                <Route path="/abayati-store/help-center" element={<HelpCenter />} />
                 <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
                 <Route path="/car-rental-landing" element={<CarRentalLanding />} />
                 <Route path="/car-rental" element={<CarRentalLanding />} />
