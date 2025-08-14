@@ -53,6 +53,14 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+// Import card images
+import googlePlayCard from "@/assets/google-play-card.jpg";
+import itunesCard from "@/assets/itunes-card.jpg";
+import steamCard from "@/assets/steam-card.jpg";
+import netflixCard from "@/assets/netflix-card.jpg";
+import visaCard from "@/assets/visa-card.jpg";
+import amazonCard from "@/assets/amazon-card.jpg";
+
 const ElectronicCardsWebsite = () => {
   const [selectedCategory, setSelectedCategory] = useState("الكل");
   const [searchTerm, setSearchTerm] = useState("");
@@ -77,7 +85,7 @@ const ElectronicCardsWebsite = () => {
       price: "25",
       originalPrice: "30",
       currency: "ر.س",
-      image: "/api/placeholder/300/200",
+      image: googlePlayCard,
       category: "تطبيقات",
       rating: 4.8,
       sales: 1250,
@@ -92,7 +100,7 @@ const ElectronicCardsWebsite = () => {
       price: "50",
       originalPrice: "60",
       currency: "ر.س",
-      image: "/api/placeholder/300/200",
+      image: itunesCard,
       category: "تطبيقات",
       rating: 4.9,
       sales: 980,
@@ -107,7 +115,7 @@ const ElectronicCardsWebsite = () => {
       price: "100",
       originalPrice: "120",
       currency: "ر.س",
-      image: "/api/placeholder/300/200",
+      image: steamCard,
       category: "ألعاب",
       rating: 4.7,
       sales: 2100,
@@ -122,7 +130,7 @@ const ElectronicCardsWebsite = () => {
       price: "75",
       originalPrice: "90",
       currency: "ر.س",
-      image: "/api/placeholder/300/200",
+      image: netflixCard,
       category: "اشتراكات",
       rating: 4.6,
       sales: 856,
@@ -137,7 +145,7 @@ const ElectronicCardsWebsite = () => {
       price: "15",
       originalPrice: "20",
       currency: "ر.س",
-      image: "/api/placeholder/300/200",
+      image: visaCard,
       category: "بطاقات دفع",
       rating: 4.5,
       sales: 1780,
@@ -152,7 +160,7 @@ const ElectronicCardsWebsite = () => {
       price: "200",
       originalPrice: "250",
       currency: "ر.س",
-      image: "/api/placeholder/300/200",
+      image: amazonCard,
       category: "خدمات رقمية",
       rating: 4.8,
       sales: 567,
@@ -428,7 +436,7 @@ const ElectronicCardsWebsite = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-12">
             {categories.map((category) => {
               const IconComponent = category.icon;
               const isSelected = selectedCategory === category.name;
@@ -436,10 +444,10 @@ const ElectronicCardsWebsite = () => {
               return (
                 <Card
                   key={category.name}
-                  className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group ${
+                  className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group border border-slate-200/50 dark:border-slate-700/50 rounded-2xl ${
                     isSelected 
-                      ? 'ring-2 ring-purple-500 shadow-xl transform -translate-y-1' 
-                      : 'hover:shadow-lg'
+                      ? 'ring-2 ring-purple-500 shadow-xl transform -translate-y-1 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20' 
+                      : 'hover:shadow-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg'
                   }`}
                   onClick={() => setSelectedCategory(category.name)}
                 >
@@ -447,7 +455,7 @@ const ElectronicCardsWebsite = () => {
                     <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                     
                     <div className={`w-16 h-16 bg-gradient-to-br ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg ${
-                      isSelected ? 'scale-110' : ''
+                      isSelected ? 'scale-110 shadow-xl' : ''
                     }`}>
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
@@ -458,7 +466,9 @@ const ElectronicCardsWebsite = () => {
                       {category.name}
                     </h3>
                     
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant={isSelected ? "default" : "secondary"} className={`text-xs ${
+                      isSelected ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white' : ''
+                    }`}>
                       {category.count} منتج
                     </Badge>
                   </CardContent>
@@ -488,13 +498,13 @@ const ElectronicCardsWebsite = () => {
             {filteredProducts.map((product) => (
               <Card 
                 key={product.id} 
-                className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg"
+                className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl"
               >
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden rounded-t-2xl">
                   <img 
                     src={product.image} 
                     alt={product.name}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   
                   {/* Overlay with Quick Actions */}
