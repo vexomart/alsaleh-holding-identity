@@ -6,9 +6,12 @@ import {
   Star, Phone, Crown, Heart, Sparkles, Gift, Users, Clock, Award, 
   ShoppingBag, Eye, ArrowLeft, Plus, Share2, Bookmark, Instagram,
   Facebook, Twitter, MessageCircle, Mail, MapPin, CreditCard,
-  Headphones, RotateCcw, Shield, Truck
+  Headphones, RotateCcw, Shield, Truck, Flower
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import abayaHeroBg from '@/assets/abaya-hero-bg.jpg';
+import abayaCollectionBg from '@/assets/abaya-collection-bg.jpg';
+import abayaPatternBg from '@/assets/abaya-pattern-bg.jpg';
 
 // Import category images
 import categoryLuxuryAbaya from '@/assets/category-luxury-abaya.jpg';
@@ -207,68 +210,82 @@ const KashkhaAbayaStore = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-purple-50 to-pink-50" dir="rtl">
       {/* Enhanced Header for Abaya Store */}
-      <header className="relative bg-gradient-to-r from-purple-900 via-purple-800 to-rose-900 text-white overflow-hidden shadow-2xl">
-        <div className="absolute inset-0 bg-black/20"></div>
+      <header className="relative bg-gradient-to-r from-purple-900 via-rose-800 to-pink-900 text-white overflow-hidden shadow-2xl">
+        <div 
+          className="absolute inset-0 bg-black/40"
+          style={{ 
+            backgroundImage: `url(${abayaPatternBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundBlendMode: 'overlay'
+          }}
+        ></div>
         <div className="absolute inset-0">
-          <div className="absolute top-10 right-10 w-20 h-20 border border-white/20 rounded-full animate-pulse"></div>
-          <div className="absolute bottom-10 left-10 w-16 h-16 border border-white/20 rounded-full animate-pulse"></div>
-          <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
-          <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
+          <div className="absolute top-10 right-10 w-20 h-20 border border-rose-300/30 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-10 left-10 w-16 h-16 border border-purple-300/30 rounded-full animate-pulse"></div>
+          <div className="absolute top-1/2 left-1/4 w-3 h-3 bg-rose-300/40 rounded-full animate-ping"></div>
+          <div className="absolute top-1/4 right-1/3 w-2 h-2 bg-purple-300/40 rounded-full animate-ping"></div>
+          <div className="absolute top-3/4 left-1/2 w-4 h-4 bg-pink-300/30 rounded-full animate-pulse"></div>
         </div>
         
         <div className="relative container mx-auto px-4">
           {/* Top Bar */}
-          <div className="flex items-center justify-between py-3 border-b border-white/10">
-            <div className="flex items-center gap-6 text-sm">
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4" />
+          <div className="flex items-center justify-between py-3 border-b border-white/20">
+            <div className="flex items-center gap-6 text-sm animate-fade-in">
+              <div className="flex items-center gap-2 hover:text-rose-200 transition-colors">
+                <Phone className="w-4 h-4 animate-pulse" />
                 <span>966500000000+</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 hover:text-purple-200 transition-colors">
                 <Clock className="w-4 h-4" />
                 <span>الأحد - الخميس: 9ص - 10م</span>
               </div>
+              <div className="flex items-center gap-2 text-rose-200">
+                <Flower className="w-4 h-4 animate-pulse" />
+                <span className="font-arabic">أناقة عربية أصيلة</span>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <a href="#" className="text-white/80 hover:text-white transition-colors">
+            <div className="flex items-center gap-4 animate-fade-in">
+              <a href="#" className="text-white/80 hover:text-rose-300 transition-all duration-300 hover:scale-110">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="text-white/80 hover:text-white transition-colors">
+              <a href="#" className="text-white/80 hover:text-purple-300 transition-all duration-300 hover:scale-110">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="text-white/80 hover:text-white transition-colors">
+              <a href="#" className="text-white/80 hover:text-pink-300 transition-all duration-300 hover:scale-110">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>
           </div>
 
           {/* Main Header */}
-          <div className="flex items-center justify-between py-6">
+          <div className="flex items-center justify-between py-6 animate-fade-in">
             <div className="flex items-center gap-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-br from-rose-400 via-purple-500 to-pink-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
                 <Crown className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-rose-200 to-purple-200 bg-clip-text text-transparent">
+                <h1 className="text-4xl lg:text-6xl font-bold mb-2 bg-gradient-to-r from-rose-200 via-purple-200 to-pink-200 bg-clip-text text-transparent animate-scale-in">
                   متجر عبايتي
                 </h1>
-                <p className="text-lg text-purple-100 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5" />
+                <p className="text-lg text-purple-100 flex items-center gap-2 animate-fade-in">
+                  <Sparkles className="w-5 h-5 animate-pulse" />
                   بيت الأناقة والجمال العربي الأصيل
+                  <Heart className="w-4 h-4 text-rose-300 animate-pulse" />
                 </p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 animate-fade-in">
               <Button 
-                className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 px-6 py-3"
+                className="bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20 px-6 py-3 transition-all duration-300 hover:scale-105 shadow-lg"
                 onClick={() => handleStoreOrder()}
               >
-                <MessageCircle className="w-5 h-5 ml-2" />
+                <MessageCircle className="w-5 h-5 ml-2 animate-pulse" />
                 تواصلي معنا
               </Button>
               <Button 
-                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-3 shadow-lg"
+                className="bg-gradient-to-r from-rose-500 via-purple-500 to-pink-500 hover:from-rose-600 hover:via-purple-600 hover:to-pink-600 text-white px-6 py-3 shadow-2xl transition-all duration-300 hover:scale-105 animate-pulse"
                 onClick={() => window.scrollTo({ top: document.getElementById('products')?.offsetTop || 0, behavior: 'smooth' })}
               >
                 <ShoppingBag className="w-5 h-5 ml-2" />
@@ -278,21 +295,21 @@ const KashkhaAbayaStore = () => {
           </div>
 
           {/* Navigation Menu */}
-          <nav className="pb-4">
+          <nav className="pb-4 animate-fade-in">
             <div className="flex items-center justify-center gap-8 text-sm">
-              <a href="#hero" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+              <a href="#hero" className="text-white/90 hover:text-rose-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-rose-300 hover:scale-105">
                 الرئيسية
               </a>
-              <a href="#categories" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+              <a href="#categories" className="text-white/90 hover:text-purple-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-purple-300 hover:scale-105">
                 الأقسام
               </a>
-              <a href="#products" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+              <a href="#products" className="text-white/90 hover:text-pink-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-pink-300 hover:scale-105">
                 المنتجات
               </a>
-              <Link to="/abayati-store/about" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+              <Link to="/abayati-store/about" className="text-white/90 hover:text-rose-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-rose-300 hover:scale-105">
                 من نحن
               </Link>
-              <Link to="/abayati-store/contact" className="text-white/90 hover:text-white transition-colors py-2 border-b-2 border-transparent hover:border-rose-300">
+              <Link to="/abayati-store/contact" className="text-white/90 hover:text-purple-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-purple-300 hover:scale-105">
                 اتصلي بنا
               </Link>
             </div>
@@ -301,8 +318,17 @@ const KashkhaAbayaStore = () => {
       </header>
 
       {/* Hero Section */}
-      <section id="hero" className="relative py-12 md:py-20 bg-gradient-to-r from-rose-600 via-purple-600 to-pink-600 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/30"></div>
+      <section 
+        id="hero" 
+        className="relative py-20 md:py-32 text-white overflow-hidden"
+        style={{
+          backgroundImage: `url(${abayaHeroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/80 via-rose-800/70 to-pink-900/80"></div>
         <div className="absolute inset-0">
           {/* Decorative elements */}
           <div className="absolute top-10 md:top-20 right-10 md:right-20 w-16 h-16 md:w-32 md:h-32 border-2 border-white/20 rounded-full"></div>
@@ -345,47 +371,77 @@ const KashkhaAbayaStore = () => {
       </section>
 
       {/* Categories */}
-      <section id="categories" className="py-12 md:py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 md:mb-12">
-            <h3 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 text-gray-800">اختاري حسب المناسبة</h3>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
-              لكل مناسبة عباءة تليق بك وتعكس شخصيتك المميزة
+      <section 
+        id="categories" 
+        className="py-12 md:py-16 relative overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, rgba(255, 240, 245, 0.8), rgba(250, 245, 255, 0.8)), url(${abayaCollectionBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-white/60"></div>
+        <div className="relative container mx-auto px-4">
+          <div className="text-center mb-8 md:mb-12 animate-fade-in">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Flower className="w-8 h-8 text-rose-500 animate-pulse" />
+              <h3 className="text-3xl md:text-4xl font-bold text-gray-800">اختاري حسب المناسبة</h3>
+              <Flower className="w-8 h-8 text-purple-500 animate-pulse" />
+            </div>
+            <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto px-4">
+              لكل مناسبة عباءة تليق بك وتعكس شخصيتك المميزة وجمالك الطبيعي
             </p>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <Link key={category.value} to={`/abayati-store/${category.value}`}>
-              <Card key={category.value} className="overflow-hidden hover:shadow-xl transition-all duration-500 group cursor-pointer border-0 relative">
+              <Card 
+                className="overflow-hidden hover:shadow-2xl transition-all duration-700 group cursor-pointer border-0 relative animate-fade-in hover:-translate-y-3 hover:rotate-1"
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
                 <div className="relative h-64 md:h-80 overflow-hidden">
                   <img 
                     src={category.image} 
                     alt={category.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000 filter brightness-90 group-hover:brightness-110"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-70 group-hover:opacity-80 transition-opacity duration-300`}></div>
+                  <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-70 group-hover:opacity-60 transition-all duration-500`}></div>
+                  
+                  {/* Floating decorative elements */}
+                  <div className="absolute top-4 right-4 w-8 h-8 border-2 border-white/30 rounded-full animate-pulse"></div>
+                  <div className="absolute bottom-6 left-6 w-6 h-6 border-2 border-white/40 rounded-full animate-ping"></div>
+                  <div className="absolute top-1/2 right-8 w-3 h-3 bg-white/40 rounded-full animate-pulse"></div>
                   
                   <div className="absolute inset-0 p-4 md:p-8 flex flex-col justify-between text-white">
                     <div className="flex justify-between items-start">
-                      <div className="w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-lg">
                         <category.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                       </div>
-                      <div className="w-8 h-8 md:w-12 md:h-12 border-2 border-white/30 rounded-full"></div>
+                      <div className="flex flex-col gap-2">
+                        <div className="w-2 h-2 bg-white/40 rounded-full animate-pulse"></div>
+                        <div className="w-1 h-1 bg-white/30 rounded-full animate-ping"></div>
+                      </div>
                     </div>
                     
-                    <div>
-                      <h4 className="text-2xl md:text-3xl font-bold mb-2 md:mb-3 group-hover:scale-105 transition-transform duration-300">{category.name}</h4>
-                      <p className="text-sm md:text-lg opacity-90 leading-relaxed">{category.description}</p>
-                      <div className="mt-2 md:mt-4 flex items-center gap-2 text-xs md:text-sm">
-                        <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
-                        <span>تصاميم حصرية</span>
+                    <div className="transform group-hover:translate-y-1 transition-transform duration-500">
+                      <h4 className="text-2xl md:text-3xl font-bold mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300 drop-shadow-lg">
+                        {category.name}
+                      </h4>
+                      <p className="text-sm md:text-lg opacity-90 leading-relaxed group-hover:opacity-100 transition-opacity duration-300">
+                        {category.description}
+                      </p>
+                      <div className="mt-2 md:mt-4 flex items-center gap-2 text-xs md:text-sm opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                        <Sparkles className="w-3 h-3 md:w-4 md:h-4 animate-pulse" />
+                        <span>تصاميم حصرية ومميزة</span>
+                        <Heart className="w-3 h-3 md:w-4 md:h-4 text-rose-300 animate-pulse" />
                       </div>
                     </div>
                   </div>
                   
-                  <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 w-6 h-6 md:w-8 md:h-8 border-2 border-white/30 rounded-full"></div>
-                  <div className="absolute top-1/2 right-3 md:right-4 w-1.5 h-1.5 md:w-2 md:h-2 bg-white/40 rounded-full"></div>
+                  {/* Animated border */}
+                  <div className="absolute inset-0 rounded-lg border-2 border-transparent group-hover:border-white/30 transition-all duration-500"></div>
                 </div>
               </Card>
               </Link>
@@ -564,18 +620,35 @@ const KashkhaAbayaStore = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-5xl font-bold mb-6 text-gray-800">لماذا تختارين عبايتي؟</h3>
+      <section 
+        className="py-20 relative overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95)), url(${abayaPatternBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      >
+        <div className="absolute inset-0">
+          <div className="absolute top-20 right-20 w-32 h-32 border border-rose-200/50 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-20 left-20 w-24 h-24 border border-purple-200/50 rounded-full animate-pulse"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-pink-200/30 rounded-full animate-pulse"></div>
+        </div>
+        
+        <div className="relative container mx-auto px-4">
+          <div className="text-center mb-16 animate-fade-in">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Heart className="w-8 h-8 text-rose-500 animate-pulse" />
+              <h3 className="text-5xl font-bold text-gray-800">لماذا تختارين عبايتي؟</h3>
+              <Heart className="w-8 h-8 text-purple-500 animate-pulse" />
+            </div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               نحن لسنا مجرد متجر عبايات، بل بيت للأناقة والجمال يحتضن أحلام كل امرأة عربية أصيلة
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="text-center p-8 bg-gradient-to-br from-purple-50 to-rose-50 rounded-2xl hover:shadow-lg transition-shadow">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mx-auto mb-6 flex items-center justify-center">
+            <div className="text-center p-8 bg-gradient-to-br from-purple-50/80 to-rose-50/80 backdrop-blur-sm rounded-3xl hover:shadow-2xl transition-all duration-700 hover:-translate-y-2 animate-fade-in border border-white/50" style={{ animationDelay: '0.1s' }}>
+              <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mx-auto mb-6 flex items-center justify-center shadow-xl animate-pulse">
                 <Award className="w-10 h-10 text-white" />
               </div>
               <h4 className="text-2xl font-bold mb-4 text-gray-800">جودة لا تُضاهى</h4>
@@ -584,8 +657,8 @@ const KashkhaAbayaStore = () => {
               </p>
             </div>
             
-            <div className="text-center p-8 bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl hover:shadow-lg transition-shadow">
-              <div className="w-20 h-20 bg-gradient-to-br from-rose-600 to-rose-800 rounded-full mx-auto mb-6 flex items-center justify-center">
+            <div className="text-center p-8 bg-gradient-to-br from-rose-50/80 to-pink-50/80 backdrop-blur-sm rounded-3xl hover:shadow-2xl transition-all duration-700 hover:-translate-y-2 animate-fade-in border border-white/50" style={{ animationDelay: '0.3s' }}>
+              <div className="w-20 h-20 bg-gradient-to-br from-rose-600 to-rose-800 rounded-full mx-auto mb-6 flex items-center justify-center shadow-xl animate-pulse">
                 <Crown className="w-10 h-10 text-white" />
               </div>
               <h4 className="text-2xl font-bold mb-4 text-gray-800">تصاميم حصرية</h4>
@@ -594,8 +667,8 @@ const KashkhaAbayaStore = () => {
               </p>
             </div>
             
-            <div className="text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl hover:shadow-lg transition-shadow">
-              <div className="w-20 h-20 bg-gradient-to-br from-green-600 to-green-800 rounded-full mx-auto mb-6 flex items-center justify-center">
+            <div className="text-center p-8 bg-gradient-to-br from-green-50/80 to-emerald-50/80 backdrop-blur-sm rounded-3xl hover:shadow-2xl transition-all duration-700 hover:-translate-y-2 animate-fade-in border border-white/50" style={{ animationDelay: '0.5s' }}>
+              <div className="w-20 h-20 bg-gradient-to-br from-green-600 to-green-800 rounded-full mx-auto mb-6 flex items-center justify-center shadow-xl animate-pulse">
                 <Heart className="w-10 h-10 text-white" />
               </div>
               <h4 className="text-2xl font-bold mb-4 text-gray-800">خدمة عملاء مميزة</h4>
