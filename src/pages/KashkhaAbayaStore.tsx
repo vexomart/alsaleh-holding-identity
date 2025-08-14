@@ -4,6 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, Phone, Crown, Heart, Sparkles, Gift, Users, Clock, Award, ShoppingBag, Eye, ArrowLeft } from 'lucide-react';
 
+// Import category images
+import categoryLuxuryAbaya from '@/assets/category-luxury-abaya.jpg';
+import categoryCasualAbaya from '@/assets/category-casual-abaya.jpg';
+import categoryFormalAbaya from '@/assets/category-formal-abaya.jpg';
+import categorySportsAbaya from '@/assets/category-sports-abaya.jpg';
+import categoryWeddingAbaya from '@/assets/category-wedding-abaya.jpg';
+import categoryTraditionalAbaya from '@/assets/category-traditional-abaya.jpg';
+
 // Import abaya images
 import luxuryBlackAbaya from '@/assets/abaya-luxury-black.jpg';
 import casualBeigeAbaya from '@/assets/abaya-casual-beige.jpg';
@@ -77,12 +85,12 @@ const KashkhaAbayaStore = () => {
   ];
 
   const categories = [
-    { name: 'الملكية', value: 'luxury', icon: Crown, color: 'from-purple-600 to-purple-800', description: 'للمناسبات الفاخرة' },
-    { name: 'اليومية', value: 'casual', icon: Heart, color: 'from-rose-500 to-rose-700', description: 'للحياة العملية' },
-    { name: 'الرسمية', value: 'formal', icon: Sparkles, color: 'from-blue-600 to-blue-800', description: 'للاجتماعات المهمة' },
-    { name: 'الرياضية', value: 'sports', icon: ShoppingBag, color: 'from-green-600 to-green-800', description: 'للأنشطة الرياضية' },
-    { name: 'الأفراح', value: 'wedding', icon: Gift, color: 'from-pink-600 to-pink-800', description: 'للمناسبات السعيدة' },
-    { name: 'التراثية', value: 'traditional', icon: Eye, color: 'from-amber-600 to-amber-800', description: 'للأصالة العربية' }
+    { name: 'الملكية', value: 'luxury', icon: Crown, image: categoryLuxuryAbaya, color: 'from-purple-600 to-purple-800', description: 'للمناسبات الفاخرة' },
+    { name: 'اليومية', value: 'casual', icon: Heart, image: categoryCasualAbaya, color: 'from-rose-500 to-rose-700', description: 'للحياة العملية' },
+    { name: 'الرسمية', value: 'formal', icon: Sparkles, image: categoryFormalAbaya, color: 'from-blue-600 to-blue-800', description: 'للاجتماعات المهمة' },
+    { name: 'الرياضية', value: 'sports', icon: ShoppingBag, image: categorySportsAbaya, color: 'from-green-600 to-green-800', description: 'للأنشطة الرياضية' },
+    { name: 'الأفراح', value: 'wedding', icon: Gift, image: categoryWeddingAbaya, color: 'from-pink-600 to-pink-800', description: 'للمناسبات السعيدة' },
+    { name: 'التراثية', value: 'traditional', icon: Eye, image: categoryTraditionalAbaya, color: 'from-amber-600 to-amber-800', description: 'للأصالة العربية' }
   ];
 
   const handleWhatsAppOrder = (abayaName: string, price: string) => {
@@ -208,18 +216,37 @@ const KashkhaAbayaStore = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((category) => (
-              <Card key={category.value} className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer border-0">
-                <div className={`bg-gradient-to-br ${category.color} p-8 text-white relative overflow-hidden`}>
-                  <div className="absolute top-4 right-4 w-16 h-16 border-2 border-white/30 rounded-full"></div>
-                  <div className="absolute bottom-4 left-4 w-8 h-8 border-2 border-white/30 rounded-full"></div>
+              <Card key={category.value} className="overflow-hidden hover:shadow-xl transition-all duration-500 group cursor-pointer border-0 relative">
+                <div className="relative h-80 overflow-hidden">
+                  <img 
+                    src={category.image} 
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-70 group-hover:opacity-80 transition-opacity duration-300`}></div>
                   
-                  <div className="relative">
-                    <category.icon className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform duration-300" />
-                    <h4 className="text-2xl font-bold mb-2">{category.name}</h4>
-                    <p className="text-lg opacity-90">{category.description}</p>
+                  <div className="absolute inset-0 p-8 flex flex-col justify-between text-white">
+                    <div className="flex justify-between items-start">
+                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <category.icon className="w-8 h-8 text-white" />
+                      </div>
+                      <div className="w-12 h-12 border-2 border-white/30 rounded-full"></div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-3xl font-bold mb-3 group-hover:scale-105 transition-transform duration-300">{category.name}</h4>
+                      <p className="text-lg opacity-90 leading-relaxed">{category.description}</p>
+                      <div className="mt-4 flex items-center gap-2 text-sm">
+                        <Sparkles className="w-4 h-4" />
+                        <span>تصاميم حصرية</span>
+                      </div>
+                    </div>
                   </div>
+                  
+                  <div className="absolute bottom-4 left-4 w-8 h-8 border-2 border-white/30 rounded-full"></div>
+                  <div className="absolute top-1/2 right-4 w-2 h-2 bg-white/40 rounded-full"></div>
                 </div>
               </Card>
             ))}
