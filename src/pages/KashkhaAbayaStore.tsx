@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Phone, Crown, Heart, Sparkles, Gift, Users, Clock, Award, ShoppingBag, Eye, ArrowLeft } from 'lucide-react';
+import { Star, Phone, Crown, Heart, Sparkles, Gift, Users, Clock, Award, ShoppingBag, Eye, ArrowLeft, Plus, Share2, Bookmark } from 'lucide-react';
 
 // Import category images
 import categoryLuxuryAbaya from '@/assets/category-luxury-abaya.jpg';
@@ -30,7 +30,12 @@ const KashkhaAbayaStore = () => {
       price: '450',
       originalPrice: '520',
       description: 'عباءة ملكية بتطريز ذهبي فاخر وخامات حريرية استثنائية',
-      features: ['تطريز يدوي', 'حرير طبيعي', 'تصميم حصري']
+      features: ['تطريز يدوي', 'حرير طبيعي', 'تصميم حصري'],
+      rating: 4.9,
+      reviews: 127,
+      inStock: true,
+      isNew: false,
+      isBestSeller: true
     },
     {
       id: 2,
@@ -40,7 +45,12 @@ const KashkhaAbayaStore = () => {
       price: '280',
       originalPrice: '320',
       description: 'عباءة يومية أنيقة بقصة عصرية مريحة وعملية',
-      features: ['قطن ممتاز', 'قصة مريحة', 'ألوان هادئة']
+      features: ['قطن ممتاز', 'قصة مريحة', 'ألوان هادئة'],
+      rating: 4.7,
+      reviews: 89,
+      inStock: true,
+      isNew: true,
+      isBestSeller: false
     },
     {
       id: 3,
@@ -50,7 +60,12 @@ const KashkhaAbayaStore = () => {
       price: '380',
       originalPrice: '450',
       description: 'عباءة رسمية راقية للمناسبات الخاصة والاجتماعات المهمة',
-      features: ['تصميم كلاسيكي', 'خامة فاخرة', 'قصة أنيقة']
+      features: ['تصميم كلاسيكي', 'خامة فاخرة', 'قصة أنيقة'],
+      rating: 4.8,
+      reviews: 156,
+      inStock: true,
+      isNew: false,
+      isBestSeller: true
     },
     {
       id: 4,
@@ -60,7 +75,12 @@ const KashkhaAbayaStore = () => {
       price: '320',
       originalPrice: '380',
       description: 'عباءة رياضية عملية مصممة خصيصاً للحياة النشطة',
-      features: ['قماش مرن', 'مقاوم للرطوبة', 'تصميم رياضي']
+      features: ['قماش مرن', 'مقاوم للرطوبة', 'تصميم رياضي'],
+      rating: 4.6,
+      reviews: 203,
+      inStock: true,
+      isNew: false,
+      isBestSeller: false
     },
     {
       id: 5,
@@ -70,7 +90,12 @@ const KashkhaAbayaStore = () => {
       price: '650',
       originalPrice: '750',
       description: 'عباءة زفاف حالمة بتفاصيل لؤلؤية وتطريز فضي رائع',
-      features: ['تطريز لؤلؤي', 'تصميم زفاف', 'خامة حريرية']
+      features: ['تطريز لؤلؤي', 'تصميم زفاف', 'خامة حريرية'],
+      rating: 5.0,
+      reviews: 78,
+      inStock: true,
+      isNew: true,
+      isBestSeller: true
     },
     {
       id: 6,
@@ -80,7 +105,57 @@ const KashkhaAbayaStore = () => {
       price: '420',
       originalPrice: '480',
       description: 'عباءة تراثية أصيلة تحتفي بالهوية العربية العريقة',
-      features: ['نقوش تراثية', 'تصميم أصيل', 'خامة تقليدية']
+      features: ['نقوش تراثية', 'تصميم أصيل', 'خامة تقليدية'],
+      rating: 4.8,
+      reviews: 94,
+      inStock: true,
+      isNew: false,
+      isBestSeller: false
+    },
+    {
+      id: 7,
+      name: 'عباءة الشتاء الدافئة',
+      image: luxuryBlackAbaya,
+      category: 'casual',
+      price: '380',
+      originalPrice: '440',
+      description: 'عباءة شتوية فاخرة مبطنة للدفء والراحة',
+      features: ['بطانة دافئة', 'مقاومة للرياح', 'تصميم أنيق'],
+      rating: 4.7,
+      reviews: 67,
+      inStock: true,
+      isNew: true,
+      isBestSeller: false
+    },
+    {
+      id: 8,
+      name: 'عباءة السهرة المخملية',
+      image: formalNavyAbaya,
+      category: 'luxury',
+      price: '580',
+      originalPrice: '680',
+      description: 'عباءة سهرة فاخرة من المخمل الراقي للمناسبات الخاصة',
+      features: ['مخمل فاخر', 'تطريز فضي', 'قصة ملكية'],
+      rating: 4.9,
+      reviews: 143,
+      inStock: false,
+      isNew: false,
+      isBestSeller: true
+    },
+    {
+      id: 9,
+      name: 'عباءة الصيف المنعشة',
+      image: casualBeigeAbaya,
+      category: 'casual',
+      price: '250',
+      originalPrice: '290',
+      description: 'عباءة صيفية خفيفة ومنعشة للأيام الحارة',
+      features: ['قماش مسامي', 'خفيفة الوزن', 'مقاومة للحرارة'],
+      rating: 4.5,
+      reviews: 112,
+      inStock: true,
+      isNew: true,
+      isBestSeller: false
     }
   ];
 
@@ -265,60 +340,159 @@ const KashkhaAbayaStore = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {abayas.map((abaya) => (
-              <Card key={abaya.id} className="overflow-hidden hover:shadow-2xl transition-all duration-500 group bg-white border-0 relative">
-                <div className="absolute top-3 md:top-4 right-3 md:right-4 z-10">
-                  <Badge className="bg-gradient-to-r from-rose-500 to-pink-500 text-white border-0 px-2 py-1 md:px-3 md:py-1 text-xs md:text-sm">
-                    حصري
-                  </Badge>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            {abayas.map((abaya, index) => (
+              <Card 
+                key={abaya.id} 
+                className="group relative overflow-hidden bg-white rounded-3xl border-0 shadow-lg hover:shadow-2xl transition-all duration-700 hover:-translate-y-2 animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                {/* Status Badges */}
+                <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
+                  {abaya.isNew && (
+                    <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0 px-3 py-1 text-xs shadow-lg animate-pulse">
+                      جديد
+                    </Badge>
+                  )}
+                  {abaya.isBestSeller && (
+                    <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 px-3 py-1 text-xs shadow-lg">
+                      الأكثر مبيعاً
+                    </Badge>
+                  )}
+                  {!abaya.inStock && (
+                    <Badge className="bg-gradient-to-r from-gray-500 to-gray-600 text-white border-0 px-3 py-1 text-xs shadow-lg">
+                      نفد المخزون
+                    </Badge>
+                  )}
                 </div>
-                
-                <div className="relative overflow-hidden">
+
+                {/* Action Buttons */}
+                <div className="absolute top-4 left-4 z-20 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-x-4 group-hover:translate-x-0">
+                  <Button size="sm" variant="ghost" className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-300 shadow-lg">
+                    <Heart className="w-4 h-4 text-gray-600 hover:text-red-500 transition-colors" />
+                  </Button>
+                  <Button size="sm" variant="ghost" className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-300 shadow-lg">
+                    <Share2 className="w-4 h-4 text-gray-600 hover:text-blue-500 transition-colors" />
+                  </Button>
+                  <Button size="sm" variant="ghost" className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-300 shadow-lg">
+                    <Eye className="w-4 h-4 text-gray-600 hover:text-purple-500 transition-colors" />
+                  </Button>
+                </div>
+
+                {/* Product Image */}
+                <div className="relative h-72 md:h-80 overflow-hidden rounded-t-3xl">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
                   <img 
                     src={abaya.image} 
                     alt={abaya.name}
-                    className="w-full h-64 md:h-80 object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 filter group-hover:brightness-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* Quick Add Button */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full group-hover:translate-y-0 transition-transform duration-500 z-20">
+                    <Button 
+                      onClick={() => handleWhatsAppOrder(abaya.name, abaya.price)}
+                      className="bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white px-6 py-2 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                    >
+                      <Plus className="w-4 h-4 ml-2" />
+                      إضافة سريعة
+                    </Button>
+                  </div>
                 </div>
-                
-                <CardContent className="p-4 md:p-6">
-                  <h4 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-gray-800 group-hover:text-purple-600 transition-colors">
+
+                {/* Product Info */}
+                <CardContent className="p-5 md:p-6 relative">
+                  {/* Rating */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star 
+                          key={i} 
+                          className={`w-3 h-3 md:w-4 md:h-4 transition-colors duration-300 ${
+                            i < Math.floor(abaya.rating) 
+                              ? 'text-yellow-400 fill-current' 
+                              : 'text-gray-300'
+                          }`} 
+                        />
+                      ))}
+                      <span className="text-xs md:text-sm text-gray-500 mr-2">({abaya.reviews})</span>
+                    </div>
+                    <Badge variant="outline" className="text-xs px-2 py-1 border-purple-200 text-purple-600">
+                      {abaya.rating}
+                    </Badge>
+                  </div>
+
+                  {/* Title */}
+                  <h4 className="text-lg md:text-xl font-bold mb-2 text-gray-800 group-hover:text-purple-600 transition-colors duration-300 line-clamp-1">
                     {abaya.name}
                   </h4>
-                  <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 leading-relaxed">{abaya.description}</p>
-                  
-                  <div className="flex flex-wrap gap-1 md:gap-2 mb-3 md:mb-4">
-                    {abaya.features.map((feature, index) => (
-                      <Badge key={index} variant="outline" className="text-xs border-purple-200 text-purple-600 px-2 py-1">
+
+                  {/* Description */}
+                  <p className="text-sm md:text-base text-gray-600 mb-4 leading-relaxed line-clamp-2 group-hover:text-gray-700 transition-colors duration-300">
+                    {abaya.description}
+                  </p>
+
+                  {/* Features */}
+                  <div className="flex flex-wrap gap-1 md:gap-2 mb-4">
+                    {abaya.features.slice(0, 2).map((feature, featureIndex) => (
+                      <Badge 
+                        key={featureIndex} 
+                        variant="outline" 
+                        className="text-xs px-2 py-1 border-gray-200 text-gray-600 hover:border-purple-300 hover:text-purple-600 transition-all duration-300"
+                      >
                         {feature}
                       </Badge>
                     ))}
+                    {abaya.features.length > 2 && (
+                      <Badge variant="outline" className="text-xs px-2 py-1 border-gray-200 text-gray-500">
+                        +{abaya.features.length - 2}
+                      </Badge>
+                    )}
                   </div>
-                  
-                  <div className="flex items-center justify-between mb-4 md:mb-6">
+
+                  {/* Price */}
+                  <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-2 md:gap-3">
-                      <span className="text-2xl md:text-3xl font-bold text-purple-600">{abaya.price} ريال</span>
-                      <span className="text-base md:text-lg text-gray-400 line-through">{abaya.originalPrice} ريال</span>
+                      <span className="text-2xl md:text-3xl font-bold text-purple-600 group-hover:scale-105 transition-transform duration-300">
+                        {abaya.price} ريال
+                      </span>
+                      {abaya.originalPrice !== abaya.price && (
+                        <span className="text-base md:text-lg text-gray-400 line-through">
+                          {abaya.originalPrice} ريال
+                        </span>
+                      )}
                     </div>
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 fill-current" />
-                      ))}
-                      <span className="text-xs md:text-sm text-gray-500 mr-1 md:mr-2">(4.9)</span>
-                    </div>
+                    {abaya.originalPrice !== abaya.price && (
+                      <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white border-0 px-2 py-1 text-xs animate-pulse">
+                        -{Math.round(((parseFloat(abaya.originalPrice) - parseFloat(abaya.price)) / parseFloat(abaya.originalPrice)) * 100)}%
+                      </Badge>
+                    )}
                   </div>
-                  
+
+                  {/* CTA Button */}
                   <Button 
                     onClick={() => handleWhatsAppOrder(abaya.name, abaya.price)}
-                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-2 md:py-3 text-base md:text-lg font-semibold transition-all duration-300 hover:shadow-lg"
+                    disabled={!abaya.inStock}
+                    className={`w-full py-3 text-base font-semibold transition-all duration-500 rounded-xl hover:shadow-lg group-hover:scale-105 ${
+                      abaya.inStock 
+                        ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white' 
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
                   >
                     <Phone className="w-4 h-4 md:w-5 md:h-5 ml-2" />
-                    <span className="hidden sm:inline">اطلبي عبر الواتساب</span>
-                    <span className="sm:hidden">طلب</span>
+                    {abaya.inStock ? (
+                      <>
+                        <span className="hidden sm:inline">اطلبي عبر الواتساب</span>
+                        <span className="sm:hidden">طلب</span>
+                      </>
+                    ) : (
+                      'غير متوفر'
+                    )}
                   </Button>
                 </CardContent>
+
+                {/* Hover Glow Effect */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-400/20 to-rose-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
               </Card>
             ))}
           </div>
