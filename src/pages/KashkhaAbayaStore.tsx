@@ -546,65 +546,6 @@ const KashkhaAbayaStore = () => {
         </div>
       </section>
 
-      {/* Store Info */}
-      <section className="py-16 bg-gradient-to-r from-purple-600 to-rose-600">
-        <div className="container mx-auto px-4">
-          <Card className="max-w-4xl mx-auto bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
-            <CardHeader className="text-center pb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-rose-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <ShoppingBag className="w-8 h-8 text-white" />
-              </div>
-              <CardTitle className="text-3xl text-gray-800 mb-2">أنشئي متجر العبايات الخاص بك</CardTitle>
-              <p className="text-lg text-gray-600">احصلي على متجر إلكتروني متكامل مثل "كشخة" بتصميم حصري ومميز</p>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
-                    <span className="text-lg font-semibold text-gray-800">السعر: 2000 ريال سعودي</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-rose-600 rounded-full"></div>
-                    <span className="text-lg font-semibold text-gray-800">مدة التنفيذ: 25 يوم عمل</span>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <h5 className="font-semibold text-gray-800 mb-3">يتضمن المتجر:</h5>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-center gap-2">
-                      <ArrowLeft className="w-4 h-4 text-purple-600" />
-                      تصميم حصري مستوحى من ثقافة العبايات
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <ArrowLeft className="w-4 h-4 text-purple-600" />
-                      نظام إدارة المنتجات والطلبات
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <ArrowLeft className="w-4 h-4 text-purple-600" />
-                      تكامل مع الواتساب للطلبات
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <ArrowLeft className="w-4 h-4 text-purple-600" />
-                      لوحة تحكم إدارية متكاملة
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="text-center pt-6">
-                <Button 
-                  onClick={handleStoreOrder}
-                  className="bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white px-8 py-4 text-xl font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <Phone className="w-6 h-6 ml-3" />
-                  ابدئي متجرك الآن
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
 
       {/* Custom Footer for Abaya Store */}
       <footer className="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white relative overflow-hidden">
