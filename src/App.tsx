@@ -127,6 +127,10 @@ import CardsStoreTerms from "./pages/cards-store/Terms";
 import KashkhaAbayaStore from "./pages/KashkhaAbayaStore";
 import LuxuryAbayas from "./pages/abaya-categories/LuxuryAbayas";
 import CasualAbayas from "./pages/abaya-categories/CasualAbayas";
+import FormalAbayas from "./pages/abaya-categories/FormalAbayas";
+import SportsAbayas from "./pages/abaya-categories/SportsAbayas";
+import WeddingAbayas from "./pages/abaya-categories/WeddingAbayas";
+import TraditionalAbayas from "./pages/abaya-categories/TraditionalAbayas";
 import AbayaAboutUs from "./pages/abaya-categories/AboutUs";
 import AbayaContactUs from "./pages/abaya-categories/ContactUs";
 
@@ -258,6 +262,10 @@ const App = () => {
                 <Route path="/kashkha-store" element={<KashkhaAbayaStore />} />
                 <Route path="/kashkha-store/luxury" element={<LuxuryAbayas />} />
                 <Route path="/kashkha-store/casual" element={<CasualAbayas />} />
+                <Route path="/kashkha-store/formal" element={<FormalAbayas />} />
+                <Route path="/kashkha-store/sports" element={<SportsAbayas />} />
+                <Route path="/kashkha-store/wedding" element={<WeddingAbayas />} />
+                <Route path="/kashkha-store/traditional" element={<TraditionalAbayas />} />
                 <Route path="/kashkha-store/about" element={<AbayaAboutUs />} />
                 <Route path="/kashkha-store/contact" element={<AbayaContactUs />} />
                 <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
