@@ -42,95 +42,102 @@ const AbayaHeader: React.FC<AbayaHeaderProps> = ({
         <div className="absolute top-3/4 left-1/2 w-4 h-4 bg-pink-300/30 rounded-full animate-pulse"></div>
       </div>
       
-      <div className="relative container mx-auto px-4">
-        {/* Top Bar */}
-        <div className="flex items-center justify-between py-3 border-b border-white/20">
-          <div className="flex items-center gap-6 text-sm animate-fade-in">
-            <div className="flex items-center gap-2 hover:text-rose-200 transition-colors">
-              <Phone className="w-4 h-4 animate-pulse" />
-              <span>966500000000+</span>
+        <div className="relative container mx-auto px-4">
+          {/* Top Bar */}
+          <div className="hidden md:flex items-center justify-between py-3 border-b border-white/20">
+            <div className="flex items-center gap-6 text-sm animate-fade-in">
+              <div className="flex items-center gap-2 hover:text-rose-200 transition-colors">
+                <Phone className="w-4 h-4 animate-pulse" />
+                <span className="hidden lg:inline">966500000000+</span>
+                <span className="lg:hidden">اتصلي بنا</span>
+              </div>
+              <div className="flex items-center gap-2 hover:text-purple-200 transition-colors">
+                <Clock className="w-4 h-4" />
+                <span className="hidden lg:inline">الأحد - الخميس: 9ص - 10م</span>
+                <span className="lg:hidden">أوقات العمل</span>
+              </div>
+              <div className="hidden lg:flex items-center gap-2 text-rose-200">
+                <Flower className="w-4 h-4 animate-pulse" />
+                <span className="font-arabic">أناقة عربية أصيلة</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 hover:text-purple-200 transition-colors">
-              <Clock className="w-4 h-4" />
-              <span>الأحد - الخميس: 9ص - 10م</span>
-            </div>
-            <div className="flex items-center gap-2 text-rose-200">
-              <Flower className="w-4 h-4 animate-pulse" />
-              <span className="font-arabic">أناقة عربية أصيلة</span>
+            <div className="flex items-center gap-4 animate-fade-in">
+              <a href="#" className="text-white/80 hover:text-rose-300 transition-all duration-300 hover:scale-110">
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a href="#" className="text-white/80 hover:text-purple-300 transition-all duration-300 hover:scale-110">
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a href="#" className="text-white/80 hover:text-pink-300 transition-all duration-300 hover:scale-110">
+                <Twitter className="w-5 h-5" />
+              </a>
             </div>
           </div>
-          <div className="flex items-center gap-4 animate-fade-in">
-            <a href="#" className="text-white/80 hover:text-rose-300 transition-all duration-300 hover:scale-110">
-              <Instagram className="w-5 h-5" />
-            </a>
-            <a href="#" className="text-white/80 hover:text-purple-300 transition-all duration-300 hover:scale-110">
-              <Facebook className="w-5 h-5" />
-            </a>
-            <a href="#" className="text-white/80 hover:text-pink-300 transition-all duration-300 hover:scale-110">
-              <Twitter className="w-5 h-5" />
-            </a>
-          </div>
-        </div>
 
-        {/* Main Header */}
-        <div className="flex items-center justify-between py-6 animate-fade-in">
-          <Link to="/abayati-store" className="flex items-center gap-6 hover:scale-105 transition-transform duration-300">
-            <div className="w-16 h-16 bg-gradient-to-br from-rose-400 via-purple-500 to-pink-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-              <Crown className="w-8 h-8 text-white" />
+          {/* Main Header */}
+          <div className="flex flex-col md:flex-row items-center justify-between py-4 md:py-6 animate-fade-in">
+            <Link to="/abayati-store" className="flex items-center gap-4 md:gap-6 hover:scale-105 transition-transform duration-300 mb-4 md:mb-0">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-rose-400 via-purple-500 to-pink-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
+                <Crown className="w-6 h-6 md:w-8 md:h-8 text-white" />
+              </div>
+              <div className="text-center md:text-right">
+                <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold mb-1 md:mb-2 bg-gradient-to-r from-rose-200 via-purple-200 to-pink-200 bg-clip-text text-transparent animate-scale-in">
+                  متجر عبايتي
+                </h1>
+                <p className="text-sm md:text-lg text-purple-100 flex items-center justify-center md:justify-start gap-2 animate-fade-in">
+                  <Sparkles className="w-4 h-4 md:w-5 md:h-5 animate-pulse" />
+                  <span className="hidden sm:inline">بيت الأناقة والجمال العربي الأصيل</span>
+                  <span className="sm:hidden">أناقة عربية أصيلة</span>
+                  <Heart className="w-3 h-3 md:w-4 md:h-4 text-rose-300 animate-pulse" />
+                </p>
+              </div>
+            </Link>
+            
+            <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 animate-fade-in w-full md:w-auto">
+              <Button 
+                className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20 px-4 md:px-6 py-2 md:py-3 text-sm md:text-base transition-all duration-300 hover:scale-105 shadow-lg"
+                onClick={onContactClick}
+              >
+                <MessageCircle className="w-4 h-4 md:w-5 md:h-5 ml-2 animate-pulse" />
+                تواصلي معنا
+              </Button>
+              <Button 
+                className="w-full sm:w-auto bg-gradient-to-r from-rose-500 via-purple-500 to-pink-500 hover:from-rose-600 hover:via-purple-600 hover:to-pink-600 text-white px-4 md:px-6 py-2 md:py-3 text-sm md:text-base shadow-2xl transition-all duration-300 hover:scale-105 animate-pulse"
+                onClick={onShopClick}
+              >
+                <ShoppingBag className="w-4 h-4 md:w-5 md:h-5 ml-2" />
+                تسوقي الآن
+              </Button>
             </div>
-            <div>
-              <h1 className="text-4xl lg:text-6xl font-bold mb-2 bg-gradient-to-r from-rose-200 via-purple-200 to-pink-200 bg-clip-text text-transparent animate-scale-in">
-                متجر عبايتي
-              </h1>
-              <p className="text-lg text-purple-100 flex items-center gap-2 animate-fade-in">
-                <Sparkles className="w-5 h-5 animate-pulse" />
-                بيت الأناقة والجمال العربي الأصيل
-                <Heart className="w-4 h-4 text-rose-300 animate-pulse" />
-              </p>
-            </div>
-          </Link>
-          
-          <div className="flex items-center gap-4 animate-fade-in">
-            <Button 
-              className="bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20 px-6 py-3 transition-all duration-300 hover:scale-105 shadow-lg"
-              onClick={onContactClick}
-            >
-              <MessageCircle className="w-5 h-5 ml-2 animate-pulse" />
-              تواصلي معنا
-            </Button>
-            <Button 
-              className="bg-gradient-to-r from-rose-500 via-purple-500 to-pink-500 hover:from-rose-600 hover:via-purple-600 hover:to-pink-600 text-white px-6 py-3 shadow-2xl transition-all duration-300 hover:scale-105 animate-pulse"
-              onClick={onShopClick}
-            >
-              <ShoppingBag className="w-5 h-5 ml-2" />
-              تسوقي الآن
-            </Button>
           </div>
-        </div>
 
-        {/* Navigation Menu */}
-        <nav className="pb-4 animate-fade-in">
-          <div className="flex items-center justify-center gap-8 text-sm">
-            <Link to="/abayati-store" className="text-white/90 hover:text-rose-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-rose-300 hover:scale-105">
-              الرئيسية
-            </Link>
-            <Link to="/abayati-store/luxury" className="text-white/90 hover:text-purple-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-purple-300 hover:scale-105">
-              العبايات الملكية
-            </Link>
-            <Link to="/abayati-store/casual" className="text-white/90 hover:text-pink-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-pink-300 hover:scale-105">
-              العبايات اليومية
-            </Link>
-            <Link to="/abayati-store/formal" className="text-white/90 hover:text-rose-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-rose-300 hover:scale-105">
-              العبايات الرسمية
-            </Link>
-            <Link to="/abayati-store/about" className="text-white/90 hover:text-purple-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-purple-300 hover:scale-105">
-              من نحن
-            </Link>
-            <Link to="/abayati-store/contact" className="text-white/90 hover:text-pink-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-pink-300 hover:scale-105">
-              اتصلي بنا
-            </Link>
-          </div>
-        </nav>
+          {/* Navigation Menu */}
+          <nav className="pb-2 md:pb-4 animate-fade-in">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs md:text-sm overflow-x-auto">
+              <Link to="/abayati-store" className="whitespace-nowrap text-white/90 hover:text-rose-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-rose-300 hover:scale-105">
+                الرئيسية
+              </Link>
+              <Link to="/abayati-store/luxury" className="whitespace-nowrap text-white/90 hover:text-purple-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-purple-300 hover:scale-105">
+                <span className="hidden sm:inline">العبايات الملكية</span>
+                <span className="sm:hidden">ملكية</span>
+              </Link>
+              <Link to="/abayati-store/casual" className="whitespace-nowrap text-white/90 hover:text-pink-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-pink-300 hover:scale-105">
+                <span className="hidden sm:inline">العبايات اليومية</span>
+                <span className="sm:hidden">يومية</span>
+              </Link>
+              <Link to="/abayati-store/formal" className="whitespace-nowrap text-white/90 hover:text-rose-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-rose-300 hover:scale-105">
+                <span className="hidden sm:inline">العبايات الرسمية</span>
+                <span className="sm:hidden">رسمية</span>
+              </Link>
+              <Link to="/abayati-store/about" className="whitespace-nowrap text-white/90 hover:text-purple-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-purple-300 hover:scale-105">
+                من نحن
+              </Link>
+              <Link to="/abayati-store/contact" className="whitespace-nowrap text-white/90 hover:text-pink-300 transition-all duration-300 py-2 border-b-2 border-transparent hover:border-pink-300 hover:scale-105">
+                <span className="hidden sm:inline">اتصلي بنا</span>
+                <span className="sm:hidden">اتصال</span>
+              </Link>
+            </div>
+          </nav>
       </div>
     </header>
   );
