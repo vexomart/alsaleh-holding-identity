@@ -430,8 +430,8 @@ const SoftwareProducts = () => {
         "✨ أنيميشن وتأثيرات بصرية متطورة",
         "🏪 إدارة متكاملة للمخزون والطلبات"
       ],
-      price: "2000 ريال",
-      originalPrice: "3000 ريال",
+      price: "4599 ريال",
+      originalPrice: "8000 ريال",
       rating: 5.0,
       downloads: "12",
       status: "متاح الآن",
@@ -442,7 +442,7 @@ const SoftwareProducts = () => {
       isFeatured: true,
       isExclusive: true,
       emoji: "👑",
-      discount: "33%",
+      discount: "43%",
       estimatedDelivery: "25 يوم"
     }
   ];
