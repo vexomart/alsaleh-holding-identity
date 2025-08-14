@@ -124,6 +124,7 @@ import CardsStoreContact from "./pages/cards-store/Contact";
 import CardsStoreFAQ from "./pages/cards-store/FAQ";
 import CardsStorePrivacy from "./pages/cards-store/Privacy";
 import CardsStoreTerms from "./pages/cards-store/Terms";
+import KashkhaAbayaStore from "./pages/KashkhaAbayaStore";
 
 import ServicesCatalog from "./pages/ServicesCatalog";
 import DigitalMarketing from "./pages/DigitalMarketing";
@@ -250,6 +251,7 @@ const App = () => {
                 <Route path="/cards-store/cards" element={<ElectronicCardsWebsite />} />
                 <Route path="/cards-store/privacy" element={<CardsStorePrivacy />} />
                 <Route path="/cards-store/terms" element={<CardsStoreTerms />} />
+                <Route path="/kashkha-store" element={<KashkhaAbayaStore />} />
                 <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
                 <Route path="/car-rental-landing" element={<CarRentalLanding />} />
                 <Route path="/car-rental" element={<CarRentalLanding />} />

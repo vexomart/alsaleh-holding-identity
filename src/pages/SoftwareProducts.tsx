@@ -44,7 +44,9 @@ import {
   Settings,
   BarChart,
   Palette,
-  Megaphone
+  Megaphone,
+  Crown,
+  Shirt
 } from "lucide-react";
 
 const SoftwareProducts = () => {
@@ -413,13 +415,42 @@ const SoftwareProducts = () => {
       emoji: "📊",
       discount: "27%",
       estimatedDelivery: "خلال شهر"
+    },
+    {
+      id: 8,
+      name: "👑 متجر كشخة للعبايات",
+      description: "متجر إلكتروني فاخر ومتكامل للعبايات العصرية مع تصميم عالمي مميز وتكامل مع الواتساب وتجربة تسوق استثنائية",
+      category: "التجارة الإلكترونية",
+      icon: Crown,
+      features: [
+        "👑 تصميم فاخر وعالمي حصري",
+        "👗 أقسام متنوعة للعبايات العصرية",
+        "💬 تكامل مع الواتساب للطلبات",
+        "📱 تجربة تسوق متجاوبة 100%",
+        "✨ أنيميشن وتأثيرات بصرية متطورة",
+        "🏪 إدارة متكاملة للمخزون والطلبات"
+      ],
+      price: "2000 ريال",
+      originalPrice: "3000 ريال",
+      rating: 5.0,
+      downloads: "12",
+      status: "متاح الآن",
+      color: "from-rose-500 to-pink-600",
+      demoUrl: "/kashkha-store",
+      tags: ["Fashion", "E-commerce", "WhatsApp", "Luxury", "Abaya"],
+      isNew: true,
+      isFeatured: true,
+      isExclusive: true,
+      emoji: "👑",
+      discount: "33%",
+      estimatedDelivery: "25 يوم"
     }
   ];
 
   const categories = [
     { name: "جميع المنتجات", emoji: "🛍️", count: products.length },
     { name: "المواقع التعريفية", emoji: "🌐", count: 2 },
-    { name: "التجارة الإلكترونية", emoji: "🛒", count: 2 },
+    { name: "التجارة الإلكترونية", emoji: "🛒", count: 3 },
     { name: "التسويق الرقمي", emoji: "📈", count: 1 },
     { name: "التصميم والإبداع", emoji: "🎨", count: 1 },
     { name: "أنظمة الإدارة", emoji: "⚙️", count: 1 }
