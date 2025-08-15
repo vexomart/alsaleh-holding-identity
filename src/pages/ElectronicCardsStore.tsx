@@ -252,114 +252,6 @@ const ElectronicCardsStore = () => {
       isNew: true,
       stockStatus: "متوفر",
       deliveryTime: "فوري"
-    },
-    {
-      id: 7,
-      title: "بطاقة Spotify Premium - 3 أشهر",
-      price: "89 ريال",
-      originalPrice: "99 ريال",
-      discount: "10% خصم",
-      category: "موسيقى",
-      cardType: "Spotify",
-      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop",
-      rating: 4.6,
-      reviews: 1987,
-      description: "استمع لملايين الأغاني بدون إعلانات مع Spotify Premium",
-      features: ["بدون إعلانات", "جودة عالية", "تحميل أوفلاين", "تشغيل عشوائي غير محدود"],
-      isHot: false,
-      isNew: true,
-      stockStatus: "متوفر",
-      deliveryTime: "فوري"
-    },
-    {
-      id: 8,
-      title: "بطاقة Xbox Game Pass Ultimate",
-      price: "67 ريال",
-      originalPrice: "75 ريال",
-      discount: "11% خصم",
-      category: "ألعاب",
-      cardType: "Xbox",
-      image: "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=400&h=250&fit=crop",
-      rating: 4.8,
-      reviews: 3254,
-      description: "اشتراك شهري يشمل مئات الألعاب و Xbox Live Gold",
-      features: ["مئات الألعاب", "Xbox Live Gold", "PC Gaming", "ألعاب اليوم الأول"],
-      isHot: true,
-      isNew: false,
-      stockStatus: "متوفر",
-      deliveryTime: "فوري"
-    },
-    {
-      id: 9,
-      title: "بطاقة Discord Nitro - شهر واحد",
-      price: "38 ريال",
-      originalPrice: "45 ريال",
-      discount: "16% خصم",
-      category: "اجتماعي",
-      cardType: "Discord",
-      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=250&fit=crop",
-      rating: 4.5,
-      reviews: 1543,
-      description: "ميزات Discord المتطورة للاعبين ومجتمعات الإنترنت",
-      features: ["رفع ملفات أكبر", "جودة صوت عالية", "ايموجي مخصص", "شارات حصرية"],
-      isHot: false,
-      isNew: true,
-      stockStatus: "متوفر",
-      deliveryTime: "فوري"
-    },
-    {
-      id: 10,
-      title: "بطاقة Fortnite V-Bucks - 2800 نقطة",
-      price: "78 ريال",
-      originalPrice: "85 ريال",
-      discount: "8% خصم",
-      category: "ألعاب",
-      cardType: "Fortnite",
-      image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop",
-      rating: 4.7,
-      reviews: 4892,
-      description: "V-Bucks للحصول على الأزياء والرقصات الحصرية في Fortnite",
-      features: ["أزياء حصرية", "رقصات جديدة", "معدات Battle Pass", "هدايا للأصدقاء"],
-      isHot: true,
-      isNew: false,
-      stockStatus: "متوفر",
-      deliveryTime: "فوري"
-    },
-    {
-      id: 11,
-      title: "بطاقة Adobe Creative Cloud",
-      price: "195 ريال",
-      originalPrice: "220 ريال",
-      discount: "11% خصم",
-      category: "إبداعي",
-      cardType: "Adobe",
-      image: "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=400&h=250&fit=crop",
-      rating: 4.6,
-      reviews: 1876,
-      description: "اشتراك شهري في مجموعة Adobe الكاملة للمبدعين",
-      features: ["Photoshop & Illustrator", "Premiere & After Effects", "مساحة تخزين سحابية", "خطوط حصرية"],
-      isHot: false,
-      isNew: true,
-      stockStatus: "متوفر",
-      deliveryTime: "فوري"
-    },
-    {
-      id: 12,
-      title: "بطاقة Netflix + Disney Bundle",
-      price: "125 ريال",
-      originalPrice: "140 ريال",
-      discount: "11% خصم",
-      category: "ترفيه",
-      cardType: "Bundle",
-      image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=400&h=250&fit=crop",
-      rating: 4.9,
-      reviews: 2567,
-      description: "باقة مدمجة تشمل Netflix و Disney Plus لشهر كامل",
-      features: ["أفلام Disney الحصرية", "محتوى Marvel و Star Wars", "أفلام وثائقية National Geographic", "مناسب للعائلة"],
-      isHot: true,
-      isNew: true,
-      stockStatus: "متوفر",
-      deliveryTime: "فوري"
     }
   ];
 
@@ -473,10 +365,10 @@ const ElectronicCardsStore = () => {
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           >
-            <Sparkles className="h-6 w-6 text-yellow-300" />
+            <Flame className="h-5 w-5 md:h-6 md:w-6 text-orange-300" />
           </motion.div>
-          <span className="bg-gradient-to-r from-yellow-200 to-orange-200 bg-clip-text text-transparent">
-            🎉 عرض محدود | خصم 25% على جميع البطاقات + توصيل مجاني - كود: MEGA25
+          <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+            عروض حصرية! خصم يصل إلى 50% على جميع البطاقات 🔥
           </span>
           <motion.div 
             animate={{ rotate: -360 }}
@@ -525,54 +417,57 @@ const ElectronicCardsStore = () => {
                   className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium transition-colors duration-200 relative group"
                 >
                   {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-blue-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
               ))}
             </nav>
 
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-4 space-x-reverse">
-              {/* WhatsApp Button */}
+            {/* Cart & Contact Buttons */}
+            <div className="hidden md:flex items-center space-x-4 space-x-reverse">
+              <Button
+                variant="outline"
+                className="relative"
+                onClick={() => toast({ title: "السلة قيد التطوير", duration: 2000 })}
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                السلة
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cart.length}
+                  </span>
+                )}
+              </Button>
+              
               <Button
                 onClick={() => window.open('https://wa.me/966555000123', '_blank')}
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden sm:flex items-center gap-2"
+                className="bg-green-500 hover:bg-green-600 text-white"
               >
-                <MessageCircle className="h-4 w-4" />
-                <span className="hidden lg:inline">واتساب</span>
-              </Button>
-
-              {/* Phone Button */}
-              <Button
-                onClick={() => window.open('tel:+966555000123', '_blank')}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden sm:flex items-center gap-2"
-              >
-                <Phone className="h-4 w-4" />
-                <span className="hidden lg:inline">اتصل بنا</span>
-              </Button>
-
-              {/* Mobile Menu Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="md:hidden"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                <MessageCircle className="h-4 w-4 mr-2" />
+                واتساب
               </Button>
             </div>
+
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
           </div>
 
           {/* Mobile Navigation */}
           <AnimatePresence>
             {isMobileMenuOpen && (
               <motion.nav
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="md:hidden border-t border-gray-200 dark:border-gray-700 py-4 overflow-hidden"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="md:hidden border-t border-gray-200 dark:border-gray-700 py-4"
               >
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {navItems.map((item) => (
                     <a
                       key={item.name}
@@ -799,8 +694,7 @@ const ElectronicCardsStore = () => {
       {/* Search and Filter Section */}
       <section id="search" className="py-12 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-            {/* Search Bar */}
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input
@@ -808,187 +702,173 @@ const ElectronicCardsStore = () => {
                 placeholder="ابحث عن البطاقات..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pr-10 pl-4 py-3 rounded-xl border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="pr-10 pl-4 py-3 text-lg rounded-xl border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 transition-colors"
               />
             </div>
-
-            {/* Filters */}
-            <div className="flex gap-4 items-center">
+            
+            <div className="flex gap-3">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-purple-500 transition-colors"
               >
-                <option value="popular">الأكثر شيوعاً</option>
+                <option value="popular">الأكثر شعبية</option>
                 <option value="price-low">السعر من الأقل للأعلى</option>
                 <option value="price-high">السعر من الأعلى للأقل</option>
                 <option value="rating">أعلى تقييم</option>
                 <option value="newest">الأحدث</option>
               </select>
-
+              
               <Button
                 variant="outline"
                 onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
-                className="px-4 py-3 rounded-xl"
+                className="px-4 py-3"
               >
-                {viewMode === "grid" ? <Layers className="h-5 w-5" /> : <Box className="h-5 w-5" />}
+                {viewMode === "grid" ? <Layers className="h-5 w-5" /> : <Layers className="h-5 w-5" />}
               </Button>
             </div>
+          </div>
+
+          {/* Results count */}
+          <div className="text-gray-600 dark:text-gray-400 mb-6">
+            عرض {sortedCards.length} من {cards.length} بطاقة
+            {selectedCategory !== "جميع البطاقات" && ` في فئة "${selectedCategory}"`}
           </div>
         </div>
       </section>
 
       {/* Cards Grid */}
-      <section ref={cardsRef} className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section ref={cardsRef} className="py-12 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={cardsInView ? "visible" : "hidden"}
-            className={`grid ${
+            className={`grid gap-6 ${
               viewMode === "grid" 
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 : "grid-cols-1"
-            } gap-8`}
+            }`}
           >
-            {sortedCards.map((card) => (
+            {sortedCards.map((card, index) => (
               <motion.div
                 key={card.id}
                 variants={cardVariants}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className={`group relative ${viewMode === "list" ? "md:flex md:gap-6" : ""}`}
-                layout
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="group"
               >
-                <Card className="overflow-hidden bg-white dark:bg-gray-900 shadow-lg hover:shadow-2xl transition-all duration-300 border-0 group-hover:border-purple-200 dark:group-hover:border-purple-800">
-                  {/* Card Badges */}
-                  <div className="absolute top-4 right-4 z-10 flex gap-2">
-                    {card.isHot && (
-                      <Badge className="bg-red-500 text-white border-0 shadow-lg">
-                        <Flame className="h-3 w-3 mr-1" />
-                        مطلوب
-                      </Badge>
-                    )}
-                    {card.isNew && (
-                      <Badge className="bg-green-500 text-white border-0 shadow-lg">
-                        <Star className="h-3 w-3 mr-1" />
-                        جديد
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Discount Badge */}
-                  <div className="absolute top-4 left-4 z-10">
-                    <Badge className="bg-orange-500 text-white border-0 shadow-lg">
-                      <Percent className="h-3 w-3 mr-1" />
-                      {card.discount}
-                    </Badge>
-                  </div>
-
-                  {/* Card Image */}
-                  <div className={`relative overflow-hidden ${viewMode === "list" ? "md:w-48 md:h-32" : "h-48"}`}>
+                <Card className="h-full overflow-hidden bg-white dark:bg-gray-900 border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl">
+                  <div className="relative">
                     <img
                       src={card.image}
                       alt={card.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
-                    {/* Favorite Button */}
+                    {/* Overlay badges */}
+                    <div className="absolute top-3 right-3 flex flex-col gap-2">
+                      {card.isHot && (
+                        <Badge className="bg-red-500 text-white text-xs px-2 py-1">
+                          <Flame className="h-3 w-3 mr-1" />
+                          HOT
+                        </Badge>
+                      )}
+                      {card.isNew && (
+                        <Badge className="bg-green-500 text-white text-xs px-2 py-1">
+                          NEW
+                        </Badge>
+                      )}
+                      {card.discount && (
+                        <Badge className="bg-orange-500 text-white text-xs px-2 py-1">
+                          {card.discount}
+                        </Badge>
+                      )}
+                    </div>
+
+                    {/* Favorite button */}
                     <Button
-                      size="sm"
                       variant="ghost"
-                      className="absolute bottom-2 right-2 bg-white/90 hover:bg-white text-gray-700 rounded-full p-2 shadow-lg"
+                      size="sm"
+                      className="absolute top-3 left-3 w-8 h-8 p-0 bg-white/80 hover:bg-white"
                       onClick={() => handleAddToFavorites(card.id)}
                     >
-                      <Heart className={`h-4 w-4 ${favorites.includes(card.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                      <Heart 
+                        className={`h-4 w-4 ${
+                          favorites.includes(card.id) 
+                            ? 'text-red-500 fill-current' 
+                            : 'text-gray-600'
+                        }`} 
+                      />
                     </Button>
                   </div>
 
                   <CardContent className="p-6">
-                    {/* Card Header */}
-                    <div className="mb-4">
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                        {card.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                        {card.description}
-                      </p>
-                    </div>
-
-                    {/* Rating and Reviews */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={`h-4 w-4 ${i < Math.floor(card.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
-                          {card.rating}
-                        </span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          ({card.reviews} تقييم)
-                        </span>
-                      </div>
-                      <Badge variant="secondary" className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                    <div className="flex items-center justify-between mb-3">
+                      <Badge variant="secondary" className="text-xs">
                         {card.category}
                       </Badge>
-                    </div>
-
-                    {/* Features */}
-                    <div className="mb-6">
-                      <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">المميزات:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {card.features.map((feature, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center gap-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full"
-                          >
-                            <CheckCircle className="h-3 w-3" />
-                            {feature}
-                          </span>
-                        ))}
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          {card.rating}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          ({card.reviews})
+                        </span>
                       </div>
                     </div>
 
-                    {/* Price and Actions */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                            {card.price}
+                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-2">
+                      {card.title}
+                    </h3>
+
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                      {card.description}
+                    </p>
+
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                          {card.price}
+                        </span>
+                        {card.originalPrice && (
+                          <span className="text-sm text-gray-500 line-through">
+                            {card.originalPrice}
                           </span>
-                          {card.originalPrice && (
-                            <span className="text-lg text-gray-400 line-through">
-                              {card.originalPrice}
-                            </span>
-                          )}
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1 text-green-600 dark:text-green-400 text-sm font-medium">
+                        <Zap className="h-4 w-4" />
+                        {card.deliveryTime}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 mb-4">
+                      {card.features.slice(0, 2).map((feature, idx) => (
+                        <div key={idx} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          {feature}
                         </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          السعر شامل الضريبة
-                        </p>
-                      </div>
+                      ))}
+                    </div>
 
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleAddToCart(card.id)}
-                          className="border-purple-300 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20"
-                        >
-                          <ShoppingCart className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => handlePurchase(card)}
-                          className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                        >
-                          شراء الآن
-                        </Button>
-                      </div>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handlePurchase(card)}
+                        className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium rounded-xl transition-all duration-300"
+                      >
+                        اشتري الآن
+                        <ShoppingCart className="h-4 w-4 mr-2" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAddToCart(card.id)}
+                        className="px-3"
+                      >
+                        <Package className="h-4 w-4" />
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -996,328 +876,190 @@ const ElectronicCardsStore = () => {
             ))}
           </motion.div>
 
-          {/* Load More Button */}
-          {sortedCards.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="text-center mt-12"
-            >
-              <Button
-                variant="outline"
-                size="lg"
-                className="px-8 py-4 rounded-xl border-2 border-purple-300 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-300"
-              >
-                عرض المزيد من البطاقات
-                <TrendingUp className="mr-2 h-5 w-5" />
-              </Button>
-            </motion.div>
+          {sortedCards.length === 0 && (
+            <div className="text-center py-12">
+              <div className="max-w-md mx-auto">
+                <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  لم يتم العثور على نتائج
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  جرب البحث بكلمات مختلفة أو تصفح الفئات المتاحة
+                </p>
+              </div>
+            </div>
           )}
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-600 to-blue-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-white"
-          >
-            <h2 className="text-4xl font-bold mb-6">
-              هل تحتاج مساعدة في اختيار البطاقة المناسبة؟
+      {/* Contact Section */}
+      <section id="contact" className="py-20 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 mb-4">
+              تواصل معنا
+            </Badge>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+              نحن هنا لمساعدتك
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              تواصل مع فريق الدعم المتخصص لدينا للحصول على استشارة مجانية
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              فريقنا متاح 24/7 للإجابة على استفساراتك ومساعدتك في اختيار البطاقة المناسبة
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">
+              <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">واتساب</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">تواصل سريع ومباشر</p>
+              <Button 
+                className="w-full bg-green-500 hover:bg-green-600"
                 onClick={() => window.open('https://wa.me/966555000123', '_blank')}
               >
-                <MessageCircle className="mr-2 h-5 w-5" />
-                تواصل عبر الواتساب
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-white text-white hover:bg-white hover:text-purple-600 px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
-                onClick={() => window.open('tel:+966555000123', '_blank')}
-              >
-                <Phone className="mr-2 h-5 w-5" />
-                اتصل بنا مباشرة
+                إرسال رسالة
               </Button>
             </div>
-          </motion.div>
+
+            <div className="text-center p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">
+              <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Phone className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">الهاتف</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">اتصال مباشر</p>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.open('tel:+966555000123', '_blank')}
+              >
+                +966 555 000 123
+              </Button>
+            </div>
+
+            <div className="text-center p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">
+              <div className="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Mail className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">البريد الإلكتروني</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">للاستفسارات العامة</p>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.open('mailto:support@digitalcards.sa', '_blank')}
+              >
+                إرسال إيميل
+              </Button>
+            </div>
+
+            <div className="text-center p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">
+              <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <HelpCircle className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">مركز المساعدة</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">الأسئلة الشائعة</p>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => toast({ title: "مركز المساعدة قيد التطوير", duration: 2000 })}
+              >
+                زيارة المركز
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Back to Home Link */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <Link to="/">
-          <Button
-            className="bg-purple-600 hover:bg-purple-700 text-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 group"
-            size="sm"
-          >
-            <Home className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
-          </Button>
-        </Link>
-      </div>
-
-      {/* Chat Widget */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => window.open('https://wa.me/966555000123', '_blank')}
-          className="bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
-          size="lg"
-        >
-          <MessageCircle className="h-6 w-6" />
-        </Button>
-      </div>
-
-      {/* Enhanced Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-        {/* Main Footer Content */}
-        <div className="relative py-16 lg:py-20">
-          {/* Background Effects */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-          </div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-              
-              {/* Store Info */}
-              <div className="lg:col-span-1">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl flex items-center justify-center">
-                    <Store className="h-7 w-7 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                      متجر البطاقات الذكي
-                    </h3>
-                    <p className="text-sm text-gray-400">Digital Cards Store</p>
-                  </div>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div>
+              <div className="flex items-center space-x-3 space-x-reverse mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl flex items-center justify-center">
+                  <Store className="h-6 w-6 text-white" />
                 </div>
-                <p className="text-gray-300 leading-relaxed mb-6">
-                  وجهتك الأولى للحصول على أفضل البطاقات الرقمية بأسعار منافسة وجودة عالية. نوفر خدمة التفعيل الفوري مع ضمان الجودة.
-                </p>
-                <div className="flex gap-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-gray-600 text-gray-300 hover:bg-purple-600 hover:border-purple-600 hover:text-white transition-all duration-300"
-                    onClick={() => window.open('https://wa.me/966555000123', '_blank')}
-                  >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    واتساب
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-gray-600 text-gray-300 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all duration-300"
-                    onClick={() => window.open('tel:+966555000123', '_blank')}
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    اتصل بنا
-                  </Button>
+                <div>
+                  <h3 className="text-xl font-bold">متجر البطاقات</h3>
+                  <p className="text-gray-400 text-sm">Digital Cards Store</p>
                 </div>
               </div>
-
-              {/* Quick Links */}
-              <div>
-                <h4 className="text-lg font-bold mb-6 text-white">روابط سريعة</h4>
-                <div className="space-y-3">
-                  {[
-                    { name: "الصفحة الرئيسية", href: "#home" },
-                    { name: "جميع الفئات", href: "#categories" },
-                    { name: "العروض الخاصة", href: "#offers" },
-                    { name: "البحث المتقدم", href: "#search" },
-                    { name: "المفضلة", href: "#favorites" },
-                    { name: "سلة التسوق", href: "#cart" }
-                  ].map((link) => (
-                    <a
-                      key={link.name}
-                      href={link.href}
-                      className="block text-gray-300 hover:text-purple-400 transition-colors duration-200 hover:translate-x-1 transform"
-                    >
-                      {link.name}
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Categories */}
-              <div>
-                <h4 className="text-lg font-bold mb-6 text-white">الفئات الشائعة</h4>
-                <div className="space-y-3">
-                  {[
-                    { name: "بطاقات الألعاب", count: "73", icon: Gamepad2 },
-                    { name: "بطاقات الترفيه", count: "48", icon: Play },
-                    { name: "بطاقات التطبيقات", count: "41", icon: Smartphone },
-                    { name: "بطاقات التسوق", count: "28", icon: ShoppingBag },
-                    { name: "بطاقات الموسيقى", count: "15", icon: Music },
-                    { name: "البطاقات الإبداعية", count: "12", icon: Layers }
-                  ].map((category) => {
-                    const IconComponent = category.icon;
-                    return (
-                      <div 
-                        key={category.name}
-                        className="flex items-center gap-3 text-gray-300 hover:text-purple-400 cursor-pointer transition-colors duration-200 group"
-                        onClick={() => setSelectedCategory(category.name.replace('بطاقات ', ''))}
-                      >
-                        <IconComponent className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                        <span className="flex-1">{category.name}</span>
-                        <Badge variant="secondary" className="bg-gray-700 text-gray-300 text-xs">
-                          {category.count}
-                        </Badge>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Contact Info */}
-              <div>
-                <h4 className="text-lg font-bold mb-6 text-white">تواصل معنا</h4>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <MessageCircle className="h-4 w-4 text-green-400" />
-                    </div>
-                    <div>
-                      <p className="text-gray-300 text-sm">واتساب</p>
-                      <p className="text-white font-medium">+966 555 000 123</p>
-                      <p className="text-gray-400 text-xs">متاح 24/7</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Phone className="h-4 w-4 text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-gray-300 text-sm">هاتف</p>
-                      <p className="text-white font-medium">+966 555 000 123</p>
-                      <p className="text-gray-400 text-xs">9:00 ص - 11:00 م</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Mail className="h-4 w-4 text-purple-400" />
-                    </div>
-                    <div>
-                      <p className="text-gray-300 text-sm">ايميل</p>
-                      <p className="text-white font-medium">info@cards-store.sa</p>
-                      <p className="text-gray-400 text-xs">نرد خلال ساعة</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Clock className="h-4 w-4 text-orange-400" />
-                    </div>
-                    <div>
-                      <p className="text-gray-300 text-sm">ساعات العمل</p>
-                      <p className="text-white font-medium">24/7 أون لاين</p>
-                      <p className="text-gray-400 text-xs">خدمة متواصلة</p>
-                    </div>
-                  </div>
-                </div>
+              <p className="text-gray-400 mb-4">
+                أفضل متجر للبطاقات الرقمية في المملكة العربية السعودية. نوفر أفضل الأسعار وأسرع خدمة تسليم.
+              </p>
+              <div className="flex space-x-4 space-x-reverse">
+                <Button
+                  size="sm"
+                  className="bg-green-500 hover:bg-green-600"
+                  onClick={() => window.open('https://wa.me/966555000123', '_blank')}
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  واتساب
+                </Button>
               </div>
             </div>
 
-            {/* Features Section */}
-            <div className="mt-16 pt-12 border-t border-gray-700">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="text-center group">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <Zap className="h-6 w-6 text-white" />
-                  </div>
-                  <h5 className="font-bold text-white mb-1">تفعيل فوري</h5>
-                  <p className="text-xs text-gray-400">خلال 30 ثانية</p>
-                </div>
+            <div>
+              <h4 className="font-bold text-lg mb-4">روابط سريعة</h4>
+              <ul className="space-y-2">
+                <li><a href="#home" className="text-gray-400 hover:text-white transition-colors">الرئيسية</a></li>
+                <li><a href="#categories" className="text-gray-400 hover:text-white transition-colors">الفئات</a></li>
+                <li><a href="#search" className="text-gray-400 hover:text-white transition-colors">البحث</a></li>
+                <li><a href="#contact" className="text-gray-400 hover:text-white transition-colors">اتصل بنا</a></li>
+              </ul>
+            </div>
 
-                <div className="text-center group">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <Shield className="h-6 w-6 text-white" />
-                  </div>
-                  <h5 className="font-bold text-white mb-1">آمان تام</h5>
-                  <p className="text-xs text-gray-400">حماية SSL</p>
-                </div>
+            <div>
+              <h4 className="font-bold text-lg mb-4">فئات البطاقات</h4>
+              <ul className="space-y-2">
+                <li><span className="text-gray-400 cursor-pointer hover:text-white transition-colors" onClick={() => setSelectedCategory("ترفيه")}>ترفيه</span></li>
+                <li><span className="text-gray-400 cursor-pointer hover:text-white transition-colors" onClick={() => setSelectedCategory("ألعاب")}>ألعاب</span></li>
+                <li><span className="text-gray-400 cursor-pointer hover:text-white transition-colors" onClick={() => setSelectedCategory("تسوق")}>تسوق</span></li>
+                <li><span className="text-gray-400 cursor-pointer hover:text-white transition-colors" onClick={() => setSelectedCategory("تطبيقات")}>تطبيقات</span></li>
+              </ul>
+            </div>
 
-                <div className="text-center group">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <Award className="h-6 w-6 text-white" />
-                  </div>
-                  <h5 className="font-bold text-white mb-1">ضمان الجودة</h5>
-                  <p className="text-xs text-gray-400">استرداد مضمون</p>
-                </div>
-
-                <div className="text-center group">
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <Headphones className="h-6 w-6 text-white" />
-                  </div>
-                  <h5 className="font-bold text-white mb-1">دعم 24/7</h5>
-                  <p className="text-xs text-gray-400">خدمة العملاء</p>
-                </div>
-              </div>
+            <div>
+              <h4 className="font-bold text-lg mb-4">معلومات التواصل</h4>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3">
+                  <Phone className="h-4 w-4 text-purple-400" />
+                  <span className="text-gray-400">+966 555 000 123</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Mail className="h-4 w-4 text-purple-400" />
+                  <span className="text-gray-400">support@digitalcards.sa</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Clock className="h-4 w-4 text-purple-400" />
+                  <span className="text-gray-400">خدمة 24/7</span>
+                </li>
+              </ul>
             </div>
           </div>
-        </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-700 bg-gray-900/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-6 text-sm text-gray-400">
-                <Link to="/cards-store/privacy" className="hover:text-purple-400 transition-colors duration-200">
-                  سياسة الخصوصية
-                </Link>
-                <Link to="/cards-store/terms" className="hover:text-purple-400 transition-colors duration-200">
-                  الشروط والأحكام
-                </Link>
-                <Link to="/cards-store/faq" className="hover:text-purple-400 transition-colors duration-200">
-                  الأسئلة الشائعة
-                </Link>
-                <Link to="/cards-store/about" className="hover:text-purple-400 transition-colors duration-200">
-                  عن المتجر
-                </Link>
-              </div>
-
+          <div className="border-t border-gray-800 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-gray-400 text-sm mb-4 md:mb-0">
+                © 2024 متجر البطاقات الرقمية. جميع الحقوق محفوظة.
+              </p>
               <div className="flex items-center gap-4">
-                <p className="text-sm text-gray-400">
-                  © 2024 متجر البطاقات الذكي. جميع الحقوق محفوظة.
-                </p>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">طُوِّر بواسطة</span>
-                  <Link 
-                    to="/" 
-                    className="text-xs bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent font-bold hover:from-purple-300 hover:to-blue-300 transition-all duration-200"
-                  >
-                    شركة ASH holding القابضة
-                  </Link>
-                </div>
+                <span className="text-gray-400 text-sm">
+                  تم التطوير بواسطة
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-purple-400 hover:text-purple-300"
+                  onClick={() => navigate('/')}
+                >
+                  شركة ASH HOLDING القابضة
+                </Button>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Scroll to Top Button */}
-        <div className="fixed bottom-24 left-6 z-40">
-          <Button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="bg-gray-700 hover:bg-gray-600 text-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 group opacity-75 hover:opacity-100"
-            size="sm"
-          >
-            <ArrowRight className="h-4 w-4 rotate-[-90deg] group-hover:scale-110 transition-transform duration-200" />
-          </Button>
         </div>
       </footer>
     </div>
