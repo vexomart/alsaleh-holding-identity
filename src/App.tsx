@@ -126,6 +126,7 @@ import CardsStoreFAQ from "./pages/cards-store/FAQ";
 import CardsStorePrivacy from "./pages/cards-store/Privacy";
 import CardsStoreTerms from "./pages/cards-store/Terms";
 import KashkhaAbayaStore from "./pages/KashkhaAbayaStore";
+import ProductDetails from "./pages/cards-store/ProductDetails";
 import LuxuryAbayas from "./pages/abaya-categories/LuxuryAbayas";
 import CasualAbayas from "./pages/abaya-categories/CasualAbayas";
 import FormalAbayas from "./pages/abaya-categories/FormalAbayas";
@@ -258,7 +259,8 @@ const App = () => {
                 <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
                 <Route path="/electronic-cards-store" element={<ElectronicCardsStore />} />
                 <Route path="/electronic-games-store" element={<ElectronicGamesStore />} />
-                <Route path="/cards-store" element={<ElectronicCardsWebsite />} />
+                <Route path="/cards-store" element={<ElectronicCardsStore />} />
+                <Route path="/cards-store/product/:id" element={<ProductDetails />} />
                 <Route path="/cards-store/about" element={<CardsStoreAbout />} />
                 <Route path="/cards-store/contact" element={<CardsStoreContact />} />
                 <Route path="/cards-store/faq" element={<CardsStoreFAQ />} />

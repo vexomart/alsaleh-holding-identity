@@ -220,7 +220,7 @@ const ElectronicCardsStore = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-x-hidden" dir="rtl">
       {/* Demo Alert */}
       <div className="bg-gradient-to-r from-orange-500 to-red-600 text-white p-3 text-center text-sm font-medium">
-        🛍️ هذا الموقع تجريبي وجميع المنتجات كمثال فقط - تم تطويره من شركة ASH HOLDING القابضة
+        🛍️ هذا الموقع تجريبي وجميع المنتجات كمثال فقط - تطوير بحب شركة علي صالح الشهري القابضة
       </div>
 
       {/* Enhanced Header */}
@@ -277,7 +277,7 @@ const ElectronicCardsStore = () => {
 
               {/* WhatsApp Button */}
               <Button
-                onClick={() => window.open('https://wa.me/966555000123', '_blank')}
+                onClick={() => window.open('https://wa.me/966555812567', '_blank')}
                 className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden sm:flex items-center gap-2"
               >
                 <MessageCircle className="h-4 w-4" />
@@ -286,7 +286,7 @@ const ElectronicCardsStore = () => {
 
               {/* Phone Button */}
               <Button
-                onClick={() => window.open('tel:+966555000123', '_blank')}
+                onClick={() => window.open('tel:+966555812567', '_blank')}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden sm:flex items-center gap-2"
               >
                 <Phone className="h-4 w-4" />
@@ -339,7 +339,7 @@ const ElectronicCardsStore = () => {
                     </Button>
                     <Button
                       onClick={() => {
-                        window.open('https://wa.me/966555000123', '_blank');
+                        window.open('https://wa.me/966555812567', '_blank');
                         setIsMobileMenuOpen(false);
                       }}
                       className="flex-1 bg-green-500 hover:bg-green-600 text-white"
@@ -400,7 +400,7 @@ const ElectronicCardsStore = () => {
                 variant="outline"
                 size="lg"
                 className="border-white text-white hover:bg-white hover:text-purple-600 px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
-                onClick={() => window.open('https://wa.me/966555000123', '_blank')}
+                onClick={() => window.open('https://wa.me/966555812567', '_blank')}
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
                 تواصل معنا
@@ -612,13 +612,14 @@ const ElectronicCardsStore = () => {
 
                       {/* Action Buttons */}
                       <div className="flex gap-2 pt-2">
-                        <Button 
-                          className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300"
-                          onClick={() => window.open('https://wa.me/966555000123', '_blank')}
-                        >
-                          <Gift className="h-4 w-4 mr-2" />
-                          اشتري الآن
-                        </Button>
+                        <Link to={`/cards-store/product/${card.id}`} className="flex-1">
+                          <Button 
+                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300"
+                          >
+                            <Gift className="h-4 w-4 mr-2" />
+                            عرض التفاصيل
+                          </Button>
+                        </Link>
                         <Button 
                           variant="outline" 
                           size="sm"
@@ -655,7 +656,7 @@ const ElectronicCardsStore = () => {
               </p>
               <div className="flex space-x-4 space-x-reverse">
                 <Button
-                  onClick={() => window.open('https://wa.me/966555000123', '_blank')}
+                  onClick={() => window.open('https://wa.me/966555812567', '_blank')}
                   className="bg-green-600 hover:bg-green-700"
                 >
                   <MessageCircle className="h-5 w-5 mr-2" />
@@ -684,7 +685,7 @@ const ElectronicCardsStore = () => {
             <div>
               <h4 className="text-lg font-semibold mb-4">معلومات التواصل</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>📞 966555000123+</li>
+                <li>📞 966555812567+</li>
                 <li>📧 cards@ash-holding.com</li>
                 <li>📍 الرياض، المملكة العربية السعودية</li>
                 <li>🕒 24/7 خدمة العملاء</li>
@@ -695,7 +696,7 @@ const ElectronicCardsStore = () => {
           <div className="border-t border-gray-700 mt-12 pt-8 text-center">
             <p className="text-gray-400">
               © 2024 متجر البطاقات الرقمية. جميع الحقوق محفوظة. طُوِّر بواسطة 
-              <span className="text-purple-400 font-semibold mr-1">شركة ASH HOLDING القابضة</span>
+              <span className="text-purple-400 font-semibold mr-1">شركة علي صالح الشهري القابضة</span>
             </p>
           </div>
         </div>
