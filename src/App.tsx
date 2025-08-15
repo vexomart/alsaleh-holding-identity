@@ -163,16 +163,21 @@ const PageLoader = () => (
 );
 
 
+// Create QueryClient instance outside component to avoid recreation
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
 const App = () => {
-  const queryClientRef = useRef<QueryClient | null>(null);
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient();
-  }
   console.log('App component rendering...');
   return (
   <HelmetProvider>
-    <QueryClientProvider client={queryClientRef.current!}>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="ash-theme">
         <NotificationProvider>
           <TooltipProvider>
