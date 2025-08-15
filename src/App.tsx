@@ -7,6 +7,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRef } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { NotificationProvider } from "@/components/EnhancedNotifications";
+import { HelmetProvider } from 'react-helmet-async';
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
@@ -169,18 +173,22 @@ const App = () => {
   }
   console.log('App component rendering...');
   return (
-  <QueryClientProvider client={queryClientRef.current!}>
-    <TooltipProvider>
-      <MobileOptimizer>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
-          {/* Subtle pattern overlay */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
-          
-          {/* Main content with mobile optimizations */}
-          <div className="relative z-10 mobile-tap mobile-scroll">
-            
-            <Toaster />
-            <Sonner />
+  <HelmetProvider>
+    <QueryClientProvider client={queryClientRef.current!}>
+      <ThemeProvider defaultTheme="system" storageKey="ash-theme">
+        <NotificationProvider>
+          <TooltipProvider>
+              <MobileOptimizer>
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
+                  {/* Subtle pattern overlay */}
+                  <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
+                  
+                  {/* Main content with mobile optimizations */}
+                  <div className="relative z-10 mobile-tap mobile-scroll">
+                    <ServiceWorkerRegistration />
+                    
+                    <Toaster />
+                    <Sonner />
             <BrowserRouter>
               <ScrollToTop />
               
@@ -334,8 +342,11 @@ const App = () => {
         </div>
       </MobileOptimizer>
     </TooltipProvider>
-  </QueryClientProvider>
-  );
+  </NotificationProvider>
+</ThemeProvider>
+</QueryClientProvider>
+</HelmetProvider>
+);
 };
 
 export default App;

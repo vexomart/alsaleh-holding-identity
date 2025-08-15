@@ -3,6 +3,9 @@ import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AdvancedSEO } from "@/components/AdvancedSEO";
+import { HeroSkeleton, DepartmentsSkeleton } from "@/components/SkeletonLoader";
+import { lazy, Suspense } from "react";
 
 // Remove direct imports, they are now lazy loaded
 
@@ -12,7 +15,6 @@ import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "luc
 import { Link } from "react-router-dom";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
 import { ImageOptimizer } from "@/components/ImageOptimizer";
-import { lazy, Suspense } from "react";
 
 // Lazy load heavy components
 const DepartmentsSection = lazy(() => import("@/components/DepartmentsSection"));
@@ -23,10 +25,16 @@ const CommitmentsSection = lazy(() => import("@/components/CommitmentsSection"))
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
-      <PerformanceOptimizer />
-      <ImageOptimizer />
-      <Navigation />
+    <>
+      <AdvancedSEO 
+        title="شركة علي صالح الشهري القابضة - الرئيسية"
+        description="شركة قابضة رائدة في الاستثمار التقني والإعلامي في المملكة العربية السعودية. نقدم خدمات متكاملة في التقنية والإعلام والاستثمار."
+        keywords={["الصفحة الرئيسية", "خدمات متكاملة", "استثمار", "تقنية متطورة"]}
+      />
+      <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
+        <PerformanceOptimizer />
+        <ImageOptimizer />
+        <Navigation />
       
       {/* Optimized Animated Background Elements - Reduced for performance */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -38,15 +46,17 @@ const Index = () => {
         <div className="absolute bottom-40 left-16 w-4 h-4 bg-accent/10 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
       </div>
       
-      <main className="relative overflow-hidden z-10">
-        {/* Hero Section with Enhanced Background */}
-        <section id="home" className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/8"></div>
-          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent"></div>
-          <div className="relative z-10">
-            <HeroSection />
-          </div>
-        </section>
+        <main className="relative overflow-hidden z-10">
+          {/* Hero Section with Enhanced Background */}
+          <section id="home" className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/8"></div>
+            <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent"></div>
+            <div className="relative z-10">
+              <Suspense fallback={<HeroSkeleton />}>
+                <HeroSection />
+              </Suspense>
+            </div>
+          </section>
 
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
@@ -151,11 +161,7 @@ const Index = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:120px_120px] opacity-20"></div>
             
             <div className="relative z-10">
-              <Suspense fallback={
-                <div className="flex items-center justify-center py-20">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              }>
+              <Suspense fallback={<DepartmentsSkeleton />}>
                 <DepartmentsSection />
               </Suspense>
             </div>
@@ -177,11 +183,7 @@ const Index = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:80px_80px] opacity-25"></div>
             
             <div className="relative z-10">
-              <Suspense fallback={
-                <div className="flex items-center justify-center py-20">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              }>
+              <Suspense fallback={<DepartmentsSkeleton />}>
                 <CommitmentsSection />
               </Suspense>
             </div>
@@ -199,9 +201,10 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* ChatBot Component */}
-      <ChatBot />
-    </div>
+        {/* ChatBot Component */}
+        <ChatBot />
+      </div>
+    </>
   );
 };
 
