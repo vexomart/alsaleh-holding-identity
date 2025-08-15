@@ -320,7 +320,7 @@ const SoftwareProducts = () => {
       downloads: "89",
       status: "متاح الآن",
       color: "from-green-500 to-emerald-500",
-      demoUrl: "/cards-store",
+      demoUrl: "/electronic-cards-store",
       tags: ["E-commerce", "Cards", "WhatsApp", "Responsive"],
       isNew: true,
       isFeatured: true,
