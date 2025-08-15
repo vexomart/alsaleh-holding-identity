@@ -1,6 +1,6 @@
-const CACHE_NAME = 'ash-holdings-v1.0';
-const STATIC_CACHE = 'ash-static-v1.0';
-const DYNAMIC_CACHE = 'ash-dynamic-v1.0';
+const CACHE_NAME = 'ash-holdings-v1.1';
+const STATIC_CACHE = 'ash-static-v1.1';
+const DYNAMIC_CACHE = 'ash-dynamic-v1.1';
 
 // Files to cache immediately
 const STATIC_FILES = [
@@ -19,7 +19,8 @@ self.addEventListener('install', (event) => {
         return cache.addAll(STATIC_FILES);
       })
       .then(() => {
-        return self.skipWaiting();
+        // Don't skip waiting automatically
+        console.log('SW installed, waiting for activation');
       })
   );
 });
@@ -106,6 +107,13 @@ self.addEventListener('sync', (event) => {
       // Handle offline form submissions here
       console.log('Background sync triggered')
     );
+  }
+});
+
+// Handle messages from main thread
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
   }
 });
 

@@ -1,8 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNotifications } from '@/components/EnhancedNotifications';
 
 export const ServiceWorkerRegistration = () => {
   const { addNotification } = useNotifications();
+  const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
+
+  const updateServiceWorker = () => {
+    if (waitingWorker) {
+      waitingWorker.postMessage({ action: 'skipWaiting' });
+      setWaitingWorker(null);
+      
+      // Show updating notification
+      addNotification({
+        type: 'info',
+        title: 'جارٍ التحديث...',
+        description: 'يتم تطبيق التحديث الآن.',
+        duration: 2000
+      });
+    }
+  };
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -17,13 +33,14 @@ export const ServiceWorkerRegistration = () => {
             if (newWorker) {
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  setWaitingWorker(newWorker);
                   addNotification({
                     type: 'info',
                     title: 'تحديث متاح',
-                    description: 'تحديث جديد متاح للموقع. سيتم تطبيقه عند إعادة تحميل الصفحة.',
+                    description: 'يتوفر تحديث جديد للموقع مع تحسينات في الأداء.',
                     action: {
-                      label: 'إعادة تحميل',
-                      onClick: () => window.location.reload()
+                      label: 'تحديث الآن',
+                      onClick: updateServiceWorker
                     },
                     duration: 0
                   });
@@ -31,6 +48,26 @@ export const ServiceWorkerRegistration = () => {
               });
             }
           });
+
+          // Listen for controlling change (new SW activated)
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            // New SW has taken control, reload the page
+            addNotification({
+              type: 'success',
+              title: 'تم التحديث بنجاح',
+              description: 'تم تطبيق التحديث. سيتم إعادة تحميل الصفحة.',
+              duration: 1000
+            });
+            
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          });
+
+          // Check for updates periodically
+          setInterval(() => {
+            registration.update();
+          }, 60000); // Check every minute
         })
         .catch((error) => {
           console.error('SW registration failed:', error);
