@@ -1,6 +1,6 @@
-const CACHE_NAME = 'ash-holdings-v1.1';
-const STATIC_CACHE = 'ash-static-v1.1';
-const DYNAMIC_CACHE = 'ash-dynamic-v1.1';
+const CACHE_NAME = 'ash-holdings-v1.2';
+const STATIC_CACHE = 'ash-static-v1.2';
+const DYNAMIC_CACHE = 'ash-dynamic-v1.2';
 
 // Files to cache immediately
 const STATIC_FILES = [
@@ -11,18 +11,19 @@ const STATIC_FILES = [
   'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap'
 ];
 
-// Install event - cache static files
+// Install event - cache static files (simplified)
 self.addEventListener('install', (event) => {
+  console.log('SW installing...');
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then((cache) => {
         return cache.addAll(STATIC_FILES);
       })
-      .then(() => {
-        // Don't skip waiting automatically
-        console.log('SW installed, waiting for activation');
+      .catch((error) => {
+        console.error('Cache failed:', error);
       })
   );
+  // Don't skip waiting - wait for user action
 });
 
 // Activate event - clean up old caches
@@ -100,19 +101,17 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Background sync for offline actions
+// Background sync (simplified)
 self.addEventListener('sync', (event) => {
   if (event.tag === 'background-sync') {
-    event.waitUntil(
-      // Handle offline form submissions here
-      console.log('Background sync triggered')
-    );
+    console.log('Background sync triggered');
   }
 });
 
-// Handle messages from main thread
+// Handle messages from main thread (simplified)
 self.addEventListener('message', (event) => {
   if (event.data && event.data.action === 'skipWaiting') {
+    console.log('Received skipWaiting message');
     self.skipWaiting();
   }
 });
