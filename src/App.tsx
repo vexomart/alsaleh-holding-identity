@@ -244,11 +244,11 @@ const App = () => {
                 <Route path="/offer-details/:id" element={<OfferDetails />} />
                 <Route path="/professional-services" element={<ProfessionalServices />} />
                 
-                <Route path="/content-creation" element={<ContentCreation />} />
-                <Route path="/design-solutions" element={<DesignSolutions />} />
-                <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
-                <Route path="/subsidiaries" element={<Subsidiaries />} />
-                <Route path="/payment-methods" element={<PaymentMethods />} />
+                <Route path="/content-creation" element={<Suspense fallback={<PageLoader />}><ContentCreation /></Suspense>} />
+                <Route path="/design-solutions" element={<Suspense fallback={<PageLoader />}><DesignSolutions /></Suspense>} />
+                <Route path="/design-solutions/:slug" element={<Suspense fallback={<PageLoader />}><EnhancedDesignCategory /></Suspense>} />
+                <Route path="/subsidiaries" element={<Suspense fallback={<PageLoader />}><Subsidiaries /></Suspense>} />
+                <Route path="/payment-methods" element={<Suspense fallback={<PageLoader />}><PaymentMethods /></Suspense>} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/payment-cancel" element={<PaymentCancel />} />
             <Route path="/partnerships" element={<Partnerships />} />
