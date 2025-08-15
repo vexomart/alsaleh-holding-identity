@@ -366,115 +366,163 @@ const ElectronicCardsStore = () => {
     }
   ];
 
-  // Premium Enhanced Categories with New Categories
+  // Enhanced Animated Categories with Improved Responsiveness
   const categories = [
     { 
       name: "جميع البطاقات", 
       icon: Globe, 
       count: 256, 
       color: "bg-gradient-to-br from-violet-600 via-purple-600 to-blue-600", 
-      description: "جميع أنواع البطاقات الرقمية",
+      description: "استكشف مجموعتنا الكاملة من البطاقات الرقمية",
       trending: true,
-      gradient: "from-violet-500/20 to-purple-500/20"
+      gradient: "from-violet-500/20 to-purple-500/20",
+      shadowColor: "shadow-violet-500/30",
+      borderColor: "border-violet-500/30",
+      hoverScale: "hover:scale-110",
+      animationDelay: "delay-[0ms]"
     },
     { 
       name: "ترفيه", 
       icon: Play, 
       count: 78, 
       color: "bg-gradient-to-br from-red-500 via-pink-500 to-rose-600", 
-      description: "نتفلكس، يوتيوب، ديزني بلس",
+      description: "نتفلكس، يوتيوب، ديزني بلس والمزيد",
       trending: false,
-      gradient: "from-red-500/20 to-pink-500/20"
+      gradient: "from-red-500/20 to-pink-500/20",
+      shadowColor: "shadow-red-500/30",
+      borderColor: "border-red-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[100ms]"
     },
     { 
       name: "ألعاب", 
       icon: Gamepad2, 
       count: 134, 
       color: "bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-600", 
-      description: "Steam، PlayStation، Xbox، Epic",
+      description: "Steam، PlayStation، Xbox، Epic Games",
       trending: true,
-      gradient: "from-blue-500/20 to-cyan-500/20"
+      gradient: "from-blue-500/20 to-cyan-500/20",
+      shadowColor: "shadow-blue-500/30",
+      borderColor: "border-blue-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[200ms]"
     },
     { 
       name: "تسوق إلكتروني", 
-      icon: ShoppingBag, 
+      icon: ShoppingBag,
       count: 45, 
       color: "bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600", 
-      description: "أمازون، نون، شي إن",
+      description: "أمازون، نون، شي إن والمتاجر الإلكترونية",
       trending: false,
-      gradient: "from-emerald-500/20 to-green-500/20"
+      gradient: "from-emerald-500/20 to-green-500/20",
+      shadowColor: "shadow-emerald-500/30",
+      borderColor: "border-emerald-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[300ms]"
     },
     { 
       name: "تطبيقات موبايل", 
       icon: Smartphone, 
       count: 67, 
       color: "bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-600", 
-      description: "Google Play، App Store، Huawei",
+      description: "Google Play، App Store، Huawei AppGallery",
       trending: true,
-      gradient: "from-orange-500/20 to-amber-500/20"
+      gradient: "from-orange-500/20 to-amber-500/20",
+      shadowColor: "shadow-orange-500/30",
+      borderColor: "border-orange-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[400ms]"
     },
     { 
       name: "موسيقى وبودكاست", 
       icon: Music, 
       count: 23, 
       color: "bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-600", 
-      description: "Spotify، Apple Music، Anghami",
+      description: "Spotify، Apple Music، Anghami، Deezer",
       trending: false,
-      gradient: "from-purple-500/20 to-indigo-500/20"
+      gradient: "from-purple-500/20 to-indigo-500/20",
+      shadowColor: "shadow-purple-500/30",
+      borderColor: "border-purple-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[500ms]"
     },
     { 
       name: "أدوات إبداعية", 
       icon: Layers, 
       count: 18, 
       color: "bg-gradient-to-br from-teal-500 via-cyan-500 to-blue-600", 
-      description: "Adobe، Canva، Figma، Notion",
+      description: "Adobe، Canva، Figma، Notion والمزيد",
       trending: false,
-      gradient: "from-teal-500/20 to-cyan-500/20"
+      gradient: "from-teal-500/20 to-cyan-500/20",
+      shadowColor: "shadow-teal-500/30",
+      borderColor: "border-teal-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[600ms]"
     },
     { 
       name: "شبكات اجتماعية", 
       icon: Users, 
       count: 12, 
       color: "bg-gradient-to-br from-pink-500 via-rose-500 to-red-600", 
-      description: "Discord، Telegram، Snapchat",
+      description: "Discord، Telegram، Snapchat Premium",
       trending: false,
-      gradient: "from-pink-500/20 to-rose-500/20"
+      gradient: "from-pink-500/20 to-rose-500/20",
+      shadowColor: "shadow-pink-500/30",
+      borderColor: "border-pink-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[700ms]"
     },
     { 
       name: "تعليم ودورات", 
       icon: GraduationCap, 
       count: 28, 
       color: "bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-600", 
-      description: "Udemy، Coursera، MasterClass",
+      description: "Udemy، Coursera، MasterClass، Skillshare",
       trending: true,
-      gradient: "from-indigo-500/20 to-blue-500/20"
+      gradient: "from-indigo-500/20 to-blue-500/20",
+      shadowColor: "shadow-indigo-500/30",
+      borderColor: "border-indigo-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[800ms]"
     },
     { 
       name: "عملات رقمية", 
       icon: Bitcoin, 
       count: 15, 
       color: "bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600", 
-      description: "Bitcoin، Ethereum، Binance",
+      description: "Bitcoin، Ethereum، Binance، Coinbase",
       trending: true,
-      gradient: "from-yellow-500/20 to-orange-500/20"
+      gradient: "from-yellow-500/20 to-orange-500/20",
+      shadowColor: "shadow-yellow-500/30",
+      borderColor: "border-yellow-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[900ms]"
     },
     { 
       name: "خدمات سحابية", 
       icon: Cloud, 
       count: 19, 
       color: "bg-gradient-to-br from-gray-500 via-slate-500 to-zinc-600", 
-      description: "Google Drive، Dropbox، iCloud",
+      description: "Google Drive، Dropbox، iCloud، OneDrive",
       trending: false,
-      gradient: "from-gray-500/20 to-slate-500/20"
+      gradient: "from-gray-500/20 to-slate-500/20",
+      shadowColor: "shadow-gray-500/30",
+      borderColor: "border-gray-500/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[1000ms]"
     },
     { 
       name: "VPN وأمان", 
       icon: Shield, 
       count: 11, 
       color: "bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700", 
-      description: "NordVPN، ExpressVPN، CyberGhost",
+      description: "NordVPN، ExpressVPN، CyberGhost، Surfshark",
       trending: false,
-      gradient: "from-green-600/20 to-emerald-600/20"
+      gradient: "from-green-600/20 to-emerald-600/20",
+      shadowColor: "shadow-green-600/30",
+      borderColor: "border-green-600/30",
+      hoverScale: "hover:scale-105",
+      animationDelay: "delay-[1100ms]"
     }
   ];
 
@@ -880,12 +928,12 @@ const ElectronicCardsStore = () => {
             </motion.div>
           </motion.div>
 
-          {/* Premium Categories Grid */}
+          {/* Responsive Animated Categories Grid */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={categoriesInView ? "visible" : "hidden"}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 mb-16"
+            className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-4 sm:gap-6 mb-16"
           >
             {categories.map((category, index) => {
               const IconComponent = category.icon;
@@ -893,111 +941,178 @@ const ElectronicCardsStore = () => {
                 <motion.div
                   key={category.name}
                   variants={{
-                    hidden: { opacity: 0, y: 50, scale: 0.8 },
+                    hidden: { 
+                      opacity: 0, 
+                      y: 60,
+                      scale: 0.8,
+                      rotate: -10
+                    },
                     visible: { 
                       opacity: 1, 
-                      y: 0, 
+                      y: 0,
                       scale: 1,
+                      rotate: 0,
                       transition: {
-                        delay: index * 0.1,
-                        duration: 0.6,
-                        ease: [0.25, 0.46, 0.45, 0.94]
+                        delay: index * 0.08,
+                        duration: 0.7,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                        type: "spring",
+                        stiffness: 100
                       }
                     }
                   }}
                   whileHover={{ 
-                    y: -8, 
-                    scale: 1.05,
-                    transition: { duration: 0.3, ease: "easeOut" }
+                    y: -12, 
+                    scale: 1.08,
+                    rotateY: 5,
+                    transition: { 
+                      duration: 0.4, 
+                      ease: "easeOut",
+                      type: "spring",
+                      stiffness: 300
+                    }
                   }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`group cursor-pointer relative overflow-hidden rounded-3xl transition-all duration-500 ${
+                  whileTap={{ 
+                    scale: 0.95,
+                    rotateY: -5,
+                    transition: { duration: 0.1 }
+                  }}
+                  className={`${category.animationDelay} group cursor-pointer relative overflow-hidden rounded-3xl transition-all duration-700 transform-gpu ${
                     selectedCategory === category.name 
-                      ? 'ring-2 ring-purple-500 shadow-2xl shadow-purple-500/25' 
-                      : 'hover:shadow-2xl hover:shadow-black/10 dark:hover:shadow-white/5'
+                      ? `ring-4 ring-purple-500 shadow-2xl ${category.shadowColor} scale-105` 
+                      : `hover:shadow-2xl ${category.shadowColor} hover:ring-2 ${category.borderColor}`
                   }`}
                   onClick={() => setSelectedCategory(category.name)}
+                  style={{ perspective: "1000px" }}
                 >
-                  {/* Card Background */}
-                  <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 h-full">
-                    {/* Gradient Overlay */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl`}></div>
+                  {/* Enhanced Card Background with Glass Effect */}
+                  <div className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-3xl p-4 sm:p-6 h-full min-h-[160px] sm:min-h-[180px]">
+                    {/* Dynamic Gradient Overlay */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-20 transition-all duration-700 rounded-3xl`}></div>
                     
-                    {/* Trending Badge */}
+                    {/* Animated Border */}
+                    <div className="absolute inset-0 rounded-3xl border-2 border-transparent bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500 opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10"
+                         style={{ padding: '2px' }}>
+                      <div className="bg-white dark:bg-gray-900 rounded-3xl h-full w-full"></div>
+                    </div>
+
+                    {/* Trending Badge with Animation */}
                     {category.trending && (
                       <motion.div 
-                        initial={{ scale: 0, rotate: -12 }}
-                        animate={{ scale: 1, rotate: -12 }}
-                        transition={{ delay: 0.5 + index * 0.1 }}
-                        className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"
+                        initial={{ scale: 0, rotate: -20, opacity: 0 }}
+                        animate={{ scale: 1, rotate: -12, opacity: 1 }}
+                        transition={{ 
+                          delay: 0.5 + index * 0.05,
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 10
+                        }}
+                        whileHover={{ rotate: -8, scale: 1.1 }}
+                        className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-20"
                       >
-                        ترند
+                        <motion.span
+                          animate={{ opacity: [1, 0.7, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          🔥 ترند
+                        </motion.span>
                       </motion.div>
                     )}
                     
-                    <div className="relative z-10 text-center space-y-4">
-                      {/* Icon Container */}
+                    <div className="relative z-10 text-center space-y-3 h-full flex flex-col justify-center">
+                      {/* Enhanced Icon Container */}
                       <div className="relative mx-auto">
                         <motion.div 
-                          className={`w-16 h-16 ${category.color} rounded-2xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl transition-all duration-500`}
-                          whileHover={{ rotate: [0, -10, 10, -5, 0] }}
-                          transition={{ duration: 0.6 }}
+                          className={`w-12 h-12 sm:w-16 sm:h-16 ${category.color} rounded-2xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-2xl transition-all duration-700 relative overflow-hidden`}
+                          whileHover={{ 
+                            rotate: [0, -8, 8, -4, 0],
+                            scale: [1, 1.1, 1.05, 1.1, 1.05]
+                          }}
+                          transition={{ duration: 0.8, ease: "easeInOut" }}
                         >
-                          <IconComponent className="h-8 w-8 text-white drop-shadow-sm" />
-                        </motion.div>
-                        
-                        {/* Floating particles */}
-                        <motion.div
-                          className="absolute inset-0 -z-10"
-                          initial={{ opacity: 0 }}
-                          whileHover={{ opacity: 1 }}
-                        >
-                          {[...Array(3)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className="absolute w-1 h-1 bg-purple-400 rounded-full"
-                              style={{
-                                left: `${20 + i * 30}%`,
-                                top: `${15 + i * 20}%`,
-                              }}
-                              animate={{
-                                y: [-10, -20, -10],
-                                opacity: [0.3, 1, 0.3],
-                              }}
-                              transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                delay: i * 0.3,
-                              }}
-                            />
-                          ))}
+                          {/* Icon Glow Effect */}
+                          <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                          <IconComponent className="h-6 w-6 sm:h-8 sm:w-8 text-white drop-shadow-lg relative z-10" />
+                          
+                          {/* Sparkle Effects */}
+                          <motion.div
+                            className="absolute inset-0 -z-10"
+                            initial={{ opacity: 0 }}
+                            whileHover={{ opacity: 1 }}
+                          >
+                            {[...Array(4)].map((_, i) => (
+                              <motion.div
+                                key={i}
+                                className="absolute w-1 h-1 bg-white rounded-full"
+                                style={{
+                                  left: `${15 + i * 25}%`,
+                                  top: `${10 + i * 25}%`,
+                                }}
+                                animate={{
+                                  scale: [0, 1, 0],
+                                  opacity: [0, 1, 0],
+                                  rotate: [0, 180, 360],
+                                }}
+                                transition={{
+                                  duration: 1.5,
+                                  repeat: Infinity,
+                                  delay: i * 0.2,
+                                  ease: "easeInOut"
+                                }}
+                              />
+                            ))}
+                          </motion.div>
                         </motion.div>
                       </div>
                       
-                      {/* Content */}
+                      {/* Enhanced Content */}
                       <div className="space-y-2">
-                        <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 text-sm leading-tight">
+                        <motion.h3 
+                          className="font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-all duration-500 text-xs sm:text-sm leading-tight"
+                          whileHover={{ scale: 1.05 }}
+                        >
                           {category.name}
-                        </h3>
+                        </motion.h3>
                         
                         <div className="space-y-1">
-                          <div className="flex items-center justify-center gap-1">
-                            <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                          <motion.div 
+                            className="flex items-center justify-center gap-1"
+                            whileHover={{ scale: 1.1 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <span className="text-lg sm:text-2xl font-bold text-purple-600 dark:text-purple-400">
                               {category.count}
                             </span>
                             <span className="text-xs text-gray-500 dark:text-gray-400">بطاقة</span>
-                          </div>
+                          </motion.div>
                           
-                          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <motion.p 
+                            className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transition-all duration-500 px-1"
+                            initial={{ height: 0 }}
+                            whileHover={{ height: "auto" }}
+                          >
                             {category.description}
-                          </p>
+                          </motion.p>
                         </div>
                       </div>
                     </div>
                     
-                    {/* Hover Border Glow */}
-                    <div className="absolute inset-0 rounded-3xl border border-transparent bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500 -z-10"></div>
+                    {/* Enhanced Hover Effects */}
+                    <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-indigo-500/10 rounded-3xl"></div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-3xl"></div>
+                    </div>
                   </div>
+
+                  {/* Selection Ring */}
+                  {selectedCategory === category.name && (
+                    <motion.div
+                      className="absolute inset-0 rounded-3xl border-4 border-purple-500"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    />
+                  )}
                 </motion.div>
               );
             })}
