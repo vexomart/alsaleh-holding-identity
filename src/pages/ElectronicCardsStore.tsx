@@ -142,114 +142,236 @@ const ElectronicCardsStore = () => {
     });
   };
 
-  // Cards data
+  // Enhanced Cards data with more products and real images
   const cards = [
     {
       id: 1,
-      title: "بطاقة نتفلكس - شهر واحد",
+      title: "بطاقة نتفلكس بريميوم - شهر واحد",
       price: "58 ريال",
-      originalPrice: "65 ريال",
-      discount: "11% خصم",
+      originalPrice: "75 ريال",
+      discount: "23% خصم",
       category: "ترفيه",
       cardType: "نتفلكس",
-      image: "/src/assets/netflix-card.jpg",
+      image: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=250&fit=crop",
       rating: 4.9,
-      reviews: 2847,
-      description: "استمتع بمحتوى نتفلكس اللامحدود لمدة شهر كامل",
-      features: ["تفعيل فوري", "يعمل في جميع البلدان", "ضمان لمدة 30 يوم"],
+      reviews: 3847,
+      description: "استمتع بجودة 4K وأربع شاشات متزامنة مع خطة نتفلكس بريميوم",
+      features: ["تفعيل فوري خلال دقائق", "يعمل في جميع البلدان العربية", "ضمان استرداد 30 يوم", "دعم فني 24/7"],
       isHot: true,
-      isNew: false
+      isNew: false,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
     },
     {
       id: 2,
-      title: "بطاقة PlayStation - 100 ريال",
-      price: "95 ريال",
-      originalPrice: "100 ريال",
-      discount: "5% خصم",
-      category: "ألعاب",
-      cardType: "PlayStation",
-      image: "/src/assets/itunes-card.jpg",
-      rating: 4.8,
-      reviews: 1923,
-      description: "بطاقة شحن PlayStation Store بقيمة 100 ريال سعودي",
-      features: ["تفعيل فوري", "للحسابات السعودية", "صالحة لجميع الألعاب"],
-      isHot: false,
-      isNew: true
-    },
-    {
-      id: 3,
-      title: "بطاقة Amazon - 50 دولار",
-      price: "185 ريال",
-      originalPrice: "195 ريال",
-      discount: "5% خصم",
-      category: "تسوق",
-      cardType: "Amazon",
-      image: "/src/assets/amazon-card.jpg",
-      rating: 4.7,
-      reviews: 1456,
-      description: "بطاقة هدايا أمازون بقيمة 50 دولار أمريكي",
-      features: ["صالحة عالمياً", "لا تنتهي الصلاحية", "تفعيل فوري"],
-      isHot: true,
-      isNew: false
-    },
-    {
-      id: 4,
-      title: "بطاقة Google Play - 100 ريال",
-      price: "95 ريال",
-      originalPrice: "100 ريال",
-      discount: "5% خصم",
-      category: "تطبيقات",
-      cardType: "Google Play",
-      image: "/src/assets/google-play-card.jpg",
-      rating: 4.8,
-      reviews: 2134,
-      description: "بطاقة شحن Google Play بقيمة 100 ريال سعودي",
-      features: ["للتطبيقات والألعاب", "تفعيل فوري", "للحسابات السعودية"],
-      isHot: false,
-      isNew: false
-    },
-    {
-      id: 5,
-      title: "بطاقة Steam - 20 دولار",
-      price: "75 ريال",
-      originalPrice: "80 ريال",
-      discount: "6% خصم",
-      category: "ألعاب",
-      cardType: "Steam",
-      image: "/src/assets/steam-card.jpg",
-      rating: 4.9,
-      reviews: 3421,
-      description: "بطاقة Steam Wallet بقيمة 20 دولار أمريكي",
-      features: ["للألعاب فقط", "تفعيل فوري", "صالحة عالمياً"],
-      isHot: true,
-      isNew: false
-    },
-    {
-      id: 6,
-      title: "بطاقة فيزا افتراضية - 50 دولار",
+      title: "بطاقة PlayStation Store - 200 ريال",
       price: "190 ريال",
       originalPrice: "200 ريال",
       discount: "5% خصم",
-      category: "بنكية",
-      cardType: "Visa Virtual",
-      image: "/src/assets/visa-card.jpg",
-      rating: 4.6,
-      reviews: 1234,
-      description: "بطاقة فيزا افتراضية بقيمة 50 دولار للتسوق الإلكتروني",
-      features: ["للتسوق الإلكتروني", "تفعيل فوري", "آمنة وموثوقة"],
+      category: "ألعاب",
+      cardType: "PlayStation",
+      image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=250&fit=crop",
+      rating: 4.8,
+      reviews: 2923,
+      description: "بطاقة شحن PlayStation Store بقيمة 200 ريال للحسابات السعودية",
+      features: ["تفعيل فوري", "للحسابات السعودية فقط", "صالحة لجميع الألعاب والمحتوى", "لا تنتهي الصلاحية"],
       isHot: false,
-      isNew: true
+      isNew: true,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 3,
+      title: "بطاقة Amazon Prime Gaming",
+      price: "285 ريال",
+      originalPrice: "320 ريال",
+      discount: "11% خصم",
+      category: "تسوق",
+      cardType: "Amazon",
+      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=250&fit=crop",
+      rating: 4.7,
+      reviews: 1856,
+      description: "اشتراك أمازون برايم مع ميزات الألعاب المجانية والشحن السريع",
+      features: ["شحن مجاني سريع", "ألعاب مجانية شهرية", "مسلسلات وأفلام حصرية", "تخزين صور لامحدود"],
+      isHot: true,
+      isNew: false,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 4,
+      title: "بطاقة Google Play - 150 ريال",
+      price: "142 ريال",
+      originalPrice: "150 ريال",
+      discount: "5% خصم",
+      category: "تطبيقات",
+      cardType: "Google Play",
+      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=250&fit=crop",
+      rating: 4.8,
+      reviews: 4134,
+      description: "بطاقة شحن Google Play للتطبيقات والألعاب والاشتراكات",
+      features: ["للتطبيقات والألعاب", "اشتراكات المواقع", "الكتب والأفلام", "محتوى رقمي متنوع"],
+      isHot: false,
+      isNew: false,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 5,
+      title: "بطاقة Steam Wallet - 50 دولار",
+      price: "188 ريال",
+      originalPrice: "200 ريال",
+      discount: "6% خصم",
+      category: "ألعاب",
+      cardType: "Steam",
+      image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&h=250&fit=crop",
+      rating: 4.9,
+      reviews: 5421,
+      description: "بطاقة Steam للألعاب الرقمية مع أكبر مكتبة ألعاب في العالم",
+      features: ["أكثر من 50,000 لعبة", "تخفيضات موسمية", "مجتمع لاعبين عالمي", "إنجازات وجوائز"],
+      isHot: true,
+      isNew: false,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 6,
+      title: "بطاقة Apple iTunes - 100 دولار",
+      price: "375 ريال",
+      originalPrice: "400 ريال",
+      discount: "6% خصم",
+      category: "تطبيقات",
+      cardType: "Apple iTunes",
+      image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&h=250&fit=crop",
+      rating: 4.7,
+      reviews: 2876,
+      description: "بطاقة Apple للتطبيقات والموسيقى والأفلام على جميع أجهزة Apple",
+      features: ["App Store و iTunes", "Apple Music", "iCloud Storage", "Apple Arcade"],
+      isHot: false,
+      isNew: true,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 7,
+      title: "بطاقة Spotify Premium - 3 أشهر",
+      price: "89 ريال",
+      originalPrice: "99 ريال",
+      discount: "10% خصم",
+      category: "موسيقى",
+      cardType: "Spotify",
+      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop",
+      rating: 4.6,
+      reviews: 1987,
+      description: "استمع لملايين الأغاني بدون إعلانات مع Spotify Premium",
+      features: ["بدون إعلانات", "جودة عالية", "تحميل أوفلاين", "تشغيل عشوائي غير محدود"],
+      isHot: false,
+      isNew: true,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 8,
+      title: "بطاقة Xbox Game Pass Ultimate",
+      price: "67 ريال",
+      originalPrice: "75 ريال",
+      discount: "11% خصم",
+      category: "ألعاب",
+      cardType: "Xbox",
+      image: "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=400&h=250&fit=crop",
+      rating: 4.8,
+      reviews: 3254,
+      description: "اشتراك شهري يشمل مئات الألعاب و Xbox Live Gold",
+      features: ["مئات الألعاب", "Xbox Live Gold", "PC Gaming", "ألعاب اليوم الأول"],
+      isHot: true,
+      isNew: false,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 9,
+      title: "بطاقة Discord Nitro - شهر واحد",
+      price: "38 ريال",
+      originalPrice: "45 ريال",
+      discount: "16% خصم",
+      category: "اجتماعي",
+      cardType: "Discord",
+      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=250&fit=crop",
+      rating: 4.5,
+      reviews: 1543,
+      description: "ميزات Discord المتطورة للاعبين ومجتمعات الإنترنت",
+      features: ["رفع ملفات أكبر", "جودة صوت عالية", "ايموجي مخصص", "شارات حصرية"],
+      isHot: false,
+      isNew: true,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 10,
+      title: "بطاقة Fortnite V-Bucks - 2800 نقطة",
+      price: "78 ريال",
+      originalPrice: "85 ريال",
+      discount: "8% خصم",
+      category: "ألعاب",
+      cardType: "Fortnite",
+      image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop",
+      rating: 4.7,
+      reviews: 4892,
+      description: "V-Bucks للحصول على الأزياء والرقصات الحصرية في Fortnite",
+      features: ["أزياء حصرية", "رقصات جديدة", "معدات Battle Pass", "هدايا للأصدقاء"],
+      isHot: true,
+      isNew: false,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 11,
+      title: "بطاقة Adobe Creative Cloud",
+      price: "195 ريال",
+      originalPrice: "220 ريال",
+      discount: "11% خصم",
+      category: "إبداعي",
+      cardType: "Adobe",
+      image: "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=400&h=250&fit=crop",
+      rating: 4.6,
+      reviews: 1876,
+      description: "اشتراك شهري في مجموعة Adobe الكاملة للمبدعين",
+      features: ["Photoshop & Illustrator", "Premiere & After Effects", "مساحة تخزين سحابية", "خطوط حصرية"],
+      isHot: false,
+      isNew: true,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
+    },
+    {
+      id: 12,
+      title: "بطاقة Netflix + Disney Bundle",
+      price: "125 ريال",
+      originalPrice: "140 ريال",
+      discount: "11% خصم",
+      category: "ترفيه",
+      cardType: "Bundle",
+      image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=400&h=250&fit=crop",
+      rating: 4.9,
+      reviews: 2567,
+      description: "باقة مدمجة تشمل Netflix و Disney Plus لشهر كامل",
+      features: ["أفلام Disney الحصرية", "محتوى Marvel و Star Wars", "أفلام وثائقية National Geographic", "مناسب للعائلة"],
+      isHot: true,
+      isNew: true,
+      stockStatus: "متوفر",
+      deliveryTime: "فوري"
     }
   ];
 
-  // Categories
+  // Enhanced Categories
   const categories = [
-    { name: "جميع البطاقات", icon: Globe, count: 150, color: "bg-purple-500" },
-    { name: "ترفيه", icon: Play, count: 45, color: "bg-red-500" },
-    { name: "ألعاب", icon: Gamepad2, count: 67, color: "bg-blue-500" },
-    { name: "تسوق", icon: ShoppingBag, count: 23, color: "bg-green-500" },
-    { name: "تطبيقات", icon: Smartphone, count: 34, color: "bg-orange-500" },
-    { name: "بنكية", icon: CreditCard, count: 12, color: "bg-indigo-500" }
+    { name: "جميع البطاقات", icon: Globe, count: 156, color: "bg-gradient-to-r from-purple-500 to-blue-500", description: "جميع أنواع البطاقات" },
+    { name: "ترفيه", icon: Play, count: 48, color: "bg-gradient-to-r from-red-500 to-pink-500", description: "نتفلكس، يوتيوب، سبوتيفاي" },
+    { name: "ألعاب", icon: Gamepad2, count: 73, color: "bg-gradient-to-r from-blue-500 to-cyan-500", description: "Steam، PlayStation، Xbox" },
+    { name: "تسوق", icon: ShoppingBag, count: 28, color: "bg-gradient-to-r from-green-500 to-emerald-500", description: "أمازون، eBay، Ali Express" },
+    { name: "تطبيقات", icon: Smartphone, count: 41, color: "bg-gradient-to-r from-orange-500 to-yellow-500", description: "Google Play، App Store" },
+    { name: "موسيقى", icon: Music, count: 15, color: "bg-gradient-to-r from-purple-500 to-indigo-500", description: "Spotify، Apple Music، Anghami" },
+    { name: "إبداعي", icon: Layers, count: 12, color: "bg-gradient-to-r from-teal-500 to-blue-500", description: "Adobe، Canva، Figma" },
+    { name: "اجتماعي", icon: Users, count: 8, color: "bg-gradient-to-r from-pink-500 to-red-500", description: "Discord، Telegram Premium" }
   ];
 
   // Filter cards based on search and category
@@ -323,19 +445,35 @@ const ElectronicCardsStore = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800" dir="rtl">
       {/* Top Banner */}
       <motion.div 
-        className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 text-center relative overflow-hidden"
+        className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white py-4 px-4 text-center relative overflow-hidden"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 animate-pulse"></div>
-        <div className="relative z-10 flex items-center justify-center gap-2 text-sm md:text-base font-medium">
-          <Sparkles className="h-5 w-5 text-yellow-300 animate-pulse" />
-          <span>عرض خاص | خصم 20% على جميع البطاقات الرقمية - استخدم كود: SAVE20</span>
-          <Sparkles className="h-5 w-5 text-yellow-300 animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent animate-pulse"></div>
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-1/4 w-32 h-32 bg-white rounded-full blur-xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-40 h-40 bg-yellow-300 rounded-full blur-xl"></div>
+        </div>
+        <div className="relative z-10 flex items-center justify-center gap-3 text-sm md:text-lg font-bold">
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          >
+            <Sparkles className="h-6 w-6 text-yellow-300" />
+          </motion.div>
+          <span className="bg-gradient-to-r from-yellow-200 to-orange-200 bg-clip-text text-transparent">
+            🎉 عرض محدود | خصم 25% على جميع البطاقات + توصيل مجاني - كود: MEGA25
+          </span>
+          <motion.div 
+            animate={{ rotate: -360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          >
+            <Sparkles className="h-6 w-6 text-yellow-300" />
+          </motion.div>
         </div>
       </motion.div>
 
@@ -929,6 +1067,249 @@ const ElectronicCardsStore = () => {
           <MessageCircle className="h-6 w-6" />
         </Button>
       </div>
+
+      {/* Enhanced Footer */}
+      <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+        {/* Main Footer Content */}
+        <div className="relative py-16 lg:py-20">
+          {/* Background Effects */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+          </div>
+
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+              
+              {/* Store Info */}
+              <div className="lg:col-span-1">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl flex items-center justify-center">
+                    <Store className="h-7 w-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                      متجر البطاقات الذكي
+                    </h3>
+                    <p className="text-sm text-gray-400">Digital Cards Store</p>
+                  </div>
+                </div>
+                <p className="text-gray-300 leading-relaxed mb-6">
+                  وجهتك الأولى للحصول على أفضل البطاقات الرقمية بأسعار منافسة وجودة عالية. نوفر خدمة التفعيل الفوري مع ضمان الجودة.
+                </p>
+                <div className="flex gap-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-gray-600 text-gray-300 hover:bg-purple-600 hover:border-purple-600 hover:text-white transition-all duration-300"
+                    onClick={() => window.open('https://wa.me/966555000123', '_blank')}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    واتساب
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-gray-600 text-gray-300 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all duration-300"
+                    onClick={() => window.open('tel:+966555000123', '_blank')}
+                  >
+                    <Phone className="h-4 w-4 mr-2" />
+                    اتصل بنا
+                  </Button>
+                </div>
+              </div>
+
+              {/* Quick Links */}
+              <div>
+                <h4 className="text-lg font-bold mb-6 text-white">روابط سريعة</h4>
+                <div className="space-y-3">
+                  {[
+                    { name: "الصفحة الرئيسية", href: "#home" },
+                    { name: "جميع الفئات", href: "#categories" },
+                    { name: "العروض الخاصة", href: "#offers" },
+                    { name: "البحث المتقدم", href: "#search" },
+                    { name: "المفضلة", href: "#favorites" },
+                    { name: "سلة التسوق", href: "#cart" }
+                  ].map((link) => (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      className="block text-gray-300 hover:text-purple-400 transition-colors duration-200 hover:translate-x-1 transform"
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Categories */}
+              <div>
+                <h4 className="text-lg font-bold mb-6 text-white">الفئات الشائعة</h4>
+                <div className="space-y-3">
+                  {[
+                    { name: "بطاقات الألعاب", count: "73", icon: Gamepad2 },
+                    { name: "بطاقات الترفيه", count: "48", icon: Play },
+                    { name: "بطاقات التطبيقات", count: "41", icon: Smartphone },
+                    { name: "بطاقات التسوق", count: "28", icon: ShoppingBag },
+                    { name: "بطاقات الموسيقى", count: "15", icon: Music },
+                    { name: "البطاقات الإبداعية", count: "12", icon: Layers }
+                  ].map((category) => {
+                    const IconComponent = category.icon;
+                    return (
+                      <div 
+                        key={category.name}
+                        className="flex items-center gap-3 text-gray-300 hover:text-purple-400 cursor-pointer transition-colors duration-200 group"
+                        onClick={() => setSelectedCategory(category.name.replace('بطاقات ', ''))}
+                      >
+                        <IconComponent className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                        <span className="flex-1">{category.name}</span>
+                        <Badge variant="secondary" className="bg-gray-700 text-gray-300 text-xs">
+                          {category.count}
+                        </Badge>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Contact Info */}
+              <div>
+                <h4 className="text-lg font-bold mb-6 text-white">تواصل معنا</h4>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <MessageCircle className="h-4 w-4 text-green-400" />
+                    </div>
+                    <div>
+                      <p className="text-gray-300 text-sm">واتساب</p>
+                      <p className="text-white font-medium">+966 555 000 123</p>
+                      <p className="text-gray-400 text-xs">متاح 24/7</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Phone className="h-4 w-4 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-gray-300 text-sm">هاتف</p>
+                      <p className="text-white font-medium">+966 555 000 123</p>
+                      <p className="text-gray-400 text-xs">9:00 ص - 11:00 م</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Mail className="h-4 w-4 text-purple-400" />
+                    </div>
+                    <div>
+                      <p className="text-gray-300 text-sm">ايميل</p>
+                      <p className="text-white font-medium">info@cards-store.sa</p>
+                      <p className="text-gray-400 text-xs">نرد خلال ساعة</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Clock className="h-4 w-4 text-orange-400" />
+                    </div>
+                    <div>
+                      <p className="text-gray-300 text-sm">ساعات العمل</p>
+                      <p className="text-white font-medium">24/7 أون لاين</p>
+                      <p className="text-gray-400 text-xs">خدمة متواصلة</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Features Section */}
+            <div className="mt-16 pt-12 border-t border-gray-700">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="text-center group">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Zap className="h-6 w-6 text-white" />
+                  </div>
+                  <h5 className="font-bold text-white mb-1">تفعيل فوري</h5>
+                  <p className="text-xs text-gray-400">خلال 30 ثانية</p>
+                </div>
+
+                <div className="text-center group">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Shield className="h-6 w-6 text-white" />
+                  </div>
+                  <h5 className="font-bold text-white mb-1">آمان تام</h5>
+                  <p className="text-xs text-gray-400">حماية SSL</p>
+                </div>
+
+                <div className="text-center group">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Award className="h-6 w-6 text-white" />
+                  </div>
+                  <h5 className="font-bold text-white mb-1">ضمان الجودة</h5>
+                  <p className="text-xs text-gray-400">استرداد مضمون</p>
+                </div>
+
+                <div className="text-center group">
+                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <Headphones className="h-6 w-6 text-white" />
+                  </div>
+                  <h5 className="font-bold text-white mb-1">دعم 24/7</h5>
+                  <p className="text-xs text-gray-400">خدمة العملاء</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-700 bg-gray-900/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-6 text-sm text-gray-400">
+                <Link to="/cards-store/privacy" className="hover:text-purple-400 transition-colors duration-200">
+                  سياسة الخصوصية
+                </Link>
+                <Link to="/cards-store/terms" className="hover:text-purple-400 transition-colors duration-200">
+                  الشروط والأحكام
+                </Link>
+                <Link to="/cards-store/faq" className="hover:text-purple-400 transition-colors duration-200">
+                  الأسئلة الشائعة
+                </Link>
+                <Link to="/cards-store/about" className="hover:text-purple-400 transition-colors duration-200">
+                  عن المتجر
+                </Link>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <p className="text-sm text-gray-400">
+                  © 2024 متجر البطاقات الذكي. جميع الحقوق محفوظة.
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">طُوِّر بواسطة</span>
+                  <Link 
+                    to="/" 
+                    className="text-xs bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent font-bold hover:from-purple-300 hover:to-blue-300 transition-all duration-200"
+                  >
+                    شركة إمكان الرقمية
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll to Top Button */}
+        <div className="fixed bottom-24 left-6 z-40">
+          <Button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="bg-gray-700 hover:bg-gray-600 text-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 group opacity-75 hover:opacity-100"
+            size="sm"
+          >
+            <ArrowRight className="h-4 w-4 rotate-[-90deg] group-hover:scale-110 transition-transform duration-200" />
+          </Button>
+        </div>
+      </footer>
     </div>
   );
 };
