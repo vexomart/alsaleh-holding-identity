@@ -168,23 +168,23 @@ const App = () => {
     queryClientRef.current = new QueryClient();
   }
   console.log('App component rendering...');
+  
   return (
-  <QueryClientProvider client={queryClientRef.current!}>
-    <TooltipProvider>
-      <MobileOptimizer>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
-          {/* Subtle pattern overlay */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
-          
-          {/* Main content with mobile optimizations */}
-          <div className="relative z-10 mobile-tap mobile-scroll">
-            
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <ScrollToTop />
+    <QueryClientProvider client={queryClientRef.current!}>
+      <TooltipProvider>
+        <MobileOptimizer>
+          <BrowserRouter>
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
+              {/* Subtle pattern overlay */}
+              <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
               
-              <Routes>
+              {/* Main content with mobile optimizations */}
+              <div className="relative z-10 mobile-tap mobile-scroll">
+                <ScrollToTop />
+                <Toaster />
+                <Sonner />
+                
+                <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
                 <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />
@@ -328,13 +328,13 @@ const App = () => {
           <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </div>
-        </div>
-      </MobileOptimizer>
-    </TooltipProvider>
-  </QueryClientProvider>
+                </Routes>
+              </div>
+            </div>
+          </BrowserRouter>
+        </MobileOptimizer>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 
