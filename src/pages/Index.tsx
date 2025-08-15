@@ -3,18 +3,16 @@ import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AdvancedSEO } from "@/components/AdvancedSEO";
-import { HeroSkeleton, DepartmentsSkeleton } from "@/components/SkeletonLoader";
-import { lazy, Suspense } from "react";
 
 // Remove direct imports, they are now lazy loaded
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
+import { SmartCardsContact } from "@/components/WhatsAppContact";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
-import { ImageOptimizer } from "@/components/ImageOptimizer";
+import { lazy, Suspense } from "react";
 
 // Lazy load heavy components
 const DepartmentsSection = lazy(() => import("@/components/DepartmentsSection"));
@@ -25,38 +23,34 @@ const CommitmentsSection = lazy(() => import("@/components/CommitmentsSection"))
 
 const Index = () => {
   return (
-    <>
-      <AdvancedSEO 
-        title="شركة علي صالح الشهري القابضة - الرئيسية"
-        description="شركة قابضة رائدة في الاستثمار التقني والإعلامي في المملكة العربية السعودية. نقدم خدمات متكاملة في التقنية والإعلام والاستثمار."
-        keywords={["الصفحة الرئيسية", "خدمات متكاملة", "استثمار", "تقنية متطورة"]}
-      />
-      <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
-        <PerformanceOptimizer />
-        <ImageOptimizer />
-        <Navigation />
+    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
+      <PerformanceOptimizer />
+      <Navigation />
       
-      {/* Optimized Animated Background Elements - Reduced for performance */}
+      {/* Animated Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/8 via-secondary/4 to-accent/6 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 left-3/4 w-48 h-48 bg-gradient-to-tr from-secondary/6 via-accent/4 to-primary/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/8 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-gradient-to-tl from-accent/12 via-primary/6 to-secondary/4 rounded-full blur-2xl animate-float-delayed"></div>
+        <div className="absolute bottom-1/4 left-3/4 w-80 h-80 bg-gradient-to-tr from-secondary/8 via-accent/6 to-primary/4 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
         
-        {/* Minimal Geometric Patterns */}
-        <div className="absolute top-20 right-20 w-3 h-3 bg-primary/15 rotate-45 animate-pulse"></div>
-        <div className="absolute bottom-40 left-16 w-4 h-4 bg-accent/10 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
+        {/* Geometric Patterns */}
+        <div className="absolute top-20 right-20 w-4 h-4 bg-primary/20 rotate-45 animate-pulse"></div>
+        <div className="absolute bottom-40 left-16 w-6 h-6 bg-accent/15 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 right-32 w-3 h-12 bg-secondary/10 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--primary))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary))_1px,transparent_1px)] bg-[size:60px_60px] opacity-[0.02]"></div>
       </div>
       
-        <main className="relative overflow-hidden z-10">
-          {/* Hero Section with Enhanced Background */}
-          <section id="home" className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/8"></div>
-            <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent"></div>
-            <div className="relative z-10">
-              <Suspense fallback={<HeroSkeleton />}>
-                <HeroSection />
-              </Suspense>
-            </div>
-          </section>
+      <main className="relative overflow-hidden z-10">
+        {/* Hero Section with Enhanced Background */}
+        <section id="home" className="relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/8"></div>
+          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent"></div>
+          <div className="relative z-10">
+            <HeroSection />
+          </div>
+        </section>
 
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
@@ -106,8 +100,8 @@ const Index = () => {
                     <CardContent className="p-8 text-center relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="relative z-10">
-                        <div className="text-3xl font-bold gradient-text mb-3">خدمات متكاملة</div>
-                        <div className="text-primary font-semibold text-lg">حلول تقنية متطورة</div>
+                        <div className="text-3xl font-bold gradient-text mb-3">متجر البطاقات الرقمية</div>
+                        <div className="text-primary font-semibold text-lg">تصميم جديد ومتطور</div>
                         <div className="w-12 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
                       </div>
                     </CardContent>
@@ -125,14 +119,26 @@ const Index = () => {
                   </Card>
                 </div>
                 
-                <div className="flex justify-center">
-                   <Link to="/current-offers">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to="/current-offers">
                     <Button 
                       size="lg" 
                       className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
                     >
                       <Gift className="w-6 h-6 ml-2" />
                       شاهد جميع العروض الحالية
+                      <ArrowRight className="w-6 h-6 mr-2" />
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/electronic-cards-store">
+                    <Button 
+                      size="lg" 
+                      variant="outline"
+                      className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950 font-bold px-12 py-6 text-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale"
+                    >
+                      <Star className="w-6 h-6 ml-2" />
+                      متجر البطاقات الجديد
                       <ArrowRight className="w-6 h-6 mr-2" />
                     </Button>
                   </Link>
@@ -161,7 +167,11 @@ const Index = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:120px_120px] opacity-20"></div>
             
             <div className="relative z-10">
-              <Suspense fallback={<DepartmentsSkeleton />}>
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              }>
                 <DepartmentsSection />
               </Suspense>
             </div>
@@ -183,7 +193,11 @@ const Index = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:80px_80px] opacity-25"></div>
             
             <div className="relative z-10">
-              <Suspense fallback={<DepartmentsSkeleton />}>
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              }>
                 <CommitmentsSection />
               </Suspense>
             </div>
@@ -201,10 +215,16 @@ const Index = () => {
         </div>
       </footer>
 
-        {/* ChatBot Component */}
-        <ChatBot />
-      </div>
-    </>
+      {/* ChatBot Component */}
+      <ChatBot />
+      
+      {/* Smart Cards Contact - Floating */}
+      <SmartCardsContact 
+        showAsButton={true}
+        pageTitle="الصفحة الرئيسية - شركة علي صالح الشهري القابضة"
+        defaultMessage="🌟 مرحباً من شركة علي صالح الشهري القابضة! أريد الاستفسار عن خدماتكم المتنوعة والعروض الحصرية المتاحة."
+      />
+    </div>
   );
 };
 

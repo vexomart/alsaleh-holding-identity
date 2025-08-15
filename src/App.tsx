@@ -1,17 +1,15 @@
-import React, { lazy, Suspense, useRef } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+
 import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useRef } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { NotificationProvider } from "@/components/EnhancedNotifications";
-import { HelmetProvider } from 'react-helmet-async';
-import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
+
+import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
-import SimpleIndex from "./pages/SimpleIndex";
 
 // Lazy load pages for better performance
 const About = lazy(() => import("./pages/About"));
@@ -171,27 +169,23 @@ const App = () => {
   }
   console.log('App component rendering...');
   return (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClientRef.current!}>
-      <ThemeProvider defaultTheme="system" storageKey="ash-theme">
-        <NotificationProvider>
-          <TooltipProvider>
-              <MobileOptimizer>
-                <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
-                  {/* Subtle pattern overlay */}
-                  <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
-                  
-                  {/* Main content with mobile optimizations */}
-                  <div className="relative z-10 mobile-tap mobile-scroll">
-                    <ServiceWorkerRegistration />
-                    
-                    <Toaster />
-                    <Sonner />
+  <QueryClientProvider client={queryClientRef.current!}>
+    <TooltipProvider>
+      <MobileOptimizer>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
+          {/* Subtle pattern overlay */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
+          
+          {/* Main content with mobile optimizations */}
+          <div className="relative z-10 mobile-tap mobile-scroll">
+            
+            <Toaster />
+            <Sonner />
             <BrowserRouter>
               <ScrollToTop />
               
               <Routes>
-                <Route path="/" element={<SimpleIndex />} />
+                <Route path="/" element={<Index />} />
                 <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
                 <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />
                 <Route path="/team" element={<Suspense fallback={<PageLoader />}><Team /></Suspense>} />
@@ -340,11 +334,8 @@ const App = () => {
         </div>
       </MobileOptimizer>
     </TooltipProvider>
-  </NotificationProvider>
-</ThemeProvider>
-</QueryClientProvider>
-</HelmetProvider>
-);
+  </QueryClientProvider>
+  );
 };
 
 export default App;
