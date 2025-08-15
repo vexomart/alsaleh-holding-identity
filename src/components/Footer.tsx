@@ -22,8 +22,7 @@ import {
   MessageCircle, 
   FileText, 
   Globe, 
-   
-  Star, 
+  Star,
   ChevronRight,
   ExternalLink,
   Building2,
