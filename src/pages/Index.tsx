@@ -58,11 +58,11 @@ const Index = () => {
             </div>
           </section>
 
-        {/* Content Sections with Professional Spacing */}
-        <div className="space-y-0">
+        {/* Content Sections with Better Spacing */}
+        <div className="space-y-8">
 
-          {/* Current Offers - Professional Global Style */}
-          <section className="relative py-12 lg:py-16 overflow-hidden">
+          {/* Current Offers Section */}
+          <section className="relative py-8 lg:py-12 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-primary/6 to-secondary/10"></div>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(var(--accent))_0%,transparent_30%),radial-gradient(circle_at_20%_80%,hsl(var(--primary))_0%,transparent_30%)] opacity-20"></div>
             
@@ -147,8 +147,8 @@ const Index = () => {
           </section>
 
 
-          {/* Departments Section - Professional Corporate */}
-          <section id="departments" className="relative py-16 lg:py-20 overflow-hidden">
+          {/* Departments Section */}
+          <section id="departments" className="relative py-8 lg:py-12 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-bl from-secondary/6 via-background to-accent/8"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--secondary))_0%,transparent_40%),radial-gradient(ellipse_at_30%_70%,hsl(var(--accent))_0%,transparent_40%)] opacity-20"></div>
             
@@ -168,8 +168,8 @@ const Index = () => {
 
 
 
-          {/* Commitments Section - Global Enterprise Style */}
-          <section id="commitments" className="relative py-16 lg:py-20 overflow-hidden">
+          {/* Commitments Section */}
+          <section id="commitments" className="relative py-8 lg:py-12 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-background to-secondary/12"></div>
             <div className="absolute inset-0 bg-[conic-gradient(from_270deg_at_20%_80%,transparent,hsl(var(--primary))_15%,transparent_35%,hsl(var(--secondary))_55%,transparent)] opacity-25"></div>
             
