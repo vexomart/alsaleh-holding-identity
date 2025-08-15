@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 // Lazy load components
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
+const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading component
@@ -45,6 +46,7 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
                 <Route path="/contact" element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
+                <Route path="/software-products" element={<Suspense fallback={<PageLoader />}><SoftwareProducts /></Suspense>} />
                 <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFound /></Suspense>} />
               </Routes>
             </div>

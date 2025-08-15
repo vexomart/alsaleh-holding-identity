@@ -288,9 +288,10 @@ const Footer = () => {
   ];
 
   const readyProjects = [
-    { name: "جميع مشاريعنا الجاهزة", href: "/ready-projects", icon: Code },
-    { name: "نظام إدارة المحتوى", href: "/ready-projects", icon: FileText },
-    { name: "تطبيق التجارة الإلكترونية", href: "/ready-projects", icon: Building2 },
+    { name: "منتجاتنا البرمجية", href: "/software-products", icon: Code },
+    { name: "جميع مشاريعنا الجاهزة", href: "/ready-projects", icon: FileText },
+    { name: "نظام إدارة المحتوى", href: "/ready-projects", icon: Building2 },
+    { name: "تطبيق التجارة الإلكترونية", href: "/ready-projects", icon: Globe },
     { name: "منصة التعلم الذكي", href: "/ready-projects", icon: GraduationCap }
   ];
 
