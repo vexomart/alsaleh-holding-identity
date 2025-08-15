@@ -16,27 +16,6 @@ serve(async (req) => {
     const body = await req.json();
     console.log("📦 Request Body:", JSON.stringify(body, null, 2));
 
-    // Input validation and sanitization
-    const sanitizeInput = (input: string): string => {
-      if (!input || typeof input !== 'string') return '';
-      return input
-        .replace(/<[^>]*>/g, '')
-        .replace(/[<>\"\']/g, '')
-        .trim()
-        .substring(0, 500);
-    };
-
-    const validateEmail = (email: string): boolean => {
-      const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-      return emailRegex.test(email) && email.length <= 254;
-    };
-
-    const validatePhone = (phone: string): boolean => {
-      const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
-      const phoneRegex = /^(\+966|966|0)?[5][0-9]{8}$/;
-      return phoneRegex.test(cleanPhone);
-    };
-
     const {
       amount,
       customer_name = 'عميل محتمل', 
@@ -47,54 +26,9 @@ serve(async (req) => {
       currency = 'SAR'
     } = body;
 
-    // Sanitize all string inputs
-    const sanitizedData = {
-      customer_name: sanitizeInput(customer_name),
-      customer_email: sanitizeInput(customer_email),
-      customer_phone: sanitizeInput(customer_phone),
-      offer_title: sanitizeInput(offer_title),
-      description: sanitizeInput(description),
-      currency: sanitizeInput(currency)
-    };
-
-    // Validate email and phone
-    if (sanitizedData.customer_email !== 'customer@example.com' && !validateEmail(sanitizedData.customer_email)) {
-      console.error("❌ Invalid email format");
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "Invalid email format" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400
-      });
-    }
-
-    if (sanitizedData.customer_phone !== '966500000000' && !validatePhone(sanitizedData.customer_phone)) {
-      console.error("❌ Invalid phone format");
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "Invalid phone format" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400
-      });
-    }
-
     // Validate and process amount
-    const processedAmount = amount && amount > 0 && amount <= 1000000 ? Number(amount) : 1499; // Max 1M SAR
+    const processedAmount = amount && amount > 0 ? Number(amount) : 1499;
     console.log("💰 Processing amount:", { received: amount, processed: processedAmount });
-
-    // Additional amount validation
-    if (isNaN(processedAmount) || processedAmount < 1 || processedAmount > 1000000) {
-      console.error("❌ Invalid amount");
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "Invalid amount" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400
-      });
-    }
 
     // Get API credentials
     const apiId = Deno.env.get('PAYLINK_API_ID');
@@ -158,15 +92,15 @@ serve(async (req) => {
       orderNumber: orderNumber,
       callBackUrl: 'https://preview--alsaleh-holding-identity.lovable.app/payment-success',
       cancelUrl: 'https://preview--alsaleh-holding-identity.lovable.app/payment-cancel',
-      clientEmail: sanitizedData.customer_email,
-      clientName: sanitizedData.customer_name,
-      clientMobile: sanitizedData.customer_phone.toString().replace(/^\+?966/, "0"),
-      note: sanitizedData.description,
+      clientEmail: customer_email,
+      clientName: customer_name,
+      clientMobile: customer_phone.toString().replace(/^\+?966/, "0"),
+      note: description,
       products: [{
-        title: sanitizedData.offer_title,
+        title: offer_title,
         price: processedAmount,
         qty: 1,
-        description: sanitizedData.description,
+        description: description,
         isDigital: true
       }],
       supportedCardBrands: ["mada", "visaMastercard"],
@@ -220,12 +154,12 @@ serve(async (req) => {
     const { error: dbError } = await supabase
       .from('payment_transactions')
       .insert({
-        offer_title: sanitizedData.offer_title,
+        offer_title,
         amount: processedAmount,
-        currency: sanitizedData.currency,
-        customer_name: sanitizedData.customer_name,
-        customer_email: sanitizedData.customer_email,
-        customer_phone: sanitizedData.customer_phone,
+        currency,
+        customer_name,
+        customer_email,
+        customer_phone,
         payment_method: 'paylink',
         status: 'pending',
         paylink_transaction_no: result.transactionNo

@@ -39,98 +39,28 @@ export const useSecurityValidation = () => {
   };
 
   const sanitizeInput = (input: string): string => {
-    if (!input || typeof input !== 'string') return '';
-    
-    // Remove potentially dangerous characters and patterns
+    // Remove potentially dangerous characters
     return input
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
-      .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '')
-      .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, '')
-      .replace(/<link\b[^<]*>/gi, '')
-      .replace(/<meta\b[^<]*>/gi, '')
-      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-      .replace(/javascript:/gi, '')
-      .replace(/vbscript:/gi, '')
-      .replace(/data:text\/html/gi, '')
-      .replace(/on\w+\s*=/gi, '')
       .replace(/<[^>]*>/g, '')
-      .replace(/[<>\"\']/g, '')
-      .trim()
-      .substring(0, 1000); // Limit length
+      .trim();
   };
 
   const validateEmail = (email: string): boolean => {
-    if (!email || typeof email !== 'string') return false;
-    
-    // Enhanced email validation
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    const isValidFormat = emailRegex.test(email);
-    const hasValidLength = email.length <= 254; // RFC 5321 limit
-    const hasValidLocalPart = email.split('@')[0]?.length <= 64; // RFC 5321 limit
-    
-    return isValidFormat && hasValidLength && hasValidLocalPart;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   const validatePhone = (phone: string): boolean => {
-    if (!phone || typeof phone !== 'string') return false;
-    
-    // Enhanced Saudi phone number validation
-    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+    // Saudi phone number validation
     const phoneRegex = /^(\+966|966|0)?[5][0-9]{8}$/;
-    return phoneRegex.test(cleanPhone) && cleanPhone.length >= 9 && cleanPhone.length <= 13;
-  };
-
-  const validateRequired = (value: string, fieldName: string): { isValid: boolean; error?: string } => {
-    const sanitized = sanitizeInput(value);
-    if (!sanitized || sanitized.trim().length === 0) {
-      return { isValid: false, error: `${fieldName} مطلوب` };
-    }
-    return { isValid: true };
-  };
-
-  const validateFormData = (data: Record<string, any>): { isValid: boolean; errors: Record<string, string> } => {
-    const errors: Record<string, string> = {};
-    
-    // Validate required fields
-    Object.entries(data).forEach(([key, value]) => {
-      if (typeof value === 'string') {
-        const sanitized = sanitizeInput(value);
-        if (sanitized !== value) {
-          logSecurityEvent({
-            eventType: 'unauthorized_access_attempt',
-            description: 'Potentially malicious input detected',
-            metadata: {
-              field: key,
-              originalValue: value.substring(0, 100), // Log first 100 chars only
-              sanitizedValue: sanitized.substring(0, 100)
-            }
-          });
-        }
-        
-        // Update the data with sanitized value
-        data[key] = sanitized;
-      }
-    });
-
-    // Specific field validations
-    if (data.email && !validateEmail(data.email)) {
-      errors.email = 'يرجى إدخال بريد إلكتروني صحيح';
-    }
-    
-    if (data.phone && !validatePhone(data.phone)) {
-      errors.phone = 'يرجى إدخال رقم هاتف سعودي صحيح';
-    }
-
-    return { isValid: Object.keys(errors).length === 0, errors };
+    return phoneRegex.test(phone.replace(/\s/g, ''));
   };
 
   return {
     validateFileUpload,
     sanitizeInput,
     validateEmail,
-    validatePhone,
-    validateRequired,
-    validateFormData
+    validatePhone
   };
 };

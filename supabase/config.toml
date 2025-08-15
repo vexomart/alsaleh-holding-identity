@@ -46,10 +46,3 @@ verify_jwt = true
 
 [functions.contract-form]
 verify_jwt = true
-
-# Subscription payment functions
-[functions.paylink-subscription]
-verify_jwt = true
-
-[functions.verify-subscription]
-verify_jwt = false

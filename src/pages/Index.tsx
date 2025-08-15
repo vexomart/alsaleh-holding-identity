@@ -3,13 +3,12 @@ import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
+import StatsSection from "@/components/StatsSection";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import CommitmentsSection from "@/components/CommitmentsSection";
 import ContactSection from "@/components/ContactSection";
 
 import Footer from "@/components/Footer";
-import ChatBot from "@/components/ChatBot";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
@@ -95,8 +94,8 @@ const Index = () => {
                     <CardContent className="p-8 text-center relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="relative z-10">
-                        <div className="text-3xl font-bold gradient-text mb-3">متجر البطاقات الرقمية</div>
-                        <div className="text-primary font-semibold text-lg">تصميم جديد ومتطور</div>
+                        <div className="text-3xl font-bold gradient-text mb-3">متاجر إلكترونية</div>
+                        <div className="text-primary font-semibold text-lg">خصم حتى 61%</div>
                         <div className="w-12 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
                       </div>
                     </CardContent>
@@ -114,30 +113,16 @@ const Index = () => {
                   </Card>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/current-offers">
-                    <Button 
-                      size="lg" 
-                      className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
-                    >
-                      <Gift className="w-6 h-6 ml-2" />
-                      شاهد جميع العروض الحالية
-                      <ArrowRight className="w-6 h-6 mr-2" />
-                    </Button>
-                  </Link>
-                  
-                  <Link to="/electronic-cards-store">
-                    <Button 
-                      size="lg" 
-                      variant="outline"
-                      className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950 font-bold px-12 py-6 text-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale"
-                    >
-                      <Star className="w-6 h-6 ml-2" />
-                      متجر البطاقات الجديد
-                      <ArrowRight className="w-6 h-6 mr-2" />
-                    </Button>
-                  </Link>
-                </div>
+                <Link to="/current-offers">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
+                  >
+                    <Gift className="w-6 h-6 ml-2" />
+                    شاهد جميع العروض الحالية
+                    <ArrowRight className="w-6 h-6 mr-2" />
+                  </Button>
+                </Link>
                 
                 <div className="mt-6 text-muted-foreground">
                   <div className="inline-flex items-center bg-background/50 backdrop-blur-sm px-6 py-3 rounded-full border border-border/50">
@@ -147,6 +132,26 @@ const Index = () => {
               </div>
             </div>
           </section>
+
+          {/* Stats Section - Enhanced Professional */}
+          <section id="stats" className="relative py-20 lg:py-32 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/8 via-background to-secondary/10"></div>
+            <div className="absolute inset-0 bg-[conic-gradient(from_90deg_at_80%_50%,transparent,hsl(var(--primary))_20%,transparent_40%,hsl(var(--secondary))_60%,transparent)] opacity-15"></div>
+            
+            {/* Professional Geometric Elements */}
+            <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-primary/15 to-secondary/10 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-tl from-secondary/12 to-accent/8 rounded-full blur-3xl animate-float-delayed"></div>
+            
+            {/* Grid Lines */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:100px_100px] opacity-30"></div>
+            
+            <div className="relative z-10">
+              <StatsSection />
+            </div>
+          </section>
+
+
+
 
 
           {/* Departments Section - Professional Corporate */}
@@ -197,9 +202,6 @@ const Index = () => {
           <Footer />
         </div>
       </footer>
-
-      {/* ChatBot Component */}
-      <ChatBot />
     </div>
   );
 };

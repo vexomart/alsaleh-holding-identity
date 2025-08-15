@@ -1,12 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { motion } from 'framer-motion';
 import { 
   Building2, 
   TrendingUp, 
@@ -31,145 +27,14 @@ import {
   PieChart,
   BrainCircuit,
   Briefcase,
-  Calendar,
-  CreditCard,
-  Crown
+  Calendar
 } from "lucide-react";
 import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";
 
 const BusinessServices = () => {
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [selectedService, setSelectedService] = useState<string>("");
-  const [subscriptionPlans, setSubscriptionPlans] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [processingPayment, setProcessingPayment] = useState(null);
-  const [user, setUser] = useState(null);
-  const [currentSubscription, setCurrentSubscription] = useState(null);
   const navigate = useNavigate();
-  const { toast } = useToast();
-
-  useEffect(() => {
-    fetchSubscriptionPlans();
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-    
-    if (user) {
-      await checkCurrentSubscription(user.id);
-    }
-  };
-
-  const checkCurrentSubscription = async (userId) => {
-    try {
-      const { data, error } = await supabase
-        .from('subscriptions')
-        .select(`
-          *,
-          subscription_plans (*)
-        `)
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .gt('current_period_end', new Date().toISOString())
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error checking subscription:', error);
-        return;
-      }
-
-      setCurrentSubscription(data);
-    } catch (error) {
-      console.error('Error checking subscription:', error);
-    }
-  };
-
-  const fetchSubscriptionPlans = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('subscription_plans')
-        .select('*')
-        .eq('is_active', true)
-        .order('price', { ascending: true });
-
-      if (error) throw error;
-      setSubscriptionPlans(data || []);
-    } catch (error) {
-      console.error('Error fetching plans:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في تحميل خطط الاشتراك",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubscribe = async (plan) => {
-    if (!user) {
-      toast({
-        title: "تسجيل الدخول مطلوب",
-        description: "يرجى تسجيل الدخول أولاً للاشتراك",
-        variant: "destructive",
-      });
-      navigate('/auth');
-      return;
-    }
-
-    if (currentSubscription) {
-      toast({
-        title: "لديك اشتراك نشط",
-        description: "لديك اشتراك نشط بالفعل",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setProcessingPayment(plan.id);
-
-    try {
-      const { data, error } = await supabase.functions.invoke('paylink-subscription', {
-        body: {
-          plan_id: plan.id,
-          return_url: `${window.location.origin}/payment-success`
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.success && data.payment_url) {
-        window.open(data.payment_url, '_blank');
-        
-        toast({
-          title: "تم إنشاء رابط الدفع",
-          description: "سيتم فتح صفحة الدفع في نافذة جديدة",
-        });
-      } else {
-        throw new Error(data.error || 'فشل في إنشاء رابط الدفع');
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      toast({
-        title: "خطأ في الدفع",
-        description: error.message || "فشل في معالجة الدفع",
-        variant: "destructive",
-      });
-    } finally {
-      setProcessingPayment(null);
-    }
-  };
-
-  const getPlanIcon = (planName) => {
-    if (planName.includes('Basic') || planName.includes('الأساسية')) return Star;
-    if (planName.includes('Professional') || planName.includes('المتقدمة')) return Zap;
-    if (planName.includes('Enterprise') || planName.includes('الشركات')) return Building2;
-    return Settings;
-  };
 
   const handleRequestService = (serviceName: string) => {
     setSelectedService(serviceName);
