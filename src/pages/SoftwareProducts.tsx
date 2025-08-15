@@ -198,7 +198,7 @@ const SoftwareProducts = () => {
         <div className="relative container mx-auto px-4 lg:px-6 text-center">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/10 to-blue-500/10 text-primary px-6 py-3 rounded-full text-sm font-medium mb-8 animate-fade-in border border-primary/20 backdrop-blur-sm">
             <Sparkles className="w-5 h-5 animate-pulse" />
-            ✨ منتجاتنا البرمجية الحصرية والمتطورة
+            ✨ منتجاتنا الحصرية والمتطورة
             <Award className="w-5 h-5 animate-bounce" />
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white mb-8 animate-fade-in [animation-delay:200ms]">
