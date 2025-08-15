@@ -666,11 +666,15 @@ const ElectronicCardsStore = () => {
               </p>
               <div className="flex space-x-4 space-x-reverse">
                 <Button
-                  onClick={() => window.open('https://wa.me/966555812567', '_blank')}
+                  onClick={() => {
+                    const message = "🌟 مرحباً من شركة علي صالح الشهري القابضة!\n\n💎 أريد الاستفسار عن خدمات متجر البطاقات الإلكترونية الذكي:\n• العروض الحصرية المتاحة\n• أنواع البطاقات الرقمية\n• طرق الدفع والتسليم\n• خدمة العملاء المتميزة\n\nأرجو التواصل معي للحصول على أفضل العروض والخدمات المتاحة.";
+                    const whatsappUrl = `https://wa.me/9660555812567?text=${encodeURIComponent(message)}`;
+                    window.open(whatsappUrl, '_blank');
+                  }}
                   className="bg-green-600 hover:bg-green-700"
                 >
                   <MessageCircle className="h-5 w-5 mr-2" />
-                  واتساب
+                  تواصل معنا
                 </Button>
                 <Button
                   onClick={() => window.location.href = '/electronic-games-store'}
@@ -695,7 +699,7 @@ const ElectronicCardsStore = () => {
             <div>
               <h4 className="text-lg font-semibold mb-4">معلومات التواصل</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>📞 966555812567+</li>
+                <li>📞 0555812567</li>
                 <li>📧 cards@ash-holding.com</li>
                 <li>📍 الرياض، المملكة العربية السعودية</li>
                 <li>🕒 24/7 خدمة العملاء</li>

@@ -204,9 +204,9 @@ const Index = () => {
       
       {/* Smart Cards Contact - Floating */}
       <SmartCardsContact 
-        showAsButton={false}
-        pageTitle="الصفحة الرئيسية - متجر البطاقات الإلكترونية الذكي"
-        defaultMessage="مرحباً! أريد الاستفسار عن خدماتكم وبطاقاتكم الإلكترونية المتنوعة."
+        showAsButton={true}
+        pageTitle="الصفحة الرئيسية - شركة علي صالح الشهري القابضة"
+        defaultMessage="🌟 مرحباً من شركة علي صالح الشهري القابضة! أريد الاستفسار عن خدماتكم المتنوعة والعروض الحصرية المتاحة."
       />
     </div>
   );
