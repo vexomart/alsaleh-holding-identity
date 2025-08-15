@@ -1,3 +1,4 @@
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -25,7 +26,11 @@ console.log('Root element HTML:', rootElement?.outerHTML);
 if (rootElement) {
   console.log('Creating React app...');
   try {
-    createRoot(rootElement).render(<App />);
+    createRoot(rootElement).render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
     console.log('React app rendered successfully');
   } catch (error) {
     console.error('Error rendering React app:', error);
