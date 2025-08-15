@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
-import { SmartCardsContact } from "@/components/WhatsAppContact";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
@@ -202,13 +201,6 @@ const Index = () => {
 
       {/* ChatBot Component */}
       <ChatBot />
-      
-      {/* Smart Cards Contact - Floating */}
-      <SmartCardsContact 
-        showAsButton={true}
-        pageTitle="الصفحة الرئيسية - شركة علي صالح الشهري القابضة"
-        defaultMessage="🌟 مرحباً من شركة علي صالح الشهري القابضة! أريد الاستفسار عن خدماتكم المتنوعة والعروض الحصرية المتاحة."
-      />
     </div>
   );
 };
