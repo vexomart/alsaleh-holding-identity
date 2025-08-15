@@ -4,16 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import DepartmentsSection from "@/components/DepartmentsSection";
-import CommitmentsSection from "@/components/CommitmentsSection";
-import ContactSection from "@/components/ContactSection";
+// Remove direct imports, they are now lazy loaded
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
 import { SmartCardsContact } from "@/components/WhatsAppContact";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
+import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
+import { lazy, Suspense } from "react";
+
+// Lazy load heavy components
+const DepartmentsSection = lazy(() => import("@/components/DepartmentsSection"));
+const CommitmentsSection = lazy(() => import("@/components/CommitmentsSection"));
 
 
 
@@ -21,6 +24,7 @@ import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
+      <PerformanceOptimizer />
       <Navigation />
       
       {/* Animated Background Elements */}
@@ -163,7 +167,13 @@ const Index = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:120px_120px] opacity-20"></div>
             
             <div className="relative z-10">
-              <DepartmentsSection />
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              }>
+                <DepartmentsSection />
+              </Suspense>
             </div>
           </section>
 
@@ -183,7 +193,13 @@ const Index = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:80px_80px] opacity-25"></div>
             
             <div className="relative z-10">
-              <CommitmentsSection />
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              }>
+                <CommitmentsSection />
+              </Suspense>
             </div>
           </section>
 
