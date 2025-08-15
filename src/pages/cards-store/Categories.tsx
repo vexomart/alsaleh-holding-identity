@@ -405,35 +405,19 @@ const Categories = () => {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15
-      }
+      y: 0
     }
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.9 },
+    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 120,
-        damping: 20
-      }
+      y: 0
     },
     hover: {
       y: -10,
-      scale: 1.02,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20
-      }
+      scale: 1.02
     }
   };
 

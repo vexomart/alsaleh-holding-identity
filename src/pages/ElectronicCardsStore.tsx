@@ -531,66 +531,39 @@ const ElectronicCardsStore = () => {
     }
   ];
 
-  // Animation variants
+  // Simple animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
+        staggerChildren: 0.1
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15
-      }
+      y: 0
     }
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 50, rotateX: -15 },
+    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
-      y: 0,
-      rotateX: 0,
-      transition: {
-        type: "spring",
-        stiffness: 120,
-        damping: 20
-      }
-    },
-    hover: {
-      y: -10,
-      scale: 1.03,
-      rotateX: 5,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20
-      }
+      y: 0
     }
   };
 
   const heroVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 50 },
+    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
-      scale: 1,
       y: 0,
       transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 20,
         staggerChildren: 0.2
       }
     }
@@ -633,7 +606,7 @@ const ElectronicCardsStore = () => {
         }`}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
+        transition={{ duration: 0.8 }}
       >
         {/* Developer Attribution */}
         <div className="bg-gradient-to-r from-slate-900 via-gray-900 to-black text-white py-2 px-4 relative overflow-hidden">
@@ -1090,7 +1063,7 @@ const ElectronicCardsStore = () => {
                   <motion.div
                     key={card.id}
                     variants={cardVariants}
-                    whileHover="hover"
+                    whileHover={{ y: -10, scale: 1.02 }}
                     className={`group relative ${viewMode === "list" ? "md:flex md:gap-6" : ""}`}
                     layout
                   >

@@ -120,15 +120,15 @@ const ProductDetails = () => {
         answer: "في الحالات النادرة التي لا تعمل فيها البطاقة، نوفر استبدال فوري أو استرداد كامل للمبلغ."
       }
     ],
-    reviews: [
-      {
-        id: 1,
-        user: "أحمد محمد",
-        rating: 5,
-        comment: "خدمة ممتازة وتسليم سريع جداً. البطاقة تعمل بشكل مثالي!",
-        date: "2024-01-15",
-        verified: true
-      },
+      reviewsList: [
+        {
+          id: 1,
+          user: "أحمد محمد",
+          rating: 5,
+          comment: "خدمة ممتازة وتسليم سريع جداً. البطاقة تعمل بشكل مثالي!",
+          date: "2024-01-15",
+          verified: true
+        },
       {
         id: 2,
         user: "سارة علي",
@@ -214,12 +214,7 @@ const ProductDetails = () => {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15
-      }
+      y: 0
     }
   };
 
@@ -670,7 +665,7 @@ const ProductDetails = () => {
                     
                     {/* Individual Reviews */}
                     <div className="space-y-6">
-                      {product.reviews.map((review) => (
+                      {product.reviewsList.map((review) => (
                         <div key={review.id} className="border border-slate-200 dark:border-slate-700 rounded-xl p-6">
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center gap-3">
