@@ -267,7 +267,7 @@ const App = () => {
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/hosting-services" element={<HostingServices />} />
                 <Route path="/company-updates" element={<CompanyUpdates />} />
-                <Route path="/software-products" element={<SoftwareProducts />} />
+                <Route path="/software-products" element={<Suspense fallback={<PageLoader />}><SoftwareProducts /></Suspense>} />
                 <Route path="/construction-website" element={<ConstructionWebsite />} />
                 <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
                 <Route path="/electronic-cards-store" element={<ElectronicCardsStore />} />

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -304,8 +304,8 @@ const Navigation = () => {
                           <div className="text-xs text-gray-500">حلول جاهزة للتطبيق</div>
                         </div>
                       </a>
-                      <a
-                        href="/software-products"
+                      <Link
+                        to="/software-products"
                         className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all group"
                       >
                         <Code className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
@@ -313,7 +313,7 @@ const Navigation = () => {
                           <div className="font-medium">منتجاتنا البرمجية</div>
                           <div className="text-xs text-gray-500">برمجيات وتطبيقات متخصصة</div>
                         </div>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )}
@@ -476,8 +476,8 @@ const Navigation = () => {
                       </div>
                       <span className="text-gray-700 leading-tight">المشاريع الجاهزة</span>
                     </a>
-                    <a
-                      href="/software-products"
+                    <Link
+                      to="/software-products"
                       className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-lg text-sm"
                       onClick={() => setIsOpen(false)}
                     >
@@ -485,7 +485,7 @@ const Navigation = () => {
                         <Code className="w-4 h-4 text-purple-600" />
                       </div>
                       <span className="text-gray-700 leading-tight">منتجاتنا البرمجية</span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 
