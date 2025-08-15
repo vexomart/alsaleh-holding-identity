@@ -67,23 +67,23 @@ const CommitmentsSection = () => {
   ];
 
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-900 dark:via-purple-900 dark:to-indigo-900">
+    <section className="py-12 md:py-16 relative overflow-hidden bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-900 dark:via-purple-900 dark:to-indigo-900">
       {/* Modern Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_center,_var(--tw-gradient-stops))] from-violet-100/40 via-transparent to-purple-100/40"></div>
-      <div className="absolute top-1/4 right-10 w-40 h-40 bg-violet-400/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-purple-400/10 rounded-full blur-3xl animate-float-delayed" />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-r from-violet-300/5 to-purple-300/5 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 right-10 w-24 h-24 bg-violet-400/10 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/4 left-10 w-20 h-20 bg-purple-400/10 rounded-full blur-3xl animate-float-delayed" />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-r from-violet-300/5 to-purple-300/5 rounded-full blur-3xl" />
       
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-20 animate-fade-in">
-          <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-            <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+        <div className="text-center mb-12 animate-fade-in">
+          <div className="inline-flex items-center gap-3 mb-4 p-2 bg-white/10 rounded-full backdrop-blur-sm">
+            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
             <span className="text-sm font-medium text-primary">التزاماتنا • رؤيتنا للمستقبل</span>
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-8 leading-tight">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-6 leading-tight">
             التزاماتنا <span className="text-gradient-primary">الراسخة</span>
           </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             مجموعة من القيم والمبادئ الأساسية التي توجه مسيرتنا وتحدد علاقتنا مع عملائنا وشركائنا حول العالم
           </p>
         </div>
@@ -182,7 +182,7 @@ const CommitmentsSection = () => {
         </div>
 
         {/* Enhanced Summary Section */}
-        <div className="text-center bg-gradient-to-br from-white/15 to-white/10 backdrop-blur-md rounded-3xl p-12 animate-fade-in border border-white/10 shadow-2xl">
+        <div className="text-center bg-gradient-to-br from-white/15 to-white/10 backdrop-blur-md rounded-2xl p-8 animate-fade-in border border-white/10 shadow-2xl">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Zap className="w-8 h-8 text-primary animate-pulse" />
             <h3 className="text-4xl font-bold text-primary">التزام شامل • نتائج استثنائية</h3>
