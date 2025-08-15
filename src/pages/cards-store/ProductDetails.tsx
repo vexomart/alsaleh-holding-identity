@@ -120,23 +120,24 @@ const ProductDetails = () => {
   }
 
   const handleWhatsAppOrder = () => {
-    const message = `أريد طلب البطاقة التالية:
+    const message = `مرحباً! أريد طلب البطاقة التالية من متجر البطاقات الإلكترونية:
 
 🎯 *${card.title}*
 💰 السعر: ${card.price}
 📦 النوع: ${card.cardType}
 ⭐ التقييم: ${card.rating}/5
 
-📋 *المواصفات:*
+📋 *المواصفات التفصيلية:*
 ${card.specifications.map(spec => `• ${spec.label}: ${spec.value}`).join('\n')}
 
-🎁 *المميزات:*
+🎁 *أهم المميزات:*
 ${card.features.slice(0, 5).map(feature => `• ${feature}`).join('\n')}
 
 🚚 وقت التسليم: ${card.deliveryTime}
 ✅ حالة التوفر: ${card.stockStatus}
+🛡️ الضمان: ${card.warranty}
 
-أرجو التواصل معي لإتمام الطلب.`;
+أرجو التواصل معي لإتمام عملية الطلب والدفع.`;
 
     const whatsappUrl = `https://wa.me/966555812567?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
