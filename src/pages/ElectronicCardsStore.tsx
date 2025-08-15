@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
@@ -446,6 +447,15 @@ const ElectronicCardsStore = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800" dir="rtl">
+      {/* Demo Site Alert */}
+      <Alert className="mx-4 mb-0 border-amber-200 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800">
+        <Info className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+        <AlertDescription className="text-center text-amber-800 dark:text-amber-200">
+          <span className="font-bold">موقع تجريبي</span> - جميع المنتجات أمثلة فقط | 
+          تم التطوير بواسطة <span className="font-bold text-amber-900 dark:text-amber-100">شركة ASH HOLDING القابضة</span>
+        </AlertDescription>
+      </Alert>
+
       {/* Top Banner */}
       <motion.div 
         className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white py-4 px-4 text-center relative overflow-hidden"
