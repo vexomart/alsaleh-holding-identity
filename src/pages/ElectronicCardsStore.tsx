@@ -275,9 +275,13 @@ const ElectronicCardsStore = () => {
                 <span className="hidden lg:inline">متجر الألعاب</span>
               </Button>
 
-              {/* WhatsApp Button */}
+              {/* Smart Cards Contact Button */}
               <Button
-                onClick={() => window.open('https://wa.me/966555812567', '_blank')}
+                onClick={() => {
+                  const message = "مرحباً! أريد الاستفسار عن خدمات متجر البطاقات الإلكترونية الذكي وأحدث العروض المتاحة.";
+                  const whatsappUrl = `https://wa.me/9660555812567?text=${encodeURIComponent(message)}`;
+                  window.open(whatsappUrl, '_blank');
+                }}
                 className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden sm:flex items-center gap-2"
               >
                 <MessageCircle className="h-4 w-4" />
@@ -286,7 +290,7 @@ const ElectronicCardsStore = () => {
 
               {/* Phone Button */}
               <Button
-                onClick={() => window.open('tel:+966555812567', '_blank')}
+                onClick={() => window.open('tel:+9660555812567', '_blank')}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden sm:flex items-center gap-2"
               >
                 <Phone className="h-4 w-4" />
@@ -339,7 +343,9 @@ const ElectronicCardsStore = () => {
                     </Button>
                     <Button
                       onClick={() => {
-                        window.open('https://wa.me/966555812567', '_blank');
+                        const message = "مرحباً! أريد الاستفسار عن خدمات متجر البطاقات الإلكترونية الذكي وأحدث العروض المتاحة.";
+                        const whatsappUrl = `https://wa.me/9660555812567?text=${encodeURIComponent(message)}`;
+                        window.open(whatsappUrl, '_blank');
                         setIsMobileMenuOpen(false);
                       }}
                       className="flex-1 bg-green-500 hover:bg-green-600 text-white"
@@ -400,7 +406,11 @@ const ElectronicCardsStore = () => {
                 variant="outline"
                 size="lg"
                 className="border-white text-white hover:bg-white hover:text-purple-600 px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
-                onClick={() => window.open('https://wa.me/966555812567', '_blank')}
+                onClick={() => {
+                  const message = "مرحباً! أريد الاستفسار عن خدمات متجر البطاقات الإلكترونية الذكي والعروض الحصرية المتاحة.";
+                  const whatsappUrl = `https://wa.me/9660555812567?text=${encodeURIComponent(message)}`;
+                  window.open(whatsappUrl, '_blank');
+                }}
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
                 تواصل معنا
