@@ -8,8 +8,8 @@ import { Badge } from "@/components/ui/badge";
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
-import { SmartCardsContact } from "@/components/WhatsAppContact";
-import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
+
+import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
 import { lazy, Suspense } from "react";
@@ -84,7 +84,7 @@ const Index = () => {
                   اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات بمعايير عالمية وأسعار استثنائية
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                   <Card className="glass-effect border border-accent/20 hover:shadow-glow transition-all duration-500 group hover-scale">
                     <CardContent className="p-8 text-center relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -96,16 +96,6 @@ const Index = () => {
                     </CardContent>
                   </Card>
                   
-                  <Card className="glass-effect border border-primary/20 hover:shadow-glow transition-all duration-500 group hover-scale">
-                    <CardContent className="p-8 text-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="relative z-10">
-                        <div className="text-3xl font-bold gradient-text mb-3">متجر البطاقات الرقمية</div>
-                        <div className="text-primary font-semibold text-lg">تصميم جديد ومتطور</div>
-                        <div className="w-12 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
-                      </div>
-                    </CardContent>
-                  </Card>
                   
                   <Card className="glass-effect border border-secondary/20 hover:shadow-glow transition-all duration-500 group hover-scale">
                     <CardContent className="p-8 text-center relative overflow-hidden">
@@ -131,17 +121,6 @@ const Index = () => {
                     </Button>
                   </Link>
                   
-                  <Link to="/electronic-cards-store">
-                    <Button 
-                      size="lg" 
-                      variant="outline"
-                      className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950 font-bold px-12 py-6 text-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale"
-                    >
-                      <Star className="w-6 h-6 ml-2" />
-                      متجر البطاقات الجديد
-                      <ArrowRight className="w-6 h-6 mr-2" />
-                    </Button>
-                  </Link>
                 </div>
                 
                 <div className="mt-6 text-muted-foreground">
@@ -218,12 +197,6 @@ const Index = () => {
       {/* ChatBot Component */}
       <ChatBot />
       
-      {/* Smart Cards Contact - Floating */}
-      <SmartCardsContact 
-        showAsButton={true}
-        pageTitle="الصفحة الرئيسية - شركة علي صالح الشهري القابضة"
-        defaultMessage="🌟 مرحباً من شركة علي صالح الشهري القابضة! أريد الاستفسار عن خدماتكم المتنوعة والعروض الحصرية المتاحة."
-      />
     </div>
   );
 };
