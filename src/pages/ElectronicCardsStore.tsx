@@ -58,7 +58,10 @@ import {
   Play,
   Layers,
   Box,
-  ExternalLink
+  ExternalLink,
+  GraduationCap,
+  Bitcoin,
+  Cloud
 } from "lucide-react";
 
 const ElectronicCardsStore = () => {
@@ -363,16 +366,116 @@ const ElectronicCardsStore = () => {
     }
   ];
 
-  // Enhanced Categories
+  // Premium Enhanced Categories with New Categories
   const categories = [
-    { name: "جميع البطاقات", icon: Globe, count: 156, color: "bg-gradient-to-r from-purple-500 to-blue-500", description: "جميع أنواع البطاقات" },
-    { name: "ترفيه", icon: Play, count: 48, color: "bg-gradient-to-r from-red-500 to-pink-500", description: "نتفلكس، يوتيوب، سبوتيفاي" },
-    { name: "ألعاب", icon: Gamepad2, count: 73, color: "bg-gradient-to-r from-blue-500 to-cyan-500", description: "Steam، PlayStation، Xbox" },
-    { name: "تسوق", icon: ShoppingBag, count: 28, color: "bg-gradient-to-r from-green-500 to-emerald-500", description: "أمازون، eBay، Ali Express" },
-    { name: "تطبيقات", icon: Smartphone, count: 41, color: "bg-gradient-to-r from-orange-500 to-yellow-500", description: "Google Play، App Store" },
-    { name: "موسيقى", icon: Music, count: 15, color: "bg-gradient-to-r from-purple-500 to-indigo-500", description: "Spotify، Apple Music، Anghami" },
-    { name: "إبداعي", icon: Layers, count: 12, color: "bg-gradient-to-r from-teal-500 to-blue-500", description: "Adobe، Canva، Figma" },
-    { name: "اجتماعي", icon: Users, count: 8, color: "bg-gradient-to-r from-pink-500 to-red-500", description: "Discord، Telegram Premium" }
+    { 
+      name: "جميع البطاقات", 
+      icon: Globe, 
+      count: 256, 
+      color: "bg-gradient-to-br from-violet-600 via-purple-600 to-blue-600", 
+      description: "جميع أنواع البطاقات الرقمية",
+      trending: true,
+      gradient: "from-violet-500/20 to-purple-500/20"
+    },
+    { 
+      name: "ترفيه", 
+      icon: Play, 
+      count: 78, 
+      color: "bg-gradient-to-br from-red-500 via-pink-500 to-rose-600", 
+      description: "نتفلكس، يوتيوب، ديزني بلس",
+      trending: false,
+      gradient: "from-red-500/20 to-pink-500/20"
+    },
+    { 
+      name: "ألعاب", 
+      icon: Gamepad2, 
+      count: 134, 
+      color: "bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-600", 
+      description: "Steam، PlayStation، Xbox، Epic",
+      trending: true,
+      gradient: "from-blue-500/20 to-cyan-500/20"
+    },
+    { 
+      name: "تسوق إلكتروني", 
+      icon: ShoppingBag, 
+      count: 45, 
+      color: "bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600", 
+      description: "أمازون، نون، شي إن",
+      trending: false,
+      gradient: "from-emerald-500/20 to-green-500/20"
+    },
+    { 
+      name: "تطبيقات موبايل", 
+      icon: Smartphone, 
+      count: 67, 
+      color: "bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-600", 
+      description: "Google Play، App Store، Huawei",
+      trending: true,
+      gradient: "from-orange-500/20 to-amber-500/20"
+    },
+    { 
+      name: "موسيقى وبودكاست", 
+      icon: Music, 
+      count: 23, 
+      color: "bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-600", 
+      description: "Spotify، Apple Music، Anghami",
+      trending: false,
+      gradient: "from-purple-500/20 to-indigo-500/20"
+    },
+    { 
+      name: "أدوات إبداعية", 
+      icon: Layers, 
+      count: 18, 
+      color: "bg-gradient-to-br from-teal-500 via-cyan-500 to-blue-600", 
+      description: "Adobe، Canva، Figma، Notion",
+      trending: false,
+      gradient: "from-teal-500/20 to-cyan-500/20"
+    },
+    { 
+      name: "شبكات اجتماعية", 
+      icon: Users, 
+      count: 12, 
+      color: "bg-gradient-to-br from-pink-500 via-rose-500 to-red-600", 
+      description: "Discord، Telegram، Snapchat",
+      trending: false,
+      gradient: "from-pink-500/20 to-rose-500/20"
+    },
+    { 
+      name: "تعليم ودورات", 
+      icon: GraduationCap, 
+      count: 28, 
+      color: "bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-600", 
+      description: "Udemy، Coursera، MasterClass",
+      trending: true,
+      gradient: "from-indigo-500/20 to-blue-500/20"
+    },
+    { 
+      name: "عملات رقمية", 
+      icon: Bitcoin, 
+      count: 15, 
+      color: "bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600", 
+      description: "Bitcoin، Ethereum، Binance",
+      trending: true,
+      gradient: "from-yellow-500/20 to-orange-500/20"
+    },
+    { 
+      name: "خدمات سحابية", 
+      icon: Cloud, 
+      count: 19, 
+      color: "bg-gradient-to-br from-gray-500 via-slate-500 to-zinc-600", 
+      description: "Google Drive، Dropbox، iCloud",
+      trending: false,
+      gradient: "from-gray-500/20 to-slate-500/20"
+    },
+    { 
+      name: "VPN وأمان", 
+      icon: Shield, 
+      count: 11, 
+      color: "bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700", 
+      description: "NordVPN، ExpressVPN، CyberGhost",
+      trending: false,
+      gradient: "from-green-600/20 to-emerald-600/20"
+    }
   ];
 
   // Filter cards based on search and category
@@ -739,59 +842,190 @@ const ElectronicCardsStore = () => {
         </div>
       </motion.section>
 
-      {/* Categories Section */}
-      <section id="categories" ref={categoriesRef} className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Premium Categories Section */}
+      <section id="categories" ref={categoriesRef} className="py-24 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/50 to-purple-50/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"></div>
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-300/25 rounded-full blur-3xl animate-pulse delay-500"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Section Header */}
           <motion.div
             initial="hidden"
             animate={categoriesInView ? "visible" : "hidden"}
             variants={containerVariants}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <motion.div variants={itemVariants}>
-              <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 mb-4">
-                فئات متنوعة
-              </Badge>
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                اكتشف فئات البطاقات المختلفة
-              </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                نوفر مجموعة واسعة من البطاقات الرقمية لتلبية جميع احتياجاتك
-              </p>
+            <motion.div variants={itemVariants} className="space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded-full border border-purple-200 dark:border-purple-700">
+                <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">فئات حصرية ومميزة</span>
+              </div>
+              
+              <div className="space-y-4">
+                <h2 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 dark:from-white dark:via-purple-100 dark:to-blue-100 bg-clip-text text-transparent leading-tight">
+                  استكشف عالم البطاقات
+                  <br />
+                  <span className="text-transparent bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text">الرقمية المتطور</span>
+                </h2>
+                
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                  اكتشف مجموعتنا الحصرية من البطاقات الرقمية المتنوعة، مصممة خصيصاً لتلبية جميع احتياجاتك الرقمية بأعلى معايير الجودة والأمان
+                </p>
+              </div>
             </motion.div>
           </motion.div>
 
+          {/* Premium Categories Grid */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={categoriesInView ? "visible" : "hidden"}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 mb-16"
           >
-            {categories.map((category) => {
+            {categories.map((category, index) => {
               const IconComponent = category.icon;
               return (
                 <motion.div
                   key={category.name}
-                  variants={itemVariants}
-                  whileHover={{ y: -10, scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`group cursor-pointer p-6 rounded-2xl bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl transition-all duration-300 text-center ${
-                    selectedCategory === category.name ? 'ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/20' : ''
+                  variants={{
+                    hidden: { opacity: 0, y: 50, scale: 0.8 },
+                    visible: { 
+                      opacity: 1, 
+                      y: 0, 
+                      scale: 1,
+                      transition: {
+                        delay: index * 0.1,
+                        duration: 0.6,
+                        ease: [0.25, 0.46, 0.45, 0.94]
+                      }
+                    }
+                  }}
+                  whileHover={{ 
+                    y: -8, 
+                    scale: 1.05,
+                    transition: { duration: 0.3, ease: "easeOut" }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`group cursor-pointer relative overflow-hidden rounded-3xl transition-all duration-500 ${
+                    selectedCategory === category.name 
+                      ? 'ring-2 ring-purple-500 shadow-2xl shadow-purple-500/25' 
+                      : 'hover:shadow-2xl hover:shadow-black/10 dark:hover:shadow-white/5'
                   }`}
                   onClick={() => setSelectedCategory(category.name)}
                 >
-                  <div className={`w-14 h-14 ${category.color} rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <IconComponent className="h-7 w-7 text-white" />
+                  {/* Card Background */}
+                  <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 h-full">
+                    {/* Gradient Overlay */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl`}></div>
+                    
+                    {/* Trending Badge */}
+                    {category.trending && (
+                      <motion.div 
+                        initial={{ scale: 0, rotate: -12 }}
+                        animate={{ scale: 1, rotate: -12 }}
+                        transition={{ delay: 0.5 + index * 0.1 }}
+                        className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"
+                      >
+                        ترند
+                      </motion.div>
+                    )}
+                    
+                    <div className="relative z-10 text-center space-y-4">
+                      {/* Icon Container */}
+                      <div className="relative mx-auto">
+                        <motion.div 
+                          className={`w-16 h-16 ${category.color} rounded-2xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl transition-all duration-500`}
+                          whileHover={{ rotate: [0, -10, 10, -5, 0] }}
+                          transition={{ duration: 0.6 }}
+                        >
+                          <IconComponent className="h-8 w-8 text-white drop-shadow-sm" />
+                        </motion.div>
+                        
+                        {/* Floating particles */}
+                        <motion.div
+                          className="absolute inset-0 -z-10"
+                          initial={{ opacity: 0 }}
+                          whileHover={{ opacity: 1 }}
+                        >
+                          {[...Array(3)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              className="absolute w-1 h-1 bg-purple-400 rounded-full"
+                              style={{
+                                left: `${20 + i * 30}%`,
+                                top: `${15 + i * 20}%`,
+                              }}
+                              animate={{
+                                y: [-10, -20, -10],
+                                opacity: [0.3, 1, 0.3],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                delay: i * 0.3,
+                              }}
+                            />
+                          ))}
+                        </motion.div>
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="space-y-2">
+                        <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 text-sm leading-tight">
+                          {category.name}
+                        </h3>
+                        
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-center gap-1">
+                            <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                              {category.count}
+                            </span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">بطاقة</span>
+                          </div>
+                          
+                          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            {category.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Hover Border Glow */}
+                    <div className="absolute inset-0 rounded-3xl border border-transparent bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500 -z-10"></div>
                   </div>
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                    {category.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {category.count} بطاقة
-                  </p>
                 </motion.div>
               );
             })}
+          </motion.div>
+
+          {/* Categories Statistics */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={categoriesInView ? "visible" : "hidden"}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
+          >
+            <motion.div variants={itemVariants} className="text-center p-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700">
+              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">12+</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">فئة متنوعة</div>
+            </motion.div>
+            <motion.div variants={itemVariants} className="text-center p-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700">
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">400+</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">بطاقة متاحة</div>
+            </motion.div>
+            <motion.div variants={itemVariants} className="text-center p-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700">
+              <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">24/7</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">دعم فني</div>
+            </motion.div>
+            <motion.div variants={itemVariants} className="text-center p-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700">
+              <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2">99%</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">معدل النجاح</div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
