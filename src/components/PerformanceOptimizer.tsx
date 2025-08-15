@@ -22,9 +22,8 @@ export const PerformanceOptimizer = () => {
       document.body.classList.add('reduce-animations');
     }
 
-    // Prefetch important pages on idle
+    // Prefetch important pages on idle (reduced list for better performance)
     const prefetchPages = [
-      '/electronic-cards-store',
       '/current-offers',
       '/about',
       '/contact'
