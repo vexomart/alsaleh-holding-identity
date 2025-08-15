@@ -67,12 +67,9 @@ const CommitmentsSection = () => {
   ];
 
   return (
-    <section className="py-8 md:py-12 relative overflow-hidden">
-      {/* Modern Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_center,_var(--tw-gradient-stops))] from-violet-100/40 via-transparent to-purple-100/40"></div>
-      <div className="absolute top-1/4 right-10 w-24 h-24 bg-violet-400/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 left-10 w-20 h-20 bg-purple-400/10 rounded-full blur-3xl animate-float-delayed" />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-r from-violet-300/5 to-purple-300/5 rounded-full blur-3xl" />
+    <section className="py-6 md:py-8 relative overflow-hidden">
+      {/* Simplified Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5"></div>
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-12 animate-fade-in">

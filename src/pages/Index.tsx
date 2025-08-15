@@ -58,68 +58,51 @@ const Index = () => {
             </div>
           </section>
 
-        {/* Content Sections with Better Spacing */}
-        <div className="space-y-8">
+        {/* Content Sections with Optimized Spacing */}
+        <div className="space-y-4 lg:space-y-6">
 
-          {/* Current Offers Section */}
-          <section className="relative py-8 lg:py-12 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-primary/6 to-secondary/10"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(var(--accent))_0%,transparent_30%),radial-gradient(circle_at_20%_80%,hsl(var(--primary))_0%,transparent_30%)] opacity-20"></div>
-            
-            {/* Professional Floating Elements */}
-            <div className="absolute top-16 right-16 w-24 h-24 bg-gradient-to-br from-accent/20 to-primary/15 rounded-full blur-2xl animate-float"></div>
-            <div className="absolute bottom-16 left-16 w-20 h-20 bg-gradient-to-tl from-secondary/20 to-accent/15 rounded-full blur-xl animate-float-delayed"></div>
+          {/* Current Offers Section - Compact & Professional */}
+          <section className="relative py-6 lg:py-8 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-primary/3 to-secondary/5"></div>
             
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-4xl mx-auto text-center">
-                <div className="mb-6">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-accent to-primary rounded-full mb-4 shadow-glow animate-pulse">
-                    <Gift className="w-6 h-6 text-white" />
+                <div className="mb-4">
+                  <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-br from-accent to-primary rounded-full mb-3">
+                    <Gift className="w-5 h-5 text-white" />
                   </div>
-                  <Badge className="bg-gradient-to-r from-accent to-primary text-white border-0 text-base px-6 py-2 shadow-lg">
+                  <Badge className="bg-gradient-to-r from-accent to-primary text-white border-0 px-4 py-1">
                     عروض محدودة الوقت
                   </Badge>
                 </div>
                 
-                <h2 className="text-3xl lg:text-5xl font-bold mb-6 gradient-text leading-tight">
+                <h2 className="text-2xl lg:text-4xl font-bold mb-4 gradient-text">
                   عروضنا الحالية المميزة
                 </h2>
                 
-                <p className="text-lg lg:text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto">
-                  اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات بمعايير عالمية وأسعار استثنائية
+                <p className="text-base lg:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+                  اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                  <Card className="glass-effect border border-accent/20 hover:shadow-glow transition-all duration-500 group hover-scale">
-                    <CardContent className="p-6 text-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="relative z-10">
-                        <div className="text-2xl font-bold gradient-text mb-2">تصميم مواقع</div>
-                        <div className="text-accent font-semibold text-base">خصم حتى 35%</div>
-                        <div className="w-8 h-1 bg-gradient-to-r from-accent to-primary mx-auto mt-3"></div>
-                      </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  <Card className="glass-effect border border-accent/20 hover:shadow-lg transition-all duration-300 group">
+                    <CardContent className="p-4 text-center">
+                      <div className="text-xl font-bold gradient-text mb-1">تصميم مواقع</div>
+                      <div className="text-accent font-semibold">خصم حتى 35%</div>
                     </CardContent>
                   </Card>
                   
-                  <Card className="glass-effect border border-primary/20 hover:shadow-glow transition-all duration-500 group hover-scale">
-                    <CardContent className="p-6 text-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="relative z-10">
-                        <div className="text-2xl font-bold gradient-text mb-2">خدمات متكاملة</div>
-                        <div className="text-primary font-semibold text-base">حلول تقنية متطورة</div>
-                        <div className="w-8 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-3"></div>
-                      </div>
+                  <Card className="glass-effect border border-primary/20 hover:shadow-lg transition-all duration-300 group">
+                    <CardContent className="p-4 text-center">
+                      <div className="text-xl font-bold gradient-text mb-1">خدمات متكاملة</div>
+                      <div className="text-primary font-semibold">حلول تقنية متطورة</div>
                     </CardContent>
                   </Card>
                   
-                  <Card className="glass-effect border border-secondary/20 hover:shadow-glow transition-all duration-500 group hover-scale">
-                    <CardContent className="p-6 text-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="relative z-10">
-                        <div className="text-2xl font-bold gradient-text mb-2">هوية بصرية</div>
-                        <div className="text-secondary font-semibold text-base">خصم حتى 40%</div>
-                        <div className="w-8 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mt-3"></div>
-                      </div>
+                  <Card className="glass-effect border border-secondary/20 hover:shadow-lg transition-all duration-300 group">
+                    <CardContent className="p-4 text-center">
+                      <div className="text-xl font-bold gradient-text mb-1">هوية بصرية</div>
+                      <div className="text-secondary font-semibold">خصم حتى 40%</div>
                     </CardContent>
                   </Card>
                 </div>
@@ -128,36 +111,21 @@ const Index = () => {
                   <Link to="/current-offers">
                     <Button 
                       size="lg" 
-                      className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-8 py-4 text-lg shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
+                      className="bg-gradient-to-r from-accent via-primary to-secondary hover:opacity-90 text-white font-bold px-6 py-3 shadow-lg transition-all duration-300"
                     >
-                      <Gift className="w-5 h-5 ml-2" />
-                      شاهد جميع العروض الحالية
-                      <ArrowRight className="w-5 h-5 mr-2" />
+                      <Gift className="w-4 h-4 ml-2" />
+                      شاهد جميع العروض
+                      <ArrowRight className="w-4 h-4 mr-2" />
                     </Button>
                   </Link>
-                </div>
-                
-                <div className="mt-4 text-muted-foreground">
-                  <div className="inline-flex items-center bg-background/50 backdrop-blur-sm px-4 py-2 rounded-full border border-border/50 text-sm">
-                    ⏰ عروض محدودة الوقت - لا تفوت الفرصة!
-                  </div>
                 </div>
               </div>
             </div>
           </section>
 
-
-          {/* Departments Section */}
-          <section id="departments" className="relative py-8 lg:py-12 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-bl from-secondary/6 via-background to-accent/8"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--secondary))_0%,transparent_40%),radial-gradient(ellipse_at_30%_70%,hsl(var(--accent))_0%,transparent_40%)] opacity-20"></div>
-            
-            {/* Corporate Design Elements */}
-            <div className="absolute top-12 left-12 w-32 h-32 bg-gradient-to-br from-secondary/15 to-accent/10 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-12 right-12 w-40 h-40 bg-gradient-to-tl from-accent/12 to-primary/8 rounded-full blur-3xl animate-float-delayed"></div>
-            
-            {/* Professional Grid Overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:120px_120px] opacity-20"></div>
+          {/* Departments Section - Compact */}
+          <section id="departments" className="relative py-6 lg:py-8 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-bl from-secondary/3 via-background to-accent/4"></div>
             
             <div className="relative z-10">
               <Suspense fallback={<DepartmentsSkeleton />}>
@@ -166,20 +134,9 @@ const Index = () => {
             </div>
           </section>
 
-
-
-          {/* Commitments Section */}
-          <section id="commitments" className="relative py-8 lg:py-12 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-background to-secondary/12"></div>
-            <div className="absolute inset-0 bg-[conic-gradient(from_270deg_at_20%_80%,transparent,hsl(var(--primary))_15%,transparent_35%,hsl(var(--secondary))_55%,transparent)] opacity-25"></div>
-            
-            {/* Enterprise-grade Visual Elements */}
-            <div className="absolute top-8 left-8 w-32 h-32 bg-gradient-to-br from-primary/12 to-secondary/8 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-8 right-8 w-28 h-28 bg-gradient-to-tl from-secondary/15 to-accent/10 rounded-full blur-2xl animate-float-delayed"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-gradient-to-br from-accent/8 to-primary/6 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-            
-            {/* Corporate Grid Pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:80px_80px] opacity-25"></div>
+          {/* Commitments Section - Compact */}
+          <section id="commitments" className="relative py-6 lg:py-8 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-background to-secondary/6"></div>
             
             <div className="relative z-10">
               <Suspense fallback={<DepartmentsSkeleton />}>
