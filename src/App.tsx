@@ -118,6 +118,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import ConstructionWebsite from "./pages/ConstructionWebsite";
 import DigitalMarketingWebsite from "./pages/DigitalMarketingWebsite";
 import ElectronicCardsStore from "./pages/ElectronicCardsStore";
+import ElectronicGamesStore from "./pages/ElectronicGamesStore";
 import ElectronicCardsWebsite from "./pages/ElectronicCardsWebsite";
 import CardsStoreAbout from "./pages/cards-store/About";
 import CardsStoreContact from "./pages/cards-store/Contact";
@@ -256,6 +257,7 @@ const App = () => {
                 <Route path="/construction-website" element={<ConstructionWebsite />} />
                 <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
                 <Route path="/electronic-cards-store" element={<ElectronicCardsStore />} />
+                <Route path="/electronic-games-store" element={<ElectronicGamesStore />} />
                 <Route path="/cards-store" element={<ElectronicCardsWebsite />} />
                 <Route path="/cards-store/about" element={<CardsStoreAbout />} />
                 <Route path="/cards-store/contact" element={<CardsStoreContact />} />

@@ -53,7 +53,7 @@ import {
   CircleCheck,
   Flame,
   Diamond,
-  Store,
+  Gamepad2,
   User,
   Play,
   Layers,
@@ -683,6 +683,15 @@ const ElectronicCardsStore = () => {
 
             {/* Action Buttons */}
             <div className="flex items-center space-x-4 space-x-reverse">
+              {/* Games Store Button */}
+              <Button
+                onClick={() => window.location.href = '/electronic-games-store'}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hidden sm:flex items-center gap-2"
+              >
+                <Gamepad2 className="h-4 w-4" />
+                <span className="hidden lg:inline">متجر الألعاب</span>
+              </Button>
+            <div className="flex items-center space-x-4 space-x-reverse">
               {/* WhatsApp Button */}
               <Button
                 onClick={() => window.open('https://wa.me/966555000123', '_blank')}
@@ -709,6 +718,8 @@ const ElectronicCardsStore = () => {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+            </div>
               </Button>
             </div>
           </div>
