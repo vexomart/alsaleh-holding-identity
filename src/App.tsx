@@ -11,6 +11,7 @@ import { NotificationProvider } from "@/components/EnhancedNotifications";
 import { HelmetProvider } from 'react-helmet-async';
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import Index from "./pages/Index";
+import SimpleIndex from "./pages/SimpleIndex";
 
 // Lazy load pages for better performance
 const About = lazy(() => import("./pages/About"));
@@ -190,7 +191,7 @@ const App = () => {
               <ScrollToTop />
               
               <Routes>
-                <Route path="/" element={<Index />} />
+                <Route path="/" element={<SimpleIndex />} />
                 <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
                 <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />
                 <Route path="/team" element={<Suspense fallback={<PageLoader />}><Team /></Suspense>} />
