@@ -7,13 +7,51 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.12 (cd3cf9e)"
   }
   public: {
     Tables: {
+      automation_usage: {
+        Row: {
+          automation_type: string
+          created_at: string | null
+          id: string
+          subscription_id: string | null
+          usage_count: number | null
+          usage_date: string | null
+          user_id: string
+        }
+        Insert: {
+          automation_type: string
+          created_at?: string | null
+          id?: string
+          subscription_id?: string | null
+          usage_count?: number | null
+          usage_date?: string | null
+          user_id: string
+        }
+        Update: {
+          automation_type?: string
+          created_at?: string | null
+          id?: string
+          subscription_id?: string | null
+          usage_count?: number | null
+          usage_date?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_usage_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
           authorized_person: string | null
@@ -577,6 +615,116 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_plans: {
+        Row: {
+          billing_interval: string
+          created_at: string | null
+          currency: string
+          custom_integrations: boolean | null
+          description: string | null
+          description_ar: string | null
+          features: Json
+          id: string
+          is_active: boolean | null
+          max_automations: number | null
+          max_workflows: number | null
+          name: string
+          name_ar: string
+          price: number
+          priority_support: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          billing_interval?: string
+          created_at?: string | null
+          currency?: string
+          custom_integrations?: boolean | null
+          description?: string | null
+          description_ar?: string | null
+          features?: Json
+          id?: string
+          is_active?: boolean | null
+          max_automations?: number | null
+          max_workflows?: number | null
+          name: string
+          name_ar: string
+          price: number
+          priority_support?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          billing_interval?: string
+          created_at?: string | null
+          currency?: string
+          custom_integrations?: boolean | null
+          description?: string | null
+          description_ar?: string | null
+          features?: Json
+          id?: string
+          is_active?: boolean | null
+          max_automations?: number | null
+          max_workflows?: number | null
+          name?: string
+          name_ar?: string
+          price?: number
+          priority_support?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          cancelled_at: string | null
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          paylink_transaction_id: string | null
+          payment_status: string | null
+          plan_id: string
+          status: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          cancel_at_period_end?: boolean | null
+          cancelled_at?: string | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          paylink_transaction_id?: string | null
+          payment_status?: string | null
+          plan_id: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          cancel_at_period_end?: boolean | null
+          cancelled_at?: string | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          paylink_transaction_id?: string | null
+          payment_status?: string | null
+          plan_id?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ticket_messages: {
         Row: {
           attachments: Json | null
@@ -719,10 +867,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_automation_limit: {
+        Args: { p_automation_type: string; p_user_id: string }
+        Returns: boolean
+      }
+      check_contract_rate_limit: {
+        Args: { p_user_id: string }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
-          p_identifier: string
           p_action_type: string
+          p_identifier: string
           p_limit?: number
           p_window_minutes?: number
         }
@@ -738,8 +894,8 @@ export type Database = {
       }
       enhanced_rate_limit_check: {
         Args: {
-          p_identifier: string
           p_action_type: string
+          p_identifier: string
           p_limit?: number
           p_window_minutes?: number
         }
@@ -761,12 +917,43 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_user_contracts: {
+        Args: { requesting_user_id?: string }
+        Returns: {
+          client_email: string
+          client_name: string
+          client_phone: string
+          contract_number: string
+          created_at: string
+          id: string
+          masked_data: boolean
+          service_price: number
+          service_type: string
+          status: string
+        }[]
+      }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
+      }
+      mask_email: {
+        Args: { email_input: string; user_requesting?: string }
+        Returns: string
+      }
+      mask_id_number: {
+        Args: { id_input: string; user_requesting?: string }
+        Returns: string
+      }
+      mask_phone: {
+        Args: { phone_input: string; user_requesting?: string }
+        Returns: string
+      }
+      record_automation_usage: {
+        Args: { p_automation_type: string; p_count?: number; p_user_id: string }
+        Returns: undefined
       }
     }
     Enums: {

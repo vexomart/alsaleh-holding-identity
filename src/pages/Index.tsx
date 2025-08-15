@@ -3,15 +3,20 @@ import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import StatsSection from "@/components/StatsSection";
-import DepartmentsSection from "@/components/DepartmentsSection";
-import CommitmentsSection from "@/components/CommitmentsSection";
-import ContactSection from "@/components/ContactSection";
+
+// Remove direct imports, they are now lazy loaded
 
 import Footer from "@/components/Footer";
+import ChatBot from "@/components/ChatBot";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
+import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
+import { ImageOptimizer } from "@/components/ImageOptimizer";
+import { lazy, Suspense } from "react";
+
+// Lazy load heavy components
+const DepartmentsSection = lazy(() => import("@/components/DepartmentsSection"));
+const CommitmentsSection = lazy(() => import("@/components/CommitmentsSection"));
 
 
 
@@ -19,21 +24,18 @@ import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
+      <PerformanceOptimizer />
+      <ImageOptimizer />
       <Navigation />
       
-      {/* Animated Background Elements */}
+      {/* Optimized Animated Background Elements - Reduced for performance */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/8 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-gradient-to-tl from-accent/12 via-primary/6 to-secondary/4 rounded-full blur-2xl animate-float-delayed"></div>
-        <div className="absolute bottom-1/4 left-3/4 w-80 h-80 bg-gradient-to-tr from-secondary/8 via-accent/6 to-primary/4 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/8 via-secondary/4 to-accent/6 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 left-3/4 w-48 h-48 bg-gradient-to-tr from-secondary/6 via-accent/4 to-primary/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
         
-        {/* Geometric Patterns */}
-        <div className="absolute top-20 right-20 w-4 h-4 bg-primary/20 rotate-45 animate-pulse"></div>
-        <div className="absolute bottom-40 left-16 w-6 h-6 bg-accent/15 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 right-32 w-3 h-12 bg-secondary/10 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-        
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--primary))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary))_1px,transparent_1px)] bg-[size:60px_60px] opacity-[0.02]"></div>
+        {/* Minimal Geometric Patterns */}
+        <div className="absolute top-20 right-20 w-3 h-3 bg-primary/15 rotate-45 animate-pulse"></div>
+        <div className="absolute bottom-40 left-16 w-4 h-4 bg-accent/10 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
       </div>
       
       <main className="relative overflow-hidden z-10">
@@ -94,8 +96,8 @@ const Index = () => {
                     <CardContent className="p-8 text-center relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="relative z-10">
-                        <div className="text-3xl font-bold gradient-text mb-3">متاجر إلكترونية</div>
-                        <div className="text-primary font-semibold text-lg">خصم حتى 61%</div>
+                        <div className="text-3xl font-bold gradient-text mb-3">خدمات متكاملة</div>
+                        <div className="text-primary font-semibold text-lg">حلول تقنية متطورة</div>
                         <div className="w-12 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
                       </div>
                     </CardContent>
@@ -113,16 +115,18 @@ const Index = () => {
                   </Card>
                 </div>
                 
-                <Link to="/current-offers">
-                  <Button 
-                    size="lg" 
-                    className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
-                  >
-                    <Gift className="w-6 h-6 ml-2" />
-                    شاهد جميع العروض الحالية
-                    <ArrowRight className="w-6 h-6 mr-2" />
-                  </Button>
-                </Link>
+                <div className="flex justify-center">
+                   <Link to="/current-offers">
+                    <Button 
+                      size="lg" 
+                      className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
+                    >
+                      <Gift className="w-6 h-6 ml-2" />
+                      شاهد جميع العروض الحالية
+                      <ArrowRight className="w-6 h-6 mr-2" />
+                    </Button>
+                  </Link>
+                </div>
                 
                 <div className="mt-6 text-muted-foreground">
                   <div className="inline-flex items-center bg-background/50 backdrop-blur-sm px-6 py-3 rounded-full border border-border/50">
@@ -132,26 +136,6 @@ const Index = () => {
               </div>
             </div>
           </section>
-
-          {/* Stats Section - Enhanced Professional */}
-          <section id="stats" className="relative py-20 lg:py-32 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/8 via-background to-secondary/10"></div>
-            <div className="absolute inset-0 bg-[conic-gradient(from_90deg_at_80%_50%,transparent,hsl(var(--primary))_20%,transparent_40%,hsl(var(--secondary))_60%,transparent)] opacity-15"></div>
-            
-            {/* Professional Geometric Elements */}
-            <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-primary/15 to-secondary/10 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-tl from-secondary/12 to-accent/8 rounded-full blur-3xl animate-float-delayed"></div>
-            
-            {/* Grid Lines */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:100px_100px] opacity-30"></div>
-            
-            <div className="relative z-10">
-              <StatsSection />
-            </div>
-          </section>
-
-
-
 
 
           {/* Departments Section - Professional Corporate */}
@@ -167,7 +151,13 @@ const Index = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:120px_120px] opacity-20"></div>
             
             <div className="relative z-10">
-              <DepartmentsSection />
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              }>
+                <DepartmentsSection />
+              </Suspense>
             </div>
           </section>
 
@@ -187,7 +177,13 @@ const Index = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:80px_80px] opacity-25"></div>
             
             <div className="relative z-10">
-              <CommitmentsSection />
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              }>
+                <CommitmentsSection />
+              </Suspense>
             </div>
           </section>
 
@@ -202,6 +198,9 @@ const Index = () => {
           <Footer />
         </div>
       </footer>
+
+      {/* ChatBot Component */}
+      <ChatBot />
     </div>
   );
 };
