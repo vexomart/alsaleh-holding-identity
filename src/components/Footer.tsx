@@ -22,7 +22,7 @@ import {
   MessageCircle, 
   FileText, 
   Globe, 
-  Heart, 
+   
   Star, 
   ChevronRight,
   ExternalLink,
@@ -283,7 +283,7 @@ const Footer = () => {
   const careersAndOpportunities = [
     { name: "طلب وظيفة", href: "/careers", icon: Users },
     { name: "فرص التدريب", href: "/training", icon: Award },
-    { name: "العمل التطوعي", href: "/volunteer", icon: Heart },
+    { name: "العمل التطوعي", href: "/volunteer", icon: Users },
     { name: "برنامج التطوير", href: "/development-program", icon: Lightbulb }
   ];
 

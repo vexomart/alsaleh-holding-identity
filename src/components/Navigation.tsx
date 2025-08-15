@@ -26,7 +26,7 @@ import {
   PenTool,
   Palette,
   BookOpen,
-  Heart,
+  Sparkles,
   TrendingUp,
   Package,
   Code
@@ -73,7 +73,7 @@ const Navigation = () => {
     { name: "الشراكات", href: "/partnerships", icon: Users },
     { name: "التسويق بالعمولة", href: "/affiliate-marketing", icon: TrendingUp },
     { name: "طرق الدفع", href: "/payment-methods", icon: Phone },
-    { name: "رحلة الإبداع والتميز", href: "/story", icon: Heart },
+    { name: "رحلة الإبداع والتميز", href: "/story", icon: Sparkles },
     { name: "قيمنا وثقافتنا", href: "/about", icon: TrendingUp },
   ];
 
