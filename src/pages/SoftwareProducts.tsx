@@ -479,28 +479,6 @@ const SoftwareProducts = () => {
       valueColor: "text-green-700 dark:text-green-300",
       emoji: "⚡"
     },
-    {
-      title: "القيمة الإجمالية",
-      value: "49995 ر.س",
-      icon: TrendingUp,
-      color: "from-purple-500 to-purple-600",
-      bgColor: "from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20",
-      borderColor: "border-purple-200 dark:border-purple-800",
-      textColor: "text-purple-600 dark:text-purple-400",
-      valueColor: "text-purple-700 dark:text-purple-300",
-      emoji: "💎"
-    },
-    {
-      title: "متوسط التقييم",
-      value: "4.87",
-      icon: Star,
-      color: "from-orange-500 to-orange-600",
-      bgColor: "from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20",
-      borderColor: "border-orange-200 dark:border-orange-800",
-      textColor: "text-orange-600 dark:text-orange-400",
-      valueColor: "text-orange-700 dark:text-orange-300",
-      emoji: "⭐"
-    }
   ];
 
   const getStatusColor = (status: string) => {
