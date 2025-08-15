@@ -657,44 +657,6 @@
   animation: cardHover 0.3s ease-out forwards;
 }
 
-/* Reduce animations for performance on low-end devices */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-.reduce-animations * {
-  animation-duration: 0.3s !important;
-  transition-duration: 0.2s !important;
-}
-
-/* Performance optimizations */
-.mobile-optimized img {
-  content-visibility: auto;
-  contain-intrinsic-size: 200px 200px;
-}
-
-.mobile-optimized .animate-float,
-.mobile-optimized .animate-float-delayed,
-.mobile-optimized .animate-pulse {
-  animation-duration: 4s;
-}
-
-/* Preload critical fonts */
-@font-face {
-  font-family: 'Cairo';
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Amiri';
-  font-display: swap;
-}
-
 /* Print styles */
 @media print {
   .print-hidden {

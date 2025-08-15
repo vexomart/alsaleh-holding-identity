@@ -1,455 +1,823 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 import { 
-  ArrowRight,
-  Star,
-  Shield,
+  ArrowLeft, 
+  Heart, 
+  Share2, 
+  ShoppingCart, 
+  Star, 
+  Zap, 
+  Shield, 
   Clock,
-  Check,
+  CheckCircle,
+  Gift,
+  Crown,
+  Flame,
+  Sparkles,
+  Users,
   MessageCircle,
   Phone,
-  Share2,
-  Heart,
-  ShoppingCart,
+  Download,
   CreditCard,
-  Zap,
-  Gift,
-  Crown
-} from 'lucide-react';
-import { CardsStoreHeader } from '@/components/cards-store/CardsStoreHeader';
-import { CardsStoreFooter } from '@/components/cards-store/CardsStoreFooter';
+  Package,
+  Truck,
+  RefreshCw,
+  AlertCircle,
+  Info,
+  ThumbsUp,
+  ThumbsDown,
+  Eye,
+  Copy,
+  ExternalLink,
+  Percent,
+  Globe,
+  Headphones,
+  Award,
+  TrendingUp
+} from "lucide-react";
 
 const ProductDetails = () => {
-  const { id } = useParams();
+  const { productId } = useParams();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // Sample card data - in real app, this would come from an API
-  const cardData = {
-    1: {
-      id: 1,
-      title: "بطاقة Netflix - 3 أشهر",
-      price: "89 ريال",
-      originalPrice: "120 ريال",
-      discount: "26% خصم",
-      category: "ترفيه",
-      cardType: "Netflix",
-      image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=800&h=500&fit=crop",
-      rating: 4.8,
-      reviews: 3254,
-      description: "استمتع بأفضل الأفلام والمسلسلات مع اشتراك Netflix لمدة 3 أشهر",
-      longDescription: "احصل على اشتراك Netflix Premium لمدة 3 أشهر كاملة واستمتع بمكتبة ضخمة من الأفلام والمسلسلات الحصرية بجودة عالية تصل إلى 4K. يمكنك مشاهدة المحتوى على أي جهاز وفي أي وقت بدون إعلانات مزعجة.",
-      features: [
-        "أفلام ومسلسلات حصرية عالية الجودة",
-        "جودة مشاهدة تصل إلى 4K Ultra HD",
-        "إمكانية العرض على 4 أجهزة متزامنة",
-        "بدون إعلانات نهائياً",
-        "تحميل المحتوى للمشاهدة بدون إنترنت",
-        "مكتبة ضخمة من المحتوى العربي والعالمي",
-        "إضافة محتوى جديد أسبوعياً",
-        "دعم جميع الأجهزة والمنصات"
-      ],
-      specifications: [
-        { label: "نوع البطاقة", value: "رقمية فورية" },
-        { label: "مدة الصلاحية", value: "سنة واحدة من تاريخ الشراء" },
-        { label: "منطقة الاستخدام", value: "الشرق الأوسط وشمال أفريقيا" },
-        { label: "طريقة التفعيل", value: "كود رقمي عبر الإيميل أو الرسائل" },
-        { label: "المنصات المدعومة", value: "جميع الأجهزة (iOS, Android, Smart TV, PC)" }
-      ],
-      isHot: true,
-      isNew: false,
-      stockStatus: "متوفر",
-      deliveryTime: "فوري - خلال دقائق",
-      warranty: "ضمان استرداد المال خلال 24 ساعة",
-      support: "دعم فني 24/7"
+  // Sample product data - in real app, this would come from API
+  const product = {
+    id: 1,
+    name: "بطاقة PlayStation Store Premium",
+    description: "بطاقة شحن متجر بلايستيشن للألعاب والمحتوى الرقمي الحصري مع أحدث الألعاب والعروض الخاصة",
+    fullDescription: "استمتع بأفضل تجربة ألعاب مع بطاقة PlayStation Store الرسمية. احصل على إمكانية الوصول الفوري إلى آلاف الألعاب والمحتوى الإضافي والاشتراكات الحصرية. تتميز البطاقة بالتفعيل السريع والأمان الكامل مع ضمان الجودة.",
+    category: "الألعاب",
+    icon: "🎮",
+    price: "50 ريال",
+    originalPrice: "65 ريال",
+    rating: 4.9,
+    reviews: 342,
+    reviewsBreakdown: {
+      5: 280,
+      4: 45,
+      3: 12,
+      2: 3,
+      1: 2
     },
-    2: {
-      id: 2,
-      title: "بطاقة Amazon - 100 ريال",
-      price: "94 ريال",
-      originalPrice: "100 ريال",
-      discount: "6% خصم",
-      category: "تسوق إلكتروني",
-      cardType: "Amazon",
-      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=500&fit=crop",
-      rating: 4.9,
-      reviews: 8765,
-      description: "تسوق من أكبر متجر إلكتروني في العالم مع بطاقة Amazon",
-      longDescription: "احصل على بطاقة Amazon بقيمة 100 ريال سعودي واستمتع بتجربة التسوق من أكبر متجر إلكتروني في العالم. يمكنك شراء ملايين المنتجات مع شحن سريع وخدمة عملاء ممتازة.",
-      features: [
-        "شحن مجاني على معظم المنتجات",
-        "ملايين المنتجات المتنوعة",
-        "خدمة عملاء ممتازة 24/7",
-        "إرجاع مجاني خلال 30 يوم",
-        "عروض وخصومات حصرية",
-        "تسليم سريع وآمن",
-        "ضمان جودة المنتجات",
-        "دعم اللغة العربية"
-      ],
-      specifications: [
-        { label: "قيمة البطاقة", value: "100 ريال سعودي" },
-        { label: "نوع البطاقة", value: "رقمية قابلة للاستخدام فوراً" },
-        { label: "مدة الصلاحية", value: "10 سنوات من تاريخ الإصدار" },
-        { label: "منطقة الاستخدام", value: "Amazon.sa والمتاجر المرتبطة" },
-        { label: "طريقة الاستخدام", value: "إدخال الكود في حساب Amazon" }
-      ],
-      isHot: false,
-      isNew: true,
-      stockStatus: "متوفر",
-      deliveryTime: "فوري - خلال دقائق",
-      warranty: "ضمان استرداد المال خلال 48 ساعة",
-      support: "دعم فني متخصص"
-    }
+    images: ["🎮", "🎯", "🏆", "⭐"],
+    gradient: "from-blue-600 via-purple-600 to-indigo-800",
+    isPopular: true,
+    isFeatured: true,
+    isNew: false,
+    discount: "23%",
+    availability: "متوفر فوراً",
+    stock: 250,
+    tags: ["ألعاب", "بلايستيشن", "ترفيه", "حصري", "رقمي"],
+    deliveryTime: "فوري",
+    savings: "15 ريال",
+    validUntil: "31/12/2024",
+    features: [
+      "تفعيل فوري بعد الشراء",
+      "متوافق مع جميع أجهزة PlayStation",
+      "بطاقة رسمية 100% مضمونة",
+      "لا تنتهي صلاحيتها",
+      "إمكانية الهدية للآخرين",
+      "دعم فني متاح على مدار الساعة"
+    ],
+    howToUse: [
+      "قم بشراء البطاقة من متجرنا",
+      "ستصلك رسالة فورية تحتوي على الكود",
+      "ادخل إلى حسابك في PlayStation Store",
+      "اذهب إلى قسم 'استرداد الأكواد'",
+      "أدخل الكود المرسل إليك",
+      "تمتع بالمحتوى فوراً!"
+    ],
+    relatedProducts: [
+      { id: 2, name: "بطاقة Xbox Live", price: "45 ريال", image: "🎮" },
+      { id: 3, name: "بطاقة Steam Wallet", price: "120 ريال", image: "💻" },
+      { id: 4, name: "بطاقة Nintendo eShop", price: "80 ريال", image: "🎯" }
+    ],
+    faqs: [
+      {
+        question: "كم يستغرق وقت التسليم؟",
+        answer: "يتم تسليم البطاقة فوراً عبر الواتساب أو البريد الإلكتروني خلال دقائق من إتمام عملية الشراء."
+      },
+      {
+        question: "هل البطاقة أصلية؟",
+        answer: "نعم، جميع بطاقاتنا أصلية 100% ومشتراة من الموزعين المعتمدين مع ضمان كامل."
+      },
+      {
+        question: "هل يمكن استخدام البطاقة في أي دولة؟",
+        answer: "تعتمد على منطقة حسابك في PlayStation Store. معظم بطاقاتنا صالحة للاستخدام في منطقة الشرق الأوسط."
+      },
+      {
+        question: "ماذا لو لم تعمل البطاقة؟",
+        answer: "في الحالات النادرة التي لا تعمل فيها البطاقة، نوفر استبدال فوري أو استرداد كامل للمبلغ."
+      }
+    ],
+      reviewsList: [
+        {
+          id: 1,
+          user: "أحمد محمد",
+          rating: 5,
+          comment: "خدمة ممتازة وتسليم سريع جداً. البطاقة تعمل بشكل مثالي!",
+          date: "2024-01-15",
+          verified: true
+        },
+      {
+        id: 2,
+        user: "سارة علي",
+        rating: 5,
+        comment: "أفضل متجر للبطاقات الإلكترونية. أسعار ممتازة وخدمة عملاء رائعة.",
+        date: "2024-01-10",
+        verified: true
+      },
+      {
+        id: 3,
+        user: "خالد السعود",
+        rating: 4,
+        comment: "جودة عالية وسعر مناسب. أنصح بالشراء من هنا.",
+        date: "2024-01-08",
+        verified: false
+      }
+    ]
   };
 
-  const card = cardData[Number(id) as keyof typeof cardData];
+  const handlePurchase = () => {
+    const whatsappMessage = `🛍️ طلب شراء بطاقة إلكترونية
 
-  if (!card) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">البطاقة غير موجودة</h1>
-          <Link to="/cards-store">
-            <Button>العودة للمتجر</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+🎫 اسم البطاقة: ${product.name}
+💰 السعر: ${product.price}
+🏷️ السعر الأصلي: ${product.originalPrice}
+🎉 نسبة الخصم: ${product.discount}
+📦 الكمية: ${selectedQuantity}
+💵 المجموع: ${parseInt(product.price.replace(/[^\d]/g, '')) * selectedQuantity} ريال
+📂 الفئة: ${product.category}
+⭐ التقييم: ${product.rating}/5
+🚀 وقت التوصيل: ${product.deliveryTime}
 
-  const handleWhatsAppOrder = () => {
-    const message = `مرحباً! أريد طلب البطاقة التالية من متجر البطاقات الإلكترونية:
+🛒 أرغب في شراء هذه البطاقة الآن!
+📱 متجر البطاقات الإلكترونية الذكي`;
+    
+    const whatsappUrl = `https://wa.me/966500000000?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    toast({
+      title: "🎉 تم اختيار البطاقة!",
+      description: "سيتم تحويلك للواتساب لإتمام عملية الشراء",
+    });
+    
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+    }, 1500);
+  };
 
-🎯 *${card.title}*
-💰 السعر: ${card.price}
-📦 النوع: ${card.cardType}
-⭐ التقييم: ${card.rating}/5
-
-📋 *المواصفات التفصيلية:*
-${card.specifications.map(spec => `• ${spec.label}: ${spec.value}`).join('\n')}
-
-🎁 *أهم المميزات:*
-${card.features.slice(0, 5).map(feature => `• ${feature}`).join('\n')}
-
-🚚 وقت التسليم: ${card.deliveryTime}
-✅ حالة التوفر: ${card.stockStatus}
-🛡️ الضمان: ${card.warranty}
-
-أرجو التواصل معي لإتمام عملية الطلب والدفع.`;
-
-    const whatsappUrl = `https://wa.me/9660555812567?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    toast({
+      title: isFavorite ? "💔 تم الإزالة من المفضلة" : "❤️ تم الإضافة للمفضلة",
+      description: isFavorite ? "تم إزالة البطاقة من قائمة المفضلة" : "تم حفظ البطاقة في المفضلة",
+    });
   };
 
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: card.title,
-        text: card.description,
-        url: window.location.href,
+        title: product.name,
+        text: `اكتشف ${product.name} بسعر خاص ${product.price}`,
+        url: window.location.href
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      // You can add a toast notification here
+      toast({
+        title: "📋 تم نسخ الرابط!",
+        description: "تم نسخ رابط المنتج إلى الحافظة",
+      });
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900" dir="rtl">
-      <CardsStoreHeader />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       
       {/* Breadcrumb */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <nav className="flex items-center space-x-2 space-x-reverse text-sm text-gray-500 dark:text-gray-400">
-            <Link to="/" className="hover:text-purple-600 dark:hover:text-purple-400">الرئيسية</Link>
-            <ArrowRight className="h-4 w-4" />
-            <Link to="/cards-store" className="hover:text-purple-600 dark:hover:text-purple-400">متجر البطاقات</Link>
-            <ArrowRight className="h-4 w-4" />
-            <span className="text-gray-900 dark:text-white">{card.title}</span>
-          </nav>
+      <motion.section 
+        className="py-6 border-b border-slate-200 dark:border-slate-700"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 mb-4">
+            <Link to="/cards-store" className="hover:text-primary transition-colors">
+              الرئيسية
+            </Link>
+            <span>/</span>
+            <Link to="/cards-store" className="hover:text-primary transition-colors">
+              المتجر
+            </Link>
+            <span>/</span>
+            <span className="text-slate-900 dark:text-white font-medium">{product.name}</span>
+          </div>
+          
+          <Button
+            variant="outline"
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            العودة
+          </Button>
         </div>
-      </div>
+      </motion.section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image Section */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-4"
-          >
-            <div className="relative">
-              <img
-                src={card.image}
-                alt={card.title}
-                className="w-full h-96 object-cover rounded-xl shadow-2xl"
-              />
-              {card.isHot && (
-                <Badge className="absolute top-4 right-4 bg-red-500 text-white">
-                  🔥 الأكثر طلباً
-                </Badge>
-              )}
-              {card.isNew && (
-                <Badge className="absolute top-4 left-4 bg-green-500 text-white">
-                  ✨ جديد
-                </Badge>
-              )}
-              {card.discount && (
-                <div className="absolute bottom-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                  {card.discount}
-                </div>
-              )}
-            </div>
+      {/* Product Details */}
+      <motion.section 
+        className="py-12"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             
-            {/* Action Buttons */}
-            <div className="flex gap-3">
-              <Button
-                onClick={handleShare}
-                variant="outline"
-                className="flex-1"
-              >
-                <Share2 className="h-4 w-4 mr-2" />
-                مشاركة
-              </Button>
-              <Button
-                variant="outline"
-                className="flex-1"
-              >
-                <Heart className="h-4 w-4 mr-2" />
-                إضافة للمفضلة
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* Details Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-6"
-          >
-            {/* Header */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="text-purple-600 border-purple-600">
-                  {card.category}
-                </Badge>
-                <Badge variant="outline" className="text-green-600 border-green-600">
-                  {card.stockStatus}
-                </Badge>
-              </div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
-                {card.title}
-              </h1>
-              
-              {/* Rating */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-5 w-5 ${
-                        i < Math.floor(card.rating)
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
+            {/* Product Images */}
+            <motion.div variants={itemVariants} className="space-y-6">
+              {/* Main Image */}
+              <div className={`relative bg-gradient-to-r ${product.gradient} rounded-3xl p-12 text-center text-white overflow-hidden group`}>
+                <div className="absolute inset-0 bg-grid-white/[0.1]"></div>
+                
+                {/* Badges */}
+                <div className="absolute top-6 left-6 flex flex-col gap-2 z-10">
+                  {product.isNew && (
+                    <Badge className="bg-green-500 text-white border-0">
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      جديد
+                    </Badge>
+                  )}
+                  {product.isPopular && (
+                    <Badge className="bg-red-500 text-white border-0">
+                      <Flame className="w-3 h-3 mr-1" />
+                      شائع
+                    </Badge>
+                  )}
+                  {product.isFeatured && (
+                    <Badge className="bg-yellow-500 text-white border-0">
+                      <Crown className="w-3 h-3 mr-1" />
+                      مميز
+                    </Badge>
+                  )}
                 </div>
-                <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {card.rating}
-                </span>
-                <span className="text-gray-500 dark:text-gray-400">
-                  ({card.reviews.toLocaleString()} تقييم)
-                </span>
+
+                {/* Discount Badge */}
+                {product.discount && (
+                  <div className="absolute top-6 right-6 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg z-10">
+                    -{product.discount}
+                  </div>
+                )}
+
+                <div className="relative z-10">
+                  <div className="text-8xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                    {product.images[activeImageIndex]}
+                  </div>
+                  <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+                  <Badge variant="secondary" className="bg-white/20 text-white border-0 text-lg px-4 py-2">
+                    {product.category}
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Thumbnail Images */}
+              <div className="flex gap-4 justify-center">
+                {product.images.map((image, index) => (
+                  <motion.button
+                    key={index}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setActiveImageIndex(index)}
+                    className={`w-16 h-16 rounded-xl border-2 flex items-center justify-center text-2xl transition-all ${
+                      activeImageIndex === index 
+                        ? 'border-primary bg-primary/10' 
+                        : 'border-slate-200 dark:border-slate-700 hover:border-primary/50'
+                    }`}
+                  >
+                    {image}
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Product Info */}
+            <motion.div variants={itemVariants} className="space-y-8">
+              
+              {/* Title and Rating */}
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+                  {product.name}
+                </h1>
+                
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-5 h-5 ${
+                            i < Math.floor(product.rating)
+                              ? "text-yellow-500 fill-yellow-500"
+                              : "text-slate-300 dark:text-slate-600"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-lg font-semibold text-slate-900 dark:text-white">
+                      {product.rating}
+                    </span>
+                    <span className="text-slate-600 dark:text-slate-400">
+                      ({product.reviews} تقييم)
+                    </span>
+                  </div>
+                  
+                  <Badge variant="outline" className="text-green-600 border-green-600">
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    {product.availability}
+                  </Badge>
+                </div>
               </div>
 
               {/* Price */}
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-4xl font-bold text-purple-600">
-                  {card.price}
-                </span>
-                {card.originalPrice && (
-                  <span className="text-xl text-gray-500 line-through">
-                    {card.originalPrice}
+              <div className="border-2 border-primary/20 rounded-2xl p-6 bg-primary/5">
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-4xl font-bold text-slate-900 dark:text-white">
+                    {product.price}
                   </span>
+                  {product.originalPrice && (
+                    <span className="text-2xl text-slate-400 line-through">
+                      {product.originalPrice}
+                    </span>
+                  )}
+                  {product.discount && (
+                    <Badge className="bg-red-500 text-white text-lg px-3 py-1">
+                      توفير {product.discount}
+                    </Badge>
+                  )}
+                </div>
+                
+                {product.savings && (
+                  <p className="text-lg text-green-600 dark:text-green-400 font-semibold flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5" />
+                    توفر {product.savings} من السعر الأصلي!
+                  </p>
                 )}
               </div>
 
-              <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                {card.longDescription}
-              </p>
-            </div>
+              {/* Quantity and Actions */}
+              <div className="space-y-6">
+                {/* Quantity */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    الكمية:
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-xl">
+                      <button
+                        onClick={() => setSelectedQuantity(Math.max(1, selectedQuantity - 1))}
+                        className="p-3 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        -
+                      </button>
+                      <span className="px-4 py-3 min-w-[60px] text-center font-semibold">
+                        {selectedQuantity}
+                      </span>
+                      <button
+                        onClick={() => setSelectedQuantity(selectedQuantity + 1)}
+                        className="p-3 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <span className="text-sm text-slate-600 dark:text-slate-400">
+                      متوفر {product.stock} قطعة
+                    </span>
+                  </div>
+                </div>
 
-            {/* Key Features */}
+                {/* Action Buttons */}
+                <div className="flex gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handlePurchase}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    شراء الآن - {parseInt(product.price.replace(/[^\d]/g, '')) * selectedQuantity} ريال
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={toggleFavorite}
+                    className="p-4 border-2 border-slate-200 dark:border-slate-700 rounded-2xl hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                  >
+                    <Heart className={`w-6 h-6 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-slate-600 dark:text-slate-400'}`} />
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={handleShare}
+                    className="p-4 border-2 border-slate-200 dark:border-slate-700 rounded-2xl hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+                  >
+                    <Share2 className="w-6 h-6 text-slate-600 dark:text-slate-400 hover:text-blue-500" />
+                  </motion.button>
+                </div>
+              </div>
+
+              {/* Quick Features */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl">
+                  <Zap className="w-6 h-6 text-green-600" />
+                  <div>
+                    <div className="font-semibold text-green-900 dark:text-green-100">توصيل فوري</div>
+                    <div className="text-sm text-green-700 dark:text-green-300">{product.deliveryTime}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                  <Shield className="w-6 h-6 text-blue-600" />
+                  <div>
+                    <div className="font-semibold text-blue-900 dark:text-blue-100">ضمان أصلي</div>
+                    <div className="text-sm text-blue-700 dark:text-blue-300">100% مضمون</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+                  <Headphones className="w-6 h-6 text-purple-600" />
+                  <div>
+                    <div className="font-semibold text-purple-900 dark:text-purple-100">دعم 24/7</div>
+                    <div className="text-sm text-purple-700 dark:text-purple-300">متاح دائماً</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
+                  <Clock className="w-6 h-6 text-orange-600" />
+                  <div>
+                    <div className="font-semibold text-orange-900 dark:text-orange-100">صالح حتى</div>
+                    <div className="text-sm text-orange-700 dark:text-orange-300">{product.validUntil}</div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Product Tabs */}
+          <motion.div variants={itemVariants}>
+            <Tabs defaultValue="description" className="w-full">
+              <TabsList className="grid w-full grid-cols-4 mb-8">
+                <TabsTrigger value="description">الوصف</TabsTrigger>
+                <TabsTrigger value="features">المميزات</TabsTrigger>
+                <TabsTrigger value="howto">طريقة الاستخدام</TabsTrigger>
+                <TabsTrigger value="reviews">التقييمات</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="description" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Info className="w-5 h-5" />
+                      وصف المنتج
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-lg leading-relaxed text-slate-700 dark:text-slate-300 mb-6">
+                      {product.fullDescription}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {product.tags.map((tag, index) => (
+                        <Badge key={index} variant="outline" className="text-sm">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    
+                    <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
+                      <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
+                        <Award className="w-5 h-5" />
+                        لماذا تختار بطاقاتنا؟
+                      </h3>
+                      <ul className="space-y-2 text-blue-800 dark:text-blue-200">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4" />
+                          بطاقات أصلية مضمونة 100%
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4" />
+                          تسليم فوري خلال دقائق
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4" />
+                          أسعار تنافسية وعروض حصرية
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4" />
+                          دعم فني على مدار الساعة
+                        </li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="features" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Sparkles className="w-5 h-5" />
+                      المميزات الرئيسية
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {product.features.map((feature, index) => (
+                        <div key={index} className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                          <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="howto" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Package className="w-5 h-5" />
+                      خطوات الاستخدام
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {product.howToUse.map((step, index) => (
+                        <div key={index} className="flex items-start gap-4">
+                          <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
+                            {index + 1}
+                          </div>
+                          <div className="flex-1 pt-1">
+                            <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                              {step}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-8 p-6 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
+                      <h3 className="font-bold text-yellow-900 dark:text-yellow-100 mb-3 flex items-center gap-2">
+                        <AlertCircle className="w-5 h-5" />
+                        ملاحظة مهمة
+                      </h3>
+                      <p className="text-yellow-800 dark:text-yellow-200">
+                        تأكد من أن حسابك في PlayStation Store يتطابق مع منطقة البطاقة. 
+                        إذا واجهت أي مشكلة، تواصل معنا فوراً وسنقوم بحلها خلال دقائق.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="reviews" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Star className="w-5 h-5" />
+                      تقييمات العملاء ({product.reviews} تقييم)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {/* Rating Summary */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                      <div className="text-center">
+                        <div className="text-5xl font-bold text-slate-900 dark:text-white mb-2">
+                          {product.rating}
+                        </div>
+                        <div className="flex items-center justify-center gap-1 mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-6 h-6 ${
+                                i < Math.floor(product.rating)
+                                  ? "text-yellow-500 fill-yellow-500"
+                                  : "text-slate-300 dark:text-slate-600"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <p className="text-slate-600 dark:text-slate-400">
+                          من أصل {product.reviews} تقييم
+                        </p>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        {[5, 4, 3, 2, 1].map((stars) => (
+                          <div key={stars} className="flex items-center gap-3">
+                            <span className="text-sm w-12">{stars} نجوم</span>
+                            <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                              <div 
+                                className="bg-yellow-500 h-2 rounded-full"
+                                style={{ 
+                                  width: `${(product.reviewsBreakdown[stars as keyof typeof product.reviewsBreakdown] / product.reviews) * 100}%` 
+                                }}
+                              ></div>
+                            </div>
+                            <span className="text-sm w-8">
+                              {product.reviewsBreakdown[stars as keyof typeof product.reviewsBreakdown]}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Individual Reviews */}
+                    <div className="space-y-6">
+                      {product.reviewsList.map((review) => (
+                        <div key={review.id} className="border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                                {review.user.charAt(0)}
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-slate-900 dark:text-white">
+                                    {review.user}
+                                  </span>
+                                  {review.verified && (
+                                    <Badge variant="outline" className="text-xs text-green-600 border-green-600">
+                                      <CheckCircle className="w-3 h-3 mr-1" />
+                                      مُتحقق
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <div className="flex items-center gap-1">
+                                    {[...Array(5)].map((_, i) => (
+                                      <Star
+                                        key={i}
+                                        className={`w-4 h-4 ${
+                                          i < review.rating
+                                            ? "text-yellow-500 fill-yellow-500"
+                                            : "text-slate-300 dark:text-slate-600"
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                  <span className="text-sm text-slate-500 dark:text-slate-400">
+                                    {review.date}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                            {review.comment}
+                          </p>
+                          
+                          <div className="flex items-center gap-4 mt-4">
+                            <button className="flex items-center gap-2 text-sm text-slate-500 hover:text-green-600 transition-colors">
+                              <ThumbsUp className="w-4 h-4" />
+                              مفيد
+                            </button>
+                            <button className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-600 transition-colors">
+                              <ThumbsDown className="w-4 h-4" />
+                              غير مفيد
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </motion.div>
+
+          {/* FAQ Section */}
+          <motion.div variants={itemVariants} className="mt-16">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Crown className="h-5 w-5 text-purple-600" />
-                  المميزات الرئيسية
+                  <MessageCircle className="w-5 h-5" />
+                  الأسئلة الشائعة
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {card.features.slice(0, 6).map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {feature}
-                      </span>
+                <div className="space-y-4">
+                  {product.faqs.map((faq, index) => (
+                    <div key={index} className="border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+                      <h3 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                        <MessageCircle className="w-4 h-4 text-blue-500" />
+                        {faq.question}
+                      </h3>
+                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                        {faq.answer}
+                      </p>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
+          </motion.div>
 
-            {/* Quick Info */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Clock className="h-5 w-5 text-blue-600" />
-                  <span className="font-semibold text-blue-900 dark:text-blue-100">وقت التسليم</span>
-                </div>
-                <p className="text-blue-700 dark:text-blue-200">{card.deliveryTime}</p>
-              </div>
-              <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="h-5 w-5 text-green-600" />
-                  <span className="font-semibold text-green-900 dark:text-green-100">الضمان</span>
-                </div>
-                <p className="text-green-700 dark:text-green-200">{card.warranty}</p>
-              </div>
+          {/* Related Products */}
+          <motion.div variants={itemVariants} className="mt-16">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 text-center">
+              منتجات ذات صلة 🔗
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {product.relatedProducts.map((relatedProduct) => (
+                <motion.div
+                  key={relatedProduct.id}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-lg border border-white/20 dark:border-slate-700/50 text-center group cursor-pointer"
+                  onClick={() => navigate(`/cards-store/product/${relatedProduct.id}`)}
+                >
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
+                    {relatedProduct.image}
+                  </div>
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-2">
+                    {relatedProduct.name}
+                  </h3>
+                  <p className="text-lg font-semibold text-primary">
+                    {relatedProduct.price}
+                  </p>
+                </motion.div>
+              ))}
             </div>
+          </motion.div>
 
-            {/* Order Buttons */}
-            <div className="space-y-3">
-              <Button
-                onClick={handleWhatsAppOrder}
-                className="w-full bg-green-500 hover:bg-green-600 text-white py-4 text-lg font-semibold rounded-xl"
-                size="lg"
-              >
-                <MessageCircle className="h-5 w-5 mr-2" />
-                اطلب عبر الواتساب
-              </Button>
+          {/* Contact Support */}
+          <motion.div variants={itemVariants} className="mt-16">
+            <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-3xl p-8 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                هل تحتاج مساعدة؟ 🤝
+              </h2>
+              <p className="text-lg mb-6 max-w-2xl mx-auto">
+                فريق الدعم الفني متاح على مدار الساعة لمساعدتك في أي استفسار
+              </p>
               
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  onClick={() => window.open('tel:+9660555812567')}
-                  variant="outline"
-                  className="py-3"
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.open('https://wa.me/966500000000', '_blank')}
+                  className="px-6 py-3 bg-white text-blue-600 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
                 >
-                  <Phone className="h-4 w-4 mr-2" />
-                  اتصل بنا
-                </Button>
-                <Button
-                  variant="outline"
-                  className="py-3"
+                  <MessageCircle className="w-5 h-5" />
+                  واتساب
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.open('tel:+966500000000')}
+                  className="px-6 py-3 bg-transparent border-2 border-white text-white font-bold rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-300 flex items-center justify-center gap-2"
                 >
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  دفع فوري
-                </Button>
+                  <Phone className="w-5 h-5" />
+                  اتصال مباشر
+                </motion.button>
               </div>
             </div>
           </motion.div>
         </div>
-
-        {/* Specifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12"
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-purple-600" />
-                المواصفات التفصيلية
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {card.specifications.map((spec, index) => (
-                  <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-3">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                      {spec.label}
-                    </dt>
-                    <dd className="text-base text-gray-900 dark:text-white">
-                      {spec.value}
-                    </dd>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* All Features */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-8"
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="h-5 w-5 text-purple-600" />
-                جميع المميزات
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {card.features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700 dark:text-gray-300">
-                      {feature}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Support Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-8 text-center bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 p-8 rounded-xl"
-        >
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            نحن هنا لخدمتك
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            فريق دعم متخصص متاح 24/7 لمساعدتك في أي استفسار
-          </p>
-          <div className="flex justify-center gap-4">
-            <Button
-              onClick={handleWhatsAppOrder}
-              className="bg-green-500 hover:bg-green-600 text-white"
-            >
-              <MessageCircle className="h-4 w-4 mr-2" />
-              واتساب
-            </Button>
-            <Button
-              onClick={() => window.open('tel:+966555812567')}
-              variant="outline"
-            >
-              <Phone className="h-4 w-4 mr-2" />
-              اتصال مباشر
-            </Button>
-          </div>
-        </motion.div>
-      </div>
-
-      <CardsStoreFooter />
+      </motion.section>
     </div>
   );
 };
