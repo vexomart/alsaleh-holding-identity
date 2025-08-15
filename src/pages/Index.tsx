@@ -95,8 +95,8 @@ const Index = () => {
                     <CardContent className="p-8 text-center relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="relative z-10">
-                        <div className="text-3xl font-bold gradient-text mb-3">متاجر إلكترونية</div>
-                        <div className="text-primary font-semibold text-lg">خصم حتى 61%</div>
+                        <div className="text-3xl font-bold gradient-text mb-3">متجر البطاقات الرقمية</div>
+                        <div className="text-primary font-semibold text-lg">تصميم جديد ومتطور</div>
                         <div className="w-12 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
                       </div>
                     </CardContent>
@@ -114,16 +114,30 @@ const Index = () => {
                   </Card>
                 </div>
                 
-                <Link to="/current-offers">
-                  <Button 
-                    size="lg" 
-                    className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
-                  >
-                    <Gift className="w-6 h-6 ml-2" />
-                    شاهد جميع العروض الحالية
-                    <ArrowRight className="w-6 h-6 mr-2" />
-                  </Button>
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to="/current-offers">
+                    <Button 
+                      size="lg" 
+                      className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
+                    >
+                      <Gift className="w-6 h-6 ml-2" />
+                      شاهد جميع العروض الحالية
+                      <ArrowRight className="w-6 h-6 mr-2" />
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/electronic-cards-store">
+                    <Button 
+                      size="lg" 
+                      variant="outline"
+                      className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950 font-bold px-12 py-6 text-xl shadow-lg hover:shadow-xl transition-all duration-300 hover-scale"
+                    >
+                      <Star className="w-6 h-6 ml-2" />
+                      متجر البطاقات الجديد
+                      <ArrowRight className="w-6 h-6 mr-2" />
+                    </Button>
+                  </Link>
+                </div>
                 
                 <div className="mt-6 text-muted-foreground">
                   <div className="inline-flex items-center bg-background/50 backdrop-blur-sm px-6 py-3 rounded-full border border-border/50">
