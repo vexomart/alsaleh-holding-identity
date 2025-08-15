@@ -59,7 +59,7 @@ ${formData.message || 'لا توجد رسالة محددة'}
 
 أرجو التواصل معي في أقرب وقت ممكن.`;
 
-    const whatsappUrl = `https://wa.me/966555812567?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/9660555812567?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     setIsOpen(false);
     
@@ -77,7 +77,7 @@ ${formData.message || 'لا توجد رسالة محددة'}
 
 أرجو التواصل معي لمزيد من المعلومات.`;
 
-    const whatsappUrl = `https://wa.me/966555812567?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/9660555812567?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 

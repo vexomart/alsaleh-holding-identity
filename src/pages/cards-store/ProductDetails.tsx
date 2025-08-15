@@ -139,7 +139,7 @@ ${card.features.slice(0, 5).map(feature => `• ${feature}`).join('\n')}
 
 أرجو التواصل معي لإتمام عملية الطلب والدفع.`;
 
-    const whatsappUrl = `https://wa.me/966555812567?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/9660555812567?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -338,7 +338,7 @@ ${card.features.slice(0, 5).map(feature => `• ${feature}`).join('\n')}
               
               <div className="grid grid-cols-2 gap-3">
                 <Button
-                  onClick={() => window.open('tel:+966555812567')}
+                  onClick={() => window.open('tel:+9660555812567')}
                   variant="outline"
                   className="py-3"
                 >
