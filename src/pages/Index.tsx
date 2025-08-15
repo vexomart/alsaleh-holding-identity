@@ -10,7 +10,7 @@ import ContactSection from "@/components/ContactSection";
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
-import WhatsAppContact from "@/components/WhatsAppContact";
+import { SmartCardsContact } from "@/components/WhatsAppContact";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import digitalServicesBanner from "@/assets/digital-services-banner.jpg";
@@ -202,11 +202,11 @@ const Index = () => {
       {/* ChatBot Component */}
       <ChatBot />
       
-      {/* WhatsApp Contact - Floating */}
-      <WhatsAppContact 
+      {/* Smart Cards Contact - Floating */}
+      <SmartCardsContact 
         showAsButton={false}
-        pageTitle="الصفحة الرئيسية - شركة علي صالح الشهري القابضة"
-        defaultMessage="مرحباً! أريد الاستفسار عن خدماتكم المتنوعة."
+        pageTitle="الصفحة الرئيسية - متجر البطاقات الإلكترونية الذكي"
+        defaultMessage="مرحباً! أريد الاستفسار عن خدماتكم وبطاقاتكم الإلكترونية المتنوعة."
       />
     </div>
   );
