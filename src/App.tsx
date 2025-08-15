@@ -12,7 +12,22 @@ import Index from "./pages/Index";
 // Lazy load components
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
+const Support = lazy(() => import("./pages/Support"));
+const Team = lazy(() => import("./pages/Team"));
+const Vision = lazy(() => import("./pages/Vision"));
+const Story = lazy(() => import("./pages/Story"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
+const CurrentOffers = lazy(() => import("./pages/CurrentOffers"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const BusinessServices = lazy(() => import("./pages/BusinessServices"));
+const DesignSolutions = lazy(() => import("./pages/DesignSolutions"));
+const TechInvestment = lazy(() => import("./pages/TechInvestment"));
+const Development = lazy(() => import("./pages/Development"));
+const Training = lazy(() => import("./pages/Training"));
+const Careers = lazy(() => import("./pages/Careers"));
+const AIIntelligence = lazy(() => import("./pages/AIIntelligence"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading component
@@ -46,7 +61,22 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
                 <Route path="/contact" element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
+                <Route path="/support" element={<Suspense fallback={<PageLoader />}><Support /></Suspense>} />
+                <Route path="/team" element={<Suspense fallback={<PageLoader />}><Team /></Suspense>} />
+                <Route path="/vision" element={<Suspense fallback={<PageLoader />}><Vision /></Suspense>} />
+                <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />
+                <Route path="/privacy" element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
+                <Route path="/terms" element={<Suspense fallback={<PageLoader />}><Terms /></Suspense>} />
                 <Route path="/software-products" element={<Suspense fallback={<PageLoader />}><SoftwareProducts /></Suspense>} />
+                <Route path="/current-offers" element={<Suspense fallback={<PageLoader />}><CurrentOffers /></Suspense>} />
+                <Route path="/faq" element={<Suspense fallback={<PageLoader />}><FAQ /></Suspense>} />
+                <Route path="/business-services" element={<Suspense fallback={<PageLoader />}><BusinessServices /></Suspense>} />
+                <Route path="/design-solutions" element={<Suspense fallback={<PageLoader />}><DesignSolutions /></Suspense>} />
+                <Route path="/tech-investment" element={<Suspense fallback={<PageLoader />}><TechInvestment /></Suspense>} />
+                <Route path="/development" element={<Suspense fallback={<PageLoader />}><Development /></Suspense>} />
+                <Route path="/training" element={<Suspense fallback={<PageLoader />}><Training /></Suspense>} />
+                <Route path="/careers" element={<Suspense fallback={<PageLoader />}><Careers /></Suspense>} />
+                <Route path="/ai-intelligence" element={<Suspense fallback={<PageLoader />}><AIIntelligence /></Suspense>} />
                 <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFound /></Suspense>} />
               </Routes>
             </div>
