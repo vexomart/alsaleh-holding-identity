@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 // Remove direct imports, they are now lazy loaded
 
 import Footer from "@/components/Footer";
-import ReviewSystem from "@/components/ReviewSystem";
 import ChatBot from "@/components/ChatBot";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -270,23 +269,6 @@ const Index = () => {
               }>
                 <CommitmentsSection />
               </Suspense>
-            </div>
-          </section>
-
-          {/* Review System Section - Corporate Professional */}
-          <section id="reviews" className="relative py-20 lg:py-32 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-background to-primary/10"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_40%,hsl(var(--accent))_0%,transparent_50%),radial-gradient(ellipse_at_40%_60%,hsl(var(--primary))_0%,transparent_50%)] opacity-20"></div>
-            
-            {/* Corporate Background Elements */}
-            <div className="absolute top-20 left-20 w-80 h-80 bg-gradient-to-br from-accent/12 to-primary/8 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-20 right-20 w-64 h-64 bg-gradient-to-tl from-primary/15 to-secondary/10 rounded-full blur-2xl animate-float-delayed"></div>
-            
-            {/* Professional Grid Pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:100px_100px] opacity-20"></div>
-            
-            <div className="relative z-10">
-              <ReviewSystem />
             </div>
           </section>
 

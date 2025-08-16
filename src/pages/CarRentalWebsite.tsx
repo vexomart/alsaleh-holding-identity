@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookingTracker from "@/components/BookingTracker";
 import InteractiveMap from "@/components/InteractiveMap";
-import ReviewSystem from "@/components/ReviewSystem";
 import BackButton from "@/components/ui/back-button";
 import { 
   Car,
@@ -129,7 +128,9 @@ const CarRentalWebsite = () => {
                   اقرأ تجارب العملاء الحقيقية وشاركنا تجربتك معنا
                 </p>
               </div>
-              <ReviewSystem />
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">نظام التقييمات غير متوفر حاليًا</p>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
