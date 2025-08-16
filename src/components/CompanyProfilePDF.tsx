@@ -1,242 +1,415 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import { Download, Loader2 } from "lucide-react";
-import { toast } from "sonner";
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font, Image } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font } from "@react-pdf/renderer";
 
-// Register Arabic font - Using TTF format for better compatibility
+// Register high-quality Arabic fonts
 Font.register({
-  family: 'NotoSansArabic',
-  src: 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyvu3CBFQLaig.ttf',
-  fontStyle: 'normal',
+  family: 'Cairo',
+  src: 'https://fonts.gstatic.com/s/cairo/v21/SLXLc1nY6Hkvalr-ag6hWXFceSI.ttf',
   fontWeight: 'normal',
 });
 
 Font.register({
-  family: 'NotoSansArabic',
-  src: 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyvu3CBFQLaig.ttf',
-  fontStyle: 'normal',
+  family: 'Cairo',
+  src: 'https://fonts.gstatic.com/s/cairo/v21/SLXKc1nY6HkvalrXwg-hWn9ceSJyYts.ttf',
   fontWeight: 'bold',
 });
 
-// Styles for the PDF
+// Professional PDF Styles
 const styles = StyleSheet.create({
+  // Base page styles
   page: {
-    fontFamily: 'NotoSansArabic',
-    fontSize: 12,
-    paddingTop: 35,
-    paddingBottom: 65,
-    paddingHorizontal: 35,
+    fontFamily: 'Cairo',
+    fontSize: 13,
+    paddingTop: 50,
+    paddingBottom: 80,
+    paddingHorizontal: 40,
     backgroundColor: '#ffffff',
+    position: 'relative',
   },
-  coverPage: {
+  
+  // Header for each page
+  pageHeader: {
+    position: 'absolute',
+    top: 15,
+    left: 40,
+    right: 40,
+    height: 30,
     backgroundColor: '#1e3a8a',
+    borderRadius: 6,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+
+  headerText: {
     color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'Cairo',
+  },
+  
+  // Footer for each page  
+  pageFooter: {
+    position: 'absolute',
+    bottom: 15,
+    left: 40,
+    right: 40,
+    height: 45,
+    backgroundColor: '#f8fafc',
+    borderRadius: 6,
+    borderTop: '3px solid #1e3a8a',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
+    paddingVertical: 8,
+  },
+
+  footerText: {
+    fontSize: 10,
+    color: '#64748b',
+    textAlign: 'center',
+    fontFamily: 'Cairo',
+  },
+  
+  // Cover page styles
+  coverPage: {
+    fontFamily: 'Cairo',
+    backgroundColor: '#1e3a8a',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 80,
+    paddingBottom: 80,
+    paddingHorizontal: 60,
     position: 'relative',
   },
-  backgroundPattern: {
+  
+  // Decorative background elements
+  backgroundDecoration: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    opacity: 0.1,
+    width: 30,
+    height: 30,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 15,
   },
+  
+  // Content styles
+  contentContainer: {
+    marginTop: 60,
+    marginBottom: 40,
+    paddingHorizontal: 0,
+  },
+  
+  mainTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 12,
+    color: 'white',
+    fontFamily: 'Cairo',
+  },
+  
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 8,
+    color: '#e2e8f0',
+    fontFamily: 'Cairo',
+  },
+  
+  description: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 15,
+    color: '#cbd5e1',
+    fontFamily: 'Cairo',
+  },
+  
+  slogan: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 40,
+    color: '#fbbf24',
+    fontFamily: 'Cairo',
+  },
+  
   logoContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: 'white',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-  },
-  mainTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-    color: 'white',
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 5,
-    color: 'white',
-  },
-  slogan: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
     marginBottom: 30,
-    color: '#ffd700',
+    boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
   },
+
+  logoText: {
+    fontSize: 24, 
+    color: '#1e3a8a', 
+    fontWeight: 'bold',
+    fontFamily: 'Cairo',
+  },
+  
+  // Statistics section
   statsContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
-    marginTop: 40,
+    marginTop: 50,
+    paddingHorizontal: 20,
   },
+  
   statBox: {
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    padding: 15,
-    borderRadius: 8,
-    minWidth: 80,
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    padding: 20,
+    borderRadius: 12,
+    width: '22%',
     textAlign: 'center',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
   },
+  
   statValue: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#1e3a8a',
+    marginBottom: 5,
+    fontFamily: 'Cairo',
   },
+  
   statLabel: {
     fontSize: 12,
-    color: '#1e3a8a',
-    marginTop: 5,
+    color: '#64748b',
+    fontFamily: 'Cairo',
   },
+  
+  // Section styles
   section: {
-    margin: 10,
-    padding: 10,
+    marginBottom: 30,
+    paddingHorizontal: 0,
   },
-  title: {
-    fontSize: 20,
+  
+  sectionTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 15,
+    marginBottom: 20,
     textAlign: 'center',
     color: '#1e3a8a',
+    borderBottom: '3px solid #1e3a8a',
+    paddingBottom: 10,
+    fontFamily: 'Cairo',
   },
+  
   text: {
-    fontSize: 12,
-    lineHeight: 1.5,
+    fontSize: 13,
+    lineHeight: 1.8,
     textAlign: 'right',
-    marginBottom: 10,
+    marginBottom: 15,
+    color: '#374151',
+    fontFamily: 'Cairo',
   },
+  
+  // Service boxes
   serviceBox: {
     backgroundColor: '#f8fafc',
-    padding: 15,
-    marginBottom: 15,
-    borderRadius: 8,
-    border: '2px solid #e2e8f0',
+    padding: 20,
+    marginBottom: 18,
+    borderRadius: 12,
+    borderLeft: '5px solid #1e3a8a',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
   },
+  
   serviceTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#1e3a8a',
-    marginBottom: 8,
+    marginBottom: 12,
     textAlign: 'right',
+    fontFamily: 'Cairo',
   },
+  
   serviceItem: {
-    fontSize: 11,
-    marginBottom: 4,
+    fontSize: 12,
+    marginBottom: 6,
     textAlign: 'right',
-    color: '#374151',
+    color: '#4b5563',
+    paddingRight: 10,
+    fontFamily: 'Cairo',
   },
-  partnerContainer: {
+  
+  // Partners section
+  partnersSection: {
+    marginTop: 25,
+    marginBottom: 25,
+  },
+  
+  partnersTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#1e3a8a',
+    fontFamily: 'Cairo',
+  },
+  
+  partnerGrid: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20,
-    marginBottom: 20,
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: 15,
   },
+  
   partnerBox: {
-    padding: 10,
-    backgroundColor: '#f1f5f9',
-    borderRadius: 8,
-    minWidth: 60,
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 10,
+    width: '22%',
     textAlign: 'center',
+    border: '2px solid #e2e8f0',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
   },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 35,
-    right: 35,
-    textAlign: 'center',
-    fontSize: 10,
-    color: '#6b7280',
-  },
-  digitalSignature: {
-    position: 'absolute',
-    bottom: 80,
-    right: 50,
-    textAlign: 'center',
-  },
-  signatureCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    border: '3px solid #1e3a8a',
-    backgroundColor: 'rgba(30, 58, 138, 0.1)',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-  },
-  signatureText: {
-    fontSize: 8,
-    textAlign: 'center',
-    color: '#1e3a8a',
+  
+  partnerText: {
+    fontSize: 14,
     fontWeight: 'bold',
+    fontFamily: 'Cairo',
   },
+  
+  // Vision & Mission boxes
   visionMissionContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 25,
+    gap: 20,
   },
+  
   visionBox: {
     backgroundColor: '#1e3a8a',
     color: 'white',
-    padding: 15,
-    borderRadius: 8,
+    padding: 20,
+    borderRadius: 12,
     width: '48%',
+    boxShadow: '0 4px 12px rgba(30, 58, 138, 0.3)',
   },
+  
   missionBox: {
     backgroundColor: '#059669',
     color: 'white',
-    padding: 15,
-    borderRadius: 8,
+    padding: 20,
+    borderRadius: 12,
     width: '48%',
+    boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)',
   },
+  
   boxTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 12,
     textAlign: 'center',
+    fontFamily: 'Cairo',
   },
+  
   boxText: {
-    fontSize: 11,
+    fontSize: 12,
     textAlign: 'center',
-    lineHeight: 1.4,
+    lineHeight: 1.6,
+    fontFamily: 'Cairo',
+  },
+  
+  // Professional digital signature
+  professionalSignature: {
+    position: 'absolute',
+    bottom: 100,
+    right: 60,
+    width: 140,
+    height: 140,
+  },
+  
+  signatureContainer: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 70,
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    border: '4px solid #1e3a8a',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 15,
+    boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
+  },
+  
+  signatureCompany: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#1e3a8a',
+    textAlign: 'center',
+    marginBottom: 8,
+    fontFamily: 'Cairo',
+  },
+  
+  signatureDetails: {
+    fontSize: 8,
+    color: '#64748b',
+    textAlign: 'center',
+    marginBottom: 4,
+    fontFamily: 'Cairo',
+  },
+  
+  signatureCode: {
+    fontSize: 7,
+    color: '#94a3b8',
+    textAlign: 'center',
+    marginTop: 8,
+    fontFamily: 'Cairo',
   },
 });
+
+// Header Component for non-cover pages
+const PageHeader = () => (
+  <View style={styles.pageHeader}>
+    <Text style={styles.headerText}>شركة علي صالح الشهري القابضة - الملف التعريفي الرسمي</Text>
+  </View>
+);
+
+// Footer Component for all pages
+const PageFooter = () => (
+  <View style={styles.pageFooter}>
+    <Text style={styles.footerText}>شركة علي صالح الشهري القابضة</Text>
+    <Text style={[styles.footerText, { fontSize: 9, marginTop: 2 }]}>
+      info@alialshehriholding.com | المملكة العربية السعودية | {new Date().getFullYear()}
+    </Text>
+  </View>
+);
 
 // Company Profile Document Component
 const CompanyProfileDocument = () => (
   <Document>
     {/* Cover Page */}
     <Page size="A4" style={styles.coverPage}>
-      <View style={styles.backgroundPattern}>
-        {/* Background decorative elements */}
-        <View style={{ position: 'absolute', top: 20, left: 20, width: 30, height: 30, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 15 }} />
-        <View style={{ position: 'absolute', top: 50, right: 30, width: 20, height: 20, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 10 }} />
-        <View style={{ position: 'absolute', bottom: 40, left: 40, width: 25, height: 25, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 12 }} />
-      </View>
+      {/* Background decorative elements */}
+      <View style={[styles.backgroundDecoration, { top: 20, left: 20 }]} />
+      <View style={[styles.backgroundDecoration, { top: 50, right: 30, width: 20, height: 20, borderRadius: 10 }]} />
+      <View style={[styles.backgroundDecoration, { bottom: 40, left: 40, width: 25, height: 25, borderRadius: 12 }]} />
+      <View style={[styles.backgroundDecoration, { top: 100, right: 80, width: 15, height: 15, borderRadius: 7 }]} />
       
       <View style={styles.logoContainer}>
-        <Text style={{ fontSize: 24, color: '#1e3a8a', fontWeight: 'bold' }}>شعار</Text>
+        <Text style={styles.logoText}>شعار</Text>
       </View>
       
       <Text style={styles.mainTitle}>شركة علي صالح الشهري القابضة</Text>
       <Text style={styles.subtitle}>ALI SALEH AL-SHAHRI HOLDING COMPANY</Text>
-      <Text style={[styles.subtitle, { fontSize: 14, marginTop: 10 }]}>رائدة في التكنولوجيا والحلول المتكاملة منذ ٢٠١٨</Text>
+      <Text style={[styles.description, { marginTop: 10 }]}>رائدة في التكنولوجيا والحلول المتكاملة منذ ٢٠١٨</Text>
       <Text style={styles.slogan}>الإبداع - التميز - الجودة</Text>
       
       <View style={styles.statsContainer}>
@@ -257,111 +430,115 @@ const CompanyProfileDocument = () => (
           <Text style={styles.statLabel}>عميل</Text>
         </View>
       </View>
-      
-      <Text style={[styles.footer, { color: 'white' }]}>الملف التعريفي الرسمي للشركة | {new Date().getFullYear()}</Text>
     </Page>
 
     {/* Page 2 - Company Overview */}
     <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text style={styles.title}>نظرة عامة على الشركة</Text>
-        
-        <Text style={styles.text}>
-          تأسست شركة علي صالح الشهري القابضة في عام ٢٠١٨ كشركة رائدة في مجال التكنولوجيا والحلول المتكاملة. نفتخر بكوننا الشريك الموثوق للشركات والمؤسسات في رحلة التحول الرقمي من خلال تقديم مجموعة شاملة من الخدمات التقنية والتجارية المبتكرة.
-        </Text>
-        
-        <Text style={styles.text}>
-          من خلال فريقنا المتخصص وخبرتنا المتراكمة، نسعى لتقديم حلول مبتكرة تلبي احتياجات عملائنا وتساعدهم في تحقيق أهدافهم بأعلى معايير الجودة والاحترافية.
-        </Text>
-
-        <Text style={[styles.title, { fontSize: 16, marginTop: 30 }]}>شركاء النجاح العالميين</Text>
-        
-        <View style={styles.partnerContainer}>
-          <View style={[styles.partnerBox, { backgroundColor: 'rgba(255, 153, 0, 0.1)' }]}>
-            <Text style={{ color: '#ff9900', fontWeight: 'bold' }}>AWS</Text>
-          </View>
-          <View style={[styles.partnerBox, { backgroundColor: 'rgba(0, 120, 215, 0.1)' }]}>
-            <Text style={{ color: '#0078d7', fontWeight: 'bold' }}>Microsoft</Text>
-          </View>
-          <View style={[styles.partnerBox, { backgroundColor: 'rgba(66, 133, 244, 0.1)' }]}>
-            <Text style={{ color: '#4285f4', fontWeight: 'bold' }}>Google</Text>
-          </View>
-          <View style={[styles.partnerBox, { backgroundColor: 'rgba(0, 188, 242, 0.1)' }]}>
-            <Text style={{ color: '#00bcf2', fontWeight: 'bold' }}>Docker</Text>
-          </View>
-        </View>
-
-        <View style={styles.visionMissionContainer}>
-          <View style={styles.visionBox}>
-            <Text style={styles.boxTitle}>الرؤية</Text>
-            <Text style={styles.boxText}>
-              أن نكون الشركة الرائدة في المنطقة في مجال التكنولوجيا والحلول المبتكرة، ونساهم في بناء مستقبل رقمي متطور
-            </Text>
-          </View>
+      <PageHeader />
+      <View style={styles.contentContainer}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>نظرة عامة على الشركة</Text>
           
-          <View style={styles.missionBox}>
-            <Text style={styles.boxTitle}>الرسالة</Text>
-            <Text style={styles.boxText}>
-              تقديم حلول تقنية متطورة وخدمات عالية الجودة لمساعدة عملائنا في تحقيق أهدافهم والنمو في عالم متغير
-            </Text>
+          <Text style={styles.text}>
+            تأسست شركة علي صالح الشهري القابضة في عام ٢٠١٨ كشركة رائدة في مجال التكنولوجيا والحلول المتكاملة. نفتخر بكوننا الشريك الموثوق للشركات والمؤسسات في رحلة التحول الرقمي من خلال تقديم مجموعة شاملة من الخدمات التقنية والتجارية المبتكرة.
+          </Text>
+          
+          <Text style={styles.text}>
+            من خلال فريقنا المتخصص وخبرتنا المتراكمة، نسعى لتقديم حلول مبتكرة تلبي احتياجات عملائنا وتساعدهم في تحقيق أهدافهم بأعلى معايير الجودة والاحترافية.
+          </Text>
+
+          <View style={styles.partnersSection}>
+            <Text style={styles.partnersTitle}>شركاء النجاح العالميين</Text>
+            
+            <View style={styles.partnerGrid}>
+              <View style={[styles.partnerBox, { backgroundColor: 'rgba(255, 153, 0, 0.1)' }]}>
+                <Text style={[styles.partnerText, { color: '#ff9900' }]}>AWS</Text>
+              </View>
+              <View style={[styles.partnerBox, { backgroundColor: 'rgba(0, 120, 215, 0.1)' }]}>
+                <Text style={[styles.partnerText, { color: '#0078d7' }]}>Microsoft</Text>
+              </View>
+              <View style={[styles.partnerBox, { backgroundColor: 'rgba(66, 133, 244, 0.1)' }]}>
+                <Text style={[styles.partnerText, { color: '#4285f4' }]}>Google</Text>
+              </View>
+              <View style={[styles.partnerBox, { backgroundColor: 'rgba(0, 188, 242, 0.1)' }]}>
+                <Text style={[styles.partnerText, { color: '#00bcf2' }]}>Docker</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.visionMissionContainer}>
+            <View style={styles.visionBox}>
+              <Text style={styles.boxTitle}>الرؤية</Text>
+              <Text style={styles.boxText}>
+                أن نكون الشركة الرائدة في المنطقة في مجال التكنولوجيا والحلول المبتكرة، ونساهم في بناء مستقبل رقمي متطور
+              </Text>
+            </View>
+            
+            <View style={styles.missionBox}>
+              <Text style={styles.boxTitle}>الرسالة</Text>
+              <Text style={styles.boxText}>
+                تقديم حلول تقنية متطورة وخدمات عالية الجودة لمساعدة عملائنا في تحقيق أهدافهم والنمو في عالم متغير
+              </Text>
+            </View>
           </View>
         </View>
       </View>
+      <PageFooter />
     </Page>
 
     {/* Page 3 - Services */}
     <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text style={styles.title}>خدماتنا المتميزة</Text>
-        
-        <View style={[styles.serviceBox, { borderColor: '#1e3a8a' }]}>
-          <Text style={styles.serviceTitle}>الحلول التقنية المتطورة</Text>
-          <Text style={styles.serviceItem}>• تطوير البرمجيات والتطبيقات المخصصة</Text>
-          <Text style={styles.serviceItem}>• حلول الذكاء الاصطناعي والتعلم الآلي</Text>
-          <Text style={styles.serviceItem}>• الحلول السحابية وأمن المعلومات</Text>
-          <Text style={styles.serviceItem}>• أنظمة إدارة قواعد البيانات</Text>
+      <PageHeader />
+      <View style={styles.contentContainer}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>خدماتنا المتميزة</Text>
+          
+          <View style={[styles.serviceBox, { borderColor: '#1e3a8a' }]}>
+            <Text style={styles.serviceTitle}>الحلول التقنية المتطورة</Text>
+            <Text style={styles.serviceItem}>• تطوير البرمجيات والتطبيقات المخصصة</Text>
+            <Text style={styles.serviceItem}>• حلول الذكاء الاصطناعي والتعلم الآلي</Text>
+            <Text style={styles.serviceItem}>• الحلول السحابية وأمن المعلومات</Text>
+            <Text style={styles.serviceItem}>• أنظمة إدارة قواعد البيانات</Text>
+          </View>
+
+          <View style={[styles.serviceBox, { borderColor: '#059669' }]}>
+            <Text style={styles.serviceTitle}>خدمات التصميم الاحترافية</Text>
+            <Text style={styles.serviceItem}>• تصميم الهوية البصرية الاحترافية</Text>
+            <Text style={styles.serviceItem}>• التصميم الجرافيكي والإعلاني</Text>
+            <Text style={styles.serviceItem}>• تصميم المواقع والتطبيقات</Text>
+            <Text style={styles.serviceItem}>• المواد المطبوعة والتسويقية</Text>
+          </View>
+
+          <View style={[styles.serviceBox, { borderColor: '#d97706' }]}>
+            <Text style={styles.serviceTitle}>الخدمات التجارية والاستشارية</Text>
+            <Text style={styles.serviceItem}>• الاستشارات التجارية والإدارية</Text>
+            <Text style={styles.serviceItem}>• إدارة المشاريع والتخطيط الاستراتيجي</Text>
+            <Text style={styles.serviceItem}>• التسويق الرقمي والإلكتروني</Text>
+            <Text style={styles.serviceItem}>• تطوير الأعمال والاستراتيجيات</Text>
+          </View>
+
+          <View style={[styles.serviceBox, { borderColor: '#7c3aed' }]}>
+            <Text style={styles.serviceTitle}>الذكاء الاصطناعي والابتكار</Text>
+            <Text style={styles.serviceItem}>• حلول الذكاء الاصطناعي المخصصة</Text>
+            <Text style={styles.serviceItem}>• تطوير نماذج التعلم الآلي</Text>
+            <Text style={styles.serviceItem}>• معالجة اللغة الطبيعية العربية</Text>
+            <Text style={styles.serviceItem}>• الرؤية الحاسوبية والتحليل الذكي</Text>
+          </View>
         </View>
 
-        <View style={[styles.serviceBox, { borderColor: '#059669' }]}>
-          <Text style={styles.serviceTitle}>خدمات التصميم الاحترافية</Text>
-          <Text style={styles.serviceItem}>• تصميم الهوية البصرية الاحترافية</Text>
-          <Text style={styles.serviceItem}>• التصميم الجرافيكي والإعلاني</Text>
-          <Text style={styles.serviceItem}>• تصميم المواقع والتطبيقات</Text>
-          <Text style={styles.serviceItem}>• المواد المطبوعة والتسويقية</Text>
-        </View>
-
-        <View style={[styles.serviceBox, { borderColor: '#d97706' }]}>
-          <Text style={styles.serviceTitle}>الخدمات التجارية والاستشارية</Text>
-          <Text style={styles.serviceItem}>• الاستشارات التجارية والإدارية</Text>
-          <Text style={styles.serviceItem}>• إدارة المشاريع والتخطيط الاستراتيجي</Text>
-          <Text style={styles.serviceItem}>• التسويق الرقمي والإلكتروني</Text>
-          <Text style={styles.serviceItem}>• تطوير الأعمال والاستراتيجيات</Text>
-        </View>
-
-        <View style={[styles.serviceBox, { borderColor: '#7c3aed' }]}>
-          <Text style={styles.serviceTitle}>الذكاء الاصطناعي والابتكار</Text>
-          <Text style={styles.serviceItem}>• حلول الذكاء الاصطناعي المخصصة</Text>
-          <Text style={styles.serviceItem}>• تطوير نماذج التعلم الآلي</Text>
-          <Text style={styles.serviceItem}>• معالجة اللغة الطبيعية العربية</Text>
-          <Text style={styles.serviceItem}>• الرؤية الحاسوبية والتحليل الذكي</Text>
+        {/* Professional Digital Signature */}
+        <View style={styles.professionalSignature}>
+          <View style={styles.signatureContainer}>
+            <Text style={styles.signatureCompany}>شركة علي صالح الشهري القابضة</Text>
+            <Text style={styles.signatureDetails}>المملكة العربية السعودية</Text>
+            <Text style={styles.signatureDetails}>{new Date().getFullYear()}</Text>
+            <Text style={styles.signatureCode}>
+              رمز التحقق: AS-{Date.now().toString(36).toUpperCase()}
+            </Text>
+          </View>
         </View>
       </View>
-
-      {/* Digital Signature */}
-      <View style={styles.digitalSignature}>
-        <View style={styles.signatureCircle}>
-          <Text style={[styles.signatureText, { fontSize: 10, fontWeight: 'bold' }]}>شركة علي صالح الشهري القابضة</Text>
-          <Text style={[styles.signatureText, { fontSize: 8, marginTop: 5 }]}>المملكة العربية السعودية</Text>
-          <Text style={[styles.signatureText, { fontSize: 8, marginTop: 5 }]}>{new Date().getFullYear()}</Text>
-        </View>
-        <Text style={[styles.signatureText, { marginTop: 5, fontSize: 7 }]}>
-          رمز التحقق: DC-{Date.now().toString(36).toUpperCase()}
-        </Text>
-      </View>
-
-      <View style={styles.footer}>
-        <Text>info@alialshehriholding.com | المملكة العربية السعودية | {new Date().getFullYear()}</Text>
-      </View>
+      <PageFooter />
     </Page>
   </Document>
 );
