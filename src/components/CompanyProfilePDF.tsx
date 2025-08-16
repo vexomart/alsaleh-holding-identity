@@ -15,6 +15,16 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
   const generateCompanyProfilePDF = async () => {
     setIsGenerating(true);
     try {
+      console.log("Starting PDF generation...");
+      
+      // Check if required libraries are loaded
+      if (!html2canvas) {
+        throw new Error("html2canvas library not loaded");
+      }
+      if (!jsPDF) {
+        throw new Error("jsPDF library not loaded");
+      }
+      
       // Create a temporary element to hold the PDF content
       const element = document.createElement("div");
       element.style.position = "absolute";
