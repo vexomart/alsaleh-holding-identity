@@ -4,6 +4,13 @@ import { Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 
+// Add Arabic font support
+const addArabicFont = (pdf: jsPDF) => {
+  // Use a more compatible approach for Arabic text
+  pdf.setLanguage("ar");
+  pdf.setR2L(true);
+};
+
 interface CompanyProfilePDFProps {
   className?: string;
 }
@@ -16,7 +23,7 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
     try {
       console.log("Starting PDF generation...");
       
-      // Create PDF directly using jsPDF without canvas
+      // Create PDF directly using jsPDF
       const pdf = new jsPDF("p", "mm", "a4");
       
       // Page 1 - Cover Page
@@ -27,19 +34,20 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setFillColor(255, 255, 255, 0.15);
       pdf.circle(105, 80, 25, 'F');
       
-      // Company Name
+      // English Company Name (works with standard fonts)
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(24);
       pdf.setFont("helvetica", "bold");
-      pdf.text("شركة علي صالح الشهري القابضة", 105, 130, { align: "center" });
+      pdf.text("ALI SALEH AL-SHAHRI HOLDING COMPANY", 105, 130, { align: "center" });
       
+      // Subtitle
       pdf.setFontSize(16);
       pdf.setFont("helvetica", "normal");
-      pdf.text("ALI SALEH AL-SHAHRI HOLDING COMPANY", 105, 145, { align: "center" });
+      pdf.text("Leading in Technology & Integrated Solutions since 2018", 105, 145, { align: "center" });
       
-      // Tagline
+      // Company description in English
       pdf.setFontSize(14);
-      pdf.text("الريادة في التكنولوجيا والحلول المتكاملة منذ 2018", 105, 165, { align: "center" });
+      pdf.text("Innovation - Excellence - Quality", 105, 165, { align: "center" });
       
       // Stats boxes
       pdf.setFillColor(255, 255, 255, 0.15);
@@ -50,7 +58,7 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setFont("helvetica", "bold");
       pdf.text("2018", 57.5, 205, { align: "center" });
       pdf.setFontSize(10);
-      pdf.text("سنة التأسيس", 57.5, 212, { align: "center" });
+      pdf.text("Since", 57.5, 212, { align: "center" });
       
       // Projects box
       pdf.rect(85, 190, 35, 25, 'F');
@@ -58,7 +66,7 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setFont("helvetica", "bold");
       pdf.text("500+", 102.5, 205, { align: "center" });
       pdf.setFontSize(10);
-      pdf.text("مشروع منجز", 102.5, 212, { align: "center" });
+      pdf.text("Projects", 102.5, 212, { align: "center" });
       
       // Employees box
       pdf.rect(130, 190, 35, 25, 'F');
@@ -66,11 +74,11 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setFont("helvetica", "bold");
       pdf.text("50+", 147.5, 205, { align: "center" });
       pdf.setFontSize(10);
-      pdf.text("موظف متخصص", 147.5, 212, { align: "center" });
+      pdf.text("Employees", 147.5, 212, { align: "center" });
       
       // Footer
       pdf.setFontSize(12);
-      pdf.text(`الملف التعريفي الرسمي للشركة | ${new Date().getFullYear()}`, 105, 280, { align: "center" });
+      pdf.text(`Official Company Profile | ${new Date().getFullYear()}`, 105, 280, { align: "center" });
       
       // Page 2 - Company Overview
       pdf.addPage();
@@ -81,7 +89,7 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setTextColor(30, 64, 175);
       pdf.setFontSize(22);
       pdf.setFont("helvetica", "bold");
-      pdf.text("نظرة عامة على الشركة", 105, 30, { align: "center" });
+      pdf.text("Company Overview", 105, 30, { align: "center" });
       
       // Blue line under header
       pdf.setDrawColor(30, 64, 175);
@@ -94,18 +102,19 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setFont("helvetica", "normal");
       
       const companyText = [
-        "تأسست شركة علي صالح الشهري القابضة في عام 2018 كشركة رائدة في",
-        "مجال التكنولوجيا والحلول المتكاملة. نحن نفخر بكوننا الشريك الموثوق",
-        "للشركات والمؤسسات في رحلة التحول الرقمي، حيث نقدم مجموعة شاملة",
-        "من الخدمات التقنية والتجارية المبتكرة.",
+        "Ali Saleh Al-Shahri Holding Company was founded in 2018 as a leading",
+        "company in the field of technology and integrated solutions. We take pride in",
+        "being the trusted partner for companies and institutions in their digital",
+        "transformation journey, providing a comprehensive range of innovative",
+        "technical and commercial services.",
         "",
-        "نسعى من خلال فريقنا المتخصص وخبراتنا المتراكمة إلى تقديم حلول",
-        "مبتكرة تلبي احتياجات عملائنا وتساعدهم على تحقيق أهدافهم التجارية",
-        "والتقنية بأعلى معايير الجودة والكفاءة.",
+        "Through our specialized team and accumulated expertise, we strive to provide",
+        "innovative solutions that meet our clients' needs and help them achieve their",
+        "business and technical goals with the highest standards of quality and efficiency.",
         "",
-        "تتميز شركتنا بتقديم خدمات متنوعة تشمل تطوير البرمجيات المخصصة،",
-        "حلول الذكاء الاصطناعي، التصميم الإبداعي، الاستشارات التجارية،",
-        "والحلول السحابية المتقدمة."
+        "Our company is distinguished by providing diverse services including custom",
+        "software development, artificial intelligence solutions, creative design,",
+        "business consulting, and advanced cloud solutions."
       ];
       
       let yPosition = 55;
@@ -122,14 +131,14 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setTextColor(30, 64, 175);
       pdf.setFontSize(16);
       pdf.setFont("helvetica", "bold");
-      pdf.text("إحصائيات الشركة", 105, 160, { align: "center" });
+      pdf.text("Company Statistics", 105, 160, { align: "center" });
       
       // Stats boxes with colors
       const stats = [
-        { value: "2018", label: "سنة التأسيس", color: [30, 64, 175], x: 40 },
-        { value: "500+", label: "مشروع منجز", color: [5, 150, 105], x: 85 },
-        { value: "50+", label: "موظف متخصص", color: [124, 58, 237], x: 130 },
-        { value: "100+", label: "عميل راضٍ", color: [220, 38, 38], x: 175 }
+        { value: "2018", label: "Established", color: [30, 64, 175], x: 40 },
+        { value: "500+", label: "Projects", color: [5, 150, 105], x: 85 },
+        { value: "50+", label: "Employees", color: [124, 58, 237], x: 130 },
+        { value: "100+", label: "Clients", color: [220, 38, 38], x: 175 }
       ];
       
       stats.forEach(stat => {
@@ -147,7 +156,7 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setTextColor(30, 64, 175);
       pdf.setFontSize(16);
       pdf.setFont("helvetica", "bold");
-      pdf.text("الرؤية والرسالة", 105, 220, { align: "center" });
+      pdf.text("Vision & Mission", 105, 220, { align: "center" });
       
       // Vision box
       pdf.setFillColor(30, 64, 175);
@@ -155,12 +164,12 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(12);
       pdf.setFont("helvetica", "bold");
-      pdf.text("🎯 رؤيتنا", 60, 245, { align: "center" });
+      pdf.text("Vision", 60, 245, { align: "center" });
       pdf.setFontSize(9);
       pdf.setFont("helvetica", "normal");
       const visionText = [
-        "أن نكون الشركة الرائدة في المنطقة",
-        "في مجال التكنولوجيا والحلول المبتكرة"
+        "To be the leading company in the region",
+        "in technology and innovative solutions"
       ];
       visionText.forEach((line, index) => {
         pdf.text(line, 60, 255 + (index * 7), { align: "center", maxWidth: 70 });
@@ -172,12 +181,12 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(12);
       pdf.setFont("helvetica", "bold");
-      pdf.text("🚀 رسالتنا", 150, 245, { align: "center" });
+      pdf.text("Mission", 150, 245, { align: "center" });
       pdf.setFontSize(9);
       pdf.setFont("helvetica", "normal");
       const missionText = [
-        "تقديم حلول تقنية متطورة وخدمات",
-        "عالية الجودة تساعد عملاءنا على تحقيق أهدافهم"
+        "Providing advanced technical solutions",
+        "and high-quality services to help our clients achieve their goals"
       ];
       missionText.forEach((line, index) => {
         pdf.text(line, 150, 255 + (index * 7), { align: "center", maxWidth: 70 });
@@ -192,7 +201,7 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setTextColor(30, 64, 175);
       pdf.setFontSize(22);
       pdf.setFont("helvetica", "bold");
-      pdf.text("خدماتنا المتميزة", 105, 30, { align: "center" });
+      pdf.text("Our Distinguished Services", 105, 30, { align: "center" });
       
       pdf.setDrawColor(30, 64, 175);
       pdf.line(30, 35, 180, 35);
@@ -200,42 +209,42 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       // Services Grid
       const services = [
         {
-          title: "💻 الحلول التقنية المتقدمة",
+          title: "Advanced Technical Solutions",
           items: [
-            "• تطوير البرمجيات المخصصة والتطبيقات",
-            "• حلول الذكاء الاصطناعي وتعلم الآلة",
-            "• الحلول السحابية وأمن المعلومات",
-            "• أنظمة إدارة قواعد البيانات"
+            "• Custom software development and applications",
+            "• AI and machine learning solutions",
+            "• Cloud solutions and information security",
+            "• Database management systems"
           ],
           color: [30, 64, 175]
         },
         {
-          title: "🎨 الخدمات التصميمية",
+          title: "Design Services",
           items: [
-            "• تصميم الهوية البصرية الاحترافية",
-            "• التصميم الجرافيكي والإعلاني",
-            "• تصميم المواقع والتطبيقات",
-            "• الطباعة والمواد التسويقية"
+            "• Professional visual identity design",
+            "• Graphic and advertising design",
+            "• Website and application design",
+            "• Printing and marketing materials"
           ],
           color: [5, 150, 105]
         },
         {
-          title: "📊 الخدمات التجارية",
+          title: "Business Services",
           items: [
-            "• الاستشارات التجارية والإدارية",
-            "• إدارة المشاريع والتخطيط",
-            "• التسويق الرقمي والإلكتروني",
-            "• تطوير الأعمال والاستراتيجيات"
+            "• Business and management consulting",
+            "• Project management and planning",
+            "• Digital and electronic marketing",
+            "• Business development and strategies"
           ],
           color: [217, 119, 6]
         },
         {
-          title: "🤖 الذكاء الاصطناعي والابتكار",
+          title: "AI and Innovation",
           items: [
-            "• حلول الذكاء الاصطناعي المخصصة",
-            "• تطوير نماذج التعلم الآلي",
-            "• معالجة اللغات الطبيعية",
-            "• الرؤية الحاسوبية والتحليل الذكي"
+            "• Custom artificial intelligence solutions",
+            "• Machine learning models development",
+            "• Natural language processing",
+            "• Computer vision and smart analysis"
           ],
           color: [124, 58, 237]
         }
@@ -273,18 +282,18 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
       pdf.setTextColor(30, 64, 175);
       pdf.setFontSize(14);
       pdf.setFont("helvetica", "bold");
-      pdf.text("معلومات التواصل", 105, 260, { align: "center" });
+      pdf.text("Contact Information", 105, 260, { align: "center" });
       
       pdf.setTextColor(0, 0, 0);
       pdf.setFontSize(10);
       pdf.setFont("helvetica", "normal");
-      pdf.text("البريد الإلكتروني: info@alialshehriholding.com", 105, 270, { align: "center" });
-      pdf.text("المملكة العربية السعودية", 105, 280, { align: "center" });
+      pdf.text("Email: info@alialshehriholding.com", 105, 270, { align: "center" });
+      pdf.text("Kingdom of Saudi Arabia", 105, 280, { align: "center" });
       
       // Save the PDF
-      pdf.save(`الملف-التعريفي-شركة-علي-صالح-الشهري-القابضة-${new Date().getFullYear()}.pdf`);
+      pdf.save(`Ali-Saleh-Al-Shahri-Holding-Company-Profile-${new Date().getFullYear()}.pdf`);
       
-      toast.success("تم تحميل الملف التعريفي بنجاح!");
+      toast.success("Company profile downloaded successfully!");
       
     } catch (error) {
       console.error("Error generating PDF:", error);
