@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
-import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star } from "lucide-react";
+import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
 import { ImageOptimizer } from "@/components/ImageOptimizer";
@@ -51,88 +51,173 @@ const Index = () => {
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
 
-          {/* Current Offers - Professional Global Style */}
-          <section className="relative py-16 lg:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-primary/6 to-secondary/10"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(var(--accent))_0%,transparent_30%),radial-gradient(circle_at_20%_80%,hsl(var(--primary))_0%,transparent_30%)] opacity-20"></div>
+          {/* Enhanced Current Offers - Corporate Professional Design */}
+          <section className="relative py-20 lg:py-32 overflow-hidden bg-gradient-to-br from-background via-muted/5 to-accent/5">
+            {/* Advanced Background Layers */}
+            <div className="absolute inset-0">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary))_0%,transparent_50%)] opacity-10"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,hsl(var(--accent))_0%,transparent_50%)] opacity-10"></div>
+              <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_30%,hsl(var(--muted))_50%,transparent_70%)] opacity-5"></div>
+            </div>
             
-            {/* Professional Floating Elements */}
-            <div className="absolute top-32 right-32 w-40 h-40 bg-gradient-to-br from-accent/20 to-primary/15 rounded-full blur-2xl animate-float"></div>
-            <div className="absolute bottom-32 left-32 w-32 h-32 bg-gradient-to-tl from-secondary/20 to-accent/15 rounded-full blur-xl animate-float-delayed"></div>
-            <div className="absolute top-1/2 right-16 w-6 h-40 bg-primary/10 animate-pulse" style={{ animationDelay: '2s' }}></div>
+            {/* Floating Animated Elements */}
+            <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-2xl animate-float"></div>
+            <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-tl from-accent/15 to-secondary/15 rounded-full blur-3xl animate-float-delayed"></div>
+            <div className="absolute top-1/3 right-10 w-2 h-20 bg-gradient-to-b from-primary/30 to-transparent animate-pulse"></div>
+            <div className="absolute bottom-1/3 left-10 w-2 h-16 bg-gradient-to-t from-accent/30 to-transparent animate-pulse" style={{ animationDelay: '1s' }}></div>
             
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="max-w-5xl mx-auto text-center">
-                <div className="mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-full mb-6 shadow-glow animate-pulse">
-                    <Gift className="w-8 h-8 text-white" />
+              <div className="max-w-7xl mx-auto">
+                
+                {/* Enhanced Header Section */}
+                <div className="text-center mb-16">
+                  <div className="inline-flex items-center justify-center mb-8">
+                    <div className="relative">
+                      <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-2xl animate-bounce">
+                        <Gift className="w-10 h-10 text-white" />
+                      </div>
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-accent to-secondary rounded-full animate-ping"></div>
+                    </div>
                   </div>
-                  <Badge className="bg-gradient-to-r from-accent to-primary text-white border-0 text-lg px-8 py-3 shadow-lg">
-                    عروض محدودة الوقت
+                  
+                  <Badge className="bg-gradient-to-r from-primary via-accent to-secondary text-white border-0 text-base px-6 py-2 rounded-full shadow-lg mb-6 animate-fade-in">
+                    ⏰ عروض محدودة الوقت
                   </Badge>
+                  
+                  <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text leading-tight animate-scale-in">
+                    عروضنا الحالية المميزة
+                  </h2>
+                  
+                  <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                    اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات بمعايير عالمية وأسعار استثنائية
+                  </p>
                 </div>
                 
-                <h2 className="text-5xl lg:text-7xl font-bold mb-8 gradient-text leading-tight">
-                  عروضنا الحالية المميزة
-                </h2>
-                
-                <p className="text-xl lg:text-2xl text-muted-foreground mb-12 leading-relaxed max-w-3xl mx-auto">
-                  اكتشف عروضنا الحصرية والمحدودة الوقت واحصل على أفضل الخدمات بمعايير عالمية وأسعار استثنائية
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                  <Card className="glass-effect border border-accent/20 hover:shadow-glow transition-all duration-500 group hover-scale">
-                    <CardContent className="p-8 text-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="relative z-10">
-                        <div className="text-3xl font-bold gradient-text mb-3">تصميم مواقع</div>
-                        <div className="text-accent font-semibold text-lg">خصم حتى 35%</div>
-                        <div className="w-12 h-1 bg-gradient-to-r from-accent to-primary mx-auto mt-4"></div>
+                {/* Enhanced Offers Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                  
+                  {/* Website Design Offer */}
+                  <Card className="group relative overflow-hidden border-2 border-primary/20 hover:border-primary/40 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 animate-fade-in" 
+                        style={{ animationDelay: '0.3s' }}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                    
+                    <CardContent className="relative p-8 text-center">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <Monitor className="w-8 h-8 text-white" />
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+                        تصميم مواقع
+                      </h3>
+                      
+                      <div className="text-3xl font-bold gradient-text mb-4">
+                        خصم حتى 35%
+                      </div>
+                      
+                      <p className="text-muted-foreground mb-6 leading-relaxed">
+                        مواقع احترافية متجاوبة مع جميع الأجهزة
+                      </p>
+                      
+                      <div className="w-20 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full mb-4"></div>
+                      
+                      <div className="flex items-center justify-center text-sm text-muted-foreground">
+                        <Clock className="w-4 h-4 ml-2" />
+                        عرض لمدة محدودة
                       </div>
                     </CardContent>
                   </Card>
                   
-                  <Card className="glass-effect border border-primary/20 hover:shadow-glow transition-all duration-500 group hover-scale">
-                    <CardContent className="p-8 text-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="relative z-10">
-                        <div className="text-3xl font-bold gradient-text mb-3">خدمات متكاملة</div>
-                        <div className="text-primary font-semibold text-lg">حلول تقنية متطورة</div>
-                        <div className="w-12 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
+                  {/* Integrated Services Offer */}
+                  <Card className="group relative overflow-hidden border-2 border-accent/20 hover:border-accent/40 transition-all duration-500 hover:shadow-2xl hover:shadow-accent/20 animate-fade-in" 
+                        style={{ animationDelay: '0.4s' }}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-accent to-secondary rounded-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                    
+                    <CardContent className="relative p-8 text-center">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent to-secondary rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <Settings className="w-8 h-8 text-white" />
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-accent transition-colors duration-300">
+                        خدمات متكاملة
+                      </h3>
+                      
+                      <div className="text-3xl font-bold gradient-text mb-4">
+                        حلول تقنية متطورة
+                      </div>
+                      
+                      <p className="text-muted-foreground mb-6 leading-relaxed">
+                        حلول شاملة لتطوير وتحسين أعمالك
+                      </p>
+                      
+                      <div className="w-20 h-1 bg-gradient-to-r from-accent to-secondary mx-auto rounded-full mb-4"></div>
+                      
+                      <div className="flex items-center justify-center text-sm text-muted-foreground">
+                        <Zap className="w-4 h-4 ml-2" />
+                        تقنيات حديثة
                       </div>
                     </CardContent>
                   </Card>
                   
-                  <Card className="glass-effect border border-secondary/20 hover:shadow-glow transition-all duration-500 group hover-scale">
-                    <CardContent className="p-8 text-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="relative z-10">
-                        <div className="text-3xl font-bold gradient-text mb-3">هوية بصرية</div>
-                        <div className="text-secondary font-semibold text-lg">خصم حتى 40%</div>
-                        <div className="w-12 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mt-4"></div>
+                  {/* Visual Identity Offer */}
+                  <Card className="group relative overflow-hidden border-2 border-secondary/20 hover:border-secondary/40 transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 animate-fade-in" 
+                        style={{ animationDelay: '0.5s' }}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-secondary to-primary rounded-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                    
+                    <CardContent className="relative p-8 text-center">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-secondary to-primary rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <Palette className="w-8 h-8 text-white" />
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-secondary transition-colors duration-300">
+                        هوية بصرية
+                      </h3>
+                      
+                      <div className="text-3xl font-bold gradient-text mb-4">
+                        خصم حتى 40%
+                      </div>
+                      
+                      <p className="text-muted-foreground mb-6 leading-relaxed">
+                        تصميم هوية بصرية مميزة وشعارات احترافية
+                      </p>
+                      
+                      <div className="w-20 h-1 bg-gradient-to-r from-secondary to-primary mx-auto rounded-full mb-4"></div>
+                      
+                      <div className="flex items-center justify-center text-sm text-muted-foreground">
+                        <Sparkles className="w-4 h-4 ml-2" />
+                        تصميم إبداعي
                       </div>
                     </CardContent>
                   </Card>
                 </div>
                 
-                <div className="flex justify-center">
-                   <Link to="/current-offers">
+                {/* Enhanced CTA Section */}
+                <div className="text-center animate-fade-in" style={{ animationDelay: '0.6s' }}>
+                  <Link to="/current-offers">
                     <Button 
                       size="lg" 
-                      className="bg-gradient-to-r from-accent via-primary to-secondary hover:from-accent/90 hover:via-primary/90 hover:to-secondary/90 text-white font-bold px-12 py-6 text-xl shadow-glow hover:shadow-xl transition-all duration-300 hover-scale"
+                      className="group relative overflow-hidden bg-gradient-to-r from-primary via-accent to-secondary hover:from-primary/90 hover:via-accent/90 hover:to-secondary/90 text-white font-bold px-16 py-8 text-xl rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105"
                     >
-                      <Gift className="w-6 h-6 ml-2" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 group-hover:animate-shimmer"></div>
+                      <Gift className="w-6 h-6 ml-3 group-hover:rotate-12 transition-transform duration-300" />
                       شاهد جميع العروض الحالية
-                      <ArrowRight className="w-6 h-6 mr-2" />
+                      <ArrowRight className="w-6 h-6 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
                     </Button>
                   </Link>
-                </div>
-                
-                <div className="mt-6 text-muted-foreground">
-                  <div className="inline-flex items-center bg-background/50 backdrop-blur-sm px-6 py-3 rounded-full border border-border/50">
-                    ⏰ عروض محدودة الوقت - لا تفوت الفرصة!
+                  
+                  <div className="mt-8">
+                    <div className="inline-flex items-center bg-background/60 backdrop-blur-sm px-8 py-4 rounded-2xl border border-border/30 shadow-lg">
+                      <div className="flex items-center text-muted-foreground">
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse ml-3"></div>
+                        <span className="font-medium">عروض محدودة الوقت - لا تفوت الفرصة!</span>
+                        <Clock className="w-5 h-5 mr-3 animate-pulse" />
+                      </div>
+                    </div>
                   </div>
                 </div>
+                
               </div>
             </div>
           </section>
