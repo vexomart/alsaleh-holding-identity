@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
+import { CompanyProfilePDF } from "@/components/CompanyProfilePDF";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +34,6 @@ import {
 } from "lucide-react";
 
 const Navigation = () => {
-  console.log("Navigation component is rendering...");
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showServices, setShowServices] = useState(false);
@@ -319,14 +319,7 @@ const Navigation = () => {
                   </div>
                 )}
               </div>
-              <a 
-                href="/company-profile"
-                className="relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group"
-                onClick={() => console.log("Company Profile clicked!")}
-              >
-                الملف التعريفي
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
-              </a>
+              <CompanyProfilePDF />
             </div>
 
             {/* Action Buttons - Responsive */}
@@ -522,13 +515,9 @@ const Navigation = () => {
                   )}
                 </div>
                 
-                <a 
-                  href="/company-profile"
-                  className="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium rounded-lg transition-all"
-                  onClick={() => setIsOpen(false)}
-                >
-                  الملف التعريفي
-                </a>
+                <div onClick={() => setIsOpen(false)}>
+                  <CompanyProfilePDF className="block w-full text-right py-3 px-2 rounded-lg hover:bg-blue-50" />
+                </div>
                 
                 {/* Mobile Action Button */}
                 {/* CTA button hidden as requested */}
