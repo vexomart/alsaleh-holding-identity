@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, FileText, Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 interface CompanyProfilePDFProps {
@@ -17,528 +16,276 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
     try {
       console.log("Starting PDF generation...");
       
-      // Check if required libraries are loaded
-      if (!html2canvas) {
-        throw new Error("html2canvas library not loaded");
-      }
-      if (!jsPDF) {
-        throw new Error("jsPDF library not loaded");
-      }
-      
-      // Create a temporary element to hold the PDF content
-      const element = document.createElement("div");
-      element.style.position = "absolute";
-      element.style.left = "-9999px";
-      element.style.top = "0";
-      element.style.width = "210mm";
-      element.style.minHeight = "297mm";
-      element.style.padding = "0";
-      element.style.margin = "0";
-      element.style.backgroundColor = "#ffffff";
-      element.style.fontFamily = "'Amiri', 'Arial', sans-serif";
-      element.style.direction = "rtl";
-      element.style.textAlign = "right";
-
-      element.innerHTML = `
-        <div style="width: 210mm; min-height: 297mm; padding: 0; margin: 0; background: #ffffff; font-family: 'Amiri', 'Cairo', Arial, sans-serif; direction: rtl; color: #1a1a1a; page-break-after: always;">
-          <!-- Page 1: Cover Page -->
-          <div style="height: 297mm; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%); color: white; text-align: center; position: relative; overflow: hidden;">
-            <!-- Background Pattern -->
-            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIiAvPjwvc3ZnPg==') repeat;"></div>
-            
-            <!-- Company Logo Placeholder -->
-            <div style="width: 150px; height: 150px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 40px; border: 3px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px);">
-              <span style="font-size: 48px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">ASH</span>
-            </div>
-            
-            <h1 style="font-size: 48px; font-weight: bold; margin: 0 0 20px 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); letter-spacing: 2px;">
-              شركة علي صالح الشهري القابضة
-            </h1>
-            <h2 style="font-size: 24px; margin: 0 0 30px 0; opacity: 0.9; font-weight: 300;">
-              ALI SALEH AL-SHAHRI HOLDING COMPANY
-            </h2>
-            <div style="width: 200px; height: 2px; background: rgba(255,255,255,0.5); margin: 30px 0;"></div>
-            <p style="font-size: 20px; margin: 0 0 40px 0; opacity: 0.95; max-width: 600px; line-height: 1.6;">
-              الريادة في التكنولوجيا والحلول المتكاملة منذ 2018
-            </p>
-            
-            <!-- Company Info Cards -->
-            <div style="display: flex; gap: 30px; margin-top: 50px;">
-              <div style="background: rgba(255,255,255,0.15); padding: 20px 30px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
-                <div style="font-size: 32px; font-weight: bold;">2018</div>
-                <div style="font-size: 14px; opacity: 0.9;">سنة التأسيس</div>
-              </div>
-              <div style="background: rgba(255,255,255,0.15); padding: 20px 30px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
-                <div style="font-size: 32px; font-weight: bold;">500+</div>
-                <div style="font-size: 14px; opacity: 0.9;">مشروع منجز</div>
-              </div>
-              <div style="background: rgba(255,255,255,0.15); padding: 20px 30px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
-                <div style="font-size: 32px; font-weight: bold;">50+</div>
-                <div style="font-size: 14px; opacity: 0.9;">موظف متخصص</div>
-              </div>
-            </div>
-            
-            <div style="position: absolute; bottom: 30px; left: 0; right: 0; text-align: center;">
-              <p style="font-size: 16px; opacity: 0.8;">الملف التعريفي الرسمي للشركة | ${new Date().getFullYear()}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Page 2: Company Overview -->
-        <div style="width: 210mm; min-height: 297mm; padding: 40px; background: #ffffff; page-break-after: always;">
-          <!-- Header -->
-          <div style="text-align: center; margin-bottom: 50px; border-bottom: 3px solid #1e40af; padding-bottom: 30px;">
-            <h1 style="font-size: 36px; color: #1e40af; margin: 0 0 10px 0; font-weight: bold;">
-              نظرة عامة على الشركة
-            </h1>
-            <p style="font-size: 18px; color: #6b7280; margin: 0;">تعرف على شركة علي صالح الشهري القابضة</p>
-          </div>
-
-          <!-- Company Description -->
-          <div style="margin-bottom: 50px;">
-            <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 35px; border-radius: 20px; border: 2px solid #e2e8f0; position: relative; overflow: hidden;">
-              <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(30, 64, 175, 0.1); border-radius: 50%;"></div>
-              <div style="position: absolute; bottom: -30px; left: -30px; width: 120px; height: 120px; background: rgba(16, 185, 129, 0.1); border-radius: 50%;"></div>
-              
-              <h2 style="font-size: 28px; color: #1e40af; margin-bottom: 25px; text-align: center; font-weight: bold;">
-                من نحن؟
-              </h2>
-              <p style="font-size: 18px; line-height: 2; margin-bottom: 20px; text-align: justify; color: #374151;">
-                تأسست شركة علي صالح الشهري القابضة في عام 2018 كشركة رائدة في مجال التكنولوجيا والحلول المتكاملة. نحن نفخر بكوننا الشريك الموثوق للشركات والمؤسسات في رحلة التحول الرقمي، حيث نقدم مجموعة شاملة من الخدمات التقنية والتجارية المبتكرة.
-              </p>
-              <p style="font-size: 18px; line-height: 2; margin-bottom: 20px; text-align: justify; color: #374151;">
-                نسعى من خلال فريقنا المتخصص وخبراتنا المتراكمة إلى تقديم حلول مبتكرة تلبي احتياجات عملائنا وتساعدهم على تحقيق أهدافهم التجارية والتقنية بأعلى معايير الجودة والكفاءة.
-              </p>
-              <p style="font-size: 18px; line-height: 2; text-align: justify; color: #374151;">
-                تتميز شركتنا بتقديم خدمات متنوعة تشمل تطوير البرمجيات المخصصة، حلول الذكاء الاصطناعي، التصميم الإبداعي، الاستشارات التجارية، والحلول السحابية المتقدمة.
-              </p>
-            </div>
-          </div>
-
-          <!-- Key Statistics -->
-          <div style="margin-bottom: 50px;">
-            <h2 style="font-size: 24px; color: #1e40af; margin-bottom: 30px; text-align: center; border-bottom: 2px solid #3b82f6; padding-bottom: 15px;">
-              إحصائيات الشركة
-            </h2>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px;">
-              <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 30px 20px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2);">
-                <div style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">2018</div>
-                <div style="font-size: 16px; opacity: 0.9;">سنة التأسيس</div>
-              </div>
-              <div style="background: linear-gradient(135deg, #059669, #10b981); padding: 30px 20px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(5, 150, 105, 0.2);">
-                <div style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">500+</div>
-                <div style="font-size: 16px; opacity: 0.9;">مشروع منجز</div>
-              </div>
-              <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); padding: 30px 20px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);">
-                <div style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">50+</div>
-                <div style="font-size: 16px; opacity: 0.9;">موظف متخصص</div>
-              </div>
-              <div style="background: linear-gradient(135deg, #dc2626, #ef4444); padding: 30px 20px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(220, 38, 38, 0.2);">
-                <div style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">100+</div>
-                <div style="font-size: 16px; opacity: 0.9;">عميل راضٍ</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Vision and Mission -->
-          <div style="margin-bottom: 40px;">
-            <h2 style="font-size: 24px; color: #1e40af; margin-bottom: 30px; text-align: center; border-bottom: 2px solid #3b82f6; padding-bottom: 15px;">
-              الرؤية والرسالة
-            </h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-              <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 35px; border-radius: 20px; color: white; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
-                <h3 style="font-size: 24px; margin-bottom: 20px; text-align: center; font-weight: bold;">🎯 رؤيتنا</h3>
-                <p style="font-size: 17px; line-height: 1.8; text-align: center;">
-                  أن نكون الشركة الرائدة في المنطقة في مجال التكنولوجيا والحلول المبتكرة، ونساهم في بناء مستقبل رقمي متطور للمملكة العربية السعودية ودول المنطقة.
-                </p>
-              </div>
-              <div style="background: linear-gradient(135deg, #059669, #10b981); padding: 35px; border-radius: 20px; color: white; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: -15px; left: -15px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
-                <h3 style="font-size: 24px; margin-bottom: 20px; text-align: center; font-weight: bold;">🚀 رسالتنا</h3>
-                <p style="font-size: 17px; line-height: 1.8; text-align: center;">
-                  تقديم حلول تقنية متطورة وخدمات عالية الجودة تساعد عملاءنا على تحقيق أهدافهم وتطوير أعمالهم بكفاءة وفعالية، مع الالتزام بأعلى معايير الجودة والابتكار.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Page 3: Services -->
-        <div style="width: 210mm; min-height: 297mm; padding: 40px; background: #ffffff; page-break-after: always;">
-          <div style="text-align: center; margin-bottom: 50px; border-bottom: 3px solid #1e40af; padding-bottom: 30px;">
-            <h1 style="font-size: 36px; color: #1e40af; margin: 0 0 10px 0; font-weight: bold;">
-              خدماتنا المتميزة
-            </h1>
-            <p style="font-size: 18px; color: #6b7280; margin: 0;">نقدم مجموعة شاملة من الخدمات التقنية والتجارية</p>
-          </div>
-
-          <!-- Main Services Grid -->
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 40px;">
-            <!-- Technology Services -->
-            <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 30px; border-radius: 15px; border: 2px solid #1e40af; position: relative;">
-              <div style="position: absolute; top: -10px; right: 20px; background: #1e40af; color: white; padding: 8px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;">⭐ الأكثر طلباً</div>
-              <h3 style="font-size: 22px; color: #1e40af; margin-bottom: 20px; text-align: center; font-weight: bold;">💻 الحلول التقنية المتقدمة</h3>
-              <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #1e40af; margin-left: 10px;">▪</span> تطوير البرمجيات المخصصة والتطبيقات
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #1e40af; margin-left: 10px;">▪</span> حلول الذكاء الاصطناعي وتعلم الآلة
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #1e40af; margin-left: 10px;">▪</span> الحلول السحابية وأمن المعلومات
-                </li>
-                <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #1e40af; margin-left: 10px;">▪</span> أنظمة إدارة قواعد البيانات
-                </li>
-              </ul>
-            </div>
-
-            <!-- Design Services -->
-            <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 30px; border-radius: 15px; border: 2px solid #059669;">
-              <h3 style="font-size: 22px; color: #059669; margin-bottom: 20px; text-align: center; font-weight: bold;">🎨 الخدمات التصميمية</h3>
-              <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="padding: 12px 0; border-bottom: 1px solid #dcfce7; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #059669; margin-left: 10px;">▪</span> تصميم الهوية البصرية الاحترافية
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #dcfce7; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #059669; margin-left: 10px;">▪</span> التصميم الجرافيكي والإعلاني
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #dcfce7; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #059669; margin-left: 10px;">▪</span> تصميم المواقع والتطبيقات
-                </li>
-                <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #059669; margin-left: 10px;">▪</span> الطباعة والمواد التسويقية
-                </li>
-              </ul>
-            </div>
-
-            <!-- Business Services -->
-            <div style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); padding: 30px; border-radius: 15px; border: 2px solid #d97706;">
-              <h3 style="font-size: 22px; color: #d97706; margin-bottom: 20px; text-align: center; font-weight: bold;">📊 الخدمات التجارية</h3>
-              <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="padding: 12px 0; border-bottom: 1px solid #fef3c7; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #d97706; margin-left: 10px;">▪</span> الاستشارات التجارية والإدارية
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #fef3c7; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #d97706; margin-left: 10px;">▪</span> إدارة المشاريع والتخطيط
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #fef3c7; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #d97706; margin-left: 10px;">▪</span> التسويق الرقمي والإلكتروني
-                </li>
-                <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #d97706; margin-left: 10px;">▪</span> تطوير الأعمال والاستراتيجيات
-                </li>
-              </ul>
-            </div>
-
-            <!-- AI & Innovation Services -->
-            <div style="background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); padding: 30px; border-radius: 15px; border: 2px solid #7c3aed; position: relative;">
-              <div style="position: absolute; top: -10px; right: 20px; background: #7c3aed; color: white; padding: 8px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;">🚀 جديد</div>
-              <h3 style="font-size: 22px; color: #7c3aed; margin-bottom: 20px; text-align: center; font-weight: bold;">🤖 الذكاء الاصطناعي والابتكار</h3>
-              <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="padding: 12px 0; border-bottom: 1px solid #f3e8ff; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #7c3aed; margin-left: 10px;">▪</span> حلول الذكاء الاصطناعي المخصصة
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #f3e8ff; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #7c3aed; margin-left: 10px;">▪</span> معالجة اللغات الطبيعية
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #f3e8ff; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #7c3aed; margin-left: 10px;">▪</span> أتمتة العمليات الذكية
-                </li>
-                <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
-                  <span style="color: #7c3aed; margin-left: 10px;">▪</span> التحليلات التنبؤية المتقدمة
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Additional Services -->
-          <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 30px; border-radius: 20px; color: white; margin-bottom: 30px;">
-            <h3 style="font-size: 24px; margin-bottom: 25px; text-align: center; font-weight: bold;">⚡ خدمات إضافية متخصصة</h3>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-              <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; backdrop-filter: blur(10px);">
-                <div style="font-size: 24px; margin-bottom: 10px;">📚</div>
-                <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">التدريب والتطوير</div>
-                <div style="font-size: 14px; opacity: 0.9;">برامج تدريبية متخصصة</div>
-              </div>
-              <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; backdrop-filter: blur(10px);">
-                <div style="font-size: 24px; margin-bottom: 10px;">🛠️</div>
-                <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">الدعم الفني</div>
-                <div style="font-size: 14px; opacity: 0.9;">دعم فني على مدار الساعة</div>
-              </div>
-              <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; backdrop-filter: blur(10px);">
-                <div style="font-size: 24px; margin-bottom: 10px;">🏪</div>
-                <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">التجارة الإلكترونية</div>
-                <div style="font-size: 14px; opacity: 0.9;">حلول متاجر إلكترونية متكاملة</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Page 4: Subsidiaries & Projects -->
-        <div style="width: 210mm; min-height: 297mm; padding: 40px; background: #ffffff; page-break-after: always;">
-          <div style="text-align: center; margin-bottom: 50px; border-bottom: 3px solid #1e40af; padding-bottom: 30px;">
-            <h1 style="font-size: 36px; color: #1e40af; margin: 0 0 10px 0; font-weight: bold;">
-              الشركات التابعة والمشاريع
-            </h1>
-            <p style="font-size: 18px; color: #6b7280; margin: 0;">نظرة على مجموعة شركاتنا ومشاريعنا الرائدة</p>
-          </div>
-
-          <!-- Active Companies -->
-          <div style="margin-bottom: 50px;">
-            <h2 style="font-size: 26px; color: #059669; margin-bottom: 25px; text-align: center; border-bottom: 2px solid #10b981; padding-bottom: 15px;">
-              🏢 الشركات النشطة
-            </h2>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px;">
-              <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 25px; border-radius: 15px; color: white; text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
-                <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold; backdrop-filter: blur(10px);">ASH</div>
-                <h4 style="font-size: 18px; margin-bottom: 12px; font-weight: bold;">علي صالح الشهري القابضة</h4>
-                <p style="font-size: 14px; margin-bottom: 10px; opacity: 0.9;">الشركة القابضة الرئيسية - الخدمات التقنية الشاملة</p>
-                <p style="font-size: 12px; background: rgba(5, 150, 105, 0.3); padding: 8px 12px; border-radius: 20px; display: inline-block;">✅ نشطة منذ 2018</p>
-              </div>
-              <div style="background: linear-gradient(135deg, #059669, #10b981); padding: 25px; border-radius: 15px; color: white; text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: -20px; left: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
-                <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold; backdrop-filter: blur(10px);">FH</div>
-                <h4 style="font-size: 18px; margin-bottom: 12px; font-weight: bold;">Feklah Holding</h4>
-                <p style="font-size: 14px; margin-bottom: 10px; opacity: 0.9;">شركة الخدمات التعليمية والأكاديمية المبتكرة</p>
-                <p style="font-size: 12px; background: rgba(30, 64, 175, 0.3); padding: 8px 12px; border-radius: 20px; display: inline-block;">✅ نشطة منذ 2020</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Upcoming Companies -->
-          <div style="margin-bottom: 40px;">
-            <h2 style="font-size: 26px; color: #7c3aed; margin-bottom: 25px; text-align: center; border-bottom: 2px solid #a855f7; padding-bottom: 15px;">
-              🚀 الشركات قيد التطوير - إطلاق 2025
-            </h2>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
-              <div style="background: white; padding: 20px; border-radius: 12px; border: 2px dashed #7c3aed; text-align: center; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.1);">
-                <div style="width: 50px; height: 50px; background: #7c3aed; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">FA</div>
-                <h4 style="font-size: 14px; margin-bottom: 10px; color: #1e40af; font-weight: bold;">فكرة أكاديمي</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">الطب والنشر والأبحاث العلمية</p>
-                <p style="font-size: 11px; color: #7c3aed; font-weight: bold;">🔄 30-08-2025</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 12px; border: 2px dashed #059669; text-align: center; box-shadow: 0 4px 15px rgba(5, 150, 105, 0.1);">
-                <div style="width: 50px; height: 50px; background: #059669; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">AM</div>
-                <h4 style="font-size: 14px; margin-bottom: 10px; color: #1e40af; font-weight: bold;">Advixo Media</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">التسويق الرقمي والإعلان المتطور</p>
-                <p style="font-size: 11px; color: #059669; font-weight: bold;">🔄 30-08-2025</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 12px; border: 2px dashed #dc2626; text-align: center; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.1);">
-                <div style="width: 50px; height: 50px; background: #dc2626; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">NX</div>
-                <h4 style="font-size: 14px; margin-bottom: 10px; color: #1e40af; font-weight: bold;">نيوماكسيو</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">الأنظمة المحاسبية المتطورة</p>
-                <p style="font-size: 11px; color: #dc2626; font-weight: bold;">🔄 30-12-2025</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 12px; border: 2px dashed #ea580c; text-align: center; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.1);">
-                <div style="width: 50px; height: 50px; background: #ea580c; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">PC</div>
-                <h4 style="font-size: 14px; margin-bottom: 10px; color: #1e40af; font-weight: bold;">Plutecode</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">المتاجر والأنظمة الجاهزة</p>
-                <p style="font-size: 11px; color: #ea580c; font-weight: bold;">🔄 20-10-2025</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 12px; border: 2px dashed #0ea5e9; text-align: center; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1);">
-                <div style="width: 50px; height: 50px; background: #0ea5e9; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">VM</div>
-                <h4 style="font-size: 14px; margin-bottom: 10px; color: #1e40af; font-weight: bold;">Vexomart</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">تأجير المتاجر الإلكترونية</p>
-                <p style="font-size: 11px; color: #0ea5e9; font-weight: bold;">🔄 01-10-2025</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 12px; border: 2px dashed #16a34a; text-align: center; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.1);">
-                <div style="width: 50px; height: 50px; background: #16a34a; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">AI</div>
-                <h4 style="font-size: 14px; margin-bottom: 10px; color: #1e40af; font-weight: bold;">FEKRAH AI</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">حلول الذكاء الاصطناعي المتقدمة</p>
-                <p style="font-size: 11px; color: #16a34a; font-weight: bold;">🔄 20-12-2025</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Major Projects -->
-          <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 30px; border-radius: 20px; border: 2px solid #1e40af;">
-            <h3 style="font-size: 22px; color: #1e40af; margin-bottom: 25px; text-align: center; font-weight: bold;">🏆 مشاريعنا الرائدة</h3>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-              <div style="background: white; padding: 20px; border-radius: 10px; border-right: 4px solid #059669;">
-                <h4 style="font-size: 16px; color: #059669; margin-bottom: 10px; font-weight: bold;">متاجر كشخة للعبايات</h4>
-                <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">منصة تجارة إلكترونية متخصصة في العبايات النسائية بتصميم عصري ونظام دفع متطور</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 10px; border-right: 4px solid #7c3aed;">
-                <h4 style="font-size: 16px; color: #7c3aed; margin-bottom: 10px; font-weight: bold;">متجر البطاقات الإلكترونية</h4>
-                <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">نظام متكامل لبيع البطاقات الرقمية والألعاب مع واجهة مستخدم متطورة</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 10px; border-right: 4px solid #dc2626;">
-                <h4 style="font-size: 16px; color: #dc2626; margin-bottom: 10px; font-weight: bold;">موقع تأجير السيارات</h4>
-                <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">منصة شاملة لخدمات تأجير السيارات مع نظام حجز ذكي وإدارة متقدمة</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 10px; border-right: 4px solid #ea580c;">
-                <h4 style="font-size: 16px; color: #ea580c; margin-bottom: 10px; font-weight: bold;">منصة إدارة المشاريع</h4>
-                <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">نظام متكامل لإدارة المشاريع والعقود مع أدوات تحليل وتقارير متقدمة</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Page 5: Achievements & Contact -->
-        <div style="width: 210mm; min-height: 297mm; padding: 40px; background: #ffffff;">
-          <div style="text-align: center; margin-bottom: 50px; border-bottom: 3px solid #1e40af; padding-bottom: 30px;">
-            <h1 style="font-size: 36px; color: #1e40af; margin: 0 0 10px 0; font-weight: bold;">
-              إنجازاتنا وتواصل معنا
-            </h1>
-            <p style="font-size: 18px; color: #6b7280; margin: 0;">جوائزنا وشراكاتنا ومعلومات الاتصال</p>
-          </div>
-
-          <!-- Achievements Section -->
-          <div style="margin-bottom: 50px;">
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 40px;">
-              <div style="background: linear-gradient(135deg, #059669, #10b981); padding: 30px; border-radius: 15px; color: white;">
-                <h3 style="font-size: 24px; margin-bottom: 20px; text-align: center; font-weight: bold;">🏆 الجوائز والتقديرات</h3>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                  <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 16px; display: flex; align-items: center;">
-                    <span style="margin-left: 10px;">🏆</span> جائزة أفضل شركة تقنية ناشئة 2023
-                  </li>
-                  <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 16px; display: flex; align-items: center;">
-                    <span style="margin-left: 10px;">⭐</span> شهادة الجودة ISO 9001:2015
-                  </li>
-                  <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 16px; display: flex; align-items: center;">
-                    <span style="margin-left: 10px;">🎯</span> عضوية الاتحاد السعودي للأمن السيبراني
-                  </li>
-                  <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
-                    <span style="margin-left: 10px;">🚀</span> شريك معتمد لدى مايكروسوفت
-                  </li>
-                </ul>
-              </div>
-              <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 30px; border-radius: 15px; color: white;">
-                <h3 style="font-size: 24px; margin-bottom: 20px; text-align: center; font-weight: bold;">🤝 الشراكات الاستراتيجية</h3>
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                  <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 16px; display: flex; align-items: center;">
-                    <span style="margin-left: 10px;">☁️</span> شريك Amazon Web Services
-                  </li>
-                  <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 16px; display: flex; align-items: center;">
-                    <span style="margin-left: 10px;">🌐</span> شريك Google Cloud Platform
-                  </li>
-                  <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 16px; display: flex; align-items: center;">
-                    <span style="margin-left: 10px;">💻</span> شريك معتمد لدى مايكروسوفت Azure
-                  </li>
-                  <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
-                    <span style="margin-left: 10px;">🔒</span> شريك في الأمن السيبراني
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <!-- Contact Information -->
-          <div style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 40px; border-radius: 20px; border: 2px solid #1e40af; margin-bottom: 40px;">
-            <h3 style="font-size: 28px; color: #1e40af; margin-bottom: 30px; text-align: center; font-weight: bold;">📞 تواصل معنا</h3>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;">
-              <div style="text-align: center; padding: 25px; background: white; border-radius: 15px; border: 2px solid #059669;">
-                <div style="width: 60px; height: 60px; background: #059669; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">📱</div>
-                <h4 style="font-size: 18px; color: #1e40af; margin-bottom: 10px; font-weight: bold;">الهاتف والواتساب</h4>
-                <p style="font-size: 16px; color: #374151; margin: 0; direction: ltr;">+966 50 123 4567</p>
-              </div>
-              <div style="text-align: center; padding: 25px; background: white; border-radius: 15px; border: 2px solid #7c3aed;">
-                <div style="width: 60px; height: 60px; background: #7c3aed; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">✉️</div>
-                <h4 style="font-size: 18px; color: #1e40af; margin-bottom: 10px; font-weight: bold;">البريد الإلكتروني</h4>
-                <p style="font-size: 16px; color: #374151; margin: 0; direction: ltr;">info@ash-holding.com</p>
-              </div>
-              <div style="text-align: center; padding: 25px; background: white; border-radius: 15px; border: 2px solid #dc2626;">
-                <div style="width: 60px; height: 60px; background: #dc2626; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">🌐</div>
-                <h4 style="font-size: 18px; color: #1e40af; margin-bottom: 10px; font-weight: bold;">الموقع الإلكتروني</h4>
-                <p style="font-size: 16px; color: #374151; margin: 0; direction: ltr;">www.ash-holding.com</p>
-              </div>
-            </div>
-            
-            <!-- Address -->
-            <div style="text-align: center; margin-top: 30px; padding: 25px; background: white; border-radius: 15px;">
-              <h4 style="font-size: 20px; color: #1e40af; margin-bottom: 15px; font-weight: bold;">📍 العنوان</h4>
-              <p style="font-size: 18px; color: #374151; line-height: 1.6;">
-                المملكة العربية السعودية - الرياض<br>
-                حي النخيل - شارع الملك فهد<br>
-                مجمع الأعمال التقني - الطابق الثالث
-              </p>
-            </div>
-          </div>
-
-          <!-- Footer -->
-          <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #1e40af, #3b82f6); border-radius: 15px; color: white;">
-            <h4 style="font-size: 24px; margin-bottom: 15px; font-weight: bold;">شكراً لاختياركم شركة علي صالح الشهري القابضة</h4>
-            <p style="font-size: 16px; margin-bottom: 20px; opacity: 0.9;">نحن في خدمتكم دائماً لتحقيق رؤيتكم وأهدافكم التقنية والتجارية</p>
-            <div style="width: 100px; height: 2px; background: rgba(255,255,255,0.5); margin: 20px auto;"></div>
-            <p style="font-size: 14px; margin: 0; opacity: 0.8;">© ${new Date().getFullYear()} شركة علي صالح الشهري القابضة - جميع الحقوق محفوظة</p>
-          </div>
-        </div>`;
-
-      document.body.appendChild(element);
-
-      // Generate the PDF with security handling
-      let imgData;
-      let canvas;
-      
-      try {
-        canvas = await html2canvas(element, {
-          scale: 1.5,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: "#ffffff",
-          width: element.offsetWidth,
-          height: element.offsetHeight,
-          logging: false,
-          foreignObjectRendering: true,
-        });
-
-        imgData = canvas.toDataURL("image/jpeg", 0.8);
-      } catch (securityError) {
-        console.warn("Canvas security error, using simple PDF fallback:", securityError);
-        // Simple fallback PDF without canvas
-        const pdf = new jsPDF("p", "mm", "a4");
-        pdf.setFont("helvetica");
-        pdf.setFontSize(20);
-        pdf.text("الملف التعريفي - شركة علي صالح الشهري القابضة", 105, 30, { align: "center" });
-        pdf.setFontSize(14);
-        pdf.text("تأسست في عام 2018", 105, 50, { align: "center" });
-        pdf.text("شركة رائدة في التكنولوجيا والحلول المتكاملة", 105, 70, { align: "center" });
-        pdf.text("خدمات متنوعة في البرمجة والتصميم والاستشارات", 105, 90, { align: "center" });
-        pdf.save(`الملف-التعريفي-${new Date().getFullYear()}.pdf`);
-        
-        // Clean up
-        document.body.removeChild(element);
-        toast.success("تم تحميل الملف التعريفي بنجاح!");
-        return;
-      }
-      
-      if (!canvas || !imgData) {
-        throw new Error("Failed to generate canvas or image data");
-      }
-      
+      // Create PDF directly using jsPDF without canvas
       const pdf = new jsPDF("p", "mm", "a4");
       
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      // Add first page
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
-
-      // Add additional pages if needed
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pdfHeight;
-      }
-
+      // Page 1 - Cover Page
+      pdf.setFillColor(30, 64, 175); // Blue background
+      pdf.rect(0, 0, 210, 297, 'F');
+      
+      // Company Logo Area (white circle)
+      pdf.setFillColor(255, 255, 255, 0.15);
+      pdf.circle(105, 80, 25, 'F');
+      
+      // Company Name
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(24);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("شركة علي صالح الشهري القابضة", 105, 130, { align: "center" });
+      
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "normal");
+      pdf.text("ALI SALEH AL-SHAHRI HOLDING COMPANY", 105, 145, { align: "center" });
+      
+      // Tagline
+      pdf.setFontSize(14);
+      pdf.text("الريادة في التكنولوجيا والحلول المتكاملة منذ 2018", 105, 165, { align: "center" });
+      
+      // Stats boxes
+      pdf.setFillColor(255, 255, 255, 0.15);
+      
+      // Year box
+      pdf.rect(40, 190, 35, 25, 'F');
+      pdf.setFontSize(18);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("2018", 57.5, 205, { align: "center" });
+      pdf.setFontSize(10);
+      pdf.text("سنة التأسيس", 57.5, 212, { align: "center" });
+      
+      // Projects box
+      pdf.rect(85, 190, 35, 25, 'F');
+      pdf.setFontSize(18);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("500+", 102.5, 205, { align: "center" });
+      pdf.setFontSize(10);
+      pdf.text("مشروع منجز", 102.5, 212, { align: "center" });
+      
+      // Employees box
+      pdf.rect(130, 190, 35, 25, 'F');
+      pdf.setFontSize(18);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("50+", 147.5, 205, { align: "center" });
+      pdf.setFontSize(10);
+      pdf.text("موظف متخصص", 147.5, 212, { align: "center" });
+      
+      // Footer
+      pdf.setFontSize(12);
+      pdf.text(`الملف التعريفي الرسمي للشركة | ${new Date().getFullYear()}`, 105, 280, { align: "center" });
+      
+      // Page 2 - Company Overview
+      pdf.addPage();
+      pdf.setFillColor(255, 255, 255); // White background
+      pdf.rect(0, 0, 210, 297, 'F');
+      
+      // Header
+      pdf.setTextColor(30, 64, 175);
+      pdf.setFontSize(22);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("نظرة عامة على الشركة", 105, 30, { align: "center" });
+      
+      // Blue line under header
+      pdf.setDrawColor(30, 64, 175);
+      pdf.setLineWidth(1);
+      pdf.line(30, 35, 180, 35);
+      
+      // Company Description
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "normal");
+      
+      const companyText = [
+        "تأسست شركة علي صالح الشهري القابضة في عام 2018 كشركة رائدة في",
+        "مجال التكنولوجيا والحلول المتكاملة. نحن نفخر بكوننا الشريك الموثوق",
+        "للشركات والمؤسسات في رحلة التحول الرقمي، حيث نقدم مجموعة شاملة",
+        "من الخدمات التقنية والتجارية المبتكرة.",
+        "",
+        "نسعى من خلال فريقنا المتخصص وخبراتنا المتراكمة إلى تقديم حلول",
+        "مبتكرة تلبي احتياجات عملائنا وتساعدهم على تحقيق أهدافهم التجارية",
+        "والتقنية بأعلى معايير الجودة والكفاءة.",
+        "",
+        "تتميز شركتنا بتقديم خدمات متنوعة تشمل تطوير البرمجيات المخصصة،",
+        "حلول الذكاء الاصطناعي، التصميم الإبداعي، الاستشارات التجارية،",
+        "والحلول السحابية المتقدمة."
+      ];
+      
+      let yPosition = 55;
+      companyText.forEach(line => {
+        if (line === "") {
+          yPosition += 5;
+        } else {
+          pdf.text(line, 105, yPosition, { align: "center", maxWidth: 150 });
+          yPosition += 8;
+        }
+      });
+      
+      // Statistics Section
+      pdf.setTextColor(30, 64, 175);
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("إحصائيات الشركة", 105, 160, { align: "center" });
+      
+      // Stats boxes with colors
+      const stats = [
+        { value: "2018", label: "سنة التأسيس", color: [30, 64, 175], x: 40 },
+        { value: "500+", label: "مشروع منجز", color: [5, 150, 105], x: 85 },
+        { value: "50+", label: "موظف متخصص", color: [124, 58, 237], x: 130 },
+        { value: "100+", label: "عميل راضٍ", color: [220, 38, 38], x: 175 }
+      ];
+      
+      stats.forEach(stat => {
+        pdf.setFillColor(stat.color[0], stat.color[1], stat.color[2]);
+        pdf.rect(stat.x - 15, 175, 30, 25, 'F');
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(14);
+        pdf.setFont("helvetica", "bold");
+        pdf.text(stat.value, stat.x, 190, { align: "center" });
+        pdf.setFontSize(8);
+        pdf.text(stat.label, stat.x, 197, { align: "center" });
+      });
+      
+      // Vision and Mission
+      pdf.setTextColor(30, 64, 175);
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("الرؤية والرسالة", 105, 220, { align: "center" });
+      
+      // Vision box
+      pdf.setFillColor(30, 64, 175);
+      pdf.rect(20, 235, 80, 40, 'F');
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("🎯 رؤيتنا", 60, 245, { align: "center" });
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "normal");
+      const visionText = [
+        "أن نكون الشركة الرائدة في المنطقة",
+        "في مجال التكنولوجيا والحلول المبتكرة"
+      ];
+      visionText.forEach((line, index) => {
+        pdf.text(line, 60, 255 + (index * 7), { align: "center", maxWidth: 70 });
+      });
+      
+      // Mission box
+      pdf.setFillColor(5, 150, 105);
+      pdf.rect(110, 235, 80, 40, 'F');
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("🚀 رسالتنا", 150, 245, { align: "center" });
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "normal");
+      const missionText = [
+        "تقديم حلول تقنية متطورة وخدمات",
+        "عالية الجودة تساعد عملاءنا على تحقيق أهدافهم"
+      ];
+      missionText.forEach((line, index) => {
+        pdf.text(line, 150, 255 + (index * 7), { align: "center", maxWidth: 70 });
+      });
+      
+      // Page 3 - Services
+      pdf.addPage();
+      pdf.setFillColor(255, 255, 255);
+      pdf.rect(0, 0, 210, 297, 'F');
+      
+      // Services Header
+      pdf.setTextColor(30, 64, 175);
+      pdf.setFontSize(22);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("خدماتنا المتميزة", 105, 30, { align: "center" });
+      
+      pdf.setDrawColor(30, 64, 175);
+      pdf.line(30, 35, 180, 35);
+      
+      // Services Grid
+      const services = [
+        {
+          title: "💻 الحلول التقنية المتقدمة",
+          items: [
+            "• تطوير البرمجيات المخصصة والتطبيقات",
+            "• حلول الذكاء الاصطناعي وتعلم الآلة",
+            "• الحلول السحابية وأمن المعلومات",
+            "• أنظمة إدارة قواعد البيانات"
+          ],
+          color: [30, 64, 175]
+        },
+        {
+          title: "🎨 الخدمات التصميمية",
+          items: [
+            "• تصميم الهوية البصرية الاحترافية",
+            "• التصميم الجرافيكي والإعلاني",
+            "• تصميم المواقع والتطبيقات",
+            "• الطباعة والمواد التسويقية"
+          ],
+          color: [5, 150, 105]
+        },
+        {
+          title: "📊 الخدمات التجارية",
+          items: [
+            "• الاستشارات التجارية والإدارية",
+            "• إدارة المشاريع والتخطيط",
+            "• التسويق الرقمي والإلكتروني",
+            "• تطوير الأعمال والاستراتيجيات"
+          ],
+          color: [217, 119, 6]
+        },
+        {
+          title: "🤖 الذكاء الاصطناعي والابتكار",
+          items: [
+            "• حلول الذكاء الاصطناعي المخصصة",
+            "• تطوير نماذج التعلم الآلي",
+            "• معالجة اللغات الطبيعية",
+            "• الرؤية الحاسوبية والتحليل الذكي"
+          ],
+          color: [124, 58, 237]
+        }
+      ];
+      
+      let serviceY = 50;
+      services.forEach((service, index) => {
+        const isLeft = index % 2 === 0;
+        const x = isLeft ? 25 : 110;
+        
+        // Service box background
+        pdf.setFillColor(service.color[0], service.color[1], service.color[2], 0.1);
+        pdf.rect(x, serviceY, 80, 55, 'F');
+        
+        // Service title
+        pdf.setTextColor(service.color[0], service.color[1], service.color[2]);
+        pdf.setFontSize(11);
+        pdf.setFont("helvetica", "bold");
+        pdf.text(service.title, x + 40, serviceY + 10, { align: "center", maxWidth: 75 });
+        
+        // Service items
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(8);
+        pdf.setFont("helvetica", "normal");
+        service.items.forEach((item, itemIndex) => {
+          pdf.text(item, x + 5, serviceY + 20 + (itemIndex * 8), { maxWidth: 70 });
+        });
+        
+        if (index % 2 === 1) {
+          serviceY += 65;
+        }
+      });
+      
+      // Contact Info
+      pdf.setTextColor(30, 64, 175);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("معلومات التواصل", 105, 260, { align: "center" });
+      
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "normal");
+      pdf.text("البريد الإلكتروني: info@alialshehriholding.com", 105, 270, { align: "center" });
+      pdf.text("المملكة العربية السعودية", 105, 280, { align: "center" });
+      
       // Save the PDF
       pdf.save(`الملف-التعريفي-شركة-علي-صالح-الشهري-القابضة-${new Date().getFullYear()}.pdf`);
-
-      // Clean up
-      document.body.removeChild(element);
       
       toast.success("تم تحميل الملف التعريفي بنجاح!");
+      
     } catch (error) {
       console.error("Error generating PDF:", error);
       toast.error("حدث خطأ أثناء إنشاء الملف التعريفي");
