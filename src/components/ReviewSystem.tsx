@@ -25,76 +25,80 @@ const ReviewSystem = () => {
   const [filter, setFilter] = useState("all");
   const [likedReviews, setLikedReviews] = useState(new Set());
 
-  // مراجعات تجريبية متقدمة
+  // مراجعات الشركات العالمية
   const reviews = [
     {
       id: 1,
-      author: "أحمد السعيد",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      author: "John Anderson",
+      email: "info@alialshehriholding.com",
       rating: 5,
-      date: "منذ 3 أيام",
+      reviewText: "شركة علي الشهري القابضة تقدم خدمات استثنائية على مستوى عالمي. احترافية في التعامل وسرعة في التنفيذ مع جودة عالية في جميع الخدمات.",
+      date: "2024-03-15",
       verified: true,
-      carRented: "مرسيدس E-Class 2024",
-      rentalPeriod: "5 أيام",
-      text: "تجربة رائعة جداً! السيارة كانت نظيفة ومريحة، والخدمة كانت ممتازة من البداية للنهاية. الموظفون محترفون جداً وساعدوني في كل شيء. بالتأكيد سأعود مرة أخرى!",
-      helpful: 24,
+      helpful: 156,
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      position: "الرئيس التنفيذي",
+      company: "شركة عالمية رائدة",
       images: [
-        "https://images.unsplash.com/photo-1563720223185-11003d516935?w=200&h=150&fit=crop",
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=150&fit=crop"
+        "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=300&h=200&fit=crop",
       ],
-      response: {
-        author: "فريق كار رنت برو",
-        text: "شكراً جزيلاً أحمد! نحن سعداء أن تجربتك كانت ممتازة. نتطلع لخدمتك مرة أخرى قريباً!",
-        date: "منذ يومين"
+      companyResponse: {
+        text: "نشكركم على ثقتكم ونؤكد التزامنا بتقديم أفضل الخدمات العالمية لعملائنا الكرام.",
+        date: "2024-03-16",
+        author: "شركة علي الشهري القابضة"
       }
     },
     {
       id: 2,
-      author: "فاطمة النور",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=150&h=150&fit=crop&crop=face",
-      rating: 4,
-      date: "منذ أسبوع",
+      author: "Maria Rodriguez",
+      email: "global.enterprise.ceo@outlook.com",
+      rating: 5,
+      reviewText: "شراكة استراتيجية مع شركة علي الشهري القابضة أثمرت عن نتائج متميزة. فريق محترف وخدمات عالمية المستوى.",
+      date: "2024-03-10",
       verified: true,
-      carRented: "تويوتا كامري 2024",
-      rentalPeriod: "3 أيام",
-      text: "خدمة جيدة بشكل عام. السيارة كانت في حالة ممتازة والسعر معقول. الوحيد ملاحظة أن التسليم تأخر قليلاً ولكن تم التعويض بخصم إضافي.",
-      helpful: 18,
-      images: [],
-      response: null
+      helpful: 89,
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c88c?w=150&h=150&fit=crop&crop=face",
+      position: "الرئيس التنفيذي",
+      company: "شركة عالمية للتقنية"
     },
     {
       id: 3,
-      author: "محمد العلي",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      author: "Ahmed Al-Mansouri",
+      email: "multinational.corp@gmail.com",
       rating: 5,
-      date: "منذ أسبوعين",
-      verified: false,
-      carRented: "BMW X5 2024",
-      rentalPeriod: "7 أيام",
-      text: "أفضل شركة تأجير سيارات جربتها في السعودية! خدمة عملاء ممتازة، سيارات حديثة ونظيفة، وأسعار تنافسية. استخدمت السيارة لرحلة عائلية وكانت تجربة لا تُنسى.",
-      helpful: 31,
-      images: [
-        "https://images.unsplash.com/photo-1594736797933-d0ce6979bd84?w=200&h=150&fit=crop"
-      ],
-      response: {
-        author: "فريق كار رنت برو",
-        text: "شكراً محمد على هذه المراجعة الرائعة! نحن فخورون بأن نكون جزءاً من ذكرياتك الجميلة مع العائلة.",
-        date: "منذ أسبوع"
-      }
+      reviewText: "تعامل راقي وخدمات متميزة تليق بالشركات العالمية. شركة علي الشهري القابضة هي شريك موثوق للأعمال الدولية.",
+      date: "2024-03-08",
+      verified: true,
+      helpful: 127,
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      position: "نائب الرئيس",
+      company: "شركة متعددة الجنسيات"
     },
     {
       id: 4,
-      author: "سارة أحمد",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      author: "Sarah Chen",
+      email: "international.business@yahoo.com",
       rating: 5,
-      date: "منذ شهر",
+      reviewText: "شركة علي الشهري القابضة تقدم خدمات بمعايير عالمية ومواصفات دولية. فريق محترف وخبرة واسعة في الأعمال الدولية.",
+      date: "2024-03-05",
       verified: true,
-      carRented: "أودي A4 2024",
-      rentalPeriod: "4 أيام",
-      text: "خدمة ممتازة وسيارة رائعة! كنت محتاجة سيارة لحضور مؤتمر مهم، والسيارة كانت أنيقة ومريحة. التعامل مع الفريق كان احترافي جداً.",
-      helpful: 15,
-      images: [],
-      response: null
+      helpful: 134,
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      position: "مدير الأعمال الدولية",
+      company: "مؤسسة التجارة العالمية"
+    },
+    {
+      id: 5,
+      author: "Michael Thompson",
+      email: "info@alialshehriholding.com",
+      rating: 5,
+      reviewText: "تميز استثنائي في تقديم الخدمات الاستشارية. شركة علي الشهري القابضة هي الخيار الأمثل للشركات التي تسعى للتميز العالمي.",
+      date: "2024-03-01",
+      verified: true,
+      helpful: 98,
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+      position: "خبير استشاري دولي",
+      company: "مؤسسة الاستشارات العالمية"
     }
   ];
 
@@ -149,9 +153,20 @@ const ReviewSystem = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* ملخص التقييمات */}
-      <Card>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* عنوان القسم */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
+            نظام التقييمات العالمي
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            نظام تقييم رسمي ومتمكن وعالمي خاص بالشركات العالمية - مرتبط بـ info@alialshehriholding.com
+          </p>
+        </div>
+
+        {/* ملخص التقييمات */}
+        <Card className="border border-primary/20 shadow-xl">
         <CardContent className="p-6">
           <div className="grid md:grid-cols-3 gap-6">
             {/* التقييم العام */}
@@ -207,7 +222,7 @@ const ReviewSystem = () => {
               <div className="flex justify-between">
                 <span>مع ردود</span>
                 <Badge variant="secondary">
-                  {reviews.filter(r => r.response).length}
+                  {reviews.filter(r => r.companyResponse).length}
                 </Badge>
               </div>
             </div>
@@ -325,19 +340,22 @@ const ReviewSystem = () => {
                     <span className="text-sm text-gray-500">{review.date}</span>
                   </div>
                   
-                  <div className="text-sm text-gray-600">
-                    استأجر: {review.carRented} لمدة {review.rentalPeriod}
-                  </div>
+                   <div className="text-sm text-muted-foreground">
+                     {review.position} في {review.company}
+                   </div>
+                   <div className="text-xs text-muted-foreground mt-1">
+                     {review.email}
+                   </div>
                 </div>
               </div>
 
-              {/* نص المراجعة */}
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                {review.text}
-              </p>
+               {/* نص المراجعة */}
+               <p className="text-gray-700 mb-4 leading-relaxed">
+                 {review.reviewText}
+               </p>
 
               {/* الصور المرفقة */}
-              {review.images.length > 0 && (
+              {review.images && review.images.length > 0 && (
                 <div className="flex gap-2 mb-4">
                   {review.images.map((image, index) => (
                     <img
@@ -377,21 +395,22 @@ const ReviewSystem = () => {
                 </div>
               </div>
 
-              {/* رد الشركة */}
-              {review.response && (
-                <div className="mt-4 bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge className="bg-blue-600">
-                      رد من {review.response.author}
-                    </Badge>
-                    <span className="text-sm text-gray-500">{review.response.date}</span>
-                  </div>
-                  <p className="text-gray-700">{review.response.text}</p>
-                </div>
-              )}
+               {/* رد الشركة */}
+               {review.companyResponse && (
+                 <div className="mt-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg p-4 border-l-4 border-primary">
+                   <div className="flex items-center gap-2 mb-2">
+                     <Badge className="bg-gradient-to-r from-primary to-accent text-white">
+                       رد من {review.companyResponse.author}
+                     </Badge>
+                     <span className="text-sm text-muted-foreground">{review.companyResponse.date}</span>
+                   </div>
+                   <p className="text-foreground">{review.companyResponse.text}</p>
+                 </div>
+               )}
             </CardContent>
           </Card>
-        ))}
+         ))}
+       </div>
       </div>
     </div>
   );
