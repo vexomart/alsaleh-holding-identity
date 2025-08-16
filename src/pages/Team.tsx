@@ -80,7 +80,7 @@ const Team = () => {
       department: "الجودة والأمان",
       departmentEn: "Quality & Security",
       specialties: ["إدارة الجودة", "الامتثال", "الأمان"],
-      achievements: "تحقيق 99.8% معدل الجودة",
+      achievements: "تحقيق 100% معدل الجودة",
       color: "from-green-600 to-emerald-600",
       icon: Shield,
       bgEffect: "from-green-500/10 to-emerald-500/10"

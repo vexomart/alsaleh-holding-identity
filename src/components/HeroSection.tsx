@@ -285,7 +285,7 @@ const HeroSection = () => {
               🏆 أفضل شركة قابضة 2024
             </Badge>
             <Badge className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-3 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg font-bold hover:scale-105 transition-transform duration-200 rounded-full">
-              🌟 99.8% معدل رضا العملاء
+              🌟 100% معدل رضا العملاء
             </Badge>
             <Badge className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-3 sm:px-6 py-2 sm:py-3 text-sm sm:text-lg font-bold hover:scale-105 transition-transform duration-200 rounded-full">
               🚀 قائد السوق العالمي

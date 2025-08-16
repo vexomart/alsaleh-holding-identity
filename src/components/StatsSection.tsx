@@ -91,7 +91,7 @@ const StatsSection = () => {
     },
     {
       icon: CheckCircle,
-      text: "معدل رضا العملاء 99.8%",
+      text: "معدل رضا العملاء 100%",
       bgColor: "bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-700",
       shadowColor: "shadow-emerald-500/30"
     },

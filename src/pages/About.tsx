@@ -62,7 +62,7 @@ const About = () => {
       color: "from-purple-600 to-pink-600"
     },
     { 
-      number: "99.8%", 
+      number: "100%", 
       label: "معدل الرضا", 
       sublabel: "Satisfaction Rate",
       icon: Star,
