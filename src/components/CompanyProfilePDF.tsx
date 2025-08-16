@@ -142,66 +142,74 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
           </div>
 
           <!-- Subsidiaries -->
-          <div style="margin-bottom: 40px;">
+          <div style="margin-bottom: 40px; page-break-inside: avoid;">
             <h2 style="font-size: 24px; color: #1e40af; margin-bottom: 20px; border-right: 4px solid #3b82f6; padding-right: 15px;">
               الشركات التابعة
             </h2>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 25px;">
-              <!-- Active Companies -->
-              <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #059669; text-align: center;">
-                <div style="width: 60px; height: 60px; background: #1e40af; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: bold;">ASH</div>
-                <h3 style="font-size: 16px; margin-bottom: 10px; color: #1e40af;">علي صالح الشهري القابضة</h3>
-                <p style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">الشركة القابضة الرئيسية</p>
-                <p style="font-size: 12px; color: #059669; font-weight: bold;">✅ نشطة - تأسست 2016</p>
-              </div>
-              <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #059669; text-align: center;">
-                <div style="width: 60px; height: 60px; background: #16a34a; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: bold;">FH</div>
-                <h3 style="font-size: 16px; margin-bottom: 10px; color: #1e40af;">Feklah Holding</h3>
-                <p style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">الخدمات التعليمية المبتكرة</p>
-                <p style="font-size: 12px; color: #059669; font-weight: bold;">✅ نشطة - تأسست 2018</p>
+            
+            <!-- Active Companies -->
+            <div style="margin-bottom: 25px;">
+              <h3 style="font-size: 18px; color: #059669; margin-bottom: 15px; border-right: 3px solid #10b981; padding-right: 12px;">
+                الشركات النشطة
+              </h3>
+              <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-around;">
+                <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #059669; text-align: center; min-width: 200px; flex: 1;">
+                  <div style="width: 60px; height: 60px; background: #1e40af; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: bold;">ASH</div>
+                  <h4 style="font-size: 16px; margin-bottom: 10px; color: #1e40af;">علي صالح الشهري القابضة</h4>
+                  <p style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">الشركة القابضة الرئيسية</p>
+                  <p style="font-size: 12px; color: #059669; font-weight: bold;">✅ نشطة - تأسست 2016</p>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #059669; text-align: center; min-width: 200px; flex: 1;">
+                  <div style="width: 60px; height: 60px; background: #16a34a; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: bold;">FH</div>
+                  <h4 style="font-size: 16px; margin-bottom: 10px; color: #1e40af;">Feklah Holding</h4>
+                  <p style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">الخدمات التعليمية المبتكرة</p>
+                  <p style="font-size: 12px; color: #059669; font-weight: bold;">✅ نشطة - تأسست 2018</p>
+                </div>
               </div>
             </div>
             
             <!-- Upcoming Companies -->
-            <h3 style="font-size: 18px; color: #7c3aed; margin-bottom: 15px; border-right: 3px solid #a855f7; padding-right: 12px;">
-              الشركات قيد التطوير
-            </h3>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-              <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #e2e8f0; text-align: center;">
-                <div style="width: 50px; height: 50px; background: #7c3aed; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">FA</div>
-                <h4 style="font-size: 14px; margin-bottom: 8px; color: #1e40af;">فكرة أكاديمي</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 5px;">الطب والنشر والأبحاث</p>
-                <p style="font-size: 11px; color: #7c3aed;">🔄 الإطلاق 30-08-2025</p>
-              </div>
-              <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #e2e8f0; text-align: center;">
-                <div style="width: 50px; height: 50px; background: #059669; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">AM</div>
-                <h4 style="font-size: 14px; margin-bottom: 8px; color: #1e40af;">Advixo Media</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 5px;">التسويق الرقمي والإعلان</p>
-                <p style="font-size: 11px; color: #7c3aed;">🔄 الإطلاق 30-08-2025</p>
-              </div>
-              <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #e2e8f0; text-align: center;">
-                <div style="width: 50px; height: 50px; background: #dc2626; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">NX</div>
-                <h4 style="font-size: 14px; margin-bottom: 8px; color: #1e40af;">نيوماكسيو</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 5px;">الأنظمة المحاسبية</p>
-                <p style="font-size: 11px; color: #7c3aed;">🔄 الإطلاق 30-12-2025</p>
-              </div>
-              <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #e2e8f0; text-align: center;">
-                <div style="width: 50px; height: 50px; background: #ea580c; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">PC</div>
-                <h4 style="font-size: 14px; margin-bottom: 8px; color: #1e40af;">Plutecode</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 5px;">المتاجر والأنظمة الجاهزة</p>
-                <p style="font-size: 11px; color: #7c3aed;">🔄 الإطلاق 20-10-2025</p>
-              </div>
-              <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #e2e8f0; text-align: center;">
-                <div style="width: 50px; height: 50px; background: #0ea5e9; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">VM</div>
-                <h4 style="font-size: 14px; margin-bottom: 8px; color: #1e40af;">Vexomart</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 5px;">تأجير المتاجر الإلكترونية</p>
-                <p style="font-size: 11px; color: #7c3aed;">🔄 الإطلاق 01-10-2025</p>
-              </div>
-              <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #e2e8f0; text-align: center;">
-                <div style="width: 50px; height: 50px; background: #16a34a; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">AI</div>
-                <h4 style="font-size: 14px; margin-bottom: 8px; color: #1e40af;">FEKRAH AI</h4>
-                <p style="font-size: 12px; color: #6b7280; margin-bottom: 5px;">الذكاء الاصطناعي</p>
-                <p style="font-size: 11px; color: #7c3aed;">🔄 الإطلاق 20-12-2025</p>
+            <div>
+              <h3 style="font-size: 18px; color: #7c3aed; margin-bottom: 15px; border-right: 3px solid #a855f7; padding-right: 12px;">
+                الشركات قيد التطوير - إطلاق 2025
+              </h3>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #a855f7; text-align: center;">
+                  <div style="width: 45px; height: 45px; background: #7c3aed; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold;">FA</div>
+                  <h4 style="font-size: 13px; margin-bottom: 8px; color: #1e40af;">فكرة أكاديمي</h4>
+                  <p style="font-size: 11px; color: #6b7280; margin-bottom: 5px;">الطب والنشر والأبحاث</p>
+                  <p style="font-size: 10px; color: #7c3aed;">🔄 الإطلاق 30-08-2025</p>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #a855f7; text-align: center;">
+                  <div style="width: 45px; height: 45px; background: #059669; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold;">AM</div>
+                  <h4 style="font-size: 13px; margin-bottom: 8px; color: #1e40af;">Advixo Media</h4>
+                  <p style="font-size: 11px; color: #6b7280; margin-bottom: 5px;">التسويق الرقمي والإعلان</p>
+                  <p style="font-size: 10px; color: #7c3aed;">🔄 الإطلاق 30-08-2025</p>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #a855f7; text-align: center;">
+                  <div style="width: 45px; height: 45px; background: #dc2626; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold;">NX</div>
+                  <h4 style="font-size: 13px; margin-bottom: 8px; color: #1e40af;">نيوماكسيو</h4>
+                  <p style="font-size: 11px; color: #6b7280; margin-bottom: 5px;">الأنظمة المحاسبية</p>
+                  <p style="font-size: 10px; color: #7c3aed;">🔄 الإطلاق 30-12-2025</p>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #a855f7; text-align: center;">
+                  <div style="width: 45px; height: 45px; background: #ea580c; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold;">PC</div>
+                  <h4 style="font-size: 13px; margin-bottom: 8px; color: #1e40af;">Plutecode</h4>
+                  <p style="font-size: 11px; color: #6b7280; margin-bottom: 5px;">المتاجر والأنظمة الجاهزة</p>
+                  <p style="font-size: 10px; color: #7c3aed;">🔄 الإطلاق 20-10-2025</p>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #a855f7; text-align: center;">
+                  <div style="width: 45px; height: 45px; background: #0ea5e9; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold;">VM</div>
+                  <h4 style="font-size: 13px; margin-bottom: 8px; color: #1e40af;">Vexomart</h4>
+                  <p style="font-size: 11px; color: #6b7280; margin-bottom: 5px;">تأجير المتاجر الإلكترونية</p>
+                  <p style="font-size: 10px; color: #7c3aed;">🔄 الإطلاق 01-10-2025</p>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px dashed #a855f7; text-align: center;">
+                  <div style="width: 45px; height: 45px; background: #16a34a; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold;">AI</div>
+                  <h4 style="font-size: 13px; margin-bottom: 8px; color: #1e40af;">FEKRAH AI</h4>
+                  <p style="font-size: 11px; color: #6b7280; margin-bottom: 5px;">الذكاء الاصطناعي</p>
+                  <p style="font-size: 10px; color: #7c3aed;">🔄 الإطلاق 20-12-2025</p>
+                </div>
               </div>
             </div>
           </div>
@@ -240,7 +248,7 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
             <h2 style="font-size: 24px; color: #1e40af; margin-bottom: 20px; border-right: 4px solid #3b82f6; padding-right: 15px;">
               معلومات الاتصال
             </h2>
-            <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 25px; border-radius: 10px; color: white;">
+            <div style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 25px; border-radius: 10px; color: white; margin-bottom: 20px;">
               <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px;">
                 <div>
                   <h3 style="font-size: 18px; margin-bottom: 15px;">الاتصال المباشر</h3>
@@ -251,10 +259,28 @@ export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className 
                 </div>
                 <div>
                   <h3 style="font-size: 18px; margin-bottom: 15px;">العنوان الرئيسي</h3>
-                  <div style="margin-bottom: 10px;">📍 الرياض - المملكة العربية السعودية</div>
+                  <div style="margin-bottom: 10px;">📍 جدة - المملكة العربية السعودية</div>
                   <div style="margin-bottom: 10px;">🏢 حي الملقا - طريق الملك فهد</div>
                   <div style="margin-bottom: 10px;">⏰ ساعات العمل: 8:00 ص - 6:00 م</div>
                   <div>📅 الأحد - الخميس</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Digital Stamp -->
+            <div style="text-align: center; margin-bottom: 20px;">
+              <div style="display: inline-block; padding: 20px; border: 3px solid #1e40af; border-radius: 15px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); position: relative;">
+                <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: white; padding: 0 10px; font-size: 12px; color: #1e40af; font-weight: bold;">ختم رقمي معتمد</div>
+                <div style="text-align: center;">
+                  <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #1e40af, #3b82f6); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">ASH</div>
+                  <h4 style="font-size: 16px; margin: 0 0 5px 0; color: #1e40af; font-weight: bold;">شركة علي صالح الشهري القابضة</h4>
+                  <p style="font-size: 12px; margin: 0 0 10px 0; color: #6b7280;">Ali Saleh AlShahri Holding Company</p>
+                  <div style="font-size: 10px; color: #059669; font-weight: bold;">
+                    ✓ مُصدق رقمياً | ${new Date().toLocaleDateString('ar-SA')}
+                  </div>
+                  <div style="font-size: 10px; color: #7c3aed; margin-top: 5px;">
+                    ID: ASH-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}
+                  </div>
                 </div>
               </div>
             </div>
