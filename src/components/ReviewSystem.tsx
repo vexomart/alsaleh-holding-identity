@@ -59,7 +59,8 @@ const ReviewSystem = () => {
       helpful: 89,
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c88c?w=150&h=150&fit=crop&crop=face",
       position: "الرئيس التنفيذي",
-      company: "شركة عالمية للتقنية"
+      company: "شركة عالمية للتقنية",
+      images: []
     },
     {
       id: 3,
@@ -72,7 +73,8 @@ const ReviewSystem = () => {
       helpful: 127,
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       position: "نائب الرئيس",
-      company: "شركة متعددة الجنسيات"
+      company: "شركة متعددة الجنسيات",
+      images: []
     },
     {
       id: 4,
@@ -85,7 +87,8 @@ const ReviewSystem = () => {
       helpful: 134,
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       position: "مدير الأعمال الدولية",
-      company: "مؤسسة التجارة العالمية"
+      company: "مؤسسة التجارة العالمية",
+      images: []
     },
     {
       id: 5,
@@ -98,7 +101,8 @@ const ReviewSystem = () => {
       helpful: 98,
       avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
       position: "خبير استشاري دولي",
-      company: "مؤسسة الاستشارات العالمية"
+      company: "مؤسسة الاستشارات العالمية",
+      images: []
     }
   ];
 
@@ -107,7 +111,8 @@ const ReviewSystem = () => {
     { value: "5", label: "5 نجوم", count: reviews.filter(r => r.rating === 5).length },
     { value: "4", label: "4 نجوم", count: reviews.filter(r => r.rating === 4).length },
     { value: "3", label: "3 نجوم", count: reviews.filter(r => r.rating === 3).length },
-    { value: "verified", label: "العملاء المؤكدين", count: reviews.filter(r => r.verified).length }
+    { value: "verified", label: "العملاء المؤكدين", count: reviews.filter(r => r.verified).length },
+    { value: "with_images", label: "مع صور", count: reviews.filter(r => r.images && r.images.length > 0).length }
   ];
 
   const filteredReviews = reviews.filter(review => {
@@ -213,12 +218,12 @@ const ReviewSystem = () => {
                   {reviews.filter(r => r.verified).length}
                 </Badge>
               </div>
-              <div className="flex justify-between">
-                <span>مع صور</span>
-                <Badge variant="secondary">
-                  {reviews.filter(r => r.images.length > 0).length}
-                </Badge>
-              </div>
+               <div className="flex justify-between">
+                 <span>مع صور</span>
+                 <Badge variant="secondary">
+                   {reviews.filter(r => r.images && r.images.length > 0).length}
+                 </Badge>
+               </div>
               <div className="flex justify-between">
                 <span>مع ردود</span>
                 <Badge variant="secondary">
