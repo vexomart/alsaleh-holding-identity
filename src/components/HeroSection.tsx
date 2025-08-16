@@ -49,33 +49,32 @@ const HeroSection = () => {
       textColor: "text-amber-100"
     },
     { 
-      icon: Building2, 
-      number: 2024, 
-      title: "شركة قابضة", 
-      titleEn: "Holding Company",
-      color: "from-purple-600 to-purple-800",
-      description: "التطور والنمو",
-      textColor: "text-purple-100"
-    },
-    { 
       icon: Trophy, 
-      number: 2848, 
-      suffix: "+",
-      title: "مشروع ناجح", 
-      titleEn: "Successful Projects",
+      number: 14883, 
+      title: "مشروع منجز", 
+      titleEn: "Completed Projects",
       color: "from-emerald-600 to-emerald-800",
       description: "إنجازات متميزة",
       textColor: "text-emerald-100"
     },
     { 
       icon: Users, 
-      number: 1760, 
-      suffix: "+",
+      number: 9512, 
       title: "عميل راضٍ", 
       titleEn: "Satisfied Clients",
       color: "from-blue-600 to-blue-800",
       description: "ثقة العملاء",
       textColor: "text-blue-100"
+    },
+    { 
+      icon: Star, 
+      number: 100, 
+      suffix: "%",
+      title: "معدل الرضا", 
+      titleEn: "Satisfaction Rate",
+      color: "from-purple-600 to-purple-800",
+      description: "رضا كامل",
+      textColor: "text-purple-100"
     }
   ];
 
