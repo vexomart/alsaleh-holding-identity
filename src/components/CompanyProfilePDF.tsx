@@ -4,17 +4,17 @@ import { Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font, Image } from "@react-pdf/renderer";
 
-// Register Arabic font
+// Register Arabic font - Using TTF format for better compatibility
 Font.register({
-  family: 'Amiri',
-  src: 'https://fonts.gstatic.com/s/amiri/v24/J7aRnpd8CGxBHqUpjBJ4zpN3cON4gg.woff2',
+  family: 'NotoSansArabic',
+  src: 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyvu3CBFQLaig.ttf',
   fontStyle: 'normal',
   fontWeight: 'normal',
 });
 
 Font.register({
-  family: 'Amiri',
-  src: 'https://fonts.gstatic.com/s/amiri/v24/J7afnpd8CGxBHqUpjBZ7sJVV.woff2',
+  family: 'NotoSansArabic',
+  src: 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyvu3CBFQLaig.ttf',
   fontStyle: 'normal',
   fontWeight: 'bold',
 });
@@ -22,7 +22,7 @@ Font.register({
 // Styles for the PDF
 const styles = StyleSheet.create({
   page: {
-    fontFamily: 'Amiri',
+    fontFamily: 'NotoSansArabic',
     fontSize: 12,
     paddingTop: 35,
     paddingBottom: 65,
