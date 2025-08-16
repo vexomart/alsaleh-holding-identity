@@ -27,45 +27,32 @@ const StatsSection = () => {
 
   const stats = [
     {
-      icon: Users,
-      number: 1760,
-      suffix: "+",
-      title: "عميل راضٍ",
-      subtitle: "Satisfied Clients",
-      description: "عملاء راضون ومتفاعلون مع خدماتنا المميزة",
-      gradient: "from-blue-500 via-blue-600 to-blue-700",
-      bgGradient: "from-blue-500/10 via-blue-600/10 to-blue-700/10",
-      glowColor: "shadow-blue-500/40",
-      textColor: "text-blue-600 dark:text-blue-400",
-      iconBg: "bg-gradient-to-br from-blue-500 to-blue-600",
-      borderColor: "border-blue-200 dark:border-blue-800"
-    },
-    {
       icon: Trophy,
-      number: 2848,
-      suffix: "+",
-      title: "مشروع ناجح", 
-      subtitle: "Successful Projects",
+      number: 14883,
+      title: "مشروع منجز", 
+      subtitle: "Completed Projects",
       description: "مشاريع منجزة بأعلى معايير الجودة العالمية",
       gradient: "from-emerald-500 via-emerald-600 to-emerald-700",
       bgGradient: "from-emerald-500/10 via-emerald-600/10 to-emerald-700/10",
       glowColor: "shadow-emerald-500/40",
       textColor: "text-emerald-600 dark:text-emerald-400",
       iconBg: "bg-gradient-to-br from-emerald-500 to-emerald-600",
-      borderColor: "border-emerald-200 dark:border-emerald-800"
+      borderColor: "border-emerald-200 dark:border-emerald-800",
+      pattern: "hexagon"
     },
     {
-      icon: Building2,
-      number: 2024,
-      title: "شركة قابضة",
-      subtitle: "Holding Company", 
-      description: "رؤية مستقبلية للنمو والتطوير المستدام",
-      gradient: "from-purple-500 via-purple-600 to-purple-700",
-      bgGradient: "from-purple-500/10 via-purple-600/10 to-purple-700/10",
-      glowColor: "shadow-purple-500/40",
-      textColor: "text-purple-600 dark:text-purple-400",
-      iconBg: "bg-gradient-to-br from-purple-500 to-purple-600",
-      borderColor: "border-purple-200 dark:border-purple-800"
+      icon: Users,
+      number: 9512,
+      title: "عميل راضٍ",
+      subtitle: "Satisfied Clients", 
+      description: "عملاء راضون ومتفاعلون مع خدماتنا المميزة",
+      gradient: "from-blue-500 via-blue-600 to-blue-700",
+      bgGradient: "from-blue-500/10 via-blue-600/10 to-blue-700/10",
+      glowColor: "shadow-blue-500/40",
+      textColor: "text-blue-600 dark:text-blue-400",
+      iconBg: "bg-gradient-to-br from-blue-500 to-blue-600",
+      borderColor: "border-blue-200 dark:border-blue-800",
+      pattern: "circle"
     },
     {
       icon: Calendar,
@@ -73,37 +60,53 @@ const StatsSection = () => {
       title: "سنة التأسيس",
       subtitle: "Foundation Year",
       description: "خبرة عريقة في تقديم الحلول المبتكرة",
+      gradient: "from-purple-500 via-purple-600 to-purple-700",
+      bgGradient: "from-purple-500/10 via-purple-600/10 to-purple-700/10",
+      glowColor: "shadow-purple-500/40",
+      textColor: "text-purple-600 dark:text-purple-400",
+      iconBg: "bg-gradient-to-br from-purple-500 to-purple-600",
+      borderColor: "border-purple-200 dark:border-purple-800",
+      pattern: "diamond"
+    },
+    {
+      icon: Star,
+      number: 100,
+      suffix: "%",
+      title: "معدل الرضا",
+      subtitle: "Satisfaction Rate",
+      description: "رضا كامل من جميع عملائنا بلا استثناء",
       gradient: "from-amber-500 via-amber-600 to-amber-700",
       bgGradient: "from-amber-500/10 via-amber-600/10 to-amber-700/10",
       glowColor: "shadow-amber-500/40",
       textColor: "text-amber-600 dark:text-amber-400",
       iconBg: "bg-gradient-to-br from-amber-500 to-amber-600",
-      borderColor: "border-amber-200 dark:border-amber-800"
+      borderColor: "border-amber-200 dark:border-amber-800",
+      pattern: "star"
     }
   ];
 
   const achievements = [
     {
       icon: TrendingUp,
-      text: "قائد السوق العالمي",
+      text: "رائدون في السوق منذ 2016",
       bgColor: "bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700",
       shadowColor: "shadow-blue-500/30"
     },
     {
       icon: CheckCircle,
-      text: "معدل رضا العملاء 100%",
+      text: "رضا تام من جميع العملاء",
       bgColor: "bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-700",
       shadowColor: "shadow-emerald-500/30"
     },
     {
       icon: Award,
-      text: "أفضل شركة قابضة 2024",
+      text: "14,883 مشروع منجز بنجاح",
       bgColor: "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700",
       shadowColor: "shadow-purple-500/30"
     },
     {
       icon: Target,
-      text: "التميز في الابتكار",
+      text: "9,512 عميل واثق في خدماتنا",
       bgColor: "bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700",
       shadowColor: "shadow-rose-500/30"
     }
@@ -190,44 +193,65 @@ const StatsSection = () => {
                 <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-white/20 to-white/5 rounded-full opacity-50"></div>
                 <div className="absolute bottom-4 left-4 w-8 h-8 bg-gradient-to-tl from-white/10 to-white/5 rounded-full opacity-30"></div>
                 
-                <CardContent className="relative p-10 text-center">
-                  {/* Enhanced Icon with Multiple Layers */}
-                  <div className="relative mb-8">
-                    <div className={`absolute inset-0 ${stat.iconBg} rounded-3xl blur-md opacity-60 group-hover:opacity-80 transition-opacity duration-500`}></div>
-                    <div className={`relative inline-flex items-center justify-center w-24 h-24 ${stat.iconBg} rounded-3xl shadow-xl group-hover:shadow-2xl transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-500`}>
-                      <stat.icon className="w-12 h-12 text-white" />
-                      <div className="absolute inset-0 bg-white/20 rounded-3xl"></div>
+                 <CardContent className="relative p-8 text-center overflow-hidden">
+                  {/* Enhanced Decorative Pattern Background */}
+                  <div className="absolute inset-0 opacity-10">
+                    {stat.pattern === 'hexagon' && (
+                      <svg viewBox="0 0 100 100" className="w-full h-full">
+                        <polygon points="50,5 85,25 85,75 50,95 15,75 15,25" 
+                                fill="currentColor" className={stat.textColor} />
+                      </svg>
+                    )}
+                    {stat.pattern === 'circle' && (
+                      <div className={`w-full h-full rounded-full bg-gradient-to-br ${stat.gradient}`}></div>
+                    )}
+                    {stat.pattern === 'diamond' && (
+                      <div className={`w-full h-full bg-gradient-to-br ${stat.gradient} transform rotate-45`}></div>
+                    )}
+                    {stat.pattern === 'star' && (
+                      <svg viewBox="0 0 100 100" className="w-full h-full">
+                        <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" 
+                                fill="currentColor" className={stat.textColor} />
+                      </svg>
+                    )}
+                  </div>
+
+                  {/* Enhanced Icon Container */}
+                  <div className="relative mb-6">
+                    <div className={`absolute inset-0 ${stat.iconBg} rounded-2xl blur-sm opacity-40 group-hover:opacity-60 transition-opacity duration-500`}></div>
+                    <div className={`relative inline-flex items-center justify-center w-20 h-20 ${stat.iconBg} rounded-2xl shadow-lg group-hover:shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
+                      <stat.icon className="w-10 h-10 text-white drop-shadow-lg" />
+                      <div className="absolute inset-0 bg-white/10 rounded-2xl"></div>
                     </div>
                   </div>
                   
-                  {/* Enhanced Number Display */}
-                  <div className={`text-7xl lg:text-8xl font-black mb-6 drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 ${stat.textColor}`}>
-                    {isVisible && (
-                      <AnimatedCounter 
-                        end={stat.number} 
-                        suffix={stat.suffix || ""} 
-                        duration={3000}
-                      />
-                    )}
+                  {/* Redesigned Number Display - No Animation, Real Numbers */}
+                  <div className={`text-5xl lg:text-6xl font-black mb-4 drop-shadow-lg ${stat.textColor} relative`}>
+                    <div className="relative z-10">
+                      {stat.number.toLocaleString('ar-SA')}
+                      {stat.suffix && <span className="text-3xl font-bold opacity-80">{stat.suffix}</span>}
+                    </div>
+                    {/* Number background glow */}
+                    <div className={`absolute inset-0 bg-gradient-to-r ${stat.gradient} opacity-20 blur-xl rounded-lg`}></div>
                   </div>
                   
-                  {/* Enhanced Title */}
-                  <h3 className="text-2xl lg:text-3xl font-black text-foreground mb-3 group-hover:text-primary transition-colors duration-300">
+                  {/* Modern Title Design */}
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
                     {stat.title}
                   </h3>
                   
-                  {/* Enhanced Subtitle */}
-                  <p className="text-base font-bold text-muted-foreground mb-4 uppercase tracking-widest">
+                  {/* Refined Subtitle */}
+                  <p className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide opacity-80">
                     {stat.subtitle}
                   </p>
                   
-                  {/* Enhanced Description */}
-                  <p className="text-muted-foreground leading-relaxed text-lg font-medium">
+                  {/* Clean Description */}
+                  <p className="text-muted-foreground leading-relaxed text-base">
                     {stat.description}
                   </p>
                   
-                  {/* Enhanced Decorative Line */}
-                  <div className={`w-20 h-1.5 bg-gradient-to-r ${stat.gradient} mx-auto mt-8 rounded-full group-hover:w-32 group-hover:h-2 transition-all duration-500 shadow-lg`}></div>
+                  {/* Modern Accent Line */}
+                  <div className={`w-16 h-1 bg-gradient-to-r ${stat.gradient} mx-auto mt-6 rounded-full group-hover:w-24 transition-all duration-500 shadow-sm`}></div>
                 </CardContent>
               </Card>
             ))}
