@@ -319,10 +319,10 @@ const Navigation = () => {
                 )}
               </div>
               <a 
-                href="/contact"
+                href="/company-profile"
                 className="relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group"
               >
-                تواصل معنا
+                الملف التعريفي
                 <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
               </a>
             </div>
@@ -521,11 +521,11 @@ const Navigation = () => {
                 </div>
                 
                 <a 
-                  href="/contact"
+                  href="/company-profile"
                   className="block py-3 px-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium rounded-lg transition-all"
                   onClick={() => setIsOpen(false)}
                 >
-                  تواصل معنا
+                  الملف التعريفي
                 </a>
                 
                 {/* Mobile Action Button */}

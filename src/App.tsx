@@ -95,6 +95,7 @@ const CarRentalWebsite = lazy(() => import("./pages/CarRentalWebsite"));
 const CareersPage = lazy(() => import("./pages/CareersPage"));
 const CarRentalLanding = lazy(() => import("./pages/CarRentalLanding"));
 const AboutUs = lazy(() => import("./pages/car-rental/AboutUs"));
+const CompanyProfile = lazy(() => import("./pages/CompanyProfile"));
 
 // Continue lazy loading for remaining pages
 const CarRentalFAQ = lazy(() => import("./pages/car-rental/FAQ"));
@@ -186,6 +187,7 @@ const App = () => {
                 
                 <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />
                 <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
                 <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />
                 <Route path="/team" element={<Suspense fallback={<PageLoader />}><Team /></Suspense>} />
