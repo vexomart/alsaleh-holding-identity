@@ -2,420 +2,397 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import jsPDF from "jspdf";
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font, Image } from "@react-pdf/renderer";
 
-// Enhanced Arabic text handling with better encoding
-const addArabicText = (pdf: jsPDF, text: string, x: number, y: number, options: any = {}) => {
-  try {
-    // Convert Arabic text to a compatible format
-    const arabicText = text;
-    pdf.text(arabicText, x, y, { 
-      align: options.align || "right",
-      direction: "rtl",
-      ...options 
-    });
-  } catch (error) {
-    // Fallback to English transliteration if Arabic fails
-    const englishFallback = text
-      .replace(/شركة/g, "Company")
-      .replace(/علي صالح الشهري القابضة/g, "Ali Saleh Al-Shahri Holding")
-      .replace(/المملكة العربية السعودية/g, "Kingdom of Saudi Arabia");
-    pdf.text(englishFallback, x, y, options);
-  }
-};
+// Register Arabic font
+Font.register({
+  family: 'Amiri',
+  src: 'https://fonts.gstatic.com/s/amiri/v24/J7aRnpd8CGxBHqUpjBJ4zpN3cON4gg.woff2',
+  fontStyle: 'normal',
+  fontWeight: 'normal',
+});
+
+Font.register({
+  family: 'Amiri',
+  src: 'https://fonts.gstatic.com/s/amiri/v24/J7afnpd8CGxBHqUpjBZ7sJVV.woff2',
+  fontStyle: 'normal',
+  fontWeight: 'bold',
+});
+
+// Styles for the PDF
+const styles = StyleSheet.create({
+  page: {
+    fontFamily: 'Amiri',
+    fontSize: 12,
+    paddingTop: 35,
+    paddingBottom: 65,
+    paddingHorizontal: 35,
+    backgroundColor: '#ffffff',
+  },
+  coverPage: {
+    backgroundColor: '#1e3a8a',
+    color: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    position: 'relative',
+  },
+  backgroundPattern: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0.1,
+  },
+  logoContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  mainTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+    color: 'white',
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 5,
+    color: 'white',
+  },
+  slogan: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#ffd700',
+  },
+  statsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 40,
+  },
+  statBox: {
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    padding: 15,
+    borderRadius: 8,
+    minWidth: 80,
+    textAlign: 'center',
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1e3a8a',
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#1e3a8a',
+    marginTop: 5,
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+    color: '#1e3a8a',
+  },
+  text: {
+    fontSize: 12,
+    lineHeight: 1.5,
+    textAlign: 'right',
+    marginBottom: 10,
+  },
+  serviceBox: {
+    backgroundColor: '#f8fafc',
+    padding: 15,
+    marginBottom: 15,
+    borderRadius: 8,
+    border: '2px solid #e2e8f0',
+  },
+  serviceTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#1e3a8a',
+    marginBottom: 8,
+    textAlign: 'right',
+  },
+  serviceItem: {
+    fontSize: 11,
+    marginBottom: 4,
+    textAlign: 'right',
+    color: '#374151',
+  },
+  partnerContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  partnerBox: {
+    padding: 10,
+    backgroundColor: '#f1f5f9',
+    borderRadius: 8,
+    minWidth: 60,
+    textAlign: 'center',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 30,
+    left: 35,
+    right: 35,
+    textAlign: 'center',
+    fontSize: 10,
+    color: '#6b7280',
+  },
+  digitalSignature: {
+    position: 'absolute',
+    bottom: 80,
+    right: 50,
+    textAlign: 'center',
+  },
+  signatureCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    border: '3px solid #1e3a8a',
+    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  signatureText: {
+    fontSize: 8,
+    textAlign: 'center',
+    color: '#1e3a8a',
+    fontWeight: 'bold',
+  },
+  visionMissionContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  visionBox: {
+    backgroundColor: '#1e3a8a',
+    color: 'white',
+    padding: 15,
+    borderRadius: 8,
+    width: '48%',
+  },
+  missionBox: {
+    backgroundColor: '#059669',
+    color: 'white',
+    padding: 15,
+    borderRadius: 8,
+    width: '48%',
+  },
+  boxTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  boxText: {
+    fontSize: 11,
+    textAlign: 'center',
+    lineHeight: 1.4,
+  },
+});
+
+// Company Profile Document Component
+const CompanyProfileDocument = () => (
+  <Document>
+    {/* Cover Page */}
+    <Page size="A4" style={styles.coverPage}>
+      <View style={styles.backgroundPattern}>
+        {/* Background decorative elements */}
+        <View style={{ position: 'absolute', top: 20, left: 20, width: 30, height: 30, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 15 }} />
+        <View style={{ position: 'absolute', top: 50, right: 30, width: 20, height: 20, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 10 }} />
+        <View style={{ position: 'absolute', bottom: 40, left: 40, width: 25, height: 25, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 12 }} />
+      </View>
+      
+      <View style={styles.logoContainer}>
+        <Text style={{ fontSize: 24, color: '#1e3a8a', fontWeight: 'bold' }}>شعار</Text>
+      </View>
+      
+      <Text style={styles.mainTitle}>شركة علي صالح الشهري القابضة</Text>
+      <Text style={styles.subtitle}>ALI SALEH AL-SHAHRI HOLDING COMPANY</Text>
+      <Text style={[styles.subtitle, { fontSize: 14, marginTop: 10 }]}>رائدة في التكنولوجيا والحلول المتكاملة منذ ٢٠١٨</Text>
+      <Text style={styles.slogan}>الإبداع - التميز - الجودة</Text>
+      
+      <View style={styles.statsContainer}>
+        <View style={[styles.statBox, { borderTop: '4px solid #1e3a8a' }]}>
+          <Text style={styles.statValue}>٢٠١٨</Text>
+          <Text style={styles.statLabel}>التأسيس</Text>
+        </View>
+        <View style={[styles.statBox, { borderTop: '4px solid #059669' }]}>
+          <Text style={styles.statValue}>٥٠٠+</Text>
+          <Text style={styles.statLabel}>مشروع</Text>
+        </View>
+        <View style={[styles.statBox, { borderTop: '4px solid #7c3aed' }]}>
+          <Text style={styles.statValue}>٥٠+</Text>
+          <Text style={styles.statLabel}>موظف</Text>
+        </View>
+        <View style={[styles.statBox, { borderTop: '4px solid #dc2626' }]}>
+          <Text style={styles.statValue}>١٠٠+</Text>
+          <Text style={styles.statLabel}>عميل</Text>
+        </View>
+      </View>
+      
+      <Text style={[styles.footer, { color: 'white' }]}>الملف التعريفي الرسمي للشركة | {new Date().getFullYear()}</Text>
+    </Page>
+
+    {/* Page 2 - Company Overview */}
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Text style={styles.title}>نظرة عامة على الشركة</Text>
+        
+        <Text style={styles.text}>
+          تأسست شركة علي صالح الشهري القابضة في عام ٢٠١٨ كشركة رائدة في مجال التكنولوجيا والحلول المتكاملة. نفتخر بكوننا الشريك الموثوق للشركات والمؤسسات في رحلة التحول الرقمي من خلال تقديم مجموعة شاملة من الخدمات التقنية والتجارية المبتكرة.
+        </Text>
+        
+        <Text style={styles.text}>
+          من خلال فريقنا المتخصص وخبرتنا المتراكمة، نسعى لتقديم حلول مبتكرة تلبي احتياجات عملائنا وتساعدهم في تحقيق أهدافهم بأعلى معايير الجودة والاحترافية.
+        </Text>
+
+        <Text style={[styles.title, { fontSize: 16, marginTop: 30 }]}>شركاء النجاح العالميين</Text>
+        
+        <View style={styles.partnerContainer}>
+          <View style={[styles.partnerBox, { backgroundColor: 'rgba(255, 153, 0, 0.1)' }]}>
+            <Text style={{ color: '#ff9900', fontWeight: 'bold' }}>AWS</Text>
+          </View>
+          <View style={[styles.partnerBox, { backgroundColor: 'rgba(0, 120, 215, 0.1)' }]}>
+            <Text style={{ color: '#0078d7', fontWeight: 'bold' }}>Microsoft</Text>
+          </View>
+          <View style={[styles.partnerBox, { backgroundColor: 'rgba(66, 133, 244, 0.1)' }]}>
+            <Text style={{ color: '#4285f4', fontWeight: 'bold' }}>Google</Text>
+          </View>
+          <View style={[styles.partnerBox, { backgroundColor: 'rgba(0, 188, 242, 0.1)' }]}>
+            <Text style={{ color: '#00bcf2', fontWeight: 'bold' }}>Docker</Text>
+          </View>
+        </View>
+
+        <View style={styles.visionMissionContainer}>
+          <View style={styles.visionBox}>
+            <Text style={styles.boxTitle}>الرؤية</Text>
+            <Text style={styles.boxText}>
+              أن نكون الشركة الرائدة في المنطقة في مجال التكنولوجيا والحلول المبتكرة، ونساهم في بناء مستقبل رقمي متطور
+            </Text>
+          </View>
+          
+          <View style={styles.missionBox}>
+            <Text style={styles.boxTitle}>الرسالة</Text>
+            <Text style={styles.boxText}>
+              تقديم حلول تقنية متطورة وخدمات عالية الجودة لمساعدة عملائنا في تحقيق أهدافهم والنمو في عالم متغير
+            </Text>
+          </View>
+        </View>
+      </View>
+    </Page>
+
+    {/* Page 3 - Services */}
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Text style={styles.title}>خدماتنا المتميزة</Text>
+        
+        <View style={[styles.serviceBox, { borderColor: '#1e3a8a' }]}>
+          <Text style={styles.serviceTitle}>الحلول التقنية المتطورة</Text>
+          <Text style={styles.serviceItem}>• تطوير البرمجيات والتطبيقات المخصصة</Text>
+          <Text style={styles.serviceItem}>• حلول الذكاء الاصطناعي والتعلم الآلي</Text>
+          <Text style={styles.serviceItem}>• الحلول السحابية وأمن المعلومات</Text>
+          <Text style={styles.serviceItem}>• أنظمة إدارة قواعد البيانات</Text>
+        </View>
+
+        <View style={[styles.serviceBox, { borderColor: '#059669' }]}>
+          <Text style={styles.serviceTitle}>خدمات التصميم الاحترافية</Text>
+          <Text style={styles.serviceItem}>• تصميم الهوية البصرية الاحترافية</Text>
+          <Text style={styles.serviceItem}>• التصميم الجرافيكي والإعلاني</Text>
+          <Text style={styles.serviceItem}>• تصميم المواقع والتطبيقات</Text>
+          <Text style={styles.serviceItem}>• المواد المطبوعة والتسويقية</Text>
+        </View>
+
+        <View style={[styles.serviceBox, { borderColor: '#d97706' }]}>
+          <Text style={styles.serviceTitle}>الخدمات التجارية والاستشارية</Text>
+          <Text style={styles.serviceItem}>• الاستشارات التجارية والإدارية</Text>
+          <Text style={styles.serviceItem}>• إدارة المشاريع والتخطيط الاستراتيجي</Text>
+          <Text style={styles.serviceItem}>• التسويق الرقمي والإلكتروني</Text>
+          <Text style={styles.serviceItem}>• تطوير الأعمال والاستراتيجيات</Text>
+        </View>
+
+        <View style={[styles.serviceBox, { borderColor: '#7c3aed' }]}>
+          <Text style={styles.serviceTitle}>الذكاء الاصطناعي والابتكار</Text>
+          <Text style={styles.serviceItem}>• حلول الذكاء الاصطناعي المخصصة</Text>
+          <Text style={styles.serviceItem}>• تطوير نماذج التعلم الآلي</Text>
+          <Text style={styles.serviceItem}>• معالجة اللغة الطبيعية العربية</Text>
+          <Text style={styles.serviceItem}>• الرؤية الحاسوبية والتحليل الذكي</Text>
+        </View>
+      </View>
+
+      {/* Digital Signature */}
+      <View style={styles.digitalSignature}>
+        <View style={styles.signatureCircle}>
+          <Text style={[styles.signatureText, { fontSize: 10, fontWeight: 'bold' }]}>شركة علي صالح الشهري القابضة</Text>
+          <Text style={[styles.signatureText, { fontSize: 8, marginTop: 5 }]}>المملكة العربية السعودية</Text>
+          <Text style={[styles.signatureText, { fontSize: 8, marginTop: 5 }]}>{new Date().getFullYear()}</Text>
+        </View>
+        <Text style={[styles.signatureText, { marginTop: 5, fontSize: 7 }]}>
+          رمز التحقق: DC-{Date.now().toString(36).toUpperCase()}
+        </Text>
+      </View>
+
+      <View style={styles.footer}>
+        <Text>info@alialshehriholding.com | المملكة العربية السعودية | {new Date().getFullYear()}</Text>
+      </View>
+    </Page>
+  </Document>
+);
 
 interface CompanyProfilePDFProps {
   className?: string;
 }
 
 export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className }) => {
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  const generateCompanyProfilePDF = async () => {
-    setIsGenerating(true);
-    try {
-      console.log("Starting PDF generation...");
-      
-      // Create PDF with better Arabic support
-      const pdf = new jsPDF("p", "mm", "a4");
-      
-      // Add triangle helper function
-      (pdf as any).triangle = function(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, style: string) {
-        this.lines([[x2-x1, y2-y1], [x3-x2, y3-y2], [x1-x3, y1-y3]], x1, y1, [1, 1], style, true);
-      };
-      
-      // Add global partners background pattern
-      const addGlobalPartnersBg = () => {
-        // Add subtle geometric patterns representing global partnerships
-        pdf.setFillColor(240, 248, 255, 0.3);
-        for (let i = 0; i < 20; i++) {
-          const x = Math.random() * 210;
-          const y = Math.random() * 297;
-          pdf.circle(x, y, 2, 'F');
-        }
-        
-        // Add corner decorative elements
-        pdf.setFillColor(30, 64, 175, 0.1);
-        pdf.rect(0, 0, 30, 30, 'F');
-        pdf.rect(180, 0, 30, 30, 'F');
-        pdf.rect(0, 267, 30, 30, 'F');
-        pdf.rect(180, 267, 30, 30, 'F');
-      };
-      
-      // Page 1 - Cover Page with Professional Design
-      // Create gradient-like background
-      pdf.setFillColor(15, 32, 87); // Dark blue
-      pdf.rect(0, 0, 210, 297, 'F');
-      
-      // Add lighter blue overlay for depth
-      pdf.setFillColor(30, 64, 175, 0.8);
-      pdf.rect(0, 0, 210, 100, 'F');
-      
-      // Global pattern background
-      addGlobalPartnersBg();
-      
-      // Company Logo Area with enhanced design
-      pdf.setFillColor(255, 255, 255, 0.95);
-      pdf.circle(105, 80, 30, 'F');
-      pdf.setFillColor(30, 64, 175);
-      pdf.circle(105, 80, 25, 'F');
-      
-      // Add crown-like decoration
-      pdf.setFillColor(255, 215, 0);
-      pdf.rect(100, 60, 10, 8, 'F');
-      pdf.triangle(95, 60, 105, 50, 115, 60, 'F');
-      
-      // Arabic Company Name
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(18);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "شركة علي صالح الشهري القابضة", 105, 120, { align: "center" });
-      
-      // English subtitle
-      pdf.setFontSize(14);
-      pdf.setFont("helvetica", "normal");
-      pdf.text("ALI SALEH AL-SHAHRI HOLDING COMPANY", 105, 135, { align: "center" });
-      
-      // Arabic subtitle
-      pdf.setFontSize(12);
-      addArabicText(pdf, "رائدة في التكنولوجيا والحلول المتكاملة منذ ٢٠١٨", 105, 150, { align: "center" });
-      
-      // Arabic slogan
-      pdf.setFontSize(14);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "الإبداع - التميز - الجودة", 105, 170, { align: "center" });
-      
-      // Enhanced stats boxes with Arabic
-      const statsBoxes = [
-        { value: "٢٠١٨", label: "التأسيس", x: 45 },
-        { value: "٥٠٠+", label: "مشروع", x: 87.5 },
-        { value: "٥٠+", label: "موظف", x: 130 },
-        { value: "١٠٠+", label: "عميل", x: 172.5 }
-      ];
-      
-      statsBoxes.forEach((stat, index) => {
-        const colors = [
-          [30, 64, 175],   // Blue
-          [5, 150, 105],   // Green
-          [124, 58, 237],  // Purple
-          [220, 38, 38]    // Red
-        ];
-        
-        pdf.setFillColor(255, 255, 255, 0.9);
-        pdf.rect(stat.x - 17.5, 190, 35, 30, 'F');
-        
-        pdf.setFillColor(colors[index][0], colors[index][1], colors[index][2]);
-        pdf.rect(stat.x - 17.5, 190, 35, 8, 'F');
-        
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(16);
-        pdf.setFont("helvetica", "bold");
-        pdf.text(stat.value, stat.x, 196, { align: "center" });
-        
-        pdf.setTextColor(0, 0, 0);
-        pdf.setFontSize(10);
-        addArabicText(pdf, stat.label, stat.x, 210, { align: "center" });
-      });
-      
-      // Footer with Arabic
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(12);
-      addArabicText(pdf, `الملف التعريفي الرسمي للشركة | ${new Date().getFullYear()}`, 105, 280, { align: "center" });
-      
-      // Page 2 - Company Overview (Arabic)
-      pdf.addPage();
-      pdf.setFillColor(255, 255, 255);
-      pdf.rect(0, 0, 210, 297, 'F');
-      
-      // Add background pattern
-      addGlobalPartnersBg();
-      
-      // Header with Arabic
-      pdf.setTextColor(30, 64, 175);
-      pdf.setFontSize(22);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "نظرة عامة على الشركة", 105, 30, { align: "center" });
-      
-      // Decorative line
-      pdf.setDrawColor(30, 64, 175);
-      pdf.setLineWidth(2);
-      pdf.line(30, 35, 180, 35);
-      
-      // Add decorative elements
-      pdf.setFillColor(30, 64, 175, 0.1);
-      pdf.circle(40, 50, 8, 'F');
-      pdf.circle(170, 50, 8, 'F');
-      
-      // Company Description in Arabic
-      pdf.setTextColor(0, 0, 0);
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "normal");
-      
-      const arabicCompanyText = [
-        "تأسست شركة علي صالح الشهري القابضة في عام ٢٠١٨",
-        "كشركة رائدة في مجال التكنولوجيا والحلول المتكاملة",
-        "",
-        "نفتخر بكوننا الشريك الموثوق للشركات والمؤسسات",
-        "في رحلة التحول الرقمي من خلال تقديم مجموعة شاملة",
-        "من الخدمات التقنية والتجارية المبتكرة",
-        "",
-        "من خلال فريقنا المتخصص وخبرتنا المتراكمة",
-        "نسعى لتقديم حلول مبتكرة تلبي احتياجات عملائنا",
-        "وتساعدهم في تحقيق أهدافهم بأعلى معايير الجودة"
-      ];
-      
-      let yPos = 60;
-      arabicCompanyText.forEach(line => {
-        if (line === "") {
-          yPos += 5;
-        } else {
-          addArabicText(pdf, line, 105, yPos, { align: "center", maxWidth: 150 });
-          yPos += 10;
-        }
-      });
-      
-      // Global Partners Section
-      pdf.setTextColor(30, 64, 175);
-      pdf.setFontSize(16);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "شركاء النجاح العالميين", 105, 160, { align: "center" });
-      
-      // Partner logos representation (simplified)
-      const partnerBoxes = [
-        { name: "AWS", x: 30, color: [255, 153, 0] },
-        { name: "Microsoft", x: 70, color: [0, 120, 215] },
-        { name: "Google", x: 110, color: [66, 133, 244] },
-        { name: "Docker", x: 150, color: [0, 188, 242] }
-      ];
-      
-      partnerBoxes.forEach(partner => {
-        pdf.setFillColor(partner.color[0], partner.color[1], partner.color[2], 0.2);
-        pdf.rect(partner.x, 175, 35, 20, 'F');
-        pdf.setTextColor(partner.color[0], partner.color[1], partner.color[2]);
-        pdf.setFontSize(10);
-        pdf.setFont("helvetica", "bold");
-        pdf.text(partner.name, partner.x + 17.5, 188, { align: "center" });
-      });
-      
-      // Vision and Mission in Arabic
-      pdf.setTextColor(30, 64, 175);
-      pdf.setFontSize(16);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "الرؤية والرسالة", 105, 220, { align: "center" });
-      
-      // Vision box
-      pdf.setFillColor(30, 64, 175);
-      pdf.rect(20, 235, 80, 45, 'F');
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(14);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "الرؤية", 60, 248, { align: "center" });
-      pdf.setFontSize(10);
-      pdf.setFont("helvetica", "normal");
-      addArabicText(pdf, "أن نكون الشركة الرائدة في المنطقة", 60, 258, { align: "center", maxWidth: 70 });
-      addArabicText(pdf, "في مجال التكنولوجيا والحلول المبتكرة", 60, 268, { align: "center", maxWidth: 70 });
-      
-      // Mission box
-      pdf.setFillColor(5, 150, 105);
-      pdf.rect(110, 235, 80, 45, 'F');
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(14);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "الرسالة", 150, 248, { align: "center" });
-      pdf.setFontSize(10);
-      pdf.setFont("helvetica", "normal");
-      addArabicText(pdf, "تقديم حلول تقنية متطورة وخدمات عالية الجودة", 150, 258, { align: "center", maxWidth: 70 });
-      addArabicText(pdf, "لمساعدة عملائنا في تحقيق أهدافهم", 150, 268, { align: "center", maxWidth: 70 });
-      
-      // Page 3 - Services (Arabic)
-      pdf.addPage();
-      pdf.setFillColor(255, 255, 255);
-      pdf.rect(0, 0, 210, 297, 'F');
-      
-      // Add background pattern
-      addGlobalPartnersBg();
-      
-      // Services Header in Arabic
-      pdf.setTextColor(30, 64, 175);
-      pdf.setFontSize(22);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "خدماتنا المتميزة", 105, 30, { align: "center" });
-      
-      pdf.setDrawColor(30, 64, 175);
-      pdf.setLineWidth(2);
-      pdf.line(30, 35, 180, 35);
-      
-      // Services Grid in Arabic
-      const arabicServices = [
-        {
-          title: "الحلول التقنية المتطورة",
-          items: [
-            "• تطوير البرمجيات والتطبيقات المخصصة",
-            "• حلول الذكاء الاصطناعي والتعلم الآلي",
-            "• الحلول السحابية وأمن المعلومات",
-            "• أنظمة إدارة قواعد البيانات"
-          ],
-          color: [30, 64, 175]
-        },
-        {
-          title: "خدمات التصميم",
-          items: [
-            "• تصميم الهوية البصرية الاحترافية",
-            "• التصميم الجرافيكي والإعلاني",
-            "• تصميم المواقع والتطبيقات",
-            "• المواد المطبوعة والتسويقية"
-          ],
-          color: [5, 150, 105]
-        },
-        {
-          title: "الخدمات التجارية",
-          items: [
-            "• الاستشارات التجارية والإدارية",
-            "• إدارة المشاريع والتخطيط",
-            "• التسويق الرقمي والإلكتروني",
-            "• تطوير الأعمال والاستراتيجيات"
-          ],
-          color: [217, 119, 6]
-        },
-        {
-          title: "الذكاء الاصطناعي والابتكار",
-          items: [
-            "• حلول الذكاء الاصطناعي المخصصة",
-            "• تطوير نماذج التعلم الآلي",
-            "• معالجة اللغة الطبيعية",
-            "• الرؤية الحاسوبية والتحليل الذكي"
-          ],
-          color: [124, 58, 237]
-        }
-      ];
-      
-      let serviceY = 50;
-      arabicServices.forEach((service, index) => {
-        const isLeft = index % 2 === 0;
-        const x = isLeft ? 25 : 110;
-        
-        // Service box background with gradient effect
-        pdf.setFillColor(service.color[0], service.color[1], service.color[2], 0.05);
-        pdf.rect(x, serviceY, 80, 60, 'F');
-        
-        // Service header bar
-        pdf.setFillColor(service.color[0], service.color[1], service.color[2]);
-        pdf.rect(x, serviceY, 80, 12, 'F');
-        
-        // Service title
-        pdf.setTextColor(255, 255, 255);
-        pdf.setFontSize(12);
-        pdf.setFont("helvetica", "bold");
-        addArabicText(pdf, service.title, x + 40, serviceY + 8, { align: "center", maxWidth: 75 });
-        
-        // Service items
-        pdf.setTextColor(0, 0, 0);
-        pdf.setFontSize(9);
-        pdf.setFont("helvetica", "normal");
-        service.items.forEach((item, itemIndex) => {
-          addArabicText(pdf, item, x + 75, serviceY + 25 + (itemIndex * 10), { align: "right", maxWidth: 70 });
-        });
-        
-        if (index % 2 === 1) {
-          serviceY += 70;
-        }
-      });
-      
-      // Digital Signature Section
-      pdf.setTextColor(30, 64, 175);
-      pdf.setFontSize(16);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "التوقيع الرقمي والاعتماد", 105, 240, { align: "center" });
-      
-      // Digital stamp/seal
-      pdf.setFillColor(30, 64, 175, 0.1);
-      pdf.circle(105, 265, 25, 'F');
-      pdf.setDrawColor(30, 64, 175);
-      pdf.setLineWidth(2);
-      pdf.circle(105, 265, 25);
-      pdf.circle(105, 265, 20);
-      
-      // Company seal content
-      pdf.setTextColor(30, 64, 175);
-      pdf.setFontSize(10);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "شركة علي صالح الشهري القابضة", 105, 258, { align: "center", maxWidth: 40 });
-      pdf.setFontSize(8);
-      addArabicText(pdf, "المملكة العربية السعودية", 105, 268, { align: "center" });
-      pdf.setFontSize(8);
-      pdf.text(`${new Date().getFullYear()}`, 105, 275, { align: "center" });
-      
-      // Digital verification code
-      pdf.setTextColor(0, 0, 0);
-      pdf.setFontSize(8);
-      pdf.setFont("helvetica", "normal");
-      const verificationCode = `DC-${Date.now().toString(36).toUpperCase()}`;
-      pdf.text(`رمز التحقق الرقمي: ${verificationCode}`, 105, 285, { align: "center" });
-      
-      // Contact Info in Arabic
-      pdf.setTextColor(30, 64, 175);
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "bold");
-      addArabicText(pdf, "معلومات التواصل", 20, 260, { align: "right" });
-      
-      pdf.setTextColor(0, 0, 0);
-      pdf.setFontSize(10);
-      pdf.setFont("helvetica", "normal");
-      pdf.text("info@alialshehriholding.com :البريد الإلكتروني", 20, 270, { align: "left" });
-      addArabicText(pdf, "المملكة العربية السعودية", 20, 280, { align: "right" });
-      
-      // Save the PDF
-      pdf.save(`Ali-Saleh-Al-Shahri-Holding-Company-Profile-${new Date().getFullYear()}.pdf`);
-      
-      toast.success("Company profile downloaded successfully!");
-      
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      toast.error("حدث خطأ أثناء إنشاء الملف التعريفي");
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   return (
-    <Button
-      onClick={generateCompanyProfilePDF}
-      disabled={isGenerating}
-      variant="ghost"
-      className={`relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group ${className}`}
+    <PDFDownloadLink 
+      document={<CompanyProfileDocument />} 
+      fileName={`Ali-Saleh-Al-Shahri-Holding-Company-Profile-${new Date().getFullYear()}.pdf`}
+      className={`inline-flex items-center relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group ${className}`}
     >
-      {isGenerating ? (
+      {({ loading }) => (
         <>
-          <Loader2 className="h-4 w-4 animate-spin ml-2" />
-          جاري التحميل...
-        </>
-      ) : (
-        <>
-          <Download className="h-4 w-4 ml-2" />
-          الملف التعريفي
+          {loading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin ml-2" />
+              جاري التحميل...
+            </>
+          ) : (
+            <>
+              <Download className="h-4 w-4 ml-2" />
+              الملف التعريفي
+            </>
+          )}
+          <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
         </>
       )}
-      <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
-    </Button>
+    </PDFDownloadLink>
   );
 };
