@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 
 const Navigation = () => {
+  console.log("Navigation component is rendering...");
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showServices, setShowServices] = useState(false);
@@ -321,6 +322,7 @@ const Navigation = () => {
               <a 
                 href="/company-profile"
                 className="relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group"
+                onClick={() => console.log("Company Profile clicked!")}
               >
                 الملف التعريفي
                 <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
