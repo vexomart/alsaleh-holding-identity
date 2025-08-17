@@ -40,6 +40,7 @@ const Navigation = () => {
   const [showProducts, setShowProducts] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
   const location = useLocation();
   const servicesHideRef = useRef<number | undefined>(undefined);
@@ -67,6 +68,15 @@ const Navigation = () => {
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Users },
     { name: "الحلول المتكاملة", href: "/integrated-solutions", icon: Award },
     { name: "المنظومة التقنية المتكاملة", href: "/tech-ecosystem", icon: Zap }
+  ];
+
+  const productsItems = [
+    { name: "المشاريع الجاهزة", href: "/ready-projects", icon: Package },
+    { name: "متجر الكوتشينة للعبايات", href: "/abaya-store", icon: Building2 },
+    { name: "متجر البطائق الإلكترونية", href: "/cards-store", icon: Code },
+    { name: "موقع تأجير السيارات", href: "/car-rental", icon: Globe },
+    { name: "موقع البناء والمقاولات", href: "/construction", icon: Building2 },
+    { name: "موقع التسويق الرقمي", href: "/digital-marketing-website", icon: TrendingUp },
   ];
 
   const othersItems = [
@@ -290,31 +300,28 @@ const Navigation = () => {
                 </button>
                 
                 {showProducts && (
-                  <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-xl border border-gray-100 z-[60] max-h-[70vh] overflow-y-auto overscroll-contain"
+                  <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-lg shadow-xl border border-gray-100 z-[60] max-h-[70vh] overflow-y-auto overscroll-contain"
                     onMouseEnter={() => { if (productsHideRef.current) clearTimeout(productsHideRef.current); setShowProducts(true); }}
                     onMouseLeave={() => { productsHideRef.current = window.setTimeout(() => setShowProducts(false), 200); }}
                   >
                     <div className="p-3">
-                      <a
-                        href="/ready-projects"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all group"
-                      >
-                        <Package className="w-4 h-4 text-blue-500 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <div className="font-medium">المشاريع الجاهزة</div>
-                          <div className="text-xs text-gray-500">حلول جاهزة للتطبيق</div>
-                        </div>
-                      </a>
-                      <Link
-                        to="/software-products"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all group"
-                      >
-                        <Code className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <div className="font-medium">مواقع ومتاجر</div>
-                          <div className="text-xs text-gray-500">برمجيات وتطبيقات متخصصة</div>
-                        </div>
-                      </Link>
+                      <div className="grid grid-cols-2 gap-2">
+                        {productsItems.map((product, index) => {
+                          const IconComponent = product.icon;
+                          return (
+                            <a
+                              key={index}
+                              href={product.href}
+                              className="flex items-center gap-2 p-2 hover:bg-gray-50 transition-colors rounded-lg group"
+                            >
+                              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-600 transition-colors">
+                                <IconComponent className="w-4 h-4 text-purple-600 group-hover:text-white" />
+                              </div>
+                              <span className="text-xs font-medium text-gray-700 group-hover:text-purple-600">{product.name}</span>
+                            </a>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -456,31 +463,31 @@ const Navigation = () => {
                 <div className="border-b border-gray-200 pb-3">
                   <button 
                     className="flex items-center justify-between w-full py-3 px-2 text-gray-900 font-semibold hover:text-blue-600 hover:bg-blue-50 transition-all rounded-lg"
+                    onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
                   >
                     <span>منتجاتنا</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${mobileProductsOpen ? 'rotate-180' : ''}`} />
                   </button>
-                  <div className="space-y-1 pr-2 mt-2">
-                    <a
-                      href="/ready-projects"
-                      className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-lg text-sm"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Package className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <span className="text-gray-700 leading-tight">المشاريع الجاهزة</span>
-                    </a>
-                    <Link
-                      to="/software-products"
-                      className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-lg text-sm"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Code className="w-4 h-4 text-purple-600" />
-                      </div>
-                      <span className="text-gray-700 leading-tight">مواقع ومتاجر</span>
-                    </Link>
-                  </div>
+                  {mobileProductsOpen && (
+                    <div className="grid grid-cols-1 gap-1 pr-2 mt-2 max-h-64 overflow-y-auto">
+                      {productsItems.map((product, index) => {
+                        const IconComponent = product.icon;
+                        return (
+                          <a
+                            key={index}
+                            href={product.href}
+                            className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors rounded-lg text-sm"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <IconComponent className="w-4 h-4 text-purple-600" />
+                            </div>
+                            <span className="text-gray-700 leading-tight">{product.name}</span>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
                 
                 {/* أخرى في الموبايل - Enhanced */}
