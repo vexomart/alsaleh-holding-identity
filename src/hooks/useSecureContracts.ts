@@ -27,8 +27,8 @@ export const useSecureContracts = () => {
     setError(null);
 
     try {
-      // Check rate limits before accessing contracts
-      const canAccess = await checkEnhancedRateLimit('contract_access', '10', 60);
+      // Check rate limits before accessing contracts with enhanced security
+      const canAccess = await checkEnhancedRateLimit('contract_access', undefined, 10, 60);
       if (!canAccess) {
         setError('تم تجاوز حد الوصول للعقود. حاول مرة أخرى لاحقاً.');
         toast.error('تم تجاوز حد الوصول للعقود');
@@ -97,8 +97,8 @@ export const useSecureContracts = () => {
 
   const createSecureContract = async (contractData: any) => {
     try {
-      // Check rate limits
-      const canCreate = await checkEnhancedRateLimit('contract_creation', '3', 60);
+      // Check rate limits with enhanced security
+      const canCreate = await checkEnhancedRateLimit('contract_creation', undefined, 3, 60);
       if (!canCreate) {
         toast.error('تم تجاوز حد إنشاء العقود');
         return { success: false, error: 'Rate limit exceeded' };
@@ -156,8 +156,8 @@ export const useSecureContracts = () => {
 
   const updateSecureContract = async (contractId: string, updateData: any) => {
     try {
-      // Check rate limits
-      const canUpdate = await checkEnhancedRateLimit('contract_update', '5', 60);
+      // Check rate limits with enhanced security
+      const canUpdate = await checkEnhancedRateLimit('contract_update', undefined, 5, 60);
       if (!canUpdate) {
         toast.error('تم تجاوز حد تحديث العقود');
         return { success: false, error: 'Rate limit exceeded' };
