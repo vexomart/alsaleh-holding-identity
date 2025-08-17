@@ -3,27 +3,25 @@ import { Download, Loader2 } from "lucide-react";
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font } from "@react-pdf/renderer";
 
 // Register reliable fonts for Arabic support
-try {
-  Font.register({
-    family: 'Amiri',
-    src: 'https://fonts.gstatic.com/s/amiri/v23/J7aRnpF2V0ErE6rzWjKhEm9Afw.woff2',
-    fontWeight: 'normal',
-  });
-
-  Font.register({
-    family: 'Amiri',
-    src: 'https://fonts.gstatic.com/s/amiri/v23/J7aSnpF2V0Erj6-Dw9mxE2NKXfAUJb.woff2',
-    fontWeight: 'bold',
-  });
-} catch (error) {
-  console.warn('Font registration failed, using fallback fonts');
-}
+Font.register({
+  family: 'Amiri',
+  fonts: [
+    {
+      src: 'https://fonts.gstatic.com/s/amiri/v23/J7aRnpF2V0ErE6rzWjKhEm9Afw.woff2',
+      fontWeight: 'normal',
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/amiri/v23/J7aSnpF2V0Erj6-Dw9mxE2NKXfAUJb.woff2',
+      fontWeight: 'bold',
+    }
+  ]
+});
 
 // Professional PDF Styles
 const styles = StyleSheet.create({
   // Base page styles
   page: {
-    fontFamily: 'Amiri, Arial, sans-serif',
+    fontFamily: 'Amiri',
     fontSize: 13,
     paddingTop: 50,
     paddingBottom: 80,
@@ -52,7 +50,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
-    fontFamily: 'Amiri, Arial, sans-serif',
+    fontFamily: 'Amiri',
   },
   
   // Footer for each page  
@@ -76,12 +74,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#64748b',
     textAlign: 'center',
-    fontFamily: 'Amiri, Arial, sans-serif',
+    fontFamily: 'Amiri',
   },
   
   // Cover page styles
   coverPage: {
-    fontFamily: 'Amiri, Arial, sans-serif',
+    fontFamily: 'Amiri',
     backgroundColor: '#1e3a8a',
     display: 'flex',
     flexDirection: 'column',
