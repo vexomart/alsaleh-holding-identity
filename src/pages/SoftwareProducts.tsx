@@ -17,15 +17,13 @@ import {
 import { ProductCard } from "@/components/software-products/ProductCard";
 import { ProductFilters } from "@/components/software-products/ProductFilters";
 import { ProductStats } from "@/components/software-products/ProductStats";
-import { PaymentModal } from "@/components/software-products/PaymentModal";
+
 import { products, categories } from "@/components/software-products/ProductsData";
 
 const SoftwareProducts = () => {
   const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState("جميع المنتجات");
   const [loadingProducts, setLoadingProducts] = useState<{[key: number]: boolean}>({});
-  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   const paymentMethods = [
@@ -39,10 +37,7 @@ const SoftwareProducts = () => {
     }
   ];
 
-  const handlePaymentMethodSelect = async (methodId: string, product: any) => {
-    setShowPaymentMethods(false);
-    setSelectedProduct(null);
-    
+  const handlePurchase = async (product: any) => {
     toast({
       title: "🚀 جاري التحضير...",
       description: "يتم تحضير صفحة الدفع الآمنة",
@@ -53,29 +48,17 @@ const SoftwareProducts = () => {
     const priceAmount = parseInt(product.price.replace(/[^\d]/g, ''));
     
     try {
-      let functionName = '';
-      let paymentData = {};
-
-      switch (methodId) {
-        case 'paylink':
-          functionName = 'paylink-payment';
-          paymentData = {
-            amount: priceAmount,
-            currency: 'SAR',
-            customer_name: 'عميل إمكان',
-            customer_email: 'customer@emkan.sa',
-            customer_phone: '966500000000',
-            offer_title: product.name,
-            description: `🛍️ شراء منتج حصري: ${product.name}`,
-            success_url: window.location.origin
-          };
-          break;
-        default:
-          throw new Error('طريقة دفع غير مدعومة');
-      }
-      
-      const { data, error } = await supabase.functions.invoke(functionName, {
-        body: paymentData
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: {
+          amount: priceAmount,
+          currency: 'SAR',
+          customer_name: 'عميل إمكان',
+          customer_email: 'customer@emkan.sa',
+          customer_phone: '966500000000',
+          offer_title: product.name,
+          description: `🛍️ شراء منتج حصري: ${product.name}`,
+          success_url: window.location.origin
+        }
       });
 
       if (error) {
@@ -112,11 +95,6 @@ const SoftwareProducts = () => {
     } finally {
       setLoadingProducts(prev => ({ ...prev, [product.id]: false }));
     }
-  };
-
-  const handlePurchase = (product: any) => {
-    setSelectedProduct(product);
-    setShowPaymentMethods(true);
   };
 
   const filteredProducts = products.filter(product => {
@@ -225,14 +203,6 @@ const SoftwareProducts = () => {
         </div>
       </div>
 
-      {/* Payment Modal */}
-      <PaymentModal 
-        isOpen={showPaymentMethods}
-        onClose={() => setShowPaymentMethods(false)}
-        selectedProduct={selectedProduct}
-        paymentMethods={paymentMethods}
-        onPaymentMethodSelect={handlePaymentMethodSelect}
-      />
     </PageContainer>
   );
 };
