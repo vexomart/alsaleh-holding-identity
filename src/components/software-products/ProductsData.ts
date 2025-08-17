@@ -34,7 +34,8 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🚗",
-    estimatedDelivery: "فوري"
+    estimatedDelivery: "فوري",
+    version: "V 1.0"
   },
   {
     id: 2,
@@ -61,7 +62,8 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🏗️",
-    estimatedDelivery: "فوري"
+    estimatedDelivery: "فوري",
+    version: "V 1.0"
   },
   {
     id: 3,
@@ -88,7 +90,8 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "📈",
-    estimatedDelivery: "فوري"
+    estimatedDelivery: "فوري",
+    version: "V 1.0"
   },
   {
     id: 4,
@@ -115,7 +118,8 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🛍️",
-    estimatedDelivery: "فوري"
+    estimatedDelivery: "فوري",
+    version: "V 1.0"
   },
   {
     id: 5,
@@ -142,7 +146,8 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "👑",
-    estimatedDelivery: "فوري"
+    estimatedDelivery: "فوري",
+    version: "V 1.0"
   }
 ];
 

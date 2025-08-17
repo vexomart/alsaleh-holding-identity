@@ -63,6 +63,14 @@ export const ProductCard = ({ product, index, isProductLoading, onPurchase }: Pr
         </div>
       )}
       
+      {product.version && (
+        <div className="absolute top-4 right-4 z-10">
+          <Badge className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1 rounded-xl font-bold shadow-lg">
+            🔖 {product.version}
+          </Badge>
+        </div>
+      )}
+      
 
       <CardHeader className="relative pb-4">
         <div className={`w-20 h-20 bg-gradient-to-r ${product.color} rounded-3xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-2xl mx-auto animate-bounce`}>
