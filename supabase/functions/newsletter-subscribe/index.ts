@@ -1,11 +1,18 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "npm:resend@2.0.0";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+const supabase = createClient(
+  Deno.env.get("SUPABASE_URL") ?? "",
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+);
 
 interface NewsletterSubscription {
   email: string;
@@ -13,251 +20,172 @@ interface NewsletterSubscription {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Initialize Supabase client with service role key
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    const { email, name }: NewsletterSubscription = await req.json();
+    
+    console.log("Newsletter subscription request:", { email, name });
 
-    // Initialize Resend
-    const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
-    const subscriptionData: NewsletterSubscription = await req.json();
-
-    console.log("Received newsletter subscription:", subscriptionData);
-
-    // Validate email
-    if (!subscriptionData.email || !subscriptionData.email.includes('@')) {
-      throw new Error("بريد إلكتروني غير صحيح");
+    if (!email || !email.includes('@')) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email address" }),
+        {
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+          status: 400,
+        }
+      );
     }
 
     // Check if email already exists
-    const { data: existingSubscription, error: checkError } = await supabaseClient
-      .from("newsletter_subscriptions")
-      .select("id, is_active")
-      .eq("email", subscriptionData.email)
+    const { data: existingSubscription } = await supabase
+      .from('newsletter_subscriptions')
+      .select('*')
+      .eq('email', email)
+      .eq('is_active', true)
       .single();
 
-    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows returned
-      throw new Error(`Database check error: ${checkError.message}`);
-    }
-
     if (existingSubscription) {
-      if (existingSubscription.is_active) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: "هذا البريد الإلكتروني مشترك بالفعل في النشرة الإخبارية",
-          }),
-          {
-            status: 400,
-            headers: {
-              "Content-Type": "application/json",
-              ...corsHeaders,
-            },
-          }
-        );
-      } else {
-        // Reactivate subscription
-        const { error: updateError } = await supabaseClient
-          .from("newsletter_subscriptions")
-          .update({ 
-            is_active: true, 
-            subscribed_at: new Date().toISOString(),
-            unsubscribed_at: null,
-            name: subscriptionData.name || null
-          })
-          .eq("id", existingSubscription.id);
-
-        if (updateError) {
-          throw new Error(`Database update error: ${updateError.message}`);
+      return new Response(
+        JSON.stringify({ message: "Email already subscribed", success: true }),
+        {
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+          status: 200,
         }
-      }
-    } else {
-      // Create new subscription
-      const { error: insertError } = await supabaseClient
-        .from("newsletter_subscriptions")
-        .insert({
-          email: subscriptionData.email,
-          name: subscriptionData.name || null,
-        });
-
-      if (insertError) {
-        throw new Error(`Database insert error: ${insertError.message}`);
-      }
+      );
     }
 
-    console.log("Newsletter subscription saved successfully");
+    // Insert new subscription
+    const { error: insertError } = await supabase
+      .from('newsletter_subscriptions')
+      .insert({
+        email,
+        name: name || null,
+        is_active: true
+      });
 
-    // Send welcome email to subscriber
-    const welcomeEmailResponse = await resend.emails.send({
+    if (insertError) {
+      console.error("Error inserting subscription:", insertError);
+      throw insertError;
+    }
+
+    // Send welcome email
+    const emailResponse = await resend.emails.send({
       from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: [subscriptionData.email],
+      to: [email],
       bcc: ["info@alialshehriholding.com"],
-      subject: "مرحباً بك في النشرة الإخبارية",
+      reply_to: "info@alialshehriholding.com",
+      subject: "مرحباً بك في النشرة الإخبارية - شركة علي صالح الشهري القابضة",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
         <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>مرحباً بك في النشرة الإخبارية</title>
-            <style>
-                body {
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
-                    background-color: #f5f5f5;
-                    margin: 0;
-                    padding: 20px;
-                    direction: rtl;
-                    text-align: right;
-                }
-                .container {
-                    max-width: 600px;
-                    margin: 0 auto;
-                    background: white;
-                    border-radius: 15px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                    overflow: hidden;
-                }
-                .header {
-                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-                    color: white;
-                    padding: 30px;
-                    text-align: center;
-                }
-                .content {
-                    padding: 30px;
-                }
-                .welcome-box {
-                    background-color: #f0f9ff;
-                    padding: 20px;
-                    border-radius: 8px;
-                    margin: 20px 0;
-                    border-right: 4px solid #2563eb;
-                }
-                .benefits-box {
-                    background-color: #f8fafc;
-                    padding: 20px;
-                    border-radius: 8px;
-                    margin: 20px 0;
-                    border-right: 4px solid #1e40af;
-                }
-                .footer {
-                    background: #1f2937;
-                    color: white;
-                    text-align: center;
-                    padding: 25px;
-                }
-            </style>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>مرحباً بك في النشرة الإخبارية</title>
         </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1 style="margin: 0; font-size: 28px; font-weight: bold;">🎉 مرحباً بك معنا!</h1>
-                    <p style="margin: 10px 0 0 0; opacity: 0.9;">شكراً لاشتراكك في النشرة الإخبارية</p>
-                </div>
-                
-                <div class="content">
-                    <div class="welcome-box">
-                        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-                            ${subscriptionData.name ? `عزيزي/عزيزتي ${subscriptionData.name}،` : 'عزيزي المشترك،'}
-                        </p>
-                        <p style="font-size: 16px; line-height: 1.6; margin: 0;">
-                            شكراً لك على الاشتراك في النشرة الإخبارية لشركة علي صالح الشهري القابضة.
-                            ستصلك أحدث الأخبار والتطورات في عالم التقنية والاستثمار.
-                        </p>
-                    </div>
-
-                    <div class="benefits-box">
-                        <h2 style="color: #1e40af; margin: 0 0 15px 0;">ماذا ستحصل عليه؟</h2>
-                        <ul style="color: #6b7280; line-height: 1.8; margin: 0; padding-right: 20px;">
-                            <li>أحدث أخبار الشركة ومشاريعها</li>
-                            <li>نصائح وأفكار في مجال الاستثمار التقني</li>
-                            <li>دعوات حصرية للفعاليات والمؤتمرات</li>
-                            <li>تحديثات عن الشركات التابعة والاستثمارات الجديدة</li>
-                        </ul>
-                    </div>
-
-                    <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f0f9ff; border-radius: 8px;">
-                        <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
-                            يمكنك إلغاء الاشتراك في أي وقت من خلال الرابط في أسفل أي رسالة إخبارية
-                        </p>
-                        <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                            للتواصل: info@alialshehriholding.com
-                        </p>
-                    </div>
-                </div>
-                
-                <div class="footer">
-                    <p style="margin: 0; font-size: 12px;">
-                        شركة علي صالح الشهري القابضة - شريكك في التحول الرقمي
-                    </p>
-                </div>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; direction: rtl;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
+            
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 30px; text-align: center;">
+              <h1 style="margin: 0; font-size: 28px; font-weight: bold;">مرحباً بك في النشرة الإخبارية</h1>
+              <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">شركة علي صالح الشهري القابضة</p>
             </div>
+
+            <!-- Content -->
+            <div style="padding: 30px;">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <div style="display: inline-block; background-color: #10b981; color: white; padding: 15px; border-radius: 50%; margin-bottom: 20px;">
+                  <svg width="40" height="40" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                ${name ? `<h2 style="color: #1e3a8a; margin: 0; font-size: 24px;">شكراً لك ${name}</h2>` : '<h2 style="color: #1e3a8a; margin: 0; font-size: 24px;">شكراً لك</h2>'}
+              </div>
+
+              <div style="background-color: #f0f9ff; border-radius: 8px; padding: 25px; margin-bottom: 25px; border-right: 4px solid #3b82f6;">
+                <p style="margin: 0 0 15px 0; color: #1e3a8a; font-size: 18px; font-weight: bold;">تم تسجيلك بنجاح في النشرة الإخبارية</p>
+                <p style="margin: 0; color: #475569; line-height: 1.6;">
+                  سوف تصلك آخر الأخبار والتحديثات حول خدماتنا ومشاريعنا الجديدة. 
+                  نعدك بإرسال محتوى مفيد وذو قيمة فقط.
+                </p>
+              </div>
+
+              <div style="background-color: #ecfdf5; border-radius: 8px; padding: 20px; margin-bottom: 25px; border-right: 4px solid #10b981;">
+                <h3 style="color: #059669; margin: 0 0 15px 0; font-size: 18px;">ماذا ستحصل عليه:</h3>
+                <ul style="margin: 0; padding: 0 0 0 20px; color: #475569; line-height: 1.8;">
+                  <li>آخر أخبار الشركة والمشاريع الجديدة</li>
+                  <li>عروض وخصومات حصرية للمشتركين</li>
+                  <li>نصائح ومقالات تقنية مفيدة</li>
+                  <li>دعوات لفعاليات ومؤتمرات الشركة</li>
+                </ul>
+              </div>
+
+              <div style="background-color: #1e3a8a; color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                <p style="margin: 0 0 10px 0; font-size: 16px; font-weight: bold;">هل لديك أي استفسار؟</p>
+                <p style="margin: 0; font-size: 14px;">
+                  يمكنك التواصل معنا في أي وقت<br>
+                  <strong>البريد الإلكتروني:</strong> info@alialshehriholding.com<br>
+                  <strong>الهاتف:</strong> 0555812567
+                </p>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
+              <p style="margin: 0; color: #64748b; font-size: 14px;">
+                شركة علي صالح الشهري القابضة<br>
+                المملكة العربية السعودية
+              </p>
+            </div>
+          </div>
         </body>
         </html>
       `,
     });
 
-    if (welcomeEmailResponse.error) {
-      console.error("Welcome email error:", welcomeEmailResponse.error);
-    } else {
-      console.log("Welcome email sent successfully:", welcomeEmailResponse);
-    }
+    console.log("Welcome email sent:", emailResponse);
 
-    // Send notification to company
-    const notificationEmailResponse = await resend.emails.send({
+    // Send notification to admin
+    await resend.emails.send({
       from: "Ali AlShehri Holding <info@alialshehriholding.com>",
       to: ["info@alialshehriholding.com"],
-      bcc: ["info@alialshehriholding.com"],
+      subject: `اشتراك جديد في النشرة الإخبارية - ${email}`,
       html: `
-        <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px;">
-          <h1 style="color: #2563eb;">اشتراك جديد في النشرة الإخبارية</h1>
-          <p><strong>البريد الإلكتروني:</strong> ${subscriptionData.email}</p>
-          ${subscriptionData.name ? `<p><strong>الاسم:</strong> ${subscriptionData.name}</p>` : ''}
+        <div style="font-family: Arial, sans-serif; direction: rtl; padding: 20px;">
+          <h2 style="color: #1e3a8a;">اشتراك جديد في النشرة الإخبارية</h2>
+          <p><strong>البريد الإلكتروني:</strong> ${email}</p>
+          ${name ? `<p><strong>الاسم:</strong> ${name}</p>` : ''}
           <p><strong>تاريخ الاشتراك:</strong> ${new Date().toLocaleString('ar-SA')}</p>
         </div>
       `,
     });
 
-    if (notificationEmailResponse.error) {
-      console.error("Notification email error:", notificationEmailResponse.error);
-    }
-
     return new Response(
-      JSON.stringify({
-        success: true,
-        message: "تم الاشتراك بنجاح! ستصلك رسالة تأكيد على بريدك الإلكتروني",
+      JSON.stringify({ 
+        success: true, 
+        message: "تم الاشتراك في النشرة الإخبارية بنجاح",
+        emailId: emailResponse.data?.id
       }),
       {
+        headers: { "Content-Type": "application/json", ...corsHeaders },
         status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
       }
     );
+
   } catch (error: any) {
     console.error("Error in newsletter-subscribe function:", error);
     return new Response(
-      JSON.stringify({
-        success: false,
-        error: error.message || "حدث خطأ أثناء الاشتراك",
+      JSON.stringify({ 
+        error: error.message,
+        success: false 
       }),
       {
+        headers: { "Content-Type": "application/json", ...corsHeaders },
         status: 500,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
       }
     );
   }
