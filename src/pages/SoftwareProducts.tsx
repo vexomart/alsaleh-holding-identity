@@ -38,11 +38,6 @@ const SoftwareProducts = () => {
   ];
 
   const handlePurchase = async (product: any) => {
-    toast({
-      title: "🚀 جاري التحضير...",
-      description: "يتم تحضير صفحة الدفع الآمنة",
-    });
-
     setLoadingProducts(prev => ({ ...prev, [product.id]: true }));
     
     const priceAmount = parseInt(product.price.replace(/[^\d]/g, ''));
