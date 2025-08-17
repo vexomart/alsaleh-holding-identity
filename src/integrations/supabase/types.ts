@@ -84,7 +84,7 @@ export type Database = {
           status: string
           tax_number: string | null
           updated_at: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           authorized_person?: string | null
@@ -117,7 +117,7 @@ export type Database = {
           status?: string
           tax_number?: string | null
           updated_at?: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           authorized_person?: string | null
@@ -150,7 +150,7 @@ export type Database = {
           status?: string
           tax_number?: string | null
           updated_at?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -407,7 +407,7 @@ export type Database = {
           tap_charge_id: string | null
           tap_payment_id: string | null
           updated_at: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           amount: number
@@ -428,7 +428,7 @@ export type Database = {
           tap_charge_id?: string | null
           tap_payment_id?: string | null
           updated_at?: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           amount?: number
@@ -449,7 +449,7 @@ export type Database = {
           tap_charge_id?: string | null
           tap_payment_id?: string | null
           updated_at?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
