@@ -129,70 +129,81 @@ const SoftwareProducts = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 lg:px-6 space-y-12">
-        {/* Statistics */}
-        <ProductStats products={products} />
-
-        {/* Filters & Search */}
-        <ProductFilters 
-          categories={categories}
-          selectedCategory={selectedCategory}
-          searchTerm={searchTerm}
-          onCategoryChange={setSelectedCategory}
-          onSearchChange={setSearchTerm}
-        />
-
-        {/* Products Section Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
-              🛍️ جميع المنتجات الحصرية
-            </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400">
-              استكشف مجموعتنا المتنوعة من الحلول البرمجية المبتكرة
-            </p>
-          </div>
-          <div className="hidden md:flex items-center gap-2">
-            <Badge variant="secondary" className="bg-primary/10 text-primary px-4 py-2 rounded-xl font-bold">
-              {filteredProducts.length} منتج متاح
-            </Badge>
-          </div>
+      <div className="container mx-auto px-4 lg:px-8 space-y-16">
+        {/* Statistics Section */}
+        <div className="mt-8">
+          <ProductStats products={products} />
         </div>
 
-        {/* Products Grid */}
+        {/* Filters & Search Section */}
+        <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 dark:border-slate-700/50">
+          <ProductFilters 
+            categories={categories}
+            selectedCategory={selectedCategory}
+            searchTerm={searchTerm}
+            onCategoryChange={setSelectedCategory}
+            onSearchChange={setSearchTerm}
+          />
+        </div>
+
+        {/* Products Section */}
         <div className="space-y-8">
-          {filteredProducts.length === 0 ? (
-            <Card className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 border-2 border-slate-200 dark:border-slate-800 rounded-3xl">
-              <CardContent className="p-16 text-center">
-                <div className="flex flex-col items-center justify-center space-y-6">
-                  <div className="w-32 h-32 bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 rounded-full flex items-center justify-center animate-pulse">
-                    <Package className="w-16 h-16 text-slate-400 dark:text-slate-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-slate-600 dark:text-slate-400 mb-2">
-                      😔 لا توجد منتجات متاحة
-                    </h3>
-                    <p className="text-slate-500 dark:text-slate-500">
-                      🔍 جرب البحث بكلمات مفتاحية أخرى أو تصفح فئة مختلفة
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProducts.map((product, index) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  index={index}
-                  isProductLoading={loadingProducts[product.id] || false}
-                  onPurchase={handlePurchase}
-                />
-              ))}
+          {/* Section Header */}
+          <div className="flex items-center justify-between py-6 border-b border-slate-200/60 dark:border-slate-700/60">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3">
+                🛍️ جميع المنتجات الحصرية
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400">
+                استكشف مجموعتنا المتنوعة من الحلول البرمجية المبتكرة
+              </p>
             </div>
-          )}
+            <div className="hidden md:flex items-center gap-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary px-6 py-3 rounded-xl font-bold text-sm">
+                {filteredProducts.length} منتج متاح
+              </Badge>
+            </div>
+          </div>
+
+          {/* Products Grid */}
+          <div className="pt-8">
+            {filteredProducts.length === 0 ? (
+              <Card className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/50 dark:to-slate-800/50 border-2 border-slate-200 dark:border-slate-800 rounded-3xl shadow-lg">
+                <CardContent className="p-20 text-center">
+                  <div className="flex flex-col items-center justify-center space-y-8">
+                    <div className="w-36 h-36 bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 rounded-full flex items-center justify-center animate-pulse shadow-inner">
+                      <Package className="w-18 h-18 text-slate-400 dark:text-slate-500" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-slate-600 dark:text-slate-400 mb-3">
+                        😔 لا توجد منتجات متاحة
+                      </h3>
+                      <p className="text-slate-500 dark:text-slate-500 text-lg">
+                        🔍 جرب البحث بكلمات مفتاحية أخرى أو تصفح فئة مختلفة
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+                {filteredProducts.map((product, index) => (
+                  <div key={product.id} className="transform transition-all duration-300 hover:scale-[1.02]">
+                    <ProductCard
+                      product={product}
+                      index={index}
+                      isProductLoading={loadingProducts[product.id] || false}
+                      onPurchase={handlePurchase}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Bottom Spacing */}
+        <div className="pb-16"></div>
       </div>
 
     </PageContainer>
