@@ -119,87 +119,6 @@ export const products = [
   },
   {
     id: 5,
-    name: "🛒 متجر إلكتروني ذكي",
-    description: "متجر إلكتروني متكامل مع نظام إدارة المخزون والطلبات وبوابات دفع متعددة وذكاء اصطناعي",
-    category: "التجارة الإلكترونية",
-    icon: ShoppingCart,
-    features: [
-      "🛒 نظام سلة تسوق ذكي",
-      "💳 بوابات دفع متعددة وآمنة",
-      "📦 إدارة المخزون والطلبات",
-      "🔍 محرك بحث ذكي بالذكاء الاصطناعي",
-      "📱 تطبيق موبايل مجاني",
-      "📊 تحليلات مبيعات متقدمة"
-    ],
-    price: "8999 ريال",
-    rating: 4.8,
-    downloads: "67",
-    status: "قريباً",
-    color: "from-green-500 to-emerald-500",
-    demoUrl: "#",
-    tags: ["E-commerce", "AI", "Mobile", "Analytics"],
-    isNew: true,
-    isFeatured: false,
-    isExclusive: true,
-    emoji: "🛒",
-    estimatedDelivery: "خلال أسبوع"
-  },
-  {
-    id: 6,
-    name: "🎨 منصة التصميم الإبداعي",
-    description: "منصة متكاملة للتصميم الجرافيكي والإبداعي مع أدوات ذكية وقوالب حصرية",
-    category: "التصميم والإبداع",
-    icon: Palette,
-    features: [
-      "🎭 أدوات تصميم احترافية",
-      "🖼️ قوالب حصرية وفريدة",
-      "🤝 العمل التعاوني المتقدم",
-      "☁️ حفظ سحابي آمن",
-      "📐 أدوات قياس وتحليل",
-      "🎯 تصدير بجودة عالية"
-    ],
-    price: "6999 ريال",
-    rating: 4.7,
-    downloads: "123",
-    status: "قريباً",
-    color: "from-pink-500 to-rose-500",
-    demoUrl: "#",
-    tags: ["Design", "Creative", "Collaborative", "Cloud"],
-    isNew: true,
-    isFeatured: false,
-    isExclusive: true,
-    emoji: "🎨",
-    estimatedDelivery: "خلال أسبوعين"
-  },
-  {
-    id: 7,
-    name: "📊 نظام إدارة الأعمال الذكي",
-    description: "نظام إدارة شامل للأعمال مع لوحة تحكم ذكية وتقارير تفاعلية وذكاء اصطناعي",
-    category: "أنظمة الإدارة",
-    icon: BarChart,
-    features: [
-      "📈 لوحة تحكم ذكية وتفاعلية",
-      "👥 إدارة الموظفين والرواتب",
-      "💰 النظام المالي والمحاسبي",
-      "📋 إدارة المشاريع والمهام",
-      "📱 تطبيق موبايل مخصص",
-      "🔔 تنبيهات ذكية وتلقائية"
-    ],
-    price: "12999 ريال",
-    rating: 4.9,
-    downloads: "45",
-    status: "تحت التطوير",
-    color: "from-indigo-500 to-purple-500",
-    demoUrl: "#",
-    tags: ["Business", "Management", "AI", "Mobile"],
-    isNew: true,
-    isFeatured: true,
-    isExclusive: true,
-    emoji: "📊",
-    estimatedDelivery: "خلال شهر"
-  },
-  {
-    id: 8,
     name: "👑 متجر عبايتي",
     description: "متجر إلكتروني فاخر ومتكامل للعبايات العصرية مع تصميم عالمي مميز وتكامل مع الواتساب وتجربة تسوق استثنائية",
     category: "التجارة الإلكترونية",
@@ -230,8 +149,6 @@ export const products = [
 export const categories = [
   { name: "جميع المنتجات", emoji: "🛍️", count: products.length },
   { name: "المواقع التعريفية", emoji: "🌐", count: 2 },
-  { name: "التجارة الإلكترونية", emoji: "🛒", count: 3 },
-  { name: "التسويق الرقمي", emoji: "📈", count: 1 },
-  { name: "التصميم والإبداع", emoji: "🎨", count: 1 },
-  { name: "أنظمة الإدارة", emoji: "⚙️", count: 1 }
+  { name: "التجارة الإلكترونية", emoji: "🛒", count: 2 },
+  { name: "التسويق الرقمي", emoji: "📈", count: 1 }
 ];
