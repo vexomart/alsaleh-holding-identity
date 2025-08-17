@@ -311,7 +311,7 @@ const Navigation = () => {
                       >
                         <Code className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
                         <div>
-                          <div className="font-medium">مواقع ومتاجر</div>
+                          <div className="font-medium">منتجاتنا البرمجية</div>
                           <div className="text-xs text-gray-500">برمجيات وتطبيقات متخصصة</div>
                         </div>
                       </Link>
@@ -319,6 +319,7 @@ const Navigation = () => {
                   </div>
                 )}
               </div>
+              <CompanyProfilePDF />
             </div>
 
             {/* Action Buttons - Responsive */}
@@ -478,7 +479,7 @@ const Navigation = () => {
                       <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
                         <Code className="w-4 h-4 text-purple-600" />
                       </div>
-                      <span className="text-gray-700 leading-tight">مواقع ومتاجر</span>
+                      <span className="text-gray-700 leading-tight">منتجاتنا البرمجية</span>
                     </Link>
                   </div>
                 </div>
@@ -514,6 +515,9 @@ const Navigation = () => {
                   )}
                 </div>
                 
+                <div onClick={() => setIsOpen(false)}>
+                  <CompanyProfilePDF className="block w-full text-right py-3 px-2 rounded-lg hover:bg-blue-50" />
+                </div>
                 
                 {/* Mobile Action Button */}
                 {/* CTA button hidden as requested */}
