@@ -684,15 +684,17 @@
   animation-duration: 4s;
 }
 
-/* Preload critical fonts */
-@font-face {
-  font-family: 'Cairo';
-  font-display: swap;
+/* Arabic Font Families */
+.font-amiri {
+  font-family: 'Amiri', serif;
 }
 
-@font-face {
-  font-family: 'Amiri';
-  font-display: swap;
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
+}
+
+.font-arabic {
+  font-family: 'Cairo', 'Amiri', 'Segoe UI', 'Tahoma', sans-serif;
 }
 
 /* Print styles */

@@ -2,26 +2,30 @@ import React, { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font } from "@react-pdf/renderer";
 
-// Register reliable fonts for Arabic support
-Font.register({
-  family: 'Amiri',
-  fonts: [
-    {
-      src: 'https://fonts.gstatic.com/s/amiri/v23/J7aRnpF2V0ErE6rzWjKhEm9Afw.woff2',
-      fontWeight: 'normal',
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/amiri/v23/J7aSnpF2V0Erj6-Dw9mxE2NKXfAUJb.woff2',
-      fontWeight: 'bold',
-    }
-  ]
-});
+// Register reliable fonts for PDF Arabic support
+try {
+  Font.register({
+    family: 'NotoSansArabic',
+    fonts: [
+      {
+        src: 'https://fonts.gstatic.com/s/notosansarabic/v18/Hgo13k-tfSpn0qi1SFdUfVtXRcuvVGOr2RY.woff2',
+        fontWeight: 400,
+      },
+      {
+        src: 'https://fonts.gstatic.com/s/notosansarabic/v18/Hgo33k-tfSpn0qi1SFdUfVtXRcuvVGOrOj8.woff2',
+        fontWeight: 700,
+      },
+    ],
+  });
+} catch (error) {
+  console.warn('Font registration failed, using fallback');
+}
 
 // Professional PDF Styles
 const styles = StyleSheet.create({
   // Base page styles
   page: {
-    fontFamily: 'Amiri',
+    fontFamily: 'NotoSansArabic',
     fontSize: 13,
     paddingTop: 50,
     paddingBottom: 80,
@@ -50,7 +54,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
-    fontFamily: 'Amiri',
+    fontFamily: 'NotoSansArabic',
   },
   
   // Footer for each page  
@@ -74,12 +78,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#64748b',
     textAlign: 'center',
-    fontFamily: 'Amiri',
+    fontFamily: 'NotoSansArabic',
   },
   
   // Cover page styles
   coverPage: {
-    fontFamily: 'Amiri',
+    fontFamily: 'NotoSansArabic',
     backgroundColor: '#1e3a8a',
     display: 'flex',
     flexDirection: 'column',
@@ -113,7 +117,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 12,
     color: 'white',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   subtitle: {
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 8,
     color: '#e2e8f0',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   description: {
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 15,
     color: '#cbd5e1',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   slogan: {
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 40,
     color: '#fbbf24',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   logoContainer: {
@@ -157,7 +161,7 @@ const styles = StyleSheet.create({
     fontSize: 24, 
     color: '#1e3a8a', 
     fontWeight: 'bold',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   // Statistics section
@@ -184,13 +188,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1e3a8a',
     marginBottom: 5,
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   statLabel: {
     fontSize: 12,
     color: '#64748b',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   // Section styles
@@ -207,7 +211,7 @@ const styles = StyleSheet.create({
     color: '#1e3a8a',
     borderBottom: '3px solid #1e3a8a',
     paddingBottom: 10,
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   text: {
@@ -216,7 +220,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginBottom: 15,
     color: '#374151',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   // Service boxes
@@ -235,7 +239,7 @@ const styles = StyleSheet.create({
     color: '#1e3a8a',
     marginBottom: 12,
     textAlign: 'right',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   serviceItem: {
@@ -244,7 +248,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     color: '#4b5563',
     paddingRight: 10,
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   // Partners section
@@ -259,7 +263,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     color: '#1e3a8a',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   partnerGrid: {
@@ -283,7 +287,7 @@ const styles = StyleSheet.create({
   partnerText: {
     fontSize: 14,
     fontWeight: 'bold',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   // Vision & Mission boxes
@@ -318,14 +322,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
     textAlign: 'center',
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   boxText: {
     fontSize: 12,
     textAlign: 'center',
     lineHeight: 1.6,
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   // Professional digital signature
@@ -357,7 +361,7 @@ const styles = StyleSheet.create({
     color: '#1e3a8a',
     textAlign: 'center',
     marginBottom: 8,
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   signatureDetails: {
@@ -365,7 +369,7 @@ const styles = StyleSheet.create({
     color: '#64748b',
     textAlign: 'center',
     marginBottom: 4,
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
   
   signatureCode: {
@@ -373,7 +377,7 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     textAlign: 'center',
     marginTop: 8,
-    fontFamily: 'Cairo',
+    fontFamily: 'NotoSansArabic',
   },
 });
 
