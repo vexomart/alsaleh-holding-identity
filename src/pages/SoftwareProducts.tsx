@@ -36,22 +36,6 @@ const SoftwareProducts = () => {
       color: 'from-blue-500 to-blue-600',
       description: 'مدى، فيزا، ماستركارد، أبل باي',
       emoji: '💳'
-    },
-    {
-      id: 'tamara',
-      name: '💎 تمارا',
-      icon: Wallet,
-      color: 'from-purple-500 to-purple-600',
-      description: 'اشتري الآن وادفع لاحقاً',
-      emoji: '💎'
-    },
-    {
-      id: 'stc-pay',
-      name: '📱 STC Pay',
-      icon: CreditCard,
-      color: 'from-orange-500 to-orange-600',
-      description: 'دفع عبر STC Pay',
-      emoji: '📱'
     }
   ];
 
@@ -84,54 +68,6 @@ const SoftwareProducts = () => {
             offer_title: product.name,
             description: `🛍️ شراء منتج حصري: ${product.name}`,
             success_url: window.location.origin
-          };
-          break;
-        case 'tamara':
-          functionName = 'tamara-payment';
-          paymentData = {
-            order_reference_id: `EMKAN_${Date.now()}`,
-            total_amount: {
-              amount: priceAmount,
-              currency: 'SAR'
-            },
-            description: `💎 شراء منتج حصري: ${product.name}`,
-            country_code: 'SA',
-            payment_type: 'PAY_BY_INSTALMENTS',
-            instalments: 4,
-            consumer: {
-              first_name: 'عميل',
-              last_name: 'إمكان',
-              phone_number: '966500000000',
-              email: 'customer@emkan.sa'
-            },
-            merchant_url: {
-              success: `${window.location.origin}/payment-success`,
-              failure: `${window.location.origin}/payment-cancel`,
-              cancel: `${window.location.origin}/payment-cancel`,
-              notification: `${window.location.origin}/api/tamara-webhook`
-            },
-            items: [{
-              name: product.name,
-              type: 'Digital',
-              reference_id: `EMKAN_${Date.now()}`,
-              sku: `EMKAN-${product.id}`,
-              quantity: 1,
-              total_amount: {
-                amount: priceAmount,
-                currency: 'SAR'
-              }
-            }]
-          };
-          break;
-        case 'stc-pay':
-          functionName = 'stc-pay';
-          paymentData = {
-            amount: priceAmount,
-            currency: 'SAR',
-            description: `📱 شراء منتج حصري: ${product.name}`,
-            customer_name: 'عميل إمكان',
-            customer_email: 'customer@emkan.sa',
-            customer_phone: '966500000000'
           };
           break;
         default:

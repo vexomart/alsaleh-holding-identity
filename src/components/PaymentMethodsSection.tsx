@@ -31,7 +31,6 @@ import {
 } from "lucide-react";
 
 // Import company logos
-import tamaraLogo from "@/assets/tamara-logo.png";
 import tabbyLogo from "@/assets/tabby-logo.png";
 import madfuLogo from "@/assets/madfu-logo.png";
 import companyLogo from "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png";
@@ -62,7 +61,7 @@ const PaymentMethodsSection = () => {
     {
       name: "المحافظ الرقمية الذكية",
       icon: Smartphone,
-      description: "STC Pay، Apple Pay، Google Pay، Samsung Pay",
+      description: "Apple Pay، Google Pay، Samsung Pay",
       features: ["مصادقة بيومترية", "دفع لاتصالي", "تشفير متقدم", "نقاط مكافآت"],
       gradient: "from-purple-600 via-violet-700 to-fuchsia-800",
       bgGradient: "from-purple-50 to-violet-100 dark:from-purple-950 dark:to-violet-950"
@@ -70,21 +69,6 @@ const PaymentMethodsSection = () => {
   ];
 
   const installmentOptions = [
-    {
-      name: "تمارا",
-      logo: tamaraLogo,
-      description: "الرائد في خدمات اشتر الآن وادفع لاحقاً بدون فوائد",
-      features: [
-        "قسط على 4 دفعات متساوية",
-        "بدون فوائد أو رسوم خفية", 
-        "موافقة فورية خلال ثوانٍ",
-        "حد أدنى 100 ريال - حد أقصى 20,000 ريال"
-      ],
-      benefits: ["أول قسط فقط 25%", "مرونة كاملة في السداد", "حماية المشتري"],
-      color: "emerald",
-      gradient: "from-emerald-500 via-teal-600 to-cyan-700",
-      premium: true
-    },
     {
       name: "تابي", 
       logo: tabbyLogo,
@@ -746,7 +730,7 @@ const PaymentMethodsSection = () => {
                       <option value="credit-card">بطاقة ائتمان</option>
                       <option value="bank-transfer">تحويل بنكي</option>
                       <option value="digital-wallet">محفظة رقمية</option>
-                      <option value="tamara">تمارا</option>
+                      <option value="tabby">تابي</option>
                       <option value="tabby">تابي</option>
                       <option value="madfu">مدفوع</option>
                       <option value="alsaleh">شركة علي صالح الشهري القابضة</option>
