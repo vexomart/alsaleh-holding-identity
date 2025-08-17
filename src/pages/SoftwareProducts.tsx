@@ -52,11 +52,8 @@ const SoftwareProducts = () => {
         body: {
           amount: priceAmount,
           currency: 'SAR',
-          customer_name: 'عميل إمكان',
-          customer_email: 'customer@emkan.sa',
-          customer_phone: '966500000000',
           offer_title: product.name,
-          description: `🛍️ شراء منتج حصري: ${product.name}`,
+          description: `شراء منتج: ${product.name}`,
           success_url: window.location.origin
         }
       });
