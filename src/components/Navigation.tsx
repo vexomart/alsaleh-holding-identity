@@ -319,7 +319,6 @@ const Navigation = () => {
                   </div>
                 )}
               </div>
-              <CompanyProfilePDF />
             </div>
 
             {/* Action Buttons - Responsive */}
@@ -515,9 +514,6 @@ const Navigation = () => {
                   )}
                 </div>
                 
-                <div onClick={() => setIsOpen(false)}>
-                  <CompanyProfilePDF className="block w-full text-right py-3 px-2 rounded-lg hover:bg-blue-50" />
-                </div>
                 
                 {/* Mobile Action Button */}
                 {/* CTA button hidden as requested */}
