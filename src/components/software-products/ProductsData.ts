@@ -35,7 +35,6 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🚗",
-    discount: "37%",
     estimatedDelivery: "فوري"
   },
   {
@@ -64,7 +63,6 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🏗️",
-    discount: "30%",
     estimatedDelivery: "فوري"
   },
   {
@@ -93,7 +91,6 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "📈",
-    discount: "33%",
     estimatedDelivery: "فوري"
   },
   {
@@ -122,7 +119,6 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🛍️",
-    discount: "33%",
     estimatedDelivery: "فوري"
   },
   {
@@ -151,7 +147,6 @@ export const products = [
     isFeatured: false,
     isExclusive: true,
     emoji: "🛒",
-    discount: "30%",
     estimatedDelivery: "خلال أسبوع"
   },
   {
@@ -180,7 +175,6 @@ export const products = [
     isFeatured: false,
     isExclusive: true,
     emoji: "🎨",
-    discount: "30%",
     estimatedDelivery: "خلال أسبوعين"
   },
   {
@@ -209,7 +203,6 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "📊",
-    discount: "27%",
     estimatedDelivery: "خلال شهر"
   },
   {
@@ -238,7 +231,6 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "👑",
-    discount: "43%",
     estimatedDelivery: "فوري"
   }
 ];
