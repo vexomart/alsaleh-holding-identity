@@ -91,6 +91,7 @@ const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
 const HostingServices = lazy(() => import("./pages/HostingServices"));
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
+const SoftwareProductDetails = lazy(() => import("./pages/ProductDetails"));
 const CarRentalWebsite = lazy(() => import("./pages/CarRentalWebsite"));
 const CareersPage = lazy(() => import("./pages/CareersPage"));
 const CarRentalLanding = lazy(() => import("./pages/CarRentalLanding"));
@@ -270,6 +271,7 @@ const App = () => {
                 <Route path="/hosting-services" element={<HostingServices />} />
                 <Route path="/company-updates" element={<CompanyUpdates />} />
                 <Route path="/software-products" element={<Suspense fallback={<PageLoader />}><SoftwareProducts /></Suspense>} />
+                <Route path="/product-details/:id" element={<Suspense fallback={<PageLoader />}><SoftwareProductDetails /></Suspense>} />
                 <Route path="/construction-website" element={<ConstructionWebsite />} />
                 <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
                 <Route path="/electronic-cards-store" element={<ElectronicCardsStore />} />

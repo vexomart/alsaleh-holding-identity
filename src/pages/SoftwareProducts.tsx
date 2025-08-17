@@ -391,11 +391,6 @@ const SoftwareProducts = () => {
                     <div className="space-y-5 mb-10">
                       <div className="flex items-center justify-between">
                         <div className="space-y-2">
-                          {product.originalPrice && (
-                            <span className="text-sm text-muted-foreground line-through block">
-                              {product.originalPrice}
-                            </span>
-                          )}
                           <div className="flex items-baseline gap-3">
                             <span className="text-3xl font-black bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                               {product.price}
@@ -403,11 +398,6 @@ const SoftwareProducts = () => {
                             <span className="text-lg text-muted-foreground font-medium">ريال</span>
                           </div>
                         </div>
-                        {product.discount && (
-                          <Badge className="bg-gradient-to-r from-red-500/15 to-red-600/15 text-red-600 border-red-500/30 px-4 py-2 rounded-xl font-bold shadow-lg">
-                            خصم {product.discount}
-                          </Badge>
-                        )}
                       </div>
                       {product.estimatedDelivery && (
                         <div className="text-sm text-muted-foreground flex items-center gap-3 bg-green-500/10 px-4 py-3 rounded-xl border border-green-500/20">
@@ -453,9 +443,10 @@ const SoftwareProducts = () => {
                       <Button 
                         variant="outline" 
                         className="group w-full border-2 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-primary font-bold py-4 px-6 rounded-2xl transition-all duration-500 hover:scale-105 backdrop-blur-sm"
+                        onClick={() => window.location.href = `/product-details/${product.id}`}
                       >
                         <span className="flex items-center justify-center">
-                          معاينة مباشرة
+                          تفاصيل المنتج
                           <Play className="w-5 h-5 ml-3 group-hover:scale-110 transition-transform duration-300" />
                         </span>
                       </Button>
