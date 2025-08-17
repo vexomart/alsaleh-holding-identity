@@ -63,13 +63,6 @@ export const ProductCard = ({ product, index, isProductLoading, onPurchase }: Pr
         </div>
       )}
       
-      {product.discount && (
-        <div className="absolute top-4 right-4 z-10">
-          <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-xl font-bold shadow-lg animate-bounce">
-            🔥 خصم {product.discount}
-          </Badge>
-        </div>
-      )}
 
       <CardHeader className="relative pb-4">
         <div className={`w-20 h-20 bg-gradient-to-r ${product.color} rounded-3xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-2xl mx-auto animate-bounce`}>
@@ -106,9 +99,6 @@ export const ProductCard = ({ product, index, isProductLoading, onPurchase }: Pr
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-2xl font-bold text-primary">{product.price}</span>
-              {product.originalPrice && (
-                <span className="text-lg text-slate-400 line-through">{product.originalPrice}</span>
-              )}
             </div>
             <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
               <Clock className="w-4 h-4 text-blue-500 animate-pulse" />

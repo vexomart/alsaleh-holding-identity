@@ -24,7 +24,6 @@ export const products = [
       "📊 تقارير مالية تفصيلية"
     ],
     price: "4999 ريال",
-    originalPrice: "7999 ريال",
     rating: 4.9,
     downloads: "145",
     status: "متاح الآن",
@@ -52,7 +51,6 @@ export const products = [
       "🖼️ معرض أعمال ديناميكي ثلاثي الأبعاد"
     ],
     price: "7000 ريال",
-    originalPrice: "9999 ريال",
     rating: 5.0,
     downloads: "89",
     status: "متاح الآن",
@@ -80,7 +78,6 @@ export const products = [
       "💬 دعم فني متخصص على مدار الساعة"
     ],
     price: "5999 ريال",
-    originalPrice: "8999 ريال",
     rating: 4.9,
     downloads: "234",
     status: "متاح الآن",
@@ -108,7 +105,6 @@ export const products = [
       "📊 إحصائيات تفاعلية ولوحة معلومات"
     ],
     price: "3999 ريال",
-    originalPrice: "5999 ريال",
     rating: 4.9,
     downloads: "89",
     status: "متاح الآن",
@@ -136,7 +132,6 @@ export const products = [
       "📊 تحليلات مبيعات متقدمة"
     ],
     price: "8999 ريال",
-    originalPrice: "12999 ريال",
     rating: 4.8,
     downloads: "67",
     status: "قريباً",
@@ -164,7 +159,6 @@ export const products = [
       "🎯 تصدير بجودة عالية"
     ],
     price: "6999 ريال",
-    originalPrice: "9999 ريال",
     rating: 4.7,
     downloads: "123",
     status: "قريباً",
@@ -192,7 +186,6 @@ export const products = [
       "🔔 تنبيهات ذكية وتلقائية"
     ],
     price: "12999 ريال",
-    originalPrice: "17999 ريال",
     rating: 4.9,
     downloads: "45",
     status: "تحت التطوير",
@@ -220,7 +213,6 @@ export const products = [
       "🏪 إدارة متكاملة للمخزون والطلبات"
     ],
     price: "4599 ريال",
-    originalPrice: "8000 ريال",
     rating: 5.0,
     downloads: "12",
     status: "متاح الآن",
