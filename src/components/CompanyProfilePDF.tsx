@@ -2,24 +2,28 @@ import React from "react";
 import { Download, Loader2 } from "lucide-react";
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font } from "@react-pdf/renderer";
 
-// Use default fonts for Arabic support
-Font.register({
-  family: 'Arial',
-  src: 'https://cdn.jsdelivr.net/npm/@fontsource/inter@4.5.2/files/inter-arabic-400-normal.woff2',
-  fontWeight: 'normal',
-});
+// Register reliable fonts for Arabic support
+try {
+  Font.register({
+    family: 'Amiri',
+    src: 'https://fonts.gstatic.com/s/amiri/v23/J7aRnpF2V0ErE6rzWjKhEm9Afw.woff2',
+    fontWeight: 'normal',
+  });
 
-Font.register({
-  family: 'Arial',
-  src: 'https://cdn.jsdelivr.net/npm/@fontsource/inter@4.5.2/files/inter-arabic-700-normal.woff2',
-  fontWeight: 'bold',
-});
+  Font.register({
+    family: 'Amiri',
+    src: 'https://fonts.gstatic.com/s/amiri/v23/J7aSnpF2V0Erj6-Dw9mxE2NKXfAUJb.woff2',
+    fontWeight: 'bold',
+  });
+} catch (error) {
+  console.warn('Font registration failed, using fallback fonts');
+}
 
 // Professional PDF Styles
 const styles = StyleSheet.create({
   // Base page styles
   page: {
-    fontFamily: 'Arial',
+    fontFamily: 'Amiri, Arial, sans-serif',
     fontSize: 13,
     paddingTop: 50,
     paddingBottom: 80,
@@ -48,7 +52,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
-    fontFamily: 'Arial',
+    fontFamily: 'Amiri, Arial, sans-serif',
   },
   
   // Footer for each page  
@@ -72,12 +76,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#64748b',
     textAlign: 'center',
-    fontFamily: 'Arial',
+    fontFamily: 'Amiri, Arial, sans-serif',
   },
   
   // Cover page styles
   coverPage: {
-    fontFamily: 'Arial',
+    fontFamily: 'Amiri, Arial, sans-serif',
     backgroundColor: '#1e3a8a',
     display: 'flex',
     flexDirection: 'column',

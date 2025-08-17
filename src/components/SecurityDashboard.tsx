@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useEnhancedSecurity } from '@/hooks/useEnhancedSecurity';
 import { supabase } from '@/integrations/supabase/client';
-import { Shield, AlertTriangle, Eye, Activity, User } from 'lucide-react';
+import { Shield, AlertTriangle, Eye, Activity, User, type LucideIcon } from 'lucide-react';
 
 interface SecurityEvent {
   id: string;
@@ -58,25 +58,25 @@ export const SecurityDashboard: React.FC = () => {
     }
   };
 
-  const getRiskColor = (riskLevel: string) => {
+  const getRiskColor = (riskLevel: string): "destructive" | "secondary" | "outline" | "default" => {
     switch (riskLevel) {
       case 'critical': return 'destructive';
       case 'high': return 'destructive';
       case 'medium': return 'secondary';
       case 'low': return 'outline';
-      default: return 'outline';
+      default: return 'default';
     }
   };
 
-  const getRiskIcon = (riskLevel: string) => {
+  const getRiskIcon = (riskLevel: string): LucideIcon => {
     switch (riskLevel) {
       case 'critical':
       case 'high':
-        return <AlertTriangle className="h-4 w-4" />;
+        return AlertTriangle;
       case 'medium':
-        return <Eye className="h-4 w-4" />;
+        return Eye;
       default:
-        return <Activity className="h-4 w-4" />;
+        return Activity;
     }
   };
 
@@ -179,7 +179,7 @@ export const SecurityDashboard: React.FC = () => {
                   className="flex items-center justify-between p-4 border rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    {getRiskIcon(event.risk_level)}
+                    {React.createElement(getRiskIcon(event.risk_level), { className: "h-4 w-4" })}
                     <div>
                       <div className="font-medium">{event.action}</div>
                       <div className="text-sm text-muted-foreground">
