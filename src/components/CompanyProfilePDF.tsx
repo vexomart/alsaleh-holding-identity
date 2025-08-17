@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font } from "@react-pdf/renderer";
 
@@ -550,15 +550,30 @@ interface CompanyProfilePDFProps {
 }
 
 export const CompanyProfilePDF: React.FC<CompanyProfilePDFProps> = ({ className }) => {
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      setIsGenerating(true);
+      // Small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 100));
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <PDFDownloadLink 
       document={<CompanyProfileDocument />} 
       fileName={`Ali-Saleh-Al-Shahri-Holding-Company-Profile-${new Date().getFullYear()}.pdf`}
-      className={`inline-flex items-center relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group ${className}`}
+      className={`inline-flex items-center relative px-3 py-2 text-sm text-gray-700 hover:text-blue-600 font-medium transition-all duration-300 group cursor-pointer ${className}`}
+      onClick={handleDownload}
     >
       {({ loading }) => (
         <>
-          {loading ? (
+          {loading || isGenerating ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin ml-2" />
               جاري التحميل...
