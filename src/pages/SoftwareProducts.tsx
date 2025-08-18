@@ -43,13 +43,69 @@ const SoftwareProducts = () => {
     const priceAmount = parseInt(product.price.replace(/[^\d]/g, ''));
     
     try {
+      // Save order to database first (order_number will be auto-generated)
+      const orderData = {
+        customer_name: 'عميل شركة إمكان',
+        customer_email: 'customer@emkan.sa',
+        customer_phone: '966500000000',
+        product_id: product.id,
+        product_name: product.name,
+        product_price: priceAmount,
+        product_version: product.version || 'V 1.0',
+        currency: 'SAR',
+        status: 'pending',
+        payment_method: 'paylink'
+      };
+
+      const { data: savedOrder, error: orderError } = await supabase
+        .from('product_orders')
+        .insert(orderData)
+        .select('*')
+        .single();
+
+      if (orderError) {
+        console.error('Error saving order:', orderError);
+        toast({
+          title: "❌ خطأ في حفظ الطلب",
+          description: "حدث خطأ أثناء حفظ الطلب. يرجى المحاولة مرة أخرى.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Send notification emails
+      const emailData = {
+        orderId: savedOrder.id,
+        orderNumber: savedOrder.order_number,
+        customerName: savedOrder.customer_name,
+        customerEmail: savedOrder.customer_email,
+        customerPhone: savedOrder.customer_phone,
+        productName: savedOrder.product_name,
+        productPrice: savedOrder.product_price,
+        productVersion: savedOrder.product_version,
+        currency: savedOrder.currency,
+        orderDate: savedOrder.created_at
+      };
+
+      // Send emails in background (don't wait for completion)
+      supabase.functions.invoke('order-notifications', {
+        body: { orderData: emailData }
+      }).then(({ error: emailError }) => {
+        if (emailError) {
+          console.error('Error sending emails:', emailError);
+        } else {
+          console.log('Notification emails sent successfully');
+        }
+      });
+
+      // Create payment session
       const { data, error } = await supabase.functions.invoke('paylink-payment', {
         body: {
           amount: priceAmount,
           currency: 'SAR',
           offer_title: product.name,
-          description: `شراء منتج: ${product.name}`,
-          success_url: window.location.origin
+          description: `شراء منتج: ${product.name} - رقم الطلب: ${savedOrder.order_number}`,
+          success_url: window.location.origin + '/payment-success?order=' + savedOrder.order_number
         }
       });
 
@@ -65,9 +121,18 @@ const SoftwareProducts = () => {
       let paymentUrl = data?.payment_url || data?.transactionUrl || data?.checkout_url || data?.url;
 
       if (paymentUrl) {
+        // Update order with payment reference
+        await supabase
+          .from('product_orders')
+          .update({ 
+            payment_reference: data?.transaction_id || data?.reference,
+            status: 'payment_pending'
+          })
+          .eq('id', savedOrder.id);
+
         toast({
-          title: "✅ تم تحضير رابط الدفع بنجاح",
-          description: "🔐 يتم فتح صفحة الدفع الآمنة الآن",
+          title: "✅ تم إنشاء الطلب بنجاح",
+          description: `رقم الطلب: ${savedOrder.order_number} - يتم توجيهكم لصفحة الدفع`,
         });
         
         window.location.href = paymentUrl;
@@ -79,9 +144,10 @@ const SoftwareProducts = () => {
         });
       }
     } catch (error) {
+      console.error('Purchase error:', error);
       toast({
-        title: "❌ خطأ في الدفع",
-        description: "حدث خطأ أثناء معالجة الدفعة. يرجى المحاولة مرة أخرى.",
+        title: "❌ خطأ في العملية",
+        description: "حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.",
         variant: "destructive"
       });
     } finally {
