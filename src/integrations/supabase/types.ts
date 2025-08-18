@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          is_active: boolean | null
+          last_login_at: string | null
+          name: string
+          password_hash: string
+          role: Database["public"]["Enums"]["user_role"]
+          two_factor_enabled: boolean | null
+          two_factor_secret: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          is_active?: boolean | null
+          last_login_at?: string | null
+          name: string
+          password_hash: string
+          role?: Database["public"]["Enums"]["user_role"]
+          two_factor_enabled?: boolean | null
+          two_factor_secret?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          is_active?: boolean | null
+          last_login_at?: string | null
+          name?: string
+          password_hash?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          two_factor_enabled?: boolean | null
+          two_factor_secret?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       automation_usage: {
         Row: {
           automation_type: string
@@ -448,6 +490,544 @@ export type Database = {
           website?: string | null
         }
         Relationships: []
+      }
+      cms_applications: {
+        Row: {
+          created_at: string | null
+          cv_url: string | null
+          email: string
+          id: string
+          job_id: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          cv_url?: string | null
+          email: string
+          id?: string
+          job_id?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          cv_url?: string | null
+          email?: string
+          id?: string
+          job_id?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_applications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "cms_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_audit_log: {
+        Row: {
+          action: Database["public"]["Enums"]["audit_action"]
+          actor_id: string | null
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          new_values: Json | null
+          old_values: Json | null
+          target_id: string | null
+          target_table: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: Database["public"]["Enums"]["audit_action"]
+          actor_id?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          target_id?: string | null
+          target_table?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: Database["public"]["Enums"]["audit_action"]
+          actor_id?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          target_id?: string | null
+          target_table?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_audit_log_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_form_submissions: {
+        Row: {
+          created_at: string | null
+          data: Json
+          form_id: string | null
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data: Json
+          form_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json
+          form_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_form_submissions_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "cms_forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_forms: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          fields: Json | null
+          id: string
+          is_active: boolean | null
+          name: string
+          notifications_email: string | null
+          recaptcha_enabled: boolean | null
+          redirect_url: string | null
+          slug: string
+          store_submissions: boolean | null
+          success_message: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          fields?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          notifications_email?: string | null
+          recaptcha_enabled?: boolean | null
+          redirect_url?: string | null
+          slug: string
+          store_submissions?: boolean | null
+          success_message?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          fields?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          notifications_email?: string | null
+          recaptcha_enabled?: boolean | null
+          redirect_url?: string | null
+          slug?: string
+          store_submissions?: boolean | null
+          success_message?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_forms_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_jobs: {
+        Row: {
+          contract_type: Database["public"]["Enums"]["contract_type"] | null
+          created_at: string | null
+          created_by: string | null
+          department: string | null
+          id: string
+          location: string | null
+          publish_at: string | null
+          requirements: string | null
+          responsibilities: string | null
+          status: Database["public"]["Enums"]["job_status"] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          contract_type?: Database["public"]["Enums"]["contract_type"] | null
+          created_at?: string | null
+          created_by?: string | null
+          department?: string | null
+          id?: string
+          location?: string | null
+          publish_at?: string | null
+          requirements?: string | null
+          responsibilities?: string | null
+          status?: Database["public"]["Enums"]["job_status"] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          contract_type?: Database["public"]["Enums"]["contract_type"] | null
+          created_at?: string | null
+          created_by?: string | null
+          department?: string | null
+          id?: string
+          location?: string | null
+          publish_at?: string | null
+          requirements?: string | null
+          responsibilities?: string | null
+          status?: Database["public"]["Enums"]["job_status"] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_jobs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_media: {
+        Row: {
+          alt_text: string | null
+          created_at: string | null
+          file_size: number | null
+          file_url: string
+          filename: string
+          folder: string | null
+          id: string
+          mime_type: string | null
+          title: string | null
+          uploaded_by: string | null
+          usage_notes: string | null
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string | null
+          file_size?: number | null
+          file_url: string
+          filename: string
+          folder?: string | null
+          id?: string
+          mime_type?: string | null
+          title?: string | null
+          uploaded_by?: string | null
+          usage_notes?: string | null
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string | null
+          file_size?: number | null
+          file_url?: string
+          filename?: string
+          folder?: string | null
+          id?: string
+          mime_type?: string | null
+          title?: string | null
+          uploaded_by?: string | null
+          usage_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_media_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_news: {
+        Row: {
+          body: string | null
+          cover: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          published_at: string | null
+          slug: string
+          status: Database["public"]["Enums"]["page_status"] | null
+          summary: string | null
+          tags: string[] | null
+          title: string
+          type: Database["public"]["Enums"]["news_type"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          body?: string | null
+          cover?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          published_at?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["page_status"] | null
+          summary?: string | null
+          tags?: string[] | null
+          title: string
+          type?: Database["public"]["Enums"]["news_type"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          body?: string | null
+          cover?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["page_status"] | null
+          summary?: string | null
+          tags?: string[] | null
+          title?: string
+          type?: Database["public"]["Enums"]["news_type"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_news_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_pages: {
+        Row: {
+          blocks: Json | null
+          created_at: string | null
+          created_by: string | null
+          hero_image: string | null
+          hero_subtitle: string | null
+          hero_title: string | null
+          id: string
+          og_image: string | null
+          publish_at: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          status: Database["public"]["Enums"]["page_status"] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          blocks?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          hero_image?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: string
+          og_image?: string | null
+          publish_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["page_status"] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          blocks?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          hero_image?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: string
+          og_image?: string | null
+          publish_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["page_status"] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_pages_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_revisions: {
+        Row: {
+          content: Json
+          created_at: string | null
+          created_by: string | null
+          id: string
+          target_id: string
+          target_table: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          target_id: string
+          target_table: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          target_id?: string
+          target_table?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_revisions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_settings: {
+        Row: {
+          description: string | null
+          id: string
+          key: string
+          updated_at: string | null
+          updated_by: string | null
+          value: Json | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json | null
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_subsidiaries: {
+        Row: {
+          banner: string | null
+          created_at: string | null
+          created_by: string | null
+          email: string | null
+          gallery: string[] | null
+          id: string
+          logo: string | null
+          name: string
+          order_index: number | null
+          services: string[] | null
+          short_desc: string | null
+          slug: string
+          social_links: Json | null
+          status: Database["public"]["Enums"]["page_status"] | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          banner?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          email?: string | null
+          gallery?: string[] | null
+          id?: string
+          logo?: string | null
+          name: string
+          order_index?: number | null
+          services?: string[] | null
+          short_desc?: string | null
+          slug: string
+          social_links?: Json | null
+          status?: Database["public"]["Enums"]["page_status"] | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          banner?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          email?: string | null
+          gallery?: string[] | null
+          id?: string
+          logo?: string | null
+          name?: string
+          order_index?: number | null
+          services?: string[] | null
+          short_desc?: string | null
+          slug?: string
+          social_links?: Json | null
+          status?: Database["public"]["Enums"]["page_status"] | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_subsidiaries_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contracts: {
         Row: {
@@ -2210,6 +2790,13 @@ export type Database = {
           status: string
         }[]
       }
+      has_admin_role: {
+        Args: {
+          required_role?: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2247,6 +2834,14 @@ export type Database = {
         | "offer"
         | "hired"
         | "rejected"
+      audit_action:
+        | "create"
+        | "update"
+        | "delete"
+        | "publish"
+        | "unpublish"
+        | "login"
+        | "logout"
       client_sector: "government" | "private" | "semi_government"
       client_status: "prospect" | "active" | "inactive" | "blocked"
       contract_status:
@@ -2256,8 +2851,12 @@ export type Database = {
         | "active"
         | "completed"
         | "terminated"
+      contract_type: "full_time" | "part_time" | "contract" | "internship"
       invoice_status: "draft" | "sent" | "paid" | "overdue" | "cancelled"
+      job_status: "open" | "closed"
       job_type: "full_time" | "part_time" | "contract" | "internship"
+      news_type: "news" | "press"
+      page_status: "draft" | "published"
       payment_status: "pending" | "completed" | "failed" | "refunded"
       project_status:
         | "planning"
@@ -2273,6 +2872,7 @@ export type Database = {
         | "waiting_client"
         | "resolved"
         | "closed"
+      user_role: "owner" | "admin" | "editor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2409,6 +3009,15 @@ export const Constants = {
         "hired",
         "rejected",
       ],
+      audit_action: [
+        "create",
+        "update",
+        "delete",
+        "publish",
+        "unpublish",
+        "login",
+        "logout",
+      ],
       client_sector: ["government", "private", "semi_government"],
       client_status: ["prospect", "active", "inactive", "blocked"],
       contract_status: [
@@ -2419,8 +3028,12 @@ export const Constants = {
         "completed",
         "terminated",
       ],
+      contract_type: ["full_time", "part_time", "contract", "internship"],
       invoice_status: ["draft", "sent", "paid", "overdue", "cancelled"],
+      job_status: ["open", "closed"],
       job_type: ["full_time", "part_time", "contract", "internship"],
+      news_type: ["news", "press"],
+      page_status: ["draft", "published"],
       payment_status: ["pending", "completed", "failed", "refunded"],
       project_status: [
         "planning",
@@ -2438,6 +3051,7 @@ export const Constants = {
         "resolved",
         "closed",
       ],
+      user_role: ["owner", "admin", "editor"],
     },
   },
 } as const
