@@ -81,9 +81,20 @@ export function ClientForm({ onSuccess, initialData }: ClientFormProps) {
       }
 
       const clientData = {
-        ...values,
-        created_by: user.id,
+        legal_name: values.legal_name,
+        display_name: values.display_name || null,
+        tax_number: values.tax_number || null,
+        commercial_register: values.commercial_register || null,
+        sector: values.sector,
+        status: values.status,
+        billing_email: values.billing_email,
+        phone: values.phone || null,
         website: values.website || null,
+        country: values.country,
+        city: values.city || null,
+        address: values.address || null,
+        notes: values.notes || null,
+        created_by: user.id,
       };
 
       const { error } = await supabase
