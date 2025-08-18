@@ -82,16 +82,16 @@ serve(async (req) => {
       });
     }
 
-    // Validate and process amount
-    const processedAmount = amount && amount > 0 && amount <= 1000000 ? Number(amount) : 1499; // Max 1M SAR
+    // Validate and process amount - Paylink minimum is 5 SAR
+    const processedAmount = amount && amount >= 5 && amount <= 1000000 ? Number(amount) : 5; // Min 5 SAR, Max 1M SAR
     console.log("💰 Processing amount:", { received: amount, processed: processedAmount });
 
     // Additional amount validation
-    if (isNaN(processedAmount) || processedAmount < 1 || processedAmount > 1000000) {
-      console.error("❌ Invalid amount");
+    if (isNaN(processedAmount) || processedAmount < 5 || processedAmount > 1000000) {
+      console.error("❌ Invalid amount - minimum 5 SAR required");
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Invalid amount" 
+        error: "الحد الأدنى للدفع هو 5 ريال سعودي" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400
