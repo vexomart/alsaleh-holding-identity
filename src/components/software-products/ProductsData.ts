@@ -23,7 +23,7 @@ export const products = [
       "🔒 نظام دفع آمن متكامل",
       "📊 تقارير مالية تفصيلية"
     ],
-    price: "70 ريال",
+    price: "5999 ريال",
     rating: 4.9,
     downloads: "145",
     status: "متاح الآن",
@@ -79,7 +79,7 @@ export const products = [
       "📈 تقارير مفصلة وتفاعلية",
       "💬 دعم فني متخصص على مدار الساعة"
     ],
-    price: "3000 ريال",
+    price: "3 ريال",
     rating: 4.9,
     downloads: "234",
     status: "متاح الآن",
