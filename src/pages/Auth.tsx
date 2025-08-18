@@ -23,25 +23,59 @@ export default function Auth() {
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          const redirectPath = (location.state as any)?.from?.pathname || '/dashboard';
-          navigate(redirectPath, { replace: true });
+          // Check user role and redirect accordingly
+          setTimeout(async () => {
+            try {
+              const { data: roleData } = await supabase
+                .from('user_roles')
+                .select('role')
+                .eq('user_id', session.user.id)
+                .maybeSingle();
+              
+              const userRole = roleData?.role || 'user';
+              const redirectPath = userRole === 'admin' 
+                ? '/admin-dashboard' 
+                : (location.state as any)?.from?.pathname || '/dashboard';
+              
+              navigate(redirectPath, { replace: true });
+            } catch (error) {
+              console.error('Error checking user role:', error);
+              navigate('/dashboard', { replace: true });
+            }
+          }, 0);
         }
       }
     );
 
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        const redirectPath = (location.state as any)?.from?.pathname || '/dashboard';
-        navigate(redirectPath, { replace: true });
+        // Check user role and redirect accordingly
+        try {
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', session.user.id)
+            .maybeSingle();
+          
+          const userRole = roleData?.role || 'user';
+          const redirectPath = userRole === 'admin' 
+            ? '/admin-dashboard' 
+            : (location.state as any)?.from?.pathname || '/dashboard';
+          
+          navigate(redirectPath, { replace: true });
+        } catch (error) {
+          console.error('Error checking user role:', error);
+          navigate('/dashboard', { replace: true });
+        }
       }
     });
 

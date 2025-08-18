@@ -90,10 +90,16 @@ export default function Dashboard() {
     return null;
   }
 
-  // Render appropriate dashboard based on user role
+  // Redirect admin users to admin panel
+  if (userRole === 'admin') {
+    navigate('/admin-panel');
+    return null;
+  }
+
+  // Regular users get client dashboard
   return (
     <div>
-      {userRole === 'admin' ? <AdminDashboard /> : <ClientDashboard />}
+      <ClientDashboard />
       <Footer />
     </div>
   );

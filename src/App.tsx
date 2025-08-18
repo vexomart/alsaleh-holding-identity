@@ -270,11 +270,14 @@ const App = () => {
             <Route path="/department/:id" element={<DepartmentDetails />} />
             <Route path="/user-guide" element={<UserGuide />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            {/* العملاء فقط */}
+            <Route path="/dashboard" element={<ClientDashboard />} />
             <Route path="/client-dashboard" element={<ClientDashboard />} />
+            
+            {/* الأدمين فقط - مسار منفصل تماماً */}
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             
-            {/* Admin Routes */}
+            {/* نظام الأدمين الكامل */}
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboardPage />} />
               <Route path="security" element={<AdminSecurityDashboard />} />
