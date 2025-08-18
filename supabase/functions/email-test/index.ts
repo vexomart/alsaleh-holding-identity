@@ -33,19 +33,85 @@ const handler = async (req: Request): Promise<Response> => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>اختبار توثيق البريد</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { 
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif; 
+            background-color: #f8fafc; 
+            direction: rtl; 
+            text-align: right;
+            line-height: 1.6;
+            padding: 20px;
+          }
+          .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            overflow: hidden;
+          }
+          .header { 
+            background: linear-gradient(135deg, #1e40af, #3b82f6); 
+            color: white; 
+            padding: 40px 30px; 
+            text-align: center; 
+          }
+          .content { 
+            padding: 40px 30px; 
+          }
+          .message-box { 
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border-right: 4px solid #0ea5e9; 
+            margin: 20px 0; 
+          }
+          .footer { 
+            background: #1f2937; 
+            color: white; 
+            text-align: center; 
+            padding: 25px; 
+          }
+        </style>
       </head>
-      <body style="font-family: Arial, sans-serif; background:#f8f9fa; padding:24px;">
-        <div style="max-width:640px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden;">
-          <div style="background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; padding:24px; text-align:center;">
-            <h1 style="margin:0; font-size:22px;">اختبار توثيق البريد (Resend)</h1>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div style="font-size: 50px; margin-bottom: 15px;">📧</div>
+            <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 10px;">اختبار توثيق البريد الإلكتروني</h1>
+            <p style="opacity: 0.9;">شركة علي صالح الشهري القابضة</p>
           </div>
-          <div style="padding:24px; color:#334155;">
-            <p>هذا بريد تجريبي للتأكد من نجاح التوثيق لنطاق: <strong>alialshehriholding.com</strong></p>
-            <p><strong>التاريخ/الوقت (الرياض):</strong> ${nowRiyadh}</p>
-            ${message ? `<div style="margin-top:12px; padding:12px; background:#f8f9ff; border-right:4px solid #667eea;">${message}</div>` : ''}
+          
+          <div class="content">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">✅ نجح الاختبار</span>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 25px; border-radius: 12px; border-right: 4px solid #059669; margin: 20px 0;">
+              <h3 style="color: #059669; margin-bottom: 15px;">📋 تفاصيل الاختبار</h3>
+              <p style="margin: 10px 0;"><strong>النطاق:</strong> alialshehriholding.com</p>
+              <p style="margin: 10px 0;"><strong>المستلم:</strong> ${recipient}</p>
+              <p style="margin: 10px 0;"><strong>التوقيت:</strong> ${nowRiyadh}</p>
+            </div>
+            
+            ${message ? `
+            <div class="message-box">
+              <h3 style="color: #0284c7; margin-bottom: 15px;">📝 الرسالة المخصصة:</h3>
+              <p style="color: #334155; font-size: 16px;">${message}</p>
+            </div>
+            ` : ''}
+            
+            <div style="background: #fef3c7; padding: 20px; border-radius: 10px; border-right: 4px solid #f59e0b; text-align: center;">
+              <p style="color: #92400e; margin: 0;">
+                🎉 <strong>تم التوثيق بنجاح!</strong> النظام جاهز لإرسال الإيميلات
+              </p>
+            </div>
           </div>
-          <div style="background:#111827; color:#fff; text-align:center; padding:16px;">
-            <small>شركة علي صالح الشهري القابضة</small>
+          
+          <div class="footer">
+            <p style="margin: 0;">نظام إدارة المراسلات - شركة علي صالح الشهري القابضة</p>
+            <p style="font-size: 14px; opacity: 0.8; margin-top: 10px;">تم إرسال هذا الإيميل تلقائياً من النظام</p>
           </div>
         </div>
       </body>
