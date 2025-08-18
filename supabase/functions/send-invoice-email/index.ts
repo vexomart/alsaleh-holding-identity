@@ -257,14 +257,47 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    const emailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <info@fekrahtech.com>",
+    // إرسال الفاتورة للعميل
+    const customerEmailResponse = await resend.emails.send({
+      from: "شركة علي صالح الشهري القابضة <info@alialshehriholding.com>",
       to: [customerEmail],
       subject: `فاتورة ضريبية رقم ${invoiceNumber} - شركة علي صالح الشهري القابضة`,
       html: invoiceHtml,
     });
 
-    console.log("Invoice email sent successfully:", emailResponse);
+    // إرسال نسخة للإدارة
+    const adminEmailResponse = await resend.emails.send({
+      from: "نظام الفواتير <info@alialshehriholding.com>",
+      to: ["info@alialshehriholding.com"],
+      subject: `نسخة إدارية - فاتورة رقم ${invoiceNumber} للعميل ${customerName}`,
+      html: `
+        <div style="direction: rtl; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <img src="https://alialshehriholding.com/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" alt="شعار الشركة" style="max-width: 200px; height: auto;" />
+          </div>
+          <h2 style="color: #1e40af; text-align: center;">إشعار فاتورة جديدة</h2>
+          <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>تم إصدار فاتورة جديدة:</strong></p>
+            <ul style="list-style: none; padding: 0;">
+              <li><strong>رقم الفاتورة:</strong> ${invoiceNumber}</li>
+              <li><strong>اسم العميل:</strong> ${customerName}</li>
+              <li><strong>إيميل العميل:</strong> ${customerEmail}</li>
+              <li><strong>المبلغ:</strong> ${amount.toFixed(2)} ${currency}</li>
+              <li><strong>الخدمة:</strong> ${serviceName}</li>
+              <li><strong>رقم المعاملة:</strong> ${transactionId}</li>
+              ${orderStatus ? `<li><strong>حالة الطلب:</strong> ${orderStatus}</li>` : ''}
+              <li><strong>تاريخ الإصدار:</strong> ${new Date().toLocaleDateString('ar-SA')}</li>
+            </ul>
+          </div>
+          <div style="text-align: center; margin-top: 30px; color: #6b7280;">
+            <p>هذا إشعار تلقائي من نظام إدارة الفواتير</p>
+          </div>
+        </div>
+      `,
+    });
+
+    console.log("Customer email sent:", customerEmailResponse);
+    console.log("Admin email sent:", adminEmailResponse);
 
     return new Response(JSON.stringify({ 
       success: true, 
