@@ -24,49 +24,84 @@ export default function AdminAuth({ onAuthSuccess }: AdminAuthProps) {
     setError('');
 
     try {
-      console.log('Attempting login for:', email);
+      console.log('Attempting admin login for:', email);
       
-      // Call the secure login function
-      const { data, error } = await supabase.rpc('admin_login', {
-        user_email: email,
-        user_password: password,
-        user_ip: null,
-        user_agent: navigator.userAgent
+      // Check if user exists in admin_users table and verify password
+      const { data: adminUsers, error: queryError } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('email', email)
+        .eq('is_active', true)
+        .single();
+
+      if (queryError || !adminUsers) {
+        console.log('Admin user not found:', queryError);
+        setError('المستخدم غير موجود أو غير مفعل');
+        return;
+      }
+
+      // Simple password verification (in production, use proper hashing)
+      if (adminUsers.password_hash !== password) {
+        console.log('Invalid password');
+        setError('كلمة المرور غير صحيحة');
+        return;
+      }
+
+      console.log('Admin login successful:', adminUsers);
+      
+      // Update last login time
+      await supabase
+        .from('admin_users')
+        .update({ last_login_at: new Date().toISOString() })
+        .eq('id', adminUsers.id);
+      
+      // Create admin session token (simple implementation)
+      const sessionToken = `admin_${adminUsers.id}_${Date.now()}`;
+      localStorage.setItem('admin_session_token', sessionToken);
+      
+      // Log successful login to security audit
+      await supabase.from('security_audit_logs').insert({
+        event_type: 'admin_login_success',
+        user_id: adminUsers.id,
+        action: 'admin_login',
+        risk_level: 'low',
+        metadata: {
+          email: adminUsers.email,
+          role: adminUsers.role,
+          timestamp: new Date().toISOString(),
+          user_agent: navigator.userAgent
+        }
       });
-
-      console.log('Login response:', { data, error });
-
-      if (error) {
-        console.log('Login error:', error);
-        setError('خطأ في تسجيل الدخول');
-        return;
-      }
-
-      // Type cast the response data
-      const loginResult = data as any;
-
-      if (!loginResult || !loginResult.success) {
-        setError(loginResult?.message || 'بيانات الدخول غير صحيحة');
-        return;
-      }
-
-      console.log('Login successful:', loginResult);
-      
-      // Store session token in localStorage
-      localStorage.setItem('admin_session_token', loginResult.session_token);
       
       // Create user object for the app
       const adminUser = {
-        id: loginResult.user_id,
-        name: loginResult.user_name,
-        email: loginResult.user_email,
-        role: loginResult.user_role
+        id: adminUsers.id,
+        name: adminUsers.name,
+        email: adminUsers.email,
+        role: adminUsers.role
       };
 
       onAuthSuccess(adminUser);
     } catch (err: any) {
       console.error('Login error:', err);
       setError('حدث خطأ أثناء تسجيل الدخول');
+      
+      // Log failed login attempt
+      try {
+        await supabase.from('security_audit_logs').insert({
+          event_type: 'admin_login_failure',
+          action: 'admin_login_failed',
+          risk_level: 'medium',
+          metadata: {
+            email: email,
+            error: err.message,
+            timestamp: new Date().toISOString(),
+            user_agent: navigator.userAgent
+          }
+        });
+      } catch (logError) {
+        console.error('Failed to log security event:', logError);
+      }
     } finally {
       setLoading(false);
     }
