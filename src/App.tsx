@@ -72,7 +72,6 @@ const PaymentMethods = lazy(() => import("./pages/PaymentMethods"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const PaymentVerification = lazy(() => import("./pages/PaymentVerification"));
 const PaymentCancel = lazy(() => import("./pages/PaymentCancel"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Partnerships = lazy(() => import("./pages/Partnerships"));
 const AffiliateMarketing = lazy(() => import("./pages/AffiliateMarketing"));
 const BusinessServices = lazy(() => import("./pages/BusinessServices"));
@@ -82,12 +81,6 @@ const FinancialPlanning = lazy(() => import("./pages/business-services/Financial
 const DepartmentDetails = lazy(() => import("./pages/DepartmentDetails"));
 const UserGuide = lazy(() => import("./pages/UserGuide"));
 const Auth = lazy(() => import("./pages/Auth"));
-const ClientDashboard = lazy(() => import("./pages/ClientDashboard"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
-const AdminSecurityDashboard = lazy(() => import("./pages/admin/SecurityDashboard"));
-const AdminClientsPage = lazy(() => import("./pages/admin/clients/ClientsPage"));
-const AdminDashboardPage = lazy(() => import("./pages/admin/Dashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
@@ -270,19 +263,8 @@ const App = () => {
             <Route path="/department/:id" element={<DepartmentDetails />} />
             <Route path="/user-guide" element={<UserGuide />} />
             <Route path="/auth" element={<Auth />} />
-            {/* العملاء فقط */}
-            <Route path="/dashboard" element={<ClientDashboard />} />
-            <Route path="/client-dashboard" element={<ClientDashboard />} />
             
-            {/* الأدمين فقط - مسار منفصل تماماً */}
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            
-            {/* نظام الأدمين الكامل */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboardPage />} />
-              <Route path="security" element={<AdminSecurityDashboard />} />
-              <Route path="clients" element={<AdminClientsPage />} />
-            </Route>
+            {/* Dashboard routes - سيتم إنشاؤها من جديد */}
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/hosting-services" element={<HostingServices />} />
