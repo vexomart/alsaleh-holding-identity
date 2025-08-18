@@ -161,6 +161,7 @@ interface InvoiceData {
   paymentMethod: string;
   vatAmount?: number;
   totalAmount?: number;
+  orderStatus?: string; // إضافة حالة الطلب
 }
 
 interface InvoicePDFProps {
@@ -209,6 +210,9 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoiceData }) => {
               <Text style={styles.text}>تاريخ الإصدار: {invoiceData.date}</Text>
               <Text style={styles.text}>رقم المعاملة: {invoiceData.transactionId}</Text>
               <Text style={styles.text}>طريقة الدفع: {invoiceData.paymentMethod}</Text>
+              {invoiceData.orderStatus && (
+                <Text style={styles.text}>حالة الطلب: {invoiceData.orderStatus}</Text>
+              )}
             </View>
           </View>
         </View>

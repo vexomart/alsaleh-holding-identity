@@ -16,6 +16,7 @@ interface InvoiceEmailRequest {
   currency: string;
   serviceName: string;
   transactionId: string;
+  orderStatus?: string; // إضافة حالة الطلب
   invoicePdfBuffer?: ArrayBuffer;
 }
 
@@ -33,7 +34,8 @@ const handler = async (req: Request): Promise<Response> => {
       amount,
       currency,
       serviceName,
-      transactionId
+      transactionId,
+      orderStatus
     }: InvoiceEmailRequest = await req.json();
 
     // Create invoice HTML content
@@ -207,6 +209,7 @@ const handler = async (req: Request): Promise<Response> => {
                 <div class="info-item"><strong>رقم الفاتورة:</strong> ${invoiceNumber}</div>
                 <div class="info-item"><strong>التاريخ:</strong> ${new Date().toLocaleDateString('ar-SA')}</div>
                 <div class="info-item"><strong>رقم المعاملة:</strong> ${transactionId}</div>
+                ${orderStatus ? `<div class="info-item"><strong>حالة الطلب:</strong> ${orderStatus}</div>` : ''}
               </div>
             </div>
             

@@ -114,6 +114,8 @@ const PaymentSuccess = () => {
         serviceName: transactionDetails.offer_title || 'خدمة',
         transactionId: transactionDetails.paylink_transaction_no || transactionDetails.id,
         paymentMethod: transactionDetails.payment_method || 'بايلينك',
+        orderStatus: paymentStatus === 'success' ? '✅ تم الدفع - جاري التنفيذ' : 
+                    paymentStatus === 'pending' ? '⏳ قيد المعالجة' : '❌ مُلغى',
       };
       
       await downloadInvoicePDF(invoiceData);
@@ -143,6 +145,8 @@ const PaymentSuccess = () => {
         currency: transactionDetails.currency || 'SAR',
         serviceName: transactionDetails.offer_title || 'خدمة',
         transactionId: transactionDetails.paylink_transaction_no || transactionDetails.id,
+        orderStatus: paymentStatus === 'success' ? '✅ تم الدفع - جاري التنفيذ' : 
+                    paymentStatus === 'pending' ? '⏳ قيد المعالجة' : '❌ مُلغى',
       };
       
       const response = await supabase.functions.invoke('send-invoice-email', {

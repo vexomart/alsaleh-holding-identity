@@ -1,0 +1,293 @@
+/* RTL Fixes for Car Rental Website and Other Components */
+
+/* إصلاحات عامة للRTL */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] body {
+  font-family: 'Cairo', 'Amiri', sans-serif;
+  direction: rtl;
+}
+
+/* إصلاحات خاصة بالأزرار */
+[dir="rtl"] .flex {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+/* إصلاحات التوسيط والهوامش */
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* إصلاحات خاصة بالكروت والمحتوى */
+[dir="rtl"] .card {
+  text-align: right;
+}
+
+[dir="rtl"] .grid {
+  direction: rtl;
+}
+
+/* إصلاحات خاصة بالـNavigation */
+[dir="rtl"] nav {
+  direction: rtl;
+}
+
+[dir="rtl"] .navbar {
+  direction: rtl;
+}
+
+/* إصلاحات خاصة بالأيقونات */
+[dir="rtl"] .icon-left {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .icon-right {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+/* إصلاحات خاصة بالجداول */
+[dir="rtl"] table {
+  direction: rtl;
+}
+
+[dir="rtl"] th, [dir="rtl"] td {
+  text-align: right;
+}
+
+/* إصلاحات خاصة بالفورمات */
+[dir="rtl"] input, [dir="rtl"] textarea, [dir="rtl"] select {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] .form-control {
+  text-align: right;
+}
+
+/* إصلاحات خاصة بالـDropdown */
+[dir="rtl"] .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+/* إصلاحات خاصة بالـModal */
+[dir="rtl"] .modal-content {
+  text-align: right;
+}
+
+/* إصلاحات خاصة بالـBreadcrumb */
+[dir="rtl"] .breadcrumb {
+  direction: rtl;
+}
+
+/* إصلاحات خاصة بالـPagination */
+[dir="rtl"] .pagination {
+  direction: rtl;
+}
+
+/* إصلاحات خاصة بالـSidebar */
+[dir="rtl"] .sidebar {
+  right: 0;
+  left: auto;
+}
+
+/* إصلاحات للأزرار مع الأيقونات */
+[dir="rtl"] .btn .icon {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+/* إصلاحات للـList Groups */
+[dir="rtl"] .list-group-item {
+  text-align: right;
+}
+
+/* إصلاحات للـBadges */
+[dir="rtl"] .badge {
+  margin-left: 0.25rem;
+  margin-right: 0;
+}
+
+/* إصلاحات للـAlerts */
+[dir="rtl"] .alert {
+  text-align: right;
+}
+
+/* إصلاحات للـToasts */
+[dir="rtl"] .toast {
+  text-align: right;
+}
+
+/* إصلاحات للـProgress bars */
+[dir="rtl"] .progress {
+  direction: ltr; /* النسبة تبقى من اليسار لليمين */
+}
+
+/* إصلاحات للـCarousel */
+[dir="rtl"] .carousel {
+  direction: ltr; /* للحفاظ على الحركة الطبيعية */
+}
+
+[dir="rtl"] .carousel-inner {
+  direction: rtl;
+}
+
+/* إصلاحات للـTabs */
+[dir="rtl"] .nav-tabs {
+  direction: rtl;
+}
+
+[dir="rtl"] .tab-content {
+  text-align: right;
+}
+
+/* إصلاحات خاصة بموقع تأجير السيارات */
+[dir="rtl"] .car-card {
+  text-align: right;
+}
+
+[dir="rtl"] .feature-list {
+  text-align: right;
+}
+
+[dir="rtl"] .hero-section {
+  text-align: right;
+}
+
+[dir="rtl"] .service-grid {
+  direction: rtl;
+}
+
+/* إصلاحات للـFooter */
+[dir="rtl"] footer {
+  text-align: right;
+}
+
+[dir="rtl"] .footer-links {
+  text-align: right;
+}
+
+/* إصلاحات للـContactUs */
+[dir="rtl"] .contact-info {
+  text-align: right;
+}
+
+/* إصلاحات للعناصر المرنة */
+[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
+
+[dir="rtl"] .justify-start {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start;
+}
+
+/* إصلاحات للـSpacing */
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 1rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 1.5rem;
+  margin-left: 0;
+}
+
+/* إصلاحات للـIcons في الأزرار */
+[dir="rtl"] .btn-icon-left {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .btn-icon-right {
+  flex-direction: row;
+}
+
+/* إصلاحات خاصة بالفواتير */
+[dir="rtl"] .invoice {
+  text-align: right;
+}
+
+[dir="rtl"] .invoice-table {
+  direction: rtl;
+}
+
+/* إصلاحات للـLoading states */
+[dir="rtl"] .loading-spinner {
+  direction: ltr; /* للحفاظ على اتجاه الدوران */
+}
+
+/* إصلاحات للـTooltips */
+[dir="rtl"] .tooltip {
+  text-align: center; /* التوسط في التلميحات */
+}
+
+/* إصلاحات للـPopover */
+[dir="rtl"] .popover {
+  text-align: right;
+}
+
+/* استثناءات للعناصر التي يجب أن تبقى LTR */
+[dir="rtl"] .ltr-content {
+  direction: ltr;
+  text-align: left;
+}
+
+[dir="rtl"] .phone-number, 
+[dir="rtl"] .email, 
+[dir="rtl"] .url, 
+[dir="rtl"] .code {
+  direction: ltr;
+  text-align: left;
+}
+
+/* إصلاحات للمنتجات والعروض */
+[dir="rtl"] .product-grid {
+  direction: rtl;
+}
+
+[dir="rtl"] .product-card {
+  text-align: right;
+}
+
+[dir="rtl"] .price {
+  direction: ltr; /* الأسعار تبقى من اليسار لليمين */
+}
+
+/* إصلاحات للـDashboard */
+[dir="rtl"] .dashboard {
+  direction: rtl;
+}
+
+[dir="rtl"] .chart-container {
+  direction: ltr; /* المخططات تبقى LTR */
+}

@@ -150,8 +150,41 @@ export default {
   },
   plugins: [
     require("tailwindcss-animate"),
-    function({ addUtilities }) {
+    // RTL Support Plugin
+    function({ addUtilities, addBase }) {
+      // RTL Base styles
+      addBase({
+        'html[dir="rtl"]': {
+          direction: 'rtl',
+        },
+        'html[dir="rtl"] body': {
+          direction: 'rtl',
+          fontFamily: 'Cairo, Amiri, sans-serif',
+        }
+      });
+
+      // RTL Utilities
       addUtilities({
+        '.rtl\\:text-right': {
+          '[dir="rtl"] &': {
+            textAlign: 'right',
+          },
+        },
+        '.rtl\\:text-left': {
+          '[dir="rtl"] &': {
+            textAlign: 'left',
+          },
+        },
+        '.rtl\\:mr-auto': {
+          '[dir="rtl"] &': {
+            marginRight: 'auto',
+          },
+        },
+        '.rtl\\:ml-auto': {
+          '[dir="rtl"] &': {
+            marginLeft: 'auto',
+          },
+        },
         '.hover-scale': {
           '@apply transition-transform duration-300 hover:scale-105': {},
         },
