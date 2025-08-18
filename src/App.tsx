@@ -150,6 +150,11 @@ const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
 
+// Admin Components
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const PagesManager = lazy(() => import("./pages/admin/PagesManager"));
+
 // Loading component for better UX
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
@@ -264,7 +269,11 @@ const App = () => {
             <Route path="/user-guide" element={<UserGuide />} />
             <Route path="/auth" element={<Auth />} />
             
-            {/* Dashboard routes - سيتم إنشاؤها من جديد */}
+            {/* Admin Panel Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="pages" element={<PagesManager />} />
+            </Route>
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/hosting-services" element={<HostingServices />} />
