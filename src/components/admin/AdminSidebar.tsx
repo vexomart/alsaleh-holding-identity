@@ -26,6 +26,7 @@ import {
   PlusCircle,
   Globe,
   MessageSquare,
+  Shield,
 } from "lucide-react";
 
 const menuItems = [
@@ -72,6 +73,7 @@ const menuItems = [
     label: "الإعدادات",
     items: [
       { title: "المستخدمين", url: "/admin/users", icon: Users },
+      { title: "الأمان", url: "/admin/security", icon: Shield },
       { title: "الإعدادات", url: "/admin/settings", icon: Settings },
     ]
   }

@@ -4,11 +4,16 @@ export type SecurityEventType =
   | 'login_attempt'
   | 'login_success' 
   | 'login_failure'
+  | 'logout'
+  | 'token_refresh'
+  | 'profile_update'
   | 'payment_initiated'
   | 'sensitive_data_access'
   | 'contract_creation'
   | 'admin_action'
-  | 'unauthorized_access_attempt';
+  | 'unauthorized_access_attempt'
+  | 'security_alert_generated'
+  | 'suspicious_activity';
 
 interface SecurityEvent {
   eventType: SecurityEventType;

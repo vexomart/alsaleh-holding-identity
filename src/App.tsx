@@ -10,6 +10,7 @@ import { MobileOptimizer } from "@/components/MobileOptimizer";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
+import { SecurityEnhancedAuth } from "@/components/SecurityEnhancedAuth";
 
 // Lazy load pages for better performance
 const About = lazy(() => import("./pages/About"));
@@ -83,6 +84,10 @@ const UserGuide = lazy(() => import("./pages/UserGuide"));
 const Auth = lazy(() => import("./pages/Auth"));
 const ClientDashboard = lazy(() => import("./pages/ClientDashboard"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminSecurityDashboard = lazy(() => import("./pages/admin/SecurityDashboard"));
+const AdminClientsPage = lazy(() => import("./pages/admin/clients/ClientsPage"));
+const AdminDashboardPage = lazy(() => import("./pages/admin/Dashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
@@ -182,6 +187,7 @@ const App = () => {
               
               {/* Main content with mobile optimizations */}
               <div className="relative z-10 mobile-tap mobile-scroll">
+                <SecurityEnhancedAuth />
                 <ScrollToTop />
                 <Toaster />
                 <Sonner />
@@ -267,6 +273,13 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/client-dashboard" element={<ClientDashboard />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboardPage />} />
+              <Route path="security" element={<AdminSecurityDashboard />} />
+              <Route path="clients" element={<AdminClientsPage />} />
+            </Route>
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/hosting-services" element={<HostingServices />} />
