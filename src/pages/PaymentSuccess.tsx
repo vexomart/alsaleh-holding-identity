@@ -1,108 +1,87 @@
-import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { CheckCircle, ArrowRight, Home, Receipt, Clock, AlertCircle, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import { supabase } from "@/integrations/supabase/client";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import React, { useEffect, useState } from 'react';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { CheckCircle, XCircle, Clock, AlertCircle, Home, Download, Receipt, FileText } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { downloadInvoicePDF } from '@/components/InvoicePDF';
+import { useToast } from '@/hooks/use-toast';
+
+interface TransactionDetails {
+  id: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone?: string;
+  amount: number;
+  currency: string;
+  offer_title: string;
+  payment_method: string;
+  paylink_transaction_no?: string;
+  tap_charge_id?: string;
+  tamara_order_id?: string;
+  status: string;
+  created_at: string;
+}
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [transactionDetails, setTransactionDetails] = useState<any>(null);
-  const [paymentStatus, setPaymentStatus] = useState<'checking' | 'success' | 'pending' | 'failed'>('checking');
+  const { toast } = useToast();
+  const [transactionDetails, setTransactionDetails] = useState<TransactionDetails | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<'checking' | 'success' | 'failed' | 'pending'>('checking');
   const [loading, setLoading] = useState(true);
-  const [contractUrl, setContractUrl] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     const verifyPayment = async () => {
       try {
-        // البحث عن معرف المعاملة من URL parameters مختلفة
-        const transactionNo = 
-          searchParams.get('paymentId') || 
-          searchParams.get('transaction_no') ||
-          searchParams.get('transactionNo') ||
-          searchParams.get('paylink_id') ||
-          searchParams.get('charge_id') ||
-          searchParams.get('order_id');
+        const transactionId = searchParams.get('transactionId') || 
+                            searchParams.get('transaction_no') ||
+                            searchParams.get('paymentId');
         
-        console.log('Payment verification started:', { transactionNo, allParams: Object.fromEntries(searchParams) });
+        console.log('Verifying payment:', transactionId);
 
-        if (!transactionNo) {
-          console.log('No transaction info found in URL');
+        if (!transactionId) {
           setPaymentStatus('failed');
           setLoading(false);
           return;
         }
 
-        // البحث عن المعاملة في قاعدة البيانات
+        // Fetch transaction details
         const { data: transactions, error } = await supabase
           .from('payment_transactions')
           .select('*')
-          .or(`paylink_transaction_no.eq.${transactionNo},tap_charge_id.eq.${transactionNo},tamara_order_id.eq.${transactionNo},stc_pay_reference.eq.${transactionNo},id.eq.${transactionNo}`)
+          .or(`id.eq.${transactionId},paylink_transaction_no.eq.${transactionId},tap_charge_id.eq.${transactionId}`)
           .limit(1);
 
-        if (error) {
-          console.error('Error fetching transaction:', error);
+        if (error || !transactions || transactions.length === 0) {
+          console.error('Transaction not found:', error);
           setPaymentStatus('failed');
           setLoading(false);
           return;
         }
 
-        if (!transactions || transactions.length === 0) {
-          console.log('No transaction found, checking if it exists by partial match');
-          
-          // محاولة ثانية للبحث بنص جزئي
-          const { data: partialTransactions, error: partialError } = await supabase
-            .from('payment_transactions')
-            .select('*')
-            .or(`paylink_transaction_no.ilike.%${transactionNo}%,offer_title.ilike.%${transactionNo}%`)
-            .limit(1);
+        const transaction = transactions[0];
+        setTransactionDetails(transaction);
 
-          if (partialError || !partialTransactions || partialTransactions.length === 0) {
-            console.log('No transaction found even with partial match');
-            setPaymentStatus('failed');
-            setLoading(false);
-            return;
-          }
-          
-          setTransactionDetails(partialTransactions[0]);
-        } else {
-          setTransactionDetails(transactions[0]);
-        }
-
-        const transaction = transactions?.[0] || (await supabase
-          .from('payment_transactions')
-          .select('*')
-          .or(`paylink_transaction_no.ilike.%${transactionNo}%`)
-          .limit(1)).data?.[0];
-
-        if (!transaction) {
-          setPaymentStatus('failed');
-          setLoading(false);
-          return;
-        }
-
-        // التحقق من حالة الدفع عبر verify-payment-status
-        console.log('Verifying payment for transaction:', transaction.id);
+        // Verify payment status
         const { data: verificationResult, error: verifyError } = await supabase.functions.invoke('verify-payment-status', {
           body: { transactionId: transaction.id }
         });
 
-        console.log('Verification result:', verificationResult);
-
         if (verifyError) {
           console.error('Payment verification error:', verifyError);
           setPaymentStatus('failed');
-        } else if (verificationResult?.status === 'PAID' || verificationResult?.status === 'COMPLETED') {
+        } else if (verificationResult?.success && verificationResult?.status === 'PAID') {
           setPaymentStatus('success');
-          console.log('Payment successful! Emails should be sent automatically.');
-        } else if (verificationResult?.status === 'PENDING' || verificationResult?.status === 'INITIATED') {
+        } else if (verificationResult?.status === 'PENDING') {
           setPaymentStatus('pending');
         } else {
           setPaymentStatus('failed');
@@ -119,48 +98,128 @@ const PaymentSuccess = () => {
     verifyPayment();
   }, [searchParams]);
 
+  // Function to download invoice PDF
+  const downloadInvoice = async () => {
+    if (!transactionDetails) return;
+    
+    try {
+      const invoiceData = {
+        invoiceNumber: `INV-${transactionDetails.paylink_transaction_no || Date.now()}`,
+        date: new Date().toLocaleDateString('ar-SA'),
+        customerName: transactionDetails.customer_name || 'عميل',
+        customerEmail: transactionDetails.customer_email || '',
+        customerPhone: transactionDetails.customer_phone || '',
+        amount: Number(transactionDetails.amount) || 0,
+        currency: transactionDetails.currency || 'SAR',
+        serviceName: transactionDetails.offer_title || 'خدمة',
+        transactionId: transactionDetails.paylink_transaction_no || transactionDetails.id,
+        paymentMethod: transactionDetails.payment_method || 'بايلينك',
+      };
+      
+      await downloadInvoicePDF(invoiceData);
+      toast({
+        title: "تم تحميل الفاتورة",
+        description: "تم تحميل الفاتورة بنجاح"
+      });
+    } catch (error) {
+      console.error('Error downloading invoice:', error);
+      toast({
+        title: "خطأ في التحميل",
+        description: "حدث خطأ أثناء تحميل الفاتورة"
+      });
+    }
+  };
+
+  // Function to send invoice via email
+  const sendInvoiceEmail = async () => {
+    if (!transactionDetails) return;
+    
+    try {
+      const invoiceData = {
+        customerEmail: transactionDetails.customer_email,
+        customerName: transactionDetails.customer_name || 'عميل',
+        invoiceNumber: `INV-${transactionDetails.paylink_transaction_no || Date.now()}`,
+        amount: Number(transactionDetails.amount) || 0,
+        currency: transactionDetails.currency || 'SAR',
+        serviceName: transactionDetails.offer_title || 'خدمة',
+        transactionId: transactionDetails.paylink_transaction_no || transactionDetails.id,
+      };
+      
+      const response = await supabase.functions.invoke('send-invoice-email', {
+        body: invoiceData
+      });
+      
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+      
+      toast({
+        title: "تم إرسال الفاتورة",
+        description: "تم إرسال الفاتورة إلى إيميلك بنجاح"
+      });
+    } catch (error) {
+      console.error('Error sending invoice email:', error);
+      toast({
+        title: "خطأ في الإرسال",
+        description: "حدث خطأ أثناء إرسال الفاتورة"
+      });
+    }
+  };
+
+  // Generate contract PDF and send via email
   const generateContractPDF = async () => {
     if (!transactionDetails) return;
-
+    
     setGenerating(true);
     try {
-      const { data, error } = await supabase.functions.invoke('contract-email', {
-        body: {
-          to: transactionDetails.customer_email,
-          contractData: {
-            client_name: transactionDetails.customer_name,
-            client_email: transactionDetails.customer_email,
-            client_phone: transactionDetails.customer_phone,
-            service_type: transactionDetails.offer_title,
-            service_price: transactionDetails.amount,
-            payment_method: transactionDetails.payment_method
-          }
-        }
+      const contractData = {
+        customer_name: transactionDetails.customer_name,
+        customer_email: transactionDetails.customer_email,
+        customer_phone: transactionDetails.customer_phone,
+        service_type: transactionDetails.offer_title,
+        service_price: transactionDetails.amount,
+        currency: transactionDetails.currency || 'SAR',
+        payment_method: 'مدفوع مسبقاً',
+        notes: `تم الدفع عبر المعاملة رقم: ${transactionDetails.paylink_transaction_no || transactionDetails.id}`
+      };
+
+      const response = await supabase.functions.invoke('contract-email', {
+        body: contractData
       });
 
-      if (error) {
-        console.error('Error generating contract:', error);
-        alert('حدث خطأ في إنشاء العقد');
-      } else {
-        alert('تم إرسال العقد إلى بريدك الإلكتروني');
+      if (response.error) {
+        throw new Error(response.error.message);
       }
+
+      toast({
+        title: "تم إنشاء العقد",
+        description: "تم إرسال العقد إلى إيميلك بنجاح"
+      });
     } catch (error) {
-      console.error('Contract generation failed:', error);
-      alert('حدث خطأ في إنشاء العقد');
+      console.error('Error generating contract:', error);
+      toast({
+        title: "خطأ في الإنشاء",
+        description: "حدث خطأ أثناء إنشاء العقد"
+      });
     } finally {
       setGenerating(false);
     }
   };
 
+  // Function to download receipt as PDF
   const downloadReceipt = async () => {
-    const receiptElement = document.getElementById('payment-receipt');
-    if (!receiptElement) return;
+    const element = document.getElementById('receipt-content');
+    if (!element) return;
 
     try {
-      const canvas = await html2canvas(receiptElement);
-      const imgData = canvas.toDataURL('image/png');
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
+      });
       
-      const pdf = new jsPDF();
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
       const imgWidth = 210;
       const pageHeight = 295;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -178,21 +237,30 @@ const PaymentSuccess = () => {
         heightLeft -= pageHeight;
       }
       
-      pdf.save(`receipt-${transactionDetails?.paylink_transaction_no || 'payment'}.pdf`);
+      pdf.save(`receipt-${searchParams.get('transaction_no') || Date.now()}.pdf`);
+      toast({
+        title: "تم تحميل الإيصال",
+        description: "تم تحميل الإيصال بنجاح"
+      });
     } catch (error) {
       console.error('Error downloading receipt:', error);
+      toast({
+        title: "خطأ في التحميل",
+        description: "حدث خطأ أثناء تحميل الإيصال"
+      });
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+        <SEO title="جاري التحقق من الدفع" description="التحقق من حالة الدفع" />
         <Navigation />
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-20">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-600 mx-auto mb-8"></div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">جاري التحقق من عملية الدفع...</h2>
-            <p className="text-gray-600">يرجى الانتظار بينما نتحقق من حالة دفعتك</p>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-8"></div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">جاري التحقق من حالة الدفع...</h2>
+            <p className="text-gray-600">يرجى الانتظار قليلاً</p>
           </div>
         </div>
         <Footer />
@@ -201,87 +269,76 @@ const PaymentSuccess = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+      <SEO 
+        title={paymentStatus === 'success' ? 'تم الدفع بنجاح' : 'حالة الدفع'} 
+        description="صفحة تأكيد حالة الدفع" 
+      />
       <Navigation />
       
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          {paymentStatus === 'success' && (
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-green-100 mb-6">
-                <CheckCircle className="w-12 h-12 text-green-600" />
-              </div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                🎉 تم الدفع بنجاح!
-              </h1>
-              <p className="text-xl text-gray-600 mb-2">
-                مرحباً بك في عالم الأتمتة الذكية
-              </p>
-              <p className="text-lg text-gray-500">
-                تم إرسال تأكيد الدفع والفاتورة إلى بريدك الإلكتروني
-              </p>
-            </div>
-          )}
+          
+          {/* Payment Status Header */}
+          <div className="text-center mb-12">
+            {paymentStatus === 'success' && (
+              <>
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-green-100 mb-6">
+                  <CheckCircle className="w-12 h-12 text-green-600" />
+                </div>
+                <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                  🎉 تم الدفع بنجاح!
+                </h1>
+                <p className="text-xl text-gray-600 mb-2">
+                  مرحباً بك في عالم الأتمتة الذكية
+                </p>
+                <p className="text-lg text-gray-500">
+                  تم إرسال تأكيد الدفع والفاتورة إلى بريدك الإلكتروني
+                </p>
+              </>
+            )}
 
-          {paymentStatus === 'pending' && (
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-yellow-100 mb-6">
-                <Clock className="w-12 h-12 text-yellow-600" />
-              </div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                ⏳ عملية الدفع قيد المعالجة
-              </h1>
-              <p className="text-xl text-gray-600 mb-2">
-                يتم معالجة دفعتك حالياً
-              </p>
-              <p className="text-lg text-gray-500">
-                سنرسل إليك تأكيد عند اكتمال العملية
-              </p>
-            </div>
-          )}
+            {paymentStatus === 'pending' && (
+              <>
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-yellow-100 mb-6">
+                  <Clock className="w-12 h-12 text-yellow-600" />
+                </div>
+                <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                  ⏳ عملية الدفع قيد المعالجة
+                </h1>
+                <p className="text-xl text-gray-600">
+                  يتم معالجة دفعتك حالياً، سنرسل إليك تأكيد عند اكتمال العملية
+                </p>
+              </>
+            )}
 
-          {paymentStatus === 'failed' && (
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-100 mb-6">
-                <AlertCircle className="w-12 h-12 text-red-600" />
-              </div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                ❌ لم تكتمل عملية الدفع
-              </h1>
-              <p className="text-xl text-gray-600 mb-2">
-                حدث خطأ في معالجة الدفع
-              </p>
-              <p className="text-lg text-gray-500">
-                يرجى المحاولة مرة أخرى أو التواصل مع الدعم
-              </p>
-            </div>
-          )}
+            {paymentStatus === 'failed' && (
+              <>
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-100 mb-6">
+                  <XCircle className="w-12 h-12 text-red-600" />
+                </div>
+                <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                  ❌ لم تكتمل عملية الدفع
+                </h1>
+                <p className="text-xl text-gray-600">
+                  حدث خطأ في معالجة الدفع، يرجى المحاولة مرة أخرى
+                </p>
+              </>
+            )}
+          </div>
 
-          {paymentStatus === 'checking' && (
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-100 mb-6">
-                <Clock className="w-12 h-12 text-blue-600 animate-pulse" />
-              </div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                🔍 جاري التحقق من الدفع
-              </h1>
-              <p className="text-xl text-gray-600 mb-2">
-                يرجى الانتظار قليلاً
-              </p>
-            </div>
-          )}
-
+          {/* Transaction Details */}
           {transactionDetails && (
-            <div id="payment-receipt" className="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div id="receipt-content" className="bg-white rounded-lg shadow-lg p-8 mb-8">
               <div className="border-b border-gray-200 pb-6 mb-6">
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">تفاصيل المعاملة</h2>
                 <p className="text-gray-600">إيصال الدفع الرسمي</p>
               </div>
               
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-3">معلومات العميل</h3>
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2">
                     <p><span className="font-medium">الاسم:</span> {transactionDetails.customer_name}</p>
                     <p><span className="font-medium">البريد الإلكتروني:</span> {transactionDetails.customer_email}</p>
                     {transactionDetails.customer_phone && (
@@ -292,110 +349,76 @@ const PaymentSuccess = () => {
                 
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-3">تفاصيل الدفع</h3>
-                  <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">المبلغ:</span> {transactionDetails.amount} {transactionDetails.currency || 'SAR'}</p>
+                  <div className="space-y-2">
+                    <p><span className="font-medium">المبلغ:</span> {transactionDetails.amount} {transactionDetails.currency}</p>
                     <p><span className="font-medium">الخدمة:</span> {transactionDetails.offer_title}</p>
                     <p><span className="font-medium">طريقة الدفع:</span> {transactionDetails.payment_method}</p>
                     <p><span className="font-medium">رقم المرجع:</span> {transactionDetails.paylink_transaction_no || transactionDetails.tap_charge_id || transactionDetails.id}</p>
-                    <p><span className="font-medium">التاريخ:</span> {new Date(transactionDetails.created_at || Date.now()).toLocaleDateString('ar-SA')}</p>
+                    <p><span className="font-medium">التاريخ:</span> {new Date(transactionDetails.created_at).toLocaleDateString('ar-SA')}</p>
                   </div>
+                </div>
+              </div>
+
+              <Separator className="my-6" />
+              
+              <div className="bg-green-50 p-4 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">الحالة:</span>
+                  <Badge variant={paymentStatus === 'success' ? 'default' : paymentStatus === 'pending' ? 'secondary' : 'destructive'}>
+                    {paymentStatus === 'success' ? '✅ تم الدفع' : 
+                     paymentStatus === 'pending' ? '⏳ قيد المعالجة' : '❌ فشل'}
+                  </Badge>
                 </div>
               </div>
             </div>
           )}
 
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
-                </div>
-                <CardTitle className="text-xl">الدعم المتخصص</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">فريق دعم متخصص متاح 24/7 لمساعدتك</p>
-                <Button variant="outline" className="w-full">
-                  تواصل معنا ⭐
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Download className="w-8 h-8 text-purple-600" />
-                </div>
-                <CardTitle className="text-xl">دليل المستخدم</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">تحميل دليل شامل لاستخدام جميع مميزات النظام</p>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={downloadReceipt}
-                >
-                  💾 تحميل الدليل
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Receipt className="w-8 h-8 text-blue-600" />
-                </div>
-                <CardTitle className="text-xl">ابدأ الأتمتة</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">ادخل إلى نظام الأتمتة وابدأ في إنشاء أول سير عمل لك</p>
-                <Button 
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                  onClick={() => navigate('/automation-system')}
-                >
-                  ➤ ابدأ الآن
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
+          {/* Action Buttons */}
           {paymentStatus === 'success' && (
-            <Alert className="mb-8 border-green-200 bg-green-50">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-800">
-                <strong>تم إرسال الإيميلات التالية:</strong>
-                <ul className="mt-2 space-y-1">
-                  <li>• تأكيد الدفع وتفاصيل المعاملة</li>
-                  <li>• الفاتورة الرسمية المختومة</li>
-                  <li>• دليل الاستخدام والبدء</li>
-                  <li>• تفاصيل تسجيل الدخول للنظام</li>
-                </ul>
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <div className="text-center space-y-4">
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap gap-3 justify-center mb-8">
               <Button 
-                onClick={() => navigate('/')}
-                variant="outline"
-                className="flex items-center gap-2"
+                asChild 
+                className="bg-blue-600 hover:bg-blue-700"
               >
-                <Home className="w-4 h-4" />
-                العودة للرئيسية
+                <Link to="/">
+                  <Home className="w-4 h-4 mr-2" />
+                  الصفحة الرئيسية
+                </Link>
               </Button>
               
-              {transactionDetails && (
-                <Button 
-                  onClick={downloadReceipt}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  تحميل الإيصال
-                </Button>
-              )}
-
-              {paymentStatus === 'success' && (
+              <Button 
+                onClick={downloadInvoice}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                تحميل الفاتورة
+              </Button>
+              
+              <Button 
+                onClick={sendInvoiceEmail}
+                variant="outline"
+                className="border-green-600 text-green-600 hover:bg-green-50"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                إرسال الفاتورة للإيميل
+              </Button>
+              
+              <Button asChild variant="outline">
+                <Link to="/user-guide">
+                  <Download className="w-4 h-4 mr-2" />
+                  دليل المستخدم
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline">
+                <Link to="/contact">
+                  تواصل مع الدعم
+                </Link>
+              </Button>
+              
+              {(transactionDetails?.offer_title?.includes('موقع') || 
+                transactionDetails?.offer_title?.includes('تطبيق') ||
+                transactionDetails?.offer_title?.includes('نظام')) && (
                 <Button 
                   onClick={generateContractPDF}
                   disabled={generating}
@@ -406,22 +429,23 @@ const PaymentSuccess = () => {
                 </Button>
               )}
             </div>
+          )}
 
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">تفاصيل العملية</h3>
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p><strong>حالة الدفع:</strong> {
-                    paymentStatus === 'success' ? '✅ تم بنجاح' :
-                    paymentStatus === 'pending' ? '⏳ قيد المعالجة' :
-                    paymentStatus === 'failed' ? '❌ فشل' : '🔍 جاري التحقق'
-                  }</p>
-                  <p><strong>المعرف:</strong> {searchParams.get('paymentId') || searchParams.get('transaction_no') || 'غير متوفر'}</p>
-                </div>
-                <div>
-                  <p><strong>الوقت:</strong> {new Date().toLocaleString('ar-SA')}</p>
-                  <p><strong>الإيميلات:</strong> {paymentStatus === 'success' ? '✅ تم الإرسال' : '⏳ في الانتظار'}</p>
-                </div>
+          {/* Summary Card */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
+            <h3 className="text-xl font-bold mb-2">ملخص العملية</h3>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <p><strong>حالة الدفع:</strong> {
+                  paymentStatus === 'success' ? '✅ تم بنجاح' :
+                  paymentStatus === 'pending' ? '⏳ قيد المعالجة' :
+                  paymentStatus === 'failed' ? '❌ فشل' : '🔍 جاري التحقق'
+                }</p>
+                <p><strong>المعرف:</strong> {searchParams.get('paymentId') || searchParams.get('transaction_no') || 'غير متوفر'}</p>
+              </div>
+              <div>
+                <p><strong>الوقت:</strong> {new Date().toLocaleString('ar-SA')}</p>
+                <p><strong>الإيميلات:</strong> {paymentStatus === 'success' ? '✅ تم الإرسال' : '⏳ في الانتظار'}</p>
               </div>
             </div>
           </div>
