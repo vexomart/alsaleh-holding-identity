@@ -2163,6 +2163,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      generate_business_contract_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_business_invoice_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_client_id: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -2176,6 +2184,10 @@ export type Database = {
         Returns: string
       }
       generate_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_quote_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
