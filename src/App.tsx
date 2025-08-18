@@ -69,6 +69,7 @@ const DesignSolutions = lazy(() => import("./pages/DesignSolutions"));
 const Subsidiaries = lazy(() => import("./pages/Subsidiaries"));
 const PaymentMethods = lazy(() => import("./pages/PaymentMethods"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const PaymentVerification = lazy(() => import("./pages/PaymentVerification"));
 const PaymentCancel = lazy(() => import("./pages/PaymentCancel"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Partnerships = lazy(() => import("./pages/Partnerships"));
@@ -252,6 +253,7 @@ const App = () => {
                 <Route path="/subsidiaries" element={<Subsidiaries />} />
                 <Route path="/payment-methods" element={<PaymentMethods />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-verification" element={<Suspense fallback={<PageLoader />}><PaymentVerification /></Suspense>} />
                 <Route path="/payment-cancel" element={<PaymentCancel />} />
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />

@@ -49,7 +49,10 @@ verify_jwt = true
 
 # Subscription payment functions
 [functions.paylink-subscription]
-verify_jwt = true
+verify_jwt = false
 
 [functions.verify-subscription]
+verify_jwt = false
+
+[functions.send-invoice-email]
 verify_jwt = false

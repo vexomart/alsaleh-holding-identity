@@ -271,12 +271,11 @@ serve(async (req) => {
       }
     }
 
-    // Save payment transaction without user_id (service role handles RLS)
+    // Save payment transaction with proper service role access
     console.log("💾 Saving transaction...");
-    const { error: dbError } = await supabase
+    const { data: transactionData, error: dbError } = await supabase
       .from('payment_transactions')
       .insert({
-        user_id: null, // This will be handled by service role
         offer_title: sanitizedData.offer_title,
         amount: processedAmount,
         currency: sanitizedData.currency,
@@ -286,7 +285,9 @@ serve(async (req) => {
         payment_method: 'paylink',
         status: 'pending',
         paylink_transaction_no: result.transactionNo
-      });
+      })
+      .select('*')
+      .single();
 
     if (dbError) {
       console.error("⚠️ Transaction save error:", dbError);

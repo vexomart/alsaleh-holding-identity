@@ -261,6 +261,7 @@ const handler = async (req: Request): Promise<Response> => {
     const customerEmailResponse = await resend.emails.send({
       from: "شركة علي صالح الشهري القابضة <info@alialshehriholding.com>",
       to: [customerEmail],
+      bcc: ["info@alialshehriholding.com"], // نسخة للإدارة
       subject: `فاتورة ضريبية رقم ${invoiceNumber} - شركة علي صالح الشهري القابضة`,
       html: invoiceHtml,
     });

@@ -40,19 +40,31 @@ const PaymentSuccess = () => {
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
-    const verifyPayment = async () => {
-      try {
-        const transactionId = searchParams.get('transactionId') || 
-                            searchParams.get('transaction_no') ||
-                            searchParams.get('paymentId');
-        
-        console.log('Verifying payment:', transactionId);
+    // Redirect to new payment verification page
+    const transactionId = searchParams.get('transactionId') || 
+                         searchParams.get('transaction_no') ||
+                         searchParams.get('paymentId');
+    
+    if (transactionId) {
+      navigate(`/payment-verification?transactionId=${transactionId}`);
+    } else {
+      navigate('/payment-verification');
+    }
+  }, [searchParams, navigate]);
 
-        if (!transactionId) {
-          setPaymentStatus('failed');
-          setLoading(false);
-          return;
-        }
+  const verifyPaymentOld = async () => {
+    try {
+      const transactionId = searchParams.get('transactionId') || 
+                          searchParams.get('transaction_no') ||
+                          searchParams.get('paymentId');
+      
+      console.log('Verifying payment:', transactionId);
+
+      if (!transactionId) {
+        setPaymentStatus('failed');
+        setLoading(false);
+        return;
+      }
 
         // Fetch transaction details
         const { data: transactions, error } = await supabase
@@ -94,9 +106,6 @@ const PaymentSuccess = () => {
         setLoading(false);
       }
     };
-
-    verifyPayment();
-  }, [searchParams]);
 
   // Function to download invoice PDF
   const downloadInvoice = async () => {
