@@ -24,47 +24,48 @@ export default function AdminAuth({ onAuthSuccess }: AdminAuthProps) {
     setError('');
 
     try {
-      // Check if user exists in admin_users table
-      const { data: adminUser, error: adminError } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('email', email)
-        .eq('is_active', true)
-        .single();
+      console.log('Attempting login for:', email);
+      
+      // Call the secure login function
+      const { data, error } = await supabase.rpc('admin_login', {
+        user_email: email,
+        user_password: password,
+        user_ip: null,
+        user_agent: navigator.userAgent
+      });
 
-      if (adminError || !adminUser) {
-        console.log('Admin user not found:', adminError);
-        setError('المستخدم غير موجود أو غير مفعل');
+      console.log('Login response:', { data, error });
+
+      if (error) {
+        console.log('Login error:', error);
+        setError('خطأ في تسجيل الدخول');
         return;
       }
 
-      // Simple password check (password_hash contains plain password for now)
-      if (password !== adminUser.password_hash) {
-        console.log('Password mismatch:', password, 'vs', adminUser.password_hash);
-        setError('كلمة المرور غير صحيحة');
+      // Type cast the response data
+      const loginResult = data as any;
+
+      if (!loginResult || !loginResult.success) {
+        setError(loginResult?.message || 'بيانات الدخول غير صحيحة');
         return;
       }
 
-      console.log('Login successful for user:', adminUser);
-
-      // Update last login
-      await supabase
-        .from('admin_users')
-        .update({ last_login_at: new Date().toISOString() })
-        .eq('id', adminUser.id);
-
-      // Log login audit
-      await supabase
-        .from('cms_audit_log')
-        .insert({
-          actor_id: adminUser.id,
-          action: 'login',
-          target_table: 'admin_users',
-          target_id: adminUser.id
-        });
+      console.log('Login successful:', loginResult);
+      
+      // Store session token in localStorage
+      localStorage.setItem('admin_session_token', loginResult.session_token);
+      
+      // Create user object for the app
+      const adminUser = {
+        id: loginResult.user_id,
+        name: loginResult.user_name,
+        email: loginResult.user_email,
+        role: loginResult.user_role
+      };
 
       onAuthSuccess(adminUser);
     } catch (err: any) {
+      console.error('Login error:', err);
       setError('حدث خطأ أثناء تسجيل الدخول');
     } finally {
       setLoading(false);

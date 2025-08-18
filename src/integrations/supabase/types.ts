@@ -2747,6 +2747,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_login: {
+        Args: {
+          user_agent?: string
+          user_email: string
+          user_ip?: unknown
+          user_password: string
+        }
+        Returns: Json
+      }
       check_automation_limit: {
         Args: { p_automation_type: string; p_user_id: string }
         Returns: boolean
