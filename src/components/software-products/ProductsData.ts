@@ -23,7 +23,7 @@ export const products = [
       "🔒 نظام دفع آمن متكامل",
       "📊 تقارير مالية تفصيلية"
     ],
-    price: "4999 ريال",
+    price: "50 ريال",
     rating: 4.9,
     downloads: "145",
     status: "متاح الآن",
