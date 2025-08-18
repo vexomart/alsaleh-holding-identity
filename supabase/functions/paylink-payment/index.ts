@@ -44,7 +44,9 @@ serve(async (req) => {
       customer_phone = '966500000000',
       offer_title = 'خدمة تسويقية',
       description = 'دفع خدمة',
-      currency = 'SAR'
+      currency = 'SAR',
+      success_url = 'https://preview--alsaleh-holding-identity.lovable.app',
+      product_details = null // For creating product orders
     } = body;
 
     // Sanitize all string inputs
@@ -215,7 +217,61 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Save transaction
+    let productOrder = null;
+
+    // Create product order if product_details are provided
+    if (product_details) {
+      console.log("📦 Creating product order...");
+      const { data: orderData, error: orderError } = await supabase
+        .from('product_orders')
+        .insert({
+          customer_name: sanitizedData.customer_name,
+          customer_email: sanitizedData.customer_email,
+          customer_phone: sanitizedData.customer_phone,
+          product_id: product_details.product_id,
+          product_name: product_details.product_name,
+          product_price: processedAmount,
+          product_version: product_details.product_version || 'V 1.0',
+          currency: sanitizedData.currency,
+          status: 'pending',
+          payment_method: 'paylink',
+          payment_reference: result.transactionNo
+        })
+        .select('*')
+        .single();
+
+      if (orderError) {
+        console.error("⚠️ Product order error:", orderError);
+      } else {
+        console.log("✅ Product order created:", orderData.order_number);
+        productOrder = orderData;
+
+        // Send notification emails in background
+        try {
+          const emailData = {
+            orderId: orderData.id,
+            orderNumber: orderData.order_number,
+            customerName: orderData.customer_name,
+            customerEmail: orderData.customer_email,
+            customerPhone: orderData.customer_phone,
+            productName: orderData.product_name,
+            productPrice: orderData.product_price,
+            productVersion: orderData.product_version,
+            currency: orderData.currency,
+            orderDate: orderData.created_at
+          };
+
+          supabase.functions.invoke('order-notifications', {
+            body: { orderData: emailData }
+          });
+          console.log("📧 Email notifications triggered");
+        } catch (emailError) {
+          console.error("⚠️ Email notification error:", emailError);
+        }
+      }
+    }
+
+    // Save payment transaction
     console.log("💾 Saving transaction...");
     const { error: dbError } = await supabase
       .from('payment_transactions')
@@ -232,7 +288,7 @@ serve(async (req) => {
       });
 
     if (dbError) {
-      console.error("⚠️ Database error:", dbError);
+      console.error("⚠️ Transaction save error:", dbError);
     } else {
       console.log("✅ Transaction saved");
     }
@@ -243,7 +299,8 @@ serve(async (req) => {
       success: true,
       payment_url: result.url,
       url: result.url,
-      transaction_no: result.transactionNo
+      transaction_no: result.transactionNo,
+      order_number: productOrder?.order_number || null
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200
