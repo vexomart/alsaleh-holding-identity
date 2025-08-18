@@ -271,11 +271,12 @@ serve(async (req) => {
       }
     }
 
-    // Save payment transaction
+    // Save payment transaction without user_id (service role handles RLS)
     console.log("💾 Saving transaction...");
     const { error: dbError } = await supabase
       .from('payment_transactions')
       .insert({
+        user_id: null, // This will be handled by service role
         offer_title: sanitizedData.offer_title,
         amount: processedAmount,
         currency: sanitizedData.currency,

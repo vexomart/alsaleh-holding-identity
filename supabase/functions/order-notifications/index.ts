@@ -282,7 +282,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send notification to admin
     const adminEmailResponse = await resend.emails.send({
       from: "نظام الطلبات <noreply@resend.dev>",
-      to: ["info@alialshehriholding.com"], // Add your admin emails here
+      to: ["info@fekrahtech.com"], // Add your admin emails here
       subject: `🚨 طلب جديد رقم ${orderData.orderNumber} - ${orderData.productName}`,
       html: getAdminEmailTemplate(formattedOrder),
     });
