@@ -158,7 +158,7 @@ serve(async (req) => {
     const invoiceData = {
       amount: processedAmount,
       orderNumber: orderNumber,
-      callBackUrl: 'https://alialshehriholding.com/payment-success',
+      callBackUrl: `https://alialshehriholding.com/payment-success?transaction_no={transaction_no}`,
       cancelUrl: 'https://alialshehriholding.com/payment-cancel',
       clientEmail: sanitizedData.customer_email,
       clientName: sanitizedData.customer_name,
@@ -292,7 +292,32 @@ serve(async (req) => {
     if (dbError) {
       console.error("⚠️ Transaction save error:", dbError);
     } else {
-      console.log("✅ Transaction saved");
+      console.log("✅ Transaction saved:", transactionData.id);
+      
+      // Send invoice email automatically
+      try {
+        console.log("📧 Sending invoice email...");
+        const emailResponse = await supabase.functions.invoke('send-invoice-email', {
+          body: {
+            customerEmail: sanitizedData.customer_email,
+            customerName: sanitizedData.customer_name,
+            invoiceNumber: `INV-${result.transactionNo}`,
+            amount: processedAmount,
+            currency: sanitizedData.currency,
+            serviceName: sanitizedData.offer_title,
+            transactionId: result.transactionNo,
+            orderStatus: '⏳ قيد المعالجة'
+          }
+        });
+        
+        if (emailResponse.error) {
+          console.error("⚠️ Email error:", emailResponse.error);
+        } else {
+          console.log("✅ Invoice email sent successfully");
+        }
+      } catch (emailError) {
+        console.error("⚠️ Email sending failed:", emailError);
+      }
     }
 
     console.log("🎉 Payment URL created:", result.url);
