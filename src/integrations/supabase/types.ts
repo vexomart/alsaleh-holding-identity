@@ -2866,6 +2866,10 @@ export type Database = {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
       }
+      verify_admin_password: {
+        Args: { plain_password: string; stored_password: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "user"
