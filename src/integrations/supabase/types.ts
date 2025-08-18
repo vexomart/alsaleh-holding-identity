@@ -2217,6 +2217,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      make_user_admin: {
+        Args: { target_email: string }
+        Returns: boolean
+      }
       mask_email: {
         Args: { email_input: string; user_requesting?: string }
         Returns: string
