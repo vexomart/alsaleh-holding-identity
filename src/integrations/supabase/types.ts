@@ -2781,6 +2781,10 @@ export type Database = {
         Args: { subscriber_email: string }
         Returns: boolean
       }
+      create_admin_session: {
+        Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
+        Returns: string
+      }
       enhanced_rate_limit_check: {
         Args: {
           p_action_type: string
