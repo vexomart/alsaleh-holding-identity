@@ -90,9 +90,9 @@ export default function Dashboard() {
     return null;
   }
 
-  // Redirect admin users to admin panel
+  // Redirect admin users to admin dashboard
   if (userRole === 'admin') {
-    navigate('/admin-panel');
+    navigate('/admin-dashboard');
     return null;
   }
 
