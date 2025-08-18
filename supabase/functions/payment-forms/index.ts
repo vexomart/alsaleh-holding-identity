@@ -237,7 +237,7 @@ const handler = async (req: Request): Promise<Response> => {
                 <!-- Footer -->
                 <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
                   <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    💙 شكراً لثقتكم في إمكان للحلول الرقمية
+                    💙 شكراً لثقتكم في شركة علي صالح الشهري القابضة
                   </p>
                   <p style="color: #9ca3af; font-size: 12px; margin: 5px 0 0 0;">
                     هذا إيميل آلي، يرجى عدم الرد عليه مباشرة
@@ -346,7 +346,7 @@ const handler = async (req: Request): Promise<Response> => {
                 <!-- Footer -->
                 <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
                   <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    🏢 إمكان للحلول الرقمية | نظام إدارة الاستردادات الآلي
+                    🏢 شركة علي صالح الشهري القابضة | نظام إدارة الاستردادات الآلي
                   </p>
                   <p style="color: #9ca3af; font-size: 12px; margin: 5px 0 0 0;">
                     تم إرسال هذا الإيميل تلقائياً من نظام إدارة الاستردادات
@@ -418,7 +418,7 @@ const handler = async (req: Request): Promise<Response> => {
                 <!-- Footer -->
                 <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
                   <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                    💙 شكراً لثقتكم في إمكان للحلول الرقمية
+                    💙 شكراً لثقتكم في شركة علي صالح الشهري القابضة
                   </p>
                   <p style="color: #9ca3af; font-size: 12px; margin: 5px 0 0 0;">
                     هذا إيميل آلي، يرجى عدم الرد عليه مباشرة

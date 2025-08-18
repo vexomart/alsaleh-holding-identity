@@ -56,8 +56,8 @@ const SoftwareProducts = () => {
             product_id: product.id,
             product_name: product.name,
             product_version: product.version || 'V 1.0',
-            customer_name: 'عميل شركة إمكان',
-            customer_email: 'customer@emkan.sa',
+            customer_name: 'عميل شركة علي صالح الشهري القابضة',
+            customer_email: 'customer@alialshehriholding.com',
             customer_phone: '966500000000'
           }
         }

@@ -63,7 +63,7 @@ export default function CompanyProfile() {
 
   const subsidiaries = [
     {
-      name: "شركة إمكان للتطوير",
+      name: "شركة علي صالح الشهري القابضة",
       field: "التطوير العقاري والإنشاءات",
       year: "2018",
       projects: "50+"
