@@ -158,8 +158,8 @@ serve(async (req) => {
     const invoiceData = {
       amount: processedAmount,
       orderNumber: orderNumber,
-      callBackUrl: 'https://preview--alsaleh-holding-identity.lovable.app/payment-success',
-      cancelUrl: 'https://preview--alsaleh-holding-identity.lovable.app/payment-cancel',
+      callBackUrl: 'https://alialshehriholding.com/payment-success',
+      cancelUrl: 'https://alialshehriholding.com/payment-cancel',
       clientEmail: sanitizedData.customer_email,
       clientName: sanitizedData.customer_name,
       clientMobile: sanitizedData.customer_phone.toString().replace(/^\+?966/, "0"),
