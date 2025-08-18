@@ -33,15 +33,19 @@ export default function AdminAuth({ onAuthSuccess }: AdminAuthProps) {
         .single();
 
       if (adminError || !adminUser) {
+        console.log('Admin user not found:', adminError);
         setError('المستخدم غير موجود أو غير مفعل');
         return;
       }
 
-      // For now, simple password check (in production, use proper hashing)
-      if (password !== 'admin123') {
+      // Simple password check (password_hash contains plain password for now)
+      if (password !== adminUser.password_hash) {
+        console.log('Password mismatch:', password, 'vs', adminUser.password_hash);
         setError('كلمة المرور غير صحيحة');
         return;
       }
+
+      console.log('Login successful for user:', adminUser);
 
       // Update last login
       await supabase
@@ -56,8 +60,7 @@ export default function AdminAuth({ onAuthSuccess }: AdminAuthProps) {
           actor_id: adminUser.id,
           action: 'login',
           target_table: 'admin_users',
-          target_id: adminUser.id,
-          ip_address: null
+          target_id: adminUser.id
         });
 
       onAuthSuccess(adminUser);
