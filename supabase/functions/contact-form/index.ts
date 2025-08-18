@@ -149,12 +149,12 @@ const handler = async (req: Request): Promise<Response> => {
                         </div>
                         <div class="info-row">
                             <span class="info-label">📧 البريد الإلكتروني:</span>
-                            <span class="info-value"><a href="mailto:${contactData.email}">${contactData.email}</a></span>
+                            <span class="info-value" style="direction: ltr;"><a href="mailto:${contactData.email}">${contactData.email}</a></span>
                         </div>
                         ${contactData.phone ? `
-                        <div class="info-row">
+                         <div class="info-row">
                             <span class="info-label">📱 الهاتف:</span>
-                            <span class="info-value"><a href="tel:${contactData.phone}">${contactData.phone}</a></span>
+                            <span class="info-value" style="direction: ltr;"><a href="tel:${contactData.phone}">${contactData.phone}</a></span>
                         </div>
                         ` : ''}
                         ${contactData.category ? `
@@ -346,7 +346,7 @@ const handler = async (req: Request): Promise<Response> => {
                             <div class="contact-item">
                                 <span style="font-size: 18px; margin-left: 10px;">📧</span>
                                 <span style="color: #374151; margin-left: 8px; font-weight: 500;">البريد الإلكتروني:</span>
-                                <a href="mailto:info@alialshehriholding.com">info@alialshehriholding.com</a>
+                                <a href="mailto:info@alialshehriholding.com" style="direction: ltr;">info@alialshehriholding.com</a>
                             </div>
                             <div class="contact-item">
                                 <span style="font-size: 18px; margin-left: 10px;">📞</span>
@@ -376,7 +376,7 @@ const handler = async (req: Request): Promise<Response> => {
                     </p>
                     <div style="color: #64748b; font-size: 14px; margin: 15px 0;">
                         🌐 للمزيد من المعلومات: 
-                        <a href="https://alialshehriholding.com" style="color: #059669;">alialshehriholding.com</a>
+                        <a href="https://alialshehriholding.com" style="color: #059669; direction: ltr;">alialshehriholding.com</a>
                     </div>
                     <div style="border-top: 1px solid #374151; padding-top: 15px; font-size: 12px; opacity: 0.8;">
                         نظام المراسلات التلقائي - تم الإرسال من النظام

@@ -88,11 +88,20 @@ const handler = async (req: Request): Promise<Response> => {
               <span style="background: #059669; color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">✅ نجح الاختبار</span>
             </div>
             
-            <div style="background: #f8fafc; padding: 25px; border-radius: 12px; border-right: 4px solid #059669; margin: 20px 0;">
-              <h3 style="color: #059669; margin-bottom: 15px;">📋 تفاصيل الاختبار</h3>
-              <p style="margin: 10px 0;"><strong>النطاق:</strong> alialshehriholding.com</p>
-              <p style="margin: 10px 0;"><strong>المستلم:</strong> ${recipient}</p>
-              <p style="margin: 10px 0;"><strong>التوقيت:</strong> ${nowRiyadh}</p>
+            <div style="background: #f8fafc; padding: 25px; border-radius: 12px; border-right: 4px solid #059669; margin: 20px 0; direction: rtl; text-align: right;">
+              <h3 style="color: #059669; margin-bottom: 15px; text-align: right;">📋 تفاصيل الاختبار</h3>
+              <div style="display: flex; justify-content: space-between; margin: 10px 0; direction: rtl;">
+                <span style="font-weight: bold;">النطاق:</span>
+                <span style="direction: ltr;">alialshehriholding.com</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin: 10px 0; direction: rtl;">
+                <span style="font-weight: bold;">المستلم:</span>
+                <span style="direction: ltr;">${recipient}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin: 10px 0; direction: rtl;">
+                <span style="font-weight: bold;">التوقيت:</span>
+                <span>${nowRiyadh}</span>
+              </div>
             </div>
             
             ${message ? `
