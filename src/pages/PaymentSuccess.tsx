@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -17,412 +18,415 @@ const PaymentSuccess = () => {
   const [loading, setLoading] = useState(true);
   const [contractUrl, setContractUrl] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
-  const checkPaymentStatus = async () => {
-    try {
-      // Get transaction details from URL parameters
-      const chargeId =
-        // Direct gateway params
-        
-        searchParams.get("paylink_id") ||
-        searchParams.get("tamara_id") ||
-        searchParams.get("stc_id") ||
-        // Paylink commonly returns transactionNo
-        searchParams.get("transactionNo") ||
-        searchParams.get("transaction_no") ||
-        searchParams.get("transaction");
-      const amount = searchParams.get("amount") || searchParams.get("amt");
-      const currency = searchParams.get("currency") || searchParams.get("curr") || "SAR";
-      
-      if (chargeId) {
-        setTransactionDetails({
-          chargeId,
-          amount,
-          currency,
-          timestamp: new Date().toISOString(),
-        });
 
-        // التحقق من حالة المعاملة في قاعدة البيانات
-        const { data: transaction, error } = await supabase
+  useEffect(() => {
+    const verifyPayment = async () => {
+      try {
+        // البحث عن معرف المعاملة من URL parameters مختلفة
+        const transactionNo = 
+          searchParams.get('paymentId') || 
+          searchParams.get('transaction_no') ||
+          searchParams.get('transactionNo') ||
+          searchParams.get('paylink_id') ||
+          searchParams.get('charge_id') ||
+          searchParams.get('order_id');
+        
+        console.log('Payment verification started:', { transactionNo, allParams: Object.fromEntries(searchParams) });
+
+        if (!transactionNo) {
+          console.log('No transaction info found in URL');
+          setPaymentStatus('failed');
+          setLoading(false);
+          return;
+        }
+
+        // البحث عن المعاملة في قاعدة البيانات
+        const { data: transactions, error } = await supabase
           .from('payment_transactions')
           .select('*')
-          .or(`paylink_transaction_no.eq.${chargeId},tamara_order_id.eq.${chargeId},stc_pay_reference.eq.${chargeId}`)
-          .maybeSingle();
+          .or(`paylink_transaction_no.eq.${transactionNo},tap_charge_id.eq.${transactionNo},tamara_order_id.eq.${transactionNo},stc_pay_reference.eq.${transactionNo},id.eq.${transactionNo}`)
+          .limit(1);
 
         if (error) {
           console.error('Error fetching transaction:', error);
           setPaymentStatus('failed');
-        } else if (transaction) {
-          setTransactionDetails(transaction);
-          
-          // إذا كانت الحالة لا تزال pending أو initiated، تحقق من الحالة الفعلية
-          if (transaction.status === 'INITIATED' || transaction.status === 'PENDING') {
-            await verifyPaymentWithProvider(transaction.id);
-          } else if (transaction.status === 'PAID' || transaction.status === 'COMPLETED') {
-            setPaymentStatus('success');
-          } else {
-            setPaymentStatus('failed');
-          }
-        } else {
-          setPaymentStatus('pending');
+          setLoading(false);
+          return;
         }
-      } else {
-        setPaymentStatus('failed');
-      }
-    } catch (error) {
-      console.error('Error checking payment status:', error);
-      setPaymentStatus('failed');
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const verifyPaymentWithProvider = async (transactionId: string) => {
+        if (!transactions || transactions.length === 0) {
+          console.log('No transaction found, checking if it exists by partial match');
+          
+          // محاولة ثانية للبحث بنص جزئي
+          const { data: partialTransactions, error: partialError } = await supabase
+            .from('payment_transactions')
+            .select('*')
+            .or(`paylink_transaction_no.ilike.%${transactionNo}%,offer_title.ilike.%${transactionNo}%`)
+            .limit(1);
+
+          if (partialError || !partialTransactions || partialTransactions.length === 0) {
+            console.log('No transaction found even with partial match');
+            setPaymentStatus('failed');
+            setLoading(false);
+            return;
+          }
+          
+          setTransactionDetails(partialTransactions[0]);
+        } else {
+          setTransactionDetails(transactions[0]);
+        }
+
+        const transaction = transactions?.[0] || (await supabase
+          .from('payment_transactions')
+          .select('*')
+          .or(`paylink_transaction_no.ilike.%${transactionNo}%`)
+          .limit(1)).data?.[0];
+
+        if (!transaction) {
+          setPaymentStatus('failed');
+          setLoading(false);
+          return;
+        }
+
+        // التحقق من حالة الدفع عبر verify-payment-status
+        console.log('Verifying payment for transaction:', transaction.id);
+        const { data: verificationResult, error: verifyError } = await supabase.functions.invoke('verify-payment-status', {
+          body: { transactionId: transaction.id }
+        });
+
+        console.log('Verification result:', verificationResult);
+
+        if (verifyError) {
+          console.error('Payment verification error:', verifyError);
+          setPaymentStatus('failed');
+        } else if (verificationResult?.status === 'PAID' || verificationResult?.status === 'COMPLETED') {
+          setPaymentStatus('success');
+          console.log('Payment successful! Emails should be sent automatically.');
+        } else if (verificationResult?.status === 'PENDING' || verificationResult?.status === 'INITIATED') {
+          setPaymentStatus('pending');
+        } else {
+          setPaymentStatus('failed');
+        }
+
+      } catch (error) {
+        console.error('Payment verification failed:', error);
+        setPaymentStatus('failed');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyPayment();
+  }, [searchParams]);
+
+  const generateContractPDF = async () => {
+    if (!transactionDetails) return;
+
+    setGenerating(true);
     try {
-      const { data, error } = await supabase.functions.invoke('verify-payment-status', {
-        body: { transactionId }
+      const { data, error } = await supabase.functions.invoke('contract-email', {
+        body: {
+          to: transactionDetails.customer_email,
+          contractData: {
+            client_name: transactionDetails.customer_name,
+            client_email: transactionDetails.customer_email,
+            client_phone: transactionDetails.customer_phone,
+            service_type: transactionDetails.offer_title,
+            service_price: transactionDetails.amount,
+            payment_method: transactionDetails.payment_method
+          }
+        }
       });
 
       if (error) {
-        console.error('Error verifying payment:', error);
-        setPaymentStatus('pending');
-        return;
-      }
-
-      if (data.status === 'PAID' || data.status === 'COMPLETED') {
-        setPaymentStatus('success');
-        setTransactionDetails(prev => prev ? { ...prev, status: data.status } : null);
-      } else if (data.status === 'FAILED') {
-        setPaymentStatus('failed');
-        setTransactionDetails(prev => prev ? { ...prev, status: data.status } : null);
+        console.error('Error generating contract:', error);
+        alert('حدث خطأ في إنشاء العقد');
       } else {
-        setPaymentStatus('pending');
+        alert('تم إرسال العقد إلى بريدك الإلكتروني');
       }
     } catch (error) {
-      console.error('Error verifying payment status:', error);
-      setPaymentStatus('pending');
-    }
-  };
-
-  useEffect(() => {
-    checkPaymentStatus();
-  }, [searchParams]);
-
-  // إنشاء عنصر HTML مبسّط للعقد لاستخدامه في توليد PDF
-  const buildContractElement = (contract: any, tx: any) => {
-    const el = document.createElement('div');
-    el.style.cssText = `width:794px;padding:32px;background:#fff;color:#000;direction:rtl;text-align:right;font-family:Tahoma,Arial,sans-serif;position:fixed;left:-10000px;top:0;`;
-    el.innerHTML = `
-      <div style="border:2px solid #1e3a8a;padding:16px;background:#f8fafc;text-align:center">
-        <h1 style="margin:0 0 6px 0;color:#1e3a8a">شركة علي صالح الشهري القابضة</h1>
-        <div style="color:#475569">عقد إلكتروني رقم: <b>${contract.contract_number || ''}</b></div>
-      </div>
-      <div style="border:1px solid #e5e7eb;margin-top:12px;padding:12px;background:#fff">
-        <div><b>اسم العميل:</b> ${contract.client_name || ''}</div>
-        <div><b>البريد:</b> ${contract.client_email || ''} — <b>الهاتف:</b> ${contract.client_phone || ''}</div>
-        <div><b>الخدمة:</b> ${contract.service_type || tx.offer_title || 'خدمات تقنية'}</div>
-        <div><b>الوصف:</b> ${contract.service_description || ''}</div>
-        <div><b>القيمة:</b> ${contract.service_price || tx.amount} ${contract.currency || tx.currency || 'SAR'}</div>
-        <div><b>تاريخ الإصدار:</b> ${new Date().toLocaleDateString('ar-SA')}</div>
-      </div>
-    `;
-    return el;
-  };
-
-  const generateAndUploadContractPDF = async (contract: any, tx: any) => {
-    try {
-      setGenerating(true);
-      const el = buildContractElement(contract, tx);
-      document.body.appendChild(el);
-      const canvas = await html2canvas(el as unknown as HTMLElement, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth - 48; // margins
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 24, 24, imgWidth, Math.min(imgHeight, pageHeight - 48));
-      const blob = pdf.output('blob');
-
-      const path = `${contract.id}/contract-${contract.contract_number || 'document'}.pdf`;
-      const { error: upErr } = await supabase.storage.from('contracts').upload(path, blob, { upsert: true, contentType: 'application/pdf' });
-      if (upErr) throw upErr;
-
-      const { data: pub } = await supabase.storage.from('contracts').getPublicUrl(path);
-      const publicUrl = pub.publicUrl;
-
-      await supabase.from('contracts').update({ contract_pdf_url: publicUrl }).eq('id', contract.id);
-      setContractUrl(publicUrl);
-
-      // إرسال بريد بالعقد
-      await supabase.functions.invoke('contract-email', {
-        body: {
-          to: contract.client_email,
-          customerName: contract.client_name,
-          contractNumber: contract.contract_number,
-          pdfUrl: publicUrl,
-          amount: contract.service_price,
-          currency: contract.currency || 'SAR',
-          offerTitle: tx.offer_title,
-          paymentStatus: 'paid',
-        },
-      });
-    } catch (e) {
-      console.error('Contract PDF generation/upload failed:', e);
+      console.error('Contract generation failed:', error);
+      alert('حدث خطأ في إنشاء العقد');
     } finally {
       setGenerating(false);
     }
   };
 
-  const prepareContract = async () => {
+  const downloadReceipt = async () => {
+    const receiptElement = document.getElementById('payment-receipt');
+    if (!receiptElement) return;
+
     try {
-      const tx = transactionDetails;
-      if (!tx) return;
-      // احصل على أحدث المعاملة لتأكيد وجود contract_id
-      let currentTx = tx;
-      if (!currentTx.id) {
-        const { data: fetched } = await supabase
-          .from('payment_transactions')
-          .select('*')
-          .or(`paylink_transaction_no.eq.${tx.chargeId},tamara_order_id.eq.${tx.chargeId},stc_pay_reference.eq.${tx.chargeId}`)
-          .maybeSingle();
-        if (fetched) currentTx = fetched;
+      const canvas = await html2canvas(receiptElement);
+      const imgData = canvas.toDataURL('image/png');
+      
+      const pdf = new jsPDF();
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      
+      let position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
-      if (!currentTx?.contract_id) return;
-
-      const { data: contract } = await supabase
-        .from('contracts')
-        .select('*')
-        .eq('id', currentTx.contract_id)
-        .maybeSingle();
-
-      if (!contract) return;
-      if (contract.contract_pdf_url) {
-        setContractUrl(contract.contract_pdf_url);
-        return;
-      }
-      await generateAndUploadContractPDF(contract, currentTx);
-    } catch (e) {
-      console.error('prepareContract error:', e);
+      
+      pdf.save(`receipt-${transactionDetails?.paylink_transaction_no || 'payment'}.pdf`);
+    } catch (error) {
+      console.error('Error downloading receipt:', error);
     }
   };
 
-  useEffect(() => {
-    if (paymentStatus === 'success') {
-      prepareContract();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paymentStatus, transactionDetails]);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+        <Navigation />
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-600 mx-auto mb-8"></div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">جاري التحقق من عملية الدفع...</h2>
+            <p className="text-gray-600">يرجى الانتظار بينما نتحقق من حالة دفعتك</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       <Navigation />
       
-      <main className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto text-center space-y-8">
-          {loading ? (
-            <div className="space-y-4">
-              <Clock className="w-20 h-20 text-blue-500 mx-auto animate-spin" />
-              <h1 className="text-2xl font-bold text-foreground">
-                جاري التحقق من حالة الدفع...
-              </h1>
-            </div>
-          ) : (
-            <>
-              {/* Success/Pending/Failed States */}
-              {paymentStatus === 'success' && (
-                <div className="space-y-4">
-                  <CheckCircle className="w-20 h-20 text-green-500 mx-auto animate-bounce" />
-                  <h1 className="text-4xl font-bold text-foreground">
-                    تم الدفع بنجاح!
-                  </h1>
-                  <p className="text-xl text-muted-foreground">
-                    شكراً لك على ثقتك بنا. تم تأكيد عملية الدفع بنجاح
-                  </p>
-                </div>
-              )}
-
-              {paymentStatus === 'pending' && (
-                <div className="space-y-4">
-                  <Clock className="w-20 h-20 text-orange-500 mx-auto" />
-                  <h1 className="text-3xl font-bold text-foreground">
-                    عملية الدفع قيد المعالجة
-                  </h1>
-                  <p className="text-xl text-muted-foreground">
-                    عملية الدفع قيد المراجعة. سيتم إشعارك فور اكتمالها
-                  </p>
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-right">
-                      قد تستغرق عملية التأكيد من 5-10 دقائق. يرجى عدم القلق
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              )}
-
-              {paymentStatus === 'failed' && (
-                <div className="space-y-4">
-                  <AlertCircle className="w-20 h-20 text-red-500 mx-auto" />
-                  <h1 className="text-3xl font-bold text-foreground">
-                    خطأ في عملية الدفع
-                  </h1>
-                  <p className="text-xl text-muted-foreground">
-                    لم يتم العثور على تفاصيل المعاملة أو حدث خطأ
-                  </p>
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-right">
-                      يرجى التواصل مع فريق الدعم للمساعدة
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Transaction Details */}
-          {transactionDetails && (
-            <Card className="text-right">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 justify-center">
-                  <Receipt className="w-5 h-5" />
-                  تفاصيل المعاملة
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">رقم المعاملة:</span>
-                  <span className="text-sm font-mono bg-muted px-2 py-1 rounded">
-                    {transactionDetails.chargeId}
-                  </span>
-                </div>
-                {transactionDetails.amount && (
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">المبلغ:</span>
-                    <span className="text-lg font-bold text-green-600">
-                      {transactionDetails.amount} {transactionDetails.currency || 'SAR'}
-                    </span>
-                  </div>
-                )}
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">تاريخ العملية:</span>
-                  <span>{new Date().toLocaleDateString('ar-SA')}</span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Next Steps - only show for success */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-4xl mx-auto">
           {paymentStatus === 'success' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>الخطوات التالية</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground">
-                  سيتم التواصل معك خلال 24 ساعة لتأكيد تفاصيل الخدمة وبدء العمل
-                </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {generating && (
-                  <Button disabled className="flex items-center gap-2 hover-scale">
-                    <Clock className="w-4 h-4 animate-spin" />
-                    جاري تجهيز العقد...
-                  </Button>
-                )}
-                {!generating && contractUrl && (
-                  <a href={contractUrl} target="_blank" rel="noopener noreferrer" className="hover-scale">
-                    <Button className="flex items-center gap-2">
-                      <Download className="w-4 h-4" />
-                      تحميل العقد PDF
-                    </Button>
-                  </a>
-                )}
-                {!generating && !contractUrl && (
-                  <Button disabled className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    يتم تجهيز العقد
-                  </Button>
-                )}
-                <Button 
-                  onClick={() => navigate("/")}
-                  className="flex items-center gap-2 hover-scale"
-                >
-                  <Home className="w-4 h-4" />
-                  العودة للرئيسية
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => navigate("/current-offers")}
-                  className="flex items-center gap-2 hover-scale"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                  مشاهدة العروض الأخرى
-                </Button>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-green-100 mb-6">
+                <CheckCircle className="w-12 h-12 text-green-600" />
               </div>
-            </CardContent>
-          </Card>
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                🎉 تم الدفع بنجاح!
+              </h1>
+              <p className="text-xl text-gray-600 mb-2">
+                مرحباً بك في عالم الأتمتة الذكية
+              </p>
+              <p className="text-lg text-gray-500">
+                تم إرسال تأكيد الدفع والفاتورة إلى بريدك الإلكتروني
+              </p>
+            </div>
           )}
 
-          {/* Pending Status Actions */}
           {paymentStatus === 'pending' && (
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    onClick={() => navigate("/")}
-                    variant="outline"
-                    className="flex items-center gap-2"
-                  >
-                    <Home className="w-4 h-4" />
-                    العودة للرئيسية
-                  </Button>
-                  <Button 
-                    onClick={() => checkPaymentStatus()}
-                    className="flex items-center gap-2"
-                  >
-                    التحقق من حالة الدفع
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-yellow-100 mb-6">
+                <Clock className="w-12 h-12 text-yellow-600" />
+              </div>
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                ⏳ عملية الدفع قيد المعالجة
+              </h1>
+              <p className="text-xl text-gray-600 mb-2">
+                يتم معالجة دفعتك حالياً
+              </p>
+              <p className="text-lg text-gray-500">
+                سنرسل إليك تأكيد عند اكتمال العملية
+              </p>
+            </div>
           )}
 
-          {/* Failed Status Actions */}
           {paymentStatus === 'failed' && (
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    onClick={() => navigate("/")}
-                    className="flex items-center gap-2"
-                  >
-                    <Home className="w-4 h-4" />
-                    العودة للرئيسية
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    onClick={() => navigate("/software-products")}
-                    className="flex items-center gap-2"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                    إعادة المحاولة
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-100 mb-6">
+                <AlertCircle className="w-12 h-12 text-red-600" />
+              </div>
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                ❌ لم تكتمل عملية الدفع
+              </h1>
+              <p className="text-xl text-gray-600 mb-2">
+                حدث خطأ في معالجة الدفع
+              </p>
+              <p className="text-lg text-gray-500">
+                يرجى المحاولة مرة أخرى أو التواصل مع الدعم
+              </p>
+            </div>
           )}
 
-          {/* Contact Information */}
-          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">هل تحتاج المساعدة؟</h3>
-            <p className="text-muted-foreground mb-4">
-              فريق الدعم الفني متاح على مدار الساعة لمساعدتك
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2 text-sm">
-              <span>📧 info@alialshehriholding.com</span>
-              <span>📱 0555812567</span>
+          {paymentStatus === 'checking' && (
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-100 mb-6">
+                <Clock className="w-12 h-12 text-blue-600 animate-pulse" />
+              </div>
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                🔍 جاري التحقق من الدفع
+              </h1>
+              <p className="text-xl text-gray-600 mb-2">
+                يرجى الانتظار قليلاً
+              </p>
+            </div>
+          )}
+
+          {transactionDetails && (
+            <div id="payment-receipt" className="bg-white rounded-lg shadow-lg p-8 mb-8">
+              <div className="border-b border-gray-200 pb-6 mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">تفاصيل المعاملة</h2>
+                <p className="text-gray-600">إيصال الدفع الرسمي</p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <div>
+                  <h3 className="font-semibold text-gray-800 mb-3">معلومات العميل</h3>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="font-medium">الاسم:</span> {transactionDetails.customer_name}</p>
+                    <p><span className="font-medium">البريد الإلكتروني:</span> {transactionDetails.customer_email}</p>
+                    {transactionDetails.customer_phone && (
+                      <p><span className="font-medium">الهاتف:</span> {transactionDetails.customer_phone}</p>
+                    )}
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold text-gray-800 mb-3">تفاصيل الدفع</h3>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="font-medium">المبلغ:</span> {transactionDetails.amount} {transactionDetails.currency || 'SAR'}</p>
+                    <p><span className="font-medium">الخدمة:</span> {transactionDetails.offer_title}</p>
+                    <p><span className="font-medium">طريقة الدفع:</span> {transactionDetails.payment_method}</p>
+                    <p><span className="font-medium">رقم المرجع:</span> {transactionDetails.paylink_transaction_no || transactionDetails.tap_charge_id || transactionDetails.id}</p>
+                    <p><span className="font-medium">التاريخ:</span> {new Date(transactionDetails.created_at || Date.now()).toLocaleDateString('ar-SA')}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            <Card className="text-center hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
+                </div>
+                <CardTitle className="text-xl">الدعم المتخصص</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">فريق دعم متخصص متاح 24/7 لمساعدتك</p>
+                <Button variant="outline" className="w-full">
+                  تواصل معنا ⭐
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Download className="w-8 h-8 text-purple-600" />
+                </div>
+                <CardTitle className="text-xl">دليل المستخدم</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">تحميل دليل شامل لاستخدام جميع مميزات النظام</p>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={downloadReceipt}
+                >
+                  💾 تحميل الدليل
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Receipt className="w-8 h-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl">ابدأ الأتمتة</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 mb-4">ادخل إلى نظام الأتمتة وابدأ في إنشاء أول سير عمل لك</p>
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  onClick={() => navigate('/automation-system')}
+                >
+                  ➤ ابدأ الآن
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {paymentStatus === 'success' && (
+            <Alert className="mb-8 border-green-200 bg-green-50">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription className="text-green-800">
+                <strong>تم إرسال الإيميلات التالية:</strong>
+                <ul className="mt-2 space-y-1">
+                  <li>• تأكيد الدفع وتفاصيل المعاملة</li>
+                  <li>• الفاتورة الرسمية المختومة</li>
+                  <li>• دليل الاستخدام والبدء</li>
+                  <li>• تفاصيل تسجيل الدخول للنظام</li>
+                </ul>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <div className="text-center space-y-4">
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button 
+                onClick={() => navigate('/')}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <Home className="w-4 h-4" />
+                العودة للرئيسية
+              </Button>
+              
+              {transactionDetails && (
+                <Button 
+                  onClick={downloadReceipt}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  تحميل الإيصال
+                </Button>
+              )}
+
+              {paymentStatus === 'success' && (
+                <Button 
+                  onClick={generateContractPDF}
+                  disabled={generating}
+                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+                >
+                  <Receipt className="w-4 h-4" />
+                  {generating ? 'جاري الإنشاء...' : 'إنشاء العقد'}
+                </Button>
+              )}
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
+              <h3 className="text-xl font-bold mb-2">تفاصيل العملية</h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p><strong>حالة الدفع:</strong> {
+                    paymentStatus === 'success' ? '✅ تم بنجاح' :
+                    paymentStatus === 'pending' ? '⏳ قيد المعالجة' :
+                    paymentStatus === 'failed' ? '❌ فشل' : '🔍 جاري التحقق'
+                  }</p>
+                  <p><strong>المعرف:</strong> {searchParams.get('paymentId') || searchParams.get('transaction_no') || 'غير متوفر'}</p>
+                </div>
+                <div>
+                  <p><strong>الوقت:</strong> {new Date().toLocaleString('ar-SA')}</p>
+                  <p><strong>الإيميلات:</strong> {paymentStatus === 'success' ? '✅ تم الإرسال' : '⏳ في الانتظار'}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </main>
+      </div>
 
       <Footer />
     </div>

@@ -276,10 +276,8 @@ serve(async (req) => {
                 </div>
               `;
 
-            // Send email in background when possible (non-blocking), otherwise send inline
-            // @ts-ignore EdgeRuntime may be available in Supabase Edge Functions
-            // deno-lint-ignore no-explicit-any
-            const ER: any = (globalThis as any).EdgeRuntime;
+            // Send email in background (non-blocking)
+            // @ts-ignore 
             const sendPromise = resend.emails.send({
               from: 'نظام المدفوعات <info@alialshehriholding.com>',
               to: [to],
@@ -287,12 +285,17 @@ serve(async (req) => {
               reply_to: 'info@alialshehriholding.com',
               subject,
               html,
-            }).then((res) => console.log('Email sent:', res)).catch((e) => console.error('Email error:', e));
-            if (ER && typeof ER.waitUntil === 'function') {
-              ER.waitUntil(sendPromise);
-            } else {
-              await sendPromise;
-            }
+            }).then((res) => {
+              console.log('Payment confirmation email sent successfully:', res);
+              return res;
+            }).catch((e) => {
+              console.error('Failed to send payment confirmation email:', e);
+              throw e;
+            });
+
+            // Wait for email to be sent
+            await sendPromise;
+            console.log('Payment confirmation email processing completed');
           }
         } catch (e) {
           console.error('Error preparing/sending email:', e);
