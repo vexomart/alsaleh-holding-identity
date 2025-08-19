@@ -26,7 +26,8 @@ import {
   ShoppingBag,
   Palette,
   TrendingUp,
-  Globe
+  Globe,
+  Users
 } from "lucide-react";
 
 const CurrentOffers = () => {
