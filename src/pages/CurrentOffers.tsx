@@ -36,6 +36,98 @@ import {
 } from "lucide-react";
 import OfferRequestForm from "@/components/OfferRequestForm";
 
+// دالة للدفع الفوري
+const handleDirectPayment = async (offer: any) => {
+  const { toast } = useToast();
+  
+  try {
+    // عرض رسالة تحضير الدفع
+    toast({
+      title: "🚀 جاري تحضير رابط الدفع...",
+      description: "سيتم توجيهك فوراً إلى Paylink لإتمام الدفع الآمن",
+      duration: 2000,
+    });
+
+    const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
+    
+    const payload = {
+      amount: amount,
+      currency: 'SAR',
+      customer_name: 'عميل مميز', // يمكن تخصيص هذا لاحقاً
+      customer_email: 'customer@example.com', // يمكن تخصيص هذا لاحقاً
+      customer_phone: '966500000000',
+      offer_title: offer.title,
+      description: `دفع عرض: ${offer.title} - ${offer.currentPrice} ريال سعودي`,
+      success_url: `${window.location.origin}/payment-success`,
+      cancel_url: `${window.location.origin}/payment-cancel`,
+      // إضافة معلومات إضافية للفاتورة
+      metadata: {
+        offer_id: offer.id,
+        original_price: offer.originalPrice,
+        current_price: offer.currentPrice,
+        discount: offer.discount,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    const { data, error } = await supabase.functions.invoke('paylink-payment', {
+      body: payload,
+    });
+
+    if (error) {
+      throw new Error(error.message || 'فشل في الاتصال بالخدمة');
+    }
+
+    if (data?.success && data?.payment_url) {
+      // رسالة نجاح
+      toast({
+        title: "✅ تم إنشاء رابط الدفع بنجاح",
+        description: "سيتم توجيهك الآن إلى Paylink لإتمام الدفع الآمن",
+        duration: 3000,
+      });
+
+      // إرسال بريد إلكتروني فوري بمعلومات الدفع
+      try {
+        await supabase.functions.invoke('send-invoice-email', {
+          body: {
+            customer_name: 'عميل مميز',
+            customer_email: 'customer@example.com',
+            amount: amount,
+            currency: 'SAR',
+            payment_url: data.payment_url,
+            transaction_id: data.transaction_id || 'N/A',
+            invoice_number: data.invoice_number || 'N/A',
+            status: 'pending',
+            payment_method: 'Paylink',
+            offer_title: offer.title,
+            offer_description: offer.description,
+            original_price: offer.originalPrice,
+            current_price: offer.currentPrice,
+            discount: offer.discount
+          }
+        });
+      } catch (emailError) {
+        console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
+      }
+
+      // التحويل الفوري إلى Paylink
+      setTimeout(() => {
+        window.open(data.payment_url, '_blank');
+      }, 1000);
+      
+    } else {
+      throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
+    }
+  } catch (error: any) {
+    console.error('Payment error:', error);
+    toast({
+      title: "❌ خطأ في عملية الدفع",
+      description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع. يرجى المحاولة مرة أخرى",
+      variant: "destructive",
+    });
+  }
+};
+
 const currentOffers = [
   {
     id: 1,
@@ -116,609 +208,6 @@ const currentOffers = [
     category: "SEO والتسويق"
   }
 ];
-
-const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<'paylink' | 'stc_pay'>('paylink');
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
-  const { toast } = useToast();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handlePayment = async () => {
-    // التحقق من صحة البيانات
-    if (!formData.name || !formData.email) {
-      toast({
-        title: "خطأ في البيانات",
-        description: "يرجى ملء جميع الحقول المطلوبة",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // التحقق من صحة البريد الإلكتروني
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(formData.email)) {
-      toast({
-        title: "خطأ في البريد الإلكتروني",
-        description: "يرجى إدخال بريد إلكتروني صحيح",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // التحقق من رقم الجوال لـ STC Pay
-    if (selectedPaymentGateway === 'stc_pay' && !formData.phone) {
-      toast({
-        title: "خطأ في البيانات",
-        description: "رقم الجوال مطلوب للدفع عبر STC Pay",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    
-    try {
-      // عرض رسالة تحضير الدفع
-      toast({
-        title: "🚀 جاري تحضير رابط الدفع...",
-        description: "سيتم توجيهك فوراً إلى صفحة الدفع الآمنة",
-        duration: 2000,
-      });
-
-      const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
-      const paymentFunction = selectedPaymentGateway === 'paylink' ? 'paylink-payment' : 'stc-pay';
-      
-      const payload = {
-        amount: amount,
-        currency: 'SAR',
-        customer_name: formData.name,
-        customer_email: formData.email,
-        customer_phone: formData.phone || '966500000000',
-        offer_title: offer.title,
-        description: `دفع عرض: ${offer.title} - ${offer.currentPrice} ريال سعودي`,
-        success_url: `${window.location.origin}/payment-success`,
-        cancel_url: `${window.location.origin}/payment-cancel`,
-        // إضافة معلومات إضافية للفاتورة
-        metadata: {
-          customer_name: formData.name,
-          customer_email: formData.email,
-          payment_type: selectedPaymentGateway,
-          offer_id: offer.id,
-          original_price: offer.originalPrice,
-          current_price: offer.currentPrice,
-          discount: offer.discount,
-          timestamp: new Date().toISOString()
-        }
-      };
-      const { data, error } = await supabase.functions.invoke(paymentFunction, {
-        body: payload,
-      });
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(error.message || 'فشل في الاتصال بالخدمة');
-      }
-
-      if (data?.success) {
-        // Handle STC Pay differently (show professional instructions modal)
-        if (selectedPaymentGateway === 'stc_pay') {
-          setIsOpen(false);
-          
-          // Show professional STC Pay instructions
-          const modal = document.createElement('div');
-          // Security: Use React components instead of innerHTML for better XSS protection
-          const modalContent = document.createElement('div');
-          modalContent.className = 'fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4';
-          modalContent.onclick = () => modal.remove();
-          
-          const innerModal = document.createElement('div');
-          innerModal.className = 'bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-sm sm:max-w-md lg:max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-hidden animate-scale-in';
-          innerModal.dir = 'rtl';
-          innerModal.onclick = (e) => e.stopPropagation();
-          
-          // Create content safely without innerHTML
-          const header = document.createElement('div');
-          header.className = 'bg-gradient-to-l from-orange-500 to-orange-600 text-white p-4 sm:p-6 text-center';
-          header.innerHTML = `
-            <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4" onclick="this.remove()">
-              <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-sm sm:max-w-md lg:max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
-                
-                <!-- Header Section - Responsive -->
-                <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-4 sm:p-6 lg:p-8 text-white text-center relative overflow-hidden">
-                  <div class="absolute top-0 right-0 w-20 sm:w-32 h-20 sm:h-32 bg-white/10 rounded-full -translate-y-10 sm:-translate-y-16 translate-x-10 sm:translate-x-16"></div>
-                  <div class="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-white/5 rounded-full translate-y-8 sm:translate-y-12 -translate-x-8 sm:-translate-x-12"></div>
-                  <div class="relative z-10">
-                    <div class="w-14 sm:w-16 lg:w-20 h-14 sm:h-16 lg:h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 backdrop-blur-sm">
-                      <svg class="w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9M19 9H14V4H19V9Z"/>
-                      </svg>
-                    </div>
-                    <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">تعليمات الدفع</h3>
-                    <p class="text-green-100 text-base sm:text-lg font-medium">STC Pay</p>
-                    <div class="mt-2 sm:mt-4 bg-white/10 rounded-full px-3 sm:px-4 py-1 sm:py-2 inline-block">
-                      <span class="text-xs sm:text-sm">• معاملة آمنة ومحمية •</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Content Section - Responsive -->
-                <div class="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 max-h-[60vh] overflow-y-auto">
-                  
-                  <!-- Step 1 - Responsive -->
-                  <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-blue-100 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-6 sm:w-8 h-6 sm:h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-lg">1</div>
-                    <div class="absolute bottom-0 left-0 w-12 sm:w-16 h-12 sm:h-16 bg-blue-200/30 rounded-full translate-y-6 sm:translate-y-8 -translate-x-6 sm:-translate-x-8"></div>
-                    <div class="relative z-10 mr-8 sm:mr-12">
-                      <h4 class="font-bold text-lg sm:text-xl text-blue-800 mb-1 sm:mb-2">افتح تطبيق STC Pay</h4>
-                      <p class="text-blue-600 text-xs sm:text-sm">تأكد من تحديث التطبيق لآخر إصدار</p>
-                    </div>
-                  </div>
-                  
-                  <!-- Step 2 - Responsive -->
-                  <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-green-100 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-6 sm:w-8 h-6 sm:h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-lg">2</div>
-                    <div class="absolute bottom-0 left-0 w-12 sm:w-16 h-12 sm:h-16 bg-green-200/30 rounded-full translate-y-6 sm:translate-y-8 -translate-x-6 sm:-translate-x-8"></div>
-                    <div class="relative z-10 mr-8 sm:mr-12">
-                      <h4 class="font-bold text-lg sm:text-xl text-green-800 mb-1 sm:mb-2">اختر "إرسال أموال"</h4>
-                      <p class="text-green-600 text-xs sm:text-sm">من القائمة الرئيسية للتطبيق</p>
-                    </div>
-                  </div>
-                  
-                  <!-- Step 3 - Amount - Responsive -->
-                  <div class="bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-purple-100 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-6 sm:w-8 h-6 sm:h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-lg">3</div>
-                    <div class="absolute bottom-0 left-0 w-12 sm:w-16 h-12 sm:h-16 bg-purple-200/30 rounded-full translate-y-6 sm:translate-y-8 -translate-x-6 sm:-translate-x-8"></div>
-                    <div class="relative z-10 mr-8 sm:mr-12">
-                      <h4 class="font-bold text-lg sm:text-xl text-purple-800 mb-3 sm:mb-4">أرسل المبلغ التالي:</h4>
-                      <div class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-purple-200 shadow-lg">
-                        <div class="text-center">
-                          <div class="text-2xl sm:text-3xl lg:text-4xl font-bold text-purple-600 mb-1 sm:mb-2">${data.amount}</div>
-                          <div class="text-base sm:text-lg text-purple-500 font-medium">${data.currency}</div>
-                          <div class="mt-2 sm:mt-4 text-xs sm:text-sm text-gray-600">إلى الرقم</div>
-                          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mt-2 font-mono bg-gray-50 rounded-lg py-2 px-2 sm:px-4 border break-all">${data.merchant_number}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <!-- Step 4 - Reference - Responsive -->
-                  <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-orange-100 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 w-6 sm:w-8 h-6 sm:h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-lg">4</div>
-                    <div class="absolute bottom-0 left-0 w-12 sm:w-16 h-12 sm:h-16 bg-orange-200/30 rounded-full translate-y-6 sm:translate-y-8 -translate-x-6 sm:-translate-x-8"></div>
-                    <div class="relative z-10 mr-8 sm:mr-12">
-                      <h4 class="font-bold text-lg sm:text-xl text-orange-800 mb-3 sm:mb-4">استخدم المرجع:</h4>
-                      <div class="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border-2 border-orange-200 shadow-lg">
-                        <div class="text-center">
-                          <div class="text-sm sm:text-base lg:text-lg font-bold text-gray-800 font-mono bg-gray-50 rounded-lg py-2 sm:py-3 px-2 sm:px-4 border break-all">${data.reference}</div>
-                          <button onclick="navigator.clipboard.writeText('${data.reference}'); this.innerHTML='<span class=&quot;text-green-600&quot;>✓ تم النسخ!</span>'; setTimeout(() => this.innerHTML='نسخ المرجع', 2000)" 
-                                  class="mt-2 sm:mt-3 bg-orange-100 hover:bg-orange-200 text-orange-800 text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-lg transition-colors w-full sm:w-auto">
-                            نسخ المرجع
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Confirmation - Responsive -->
-                  <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-gray-200 text-center">
-                    <div class="w-10 sm:w-12 h-10 sm:h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                      <svg class="w-5 sm:w-6 h-5 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                      </svg>
-                    </div>
-                    <div class="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2">⏱️ سيتم تأكيد الدفع خلال</div>
-                    <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">دقائق قليلة</div>
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-2 sm:p-3">
-                      <div class="text-xs sm:text-sm text-green-700">ستصلك رسالة تأكيد فور إتمام العملية</div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Footer Actions - Responsive -->
-                <div class="p-4 sm:p-6 bg-gray-50 border-t">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    <button onclick="this.closest('.fixed').remove()" 
-                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 transform hover:scale-105 order-2 sm:order-1">
-                      إغلاق
-                    </button>
-                    <button onclick="navigator.clipboard.writeText('${data.merchant_number}'); this.innerHTML='<span class=&quot;text-white&quot;>✓ تم النسخ!</span>'; setTimeout(() => this.innerHTML='نسخ الرقم', 2000)" 
-                            class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg order-1 sm:order-2">
-                      نسخ الرقم
-                    </button>
-                  </div>
-                  
-                  <!-- Support Info - Responsive -->
-                  <div class="mt-3 sm:mt-4 text-center">
-                    <div class="text-xs text-gray-500">هل تحتاج مساعدة؟</div>
-                    <div class="text-xs sm:text-sm text-gray-600 font-medium">اتصل بنا على: 920000000</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-          document.body.appendChild(modal);
-          
-          toast({
-            title: "تم إنشاء طلب الدفع بنجاح",
-            description: "يرجى اتباع التعليمات المعروضة لإتمام الدفع",
-            duration: 5000,
-          });
-          
-        } else if (data?.payment_url) {
-          // رسالة نجاح مع معلومات إضافية
-          toast({
-            title: "✅ تم إنشاء رابط الدفع بنجاح",
-            description: "سيتم توجيهك الآن إلى Paylink لإتمام الدفع الآمن",
-            duration: 3000,
-          });
-
-          // إرسال بريد إلكتروني فوري بمعلومات الدفع
-          try {
-            await supabase.functions.invoke('send-invoice-email', {
-              body: {
-                customer_name: formData.name,
-                customer_email: formData.email,
-                amount: amount,
-                currency: 'SAR',
-                payment_url: data.payment_url,
-                transaction_id: data.transaction_id || 'N/A',
-                invoice_number: data.invoice_number || 'N/A',
-                status: 'pending',
-                payment_method: 'Paylink',
-                offer_title: offer.title,
-                offer_description: offer.description,
-                original_price: offer.originalPrice,
-                current_price: offer.currentPrice,
-                discount: offer.discount
-              }
-            });
-            
-            toast({
-              title: "📧 تم إرسال معلومات الدفع",
-              description: "تم إرسال تفاصيل الدفع إلى بريدك الإلكتروني",
-              duration: 4000,
-            });
-          } catch (emailError) {
-            console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
-          }
-
-          // إغلاق النافذة أولاً
-          setIsOpen(false);
-          
-          // التحويل الفوري إلى Paylink في تبويبة جديدة
-          setTimeout(() => {
-            window.open(data.payment_url, '_blank');
-          }, 1000);
-          
-        } else {
-          throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
-        }
-      } else {
-        throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
-      }
-    } catch (error: any) {
-      console.error('Payment error:', error);
-      toast({
-        title: "❌ خطأ في عملية الدفع",
-        description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع. يرجى المحاولة مرة أخرى",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {trigger}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-3xl max-h-[95vh] overflow-y-auto animate-scale-in bg-gradient-to-br from-background/95 via-primary/5 to-accent/10 backdrop-blur-xl border-primary/20 shadow-2xl" dir="rtl">
-        {/* Floating Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-2xl animate-float"></div>
-          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-secondary/15 to-primary/15 rounded-full blur-2xl animate-float-delayed"></div>
-          <div className="absolute top-1/2 right-1/3 w-24 h-24 bg-gradient-to-br from-accent/10 to-warning/10 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
-        </div>
-
-        <DialogHeader className="relative z-10 text-center pb-6 border-b border-primary/10">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-br from-primary to-accent rounded-full shadow-glow animate-pulse">
-              <CreditCard className="w-8 h-8 text-white" />
-            </div>
-          </div>
-          <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-fade-in">
-            الدفع الآمن والمحمي
-          </DialogTitle>
-          <p className="text-muted-foreground text-lg mt-2 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            اختر طريقة الدفع المناسبة واستمتع بتجربة آمنة ومضمونة
-          </p>
-        </DialogHeader>
-
-        <div className="relative z-10 space-y-8 pt-6">
-          {/* Premium Offer Summary Card */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 border border-primary/20 p-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-            <div className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
-                    <Award className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-bold text-xl text-foreground">{offer.title}</h3>
-                </div>
-                <Badge className="bg-gradient-to-r from-destructive to-orange-500 text-white shadow-lg animate-bounce-gentle">
-                  خصم {offer.discount}
-                </Badge>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl font-bold bg-gradient-to-r from-success to-accent bg-clip-text text-transparent">
-                      {offer.currentPrice} ر.س
-                    </span>
-                    <span className="text-lg text-muted-foreground line-through">
-                      {offer.originalPrice} ر.س
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Timer className="w-4 h-4" />
-                    <span className="text-sm">باقي {offer.timeLeft} على انتهاء العرض</span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm text-muted-foreground">وفر</div>
-                  <div className="text-lg font-bold text-success">
-                    {(parseFloat(offer.originalPrice.replace(/,/g, '')) - parseFloat(offer.currentPrice.replace(/,/g, ''))).toLocaleString()} ر.س
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Payment Gateway Selection - Enhanced Banking Style */}
-          <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="text-center">
-              <h4 className="text-xl font-bold text-foreground mb-2">اختر بوابة الدفع المفضلة</h4>
-              <p className="text-muted-foreground">جميع الطرق آمنة ومحمية بأعلى معايير الأمان</p>
-            </div>
-            
-            {/* Active Payment Methods - Premium Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                { 
-                  id: 'paylink', 
-                  name: 'البطاقة الائتمانية', 
-                  description: 'مدى، فيزا، ماستركارد، أبل باي',
-                  features: ['✓ يدعم مدى', '✓ فيزا وماستركارد', '✓ Apple Pay'],
-                  gradient: 'from-green-500/20 to-emerald-500/20',
-                  borderGradient: 'from-green-500 to-emerald-500'
-                },
-                { 
-                  id: 'stc_pay', 
-                  name: 'STC Pay', 
-                  description: 'المحفظة الرقمية الرائدة',
-                  features: ['✓ دفع عبر الجوال', '✓ سرعة في التحويل', '✓ أمان عالي'],
-                  gradient: 'from-purple-500/20 to-pink-500/20',
-                  borderGradient: 'from-purple-500 to-pink-500'
-                }
-              ].map((gateway) => (
-                <button
-                  key={gateway.id}
-                  type="button"
-                  onClick={() => setSelectedPaymentGateway(gateway.id as any)}
-                  className={`relative overflow-hidden p-6 rounded-xl border-2 transition-all duration-300 hover-scale text-right group ${
-                    selectedPaymentGateway === gateway.id
-                      ? `bg-gradient-to-br ${gateway.gradient} border-primary shadow-glow scale-105`
-                      : `bg-gradient-to-br from-background/50 to-muted/30 border-border hover:border-primary/50 hover:shadow-lg`
-                  }`}
-                >
-                  <div className={`absolute inset-0 bg-gradient-to-r ${gateway.borderGradient} opacity-0 ${
-                    selectedPaymentGateway === gateway.id ? 'opacity-10' : 'group-hover:opacity-5'
-                  } transition-opacity duration-300`}></div>
-                  
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-3">
-                      <h5 className="font-bold text-lg text-foreground">{gateway.name}</h5>
-                      {selectedPaymentGateway === gateway.id && (
-                        <div className="p-1 bg-primary rounded-full animate-bounce-gentle">
-                          <CheckCircle className="w-5 h-5 text-white" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-muted-foreground text-sm mb-4">{gateway.description}</p>
-                    <div className="space-y-1">
-                      {gateway.features.map((feature, index) => (
-                        <div key={index} className="text-xs text-muted-foreground">{feature}</div>
-                      ))}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-            
-            {/* Coming Soon Section - Banking Style */}
-            <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-              <div className="text-center">
-                <h5 className="text-lg font-bold text-muted-foreground mb-1">قريباً - حلول دفع إضافية</h5>
-                <p className="text-sm text-muted-foreground">المزيد من الخيارات المبتكرة في الطريق</p>
-              </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[
-                  { name: 'تمارا', logo: '/src/assets/tamara-logo.png', desc: 'أقساط مرنة' },
-                  { name: 'تابي', logo: '/src/assets/tabby-logo.png', desc: 'ادفع لاحقاً' },
-                  { name: 'الراجحي', logo: '/src/assets/alrajhi-bank-logo.png', desc: 'حلول بنكية' },
-                  { name: 'تساهيل', logo: '/src/assets/tasaheel-logo.png', desc: 'تمويل مبتكر' }
-                ].map((item, index) => (
-                  <div key={index} className="relative p-4 bg-gradient-to-br from-muted/30 to-background/50 border border-muted rounded-xl text-center overflow-hidden group">
-                    <div className="absolute top-2 right-2">
-                      <Badge variant="secondary" className="text-xs animate-bounce-gentle">قريباً</Badge>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="relative z-10">
-                      <img src={item.logo} alt={item.name} className="w-10 h-10 mx-auto mb-2 opacity-60 group-hover:opacity-80 transition-opacity" />
-                      <div className="font-semibold text-sm text-muted-foreground">{item.name}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{item.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced Payment Form */}
-          <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <div className="text-center">
-              <h4 className="text-xl font-bold text-foreground mb-2">بياناتك الشخصية</h4>
-              <p className="text-muted-foreground">معلومات آمنة ومحمية وفقاً لأعلى معايير الخصوصية</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  الاسم الكامل *
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="أدخل اسمك الكامل كما هو في الهوية"
-                  className="h-12 bg-background/50 border-2 border-muted focus:border-primary transition-all duration-300 rounded-xl"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  البريد الإلكتروني *
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="example@domain.com"
-                  className="h-12 bg-background/50 border-2 border-muted focus:border-primary transition-all duration-300 rounded-xl"
-                  required
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="phone" className={`text-sm font-medium flex items-center gap-2 ${
-                selectedPaymentGateway === 'stc_pay' ? 'text-primary' : 'text-muted-foreground'
-              }`}>
-                <div className={`w-2 h-2 rounded-full ${
-                  selectedPaymentGateway === 'stc_pay' ? 'bg-primary animate-pulse' : 'bg-muted-foreground'
-                }`}></div>
-                رقم الجوال {selectedPaymentGateway === 'stc_pay' ? '(مطلوب لـ STC Pay) *' : '(اختياري)'}
-              </Label>
-              {selectedPaymentGateway === 'stc_pay' && (
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-2">
-                  <div className="flex items-center gap-2 text-purple-700 text-sm">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-                    <span className="font-medium">رقم الجوال مطلوب للدفع عبر STC Pay</span>
-                  </div>
-                </div>
-              )}
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="05xxxxxxxx"
-                className={`h-12 bg-background/50 border-2 transition-all duration-300 rounded-xl ${
-                  selectedPaymentGateway === 'stc_pay' 
-                    ? 'border-primary focus:border-primary shadow-md' 
-                    : 'border-muted focus:border-primary'
-                }`}
-                dir="ltr"
-                required={selectedPaymentGateway === 'stc_pay'}
-              />
-            </div>
-          </div>
-
-          {/* Enhanced Payment Button */}
-          <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.7s' }}>
-            <Button
-              onClick={handlePayment}
-              disabled={isLoading}
-              className="w-full h-14 bg-gradient-to-r from-primary via-accent to-secondary hover:shadow-2xl text-white text-lg font-bold rounded-xl transition-all duration-300 hover-scale relative overflow-hidden group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-              
-              {isLoading ? (
-                <div className="flex items-center justify-center gap-3">
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                  <span>جاري معالجة الطلب...</span>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center gap-3">
-                  <CreditCard className="w-6 h-6" />
-                  <span>
-                    {selectedPaymentGateway === 'stc_pay' ? 
-                      `ادفع عبر STC Pay - ${offer.currentPrice} ر.س` :
-                      `ادفع عبر ${selectedPaymentGateway === 'paylink' ? 'البطاقة الائتمانية' : 'STC Pay'} - ${offer.currentPrice} ر.س`
-                    }
-                  </span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </div>
-              )}
-            </Button>
-
-            {/* Security and Trust Indicators */}
-            <div className="grid grid-cols-3 gap-4 text-center text-sm">
-              <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>SSL محمي</span>
-              </div>
-              <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                <span>PCI معتمد</span>
-              </div>
-              <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-                <span>بيانات مشفرة</span>
-              </div>
-            </div>
-
-            <div className="text-center p-4 bg-gradient-to-r from-muted/30 to-background/50 rounded-xl border border-muted">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <div className="p-2 bg-green-500/20 rounded-full">
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                </div>
-                <span className="font-medium text-foreground">ضمان الأمان الكامل</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                جميع المدفوعات محمية بتقنيات التشفير المتقدمة ومعايير الأمان العالمية. بياناتك في أمان تام.
-              </p>
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-};
 
 const CurrentOffers = () => {
   // تاريخ انتهاء العروض (25 يوم من الآن)
@@ -958,20 +447,16 @@ const CurrentOffers = () => {
 
                   {/* Enhanced Action Buttons - Mobile Optimized */}
                   <div className="grid grid-cols-1 gap-3">
-                    <PaymentDialog 
-                      offer={offer}
-                      trigger={
-                        <Button 
-                          className={`w-full h-12 sm:h-14 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} hover:shadow-glow text-white font-bold text-base sm:text-lg rounded-xl transition-all duration-300 hover-scale group border border-white/20`}
-                        >
-                          <div className="flex items-center justify-center gap-2">
-                            <CreditCard className="w-5 h-5 group-hover:animate-bounce" />
-                            <span>ادفع الآن</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </Button>
-                      }
-                    />
+                    <Button 
+                      onClick={() => handleDirectPayment(offer)}
+                      className={`w-full h-12 sm:h-14 bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} hover:shadow-glow text-white font-bold text-base sm:text-lg rounded-xl transition-all duration-300 hover-scale group border border-white/20`}
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <CreditCard className="w-5 h-5 group-hover:animate-bounce" />
+                        <span>ادفع الآن</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </Button>
                     
                     <Button 
                       variant="outline" 
