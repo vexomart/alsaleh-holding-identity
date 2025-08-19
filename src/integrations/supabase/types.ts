@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_profiles: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          department: string | null
+          full_name: string
+          id: string
+          is_active: boolean
+          last_login_at: string | null
+          phone: string | null
+          role: Database["public"]["Enums"]["admin_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          full_name: string
+          id?: string
+          is_active?: boolean
+          last_login_at?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["admin_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          last_login_at?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["admin_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       admin_sessions: {
         Row: {
           admin_user_id: string | null
@@ -2847,7 +2889,9 @@ export type Database = {
         Returns: Json
       }
       create_secure_admin_session: {
-        Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
+        Args:
+          | { admin_user_id: string; session_data?: Json }
+          | { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
       }
       decrypt_sensitive_admin_data: {
@@ -2903,6 +2947,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_admin_role: {
+        Args: { user_id?: string }
+        Returns: Database["public"]["Enums"]["admin_role"]
+      }
       get_current_admin_user: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -2934,6 +2982,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_admin: {
+        Args: { user_id?: string }
         Returns: boolean
       }
       log_sensitive_data_access: {
@@ -2987,6 +3039,7 @@ export type Database = {
       }
     }
     Enums: {
+      admin_role: "owner" | "admin" | "editor"
       app_role: "admin" | "user"
       applicant_stage:
         | "applied"
@@ -3161,6 +3214,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_role: ["owner", "admin", "editor"],
       app_role: ["admin", "user"],
       applicant_stage: [
         "applied",
