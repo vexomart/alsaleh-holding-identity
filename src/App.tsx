@@ -280,6 +280,7 @@ const App = () => {
                 <Route path="/cards-store/about" element={<CardsStoreAbout />} />
                 <Route path="/cards-store/contact" element={<CardsStoreContact />} />
                 <Route path="/cards-store/faq" element={<CardsStoreFAQ />} />
+                <Route path="/offer/:offerId" element={<Suspense fallback={<PageLoader />}><OfferDetails /></Suspense>} />
                 <Route path="/cards-store/cards" element={<ElectronicCardsWebsite />} />
                 <Route path="/cards-store/privacy" element={<CardsStorePrivacy />} />
                 <Route path="/cards-store/terms" element={<CardsStoreTerms />} />
