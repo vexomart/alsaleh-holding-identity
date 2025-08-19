@@ -154,8 +154,7 @@ const Navigation = () => {
                   {/* Company Name - Enhanced Typography */}
                   <div className="hidden sm:block">
                     <h1 className="text-lg lg:text-xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
-                      <span className="hidden lg:inline">شركة علي صالح الشهري القابضة</span>
-                      <span className="lg:hidden">علي الشهري القابضة</span>
+                      ASH HOLDING
                     </h1>
                     <div className="flex items-center gap-2 mt-0.5">
                       <div className="flex items-center gap-0.5">
@@ -177,7 +176,7 @@ const Navigation = () => {
                   {/* Mobile Company Name */}
                   <div className="block sm:hidden">
                     <h1 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                      علي الشهري
+                      ASH HOLDING
                     </h1>
                     <div className="flex items-center gap-1 mt-0.5">
                       <div className="flex items-center gap-0.5">
