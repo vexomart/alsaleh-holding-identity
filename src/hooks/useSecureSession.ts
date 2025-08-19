@@ -31,7 +31,7 @@ export const useSecureSession = (): SecureSessionHook => {
       // Validate session with database
       const { data: sessionValidation, error } = await supabase.rpc(
         'validate_admin_session',
-        { token: sessionId }
+        { session_id: sessionId }
       );
 
       const sessionData = sessionValidation as any;

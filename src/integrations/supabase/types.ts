@@ -3020,7 +3020,7 @@ export type Database = {
         Returns: undefined
       }
       validate_admin_session: {
-        Args: { token: string; user_agent?: string }
+        Args: { session_id: string } | { token: string; user_agent?: string }
         Returns: Json
       }
       verify_admin_password: {
