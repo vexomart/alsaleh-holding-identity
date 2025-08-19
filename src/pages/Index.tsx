@@ -23,24 +23,16 @@ const Index = () => {
       <ImageOptimizer />
       <Navigation />
       
-      {/* Optimized Animated Background Elements - Reduced for performance */}
+      {/* Simplified Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/8 via-secondary/4 to-accent/6 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 left-3/4 w-48 h-48 bg-gradient-to-tr from-secondary/6 via-accent/4 to-primary/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-        
-        {/* Minimal Geometric Patterns */}
-        <div className="absolute top-20 right-20 w-3 h-3 bg-primary/15 rotate-45 animate-pulse"></div>
-        <div className="absolute bottom-40 left-16 w-4 h-4 bg-accent/10 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/8 to-accent/6 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 left-3/4 w-48 h-48 bg-gradient-to-tr from-secondary/6 to-primary/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
       
       <main className="relative overflow-hidden z-10">
-        {/* Hero Section with Enhanced Background */}
-        <section id="home" className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/8"></div>
-          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent"></div>
-          <div className="relative z-10">
-            <HeroSection />
-          </div>
+        {/* Hero Section - Simplified */}
+        <section id="home" className="relative bg-gradient-to-br from-background via-primary/5 to-secondary/8">
+          <HeroSection />
         </section>
 
         {/* Content Sections with Professional Spacing */}

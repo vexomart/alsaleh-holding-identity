@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { LinkSection } from "@/components/ui/link-section";
 
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -418,237 +419,31 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Links Grid */}
+          {/* Links Grid - Optimized */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8 mb-16">
-            
-            {/* Quick Links */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Home className="w-5 h-5" />
-                روابط سريعة
-              </h4>
-              <ul className="space-y-3">
-                {quickLinks.map((link, index) => {
-                  const IconComponent = link.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={link.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{link.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Services */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Building2 className="w-5 h-5" />
-                خدماتنا
-              </h4>
-              <ul className="space-y-3">
-                {services.map((service, index) => {
-                  const IconComponent = service.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={service.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{service.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Digital Solutions */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Zap className="w-5 h-5" />
-                الحلول الرقمية
-              </h4>
-              <ul className="space-y-3">
-                {digitalSolutions.map((solution, index) => {
-                  const IconComponent = solution.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={solution.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{solution.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Careers and Opportunities */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                الوظائف والفرص
-              </h4>
-              <ul className="space-y-3">
-                {careersAndOpportunities.map((career, index) => {
-                  const IconComponent = career.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={career.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                        onClick={career.name === "طلب وظيفة" ? (e) => {
-                          e.preventDefault();
-                          setShowJobForm(true);
-                        } : undefined}
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{career.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Ready Projects */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Code className="w-5 h-5" />
-                المشاريع الجاهزة
-              </h4>
-              <ul className="space-y-3">
-                {readyProjects.map((project, index) => {
-                  const IconComponent = project.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={project.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{project.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <HeadphonesIcon className="w-5 h-5" />
-                الدعم والمساعدة
-              </h4>
-              <ul className="space-y-3">
-                {supportLinks.slice(0, 5).map((link, index) => {
-                  const IconComponent = link.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={link.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{link.name}</span>
-                        {link.badge && (
-                          <Badge variant="secondary" className="text-xs bg-white/20 text-white border-white/30">
-                            {link.badge}
-                          </Badge>
-                        )}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            <LinkSection title="روابط سريعة" icon={Home} links={quickLinks} />
+            <LinkSection title="خدماتنا" icon={Building2} links={services} />
+            <LinkSection title="الحلول الرقمية" icon={Zap} links={digitalSolutions} />
+            <LinkSection 
+              title="الوظائف والفرص" 
+              icon={Users} 
+              links={careersAndOpportunities.map(career => ({
+                ...career,
+                onClick: career.name === "طلب وظيفة" ? (e) => {
+                  e.preventDefault();
+                  setShowJobForm(true);
+                } : undefined
+              }))} 
+            />
+            <LinkSection title="المشاريع الجاهزة" icon={Code} links={readyProjects} />
+            <LinkSection title="الدعم والمساعدة" icon={HeadphonesIcon} links={supportLinks} limit={5} />
           </div>
 
-          {/* Additional Sections Grid */}
+          {/* Additional Sections Grid - Optimized */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 pb-8 border-b border-white/10">
-            
-            {/* Current Projects */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5" />
-                المشاريع الحالية
-              </h4>
-              <ul className="space-y-3">
-                {currentProjects.map((project, index) => {
-                  const IconComponent = project.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={project.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{project.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Contracts */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <FileText className="w-5 h-5" />
-                التعاقد
-              </h4>
-              <ul className="space-y-3">
-                {contracts.map((contract, index) => {
-                  const IconComponent = contract.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={contract.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{contract.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Company Updates */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Globe className="w-5 h-5" />
-                أخبار الشركة
-              </h4>
-              <ul className="space-y-3">
-                {companyUpdates.map((update, index) => {
-                  const IconComponent = update.icon;
-                  return (
-                    <li key={index}>
-                      <a 
-                        href={update.href} 
-                        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                      >
-                        <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
-                        <span>{update.name}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            <LinkSection title="المشاريع الحالية" icon={TrendingUp} links={currentProjects} />
+            <LinkSection title="التعاقد والعمل معنا" icon={FileText} links={contracts} />
+            <LinkSection title="آخر الأخبار والتحديثات" icon={Globe} links={companyUpdates} />
           </div>
 
           {/* Stats Section */}
