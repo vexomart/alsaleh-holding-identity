@@ -136,6 +136,7 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
   };
 
   const handlePayment = async () => {
+    // التحقق من صحة البيانات
     if (!formData.name || !formData.email) {
       toast({
         title: "خطأ في البيانات",
@@ -145,7 +146,18 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
       return;
     }
 
-    // Validate phone for STC Pay
+    // التحقق من صحة البريد الإلكتروني
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.email)) {
+      toast({
+        title: "خطأ في البريد الإلكتروني",
+        description: "يرجى إدخال بريد إلكتروني صحيح",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // التحقق من رقم الجوال لـ STC Pay
     if (selectedPaymentGateway === 'stc_pay' && !formData.phone) {
       toast({
         title: "خطأ في البيانات",
@@ -156,10 +168,16 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
     }
 
     setIsLoading(true);
+    
     try {
+      // عرض رسالة تحضير الدفع
+      toast({
+        title: "🚀 جاري تحضير رابط الدفع...",
+        description: "سيتم توجيهك فوراً إلى صفحة الدفع الآمنة",
+        duration: 2000,
+      });
+
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
-      
-      // Choose payment function based on selected gateway
       const paymentFunction = selectedPaymentGateway === 'paylink' ? 'paylink-payment' : 'stc-pay';
       
       const payload = {
@@ -167,10 +185,22 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
         currency: 'SAR',
         customer_name: formData.name,
         customer_email: formData.email,
-        customer_phone: formData.phone,
+        customer_phone: formData.phone || '966500000000',
         offer_title: offer.title,
-        description: `دفع عرض: ${offer.title}`,
-        ...(selectedPaymentGateway === 'paylink' ? { success_url: window.location.origin } : {})
+        description: `دفع عرض: ${offer.title} - ${offer.currentPrice} ريال سعودي`,
+        success_url: `${window.location.origin}/payment-success`,
+        cancel_url: `${window.location.origin}/payment-cancel`,
+        // إضافة معلومات إضافية للفاتورة
+        metadata: {
+          customer_name: formData.name,
+          customer_email: formData.email,
+          payment_type: selectedPaymentGateway,
+          offer_id: offer.id,
+          original_price: offer.originalPrice,
+          current_price: offer.currentPrice,
+          discount: offer.discount,
+          timestamp: new Date().toISOString()
+        }
       };
       const { data, error } = await supabase.functions.invoke(paymentFunction, {
         body: payload,
@@ -180,8 +210,6 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
         console.error('Supabase error:', error);
         throw new Error(error.message || 'فشل في الاتصال بالخدمة');
       }
-
-      console.log('Payment response:', data);
 
       if (data?.success) {
         // Handle STC Pay differently (show professional instructions modal)
@@ -329,31 +357,61 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
           });
           
         } else if (data?.payment_url) {
-          console.log('Opening payment URL:', data.payment_url);
-          
+          // رسالة نجاح مع معلومات إضافية
           toast({
-            title: "تم إنشاء رابط الدفع بنجاح",
-            description: `سيتم فتح صفحة الدفع الآن عبر ${
-              selectedPaymentGateway === 'paylink' ? 'البطاقة الائتمانية' : 'STC Pay'
-            }`,
+            title: "✅ تم إنشاء رابط الدفع بنجاح",
+            description: "سيتم توجيهك الآن إلى Paylink لإتمام الدفع الآمن",
+            duration: 3000,
           });
-          
-          // Close dialog first
+
+          // إرسال بريد إلكتروني فوري بمعلومات الدفع
+          try {
+            await supabase.functions.invoke('send-invoice-email', {
+              body: {
+                customer_name: formData.name,
+                customer_email: formData.email,
+                amount: amount,
+                currency: 'SAR',
+                payment_url: data.payment_url,
+                transaction_id: data.transaction_id || 'N/A',
+                invoice_number: data.invoice_number || 'N/A',
+                status: 'pending',
+                payment_method: 'Paylink',
+                offer_title: offer.title,
+                offer_description: offer.description,
+                original_price: offer.originalPrice,
+                current_price: offer.currentPrice,
+                discount: offer.discount
+              }
+            });
+            
+            toast({
+              title: "📧 تم إرسال معلومات الدفع",
+              description: "تم إرسال تفاصيل الدفع إلى بريدك الإلكتروني",
+              duration: 4000,
+            });
+          } catch (emailError) {
+            console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
+          }
+
+          // إغلاق النافذة أولاً
           setIsOpen(false);
           
-          // Redirect to payment page in same window to avoid popup blockers
-          window.location.href = data.payment_url;
+          // التحويل الفوري إلى Paylink في تبويبة جديدة
+          setTimeout(() => {
+            window.open(data.payment_url, '_blank');
+          }, 1000);
+          
         } else {
-          throw new Error('لم يتم إنشاء رابط الدفع بشكل صحيح');
+          throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
         }
       } else {
-        console.error('Invalid response:', data);
-        throw new Error('لم يتم إنشاء رابط الدفع بشكل صحيح');
+        throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
       }
     } catch (error: any) {
       console.error('Payment error:', error);
       toast({
-        title: "خطأ في عملية الدفع",
+        title: "❌ خطأ في عملية الدفع",
         description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع. يرجى المحاولة مرة أخرى",
         variant: "destructive",
       });
