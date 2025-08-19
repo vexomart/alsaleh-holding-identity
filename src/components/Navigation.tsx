@@ -58,6 +58,7 @@ const Navigation = () => {
 
   const services = [
     { name: "العروض الحالية", href: "/current-offers", icon: Gift },
+    { name: "الخدمات التقنية", href: "/technical-services", icon: Code },
     { name: "خدمات الأعمال", href: "/business-services", icon: Building2 },
     { name: "الاستضافات و الخوادم", href: "/hosting-services", icon: Globe },
     { name: "خدماتنا الاحترافية", href: "/professional-services", icon: Settings },

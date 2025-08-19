@@ -8,14 +8,10 @@ import { Badge } from "@/components/ui/badge";
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
-import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette } from "lucide-react";
+import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
 import { ImageOptimizer } from "@/components/ImageOptimizer";
-import { lazy, Suspense } from "react";
-
-// Lazy load heavy components
-const DepartmentsSection = lazy(() => import("@/components/DepartmentsSection"));
 
 
 
