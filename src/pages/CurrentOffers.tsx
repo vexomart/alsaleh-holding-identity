@@ -29,95 +29,100 @@ import {
   Globe
 } from "lucide-react";
 
-// دالة للدفع الفوري
-const handleDirectPayment = async (offer: any) => {
+const CurrentOffers = () => {
   const { toast } = useToast();
   
-  try {
-    // عرض رسالة تحضير الدفع
-    toast({
-      title: "🚀 جاري تحضير رابط الدفع...",
-      description: "سيتم توجيهك فوراً إلى Paylink لإتمام الدفع الآمن",
-      duration: 2000,
-    });
+  // تاريخ انتهاء العروض (25 يوم من الآن)
+  const offerEndDate = new Date();
+  offerEndDate.setDate(offerEndDate.getDate() + 25);
 
-    const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
-    
-    const payload = {
-      amount: amount,
-      currency: 'SAR',
-      customer_name: 'عميل مميز',
-      customer_email: 'customer@example.com',
-      customer_phone: '966500000000',
-      offer_title: offer.title,
-      description: `دفع عرض: ${offer.title} - ${offer.currentPrice} ريال سعودي`,
-      success_url: `${window.location.origin}/payment-success`,
-      cancel_url: `${window.location.origin}/payment-cancel`,
-      metadata: {
-        offer_id: offer.id,
-        original_price: offer.originalPrice,
-        current_price: offer.currentPrice,
-        discount: offer.discount,
-        timestamp: new Date().toISOString()
-      }
-    };
-
-    const { data, error } = await supabase.functions.invoke('paylink-payment', {
-      body: payload,
-    });
-
-    if (error) {
-      throw new Error(error.message || 'فشل في الاتصال بالخدمة');
-    }
-
-    if (data?.success && data?.payment_url) {
+  // دالة للدفع الفوري
+  const handleDirectPayment = async (offer: any) => {
+    try {
+      // عرض رسالة تحضير الدفع
       toast({
-        title: "✅ تم إنشاء رابط الدفع بنجاح",
-        description: "سيتم توجيهك الآن إلى Paylink لإتمام الدفع الآمن",
-        duration: 3000,
+        title: "🚀 جاري تحضير رابط الدفع...",
+        description: "سيتم توجيهك فوراً إلى Paylink لإتمام الدفع الآمن",
+        duration: 2000,
       });
 
-      // إرسال بريد إلكتروني فوري بمعلومات الدفع
-      try {
-        await supabase.functions.invoke('send-invoice-email', {
-          body: {
-            customer_name: 'عميل مميز',
-            customer_email: 'customer@example.com',
-            amount: amount,
-            currency: 'SAR',
-            payment_url: data.payment_url,
-            transaction_id: data.transaction_id || 'N/A',
-            invoice_number: data.invoice_number || 'N/A',
-            status: 'pending',
-            payment_method: 'Paylink',
-            offer_title: offer.title,
-            offer_description: offer.description,
-            original_price: offer.originalPrice,
-            current_price: offer.currentPrice,
-            discount: offer.discount
-          }
-        });
-      } catch (emailError) {
-        console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
+      const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
+      
+      const payload = {
+        amount: amount,
+        currency: 'SAR',
+        customer_name: 'عميل مميز',
+        customer_email: 'customer@example.com',
+        customer_phone: '966500000000',
+        offer_title: offer.title,
+        description: `دفع عرض: ${offer.title} - ${offer.currentPrice} ريال سعودي`,
+        success_url: `${window.location.origin}/payment-success`,
+        cancel_url: `${window.location.origin}/payment-cancel`,
+        metadata: {
+          offer_id: offer.id,
+          original_price: offer.originalPrice,
+          current_price: offer.currentPrice,
+          discount: offer.discount,
+          timestamp: new Date().toISOString()
+        }
+      };
+
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: payload,
+      });
+
+      if (error) {
+        throw new Error(error.message || 'فشل في الاتصال بالخدمة');
       }
 
-      // التحويل الفوري إلى Paylink
-      setTimeout(() => {
-        window.open(data.payment_url, '_blank');
-      }, 1000);
-      
-    } else {
-      throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
+      if (data?.success && data?.payment_url) {
+        toast({
+          title: "✅ تم إنشاء رابط الدفع بنجاح",
+          description: "سيتم توجيهك الآن إلى Paylink لإتمام الدفع الآمن",
+          duration: 3000,
+        });
+
+        // إرسال بريد إلكتروني فوري بمعلومات الدفع
+        try {
+          await supabase.functions.invoke('send-invoice-email', {
+            body: {
+              customer_name: 'عميل مميز',
+              customer_email: 'customer@example.com',
+              amount: amount,
+              currency: 'SAR',
+              payment_url: data.payment_url,
+              transaction_id: data.transaction_id || 'N/A',
+              invoice_number: data.invoice_number || 'N/A',
+              status: 'pending',
+              payment_method: 'Paylink',
+              offer_title: offer.title,
+              offer_description: offer.description,
+              original_price: offer.originalPrice,
+              current_price: offer.currentPrice,
+              discount: offer.discount
+            }
+          });
+        } catch (emailError) {
+          console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
+        }
+
+        // التحويل الفوري إلى Paylink
+        setTimeout(() => {
+          window.open(data.payment_url, '_blank');
+        }, 1000);
+        
+      } else {
+        throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
+      }
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      toast({
+        title: "❌ خطأ في عملية الدفع",
+        description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع. يرجى المحاولة مرة أخرى",
+        variant: "destructive",
+      });
     }
-  } catch (error: any) {
-    console.error('Payment error:', error);
-    toast({
-      title: "❌ خطأ في عملية الدفع",
-      description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع. يرجى المحاولة مرة أخرى",
-      variant: "destructive",
-    });
-  }
-};
+  };
 
 const currentOffers = [
   {
@@ -200,11 +205,6 @@ const currentOffers = [
   }
 ];
 
-const CurrentOffers = () => {
-  const { toast } = useToast();
-  // تاريخ انتهاء العروض (25 يوم من الآن)
-  const offerEndDate = new Date();
-  offerEndDate.setDate(offerEndDate.getDate() + 25);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden" dir="rtl">
@@ -260,7 +260,7 @@ const CurrentOffers = () => {
           
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-scale-in leading-tight">
             <span className="bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
-              العروض الحالية - 25 يوم فقط
+              العروض الحالية
             </span>
             <br />
             <span className="text-foreground">المميزة والحصرية</span>
@@ -272,13 +272,10 @@ const CurrentOffers = () => {
 
           {/* Global Countdown Timer */}
           <div className="mb-12 flex justify-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <div className="bg-white/90 dark:bg-slate-800/90 rounded-2xl p-6 shadow-xl border border-slate-200 dark:border-slate-700 backdrop-blur-sm">
-              <div className="flex items-center gap-4 mb-3">
-                <Sparkles className="w-6 h-6 text-orange-500 animate-spin" />
-                <span className="text-xl font-bold text-slate-700 dark:text-slate-300">جميع العروض تنتهي خلال:</span>
-                <Timer className="w-6 h-6 text-red-500 animate-pulse" />
+            <div className="bg-gradient-to-r from-red-500/90 to-orange-500/90 rounded-2xl px-8 py-4 shadow-xl border border-red-200 backdrop-blur-sm animate-pulse">
+              <div className="text-center">
+                <CountdownTimer targetDate={offerEndDate} size="lg" />
               </div>
-              <CountdownTimer targetDate={offerEndDate} size="lg" />
             </div>
           </div>
 
