@@ -17,7 +17,6 @@ import { lazy, Suspense } from "react";
 // Lazy load heavy components
 const DepartmentsSection = lazy(() => import("@/components/DepartmentsSection"));
 const CommitmentsSection = lazy(() => import("@/components/CommitmentsSection"));
-const CurrentOffersSection = lazy(() => import("@/components/CurrentOffersSection"));
 
 
 
@@ -52,14 +51,6 @@ const Index = () => {
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
 
-          {/* Current Offers Section */}
-          <Suspense fallback={
-            <div className="py-20 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
-          }>
-            <CurrentOffersSection />
-          </Suspense>
 
 
           {/* Departments Section - Professional Corporate */}
