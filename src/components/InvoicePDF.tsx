@@ -20,109 +20,250 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 30,
     paddingBottom: 20,
-    borderBottomWidth: 2,
-    borderBottomColor: '#3b82f6',
+    borderBottomWidth: 3,
+    borderBottomColor: '#059669',
+    backgroundColor: '#f0fdf4',
+    padding: 20,
+    borderRadius: 8,
+  },
+  companyLogo: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#059669',
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  logoText: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   companyInfo: {
     textAlign: 'right',
+    flex: 1,
   },
   companyName: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#1e40af',
-    marginBottom: 5,
+    color: '#064e3b',
+    marginBottom: 8,
   },
   companyDetails: {
-    fontSize: 10,
-    color: '#6b7280',
-    lineHeight: 1.4,
+    fontSize: 9,
+    color: '#374151',
+    lineHeight: 1.6,
+  },
+  invoiceSection: {
+    textAlign: 'left',
   },
   invoiceTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#374151',
-    textAlign: 'left',
+    color: '#dc2626',
+    marginBottom: 5,
   },
   invoiceNumber: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#6b7280',
-    textAlign: 'left',
+    backgroundColor: '#fef3c7',
+    padding: '5 10',
+    borderRadius: 4,
+  },
+  statusBadge: {
+    backgroundColor: '#10b981',
+    color: 'white',
+    padding: '6 12',
+    borderRadius: 15,
+    fontSize: 10,
+    fontWeight: 'bold',
+    marginTop: 8,
+    textAlign: 'center',
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 25,
+  },
+  sectionHeader: {
+    backgroundColor: '#f8fafc',
+    padding: 12,
+    marginBottom: 15,
+    borderLeftWidth: 4,
+    borderLeftColor: '#059669',
+    borderRadius: 4,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#064e3b',
+    textAlign: 'right',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
-  customerInfo: {
+  infoCard: {
     width: '48%',
-    padding: 15,
-    backgroundColor: '#f8fafc',
+    padding: 18,
+    backgroundColor: '#ffffff',
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
-  invoiceInfo: {
-    width: '48%',
-    padding: 15,
-    backgroundColor: '#f1f5f9',
-    borderRadius: 8,
+  cardIcon: {
+    width: 24,
+    height: 24,
+    backgroundColor: '#059669',
+    borderRadius: 12,
+    marginBottom: 10,
   },
-  sectionTitle: {
+  cardTitle: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#374151',
-    marginBottom: 10,
+    color: '#064e3b',
+    marginBottom: 12,
     textAlign: 'right',
   },
-  text: {
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+  },
+  label: {
     fontSize: 10,
-    color: '#4b5563',
-    marginBottom: 5,
+    color: '#6b7280',
+    fontWeight: 'bold',
+  },
+  value: {
+    fontSize: 10,
+    color: '#374151',
     textAlign: 'right',
   },
   table: {
     marginTop: 20,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 8,
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#059669',
     color: 'white',
-    padding: 10,
+    padding: 12,
+  },
+  tableHeaderCell: {
     fontSize: 12,
     fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
   },
   tableRow: {
     flexDirection: 'row',
+    backgroundColor: '#ffffff',
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-    padding: 10,
-    fontSize: 10,
+    borderBottomColor: '#f3f4f6',
+    padding: 12,
+  },
+  tableRowAlt: {
+    backgroundColor: '#f9fafb',
   },
   tableCell: {
-    flex: 1,
+    fontSize: 10,
+    textAlign: 'center',
+    color: '#374151',
+  },
+  serviceName: {
+    flex: 3,
     textAlign: 'right',
+    paddingRight: 10,
+  },
+  quantity: {
+    flex: 1,
+  },
+  price: {
+    flex: 1.5,
   },
   total: {
-    marginTop: 20,
-    padding: 15,
-    backgroundColor: '#1e40af',
-    color: 'white',
+    flex: 1.5,
+  },
+  summarySection: {
+    marginTop: 30,
+    backgroundColor: '#f8fafc',
     borderRadius: 8,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
-  totalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  totalText: {
-    fontSize: 12,
-    textAlign: 'right',
-  },
-  totalAmount: {
+  summaryTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'left',
+    color: '#064e3b',
+    textAlign: 'center',
+    marginBottom: 15,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+    padding: '8 0',
+  },
+  summaryLabel: {
+    fontSize: 12,
+    color: '#374151',
+  },
+  summaryValue: {
+    fontSize: 12,
+    color: '#374151',
+    fontWeight: 'bold',
+  },
+  finalTotal: {
+    backgroundColor: '#059669',
+    color: 'white',
+    padding: 12,
+    borderRadius: 6,
+    marginTop: 10,
+  },
+  finalTotalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  finalTotalLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  finalTotalAmount: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  notesSection: {
+    marginTop: 25,
+    padding: 15,
+    backgroundColor: '#fffbeb',
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#f59e0b',
+  },
+  notesTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#92400e',
+    marginBottom: 8,
+    textAlign: 'right',
+  },
+  notesText: {
+    fontSize: 10,
+    color: '#78350f',
+    lineHeight: 1.5,
+    textAlign: 'right',
   },
   footer: {
     position: 'absolute',
@@ -132,19 +273,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 9,
     color: '#6b7280',
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
-    paddingTop: 10,
+    borderTopWidth: 2,
+    borderTopColor: '#059669',
+    paddingTop: 15,
+    backgroundColor: '#f8fafc',
+    padding: 15,
+    borderRadius: 8,
+  },
+  footerTitle: {
+    fontWeight: 'bold',
+    color: '#064e3b',
+    marginBottom: 5,
   },
   watermark: {
     position: 'absolute',
-    top: '50%',
+    top: '45%',
     left: '50%',
     transform: 'translate(-50%, -50%) rotate(-45deg)',
-    fontSize: 60,
-    color: '#f3f4f6',
-    opacity: 0.3,
+    fontSize: 80,
+    color: '#10b981',
+    opacity: 0.05,
     zIndex: -1,
+    fontWeight: 'bold',
   },
 });
 
@@ -183,76 +333,129 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoiceData }) => {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.companyInfo}>
+            <View style={styles.companyLogo}>
+              <Text style={styles.logoText}>ع.ش</Text>
+            </View>
             <Text style={styles.companyName}>شركة علي صالح الشهري القابضة</Text>
             <Text style={styles.companyDetails}>
-              {`جدة، المملكة العربية السعودية\nهاتف: 0555812567\nإيميل: info@alialshehriholding.com\nموقع: alialshehriholding.com`}
+              {`جدة، المملكة العربية السعودية\nهاتف: 0555812567\nإيميل: info@alialshehriholding.com\nموقع: alialshehriholding.com\nالرقم الضريبي: 123456789000003`}
             </Text>
           </View>
-          <View>
+          <View style={styles.invoiceSection}>
             <Text style={styles.invoiceTitle}>فاتورة ضريبية</Text>
             <Text style={styles.invoiceNumber}>رقم الفاتورة: {invoiceData.invoiceNumber}</Text>
+            <View style={styles.statusBadge}>
+              <Text>مدفوعة ✓</Text>
+            </View>
           </View>
         </View>
 
         {/* Customer and Invoice Info */}
         <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>📋 معلومات الفاتورة</Text>
+          </View>
           <View style={styles.row}>
-            <View style={styles.customerInfo}>
-              <Text style={styles.sectionTitle}>بيانات العميل</Text>
-              <Text style={styles.text}>الاسم: {invoiceData.customerName}</Text>
-              <Text style={styles.text}>الإيميل: {invoiceData.customerEmail}</Text>
+            <View style={styles.infoCard}>
+              <View style={styles.cardIcon}></View>
+              <Text style={styles.cardTitle}>👤 بيانات العميل</Text>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>الاسم:</Text>
+                <Text style={styles.value}>{invoiceData.customerName}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>الإيميل:</Text>
+                <Text style={styles.value}>{invoiceData.customerEmail}</Text>
+              </View>
               {invoiceData.customerPhone && (
-                <Text style={styles.text}>الهاتف: {invoiceData.customerPhone}</Text>
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>الهاتف:</Text>
+                  <Text style={styles.value}>{invoiceData.customerPhone}</Text>
+                </View>
               )}
             </View>
-            <View style={styles.invoiceInfo}>
-              <Text style={styles.sectionTitle}>تفاصيل الفاتورة</Text>
-              <Text style={styles.text}>تاريخ الإصدار: {invoiceData.date}</Text>
-              <Text style={styles.text}>رقم المعاملة: {invoiceData.transactionId}</Text>
-              <Text style={styles.text}>طريقة الدفع: {invoiceData.paymentMethod}</Text>
+            <View style={styles.infoCard}>
+              <View style={styles.cardIcon}></View>
+              <Text style={styles.cardTitle}>📄 تفاصيل الفاتورة</Text>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>تاريخ الإصدار:</Text>
+                <Text style={styles.value}>{invoiceData.date}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>رقم المعاملة:</Text>
+                <Text style={styles.value}>{invoiceData.transactionId}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>طريقة الدفع:</Text>
+                <Text style={styles.value}>{invoiceData.paymentMethod}</Text>
+              </View>
               {invoiceData.orderStatus && (
-                <Text style={styles.text}>حالة الطلب: {invoiceData.orderStatus}</Text>
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>حالة الطلب:</Text>
+                  <Text style={styles.value}>{invoiceData.orderStatus}</Text>
+                </View>
               )}
             </View>
           </View>
         </View>
 
         {/* Services Table */}
-        <View style={styles.table}>
-          <View style={styles.tableHeader}>
-            <Text style={[styles.tableCell, { flex: 3 }]}>الخدمة</Text>
-            <Text style={styles.tableCell}>الكمية</Text>
-            <Text style={styles.tableCell}>السعر</Text>
-            <Text style={styles.tableCell}>المجموع</Text>
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>🛍️ تفاصيل الخدمات</Text>
           </View>
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCell, { flex: 3 }]}>{invoiceData.serviceName}</Text>
-            <Text style={styles.tableCell}>1</Text>
-            <Text style={styles.tableCell}>{subtotal.toFixed(2)}</Text>
-            <Text style={styles.tableCell}>{subtotal.toFixed(2)}</Text>
+          <View style={styles.table}>
+            <View style={styles.tableHeader}>
+              <Text style={[styles.tableHeaderCell, styles.serviceName]}>الخدمة</Text>
+              <Text style={[styles.tableHeaderCell, styles.quantity]}>الكمية</Text>
+              <Text style={[styles.tableHeaderCell, styles.price]}>السعر</Text>
+              <Text style={[styles.tableHeaderCell, styles.total]}>المجموع</Text>
+            </View>
+            <View style={[styles.tableRow]}>
+              <Text style={[styles.tableCell, styles.serviceName]}>{invoiceData.serviceName}</Text>
+              <Text style={[styles.tableCell, styles.quantity]}>1</Text>
+              <Text style={[styles.tableCell, styles.price]}>{subtotal.toFixed(2)}</Text>
+              <Text style={[styles.tableCell, styles.total]}>{subtotal.toFixed(2)}</Text>
+            </View>
           </View>
         </View>
 
-        {/* Total Section */}
-        <View style={styles.total}>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalText}>المجموع الفرعي:</Text>
-            <Text style={styles.totalText}>{subtotal.toFixed(2)} {invoiceData.currency}</Text>
+        {/* Summary Section */}
+        <View style={styles.summarySection}>
+          <Text style={styles.summaryTitle}>💰 ملخص الفاتورة</Text>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>المجموع الفرعي:</Text>
+            <Text style={styles.summaryValue}>{subtotal.toFixed(2)} {invoiceData.currency}</Text>
           </View>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalText}>ضريبة القيمة المضافة (15%):</Text>
-            <Text style={styles.totalText}>{vatAmount.toFixed(2)} {invoiceData.currency}</Text>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>ضريبة القيمة المضافة (15%):</Text>
+            <Text style={styles.summaryValue}>{vatAmount.toFixed(2)} {invoiceData.currency}</Text>
           </View>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalAmount}>المجموع الإجمالي:</Text>
-            <Text style={styles.totalAmount}>{totalAmount.toFixed(2)} {invoiceData.currency}</Text>
+          <View style={styles.finalTotal}>
+            <View style={styles.finalTotalRow}>
+              <Text style={styles.finalTotalLabel}>المجموع الإجمالي:</Text>
+              <Text style={styles.finalTotalAmount}>{totalAmount.toFixed(2)} {invoiceData.currency}</Text>
+            </View>
           </View>
+        </View>
+
+        {/* Notes Section */}
+        <View style={styles.notesSection}>
+          <Text style={styles.notesTitle}>📌 ملاحظات مهمة</Text>
+          <Text style={styles.notesText}>
+            • هذه فاتورة ضريبية معتمدة وفقاً للوائح هيئة الزكاة والضريبة والجمارك{'\n'}
+            • جميع المبالغ المذكورة بالريال السعودي{'\n'}
+            • في حالة وجود أي استفسار، يرجى التواصل معنا خلال 30 يوم من تاريخ الفاتورة{'\n'}
+            • شكراً لاختياركم خدماتنا، نتطلع لخدمتكم مرة أخرى
+          </Text>
         </View>
 
         {/* Footer */}
-        <Text style={styles.footer}>
-          شكراً لتعاملكم معنا • هذه فاتورة ضريبية معتمدة • جميع المبالغ بالريال السعودي
-        </Text>
+        <View style={styles.footer}>
+          <Text style={styles.footerTitle}>شركة علي صالح الشهري القابضة</Text>
+          <Text>🌐 www.alialshehriholding.com | 📧 info@alialshehriholding.com | 📱 0555812567</Text>
+          <Text>جدة، المملكة العربية السعودية | س.ت: 123456789000003</Text>
+        </View>
       </Page>
     </Document>
   );
