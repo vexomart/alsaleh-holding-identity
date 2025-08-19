@@ -67,9 +67,9 @@ import {
 const SubsidiariesSection = () => {
   const subsidiaries = [
     {
-      name: "علي صالح الشهري القابضة",
+      name: "ASH HOLDING",
       nameEn: "Ali Saleh AlShahri Holdings", 
-      description: "بورتال شركة علي صالح الشهري القابضة - مجموعة متنوعة من الاستثمارات والمشاريع الرائدة",
+      description: "بورتال ASH HOLDING - مجموعة متنوعة من الاستثمارات والمشاريع الرائدة",
       category: "الشركة القابضة",
       established: "2016",
       icon: Building2,

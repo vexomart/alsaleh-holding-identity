@@ -161,7 +161,7 @@ const HeroSection = () => {
           <div className="relative">
             {/* Main Title with Better Visibility - Responsive Sizes */}
             <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl px-4 sm:px-0">
-              شركة علي صالح الشهري القابضة
+              ASH HOLDING
               
               {/* Animated Underline */}
               <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-0.5 sm:h-1 bg-gradient-to-r from-secondary to-primary hover:w-full transition-all duration-1000 rounded-full shadow-glow" />
@@ -169,7 +169,7 @@ const HeroSection = () => {
             
             {/* Text Glow Effect for Better Visibility - Responsive */}
             <div className="absolute inset-0 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/20 blur-sm px-4 sm:px-0">
-              شركة علي صالح الشهري القابضة
+              ASH HOLDING
             </div>
           </div>
           

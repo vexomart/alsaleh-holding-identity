@@ -73,7 +73,7 @@ export const SmartCardsContact: React.FC<SmartCardsContactProps> = ({
   const handleWhatsAppSend = () => {
     const message = `🌟 مرحباً من متجر البطاقات الإلكترونية الذكي
     
-🏢 *شركة علي صالح الشهري القابضة*
+🏢 *ASH HOLDING*
 🎯 ${pageTitle}
 
 👤 *معلومات العميل:*
@@ -101,7 +101,7 @@ ${formData.message || 'استفسار عام عن خدماتكم'}
 
   const handleDirectWhatsApp = () => {
     const message = `🌟 مرحباً من متجر البطاقات الإلكترونية الذكي
-🏢 شركة علي صالح الشهري القابضة
+🏢 ASH HOLDING
 
 أرجو التواصل لمزيد من المعلومات عن خدماتكم المميزة.`;
 
@@ -196,7 +196,7 @@ ${formData.message || 'استفسار عام عن خدماتكم'}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.5 }}
                       >
-                        شركة علي صالح الشهري القابضة
+                        ASH HOLDING
                       </motion.p>
                     </motion.div>
 

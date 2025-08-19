@@ -347,7 +347,7 @@ const Footer = () => {
             <div className="lg:col-span-2 space-y-6">
               <div>
                 <h2 className="text-3xl font-bold text-white mb-4">
-                  شركة علي صالح الشهري القابضة
+                  ASH HOLDING
                 </h2>
                 <p className="text-gray-300 text-lg leading-relaxed max-w-2xl">
                   شركة قابضة رائدة في الاستثمار التقني والإعلامي، نساهم في بناء مستقبل أفضل 
@@ -714,7 +714,7 @@ const Footer = () => {
         <div className="border-t border-white/10 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
             <div className="text-center md:text-right">
-              © 2024 شركة علي صالح الشهري القابضة. جميع الحقوق محفوظة.
+              © 2024 ASH HOLDING. جميع الحقوق محفوظة.
             </div>
             <div className="flex flex-wrap justify-center gap-6">
               <a href="/privacy" className="hover:text-white transition-colors duration-200">

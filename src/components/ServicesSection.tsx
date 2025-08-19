@@ -322,7 +322,7 @@ const ServicesSection = () => {
   const whatsappNumber = "966555812567";
   
   const openWhatsApp = (serviceTitle: string, price: string, services: string[], technologies: string[], deliveryTime: string, rating: number, projectsCount: number) => {
-    const message = `🚀 مرحبا بك في شركة علي صالح الشهري القابضة
+    const message = `🚀 مرحبا بك في ASH HOLDING
 
 💼 طلب خدمة احترافية
 ═══════════════════

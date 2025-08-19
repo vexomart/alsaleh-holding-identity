@@ -17,7 +17,7 @@ const CurrentOffersSection = () => {
   const whatsappNumber = "966555812567";
   
   const openWhatsApp = (offerTitle: string, price: string, originalPrice: string, discount: string, timeLeft: string, features: string[]) => {
-    const message = `🌟 مرحبا بك في شركة علي صالح الشهري القابضة
+    const message = `🌟 مرحبا بك في ASH HOLDING
 
 🎯 طلب عرض خاص
 ═══════════════════
@@ -187,7 +187,7 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a 
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('مرحبا بك في شركة علي صالح الشهري القابضة\n\n🛍️ طلب عرض شامل\n═══════════════════\n\n📌 تفاصيل الطلب:\n🎯 اريد الاطلاع على جميع العروض\n💰 اريد مقارنة الاسعار\n⚡ اريد الاستفادة من العروض\n\n🤔 معلومات احتاجها:\n• مدة تنفيذ كل مشروع\n• طرق الدفع المتاحة\n• تفاصيل الدعم الفني\n• نماذج من الاعمال\n\n💡 اريد استشارة شاملة!\n\nشكرا لكم 🙏')}`}
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('مرحبا بك في ASH HOLDING\n\n🛍️ طلب عرض شامل\n═══════════════════\n\n📌 تفاصيل الطلب:\n🎯 اريد الاطلاع على جميع العروض\n💰 اريد مقارنة الاسعار\n⚡ اريد الاستفادة من العروض\n\n🤔 معلومات احتاجها:\n• مدة تنفيذ كل مشروع\n• طرق الدفع المتاحة\n• تفاصيل الدعم الفني\n• نماذج من الاعمال\n\n💡 اريد استشارة شاملة!\n\nشكرا لكم 🙏')}`}
               target="_blank"
               rel="noopener noreferrer"
             >

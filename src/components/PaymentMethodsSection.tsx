@@ -100,7 +100,7 @@ const PaymentMethodsSection = () => {
       premium: false
     },
     {
-      name: "شركة علي صالح الشهري القابضة",
+      name: "ASH HOLDING",
       logo: companyLogo, 
       description: "منصة التمويل الرقمي الرائدة بحلول مالية ذكية",
       features: [
@@ -733,7 +733,7 @@ const PaymentMethodsSection = () => {
                       <option value="tabby">تابي</option>
                       <option value="tabby">تابي</option>
                       <option value="madfu">مدفوع</option>
-                      <option value="alsaleh">شركة علي صالح الشهري القابضة</option>
+                      <option value="alsaleh">ASH HOLDING</option>
                       <option value="tasaheel">تساهيل</option>
                     </select>
                   </div>
