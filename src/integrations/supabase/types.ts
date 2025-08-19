@@ -2842,13 +2842,25 @@ export type Database = {
         Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
       }
+      create_secure_admin_password: {
+        Args: { plain_password: string }
+        Returns: Json
+      }
       create_secure_admin_session: {
         Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
+        Returns: string
+      }
+      decrypt_sensitive_admin_data: {
+        Args: { encrypted_data: string }
         Returns: string
       }
       encrypt_admin_password: {
         Args: { plain_password: string }
         Returns: Json
+      }
+      encrypt_sensitive_admin_data: {
+        Args: { data_text: string }
+        Returns: string
       }
       enhanced_rate_limit_check: {
         Args: {
@@ -2963,6 +2975,14 @@ export type Database = {
         Args:
           | { plain_password: string; stored_hash: string; stored_salt: string }
           | { plain_password: string; stored_password: string }
+        Returns: boolean
+      }
+      verify_secure_admin_password: {
+        Args: {
+          plain_password: string
+          stored_encrypted_salt: string
+          stored_hash: string
+        }
         Returns: boolean
       }
     }
