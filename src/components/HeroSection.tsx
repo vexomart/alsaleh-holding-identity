@@ -87,19 +87,20 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, [businessImages.length]);
 
-  useEffect(() => {
-    const handleMouseMove = useCallback((e: MouseEvent) => {
-      // Cancel previous animation frame to prevent accumulation
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current);
-      }
-      
-      // Use requestAnimationFrame to avoid forced reflows
-      rafId.current = requestAnimationFrame(() => {
-        setMousePosition({ x: e.clientX, y: e.clientY });
-      });
-    }, []);
+  // Handle mouse movement with optimized performance
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    // Cancel previous animation frame to prevent accumulation
+    if (rafId.current) {
+      cancelAnimationFrame(rafId.current);
+    }
+    
+    // Use requestAnimationFrame to avoid forced reflows
+    rafId.current = requestAnimationFrame(() => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    });
+  }, []);
 
+  useEffect(() => {
     // Throttle mouse events for better performance
     let throttleTimer: number;
     const throttledMouseMove = (e: MouseEvent) => {
@@ -122,7 +123,7 @@ const HeroSection = () => {
         clearTimeout(throttleTimer);
       }
     };
-  }, []);
+  }, [handleMouseMove]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden mobile-scroll"
