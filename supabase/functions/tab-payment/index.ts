@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,6 +13,8 @@ serve(async (req) => {
   }
 
   try {
+    console.log("TAB Payment request received");
+    
     const {
       amount,
       currency = 'SAR',
@@ -25,14 +28,39 @@ serve(async (req) => {
       metadata = {}
     } = await req.json();
 
+    console.log("Payment request data:", { 
+      amount, 
+      currency, 
+      customer_name, 
+      customer_email, 
+      offer_title 
+    });
+
     // TAB Payment API configuration
     const TAB_API_KEY = Deno.env.get("TAB_API_KEY"); 
     const TAB_SECRET_KEY = Deno.env.get("TAB_SECRET_KEY");
     const TAB_MERCHANT_ID = Deno.env.get("TAB_MERCHANT_ID");
-    const TAB_BASE_URL = Deno.env.get("TAB_BASE_URL") || "https://api.tap.company/v2";
+    const TAB_BASE_URL = "https://api.tap.company/v2";
+    
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    console.log("TAB API Keys status:", {
+      hasApiKey: !!TAB_API_KEY,
+      hasSecretKey: !!TAB_SECRET_KEY,
+      hasMerchantId: !!TAB_MERCHANT_ID
+    });
 
     if (!TAB_API_KEY || !TAB_SECRET_KEY || !TAB_MERCHANT_ID) {
+      console.error("Missing TAB credentials");
       throw new Error("TAB payment configuration is incomplete");
+    }
+
+    // Validate required fields
+    if (!amount || !customer_name || !customer_email || !customer_phone) {
+      throw new Error("Missing required payment fields");
     }
 
     // Create TAB payment request
@@ -95,6 +123,37 @@ serve(async (req) => {
 
     // Generate invoice number
     const invoice_number = `INV-TAB-${Date.now()}`;
+    
+    // Save transaction to database
+    const { data: transactionData, error: dbError } = await supabase
+      .from('payment_transactions')
+      .insert({
+        transaction_id: tabResult.id,
+        payment_method: 'TAB',
+        amount: amount,
+        currency: currency,
+        status: 'PENDING',
+        customer_name: customer_name,
+        customer_email: customer_email,
+        customer_phone: customer_phone,
+        invoice_number: invoice_number,
+        offer_title: offer_title,
+        description: description,
+        metadata: {
+          tab_charge_id: tabResult.id,
+          tab_transaction_url: tabResult.transaction.url,
+          ...metadata
+        }
+      })
+      .select()
+      .single();
+
+    if (dbError) {
+      console.error("Database error:", dbError);
+      // Continue anyway - payment was created successfully
+    } else {
+      console.log("Transaction saved to database:", transactionData);
+    }
 
     const responseData = {
       success: true,
