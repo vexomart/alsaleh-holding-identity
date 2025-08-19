@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-// Remove direct imports, they are now lazy loaded
+// Lazy load below-the-fold components for better performance
+import { lazy, Suspense } from "react";
+const Footer = lazy(() => import("@/components/Footer"));
+const ChatBot = lazy(() => import("@/components/ChatBot"));
 
-import Footer from "@/components/Footer";
-import ChatBot from "@/components/ChatBot";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
@@ -142,16 +143,20 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Footer with Enhanced Styling */}
+      {/* Footer with Enhanced Styling - Lazy Loaded */}
       <footer className="relative z-10 mt-8">
         <div className="absolute inset-0 bg-gradient-to-t from-background via-primary/5 to-transparent"></div>
         <div className="relative z-10">
-          <Footer />
+          <Suspense fallback={<div className="h-96 bg-muted/10 animate-pulse" />}>
+            <Footer />
+          </Suspense>
         </div>
       </footer>
 
-      {/* ChatBot Component */}
-      <ChatBot />
+      {/* ChatBot Component - Lazy Loaded */}
+      <Suspense fallback={null}>
+        <ChatBot />
+      </Suspense>
     </div>
   );
 };
