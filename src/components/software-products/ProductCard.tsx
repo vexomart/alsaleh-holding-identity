@@ -110,7 +110,7 @@ export const ProductCard = ({ product, index, isProductLoading, onPurchase }: Pr
             </div>
             <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
               <Clock className="w-4 h-4 text-blue-500 animate-pulse" />
-              <span>🚚 التسليم: {product.estimatedDelivery}</span>
+              <span>⏱️ مدة التنفيذ: {product.estimatedDelivery}</span>
             </div>
           </div>
           <Badge className={`${getStatusColor(product.status)} px-3 py-1 rounded-xl font-bold animate-pulse`}>

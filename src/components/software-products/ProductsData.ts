@@ -34,7 +34,7 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🚗",
-    estimatedDelivery: "فوري",
+    estimatedDelivery: "15-45 يوم",
     version: "V 1.0"
   },
   {
@@ -62,7 +62,7 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🏗️",
-    estimatedDelivery: "فوري",
+    estimatedDelivery: "15-45 يوم",
     version: "V 1.0"
   },
   {
@@ -90,7 +90,7 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "📈",
-    estimatedDelivery: "فوري",
+    estimatedDelivery: "15-45 يوم",
     version: "V 1.0"
   },
   {
@@ -118,7 +118,7 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "🛍️",
-    estimatedDelivery: "فوري",
+    estimatedDelivery: "15-45 يوم",
     version: "V 1.0"
   },
   {
@@ -146,7 +146,7 @@ export const products = [
     isFeatured: true,
     isExclusive: true,
     emoji: "👑",
-    estimatedDelivery: "فوري",
+    estimatedDelivery: "15-45 يوم",
     version: "V 1.0"
   }
 ];
