@@ -21,7 +21,7 @@ export const currentOffers: CurrentOffer[] = [
     title: "باقة المواقع الكاملة",
     description: "موقع إلكتروني احترافي مع لوحة تحكم ونظام إدارة محتوى متكامل",
     originalPriceSAR: 15000,
-    currentPriceSAR: 10,
+    currentPriceSAR: 5999,
     discount: "99%",
     timeLeft: "15 يوم",
     features: [
