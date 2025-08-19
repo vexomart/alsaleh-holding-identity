@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { 
   Calendar, 
   Trophy, 
@@ -28,6 +28,7 @@ const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const rafId = useRef<number>();
   
   const businessImages = [
     "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
@@ -87,12 +88,40 @@ const HeroSection = () => {
   }, [businessImages.length]);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    const handleMouseMove = useCallback((e: MouseEvent) => {
+      // Cancel previous animation frame to prevent accumulation
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
+      }
+      
+      // Use requestAnimationFrame to avoid forced reflows
+      rafId.current = requestAnimationFrame(() => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      });
+    }, []);
+
+    // Throttle mouse events for better performance
+    let throttleTimer: number;
+    const throttledMouseMove = (e: MouseEvent) => {
+      if (throttleTimer) return;
+      
+      throttleTimer = window.setTimeout(() => {
+        handleMouseMove(e);
+        throttleTimer = 0;
+      }, 16); // ~60fps
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', throttledMouseMove, { passive: true });
+    
+    return () => {
+      window.removeEventListener('mousemove', throttledMouseMove);
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
+      }
+      if (throttleTimer) {
+        clearTimeout(throttleTimer);
+      }
+    };
   }, []);
 
   return (
@@ -136,12 +165,12 @@ const HeroSection = () => {
         {/* Professional grid overlay */}
         <div className="absolute inset-0 bg-grid-pattern opacity-10 animate-pulse" />
         
-        {/* Interactive mouse follower with corporate colors */}
+        {/* Interactive mouse follower with corporate colors - Optimized */}
         <div 
-          className="absolute w-40 h-40 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full blur-3xl pointer-events-none transition-all duration-1000"
+          className="absolute w-40 h-40 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full blur-3xl pointer-events-none will-change-transform"
           style={{
-            left: mousePosition.x - 80,
-            top: mousePosition.y - 80,
+            transform: `translate(${mousePosition.x - 80}px, ${mousePosition.y - 80}px)`,
+            transition: 'transform 0.1s ease-out'
           }}
         />
       </div>
