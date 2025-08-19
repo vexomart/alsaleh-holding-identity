@@ -17,15 +17,34 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/favicon.ico">
     
-    <!-- Resource Hints for Performance -->
+    <!-- Enhanced Resource Hints for Performance -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Arabic Fonts - Optimized Loading -->
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet"></noscript>
+    <!-- Critical Font Preload -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap&subset=arabic" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Arabic Fonts - Async Loading with font-display swap -->
+    <script>
+      // Async font loading for better performance
+      function loadFonts() {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap&subset=arabic';
+        document.head.appendChild(link);
+      }
+      // Load fonts after DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadFonts);
+      } else {
+        loadFonts();
+      }
+    </script>
+    
+    <!-- Fallback for no-script -->
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap&subset=arabic" rel="stylesheet"></noscript>
     
     <!-- SEO Meta Tags -->
     <title>شركة علي صالح الشهري القابضة - الاستثمار التقني والإعلامي</title>
