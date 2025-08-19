@@ -82,10 +82,22 @@ const CurrentOffers = () => {
 
       if (error) {
         console.error("❌ TAB Payment Error:", error);
-        throw new Error(error.message || 'فشل في الاتصال بالخدمة');
+        toast({
+          title: "⚠️ خطأ في الدفع",
+          description: error.message || "فشل في الاتصال بخدمة الدفع",
+          variant: "destructive",
+          duration: 5000,
+        });
+        return;
       }
 
-      if (data?.success && data?.payment_url) {
+      console.log("📥 TAB Response received:", data);
+
+      if (!data) {
+        throw new Error("لم يتم استلام رد من خدمة الدفع");
+      }
+
+      if (data.success && data.payment_url) {
         console.log("✅ Payment URL received:", data.payment_url);
         
         toast({
