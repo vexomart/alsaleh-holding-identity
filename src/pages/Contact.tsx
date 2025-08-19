@@ -134,7 +134,7 @@ const Contact = () => {
       icon: MapPin,
       title: "العنوان",
       titleEn: "Office Address",
-      value: "الرياض، المملكة العربية السعودية",
+      value: "جدة، المملكة العربية السعودية",
       description: "مكتبنا الرئيسي للقاءات الشخصية",
       color: "from-purple-600 to-pink-600",
       bgEffect: "from-purple-500/10 to-pink-500/10",

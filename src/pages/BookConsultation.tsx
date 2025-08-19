@@ -522,7 +522,7 @@ export default function BookConsultation() {
             </div>
             <div className="flex items-center justify-center space-x-3 space-x-reverse">
               <MapPin className="w-5 h-5 text-primary" />
-              <span>الرياض، المملكة العربية السعودية</span>
+              <span>جدة، المملكة العربية السعودية</span>
             </div>
           </div>
         </div>

@@ -185,7 +185,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoiceData }) => {
           <View style={styles.companyInfo}>
             <Text style={styles.companyName}>شركة علي صالح الشهري القابضة</Text>
             <Text style={styles.companyDetails}>
-              {`الرياض، المملكة العربية السعودية\nهاتف: 0555812567\nإيميل: info@alialshehriholding.com\nموقع: alialshehriholding.com`}
+              {`جدة، المملكة العربية السعودية\nهاتف: 0555812567\nإيميل: info@alialshehriholding.com\nموقع: alialshehriholding.com`}
             </Text>
           </View>
           <View>

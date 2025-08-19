@@ -748,7 +748,7 @@ const ElectronicCardsWebsite = () => {
                 </li>
                 <li className="flex items-center gap-2 text-slate-400">
                   <MapPin className="w-4 h-4" />
-                  الرياض، المملكة العربية السعودية
+                  جدة، المملكة العربية السعودية
                 </li>
                 <li className="flex items-center gap-2 text-slate-400">
                   <Clock className="w-4 h-4" />

@@ -167,7 +167,7 @@ const AbayaFooter: React.FC = () => {
               </div>
               <div>
                 <p className="font-semibold text-lg">العنوان</p>
-                <p className="text-gray-300">الرياض، المملكة العربية السعودية</p>
+                <p className="text-gray-300">جدة، المملكة العربية السعودية</p>
               </div>
             </div>
           </div>

@@ -701,7 +701,7 @@ const ElectronicCardsStore = () => {
               <ul className="space-y-2 text-gray-400">
                 <li>📞 0555812567</li>
                 <li>📧 cards@ash-holding.com</li>
-                <li>📍 الرياض، المملكة العربية السعودية</li>
+                <li>📍 جدة، المملكة العربية السعودية</li>
                 <li>🕒 24/7 خدمة العملاء</li>
               </ul>
             </div>
