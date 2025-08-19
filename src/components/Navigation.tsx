@@ -70,6 +70,21 @@ const Navigation = () => {
     { name: "المنظومة التقنية المتكاملة", href: "/tech-ecosystem", icon: Zap }
   ];
 
+  const products = [
+    { 
+      name: "المشاريع الجاهزة", 
+      href: "/ready-projects", 
+      icon: Package,
+      description: "مشاريع جاهزة للتطبيق الفوري"
+    },
+    { 
+      name: "منتجاتنا البرمجية", 
+      href: "/software-products", 
+      icon: Code,
+      description: "حلول برمجية متخصصة"
+    }
+  ];
+
   const othersItems = [
     { name: "العمل عن بُعد", href: "/remote-work", icon: Globe },
     { name: "الشراكات", href: "/partnerships", icon: Users },
@@ -120,12 +135,12 @@ const Navigation = () => {
           <div className="container mx-auto px-4 lg:px-6">
             <div className="flex items-center justify-between h-16 lg:h-18">
               
-              {/* Logo & Company Name - Enhanced Responsive */}
+              {/* Logo & Company Name - Enhanced Mobile */}
               <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
                 <a href="/" className="flex items-center gap-2 sm:gap-3 group">
                   {/* Logo */}
                   <div className="relative">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 touch-manipulation">
                       <img 
                         src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
                         alt="ASH Holdings" 
@@ -175,7 +190,7 @@ const Navigation = () => {
                 </a>
               </div>
 
-              {/* Navigation Menu - Center */}
+              {/* Desktop Navigation Menu */}
               <div className="hidden lg:flex items-center gap-1 xl:gap-2">
                 <a 
                   href="/" 
@@ -234,6 +249,64 @@ const Navigation = () => {
                   )}
                 </div>
 
+                {/* Products Dropdown */}
+                <div 
+                  className="relative group"
+                  onMouseEnter={() => { if (productsHideRef.current) clearTimeout(productsHideRef.current); setShowProducts(true); }}
+                  onMouseLeave={() => { productsHideRef.current = window.setTimeout(() => setShowProducts(false), 200); }}
+                >
+                  <button 
+                    className="relative flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 rounded-lg hover:bg-blue-50/80 group"
+                  >
+                    منتجاتنا
+                    <ChevronDown className="w-3.5 h-3.5 group-hover:rotate-180 transition-all duration-300" />
+                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                  </button>
+                  
+                  {showProducts && (
+                    <div className="absolute top-full left-0 mt-2 w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 z-[60]">
+                      <div className="p-4">
+                        <div className="space-y-2">
+                          {products.map((product, index) => {
+                            const IconComponent = product.icon;
+                            return (
+                              <a
+                                key={index}
+                                href={product.href}
+                                className="flex items-start gap-3 p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 rounded-xl group border border-transparent hover:border-blue-200/50"
+                              >
+                                <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300 group-hover:scale-110 flex-shrink-0">
+                                  <IconComponent className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" />
+                                </div>
+                                <div className="flex-1">
+                                  <span className="text-sm font-medium text-slate-700 group-hover:text-blue-600 block leading-tight">{product.name}</span>
+                                  <span className="text-xs text-slate-500 mt-1 block">{product.description}</span>
+                                </div>
+                                <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors opacity-0 group-hover:opacity-100" />
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <a 
+                  href="/vision" 
+                  className="relative px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
+                >
+                  رؤيتنا
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                </a>
+                <a 
+                  href="/subsidiaries"
+                  className="relative px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
+                >
+                  شركاتنا
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                </a>
+
                 {/* Others Dropdown */}
                 <div 
                   className="relative group"
@@ -276,268 +349,147 @@ const Navigation = () => {
                   )}
                 </div>
 
-                
                 <a 
-                  href="/vision" 
+                  href="/contact" 
                   className="relative px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
                 >
-                  رؤيتنا
+                  تواصل معنا
                   <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
                 </a>
-                <a 
-                  href="/subsidiaries"
-                  className="relative px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
-                >
-                  شركاتنا
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
-                </a>
-              
-                {/* Products Dropdown */}
-                <div 
-                  className="relative group"
-                  onMouseEnter={() => { if (productsHideRef.current) clearTimeout(productsHideRef.current); setShowProducts(true); }}
-                  onMouseLeave={() => { productsHideRef.current = window.setTimeout(() => setShowProducts(false), 200); }}
-                >
-                  <button 
-                    className="relative flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 rounded-lg hover:bg-blue-50/80 group"
-                  >
-                    منتجاتنا
-                    <ChevronDown className="w-3.5 h-3.5 group-hover:rotate-180 transition-all duration-300" />
-                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
-                  </button>
-                  
-                  {showProducts && (
-                    <div className="absolute top-full left-0 mt-2 w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 z-[60]"
-                      onMouseEnter={() => { if (productsHideRef.current) clearTimeout(productsHideRef.current); setShowProducts(true); }}
-                      onMouseLeave={() => { productsHideRef.current = window.setTimeout(() => setShowProducts(false), 200); }}
-                    >
-                      <div className="p-4 space-y-2">
-                        <a
-                          href="/ready-projects"
-                          className="flex items-center gap-3 p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 rounded-xl transition-all duration-300 group border border-transparent hover:border-blue-200/50"
-                        >
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300 group-hover:scale-110">
-                            <Package className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">المشاريع الجاهزة</div>
-                            <div className="text-xs text-slate-500">حلول جاهزة للتطبيق فوراً</div>
-                          </div>
-                          <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
-                        </a>
-                        <Link
-                          to="/software-products"
-                          className="flex items-center gap-3 p-3 hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 rounded-xl transition-all duration-300 group border border-transparent hover:border-purple-200/50"
-                        >
-                          <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl flex items-center justify-center group-hover:from-purple-600 group-hover:to-indigo-600 transition-all duration-300 group-hover:scale-110">
-                            <Code className="w-5 h-5 text-purple-600 group-hover:text-white transition-colors" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-semibold text-slate-800 group-hover:text-purple-600 transition-colors">منتجاتنا البرمجية</div>
-                            <div className="text-xs text-slate-500">برمجيات وتطبيقات متخصصة</div>
-                          </div>
-                          <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-colors" />
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
               </div>
 
-            {/* Action Buttons - Responsive */}
-            <div className="flex items-center gap-1 sm:gap-2">
-              {/* Contact Buttons - Hidden on mobile, visible on larger screens */}
-              <div className="hidden lg:flex items-center gap-2">
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-green-500 text-green-600 hover:bg-green-50"
-                  asChild
-                >
-                  <a href="https://wa.me/966555812567" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-3 h-3" />
-                    <span className="hidden xl:block">واتساب</span>
+              {/* Right Side Actions */}
+              <div className="flex items-center gap-2 lg:gap-4">
+                {/* Desktop CTA Button */}
+                <div className="hidden lg:flex items-center gap-3">
+                  <a 
+                    href="/book-consultation"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    <HeadphonesIcon className="w-4 h-4" />
+                    احجز استشارة مجانية
                   </a>
-                </Button>
-                <Button 
-                  variant="outline"
+                </div>
+
+                {/* Mobile Menu Button */}
+                <Button
+                  variant="ghost"
                   size="sm"
-                  className="h-8 px-2 lg:px-3 text-xs flex items-center gap-1 lg:gap-1.5 border-blue-500 text-blue-600 hover:bg-blue-50"
-                  asChild
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="lg:hidden p-2 h-10 w-10 touch-manipulation active:scale-95 transition-transform"
+                  aria-label="فتح القائمة"
                 >
-                  <a href="tel:0555812567">
-                    <Phone className="w-3 h-3" />
-                    <span className="hidden xl:block">اتصال</span>
-                  </a>
-                </Button>
-              </div>
-              
-              {/* Main CTA - Responsive */}
-              <Button 
-                size="sm"
-                className="h-8 px-2 sm:px-4 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                asChild
-              >
-                <a href="/start-with-us">
-                  <span className="hidden sm:block">ابدأ معنا</span>
-                  <span className="sm:hidden">ابدأ</span>
-                  <Zap className="w-3 h-3 mr-1 sm:mr-1.5" />
-                </a>
-              </Button>
-              
-              {/* Mobile Menu Button */}
-              <button
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                {isOpen ? <X size={18} /> : <Menu size={18} />}
-              </button>
-            </div>
-          </div>
-            
-            {/* Mobile Menu - Enhanced Design */}
-            {isOpen && (
-              <div className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200/80 shadow-xl">
-                <div className="px-4 py-4 space-y-3 max-h-screen overflow-y-auto">
-                  
-                  {/* Mobile Contact Info */}
-                  <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-4 border border-slate-200/50">
-                    <div className="grid grid-cols-2 gap-3">
-                      <a href="tel:0555812567" className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors group">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors">
-                          <Phone className="w-4 h-4 group-hover:text-white" />
-                        </div>
-                        <span className="font-medium text-sm">اتصال</span>
-                      </a>
-                      <a href="https://wa.me/966555812567" target="_blank" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-800 transition-colors group">
-                        <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 transition-colors">
-                          <MessageCircle className="w-4 h-4 group-hover:text-white" />
-                        </div>
-                        <span className="font-medium text-sm">واتساب</span>
-                      </a>
+                  <div className="relative w-6 h-6 flex items-center justify-center">
+                    <div className={`transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-0' : 'rotate-0 -translate-y-1'}`}>
+                      <div className={`w-5 h-0.5 bg-slate-700 transition-all duration-300 ${isOpen ? 'rotate-90' : ''}`}></div>
+                    </div>
+                    <div className={`absolute w-5 h-0.5 bg-slate-700 transition-all duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`}></div>
+                    <div className={`transition-all duration-300 ${isOpen ? '-rotate-45 translate-y-0' : 'rotate-0 translate-y-1'}`}>
+                      <div className="w-5 h-0.5 bg-slate-700"></div>
                     </div>
                   </div>
-                  
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Enhanced Mobile Menu */}
+      {isOpen && (
+        <div className="lg:hidden fixed inset-0 z-50">
+          {/* Backdrop with blur */}
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300" 
+            onClick={() => setIsOpen(false)} 
+          />
+          
+          {/* Mobile Panel */}
+          <div className="fixed top-0 right-0 h-full w-[85vw] max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ease-out overflow-hidden">
+            <div className="flex flex-col h-full">
+              {/* Mobile Header */}
+              <div className="flex items-center justify-between p-4 border-b border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                    <img 
+                      src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+                      alt="ASH Holdings" 
+                      className="h-3 w-auto object-contain filter brightness-0 invert"
+                    />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-bold text-slate-900">علي الشهري القابضة</h2>
+                    <div className="flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-emerald-600 font-medium">متاح الآن</span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 hover:bg-white/50 rounded-lg transition-all duration-200 active:scale-95 touch-manipulation"
+                >
+                  <X className="w-5 h-5 text-slate-600" />
+                </button>
+              </div>
+              
+              {/* Mobile Navigation */}
+              <div className="flex-1 overflow-y-auto">
+                <nav className="p-4 space-y-1">
+                  {/* Home */}
                   <a 
                     href="/" 
-                    className="block py-4 px-4 text-slate-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 font-medium rounded-xl transition-all duration-300 border border-transparent hover:border-blue-200/50"
+                    className="flex items-center gap-3 p-3 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 font-medium group active:scale-95 touch-manipulation"
                     onClick={() => setIsOpen(false)}
                   >
+                    <div className="w-8 h-8 bg-blue-100 group-hover:bg-blue-600 rounded-lg flex items-center justify-center transition-all duration-200">
+                      <Code className="w-4 h-4 text-blue-600 group-hover:text-white transition-colors" />
+                    </div>
                     الرئيسية
                   </a>
+                  
+                  {/* About */}
                   <a 
                     href="/about" 
-                    className="block py-4 px-4 text-slate-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 font-medium rounded-xl transition-all duration-300 border border-transparent hover:border-blue-200/50"
+                    className="flex items-center gap-3 p-3 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 font-medium group active:scale-95 touch-manipulation"
                     onClick={() => setIsOpen(false)}
                   >
+                    <div className="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-600 rounded-lg flex items-center justify-center transition-all duration-200">
+                      <Users className="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors" />
+                    </div>
                     من نحن
                   </a>
-                
-                  {/* خدماتنا في الموبايل - Enhanced */}
-                  <div className="border-b border-slate-200 pb-4">
-                    <button 
-                      className="flex items-center justify-between w-full py-4 px-4 text-slate-900 font-semibold hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all rounded-xl border border-transparent hover:border-blue-200/50"
+                  
+                  {/* Mobile Services Accordion */}
+                  <div className="space-y-1">
+                    <button
                       onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                      className="w-full flex items-center justify-between gap-3 p-3 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 font-medium group active:scale-95 touch-manipulation"
                     >
-                      <span>خدماتنا</span>
-                      <ChevronDown className={`w-5 h-5 transition-all duration-300 ${mobileServicesOpen ? 'rotate-180 text-blue-600' : 'text-slate-400'}`} />
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-purple-100 group-hover:bg-purple-600 rounded-lg flex items-center justify-center transition-all duration-200">
+                          <Settings className="w-4 h-4 text-purple-600 group-hover:text-white transition-colors" />
+                        </div>
+                        خدماتنا
+                      </div>
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileServicesOpen ? 'rotate-180' : ''}`} />
                     </button>
+                    
                     {mobileServicesOpen && (
-                      <div className="grid grid-cols-1 gap-2 pr-2 mt-3 max-h-64 overflow-y-auto">
+                      <div className="pr-4 space-y-1 animate-fade-in">
                         {services.map((service, index) => {
                           const IconComponent = service.icon;
                           return (
                             <a
                               key={index}
                               href={service.href}
-                              className="flex items-center gap-3 p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 rounded-xl text-sm border border-transparent hover:border-blue-200/50 group"
+                              className="flex items-center gap-3 p-2.5 pr-12 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 group active:scale-95 touch-manipulation"
                               onClick={() => setIsOpen(false)}
                             >
-                              <div className="w-9 h-9 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
-                                <IconComponent className="w-4 h-4 text-blue-600 group-hover:text-white transition-colors" />
+                              <div className="w-6 h-6 bg-blue-50 group-hover:bg-blue-100 rounded-md flex items-center justify-center transition-all duration-200">
+                                <IconComponent className="w-3 h-3 text-blue-600 transition-colors" />
                               </div>
-                              <span className="text-slate-700 group-hover:text-blue-600 leading-tight font-medium">{service.name}</span>
-                            </a>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                
-                  <a 
-                    href="/vision" 
-                    className="block py-4 px-4 text-slate-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 font-medium rounded-xl transition-all duration-300 border border-transparent hover:border-blue-200/50"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    رؤيتنا
-                  </a>
-                  <a 
-                    href="/subsidiaries" 
-                    className="block py-4 px-4 text-slate-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 font-medium rounded-xl transition-all duration-300 border border-transparent hover:border-blue-200/50"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    شركاتنا
-                  </a>
-                
-                  {/* Products Dropdown for Mobile */}
-                  <div className="border-b border-slate-200 pb-4">
-                    <div className="py-2">
-                      <h3 className="px-4 py-2 text-slate-900 font-semibold text-sm">منتجاتنا</h3>
-                    </div>
-                    <div className="space-y-2 pr-2">
-                      <a
-                        href="/ready-projects"
-                        className="flex items-center gap-3 p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 rounded-xl text-sm border border-transparent hover:border-blue-200/50 group"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
-                          <Package className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-slate-700 group-hover:text-blue-600 leading-tight font-medium">المشاريع الجاهزة</span>
-                          <div className="text-xs text-slate-500 mt-1">حلول جاهزة للتطبيق</div>
-                        </div>
-                      </a>
-                      <Link
-                        to="/software-products"
-                        className="flex items-center gap-3 p-3 hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 transition-all duration-300 rounded-xl text-sm border border-transparent hover:border-purple-200/50 group"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-purple-600 group-hover:to-indigo-600 transition-all duration-300">
-                          <Code className="w-5 h-5 text-purple-600 group-hover:text-white transition-colors" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-slate-700 group-hover:text-purple-600 leading-tight font-medium">منتجاتنا البرمجية</span>
-                          <div className="text-xs text-slate-500 mt-1">برمجيات متخصصة</div>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                
-                  {/* أخرى في الموبايل - Enhanced */}
-                  <div className="pb-4">
-                    <button 
-                      className="flex items-center justify-between w-full py-4 px-4 text-slate-900 font-semibold hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all rounded-xl border border-transparent hover:border-blue-200/50"
-                      onClick={() => setMobileOthersOpen(!mobileOthersOpen)}
-                    >
-                      <span>أخرى</span>
-                      <ChevronDown className={`w-5 h-5 transition-all duration-300 ${mobileOthersOpen ? 'rotate-180 text-blue-600' : 'text-slate-400'}`} />
-                    </button>
-                    {mobileOthersOpen && (
-                      <div className="space-y-2 pr-2 mt-3 max-h-48 overflow-y-auto">
-                        {othersItems.map((item, index) => {
-                          const IconComponent = item.icon;
-                          return (
-                            <a
-                              key={index}
-                              href={item.href}
-                              className="flex items-center gap-3 p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 rounded-xl text-sm border border-transparent hover:border-blue-200/50 group"
-                              onClick={() => setIsOpen(false)}
-                            >
-                              <div className="w-9 h-9 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
-                                <IconComponent className="w-4 h-4 text-blue-600 group-hover:text-white transition-colors" />
-                              </div>
-                              <span className="text-slate-700 group-hover:text-blue-600 leading-tight font-medium">{item.name}</span>
+                              {service.name}
                             </a>
                           );
                         })}
@@ -545,25 +497,148 @@ const Navigation = () => {
                     )}
                   </div>
                   
-                  {/* Mobile CTA */}
-                  <div className="pt-4 border-t border-slate-200">
-                    <Button 
-                      size="lg"
-                      className="w-full h-12 text-base font-semibold bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                      asChild
-                    >
-                      <a href="/start-with-us" onClick={() => setIsOpen(false)}>
-                        <Zap className="w-5 h-5 mr-2" />
-                        ابدأ رحلتك معنا الآن
-                      </a>
-                    </Button>
+                  {/* Products */}
+                  <div className="space-y-1">
+                    <div className="py-2">
+                      <div className="flex items-center gap-3 p-3 text-slate-700 font-medium">
+                        <div className="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center">
+                          <Package className="w-4 h-4 text-rose-600" />
+                        </div>
+                        منتجاتنا
+                      </div>
+                    </div>
+                    <div className="pr-4 space-y-1">
+                      {products.map((product, index) => {
+                        const IconComponent = product.icon;
+                        return (
+                          <a
+                            key={index}
+                            href={product.href}
+                            className="flex items-center gap-3 p-3 pr-12 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 group active:scale-95 touch-manipulation"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <div className="w-6 h-6 bg-blue-50 group-hover:bg-blue-100 rounded-md flex items-center justify-center transition-all duration-200">
+                              <IconComponent className="w-3 h-3 text-blue-600 transition-colors" />
+                            </div>
+                            <div className="flex-1">
+                              <span className="block leading-tight font-medium">{product.name}</span>
+                              <span className="text-xs text-slate-500 mt-0.5 block">{product.description}</span>
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
                   </div>
+                  
+                  {/* Vision */}
+                  <a 
+                    href="/vision" 
+                    className="flex items-center gap-3 p-3 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 font-medium group active:scale-95 touch-manipulation"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-amber-100 group-hover:bg-amber-600 rounded-lg flex items-center justify-center transition-all duration-200">
+                      <Star className="w-4 h-4 text-amber-600 group-hover:text-white transition-colors" />
+                    </div>
+                    رؤيتنا
+                  </a>
+                  
+                  {/* Subsidiaries */}
+                  <a 
+                    href="/subsidiaries" 
+                    className="flex items-center gap-3 p-3 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 font-medium group active:scale-95 touch-manipulation"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-indigo-100 group-hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-all duration-200">
+                      <Building2 className="w-4 h-4 text-indigo-600 group-hover:text-white transition-colors" />
+                    </div>
+                    شركاتنا
+                  </a>
+                  
+                  {/* Mobile Others Accordion */}
+                  <div className="space-y-1">
+                    <button
+                      onClick={() => setMobileOthersOpen(!mobileOthersOpen)}
+                      className="w-full flex items-center justify-between gap-3 p-3 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 font-medium group active:scale-95 touch-manipulation"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-teal-100 group-hover:bg-teal-600 rounded-lg flex items-center justify-center transition-all duration-200">
+                          <Globe className="w-4 h-4 text-teal-600 group-hover:text-white transition-colors" />
+                        </div>
+                        أخرى
+                      </div>
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileOthersOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {mobileOthersOpen && (
+                      <div className="pr-4 space-y-1 animate-fade-in">
+                        {othersItems.map((item, index) => {
+                          const IconComponent = item.icon;
+                          return (
+                            <a
+                              key={index}
+                              href={item.href}
+                              className="flex items-center gap-3 p-2.5 pr-12 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 group active:scale-95 touch-manipulation"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              <div className="w-6 h-6 bg-teal-50 group-hover:bg-teal-100 rounded-md flex items-center justify-center transition-all duration-200">
+                                <IconComponent className="w-3 h-3 text-teal-600 transition-colors" />
+                              </div>
+                              {item.name}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Contact */}
+                  <a 
+                    href="/contact" 
+                    className="flex items-center gap-3 p-3 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 font-medium group active:scale-95 touch-manipulation"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-green-100 group-hover:bg-green-600 rounded-lg flex items-center justify-center transition-all duration-200">
+                      <Phone className="w-4 h-4 text-green-600 group-hover:text-white transition-colors" />
+                    </div>
+                    تواصل معنا
+                  </a>
+                </nav>
+              </div>
+              
+              {/* Mobile Footer */}
+              <div className="p-4 border-t border-slate-200 bg-slate-50/50 space-y-3">
+                <a 
+                  href="/book-consultation"
+                  className="block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center py-3 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg active:scale-95 touch-manipulation"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <HeadphonesIcon className="w-4 h-4" />
+                    احجز استشارة مجانية
+                  </div>
+                </a>
+                
+                <div className="flex items-center justify-between text-sm">
+                  <a 
+                    href="tel:0555812567"
+                    className="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors touch-manipulation"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span className="font-medium">0555812567</span>
+                  </a>
+                  <a 
+                    href="mailto:info@alialshehriholding.com"
+                    className="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors touch-manipulation"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span className="text-xs">إيميل</span>
+                  </a>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
-      </nav>
+      )}
     </>
   );
 };
