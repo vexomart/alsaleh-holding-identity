@@ -2,19 +2,18 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { Clock, Star, Zap, Gift, ArrowRight, Timer, CheckCircle, Phone, Send, CreditCard, Loader2 } from "lucide-react";
+import { Clock, Star, Zap, Gift, ArrowRight, Timer, CheckCircle, Phone, Send, Sparkles, TrendingUp, Target } from "lucide-react";
 import OfferRequestForm from "./OfferRequestForm";
-
+import { CountdownTimer } from "./CountdownTimer";
 import { currentOffers } from "@/data/offers";
 
 
 const CurrentOffersSection = () => {
   const whatsappNumber = "966555812567";
+  
+  // تاريخ انتهاء العروض (25 يوم من الآن)
+  const offerEndDate = new Date();
+  offerEndDate.setDate(offerEndDate.getDate() + 25);
   
   const openWhatsApp = (offerTitle: string, price: string, originalPrice: string, discount: string, timeLeft: string, features: string[]) => {
     const message = `🌟 مرحبا بك في ASH HOLDING
@@ -68,9 +67,20 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
           <h2 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-8 tracking-tight">
             العروض الحالية
           </h2>
-          <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-5xl mx-auto leading-relaxed font-medium">
-            استفد من عروضنا الحصرية المحدودة واحصل على أفضل الخدمات التقنية بأسعار استثنائية مع ضمان الجودة العالمية
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed">
+            اكتشف مجموعة من أفضل عروضنا الحصرية بأسعار استثنائية ولفترة محدودة، خدمات احترافية بجودة عالية وأسعار لا تقاوم
           </p>
+          
+          {/* Global Countdown Timer */}
+          <div className="mt-8 flex justify-center">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-4 mb-3">
+                <Sparkles className="w-6 h-6 text-orange-500" />
+                <span className="text-xl font-bold text-slate-700 dark:text-slate-300">العروض تنتهي خلال:</span>
+              </div>
+              <CountdownTimer targetDate={offerEndDate} size="lg" />
+            </div>
+          </div>
         </div>
 
         {/* Offers Grid */}
@@ -82,21 +92,12 @@ ${features.map((feature, index) => `${index + 1}. ${feature}`).join('\n')}
                 {/* Modern Gradient Background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${offer.bgGradient} opacity-0 group-hover:opacity-30 transition-opacity duration-500 z-0`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-transparent"></div>
-                {/* Floating Badge */}
-                <div className="absolute -top-2 -right-2 z-20">
-                  <div className="relative">
-                    <Badge className={`bg-gradient-to-r ${offer.color} text-white px-4 py-2 text-sm font-bold shadow-lg transform rotate-3 group-hover:rotate-0 transition-transform duration-300`}>
-                      {offer.badge}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Time Left Indicator */}
-                <div className="absolute top-4 left-4 z-20">
-                  <div className="flex items-center gap-2 bg-red-500/90 text-white px-3 py-2 rounded-full text-sm font-medium shadow-lg animate-pulse">
-                    <Clock className="w-4 h-4" />
-                    <span>متبقي {offer.timeLeft}</span>
-                  </div>
+                {/* Timer and Badge */}
+                <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-start">
+                  <CountdownTimer targetDate={offerEndDate} size="sm" />
+                  <Badge className={`bg-gradient-to-r ${offer.color} text-white px-3 py-1.5 text-xs font-bold shadow-lg transform rotate-1 group-hover:rotate-0 transition-transform duration-300`}>
+                    {offer.badge}
+                  </Badge>
                 </div>
 
                 <CardHeader className="pt-20 pb-6 relative z-10">
