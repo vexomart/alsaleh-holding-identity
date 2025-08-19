@@ -16,7 +16,6 @@ import { lazy, Suspense } from "react";
 
 // Lazy load heavy components
 const DepartmentsSection = lazy(() => import("@/components/DepartmentsSection"));
-const CommitmentsSection = lazy(() => import("@/components/CommitmentsSection"));
 
 
 
@@ -78,29 +77,6 @@ const Index = () => {
 
 
 
-          {/* Commitments Section - Global Enterprise Style */}
-          <section id="commitments" className="relative py-20 lg:py-32 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-background to-secondary/12"></div>
-            <div className="absolute inset-0 bg-[conic-gradient(from_270deg_at_20%_80%,transparent,hsl(var(--primary))_15%,transparent_35%,hsl(var(--secondary))_55%,transparent)] opacity-25"></div>
-            
-            {/* Enterprise-grade Visual Elements */}
-            <div className="absolute top-16 left-16 w-80 h-80 bg-gradient-to-br from-primary/12 to-secondary/8 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-16 right-16 w-64 h-64 bg-gradient-to-tl from-secondary/15 to-accent/10 rounded-full blur-2xl animate-float-delayed"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/8 to-primary/6 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-            
-            {/* Corporate Grid Pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:80px_80px] opacity-25"></div>
-            
-            <div className="relative z-10">
-              <Suspense fallback={
-                <div className="flex items-center justify-center py-20">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              }>
-                <CommitmentsSection />
-              </Suspense>
-            </div>
-          </section>
 
         </div>
       </main>
