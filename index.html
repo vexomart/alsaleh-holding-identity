@@ -20,6 +20,10 @@
     <!-- Critical Image Preload for LCP -->
     <link rel="preload" href="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=60" as="image" fetchpriority="high">
     
+    <!-- Critical Font Files Preload - Break dependency chain -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscRiyS8p4_RA.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS8p4_RHH1.woff2" as="font" type="font/woff2" crossorigin>
+    
     <!-- Enhanced Resource Hints for Performance -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -28,23 +32,43 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     
-    <!-- Critical Font Preload -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap&subset=arabic" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Inline Critical Font CSS to eliminate request chain -->
+    <style>
+      @font-face {
+        font-family: 'Cairo';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url(https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscRiyS8p4_RA.woff2) format('woff2');
+        unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE80-FEFC;
+      }
+      @font-face {
+        font-family: 'Cairo';
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: url(https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS8p4_RHH1.woff2) format('woff2');
+        unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE80-FEFC;
+      }
+    </style>
     
-    <!-- Arabic Fonts - Async Loading with font-display swap -->
+    <!-- Non-Critical Fonts - Async Loading -->
     <script>
-      // Async font loading for better performance
-      function loadFonts() {
+      // Load remaining font weights asynchronously
+      function loadRemainingFonts() {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap&subset=arabic';
+        link.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;700&display=swap&subset=arabic';
         document.head.appendChild(link);
       }
-      // Load fonts after DOM is ready
+      
+      // Load after critical rendering
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadFonts);
+        document.addEventListener('DOMContentLoaded', () => {
+          requestIdleCallback ? requestIdleCallback(loadRemainingFonts) : setTimeout(loadRemainingFonts, 0);
+        });
       } else {
-        loadFonts();
+        requestIdleCallback ? requestIdleCallback(loadRemainingFonts) : setTimeout(loadRemainingFonts, 0);
       }
     </script>
     
