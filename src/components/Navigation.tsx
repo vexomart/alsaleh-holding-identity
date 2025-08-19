@@ -41,6 +41,7 @@ const Navigation = () => {
   const [showProducts, setShowProducts] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
   const location = useLocation();
   const servicesHideRef = useRef<number | undefined>(undefined);
@@ -497,37 +498,44 @@ const Navigation = () => {
                     )}
                   </div>
                   
-                  {/* Products */}
+                  {/* Mobile Products Accordion */}
                   <div className="space-y-1">
-                    <div className="py-2">
-                      <div className="flex items-center gap-3 p-3 text-slate-700 font-medium">
-                        <div className="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center">
-                          <Package className="w-4 h-4 text-rose-600" />
+                    <button
+                      onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
+                      className="w-full flex items-center justify-between gap-3 p-3 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 font-medium group active:scale-95 touch-manipulation"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-rose-100 group-hover:bg-rose-600 rounded-lg flex items-center justify-center transition-all duration-200">
+                          <Package className="w-4 h-4 text-rose-600 group-hover:text-white transition-colors" />
                         </div>
                         منتجاتنا
                       </div>
-                    </div>
-                    <div className="pr-4 space-y-1">
-                      {products.map((product, index) => {
-                        const IconComponent = product.icon;
-                        return (
-                          <a
-                            key={index}
-                            href={product.href}
-                            className="flex items-center gap-3 p-3 pr-12 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 group active:scale-95 touch-manipulation"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            <div className="w-6 h-6 bg-blue-50 group-hover:bg-blue-100 rounded-md flex items-center justify-center transition-all duration-200">
-                              <IconComponent className="w-3 h-3 text-blue-600 transition-colors" />
-                            </div>
-                            <div className="flex-1">
-                              <span className="block leading-tight font-medium">{product.name}</span>
-                              <span className="text-xs text-slate-500 mt-0.5 block">{product.description}</span>
-                            </div>
-                          </a>
-                        );
-                      })}
-                    </div>
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileProductsOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {mobileProductsOpen && (
+                      <div className="pr-4 space-y-1 animate-fade-in">
+                        {products.map((product, index) => {
+                          const IconComponent = product.icon;
+                          return (
+                            <a
+                              key={index}
+                              href={product.href}
+                              className="flex items-center gap-3 p-2.5 pr-12 text-sm text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 group active:scale-95 touch-manipulation"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              <div className="w-6 h-6 bg-blue-50 group-hover:bg-blue-100 rounded-md flex items-center justify-center transition-all duration-200">
+                                <IconComponent className="w-3 h-3 text-blue-600 transition-colors" />
+                              </div>
+                              <div className="flex-1">
+                                <span className="block leading-tight font-medium">{product.name}</span>
+                                <span className="text-xs text-slate-500 mt-0.5 block">{product.description}</span>
+                              </div>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                   
                   {/* Vision */}
