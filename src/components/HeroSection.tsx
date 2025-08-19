@@ -129,18 +129,26 @@ const HeroSection = () => {
       onTouchStart={(e) => e.currentTarget.classList.add('touch-active')}
       onTouchEnd={(e) => e.currentTarget.classList.remove('touch-active')}
     >
-      {/* Enhanced Dynamic Background Slider with Modern Transitions */}
+      {/* Enhanced Dynamic Background Slider with Modern Transitions - LCP Optimized */}
       <div className="absolute inset-0">
         {businessImages.map((image, index) => (
           <div
             key={index}
-            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-[3000ms] ease-in-out transform ${
+            className={`absolute inset-0 transition-all duration-[3000ms] ease-in-out transform ${
               index === currentSlide 
                 ? 'opacity-100 scale-110 blur-0' 
                 : 'opacity-0 scale-100 blur-sm'
             }`}
-            style={{ backgroundImage: `url(${image})` }}
-          />
+          >
+            <img
+              src={image}
+              alt={`Business background ${index + 1}`}
+              className="absolute inset-0 w-full h-full object-cover object-center"
+              fetchPriority={index === 0 ? "high" : "low"}
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
+            />
+          </div>
         ))}
         
         {/* Modern Parallax Effect Overlay */}
