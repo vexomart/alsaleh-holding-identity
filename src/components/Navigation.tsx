@@ -427,7 +427,7 @@ const Navigation = () => {
                   </div>
                   <div>
                     <h2 className="text-lg font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                      علي الشهري القابضة
+                      ASH HOLDING
                     </h2>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="flex items-center gap-0.5">

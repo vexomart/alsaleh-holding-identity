@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 const ServicesCatalog = () => {
-  const title = "قائمة الخدمات والأسعار | شركة علي الشهري القابضة";
+  const title = "قائمة الخدمات والأسعار | شركة ASH HOLDING";
   const description = "استكشف قائمة الخدمات والأسعار قريباً من شركة علي صالح الشهري القابضة. سيتم تحديث هذه الصفحة بالخدمات والتسعير قريباً.";
   const canonical = `${window.location.origin}/services-catalog`;
 

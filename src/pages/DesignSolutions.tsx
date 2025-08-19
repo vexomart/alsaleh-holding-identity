@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 
 const DesignSolutions = () => {
   useEffect(() => {
-    document.title = "حلول التصميم | شركة علي الشهري القابضة";
+    document.title = "حلول التصميم | شركة ASH HOLDING";
     const desc = "خدمات تصميم احترافية: هوية بصرية، تسويق، سوشيال ميديا، مطبوعات، رقمية، أعمال خاصة.";
 
     let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
