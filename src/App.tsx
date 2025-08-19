@@ -65,6 +65,7 @@ const CurrentOffers = lazy(() => import("./pages/CurrentOffers"));
 const OfferDetails = lazy(() => import("./pages/OfferDetails"));
 const ProfessionalServices = lazy(() => import("./pages/ProfessionalServices"));
 const ContentCreation = lazy(() => import("./pages/ContentCreation"));
+const LogoProcessor = lazy(() => import("./pages/LogoProcessor"));
 const DesignSolutions = lazy(() => import("./pages/DesignSolutions"));
 const Subsidiaries = lazy(() => import("./pages/Subsidiaries"));
 const PaymentMethods = lazy(() => import("./pages/PaymentMethods"));
@@ -327,6 +328,7 @@ const App = () => {
                 <Route path="/digital-marketing" element={<DigitalMarketing />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
+          <Route path="/logo-processor" element={<Suspense fallback={<PageLoader />}><LogoProcessor /></Suspense>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
                 </Routes>
