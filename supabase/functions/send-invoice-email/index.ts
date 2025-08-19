@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@4.0.0";
 import { renderAsync } from "npm:@react-email/components@0.0.22";
 import React from "npm:react@18.3.1";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { ProfessionalInvoiceEmail } from "./_templates/professional-invoice.tsx";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -35,43 +36,114 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const requestData: InvoiceEmailRequest = await req.json();
+    // SECURITY: Authenticate user first (required since JWT verification is enabled)
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      console.log("Authentication failed - no authorization header");
+      return new Response(JSON.stringify({ 
+        error: "Authentication required",
+        message: "يجب تسجيل الدخول أولاً" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
+
+    const token = authHeader.replace("Bearer ", "");
     
+    // Initialize Supabase client for authentication
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
+
+    // Verify user token
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+    if (userError || !userData?.user?.email) {
+      console.log("Authentication failed - invalid token", userError?.message);
+      return new Response(JSON.stringify({ 
+        error: "Invalid authentication",
+        message: "فشل في التحقق من الهوية" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
+
+    const user = userData.user;
+    console.log("User authenticated for invoice email:", user.id);
+
+    // Parse and validate request body
+    const requestData: InvoiceEmailRequest = await req.json();
+
+    // SECURITY: Input validation and sanitization
+    if (!requestData.customer_email || typeof requestData.customer_email !== 'string') {
+      throw new Error("Valid customer email is required");
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(requestData.customer_email)) {
+      throw new Error("Invalid email format");
+    }
+
+    // Sanitize and validate required fields
+    if (!requestData.customer_name || typeof requestData.customer_name !== 'string' || requestData.customer_name.length > 200) {
+      throw new Error("Valid customer name is required (max 200 characters)");
+    }
+
+    if (!requestData.amount || typeof requestData.amount !== 'number' || requestData.amount <= 0) {
+      throw new Error("Valid amount is required");
+    }
+
+    if (!requestData.offer_title || typeof requestData.offer_title !== 'string' || requestData.offer_title.length > 300) {
+      throw new Error("Valid offer title is required (max 300 characters)");
+    }
+
+    // Sanitize text fields
+    const sanitizedData = {
+      ...requestData,
+      customer_name: requestData.customer_name.substring(0, 200),
+      offer_title: requestData.offer_title.substring(0, 300),
+      offer_description: requestData.offer_description?.substring(0, 500) || '',
+      transaction_id: requestData.transaction_id?.substring(0, 100) || '',
+    };
     console.log("📧 Processing invoice email request:", {
-      customer_name: requestData.customer_name,
-      customer_email: requestData.customer_email,
-      amount: requestData.amount,
-      offer_title: requestData.offer_title,
+      customer_name: sanitizedData.customer_name,
+      customer_email: sanitizedData.customer_email,
+      amount: sanitizedData.amount,
+      offer_title: sanitizedData.offer_title,
     });
 
     // Generate invoice number if not provided
-    const invoice_number = requestData.invoice_number || 
+    const invoice_number = sanitizedData.invoice_number || 
       `INV-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
     // Render the professional email template
     const emailHtml = await renderAsync(
       React.createElement(ProfessionalInvoiceEmail, {
-        customer_name: requestData.customer_name,
-        customer_email: requestData.customer_email,
-        amount: requestData.amount,
-        currency: requestData.currency || 'SAR',
-        payment_url: requestData.payment_url,
-        transaction_id: requestData.transaction_id || 'N/A',
+        customer_name: sanitizedData.customer_name,
+        customer_email: sanitizedData.customer_email,
+        amount: sanitizedData.amount,
+        currency: sanitizedData.currency || 'SAR',
+        payment_url: sanitizedData.payment_url,
+        transaction_id: sanitizedData.transaction_id || 'N/A',
         invoice_number: invoice_number,
-        status: requestData.status || 'pending',
-        payment_method: requestData.payment_method || 'Paylink',
-        offer_title: requestData.offer_title,
-        offer_description: requestData.offer_description,
-        original_price: requestData.original_price,
-        current_price: requestData.current_price,
-        discount: requestData.discount,
+        status: sanitizedData.status || 'pending',
+        payment_method: sanitizedData.payment_method || 'Paylink',
+        offer_title: sanitizedData.offer_title,
+        offer_description: sanitizedData.offer_description,
+        original_price: sanitizedData.original_price,
+        current_price: sanitizedData.current_price,
+        discount: sanitizedData.discount,
       })
     );
 
     // Send email to customer
     const customerEmailResponse = await resend.emails.send({
       from: "شركة علي صالح الشهري القابضة <noreply@alialshehriholding.com>",
-      to: [requestData.customer_email],
+      to: [sanitizedData.customer_email],
       bcc: ["info@alialshehriholding.com"], // Copy to admin
       subject: `فاتورة ضريبية رقم ${invoice_number} - شركة علي صالح الشهري القابضة 🧾`,
       html: emailHtml,
@@ -94,21 +166,21 @@ const handler = async (req: Request): Promise<Response> => {
             <h2 style="color: #0c4a6e; margin: 0 0 16px 0; font-size: 18px;">تفاصيل الفاتورة</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 14px;">
               <div><strong style="color: #0369a1;">رقم الفاتورة:</strong> ${invoice_number}</div>
-              <div><strong style="color: #0369a1;">المبلغ:</strong> ${requestData.amount} ${requestData.currency || 'SAR'}</div>
-              <div><strong style="color: #0369a1;">العميل:</strong> ${requestData.customer_name}</div>
-              <div><strong style="color: #0369a1;">الإيميل:</strong> ${requestData.customer_email}</div>
-              <div style="grid-column: 1 / -1;"><strong style="color: #0369a1;">الخدمة:</strong> ${requestData.offer_title}</div>
-              <div><strong style="color: #0369a1;">رقم المعاملة:</strong> ${requestData.transaction_id}</div>
-              <div><strong style="color: #0369a1;">الحالة:</strong> ${requestData.status}</div>
+              <div><strong style="color: #0369a1;">المبلغ:</strong> ${sanitizedData.amount} ${sanitizedData.currency || 'SAR'}</div>
+              <div><strong style="color: #0369a1;">العميل:</strong> ${sanitizedData.customer_name}</div>
+              <div><strong style="color: #0369a1;">الإيميل:</strong> ${sanitizedData.customer_email}</div>
+              <div style="grid-column: 1 / -1;"><strong style="color: #0369a1;">الخدمة:</strong> ${sanitizedData.offer_title}</div>
+              <div><strong style="color: #0369a1;">رقم المعاملة:</strong> ${sanitizedData.transaction_id}</div>
+              <div><strong style="color: #0369a1;">الحالة:</strong> ${sanitizedData.status}</div>
             </div>
           </div>
           
           <div style="background: linear-gradient(135deg, #fefce8, #fef3c7); padding: 16px; border-radius: 8px; border-right: 4px solid #f59e0b; margin-bottom: 20px;">
             <p style="margin: 0; color: #92400e; font-size: 14px;">
               <strong>💰 تفاصيل السعر:</strong><br>
-              السعر الأصلي: ${requestData.original_price} ${requestData.currency || 'SAR'}<br>
-              السعر بعد الخصم: ${requestData.current_price} ${requestData.currency || 'SAR'}<br>
-              نسبة الخصم: ${requestData.discount}
+              السعر الأصلي: ${sanitizedData.original_price} ${sanitizedData.currency || 'SAR'}<br>
+              السعر بعد الخصم: ${sanitizedData.current_price} ${sanitizedData.currency || 'SAR'}<br>
+              نسبة الخصم: ${sanitizedData.discount}
             </p>
           </div>
           
@@ -124,7 +196,7 @@ const handler = async (req: Request): Promise<Response> => {
     const adminEmailResponse = await resend.emails.send({
       from: "نظام الفواتير <system@alialshehriholding.com>",
       to: ["info@alialshehriholding.com"],
-      subject: `🔔 فاتورة جديدة رقم ${invoice_number} - ${requestData.customer_name}`,
+      subject: `🔔 فاتورة جديدة رقم ${invoice_number} - ${sanitizedData.customer_name}`,
       html: adminNotificationHtml,
     });
 

@@ -66,6 +66,8 @@ export type Database = {
           ip_address: unknown | null
           is_revoked: boolean | null
           last_activity: string | null
+          revoked_at: string | null
+          session_secret: string | null
           session_token: string
           user_agent: string | null
         }
@@ -78,6 +80,8 @@ export type Database = {
           ip_address?: unknown | null
           is_revoked?: boolean | null
           last_activity?: string | null
+          revoked_at?: string | null
+          session_secret?: string | null
           session_token: string
           user_agent?: string | null
         }
@@ -90,6 +94,8 @@ export type Database = {
           ip_address?: unknown | null
           is_revoked?: boolean | null
           last_activity?: string | null
+          revoked_at?: string | null
+          session_secret?: string | null
           session_token?: string
           user_agent?: string | null
         }
@@ -2870,11 +2876,24 @@ export type Database = {
         Args: { plain_password: string }
         Returns: Json
       }
+      create_secure_admin_password_v2: {
+        Args: { plain_password: string }
+        Returns: Json
+      }
       create_secure_admin_session: {
         Args:
           | { admin_user_id: string; session_data?: Json }
           | { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
+      }
+      create_ultra_secure_admin_session: {
+        Args: {
+          additional_entropy?: string
+          admin_user_id: string
+          user_agent?: string
+          user_ip?: unknown
+        }
+        Returns: Json
       }
       decrypt_sensitive_admin_data: {
         Args: { encrypted_data: string }
@@ -2887,6 +2906,15 @@ export type Database = {
       encrypt_sensitive_admin_data: {
         Args: { data_text: string }
         Returns: string
+      }
+      enhanced_admin_rate_limit_check: {
+        Args: {
+          p_action_type: string
+          p_admin_id: string
+          p_limit?: number
+          p_window_minutes?: number
+        }
+        Returns: boolean
       }
       enhanced_rate_limit_check: {
         Args: {
@@ -3003,6 +3031,10 @@ export type Database = {
       }
       validate_admin_session: {
         Args: { session_id: string } | { token: string; user_agent?: string }
+        Returns: Json
+      }
+      validate_ultra_secure_admin_session: {
+        Args: { token: string; user_agent?: string; user_ip?: unknown }
         Returns: Json
       }
       verify_admin_password: {
