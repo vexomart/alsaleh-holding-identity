@@ -32,7 +32,7 @@ import {
 const CurrentOffers = () => {
   const { toast } = useToast();
   
-  // تاريخ انتهاء العروض (25 يوم من الآن)
+  // تاريخ انتهاء العروض (25 يوم من الآن)  
   const offerEndDate = new Date();
   offerEndDate.setDate(offerEndDate.getDate() + 25);
 
@@ -126,7 +126,8 @@ const CurrentOffers = () => {
 
 const currentOffers = [
   {
-    id: 1,
+    id: "complete-website",
+    offerType: 1,
     title: "عرض الموقع الاحترافي الكامل",
     description: "تصميم وتطوير موقع إلكتروني احترافي متكامل مع لوحة تحكم إدارية وتحسين محركات البحث",
     originalPrice: "15000",
@@ -152,7 +153,8 @@ const currentOffers = [
     category: "تطوير الويب"
   },
   {
-    id: 2,
+    id: "ecommerce-store",
+    offerType: 2,
     title: "تصميم متجر إلكتروني متكامل",
     description: "متجر إلكتروني احترافي ومتكامل مع نظام إدارة المنتجات والمبيعات وبوابات الدفع المتعددة",
     originalPrice: "7699",
@@ -180,7 +182,8 @@ const currentOffers = [
     category: "التجارة الإلكترونية"
   },
   {
-    id: 3,
+    id: "seo-services",
+    offerType: 3,
     title: "كلمات مفتاحية قوية لموقعك SEO",
     description: "تحليل شامل وإعداد كلمات مفتاحية قوية لتحسين ظهور موقعك في محركات البحث",
     originalPrice: "999",
@@ -434,15 +437,15 @@ const currentOffers = [
                 </CardHeader>
 
                 <CardContent className="relative z-10 p-6 pt-0">
-                  {/* Pay Now Button Only */}
+                  {/* View Details Button */}
                   <Button 
-                    onClick={() => handleDirectPayment(offer)}
+                    onClick={() => window.location.href = `/offer/${offer.id}`}
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white font-bold py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group border-0 relative overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
                     <div className="relative flex items-center justify-center gap-3">
-                      <CreditCard className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-                      <span className="font-bold">ادفع الآن</span>
+                      <ShoppingBag className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+                      <span className="font-bold">عرض التفاصيل</span>
                       <Sparkles className="w-5 h-5 animate-pulse group-hover:animate-spin transition-all duration-300" />
                     </div>
                   </Button>
