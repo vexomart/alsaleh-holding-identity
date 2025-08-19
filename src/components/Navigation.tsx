@@ -144,7 +144,7 @@ const Navigation = () => {
                   <div className="relative">
                     <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 touch-manipulation">
                       <img 
-                        src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+                        src="/logo-small.png" 
                         alt="ASH Holdings" 
                         className="h-4 w-auto sm:h-5 lg:h-6 object-contain filter brightness-0 invert"
                       />
@@ -417,7 +417,7 @@ const Navigation = () => {
                   <div className="relative">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
                       <img 
-                        src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+                        src="/logo-small.png" 
                         alt="ASH Holdings" 
                         className="h-5 w-auto object-contain filter brightness-0 invert"
                       />
