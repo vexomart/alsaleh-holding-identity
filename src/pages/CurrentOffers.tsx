@@ -40,6 +40,8 @@ const CurrentOffers = () => {
   // دالة للدفع عبر TAB
   const handleTabPayment = async (offer: any) => {
     try {
+      console.log("🚀 Starting TAB payment for offer:", offer);
+      
       // عرض رسالة تحضير الدفع
       toast({
         title: "🚀 جاري تحضير رابط الدفع...",
@@ -48,6 +50,7 @@ const CurrentOffers = () => {
       });
 
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
+      console.log("💰 Payment amount:", amount);
       
       const payload = {
         amount: amount,
@@ -68,15 +71,23 @@ const CurrentOffers = () => {
         }
       };
 
+      console.log("📤 Sending payload to TAB:", payload);
+
       const { data, error } = await supabase.functions.invoke('tab-payment', {
         body: payload,
       });
 
+      console.log("📥 TAB Response - data:", data);
+      console.log("📥 TAB Response - error:", error);
+
       if (error) {
+        console.error("❌ TAB Payment Error:", error);
         throw new Error(error.message || 'فشل في الاتصال بالخدمة');
       }
 
       if (data?.success && data?.payment_url) {
+        console.log("✅ Payment URL received:", data.payment_url);
+        
         toast({
           title: "✅ تم إنشاء رابط الدفع بنجاح",
           description: "سيتم توجيهك الآن إلى TAB لإتمام الدفع الآمن",
