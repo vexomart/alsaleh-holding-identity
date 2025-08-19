@@ -1314,15 +1314,7 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "invoices_transaction_id_fkey"
-            columns: ["transaction_id"]
-            isOneToOne: false
-            referencedRelation: "payment_transactions"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       job_applicants: {
         Row: {
@@ -1763,78 +1755,68 @@ export type Database = {
             referencedRelation: "invoices"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "payment_history_transaction_id_fkey"
-            columns: ["transaction_id"]
-            isOneToOne: false
-            referencedRelation: "payment_transactions"
-            referencedColumns: ["id"]
-          },
         ]
       }
       payment_transactions: {
         Row: {
           amount: number
-          contract_data: Json | null
           contract_id: string | null
-          created_at: string
-          currency: string
+          created_at: string | null
+          currency: string | null
           customer_email: string
           customer_name: string
           customer_phone: string | null
+          description: string | null
           id: string
-          offer_title: string
-          paylink_transaction_no: string | null
-          payment_method: string | null
-          status: string
-          stc_pay_reference: string | null
-          tamara_order_id: string | null
-          tap_charge_id: string | null
-          tap_payment_id: string | null
-          updated_at: string
-          user_id: string
+          invoice_number: string | null
+          metadata: Json | null
+          offer_title: string | null
+          payment_date: string | null
+          payment_method: string
+          status: string | null
+          transaction_id: string
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           amount: number
-          contract_data?: Json | null
           contract_id?: string | null
-          created_at?: string
-          currency?: string
+          created_at?: string | null
+          currency?: string | null
           customer_email: string
           customer_name: string
           customer_phone?: string | null
+          description?: string | null
           id?: string
-          offer_title: string
-          paylink_transaction_no?: string | null
-          payment_method?: string | null
-          status?: string
-          stc_pay_reference?: string | null
-          tamara_order_id?: string | null
-          tap_charge_id?: string | null
-          tap_payment_id?: string | null
-          updated_at?: string
-          user_id: string
+          invoice_number?: string | null
+          metadata?: Json | null
+          offer_title?: string | null
+          payment_date?: string | null
+          payment_method?: string
+          status?: string | null
+          transaction_id: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           amount?: number
-          contract_data?: Json | null
           contract_id?: string | null
-          created_at?: string
-          currency?: string
+          created_at?: string | null
+          currency?: string | null
           customer_email?: string
           customer_name?: string
           customer_phone?: string | null
+          description?: string | null
           id?: string
-          offer_title?: string
-          paylink_transaction_no?: string | null
-          payment_method?: string | null
-          status?: string
-          stc_pay_reference?: string | null
-          tamara_order_id?: string | null
-          tap_charge_id?: string | null
-          tap_payment_id?: string | null
-          updated_at?: string
-          user_id?: string
+          invoice_number?: string | null
+          metadata?: Json | null
+          offer_title?: string | null
+          payment_date?: string | null
+          payment_method?: string
+          status?: string | null
+          transaction_id?: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
