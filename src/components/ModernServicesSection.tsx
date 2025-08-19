@@ -6,10 +6,12 @@ import {
   Megaphone, 
   Palette, 
   ShoppingCart, 
-  Users,
-  Shield,
+  Smartphone,
+  Server,
+  Video,
+  TrendingUp,
+  Search,
   ArrowRight,
-  Star,
   Sparkles,
   Zap
 } from "lucide-react";
@@ -17,77 +19,97 @@ import {
 const modernServices = [
   {
     id: 1,
-    title: "البرمجة والتطوير",
-    shortDesc: "مواقع وتطبيقات متطورة بأحدث التقنيات",
-    icon: Code,
+    title: "تصميم تطبيقات الجوال",
+    shortDesc: "تطبيقات احترافية لنظامي iOS و Android",
+    icon: Smartphone,
     gradient: "from-blue-500/20 to-cyan-500/20",
     iconBg: "from-blue-500 to-cyan-500",
-    price: "5,000",
     delay: "0ms"
   },
   {
     id: 2,
-    title: "التسويق الرقمي",
-    shortDesc: "استراتيجيات تسويقية ذكية لنمو أعمالك",
-    icon: Megaphone,
-    gradient: "from-pink-500/20 to-red-500/20",
-    iconBg: "from-pink-500 to-red-500",
-    price: "3,000", 
-    delay: "150ms"
+    title: "تصميم متجر الكتروني",
+    shortDesc: "متاجر إلكترونية متكاملة ومحسنة",
+    icon: ShoppingCart,
+    gradient: "from-green-500/20 to-emerald-500/20",
+    iconBg: "from-green-500 to-emerald-500",
+    delay: "100ms"
   },
   {
     id: 3,
-    title: "التصميم الإبداعي",
-    shortDesc: "هوية بصرية مميزة تعكس احترافية علامتك",
-    icon: Palette,
-    gradient: "from-purple-500/20 to-pink-500/20",
-    iconBg: "from-purple-500 to-pink-500",
-    price: "2,500",
-    delay: "300ms"
+    title: "تطوير وتصميم مواقع الانترنت",
+    shortDesc: "مواقع ويب متجاوبة وسريعة التحميل",
+    icon: Code,
+    gradient: "from-purple-500/20 to-violet-500/20",
+    iconBg: "from-purple-500 to-violet-500",
+    delay: "200ms"
   },
   {
     id: 4,
-    title: "المتاجر الإلكترونية",
-    shortDesc: "متاجر احترافية متكاملة لزيادة المبيعات",
-    icon: ShoppingCart,
-    gradient: "from-orange-500/20 to-red-500/20", 
-    iconBg: "from-orange-500 to-red-500",
-    price: "8,000",
-    delay: "450ms"
+    title: "استضافة مواقع و حجز دومينات",
+    shortDesc: "خدمات استضافة آمنة وموثوقة",
+    icon: Server,
+    gradient: "from-orange-500/20 to-amber-500/20",
+    iconBg: "from-orange-500 to-amber-500",
+    delay: "300ms"
   },
   {
     id: 5,
-    title: "منصات الأعمال",
-    shortDesc: "حلول ذكية لربط العمال بالعملاء",
-    icon: Users,
-    gradient: "from-teal-500/20 to-blue-500/20",
-    iconBg: "from-teal-500 to-blue-500",
-    price: "6,000",
-    delay: "600ms"
+    title: "التسويق الإلكتروني",
+    shortDesc: "حملات تسويقية مبتكرة ومستهدفة",
+    icon: Megaphone,
+    gradient: "from-pink-500/20 to-rose-500/20",
+    iconBg: "from-pink-500 to-rose-500",
+    delay: "400ms"
   },
   {
     id: 6,
-    title: "الأمن السيبراني",
-    shortDesc: "حماية متقدمة لبياناتك ومعلوماتك",
-    icon: Shield,
+    title: "موشن جرافيك",
+    shortDesc: "فيديوهات تفاعلية ومؤثرات بصرية",
+    icon: Video,
+    gradient: "from-indigo-500/20 to-blue-500/20",
+    iconBg: "from-indigo-500 to-blue-500",
+    delay: "500ms"
+  },
+  {
+    id: 7,
+    title: "تصميم الهوية التجارية",
+    shortDesc: "هويات بصرية احترافية ومميزة",
+    icon: Palette,
+    gradient: "from-teal-500/20 to-cyan-500/20",
+    iconBg: "from-teal-500 to-cyan-500",
+    delay: "600ms"
+  },
+  {
+    id: 8,
+    title: "تطوير الأعمال",
+    shortDesc: "استشارات وحلول تطوير الأعمال",
+    icon: TrendingUp,
     gradient: "from-red-500/20 to-orange-500/20",
-    iconBg: "from-red-500 to-orange-500", 
-    price: "5,500",
-    delay: "750ms"
+    iconBg: "from-red-500 to-orange-500",
+    delay: "700ms"
+  },
+  {
+    id: 9,
+    title: "أرشفة مواقع (SEO)",
+    shortDesc: "تحسين محركات البحث والظهور",
+    icon: Search,
+    gradient: "from-slate-600/20 to-gray-600/20",
+    iconBg: "from-slate-600 to-gray-600",
+    delay: "800ms"
   }
 ];
 
 const ModernServicesSection = () => {
   const whatsappNumber = "966555812567";
   
-  const openWhatsApp = (serviceTitle: string, price: string) => {
+  const openWhatsApp = (serviceTitle: string) => {
     const message = `🚀 مرحبا بك في ASH HOLDING
 
-💼 طلب استشارة مجانية
+💼 استفسار عن الخدمة
 ═══════════════════
 
 📌 الخدمة المطلوبة: ${serviceTitle}
-💰 يبدأ من: ${price} ريال
 
 🎯 أريد معرفة المزيد حول هذه الخدمة والحصول على عرض مخصص!
 
@@ -140,7 +162,7 @@ const ModernServicesSection = () => {
                   <div className="flex items-start gap-4 mb-4">
                     <div 
                       className={`p-4 rounded-xl bg-gradient-to-br ${service.iconBg} shadow-lg cursor-pointer hover:scale-110 transition-all duration-300 group-hover:animate-pulse`}
-                      onClick={() => openWhatsApp(service.title, service.price)}
+                      onClick={() => openWhatsApp(service.title)}
                     >
                       <IconComponent className="w-6 h-6 text-white" />
                     </div>
@@ -148,10 +170,6 @@ const ModernServicesSection = () => {
                       <CardTitle className="text-xl mb-2 text-foreground group-hover:text-primary transition-colors duration-300">
                         {service.title}
                       </CardTitle>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span>يبدأ من {service.price} ريال</span>
-                      </div>
                     </div>
                   </div>
                   <CardDescription className="text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
@@ -161,11 +179,11 @@ const ModernServicesSection = () => {
 
                 <CardContent className="pt-0 relative z-10">
                   <Button 
-                    onClick={() => openWhatsApp(service.title, service.price)}
+                    onClick={() => openWhatsApp(service.title)}
                     className="w-full bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary/90 hover:to-accent/90 transition-all duration-300 group-hover:scale-105"
                     size="lg"
                   >
-                    <span>استشارة مجانية</span>
+                    <span>تواصل معنا</span>
                     <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                   </Button>
                 </CardContent>
@@ -184,10 +202,10 @@ const ModernServicesSection = () => {
             <h3 className="text-2xl font-bold text-foreground">هل تحتاج خدمة مخصصة؟</h3>
           </div>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            تواصل معنا للحصول على استشارة مجانية وعرض مخصص يناسب احتياجاتك
+            تواصل معنا للحصول على عرض مخصص يناسب احتياجاتك
           </p>
           <Button 
-            onClick={() => openWhatsApp("استشارة شاملة", "مجاني")}
+            onClick={() => openWhatsApp("استشارة شاملة")}
             size="lg"
             className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary/90 hover:to-accent/90 transition-all duration-300 px-8"
           >
