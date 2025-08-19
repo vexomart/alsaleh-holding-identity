@@ -27,13 +27,14 @@ import {
   LogOut,
   User
 } from 'lucide-react';
-import AdminAuth from './AdminAuth';
+import SecureAdminAuth from './SecureAdminAuth';
+import { useSecureSession } from '@/hooks/useSecureSession';
 
 interface AdminUser {
   id: string;
-  name: string;
-  email: string;
+  full_name: string;
   role: 'owner' | 'admin' | 'editor';
+  department?: string;
 }
 
 const menuItems = [
@@ -51,17 +52,17 @@ const menuItems = [
 ];
 
 export default function AdminLayout() {
-  const [user, setUser] = useState<AdminUser | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, loading, logout } = useSecureSession();
 
   const handleAuthSuccess = (adminUser: AdminUser) => {
-    setUser(adminUser);
+    // User is set automatically by the secure session hook
   };
 
-  const handleLogout = () => {
-    setUser(null);
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
@@ -90,8 +91,19 @@ export default function AdminLayout() {
     return location.pathname.startsWith(path);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">جاري التحقق من الجلسة...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
-    return <AdminAuth onAuthSuccess={handleAuthSuccess} />;
+    return <SecureAdminAuth onAuthSuccess={handleAuthSuccess} />;
   }
 
   const SidebarContent = () => (
@@ -147,7 +159,7 @@ export default function AdminLayout() {
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback>
-                    {user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                    {user.full_name.split(' ').map(n => n[0]).join('').substring(0, 2)}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -155,8 +167,10 @@ export default function AdminLayout() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">{user.name}</p>
-                  <p className="text-xs text-muted-foreground">{user.email}</p>
+                  <p className="font-medium">{user.full_name}</p>
+                  {user.department && (
+                    <p className="text-xs text-muted-foreground">{user.department}</p>
+                  )}
                   <Badge className={`text-xs w-fit ${getRoleBadgeColor(user.role)}`}>
                     {getRoleLabel(user.role)}
                   </Badge>
