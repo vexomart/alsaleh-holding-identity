@@ -147,6 +147,7 @@ const HelpCenter = lazy(() => import("./pages/abaya-categories/HelpCenter"));
 const ServicesCatalog = lazy(() => import("./pages/ServicesCatalog"));
 const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
+const PaymentTest = lazy(() => import("./pages/PaymentTest"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
 
 
@@ -326,6 +327,7 @@ const App = () => {
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
                 <Route path="/digital-marketing" element={<DigitalMarketing />} />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/payment-test" element={<Suspense fallback={<PageLoader />}><PaymentTest /></Suspense>} />
           <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

@@ -27,14 +27,14 @@ serve(async (req) => {
     
     const response = {
       success: true,
-      payment_url: `${baseUrl}/payment-success?test=true&amount=${amount}&offer=${encodeURIComponent(offer_title)}`,
+      payment_url: `${baseUrl}/payment-test?amount=${amount}&offer=${encodeURIComponent(offer_title)}&transaction=${transactionId}`,
       transaction_id: transactionId,
       invoice_number: `INV-${Date.now()}`,
       amount: amount || 50,
       currency: "SAR",
       status: "pending",
       payment_method: "TAB",
-      message: "تم إنشاء رابط الدفع بنجاح - وضع الاختبار",
+      message: "صفحة دفع تجريبية - لم يتم خصم أي مبلغ",
       isTest: true
     };
 

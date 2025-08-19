@@ -101,8 +101,8 @@ const CurrentOffers = () => {
         console.log("✅ Payment URL received:", data.payment_url);
         
         toast({
-          title: "✅ تم إنشاء رابط الدفع بنجاح",
-          description: "سيتم توجيهك الآن إلى TAB لإتمام الدفع الآمن",
+          title: "✅ تم إنشاء صفحة الدفع التجريبية",
+          description: "سيتم توجيهك الآن إلى صفحة الاختبار - لن يتم خصم أي مبلغ",
           duration: 3000,
         });
 
