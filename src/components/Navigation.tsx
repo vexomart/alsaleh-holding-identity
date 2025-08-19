@@ -34,7 +34,35 @@ import {
   ArrowUpRight,
   ChevronRight,
   Play,
-  Shield
+  Shield,
+  Monitor,
+  Smartphone,
+  Laptop,
+  CreditCard,
+  Gamepad2,
+  Camera,
+  Headphones,
+  Car,
+  Home,
+  ShoppingBag,
+  Palette as PaletteIcon,
+  DollarSign,
+  Heart,
+  Coffee,
+  Music,
+  Brush,
+  FileText,
+  Database,
+  Cloud,
+  Lock,
+  Wifi,
+  Cpu,
+  HardDrive,
+  Network,
+  Bot,
+  Brain,
+  Eye,
+  Fingerprint
 } from "lucide-react";
 
 const Navigation = () => {
@@ -44,6 +72,7 @@ const Navigation = () => {
   const [showProducts, setShowProducts] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
   const location = useLocation();
   const servicesHideRef = useRef<number | undefined>(undefined);
@@ -71,6 +100,45 @@ const Navigation = () => {
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Users },
     { name: "الحلول المتكاملة", href: "/integrated-solutions", icon: Award },
     { name: "المنظومة التقنية المتكاملة", href: "/tech-ecosystem", icon: Zap }
+  ];
+
+  const products = [
+    {
+      category: "المنتجات الرقمية",
+      items: [
+        { name: "متجر البطاقات الإلكترونية", href: "/electronic-cards-store", icon: CreditCard },
+        { name: "متجر الألعاب الإلكترونية", href: "/electronic-games-store", icon: Gamepad2 },
+        { name: "متجر كشخة للعبايات", href: "/kashkha-abaya-store", icon: ShoppingBag },
+        { name: "تطبيقات الجوال", href: "/mobile-apps", icon: Smartphone },
+      ]
+    },
+    {
+      category: "البرمجيات والتطبيقات",
+      items: [
+        { name: "المنتجات البرمجية", href: "/software-products", icon: Monitor },
+        { name: "أنظمة إدارة المحتوى", href: "/cms-systems", icon: Database },
+        { name: "الحلول السحابية", href: "/cloud-solutions", icon: Cloud },
+        { name: "أنظمة الأمان", href: "/security-systems", icon: Lock },
+      ]
+    },
+    {
+      category: "الذكاء الاصطناعي",
+      items: [
+        { name: "الذكاء الاصطناعي", href: "/ai-intelligence", icon: Brain },
+        { name: "حلول الذكاء الاصطناعي", href: "/ai-solutions", icon: Bot },
+        { name: "رؤية الحاسوب", href: "/computer-vision", icon: Eye },
+        { name: "التعلم الآلي", href: "/machine-learning", icon: Cpu },
+      ]
+    },
+    {
+      category: "الخدمات التقنية",
+      items: [
+        { name: "الشبكات والبنية التحتية", href: "/network-infrastructure", icon: Network },
+        { name: "أنظمة التشغيل الآلي", href: "/automation-system", icon: Settings },
+        { name: "حلول التخزين", href: "/storage-solutions", icon: HardDrive },
+        { name: "الأمان السيبراني", href: "/cybersecurity", icon: Fingerprint },
+      ]
+    }
   ];
 
   const othersItems = [
@@ -193,6 +261,87 @@ const Navigation = () => {
                   )}
                 </div>
 
+                {/* Products Dropdown */}
+                <div 
+                  className="relative"
+                  onMouseEnter={() => setShowProducts(true)}
+                  onMouseLeave={() => setShowProducts(false)}
+                >
+                  <button className="flex items-center gap-1 text-foreground hover:text-primary font-semibold transition-colors border-b-2 border-transparent hover:border-primary py-2">
+                    منتجاتنا
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  
+                  {showProducts && (
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[1100px] bg-white shadow-2xl border rounded-2xl z-50">
+                      <div className="p-8">
+                        <div className="grid grid-cols-4 gap-8">
+                          {products.map((category, categoryIndex) => (
+                            <div key={categoryIndex} className="space-y-4">
+                              <h3 className="font-bold text-primary text-lg border-b border-primary/20 pb-2">
+                                {category.category}
+                              </h3>
+                              <div className="space-y-3">
+                                {category.items.map((product, productIndex) => {
+                                  const IconComponent = product.icon;
+                                  return (
+                                    <a
+                                      key={productIndex}
+                                      href={product.href}
+                                      className="flex items-center gap-3 p-3 hover:bg-primary/5 rounded-xl transition-all group"
+                                    >
+                                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
+                                        <IconComponent className="w-5 h-5" />
+                                      </div>
+                                      <span className="text-sm font-medium text-foreground group-hover:text-primary">{product.name}</span>
+                                    </a>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Others Dropdown */}
+                <div 
+                  className="relative"
+                  onMouseEnter={() => setShowOthers(true)}
+                  onMouseLeave={() => setShowOthers(false)}
+                >
+                  <button className="flex items-center gap-1 text-foreground hover:text-primary font-semibold transition-colors border-b-2 border-transparent hover:border-primary py-2">
+                    أخرى
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  
+                  {showOthers && (
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[600px] bg-white shadow-2xl border rounded-2xl z-50">
+                      <div className="p-6">
+                        <div className="grid grid-cols-2 gap-4">
+                          {othersItems.map((item, index) => {
+                            const IconComponent = item.icon;
+                            return (
+                              <a
+                                key={index}
+                                href={item.href}
+                                className="flex items-center gap-3 p-4 hover:bg-primary/5 rounded-xl transition-all group"
+                              >
+                                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                  <IconComponent className="w-5 h-5" />
+                                </div>
+                                <span className="text-sm font-semibold text-foreground group-hover:text-primary">{item.name}</span>
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <a href="/subsidiaries" className="text-foreground hover:text-primary font-semibold transition-colors border-b-2 border-transparent hover:border-primary py-2">
                   شركاتنا
                 </a>
@@ -239,11 +388,68 @@ const Navigation = () => {
                 </button>
                 {mobileServicesOpen && (
                   <div className="pl-4 mt-2 space-y-2">
-                    {services.map((service, index) => (
-                      <a key={index} href={service.href} className="block py-2 text-sm text-muted-foreground hover:text-primary">
-                        {service.name}
-                      </a>
+                    {services.map((service, index) => {
+                      const IconComponent = service.icon;
+                      return (
+                        <a key={index} href={service.href} className="flex items-center gap-3 py-2 text-sm text-muted-foreground hover:text-primary">
+                          <IconComponent className="w-4 h-4" />
+                          {service.name}
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <button 
+                  className="flex items-center justify-between w-full py-2 text-foreground font-medium"
+                  onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
+                >
+                  منتجاتنا
+                  <ChevronDown className={`w-5 h-5 transition-transform ${mobileProductsOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileProductsOpen && (
+                  <div className="pl-4 mt-2 space-y-4">
+                    {products.map((category, categoryIndex) => (
+                      <div key={categoryIndex} className="space-y-2">
+                        <h4 className="font-semibold text-primary text-sm">{category.category}</h4>
+                        <div className="pl-2 space-y-2">
+                          {category.items.map((product, productIndex) => {
+                            const IconComponent = product.icon;
+                            return (
+                              <a key={productIndex} href={product.href} className="flex items-center gap-3 py-2 text-sm text-muted-foreground hover:text-primary">
+                                <IconComponent className="w-4 h-4" />
+                                {product.name}
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </div>
                     ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <button 
+                  className="flex items-center justify-between w-full py-2 text-foreground font-medium"
+                  onClick={() => setMobileOthersOpen(!mobileOthersOpen)}
+                >
+                  أخرى
+                  <ChevronDown className={`w-5 h-5 transition-transform ${mobileOthersOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileOthersOpen && (
+                  <div className="pl-4 mt-2 space-y-2">
+                    {othersItems.map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <a key={index} href={item.href} className="flex items-center gap-3 py-2 text-sm text-muted-foreground hover:text-primary">
+                          <IconComponent className="w-4 h-4" />
+                          {item.name}
+                        </a>
+                      );
+                    })}
                   </div>
                 )}
               </div>
