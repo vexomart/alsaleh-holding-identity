@@ -32,8 +32,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     
-    <!-- Inline Critical Font CSS to eliminate request chain -->
+    <!-- Eliminate render blocking with media trick -->
+    <link rel="preload" href="/assets/index-DBuaRAC3.css" as="style" onload="this.onload=null;this.rel='stylesheet';">
+    <noscript><link rel="stylesheet" href="/assets/index-DBuaRAC3.css"></noscript>
+    
+    <!-- Critical fonts only - Remove external requests -->
     <style>
+      /* Critical font fallbacks to prevent layout shift */
+      * {
+        font-family: 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      
+      /* Enhanced critical Cairo font faces */
       @font-face {
         font-family: 'Cairo';
         font-style: normal;
@@ -50,26 +60,33 @@
         src: url(https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS8p4_RHH1.woff2) format('woff2');
         unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE80-FEFC;
       }
+      
+      /* Prevent layout shift during font loading */
+      .loading {
+        font-family: system-ui, -apple-system, sans-serif;
+      }
     </style>
     
-    <!-- Non-Critical Fonts - Async Loading -->
+    <!-- Load additional font weights after initial render -->
     <script>
-      // Load remaining font weights asynchronously
-      function loadRemainingFonts() {
+      // Defer non-critical font loading completely  
+      function loadAdditionalFonts() {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;700&display=swap&subset=arabic';
+        link.media = 'print';
+        link.onload = function() { this.media = 'all'; };
         document.head.appendChild(link);
       }
       
-      // Load after critical rendering
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          requestIdleCallback ? requestIdleCallback(loadRemainingFonts) : setTimeout(loadRemainingFonts, 0);
-        });
-      } else {
-        requestIdleCallback ? requestIdleCallback(loadRemainingFonts) : setTimeout(loadRemainingFonts, 0);
-      }
+      // Load after page is interactive
+      window.addEventListener('load', () => {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadAdditionalFonts, { timeout: 2000 });
+        } else {
+          setTimeout(loadAdditionalFonts, 1000);
+        }
+      });
     </script>
     
     <!-- Fallback for no-script -->
