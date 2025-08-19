@@ -53,9 +53,19 @@ serve(async (req) => {
       hasMerchantId: !!TAB_MERCHANT_ID
     });
 
-    if (!TAB_API_KEY || !TAB_SECRET_KEY || !TAB_MERCHANT_ID) {
-      console.error("Missing TAB credentials");
-      throw new Error("TAB payment configuration is incomplete");
+    if (!TAB_API_KEY) {
+      console.error("Missing TAB_API_KEY");
+      throw new Error("TAB_API_KEY is not configured");
+    }
+
+    if (!TAB_SECRET_KEY) {
+      console.error("Missing TAB_SECRET_KEY");
+      throw new Error("TAB_SECRET_KEY is not configured");
+    }
+
+    if (!TAB_MERCHANT_ID) {
+      console.error("Missing TAB_MERCHANT_ID");
+      throw new Error("TAB_MERCHANT_ID is not configured");
     }
 
     // Validate required fields
