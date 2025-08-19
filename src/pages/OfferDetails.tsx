@@ -437,121 +437,207 @@ const OfferDetails = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* زر الدفع المحسن والاحترافي */}
               <div className="flex flex-col sm:flex-row gap-4">
-                {/* زر الدفع المباشر مع PayLink */}
                 <Button 
                   onClick={() => setIsPaymentOpen(true)}
-                  className={`flex-1 h-14 bg-gradient-to-r from-green-500 to-emerald-500 hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group relative overflow-hidden`}
+                  className="flex-1 h-16 bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 hover:from-emerald-700 hover:via-green-700 hover:to-teal-700 text-white font-bold text-xl rounded-2xl transition-all duration-500 hover-scale group relative overflow-hidden shadow-2xl hover:shadow-emerald-500/50 border-0"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                  <Crown className="w-5 h-5 ml-2 group-hover:animate-bounce relative z-10" />
-                  <span className="relative z-10">ادفع الآن - دفع آمن</span>
-                  <Sparkles className="w-4 h-4 mr-2 animate-pulse relative z-10" />
+                  {/* التأثيرات البصرية */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* المحتوى */}
+                  <div className="relative z-10 flex items-center justify-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+                      <Crown className="w-5 h-5 text-white group-hover:animate-bounce" />
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-lg font-bold">ادفع الآن</span>
+                      <span className="text-sm opacity-90">💳 دفع آمن ومضمون</span>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:-rotate-12 transition-transform duration-300">
+                      <Shield className="w-5 h-5 text-white animate-pulse" />
+                    </div>
+                  </div>
+                  
+                  {/* شريط الأمان في الأسفل */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-green-400 to-blue-400 opacity-70 group-hover:opacity-100 transition-opacity"></div>
                 </Button>
 
                 <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
-                  <DialogContent className="sm:max-w-lg" dir="rtl">
-                    <DialogHeader>
-                      <DialogTitle className="text-center text-2xl">
-                        اختر طريقة الدفع 💳
-                      </DialogTitle>
+                  <DialogContent className="sm:max-w-2xl" dir="rtl">
+                    {/* Header محسن */}
+                    <DialogHeader className="text-center pb-6 border-b">
+                      <div className="flex items-center justify-center gap-3 mb-4">
+                        <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full flex items-center justify-center">
+                          <CreditCard className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="text-right">
+                          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+                            الدفع الآمن والمضمون
+                          </DialogTitle>
+                          <p className="text-sm text-muted-foreground">اختر طريقة الدفع المفضلة لديك</p>
+                        </div>
+                      </div>
                     </DialogHeader>
                     
-                    <div className="space-y-6">
-                      {/* Offer Summary */}
-                      <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 p-4 rounded-lg">
-                        <h3 className="font-bold text-lg mb-2">{offer.title}</h3>
-                        <div className="flex justify-between items-center">
-                          <span className="text-2xl font-bold text-green-600">
-                            {offer.currentPrice} ر.س
-                          </span>
-                          <Badge variant="destructive">خصم {offer.discount}</Badge>
+                    <div className="space-y-8 pt-6">
+                      {/* ملخص العرض المحسن */}
+                      <div className="bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 dark:from-emerald-950 dark:via-green-950 dark:to-teal-950 p-6 rounded-2xl border-2 border-emerald-200/50 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-emerald-200/30 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center">
+                                <ShoppingBag className="w-5 h-5 text-white" />
+                              </div>
+                              <div>
+                                <h3 className="font-bold text-lg text-emerald-800 dark:text-emerald-200">{offer.title}</h3>
+                                <p className="text-sm text-emerald-600 dark:text-emerald-400">عرض حصري ومحدود</p>
+                              </div>
+                            </div>
+                            <Badge className="bg-gradient-to-r from-red-500 to-orange-500 text-white animate-pulse px-4 py-2 text-base">
+                              خصم {offer.discount}
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex justify-between items-center bg-white/60 dark:bg-slate-800/60 rounded-xl p-4">
+                            <div className="text-center">
+                              <p className="text-sm text-muted-foreground mb-1">السعر بعد الخصم</p>
+                              <span className="text-3xl font-bold text-emerald-600">
+                                {offer.currentPrice} ر.س
+                              </span>
+                            </div>
+                            <div className="text-center opacity-60">
+                              <p className="text-sm text-muted-foreground mb-1">السعر الأصلي</p>
+                              <span className="text-xl line-through text-red-500">
+                                {offer.originalPrice} ر.س
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Payment Methods Selection */}
-                      <div className="space-y-3">
-                        <h4 className="font-bold text-lg">طرق الدفع المتاحة:</h4>
-                        <div className="grid grid-cols-2 gap-3">
-                          
+                      {/* طرق الدفع المحسنة */}
+                      <div className="space-y-4">
+                        <h4 className="font-bold text-xl text-center mb-6 flex items-center justify-center gap-2">
+                          <Sparkles className="w-5 h-5 text-yellow-500" />
+                          طرق الدفع المتاحة
+                          <Sparkles className="w-5 h-5 text-yellow-500" />
+                        </h4>
+                        
+                        <div className="grid grid-cols-3 gap-4">
+                          {/* PayLink */}
                           <button
                             onClick={() => setSelectedPaymentMethod('paylink')}
-                            className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+                            className={`group p-6 border-3 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
                               selectedPaymentMethod === 'paylink'
-                                ? 'border-green-500 bg-green-50 dark:bg-green-950'
-                                : 'border-gray-200 hover:border-gray-300'
+                                ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950 shadow-lg shadow-emerald-500/20'
+                                : 'border-gray-200 hover:border-emerald-300 hover:shadow-lg'
                             }`}
                           >
                             <div className="text-center">
-                              <Globe className="w-8 h-8 mx-auto mb-2 text-green-600" />
-                              <div className="font-bold text-sm">البطاقة الائتمانية</div>
-                              <div className="text-xs text-muted-foreground">مدى، فيزا، ماستركارد</div>
+                              <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                                selectedPaymentMethod === 'paylink' 
+                                  ? 'bg-gradient-to-r from-emerald-500 to-green-600' 
+                                  : 'bg-gray-100 group-hover:bg-emerald-100'
+                              }`}>
+                                <CreditCard className={`w-8 h-8 ${
+                                  selectedPaymentMethod === 'paylink' ? 'text-white' : 'text-emerald-600'
+                                }`} />
+                              </div>
+                              <div className="font-bold text-base mb-2">البطاقة الائتمانية</div>
+                              <div className="text-xs text-muted-foreground">مدى • فيزا • ماستركارد</div>
                             </div>
                           </button>
                           
+                          {/* تمارا */}
                           <button
                             onClick={() => setSelectedPaymentMethod('tamara')}
-                            className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+                            className={`group p-6 border-3 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
                               selectedPaymentMethod === 'tamara'
-                                ? 'border-purple-500 bg-purple-50 dark:bg-purple-950'
-                                : 'border-gray-200 hover:border-gray-300'
+                                ? 'border-purple-500 bg-purple-50 dark:bg-purple-950 shadow-lg shadow-purple-500/20'
+                                : 'border-gray-200 hover:border-purple-300 hover:shadow-lg'
                             }`}
                           >
                             <div className="text-center">
-                              <Clock className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                              <div className="font-bold text-sm">تمارا</div>
-                              <div className="text-xs text-muted-foreground">ادفع لاحقاً</div>
+                              <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                                selectedPaymentMethod === 'tamara' 
+                                  ? 'bg-gradient-to-r from-purple-500 to-pink-600' 
+                                  : 'bg-gray-100 group-hover:bg-purple-100'
+                              }`}>
+                                <Clock className={`w-8 h-8 ${
+                                  selectedPaymentMethod === 'tamara' ? 'text-white' : 'text-purple-600'
+                                }`} />
+                              </div>
+                              <div className="font-bold text-base mb-2">تمارا</div>
+                              <div className="text-xs text-muted-foreground">ادفع لاحقاً بالتقسيط</div>
                             </div>
                           </button>
                           
+                          {/* STC Pay */}
                           <button
                             onClick={() => setSelectedPaymentMethod('stc')}
-                            className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+                            className={`group p-6 border-3 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
                               selectedPaymentMethod === 'stc'
-                                ? 'border-orange-500 bg-orange-50 dark:bg-orange-950'
-                                : 'border-gray-200 hover:border-gray-300'
+                                ? 'border-orange-500 bg-orange-50 dark:bg-orange-950 shadow-lg shadow-orange-500/20'
+                                : 'border-gray-200 hover:border-orange-300 hover:shadow-lg'
                             }`}
                           >
                             <div className="text-center">
-                              <Phone className="w-8 h-8 mx-auto mb-2 text-orange-600" />
-                              <div className="font-bold text-sm">STC Pay</div>
-                              <div className="text-xs text-muted-foreground">محفظة رقمية</div>
+                              <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                                selectedPaymentMethod === 'stc' 
+                                  ? 'bg-gradient-to-r from-orange-500 to-red-600' 
+                                  : 'bg-gray-100 group-hover:bg-orange-100'
+                              }`}>
+                                <Phone className={`w-8 h-8 ${
+                                  selectedPaymentMethod === 'stc' ? 'text-white' : 'text-orange-600'
+                                }`} />
+                              </div>
+                              <div className="font-bold text-base mb-2">STC Pay</div>
+                              <div className="text-xs text-muted-foreground">المحفظة الرقمية</div>
                             </div>
                           </button>
                         </div>
                       </div>
 
-                      {/* Payment Form */}
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="payment-name">الاسم الكامل *</Label>
-                          <Input
-                            id="payment-name"
-                            name="name"
-                            type="text"
-                            value={paymentData.name}
-                            onChange={handlePaymentInputChange}
-                            placeholder="أدخل اسمك الكامل"
-                            required
-                          />
+                      {/* نموذج الدفع المحسن */}
+                      <div className="bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-800 dark:to-gray-800 p-6 rounded-2xl space-y-5">
+                        <h5 className="font-bold text-lg text-center mb-4">أدخل بياناتك لإتمام الدفع</h5>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="payment-name" className="text-sm font-medium">الاسم الكامل *</Label>
+                            <Input
+                              id="payment-name"
+                              name="name"
+                              type="text"
+                              value={paymentData.name}
+                              onChange={handlePaymentInputChange}
+                              placeholder="أدخل اسمك الكامل"
+                              className="h-12 border-2 focus:border-emerald-500 rounded-xl"
+                              required
+                            />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="payment-email" className="text-sm font-medium">البريد الإلكتروني *</Label>
+                            <Input
+                              id="payment-email"
+                              name="email"
+                              type="email"
+                              value={paymentData.email}
+                              onChange={handlePaymentInputChange}
+                              placeholder="example@email.com"
+                              className="h-12 border-2 focus:border-emerald-500 rounded-xl"
+                              required
+                            />
+                          </div>
                         </div>
                         
-                        <div>
-                          <Label htmlFor="payment-email">البريد الإلكتروني *</Label>
-                          <Input
-                            id="payment-email"
-                            name="email"
-                            type="email"
-                            value={paymentData.email}
-                            onChange={handlePaymentInputChange}
-                            placeholder="example@email.com"
-                            required
-                          />
-                        </div>
-                        
-                        <div>
-                          <Label htmlFor="payment-phone">رقم الجوال</Label>
+                        <div className="space-y-2">
+                          <Label htmlFor="payment-phone" className="text-sm font-medium">رقم الجوال (اختياري)</Label>
                           <Input
                             id="payment-phone"
                             name="phone"
@@ -559,33 +645,60 @@ const OfferDetails = () => {
                             value={paymentData.phone}
                             onChange={handlePaymentInputChange}
                             placeholder="05xxxxxxxx"
+                            className="h-12 border-2 focus:border-emerald-500 rounded-xl"
                             dir="ltr"
                           />
                         </div>
                       </div>
 
-                       {/* Payment Button */}
-                      <Button
-                        onClick={handleDirectPayment}
-                        disabled={isPaymentLoading}
-                        className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white py-3 text-lg font-bold"
-                      >
-                        {isPaymentLoading ? (
-                          <>
-                            <Loader2 className="w-5 h-5 ml-2 animate-spin" />
-                            جاري المعالجة...
-                          </>
-                        ) : (
-                          <>
-                            <CreditCard className="w-5 h-5 ml-2" />
-                            ادفع {offer.currentPrice} ر.س
-                          </>
-                        )}
-                      </Button>
+                      {/* زر الدفع النهائي المحسن */}
+                      <div className="space-y-4">
+                        <Button
+                          onClick={handleDirectPayment}
+                          disabled={isPaymentLoading}
+                          className="w-full h-16 bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 hover:from-emerald-700 hover:via-green-700 hover:to-teal-700 text-white text-xl font-bold rounded-2xl shadow-2xl hover:shadow-emerald-500/50 transition-all duration-500 transform hover:scale-[1.02] relative overflow-hidden group border-0"
+                        >
+                          {isPaymentLoading ? (
+                            <div className="flex items-center justify-center gap-3">
+                              <Loader2 className="w-6 h-6 animate-spin" />
+                              <span>جاري المعالجة...</span>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+                              <div className="relative z-10 flex items-center justify-center gap-4">
+                                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                  <CreditCard className="w-5 h-5" />
+                                </div>
+                                <div className="text-center">
+                                  <div className="text-xl font-bold">ادفع {offer.currentPrice} ر.س</div>
+                                  <div className="text-sm opacity-90">دفع آمن بتقنية التشفير</div>
+                                </div>
+                                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                  <Shield className="w-5 h-5 animate-pulse" />
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </Button>
 
-                      {/* Security Notice */}
-                      <div className="text-center text-sm text-muted-foreground">
-                        🔒 جميع المدفوعات آمنة ومحمية بتقنية التشفير
+                        {/* ضمانات الأمان */}
+                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 p-4 rounded-xl border border-green-200/50">
+                          <div className="flex items-center justify-center gap-6 text-sm text-green-700 dark:text-green-300">
+                            <div className="flex items-center gap-2">
+                              <Shield className="w-5 h-5 text-green-600" />
+                              <span>تشفير SSL</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <CheckCircle className="w-5 h-5 text-green-600" />
+                              <span>دفع آمن 100%</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Award className="w-5 h-5 text-green-600" />
+                              <span>ضمان الاسترداد</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </DialogContent>
