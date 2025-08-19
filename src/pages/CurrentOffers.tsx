@@ -37,13 +37,13 @@ const CurrentOffers = () => {
   const offerEndDate = new Date();
   offerEndDate.setDate(offerEndDate.getDate() + 25);
 
-  // دالة للدفع الفوري
-  const handleDirectPayment = async (offer: any) => {
+  // دالة للدفع عبر TAB
+  const handleTabPayment = async (offer: any) => {
     try {
       // عرض رسالة تحضير الدفع
       toast({
         title: "🚀 جاري تحضير رابط الدفع...",
-        description: "سيتم توجيهك فوراً إلى Paylink لإتمام الدفع الآمن",
+        description: "سيتم توجيهك فوراً إلى TAB لإتمام الدفع الآمن",
         duration: 2000,
       });
 
@@ -68,7 +68,7 @@ const CurrentOffers = () => {
         }
       };
 
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+      const { data, error } = await supabase.functions.invoke('tab-payment', {
         body: payload,
       });
 
@@ -79,7 +79,7 @@ const CurrentOffers = () => {
       if (data?.success && data?.payment_url) {
         toast({
           title: "✅ تم إنشاء رابط الدفع بنجاح",
-          description: "سيتم توجيهك الآن إلى Paylink لإتمام الدفع الآمن",
+          description: "سيتم توجيهك الآن إلى TAB لإتمام الدفع الآمن",
           duration: 3000,
         });
 
@@ -95,7 +95,7 @@ const CurrentOffers = () => {
               transaction_id: data.transaction_id || 'N/A',
               invoice_number: data.invoice_number || 'N/A',
               status: 'pending',
-              payment_method: 'Paylink',
+              payment_method: 'TAB',
               offer_title: offer.title,
               offer_description: offer.description,
               original_price: offer.originalPrice,
@@ -107,9 +107,9 @@ const CurrentOffers = () => {
           console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
         }
 
-        // التحويل الفوري إلى Paylink (تحويل مباشر بدلاً من نافذة جديدة)
+        // التحويل الفوري إلى TAB
         setTimeout(() => {
-          window.location.href = data.payment_url; // تحويل مباشر
+          window.location.href = data.payment_url;
         }, 1000);
         
       } else {
@@ -438,31 +438,17 @@ const currentOffers = [
                 </CardHeader>
 
                  <CardContent className="relative z-10 p-6 pt-0">
-                  {/* أزرار العمل المحسنة */}
+                  {/* زر الدفع الوحيد */}
                   <div className="space-y-3">
-                    {/* زر الدفع المباشر مع PayLink */}
                     <Button 
-                      onClick={() => handleDirectPayment(offer)}
-                      className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group border-0 relative overflow-hidden"
+                      onClick={() => handleTabPayment(offer)}
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group border-0 relative overflow-hidden"
                     >
                       <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
                       <div className="relative flex items-center justify-center gap-3">
                         <CreditCard className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-                        <span className="font-bold">ادفع الآن - تحويل فوري</span>
+                        <span className="font-bold">ادفع الآن</span>
                         <Sparkles className="w-5 h-5 animate-pulse group-hover:animate-spin transition-all duration-300" />
-                      </div>
-                    </Button>
-                    
-                    {/* زر عرض التفاصيل */}
-                    <Button 
-                      onClick={() => window.location.href = `/offer/${offer.id}`}
-                      variant="outline"
-                      className="w-full border-2 border-primary text-primary hover:bg-primary/5 font-medium py-3 text-base rounded-xl transition-all duration-300 hover-scale group"
-                    >
-                      <div className="flex items-center justify-center gap-3">
-                        <ShoppingBag className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                        <span>عرض التفاصيل الكاملة</span>
-                        <ArrowRight className="w-4 h-4" />
                       </div>
                     </Button>
                   </div>

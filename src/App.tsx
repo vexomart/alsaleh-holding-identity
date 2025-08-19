@@ -62,7 +62,6 @@ const TechProjects = lazy(() => import("./pages/TechProjects"));
 const TechProjectDetails = lazy(() => import("./pages/TechProjectDetails"));
 const Technologies = lazy(() => import("./pages/Technologies"));
 const CurrentOffers = lazy(() => import("./pages/CurrentOffers"));
-const OfferDetails = lazy(() => import("./pages/OfferDetails"));
 const ProfessionalServices = lazy(() => import("./pages/ProfessionalServices"));
 const ContentCreation = lazy(() => import("./pages/ContentCreation"));
 const DesignSolutions = lazy(() => import("./pages/DesignSolutions"));
@@ -244,7 +243,6 @@ const App = () => {
                 <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
                 <Route path="/technologies" element={<Technologies />} />
                 <Route path="/current-offers" element={<CurrentOffers />} />
-                <Route path="/offer-details/:id" element={<OfferDetails />} />
                 <Route path="/professional-services" element={<ProfessionalServices />} />
                 
                 <Route path="/content-creation" element={<ContentCreation />} />
@@ -280,7 +278,6 @@ const App = () => {
                 <Route path="/cards-store/about" element={<CardsStoreAbout />} />
                 <Route path="/cards-store/contact" element={<CardsStoreContact />} />
                 <Route path="/cards-store/faq" element={<CardsStoreFAQ />} />
-                <Route path="/offer/:offerId" element={<Suspense fallback={<PageLoader />}><OfferDetails /></Suspense>} />
                 <Route path="/cards-store/cards" element={<ElectronicCardsWebsite />} />
                 <Route path="/cards-store/privacy" element={<CardsStorePrivacy />} />
                 <Route path="/cards-store/terms" element={<CardsStoreTerms />} />
