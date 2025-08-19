@@ -45,7 +45,7 @@ const CurrentOffers = () => {
       // عرض رسالة تحضير الدفع
       toast({
         title: "🚀 جاري تحضير رابط الدفع...",
-        description: "سيتم توجيهك فوراً إلى TAB لإتمام الدفع الآمن",
+        description: "سيتم توجيهك فوراً لإتمام الدفع الآمن",
         duration: 2000,
       });
 
@@ -101,8 +101,8 @@ const CurrentOffers = () => {
         console.log("✅ Payment URL received:", data.payment_url);
         
         toast({
-          title: "✅ تم إنشاء صفحة الدفع التجريبية",
-          description: "سيتم توجيهك الآن إلى صفحة الاختبار - لن يتم خصم أي مبلغ",
+          title: "✅ تم إنشاء رابط الدفع بنجاح",
+          description: "سيتم توجيهك الآن لإتمام عملية الدفع الآمنة",
           duration: 3000,
         });
 
@@ -117,7 +117,7 @@ const CurrentOffers = () => {
               payment_url: data.payment_url,
               transaction_id: data.transaction_id || 'N/A',
               invoice_number: data.invoice_number || 'N/A',
-              status: 'pending',
+              status: data.status || 'pending',
               payment_method: 'TAB',
               offer_title: offer.title,
               offer_description: offer.description,
@@ -130,10 +130,10 @@ const CurrentOffers = () => {
           console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
         }
 
-        // التحويل الفوري إلى TAB
+        // التحويل الفوري لبوابة الدفع
         setTimeout(() => {
           window.location.href = data.payment_url;
-        }, 1000);
+        }, 1500);
         
       } else {
         throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
