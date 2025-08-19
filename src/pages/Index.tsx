@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { lazy, Suspense } from "react";
 const Footer = lazy(() => import("@/components/Footer"));
 const ChatBot = lazy(() => import("@/components/ChatBot"));
+const OurServicesSection = lazy(() => import("@/components/OurServicesSection"));
 
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -38,6 +39,12 @@ const Index = () => {
 
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
+          {/* Our Services Section */}
+          <section className="relative">
+            <Suspense fallback={<div className="h-96 bg-muted/10 animate-pulse rounded-lg" />}>
+              <OurServicesSection />
+            </Suspense>
+          </section>
         </div>
       </main>
 
