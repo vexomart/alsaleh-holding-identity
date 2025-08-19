@@ -19,8 +19,11 @@ export type Database = {
           admin_user_id: string | null
           created_at: string | null
           expires_at: string
+          fingerprint: string | null
           id: string
           ip_address: unknown | null
+          is_revoked: boolean | null
+          last_activity: string | null
           session_token: string
           user_agent: string | null
         }
@@ -28,8 +31,11 @@ export type Database = {
           admin_user_id?: string | null
           created_at?: string | null
           expires_at: string
+          fingerprint?: string | null
           id?: string
           ip_address?: unknown | null
+          is_revoked?: boolean | null
+          last_activity?: string | null
           session_token: string
           user_agent?: string | null
         }
@@ -37,8 +43,11 @@ export type Database = {
           admin_user_id?: string | null
           created_at?: string | null
           expires_at?: string
+          fingerprint?: string | null
           id?: string
           ip_address?: unknown | null
+          is_revoked?: boolean | null
+          last_activity?: string | null
           session_token?: string
           user_agent?: string | null
         }
@@ -59,9 +68,12 @@ export type Database = {
           id: string
           is_active: boolean | null
           last_login_at: string | null
+          last_password_change: string | null
           name: string
           password_hash: string
+          password_salt: string | null
           role: Database["public"]["Enums"]["user_role"]
+          session_secret: string | null
           two_factor_enabled: boolean | null
           two_factor_secret: string | null
           updated_at: string | null
@@ -72,9 +84,12 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           last_login_at?: string | null
+          last_password_change?: string | null
           name: string
           password_hash: string
+          password_salt?: string | null
           role?: Database["public"]["Enums"]["user_role"]
+          session_secret?: string | null
           two_factor_enabled?: boolean | null
           two_factor_secret?: string | null
           updated_at?: string | null
@@ -85,9 +100,12 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           last_login_at?: string | null
+          last_password_change?: string | null
           name?: string
           password_hash?: string
+          password_salt?: string | null
           role?: Database["public"]["Enums"]["user_role"]
+          session_secret?: string | null
           two_factor_enabled?: boolean | null
           two_factor_secret?: string | null
           updated_at?: string | null
@@ -2239,6 +2257,45 @@ export type Database = {
         }
         Relationships: []
       }
+      sensitive_data_audit: {
+        Row: {
+          access_type: string
+          created_at: string | null
+          data_classification: string
+          id: string
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: string
+          risk_score: number | null
+          success: boolean
+          user_id: string | null
+        }
+        Insert: {
+          access_type: string
+          created_at?: string | null
+          data_classification: string
+          id?: string
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type: string
+          risk_score?: number | null
+          success: boolean
+          user_id?: string | null
+        }
+        Update: {
+          access_type?: string
+          created_at?: string | null
+          data_classification?: string
+          id?: string
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string
+          risk_score?: number | null
+          success?: boolean
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       service_requests: {
         Row: {
           actual_cost: number | null
@@ -2785,6 +2842,14 @@ export type Database = {
         Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
       }
+      create_secure_admin_session: {
+        Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
+        Returns: string
+      }
+      encrypt_admin_password: {
+        Args: { plain_password: string }
+        Returns: Json
+      }
       enhanced_rate_limit_check: {
         Args: {
           p_action_type: string
@@ -2859,6 +2924,17 @@ export type Database = {
         }
         Returns: boolean
       }
+      log_sensitive_data_access: {
+        Args: {
+          p_access_type: string
+          p_classification: string
+          p_metadata?: Json
+          p_resource_id: string
+          p_resource_type: string
+          p_success: boolean
+        }
+        Returns: undefined
+      }
       make_user_admin: {
         Args: { target_email: string }
         Returns: boolean
@@ -2879,8 +2955,14 @@ export type Database = {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
       }
+      validate_admin_session: {
+        Args: { token: string; user_agent?: string }
+        Returns: Json
+      }
       verify_admin_password: {
-        Args: { plain_password: string; stored_password: string }
+        Args:
+          | { plain_password: string; stored_hash: string; stored_salt: string }
+          | { plain_password: string; stored_password: string }
         Returns: boolean
       }
     }

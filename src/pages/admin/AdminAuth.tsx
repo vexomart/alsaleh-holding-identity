@@ -24,79 +24,105 @@ export default function AdminAuth({ onAuthSuccess }: AdminAuthProps) {
     setError('');
 
     try {
-      console.log('Attempting admin login for:', email);
+      console.log('Attempting secure admin login for:', email);
       
-      // Check if user exists in admin_users table and verify password
-      const { data: adminUsers, error: queryError } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('email', email)
-        .eq('is_active', true)
-        .single();
+      // استخدام دالة التسجيل الآمنة الجديدة
+      const { data, error } = await supabase.rpc('admin_login', {
+        user_email: email,
+        user_password: password,
+        user_ip: null,
+        user_agent: navigator.userAgent
+      });
 
-      if (queryError || !adminUsers) {
-        console.log('Admin user not found:', queryError);
-        setError('المستخدم غير موجود أو غير مفعل');
+      console.log('Secure login response:', { data, error });
+
+      if (error) {
+        console.log('Login error:', error);
+        setError('خطأ في تسجيل الدخول');
+        
+        // تسجيل محاولة الدخول الفاشلة
+        await supabase.from('sensitive_data_audit').insert({
+          resource_type: 'admin_login',
+          resource_id: email,
+          access_type: 'authentication',
+          data_classification: 'restricted',
+          success: false,
+          metadata: {
+            error: error.message,
+            user_agent: navigator.userAgent,
+            timestamp: new Date().toISOString()
+          }
+        });
         return;
       }
 
-      // Simple password verification (in production, use proper hashing)
-      if (adminUsers.password_hash !== password) {
-        console.log('Invalid password');
-        setError('كلمة المرور غير صحيحة');
+      const loginResult = data as any;
+
+      if (!loginResult || !loginResult.success) {
+        setError(loginResult?.message || 'بيانات الدخول غير صحيحة');
+        
+        // تسجيل محاولة الدخول الفاشلة
+        await supabase.from('sensitive_data_audit').insert({
+          resource_type: 'admin_login',
+          resource_id: email,
+          access_type: 'authentication',
+          data_classification: 'restricted',
+          success: false,
+          metadata: {
+            reason: loginResult?.message,
+            user_agent: navigator.userAgent,
+            timestamp: new Date().toISOString()
+          }
+        });
         return;
       }
 
-      console.log('Admin login successful:', adminUsers);
+      console.log('Secure admin login successful:', loginResult);
       
-      // Update last login time
-      await supabase
-        .from('admin_users')
-        .update({ last_login_at: new Date().toISOString() })
-        .eq('id', adminUsers.id);
+      // حفظ session token الآمن
+      localStorage.setItem('admin_session_token', loginResult.session_token);
       
-      // Create admin session token (simple implementation)
-      const sessionToken = `admin_${adminUsers.id}_${Date.now()}`;
-      localStorage.setItem('admin_session_token', sessionToken);
-      
-      // Log successful login to security audit
-      await supabase.from('security_audit_logs').insert({
-        event_type: 'admin_login_success',
-        user_id: adminUsers.id,
-        action: 'admin_login',
-        risk_level: 'low',
+      // تسجيل نجاح الدخول
+      await supabase.from('sensitive_data_audit').insert({
+        resource_type: 'admin_login',
+        resource_id: loginResult.user_email,
+        access_type: 'authentication',
+        data_classification: 'restricted',
+        success: true,
         metadata: {
-          email: adminUsers.email,
-          role: adminUsers.role,
-          timestamp: new Date().toISOString(),
-          user_agent: navigator.userAgent
+          role: loginResult.user_role,
+          session_created: true,
+          user_agent: navigator.userAgent,
+          timestamp: new Date().toISOString()
         }
       });
       
-      // Create user object for the app
+      // إنشاء كائن المستخدم للتطبيق
       const adminUser = {
-        id: adminUsers.id,
-        name: adminUsers.name,
-        email: adminUsers.email,
-        role: adminUsers.role
+        id: loginResult.user_id,
+        name: loginResult.user_name,
+        email: loginResult.user_email,
+        role: loginResult.user_role
       };
 
       onAuthSuccess(adminUser);
     } catch (err: any) {
-      console.error('Login error:', err);
+      console.error('Admin login error:', err);
       setError('حدث خطأ أثناء تسجيل الدخول');
       
-      // Log failed login attempt
+      // تسجيل الخطأ في النظام
       try {
-        await supabase.from('security_audit_logs').insert({
-          event_type: 'admin_login_failure',
-          action: 'admin_login_failed',
-          risk_level: 'medium',
+        await supabase.from('sensitive_data_audit').insert({
+          resource_type: 'admin_login',
+          resource_id: email,
+          access_type: 'authentication',
+          data_classification: 'restricted',
+          success: false,
           metadata: {
-            email: email,
             error: err.message,
-            timestamp: new Date().toISOString(),
-            user_agent: navigator.userAgent
+            error_type: 'system_error',
+            user_agent: navigator.userAgent,
+            timestamp: new Date().toISOString()
           }
         });
       } catch (logError) {
