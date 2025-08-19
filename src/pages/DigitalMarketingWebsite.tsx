@@ -156,7 +156,7 @@ const DigitalMarketingWebsite = () => {
       company: "شركة النور للتكنولوجيا",
       review: "خدمة متميزة وفريق يفهم احتياجاتنا. حققوا أهدافنا التسويقية بشكل يفوق التوقعات",
       rating: 5,
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png"
+      image: "/avatar-placeholder.png"
     },
     {
       name: "خالد الرشيد",
@@ -204,7 +204,7 @@ const DigitalMarketingWebsite = () => {
       role: "مطور تقنيات الويب",
       experience: "12+ سنة خبرة",
       speciality: "تطوير المنصات الرقمية",
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png"
+      image: "/avatar-placeholder.png"
     },
     {
       name: "لينا المنصوري",

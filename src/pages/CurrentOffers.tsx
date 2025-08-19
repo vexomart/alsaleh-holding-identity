@@ -551,7 +551,7 @@ const currentOffers = [
                 company: "مؤسسة البناء المتطور", 
                 text: "عمل احترافي بكل معنى الكلمة. التزام بالمواعيد، جودة عالية، وأسعار معقولة. حصلنا على هوية بصرية مميزة وموقع رائع.",
                 rating: 5,
-                avatar: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png",
+                avatar: "/avatar-placeholder.png",
                 project: "هوية بصرية + موقع",
                 gradient: "from-orange-500 to-red-500"
               }
