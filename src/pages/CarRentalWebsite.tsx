@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import BookingTracker from "@/components/BookingTracker";
+
 import InteractiveMap from "@/components/InteractiveMap";
 import BackButton from "@/components/ui/back-button";
 import { 
@@ -108,7 +108,7 @@ const CarRentalWebsite = () => {
                   تابع حالة حجزك ومراحل التنفيذ بالتفصيل مع إشعارات فورية
                 </p>
               </div>
-              <BookingTracker />
+              
             </TabsContent>
 
             <TabsContent value="map" className="space-y-6">

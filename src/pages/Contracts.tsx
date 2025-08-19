@@ -2,7 +2,7 @@ import { Check, FileText, Users, Calendar, Shield, Award, Building2, Mail, Phone
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ContractForms } from "@/components/ContractForms";
+
 
 const Contracts = () => {
   const contractSteps = [
@@ -424,7 +424,9 @@ const Contracts = () => {
               نماذج طلب التعاقد
             </h3>
             
-            <ContractForms />
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">صفحة العقود متاحة قريباً</p>
+      </div>
           </div>
 
           {/* Legal Terms */}

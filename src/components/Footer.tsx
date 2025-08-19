@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import WorkingHoursNotification from "@/components/WorkingHoursNotification";
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -732,7 +732,7 @@ const Footer = () => {
       </div>
 
       {/* Working Hours Notification */}
-      <WorkingHoursNotification />
+      
 
       {/* Job Application Dialog */}
       <Dialog open={showJobForm} onOpenChange={setShowJobForm}>

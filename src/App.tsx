@@ -10,7 +10,6 @@ import { MobileOptimizer } from "@/components/MobileOptimizer";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
-import { SecurityEnhancedAuth } from "@/components/SecurityEnhancedAuth";
 
 // Lazy load pages for better performance
 const About = lazy(() => import("./pages/About"));
@@ -116,8 +115,8 @@ const CarFleet = lazy(() => import("./pages/CarFleet"));
 const CarBooking = lazy(() => import("./pages/CarBooking"));
 const EmailTest = lazy(() => import("./pages/EmailTest"));
 const EnhancedDesignCategory = lazy(() => import("./pages/EnhancedDesignCategory"));
-const InvoiceAdmin = lazy(() => import("./pages/InvoiceAdmin"));
-const InvoiceViewer = lazy(() => import("./pages/InvoiceViewer"));
+
+
 const TechEcosystem = lazy(() => import("./pages/TechEcosystem"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const ConstructionWebsite = lazy(() => import("./pages/ConstructionWebsite"));
@@ -150,10 +149,6 @@ const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
 
-// Admin Components
-const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
-const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
-const PagesManager = lazy(() => import("./pages/admin/PagesManager"));
 
 // Loading component for better UX
 const PageLoader = () => (
@@ -185,7 +180,7 @@ const App = () => {
               
               {/* Main content with mobile optimizations */}
               <div className="relative z-10 mobile-tap mobile-scroll">
-                <SecurityEnhancedAuth />
+                
                 <ScrollToTop />
                 <Toaster />
                 <Sonner />
@@ -269,11 +264,6 @@ const App = () => {
             <Route path="/user-guide" element={<UserGuide />} />
             <Route path="/auth" element={<Auth />} />
             
-            {/* Admin Panel Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="pages" element={<PagesManager />} />
-            </Route>
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/hosting-services" element={<HostingServices />} />
@@ -330,8 +320,8 @@ const App = () => {
                 <Route path="/car-fleet" element={<CarFleet />} />
                 <Route path="/car-booking" element={<CarBooking />} />
                 <Route path="/email-test" element={<EmailTest />} />
-                <Route path="/invoice-admin" element={<InvoiceAdmin />} />
-                <Route path="/invoice-viewer/:id" element={<InvoiceViewer />} />
+                
+                
                 <Route path="/tech-ecosystem" element={<TechEcosystem />} />
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
                 <Route path="/digital-marketing" element={<DigitalMarketing />} />

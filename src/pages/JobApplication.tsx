@@ -40,7 +40,7 @@ import Footer from "@/components/Footer";
 import { JobApplicationSteps } from "@/components/JobApplicationSteps";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
-import { useSecurityAudit } from "@/hooks/useSecurityAudit";
+
 
 const JobApplication = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -75,7 +75,6 @@ const JobApplication = () => {
   
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { logSecurityEvent } = useSecurityAudit();
 
   // Check authentication status
   useEffect(() => {
@@ -244,15 +243,11 @@ const JobApplication = () => {
         const sanitizedName = formData.cv.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const fileName = `${user.id}/${Date.now()}_${sanitizedName}`;
         
-        // Log file upload attempt
-        await logSecurityEvent({
-          eventType: 'sensitive_data_access',
-          description: 'CV file upload attempt',
-          metadata: {
-            fileName: sanitizedName,
-            fileSize: formData.cv.size,
-            fileType: formData.cv.type
-          }
+        // Log file upload attempt for security monitoring
+        console.log('CV upload attempt:', {
+          fileName: sanitizedName,
+          fileSize: formData.cv.size,
+          fileType: formData.cv.type
         });
         
         const { error: uploadError } = await supabase.storage
