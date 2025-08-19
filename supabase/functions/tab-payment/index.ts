@@ -19,20 +19,22 @@ serve(async (req) => {
 
     const { amount, offer_title = "خدمة تقنية" } = requestData;
 
-    // إنشاء رابط دفع تجريبي
-    const testPaymentUrl = `https://pay.tap.company/test-${Date.now()}`;
     const transactionId = `test-${Date.now()}`;
-
+    
+    // إنشاء رد ناجح مع توجيه داخلي
+    const currentUrl = new URL(req.headers.get("referer") || "https://alsalehholding.com");
+    const baseUrl = `${currentUrl.protocol}//${currentUrl.host}`;
+    
     const response = {
       success: true,
-      payment_url: testPaymentUrl,
+      payment_url: `${baseUrl}/payment-success?test=true&amount=${amount}&offer=${encodeURIComponent(offer_title)}`,
       transaction_id: transactionId,
       invoice_number: `INV-${Date.now()}`,
       amount: amount || 50,
       currency: "SAR",
       status: "pending",
       payment_method: "TAB",
-      message: "تم إنشاء رابط دفع تجريبي بنجاح",
+      message: "تم إنشاء رابط الدفع بنجاح - وضع الاختبار",
       isTest: true
     };
 
