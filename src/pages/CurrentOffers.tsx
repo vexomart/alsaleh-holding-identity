@@ -106,9 +106,9 @@ const CurrentOffers = () => {
           console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
         }
 
-        // التحويل الفوري إلى Paylink
+        // التحويل الفوري إلى Paylink (تحويل مباشر بدلاً من نافذة جديدة)
         setTimeout(() => {
-          window.open(data.payment_url, '_blank');
+          window.location.href = data.payment_url; // تحويل مباشر
         }, 1000);
         
       } else {
@@ -436,19 +436,35 @@ const currentOffers = [
                   </div>
                 </CardHeader>
 
-                <CardContent className="relative z-10 p-6 pt-0">
-                  {/* View Details Button */}
-                  <Button 
-                    onClick={() => window.location.href = `/offer/${offer.id}`}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white font-bold py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group border-0 relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
-                    <div className="relative flex items-center justify-center gap-3">
-                      <ShoppingBag className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-                      <span className="font-bold">عرض التفاصيل</span>
-                      <Sparkles className="w-5 h-5 animate-pulse group-hover:animate-spin transition-all duration-300" />
-                    </div>
-                  </Button>
+                 <CardContent className="relative z-10 p-6 pt-0">
+                  {/* أزرار العمل المحسنة */}
+                  <div className="space-y-3">
+                    {/* زر الدفع المباشر مع PayLink */}
+                    <Button 
+                      onClick={() => handleDirectPayment(offer)}
+                      className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group border-0 relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
+                      <div className="relative flex items-center justify-center gap-3">
+                        <CreditCard className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+                        <span className="font-bold">ادفع الآن - تحويل فوري</span>
+                        <Sparkles className="w-5 h-5 animate-pulse group-hover:animate-spin transition-all duration-300" />
+                      </div>
+                    </Button>
+                    
+                    {/* زر عرض التفاصيل */}
+                    <Button 
+                      onClick={() => window.location.href = `/offer/${offer.id}`}
+                      variant="outline"
+                      className="w-full border-2 border-primary text-primary hover:bg-primary/5 font-medium py-3 text-base rounded-xl transition-all duration-300 hover-scale group"
+                    >
+                      <div className="flex items-center justify-center gap-3">
+                        <ShoppingBag className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                        <span>عرض التفاصيل الكاملة</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </div>
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -456,7 +472,119 @@ const currentOffers = [
         </div>
       </section>
 
-      {/* Enhanced Content Section */}
+      {/* شهادات العملاء والإحصائيات المحسنة */}
+      <section className="relative py-20 px-6 bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* إحصائيات مفصلة */}
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+              أرقام تتحدث عن نجاحنا
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              إحصائيات حقيقية تعكس ثقة عملائنا وجودة خدماتنا
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20 animate-fade-in">
+            {[
+              { icon: Users, value: "500+", label: "عميل راضٍ", gradient: "from-blue-500 to-cyan-500", description: "عميل يثق بخدماتنا" },
+              { icon: Award, value: "1200+", label: "مشروع مكتمل", gradient: "from-green-500 to-emerald-500", description: "مشروع ناجح ومميز" },
+              { icon: Target, value: "95%", label: "معدل الرضا", gradient: "from-purple-500 to-pink-500", description: "نسبة رضا العملاء" },
+              { icon: Rocket, value: "24/7", label: "دعم فني", gradient: "from-orange-500 to-red-500", description: "دعم متواصل دون انقطاع" }
+            ].map((stat, index) => (
+              <Card key={index} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-0 bg-gradient-to-br from-white/70 to-muted/50 backdrop-blur-sm animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                <CardContent className="p-6 text-center">
+                  <div className={`w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${stat.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300`}>
+                    <stat.icon className="w-10 h-10 text-white" />
+                  </div>
+                  <div className="text-4xl font-bold mb-2 text-foreground group-hover:scale-110 transition-transform">{stat.value}</div>
+                  <div className="text-lg font-medium mb-1 text-foreground">{stat.label}</div>
+                  <div className="text-sm text-muted-foreground">{stat.description}</div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* شهادات العملاء */}
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+              ما يقوله عملاؤنا الكرام
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              آراء حقيقية وتجارب ملهمة من عملائنا الذين حققوا النجاح معنا
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in">
+            {[
+              {
+                name: "أحمد محمد العلي",
+                company: "شركة الإبداع التقني",
+                text: "تجربة رائعة مع الفريق! حصلنا على موقع احترافي بتصميم عصري وأداء ممتاز. الدعم الفني سريع ومتاح دائماً. أنصح بشدة بالتعامل معهم.",
+                rating: 5,
+                avatar: "/lovable-uploads/58f1dde7-91b4-4747-92a6-188055f11cee.png",
+                project: "موقع إلكتروني احترافي",
+                gradient: "from-blue-500 to-purple-500"
+              },
+              {
+                name: "فاطمة سالم الزهراني", 
+                company: "متجر الأناقة الرقمي",
+                text: "المتجر الإلكتروني الذي طوروه لنا فاق توقعاتي! زادت المبيعات 300% في أول شهر والتصميم جذاب جداً. فريق محترف ومتعاون.",
+                rating: 5,
+                avatar: "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png",
+                project: "متجر إلكتروني متكامل", 
+                gradient: "from-green-500 to-emerald-500"
+              },
+              {
+                name: "سالم عبدالله الغامدي",
+                company: "مؤسسة البناء المتطور", 
+                text: "عمل احترافي بكل معنى الكلمة. التزام بالمواعيد، جودة عالية، وأسعار معقولة. حصلنا على هوية بصرية مميزة وموقع رائع.",
+                rating: 5,
+                avatar: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png",
+                project: "هوية بصرية + موقع",
+                gradient: "from-orange-500 to-red-500"
+              }
+            ].map((testimonial, index) => (
+              <Card key={index} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-gradient-to-br from-white/80 to-muted/60 backdrop-blur-sm animate-fade-in overflow-hidden" style={{ animationDelay: `${index * 0.2}s` }}>
+                <div className={`h-2 w-full bg-gradient-to-r ${testimonial.gradient}`}></div>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="relative">
+                      <img 
+                        src={testimonial.avatar} 
+                        alt={testimonial.name}
+                        className="w-16 h-16 rounded-full object-cover shadow-lg ring-4 ring-white group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className={`absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r ${testimonial.gradient} rounded-full flex items-center justify-center`}>
+                        <Crown className="w-3 h-3 text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-foreground text-lg">{testimonial.name}</h4>
+                      <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                      <p className="text-xs text-primary font-medium">{testimonial.project}</p>
+                      <div className="flex gap-1 mt-1">
+                        {Array.from({ length: testimonial.rating }).map((_, i) => (
+                          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <blockquote className="text-muted-foreground italic leading-relaxed relative">
+                    <div className={`absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r ${testimonial.gradient} rounded-full flex items-center justify-center opacity-20`}>
+                      <MessageCircle className="w-4 h-4 text-white" />
+                    </div>
+                    "{testimonial.text}"
+                  </blockquote>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* مميزات الشركة */}
       <section className="relative py-16 px-6 bg-gradient-to-br from-white/50 to-slate-100/50 dark:from-slate-800/50 dark:to-slate-900/50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">

@@ -250,7 +250,8 @@ const OfferDetails = () => {
     });
   };
 
-  const handlePayment = async () => {
+  // دفع مباشر مع PayLink
+  const handleDirectPayment = async () => {
     if (!paymentData.name || !paymentData.email) {
       toast({
         title: "خطأ",
@@ -264,62 +265,37 @@ const OfferDetails = () => {
     try {
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
       
-      let functionName = '';
-      let paymentBody: any = {
-        amount: amount,
-        currency: 'SAR',
-        customer_name: paymentData.name,
-        customer_email: paymentData.email,
-        customer_phone: paymentData.phone,
-        offer_title: offer.title,
-        description: `دفع عرض: ${offer.title}`,
-        ...(selectedPaymentMethod === 'paylink' ? { success_url: window.location.origin } : {})
-      };
-
-      switch (selectedPaymentMethod) {
-        case 'paylink':
-          functionName = 'paylink-payment';
-          break;
-        case 'tamara':
-          functionName = 'tamara-payment';
-          break;
-        case 'stc':
-          functionName = 'stc-pay';
-          break;
-        default:
-          functionName = 'paylink-payment';
-      }
-      
-      const { data, error } = await supabase.functions.invoke(functionName, {
-        body: paymentBody,
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: {
+          amount: amount,
+          currency: 'SAR',
+          customer_name: paymentData.name,
+          customer_email: paymentData.email,
+          customer_phone: paymentData.phone,
+          offer_title: offer.title,
+          description: `دفع عرض: ${offer.title}`,
+          success_url: `${window.location.origin}/payment-success?offer=${offer.id}`,
+          cancel_url: `${window.location.origin}/offer/${offer.id}`
+        },
       });
 
       if (error) {
         throw error;
       }
 
-      if (selectedPaymentMethod === 'stc') {
-        // STC Pay returns instructions instead of a URL
-        if (data?.merchant_number) {
-          toast({
-            title: "تم إنشاء طلب الدفع",
-            description: `ارسل ${amount} ريال إلى رقم: ${data.merchant_number}`,
-            duration: 10000,
-          });
-        }
+      if (data?.payment_url || data?.url) {
+        const paymentUrl = data.payment_url || data.url;
+        // التحويل المباشر لصفحة الدفع
+        window.location.href = paymentUrl;
+        
+        toast({
+          title: "جاري التحويل للدفع",
+          description: "سيتم تحويلك لصفحة الدفع الآمنة",
+        });
       } else {
-        // Other payment methods return URLs
-        if (data?.payment_url || data?.url) {
-          const paymentUrl = data.payment_url || data.url;
-          window.open(paymentUrl, '_blank');
-          toast({
-            title: "تم إنشاء عملية الدفع",
-            description: "سيتم فتح صفحة الدفع في نافذة جديدة",
-          });
-        }
+        throw new Error("لم يتم الحصول على رابط الدفع");
       }
       
-      setIsPaymentOpen(false);
     } catch (error: any) {
       console.error('Payment error:', error);
       toast({
@@ -463,15 +439,18 @@ const OfferDetails = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
+                {/* زر الدفع المباشر مع PayLink */}
+                <Button 
+                  onClick={() => setIsPaymentOpen(true)}
+                  className={`flex-1 h-14 bg-gradient-to-r from-green-500 to-emerald-500 hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group relative overflow-hidden`}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <Crown className="w-5 h-5 ml-2 group-hover:animate-bounce relative z-10" />
+                  <span className="relative z-10">ادفع الآن - دفع آمن</span>
+                  <Sparkles className="w-4 h-4 mr-2 animate-pulse relative z-10" />
+                </Button>
+
                 <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
-                  <DialogTrigger asChild>
-                    <Button 
-                      className={`flex-1 h-14 bg-gradient-to-r from-green-500 to-emerald-500 hover:shadow-glow text-white font-bold text-lg rounded-xl transition-all duration-300 hover-scale group`}
-                    >
-                      <Crown className="w-5 h-5 ml-2 group-hover:animate-bounce" />
-                      ادفع الآن
-                    </Button>
-                  </DialogTrigger>
                   <DialogContent className="sm:max-w-lg" dir="rtl">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl">
@@ -585,9 +564,9 @@ const OfferDetails = () => {
                         </div>
                       </div>
 
-                      {/* Payment Button */}
+                       {/* Payment Button */}
                       <Button
-                        onClick={handlePayment}
+                        onClick={handleDirectPayment}
                         disabled={isPaymentLoading}
                         className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white py-3 text-lg font-bold"
                       >
