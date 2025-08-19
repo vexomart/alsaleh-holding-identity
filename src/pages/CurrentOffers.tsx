@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { CountdownTimer } from "@/components/CountdownTimer";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,7 +44,7 @@ const currentOffers = [
     originalPrice: "15000",
     currentPrice: "5999",
     discount: "35%",
-    timeLeft: "14 يوم",
+    timeLeft: "25 يوم",
     features: [
       "تصميم مخصص وفريد احترافي",
       "استضافة مجانية لسنة كاملة",
@@ -69,7 +70,7 @@ const currentOffers = [
     originalPrice: "7699",
     currentPrice: "2999",
     discount: "61%",
-    timeLeft: "40 يوم",
+    timeLeft: "25 يوم",
     features: [
       "تصميم عصري ومتجاوب للمتجر",
       "نظام إدارة المنتجات والمخزون",
@@ -92,53 +93,27 @@ const currentOffers = [
   },
   {
     id: 3,
-    title: "متجر عبايتي 👗",
-    description: "متجر إلكتروني فاخر ومتكامل للعبايات العصرية مع تصميم عالمي مميز وتكامل مع الواتساب وتجربة تسوق استثنائية",
-    originalPrice: "8000",
-    currentPrice: "4599",
-    discount: "43%",
-    timeLeft: "20 يوم",
+    title: "كلمات مفتاحية قوية لموقعك SEO",
+    description: "تحليل شامل وإعداد كلمات مفتاحية قوية لتحسين ظهور موقعك في محركات البحث",
+    originalPrice: "999",
+    currentPrice: "499",
+    discount: "50%",
+    timeLeft: "25 يوم",
     features: [
-      "تصميم فاخر وعالمي حصري 👗",
-      "أقسام متنوعة للعبايات العصرية 🌟",
-      "تكامل مع الواتساب للطلبات 💬",
-      "تجربة تسوق استثنائية 🛍️",
-      "إدارة ومتابعة لمدة 6 شهور 📱",
-      "دعم فني كامل 🚀"
+      "تحليل شامل للمنافسين",
+      "بحث متقدم عن الكلمات المفتاحية",
+      "تقرير مفصل بأفضل الكلمات",
+      "استراتيجية SEO & SEM متكاملة",
+      "تنفيذ من 4-6 أيام",
+      "دعم فني لمدة شهر"
     ],
-    badge: "حصري",
-    icon: Gift,
-    gradientFrom: "from-pink-500",
-    gradientTo: "to-purple-600",
-    accentColor: "text-pink-500",
-    bgPattern: "bg-pink-50",
-    category: "متجر العبايات"
-  },
-  {
-    id: 4,
-    title: "حزمة الهوية البصرية الشاملة",
-    description: "تصميم هوية بصرية متكاملة تعكس قيم وشخصية علامتك التجارية مع جميع المطبوعات",
-    originalPrice: "8000",
-    currentPrice: "4800",
-    discount: "40%",
-    timeLeft: "10 أيام",
-    features: [
-      "تصميم الشعار الاحترافي المميز",
-      "دليل الهوية البصرية الكامل",
-      "تصميم البطاقات التجارية الأنيقة",
-      "تصميم الخطابات الرسمية",
-      "قوالب وسائل التواصل الاجتماعي",
-      "تصميم اللافتات والإعلانات",
-      "ملفات بجودة عالية للطباعة",
-      "حقوق الملكية الكاملة لك"
-    ],
-    badge: "توفير 40%",
-    icon: Palette,
-    gradientFrom: "from-purple-500",
-    gradientTo: "to-pink-500",
-    accentColor: "text-purple-500",
-    bgPattern: "bg-purple-50",
-    category: "التصميم والهوية"
+    badge: "متخصص",
+    icon: Star,
+    gradientFrom: "from-orange-500",
+    gradientTo: "to-yellow-600",
+    accentColor: "text-orange-500",
+    bgPattern: "bg-orange-50",
+    category: "SEO والتسويق"
   }
 ];
 
@@ -688,6 +663,10 @@ const PaymentDialog = ({ offer, trigger }: { offer: any; trigger: React.ReactNod
 };
 
 const CurrentOffers = () => {
+  // تاريخ انتهاء العروض (25 يوم من الآن)
+  const offerEndDate = new Date();
+  offerEndDate.setDate(offerEndDate.getDate() + 25);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5 relative overflow-hidden">
       <Navigation />
@@ -725,15 +704,26 @@ const CurrentOffers = () => {
           
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-scale-in leading-tight">
             <span className="bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
-              العروض الحالية
+              العروض الحالية - 25 يوم فقط
             </span>
             <br />
             <span className="text-foreground">المميزة والحصرية</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
             اكتشف مجموعة من أفضل عروضنا الحصرية بأسعار استثنائية ولفترة محدودة. خدمات احترافية بجودة عالية وأسعار لا تُقاوم
           </p>
+
+          {/* Global Countdown Timer */}
+          <div className="mb-12 flex justify-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <div className="bg-white/90 dark:bg-slate-800/90 rounded-2xl p-6 shadow-xl border border-slate-200 dark:border-slate-700 backdrop-blur-sm">
+              <div className="flex items-center gap-4 mb-3">
+                <Sparkles className="w-6 h-6 text-orange-500" />
+                <span className="text-xl font-bold text-slate-700 dark:text-slate-300">جميع العروض تنتهي خلال:</span>
+              </div>
+              <CountdownTimer targetDate={offerEndDate} size="lg" />
+            </div>
+          </div>
 
           {/* Enhanced Features Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12 animate-fade-in" style={{ animationDelay: '0.4s' }}>
@@ -795,34 +785,36 @@ const CurrentOffers = () => {
       {/* Enhanced Offers Grid - Mobile Responsive */}
       <section className="relative px-3 sm:px-6 pb-20">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {currentOffers.map((offer, index) => (
               <Card 
                 key={offer.id} 
                 className={`group relative overflow-hidden border border-white/30 shadow-lg bg-gradient-to-br ${offer.bgPattern} backdrop-blur-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1 animate-fade-in hover-scale rounded-xl`}
-                style={{ animationDelay: `${index * 0.2}s` }}
+                style={{ animationDelay: `${index * 0.15}s` }}
               >
                 {/* Background Effects */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${offer.gradientFrom}/20 ${offer.gradientTo}/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/10 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-white/5 to-transparent rounded-full translate-y-12 -translate-x-12"></div>
                 
-                {/* Service-specific floating elements */}
-                <div className="absolute top-4 left-4 opacity-30 animate-float">
-                  <offer.icon className={`w-6 h-6 ${offer.accentColor}`} />
-                </div>
-                <div className="absolute bottom-4 right-4 opacity-20 animate-float-delayed">
-                  <Sparkles className={`w-4 h-4 ${offer.accentColor}`} />
+                {/* Timer and Badge */}
+                <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-start">
+                  <CountdownTimer targetDate={offerEndDate} size="sm" />
+                  <Badge 
+                    className={`bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} text-white shadow-lg animate-bounce-gentle text-xs px-3 py-1.5 transform rotate-1 group-hover:rotate-0 transition-transform`}
+                  >
+                    {offer.badge}
+                  </Badge>
                 </div>
 
-                <CardHeader className="relative z-10 pb-3 sm:pb-4 p-4 sm:p-6">
+                <CardHeader className="relative z-10 pb-3 sm:pb-4 p-4 sm:p-6 pt-20">
                   <div className="flex items-start justify-between mb-3 sm:mb-4">
-                    <div className="space-y-2">
-                      <Badge 
-                        className={`bg-gradient-to-r ${offer.gradientFrom} ${offer.gradientTo} text-white shadow-lg animate-bounce-gentle text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2`}
-                      >
-                        {offer.badge}
-                      </Badge>
+                    <div className="space-y-2 flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`p-3 rounded-xl bg-gradient-to-br ${offer.gradientFrom} ${offer.gradientTo} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                          <offer.icon className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
                       <div className="text-xs text-muted-foreground bg-white/50 rounded-full px-2 py-1 inline-block">
                         {offer.category}
                       </div>
