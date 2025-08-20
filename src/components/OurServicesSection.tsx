@@ -163,51 +163,27 @@ const OurServicesSection = () => {
                 <CardContent className="relative z-10 p-3 sm:p-4 md:p-6 lg:p-8 xl:p-10 w-full">
                   {/* Mobile-First Responsive Animated Icon Container with Enhanced Effects */}
                   <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-10 relative flex justify-center sm:justify-start">
-                    {/* Pulsing Background Ring */}
-                    <div className={cn(
-                      "absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-xl sm:rounded-2xl lg:rounded-3xl",
-                      "bg-gradient-to-br opacity-20 animate-pulse blur-lg",
-                      service.gradient
-                    )}></div>
-                    
                      <div className={cn(
                        "relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18 rounded-xl sm:rounded-2xl lg:rounded-3xl flex items-center justify-center transition-all duration-700",
-                       "bg-gradient-to-br shadow-md sm:shadow-lg lg:shadow-xl xl:shadow-2xl transform-gpu",
-                       service.gradient,
+                       "bg-slate-100 dark:bg-slate-700 shadow-md sm:shadow-lg lg:shadow-xl xl:shadow-2xl transform-gpu",
                        isActive ? "animate-icon-float scale-110" : "",
-                       `shadow-${service.glowColor}`,
-                       "border-2 border-white/30"
+                       "border-2 border-slate-200 dark:border-slate-600"
                      )}>
                        <IconComponent 
                          className={cn(
-                           "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-9 xl:h-9 text-white transition-all duration-700 filter drop-shadow-lg",
+                           "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-9 xl:h-9 text-slate-600 dark:text-slate-300 transition-all duration-700",
                            isActive ? "animate-bounce-slow scale-110" : ""
                          )}
                        />
                        
-                       {/* Enhanced Multi-layered Glow Rings */}
                        <div className={cn(
-                         "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-1000",
-                         "bg-gradient-to-br blur-md sm:blur-lg lg:blur-xl",
-                         service.gradient,
-                         isActive && "animate-pulse opacity-40 sm:opacity-50"
-                       )}></div>
-                       
-                       <div className={cn(
-                         "absolute -inset-1 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-1000",
-                         "bg-gradient-to-br blur-2xl",
-                         service.gradient,
-                         "animate-pulse"
-                       )}></div>
-                       
-                       <div className={cn(
-                         "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl border border-white/20 sm:border-2 sm:border-white/30 transition-all duration-1000",
-                         isActive ? "animate-rotate border-white/50" : ""
+                         "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl border border-slate-300/30 dark:border-slate-500/30 transition-all duration-1000",
+                         isActive ? "border-slate-400/50 dark:border-slate-400/50" : ""
                        )}></div>
                        
                        {/* Enhanced Corner Sparkles */}
                        <Sparkles className={cn(
-                         "absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 lg:-top-2 lg:-right-2 w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-white/80 transition-all duration-500",
+                         "absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 lg:-top-2 lg:-right-2 w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-slate-500 dark:text-slate-400 transition-all duration-500",
                          isActive ? "animate-pulse scale-125" : "opacity-0"
                        )} />
                      </div>
@@ -273,14 +249,13 @@ const OurServicesSection = () => {
                          <span className="text-sm sm:text-base lg:text-lg font-black font-cairo relative whitespace-nowrap">
                            المزيد
                          </span>
-                         <div className={cn(
-                           "relative w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-r flex items-center justify-center transition-all duration-500 flex-shrink-0",
-                           service.gradient,
-                           "shadow-sm sm:shadow-md lg:shadow-lg",
-                           "border-2 border-white/30",
-                           "transform-gpu"
-                         )}>
-                           <ArrowLeft className="relative z-10 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white transition-transform duration-300" />
+                          <div className={cn(
+                            "relative w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-slate-200 dark:bg-slate-600 flex items-center justify-center transition-all duration-500 flex-shrink-0",
+                            "shadow-sm sm:shadow-md lg:shadow-lg",
+                            "border-2 border-slate-300 dark:border-slate-500",
+                            "transform-gpu"
+                          )}>
+                           <ArrowLeft className="relative z-10 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-slate-600 dark:text-slate-300 transition-transform duration-300" />
                            
                            {/* Rotating Ring */}
                            <div className="absolute inset-0 rounded-lg sm:rounded-xl lg:rounded-2xl border border-white/40 transition-transform duration-1000"></div>
