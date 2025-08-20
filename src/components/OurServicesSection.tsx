@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Code, Package, Megaphone, Building, PenTool, ArrowLeft, Sparkles, Zap, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -253,7 +253,7 @@ const OurServicesSection = () => {
                              "border border-transparent",
                              "shadow-sm whitespace-nowrap"
                            )}
-                           style={{ animationDelay: `${idx * 0.1}s` }}
+                            style={{ animationDelay: `${idx * 0.1}s` }}
                          >
                            {feature}
                          </span>

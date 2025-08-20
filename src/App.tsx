@@ -1,14 +1,11 @@
+import React, { lazy, Suspense, useRef } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-
 import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRef } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
-
-import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 
 // Lazy load pages for better performance
