@@ -63,7 +63,6 @@ const AutomationSystem = () => {
   const [subscriptionPlans, setSubscriptionPlans] = useState([]);
   const [loadingPlans, setLoadingPlans] = useState(true);
   const [processingPayment, setProcessingPayment] = useState(null);
-  const [user, setUser] = useState(null);
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -81,17 +80,8 @@ const AutomationSystem = () => {
 
   useEffect(() => {
     fetchSubscriptionPlans();
-    checkAuth();
   }, []);
 
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-    
-    if (user) {
-      await checkCurrentSubscription(user.id);
-    }
-  };
 
   const checkCurrentSubscription = async (userId) => {
     try {

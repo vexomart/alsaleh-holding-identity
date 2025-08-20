@@ -43,24 +43,14 @@ const BusinessServices = () => {
   const [subscriptionPlans, setSubscriptionPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processingPayment, setProcessingPayment] = useState(null);
-  const [user, setUser] = useState(null);
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
     fetchSubscriptionPlans();
-    checkAuth();
   }, []);
 
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-    
-    if (user) {
-      await checkCurrentSubscription(user.id);
-    }
-  };
 
   const checkCurrentSubscription = async (userId) => {
     try {
@@ -111,16 +101,7 @@ const BusinessServices = () => {
   };
 
   const handleSubscribe = async (plan) => {
-    if (!user) {
-      toast({
-        title: "تسجيل الدخول مطلوب",
-        description: "يرجى تسجيل الدخول أولاً للاشتراك",
-        variant: "destructive",
-      });
-      navigate('/auth');
-      return;
-    }
-
+    // Remove user authentication requirement
     if (currentSubscription) {
       toast({
         title: "لديك اشتراك نشط",
