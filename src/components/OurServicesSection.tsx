@@ -74,31 +74,54 @@ const OurServicesSection = () => {
   }, []);
 
   return (
-    <section className="relative py-8 sm:py-12 md:py-16 lg:py-20 xl:py-28 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 font-inter">
-      {/* Premium Corporate Background */}
-      <div className="absolute inset-0">
-        {/* Geometric Pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-10 sm:opacity-20 dark:opacity-5 sm:dark:opacity-10" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="enterprise-grid" width="40" height="40" patternUnits="userSpaceOnUse" className="sm:w-[60px] sm:h-[60px] lg:w-[80px] lg:h-[80px]">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.2" className="sm:strokeWidth-[0.4] lg:strokeWidth-[0.5]"/>
-              <circle cx="20" cy="20" r="0.8" fill="currentColor" opacity="0.3" className="sm:r-[1] lg:r-[1.2]"/>
-              <path d="M 10 10 L 30 10 L 30 30 L 10 30 Z" fill="none" stroke="currentColor" strokeWidth="0.2" opacity="0.15" className="sm:strokeWidth-[0.25] lg:strokeWidth-[0.3]"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#enterprise-grid)" className="text-blue-600 dark:text-blue-400"/>
-        </svg>
+    <section className="relative py-8 sm:py-12 md:py-16 lg:py-20 xl:py-28 overflow-hidden font-inter">
+      {/* خلفية مميزة ومبتكرة */}
+      <div className="absolute inset-0 z-0">
+        {/* الطبقة الرئيسية للخلفية */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100/30 dark:from-slate-900 dark:via-slate-800/90 dark:to-slate-900"></div>
         
-        {/* Mobile-Optimized Floating Corporate Elements */}
-        <div className="absolute top-8 right-8 w-32 h-32 sm:top-12 sm:right-12 sm:w-48 sm:h-48 md:top-15 md:right-15 md:w-64 md:h-64 lg:top-20 lg:right-20 lg:w-96 lg:h-96 bg-gradient-to-br from-blue-400/6 to-indigo-600/8 sm:from-blue-400/8 sm:to-indigo-600/12 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-float"></div>
-        <div className="absolute bottom-12 left-8 w-28 h-28 sm:bottom-16 sm:left-12 sm:w-40 sm:h-40 md:bottom-20 md:left-15 md:w-56 md:h-56 lg:bottom-32 lg:left-20 lg:w-80 lg:h-80 bg-gradient-to-tr from-purple-400/6 to-pink-500/8 sm:from-purple-400/8 sm:to-pink-500/10 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-float-delayed"></div>
-        <div className="absolute top-1/3 left-1/3 w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-gradient-to-r from-cyan-300/4 to-blue-400/6 sm:from-cyan-300/6 sm:to-blue-400/8 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-pulse" style={{ animationDuration: "4s" }}></div>
+        {/* العناصر الجرافيكية المتحركة */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+          {/* دوائر متدرجة متحركة */}
+          <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-indigo-600/15 rounded-full blur-3xl animate-float opacity-60"></div>
+          <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-gradient-to-tr from-purple-400/15 to-pink-500/10 rounded-full blur-3xl animate-float-delayed opacity-50"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-cyan-400/12 to-blue-500/8 rounded-full blur-2xl animate-pulse opacity-40" style={{ animationDuration: "6s" }}></div>
+          
+          {/* خطوط هندسية ديناميكية */}
+          <svg className="absolute inset-0 w-full h-full opacity-10 dark:opacity-5" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="premium-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.3"/>
+                <circle cx="30" cy="30" r="2" fill="currentColor" opacity="0.4"/>
+                <path d="M 20 20 L 40 20 L 40 40 L 20 40 Z" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.2"/>
+              </pattern>
+              <linearGradient id="grid-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.1"/>
+                <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.15"/>
+                <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.1"/>
+              </linearGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#premium-grid)" className="text-blue-600 dark:text-blue-400"/>
+          </svg>
+          
+          {/* عناصر ضوئية متحركة */}
+          <div className="absolute top-16 right-16 w-3 h-24 bg-gradient-to-b from-blue-500/40 to-transparent rounded-full animate-pulse" style={{ animationDelay: "1s" }}></div>
+          <div className="absolute bottom-20 left-20 w-24 h-3 bg-gradient-to-r from-purple-500/40 to-transparent rounded-full animate-pulse" style={{ animationDelay: "2s" }}></div>
+          
+          {/* نجوم متلألئة */}
+          <div className="absolute top-32 left-1/3 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-60" style={{ animationDelay: "0.5s" }}></div>
+          <div className="absolute bottom-1/4 right-1/3 w-1.5 h-1.5 bg-blue-400 rounded-full animate-ping opacity-40" style={{ animationDelay: "1.5s" }}></div>
+          <div className="absolute top-2/3 left-16 w-1 h-1 bg-purple-400 rounded-full animate-ping opacity-50" style={{ animationDelay: "3s" }}></div>
+          
+          {/* تأثير الضباب اللامع */}
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/5 to-transparent pointer-events-none"></div>
+        </div>
         
-        {/* Mobile-Responsive Corporate Lines */}
-        <div className="hidden md:block absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-200/20 sm:via-blue-200/30 to-transparent"></div>
-        <div className="hidden md:block absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-purple-200/20 sm:via-purple-200/30 to-transparent"></div>
+        {/* طبقة التشويش الأنيقة */}
+        <div className="absolute inset-0 backdrop-blur-[0.5px] bg-white/10 dark:bg-black/10"></div>
       </div>
       
+      {/* المحتوى */}
       <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 relative z-10 max-w-7xl">
         {/* Mobile-First Enterprise Header */}
         <div className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-28 animate-fade-in">
