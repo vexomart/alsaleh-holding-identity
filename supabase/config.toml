@@ -10,6 +10,9 @@ verify_jwt = false
 [functions.tap-payment]
 verify_jwt = false
 
+[functions.verify-tap-payment]
+verify_jwt = false
+
 # Public functions (no JWT required)
 [functions.contact-form]
 verify_jwt = false

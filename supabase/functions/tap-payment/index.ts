@@ -133,10 +133,10 @@ serve(async (req) => {
         id: "src_all"
       },
       post: {
-        url: `${req.headers.get('origin') || 'https://alialshehriholding.com'}/payment-success`
+        url: `https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/verify-tap-payment`
       },
       redirect: {
-        url: `${req.headers.get('origin') || 'https://alialshehriholding.com'}/payment-success`
+        url: `https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/verify-tap-payment`
       }
     };
 
