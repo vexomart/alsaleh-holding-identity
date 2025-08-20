@@ -9,25 +9,21 @@ import businessCardsProductImg from "@/assets/printing/business-cards-category.j
 import ledBusinessCardsImg from "@/assets/printing/led-business-cards.jpg";
 import spotUvBusinessCardsImg from "@/assets/printing/spot-uv-business-cards.jpg";
 import goldFoilBusinessCardsImg from "@/assets/printing/gold-foil-business-cards.jpg";
+import silverFoilBusinessCardsImg from "@/assets/printing/silver-foil-business-cards.jpg";
+import texturedFabricBusinessCardsImg from "@/assets/printing/textured-fabric-business-cards.jpg";
+import threeDEffectBusinessCardsImg from "@/assets/printing/3d-effect-business-cards.jpg";
 
 const BusinessCards = () => {
   const products = [
     {
       title: "كروت شخصية أساسية ورقمية",
-      description: "كروت شخصية عصرية تجمع بين الأناقة الكلاسيكية والتقنيات الذكية الحديثة",
+      description: "كروت شخصية عصرية تجمع بين الأناقة الكلاسيكية والتقنيات الذكية",
       price: "من 199 ريال",
       originalPrice: "349 ريال",
       image: businessCardsProductImg,
       rating: 4.9,
       reviews: 430,
-      features: [
-        "تصميم كلاسيكي أنيق مع لمسة عصرية",
-        "ورق مقوى فاخر 350 جرام",
-        "طباعة عالية الدقة بألوان زاهية",
-        "تشطيب لامع، مطفي، أو معدني",
-        "دعم تقنية NFC الذكية (اختياري)",
-        "كود QR مخصص للمشاركة السريعة"
-      ],
+      features: ["تصميم كلاسيكي أنيق", "ورق مقوى فاخر 350 جرام", "دعم تقنية NFC الذكية", "كود QR مخصص"],
       category: "متميز",
       icon: CreditCard,
       gradient: "from-blue-600 via-purple-600 to-pink-600"
@@ -40,14 +36,7 @@ const BusinessCards = () => {
       image: ledBusinessCardsImg,
       rating: 4.8,
       reviews: 185,
-      features: [
-        "إضاءة LED متقدمة",
-        "بطارية قابلة للشحن",
-        "تحكم في الألوان والأنماط",
-        "مقاومة للماء والغبار",
-        "عمر بطارية طويل",
-        "تصميم أنيق ومبتكر"
-      ],
+      features: ["إضاءة LED متقدمة", "بطارية قابلة للشحن", "تحكم في الألوان", "مقاومة للماء"],
       category: "مبتكر",
       icon: Smartphone,
       gradient: "from-yellow-500 via-orange-500 to-red-500"
@@ -60,14 +49,7 @@ const BusinessCards = () => {
       image: spotUvBusinessCardsImg,
       rating: 4.7,
       reviews: 298,
-      features: [
-        "طلاء سبوت UV عالي اللمعان",
-        "ملمس ناعم وفاخر",
-        "مقاومة للخدوش والتآكل",
-        "إبراز التفاصيل المهمة",
-        "تأثير بصري متميز",
-        "جودة طباعة عالية"
-      ],
+      features: ["طلاء سبوت UV عالي اللمعان", "ملمس ناعم وفاخر", "مقاومة للخدوش", "تأثير بصري متميز"],
       category: "فاخر",
       icon: Sparkles,
       gradient: "from-purple-500 via-indigo-500 to-blue-500"
@@ -80,17 +62,49 @@ const BusinessCards = () => {
       image: goldFoilBusinessCardsImg,
       rating: 4.9,
       reviews: 342,
-      features: [
-        "ختم ذهبي حقيقي 24 قيراط",
-        "تصميم مخصص للختم",
-        "ورق فاخر عالي الجودة",
-        "لمسة نهائية أنيقة",
-        "مظهر راقي ومميز",
-        "تفاصيل دقيقة ومتقنة"
-      ],
+      features: ["ختم ذهبي حقيقي 24 قيراط", "تصميم مخصص للختم", "ورق فاخر عالي الجودة", "مظهر راقي ومميز"],
       category: "ملكي",
       icon: Star,
       gradient: "from-yellow-400 via-yellow-500 to-yellow-600"
+    },
+    {
+      title: "كروت شخصية مع ختم فضي",
+      description: "كروت شخصية بختم فضي أنيق يعطي لمسة عصرية راقية",
+      price: "من 319 ريال",
+      originalPrice: "459 ريال",
+      image: silverFoilBusinessCardsImg,
+      rating: 4.8,
+      reviews: 267,
+      features: ["ختم فضي عالي الجودة", "تشطيب معدني لامع", "تصميم أنيق وعصري", "مقاومة للتآكل"],
+      category: "أنيق",
+      icon: Star,
+      gradient: "from-gray-400 via-gray-500 to-gray-600"
+    },
+    {
+      title: "كروت شخصية مقمشة",
+      description: "كروت شخصية بملمس قماشي فاخر يضفي طابعاً مميزاً وأنيقاً",
+      price: "من 279 ريال",
+      originalPrice: "389 ريال",
+      image: texturedFabricBusinessCardsImg,
+      rating: 4.6,
+      reviews: 221,
+      features: ["ملمس قماشي فاخر", "نسيج طبيعي ناعم", "مقاومة للبهتان", "تصميم راقي ومميز"],
+      category: "مميز",
+      icon: Palette,
+      gradient: "from-teal-500 via-cyan-500 to-blue-500"
+    },
+    {
+      title: "كروت شخصية تأثير ثلاثي الأبعاد",
+      description: "كروت شخصية بتأثير ثلاثي الأبعاد لإطلالة مبتكرة وعصرية",
+      price: "من 429 ريال",
+      originalPrice: "599 ريال",
+      image: threeDEffectBusinessCardsImg,
+      rating: 4.9,
+      reviews: 156,
+      features: ["تأثير ثلاثي الأبعاد", "طباعة متعددة الطبقات", "عمق بصري مذهل", "تقنية حديثة"],
+      category: "عصري",
+      icon: QrCode,
+      gradient: "from-pink-500 via-rose-500 to-red-500"
     }
   ];
 
@@ -203,101 +217,100 @@ const BusinessCards = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map((product, index) => {
               const IconComponent = product.icon;
               return (
                 <Card 
                   key={index} 
-                  className="group border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale overflow-hidden bg-white animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  className="group border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale overflow-hidden bg-white animate-fade-in"
+                  style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-48 overflow-hidden">
                     <img 
                       src={product.image} 
                       alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-85`}></div>
-                    <div className="absolute inset-0 backdrop-blur-[0.5px]"></div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-80`}></div>
                     
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-3 py-1 text-sm font-bold shadow-lg">
+                    <div className="absolute top-2 right-2">
+                      <Badge className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-2 py-1 text-xs font-bold shadow-lg">
                         وفر {Math.round(((parseInt(product.originalPrice.replace(/[^\d]/g, '')) - parseInt(product.price.replace(/[^\d]/g, ''))) / parseInt(product.originalPrice.replace(/[^\d]/g, ''))) * 100)}%
                       </Badge>
                     </div>
                     
-                    <div className="absolute top-4 left-4">
-                      <Badge className={`bg-gradient-to-r ${product.gradient} text-white px-3 py-1 text-sm font-bold shadow-lg`}>
+                    <div className="absolute top-2 left-2">
+                      <Badge className={`bg-gradient-to-r ${product.gradient} text-white px-2 py-1 text-xs font-bold shadow-lg`}>
                         {product.category}
                       </Badge>
                     </div>
                     
-                    <div className="absolute bottom-4 left-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
+                    <div className="absolute bottom-2 left-2">
+                      <div className="flex items-center gap-1">
+                        <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-full px-2 py-0.5">
                           {[...Array(5)].map((_, i) => (
                             <Star 
                               key={i} 
-                              className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                              className={`w-3 h-3 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
                             />
                           ))}
                         </div>
-                        <span className="text-sm text-white font-bold bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
+                        <span className="text-xs text-white font-bold bg-black/30 backdrop-blur-sm rounded-full px-2 py-0.5">
                           ({product.reviews})
                         </span>
                       </div>
                     </div>
                     
-                    <div className="absolute bottom-4 right-4">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
-                        <IconComponent className="w-6 h-6 text-white" />
+                    <div className="absolute bottom-2 right-2">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                        <IconComponent className="w-4 h-4 text-white" />
                       </div>
                     </div>
                   </div>
                   
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+                  <CardHeader className="pb-2 p-4">
+                    <CardTitle className="text-base font-bold text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-2">
                       {product.title}
                     </CardTitle>
-                    <CardDescription className="text-gray-600">
+                    <CardDescription className="text-gray-600 text-sm line-clamp-2">
                       {product.description}
                     </CardDescription>
                   </CardHeader>
                   
-                  <CardContent className="space-y-4">
-                    {/* Features */}
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">المميزات المتضمنة:</h4>
-                      <div className="grid grid-cols-1 gap-2">
-                        {product.features.slice(0, 4).map((feature, featureIndex) => (
-                          <div key={featureIndex} className="flex items-center gap-2 text-sm">
-                            <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                            <span className="text-gray-600">{feature}</span>
+                  <CardContent className="space-y-3 p-4 pt-0">
+                    {/* Features - Compact */}
+                    <div className="space-y-1">
+                      <h4 className="text-xs font-medium text-gray-700 mb-1">المميزات:</h4>
+                      <div className="grid grid-cols-1 gap-1">
+                        {product.features.slice(0, 3).map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-center gap-1 text-xs">
+                            <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
+                            <span className="text-gray-600 truncate">{feature}</span>
                           </div>
                         ))}
-                        {product.features.length > 4 && (
+                        {product.features.length > 3 && (
                           <div className="text-xs text-blue-600 font-medium">
-                            +{product.features.length - 4} مميزات إضافية
+                            +{product.features.length - 3} مميزات إضافية
                           </div>
                         )}
                       </div>
                     </div>
                     
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                       <div>
-                        <span className="text-2xl font-bold text-green-600">{product.price}</span>
-                        <span className="text-sm text-gray-400 line-through mr-2">{product.originalPrice}</span>
+                        <span className="text-lg font-bold text-green-600">{product.price}</span>
+                        <span className="text-xs text-gray-400 line-through mr-1">{product.originalPrice}</span>
                       </div>
                     </div>
                     
-                    <div className="flex gap-2">
-                      <Button className={`flex-1 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white`}>
-                        <ShoppingCart className="w-4 h-4 mr-2" />
+                    <div className="flex gap-1">
+                      <Button className={`flex-1 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white text-xs py-2`}>
+                        <ShoppingCart className="w-3 h-3 mr-1" />
                         اطلب الآن
                       </Button>
-                      <Button variant="outline" size="icon" className="hover:bg-gray-50">
-                        <Eye className="w-4 h-4" />
+                      <Button variant="outline" size="sm" className="hover:bg-gray-50 px-2">
+                        <Eye className="w-3 h-3" />
                       </Button>
                     </div>
                   </CardContent>
