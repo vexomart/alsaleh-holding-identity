@@ -174,7 +174,7 @@ export default {
         "bounce-slow": "bounce-slow 3s ease-in-out infinite",
         "icon-float": "icon-float 4s ease-in-out infinite",
         "icon-pulse": "icon-pulse 3s ease-in-out infinite",
-        "shimmer": "shimmer 2s ease-in-out infinite",
+        "animate-rotate-slow": "rotate 8s linear infinite",
       },
     },
   },

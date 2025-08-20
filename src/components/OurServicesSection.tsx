@@ -151,12 +151,16 @@ const OurServicesSection = () => {
                 key={service.id}
                 className={cn(
                   "group relative overflow-hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl",
-                  "border border-slate-200/50 dark:border-slate-700/50 rounded-xl sm:rounded-2xl lg:rounded-3xl",
+                  "border-2 border-slate-200/60 dark:border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl",
                   "transition-all duration-700 transform hover:scale-[1.01] sm:hover:scale-[1.02] lg:hover:scale-[1.03] hover:-translate-y-0.5 sm:hover:-translate-y-1 lg:hover:-translate-y-2",
                   "shadow-md sm:shadow-lg lg:shadow-xl hover:shadow-lg sm:hover:shadow-xl lg:hover:shadow-2xl cursor-pointer",
+                  "hover:border-blue-400/60 dark:hover:border-blue-500/60",
                   isHovered && `hover:shadow-${service.glowColor.split("/")[0]}-500/15 sm:hover:shadow-${service.glowColor.split("/")[0]}-500/20`,
-                  isActive && "animate-pulse",
-                  "animate-fade-in w-full"
+                  isActive && "animate-pulse border-blue-400/80 dark:border-blue-500/80",
+                  "animate-fade-in w-full",
+                  "before:absolute before:inset-0 before:rounded-xl sm:before:rounded-2xl lg:before:rounded-3xl",
+                  "before:bg-gradient-to-r before:from-blue-500/0 before:via-blue-500/5 before:to-purple-500/0",
+                  "before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-700"
                 )}
                 style={{ 
                   animationDelay: `${index * 0.1}s`,
@@ -164,97 +168,145 @@ const OurServicesSection = () => {
                 onMouseEnter={() => setHoveredService(service.id)}
                 onMouseLeave={() => setHoveredService(null)}
               >
-                {/* Premium Background Gradient */}
+                {/* Animated Gradient Border */}
                 <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-3 sm:group-hover:opacity-5 transition-all duration-1000",
-                  service.bgGradient
+                  "absolute -inset-0.5 rounded-xl sm:rounded-2xl lg:rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-1000",
+                  "bg-gradient-to-r animate-pulse",
+                  service.gradient,
+                  "blur-sm group-hover:blur-none"
                 )}></div>
                 
-                {/* Mobile-Optimized Animated Corporate Border */}
+                {/* Premium Background Gradient with Animation */}
+                <div className={cn(
+                  "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-all duration-1000",
+                  service.bgGradient,
+                  "animate-shimmer"
+                )}></div>
+                
+                {/* Enhanced Animated Corporate Border */}
                 <div className={cn(
                   "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-700",
                   "bg-gradient-to-r p-px opacity-0 group-hover:opacity-100",
-                  service.gradient
+                  service.gradient,
+                  "animate-rotate-slow"
                 )}>
                   <div className="w-full h-full bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl lg:rounded-3xl"></div>
                 </div>
                 
-                {/* Shimmer effect */}
-                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full skew-x-12 rounded-xl sm:rounded-2xl lg:rounded-3xl"></div>
+                {/* Enhanced Multiple Shimmer Effects */}
+                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1500 group-hover:translate-x-full skew-x-12 rounded-xl sm:rounded-2xl lg:rounded-3xl"></div>
+                <div className="absolute inset-0 -translate-y-full bg-gradient-to-b from-transparent via-blue-400/10 to-transparent transition-transform duration-2000 group-hover:translate-y-full skew-y-12 rounded-xl sm:rounded-2xl lg:rounded-3xl opacity-0 group-hover:opacity-100" style={{ animationDelay: "0.5s" }}></div>
+                
+                {/* Floating Border Animation */}
+                <div className={cn(
+                  "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl border-2 transition-all duration-1000",
+                  "border-transparent group-hover:border-gradient-to-r",
+                  `group-hover:border-${service.gradient.split(' ')[1]}`,
+                  "animate-pulse opacity-0 group-hover:opacity-60"
+                )}></div>
                 
                 <CardContent className="relative z-10 p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
-                  {/* Mobile-First Responsive Animated Icon Container */}
-                  <div className="mb-4 sm:mb-6 lg:mb-8 xl:mb-10">
+                  {/* Mobile-First Responsive Animated Icon Container with Enhanced Effects */}
+                  <div className="mb-4 sm:mb-6 lg:mb-8 xl:mb-10 relative">
+                    {/* Pulsing Background Ring */}
+                    <div className={cn(
+                      "absolute inset-0 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-xl sm:rounded-2xl lg:rounded-3xl",
+                      "bg-gradient-to-br opacity-20 animate-pulse blur-lg",
+                      service.gradient
+                    )}></div>
+                    
                     <div className={cn(
                       "relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-xl sm:rounded-2xl lg:rounded-3xl flex items-center justify-center transition-all duration-700",
                       "bg-gradient-to-br shadow-md sm:shadow-lg lg:shadow-xl xl:shadow-2xl transform-gpu",
                       service.gradient,
-                      isActive ? "animate-icon-float" : "group-hover:animate-icon-pulse",
+                      isActive ? "animate-icon-float scale-110" : "group-hover:animate-icon-pulse",
                       "group-hover:scale-105 sm:group-hover:scale-110 group-hover:rotate-1 sm:group-hover:rotate-2 lg:group-hover:rotate-3",
-                      `shadow-${service.glowColor}`
+                      `shadow-${service.glowColor}`,
+                      "border-2 border-white/30 group-hover:border-white/50"
                     )}>
                       <IconComponent 
                         className={cn(
                           "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 text-white transition-all duration-700 filter drop-shadow-lg",
-                          isActive ? "animate-bounce-slow" : "group-hover:scale-110 sm:group-hover:scale-125",
+                          isActive ? "animate-bounce-slow scale-110" : "group-hover:scale-110 sm:group-hover:scale-125",
                           "group-hover:rotate-3 sm:group-hover:rotate-6 lg:group-hover:rotate-12"
                         )}
                       />
                       
-                      {/* Auto-rotating glow rings */}
+                      {/* Enhanced Multi-layered Glow Rings */}
                       <div className={cn(
                         "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-1000",
-                        "bg-gradient-to-br opacity-0 group-hover:opacity-40 sm:group-hover:opacity-60 blur-md sm:blur-lg lg:blur-xl",
+                        "bg-gradient-to-br opacity-0 group-hover:opacity-60 blur-md sm:blur-lg lg:blur-xl",
                         service.gradient,
-                        isActive && "animate-pulse opacity-30 sm:opacity-40"
+                        isActive && "animate-pulse opacity-40 sm:opacity-50"
+                      )}></div>
+                      
+                      <div className={cn(
+                        "absolute -inset-1 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-1000",
+                        "bg-gradient-to-br opacity-0 group-hover:opacity-30 blur-2xl",
+                        service.gradient,
+                        "animate-pulse"
                       )}></div>
                       
                       <div className={cn(
                         "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl border border-white/20 sm:border-2 sm:border-white/30 transition-all duration-1000",
-                        isActive ? "animate-rotate" : "group-hover:rotate-180 group-hover:scale-110 sm:group-hover:scale-125"
+                        isActive ? "animate-rotate border-white/50" : "group-hover:rotate-180 group-hover:scale-110 sm:group-hover:scale-125 group-hover:border-white/50"
                       )}></div>
                       
-                      {/* Corner sparkles */}
+                      {/* Floating Particles */}
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-white/80 rounded-full animate-ping opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-blue-400/80 rounded-full animate-ping opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ animationDelay: "0.3s" }}></div>
+                      
+                      {/* Enhanced Corner Sparkles */}
                       <Sparkles className={cn(
                         "absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 lg:-top-2 lg:-right-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white/80 transition-all duration-500",
-                        isActive ? "animate-pulse" : "opacity-0 group-hover:opacity-100"
+                        isActive ? "animate-pulse scale-125" : "opacity-0 group-hover:opacity-100 group-hover:rotate-12 group-hover:scale-110"
                       )} />
                     </div>
                   </div>
                   
-                  {/* Mobile-First Enhanced Responsive Content */}
+                  {/* Mobile-First Enhanced Content with Better Typography */}
                   <div className="space-y-3 sm:space-y-4 lg:space-y-5 xl:space-y-6">
-                    {/* Mobile-Optimized Bilingual Title */}
+                    {/* Enhanced Mobile-Optimized Title with Custom Typography */}
                     <div className="space-y-1 sm:space-y-1.5 lg:space-y-2">
                       <h3 className={cn(
-                        "text-lg sm:text-xl md:text-2xl lg:text-3xl font-black leading-tight transition-all duration-500 font-cairo",
-                        "text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400"
+                        "text-lg sm:text-xl md:text-2xl lg:text-3xl font-black leading-tight transition-all duration-500",
+                        "text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400",
+                        "font-cairo tracking-wide",
+                        "relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r",
+                        `after:${service.gradient} after:transition-all after:duration-500 group-hover:after:w-full`,
+                        "group-hover:scale-105 transform transition-transform duration-300"
                       )}>
                         {service.title}
                       </h3>
-                      <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 font-poppins tracking-wide uppercase">
+                      <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 font-poppins tracking-wider uppercase opacity-80 group-hover:opacity-100 transition-opacity duration-300">
                         {service.titleEn}
                       </p>
                     </div>
                     
                     <p className={cn(
                       "text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-medium",
-                      "group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors duration-500 font-cairo line-clamp-3 sm:line-clamp-none"
+                      "group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors duration-500",
+                      "font-cairo line-clamp-3 sm:line-clamp-none",
+                      "relative pl-3 border-l-2 border-transparent group-hover:border-blue-400/50 transition-all duration-500"
                     )}>
                       {service.description}
                     </p>
                     
-                    {/* Mobile-Optimized Feature Tags */}
+                    {/* Enhanced Mobile-Optimized Feature Tags with Animations */}
                     <div className="flex flex-wrap gap-1 sm:gap-1.5 lg:gap-2">
                       {service.features.map((feature, idx) => (
                         <span 
                           key={idx}
                           className={cn(
-                            "px-2 sm:px-2.5 lg:px-3 py-0.5 sm:py-1 text-xs font-semibold rounded-full transition-all duration-300",
+                            "px-2 sm:px-2.5 lg:px-3 py-0.5 sm:py-1 text-xs font-bold rounded-full transition-all duration-300",
                             "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300",
                             "group-hover:bg-blue-100 dark:group-hover:bg-blue-900/20",
-                            "group-hover:text-blue-600 dark:group-hover:text-blue-400 font-cairo"
+                            "group-hover:text-blue-600 dark:group-hover:text-blue-400 font-cairo",
+                            "border border-transparent group-hover:border-blue-300/50 dark:group-hover:border-blue-600/50",
+                            "hover:scale-105 transform transition-transform duration-200",
+                            "shadow-sm group-hover:shadow-md"
                           )}
+                          style={{ animationDelay: `${idx * 0.1}s` }}
                         >
                           {feature}
                         </span>
@@ -262,29 +314,59 @@ const OurServicesSection = () => {
                     </div>
                   </div>
                   
-                  {/* Mobile-First Responsive Premium Action Button */}
+                  {/* Enhanced Mobile-First Premium Action Button */}
                   <div className={cn(
                     "flex items-center gap-2 sm:gap-3 lg:gap-4 mt-4 sm:mt-6 lg:mt-8 font-bold transition-all duration-500",
-                    "text-blue-600 dark:text-blue-400"
+                    "text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300"
                   )}>
-                    <span className="text-sm sm:text-base lg:text-lg font-cairo">المزيد</span>
+                    <span className="text-sm sm:text-base lg:text-lg font-black font-cairo relative">
+                      المزيد
+                      <div className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></div>
+                    </span>
                     <div className={cn(
-                      "w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-r flex items-center justify-center transition-all duration-300",
+                      "relative w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-r flex items-center justify-center transition-all duration-500",
                       service.gradient,
-                      "group-hover:scale-105 sm:group-hover:scale-110 shadow-sm sm:shadow-md lg:shadow-lg"
+                      "group-hover:scale-110 sm:group-hover:scale-125 shadow-sm sm:shadow-md lg:shadow-lg",
+                      "border-2 border-white/30 group-hover:border-white/50",
+                      "hover:shadow-xl transform-gpu"
                     )}>
-                      <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white group-hover:-translate-x-0.5 transition-transform duration-300" />
+                      {/* Button Glow Effect */}
+                      <div className={cn(
+                        "absolute inset-0 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-r opacity-0 group-hover:opacity-60 blur-md transition-all duration-500",
+                        service.gradient
+                      )}></div>
+                      
+                      <ArrowLeft className="relative z-10 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white group-hover:-translate-x-1 transition-transform duration-300 group-hover:scale-110" />
+                      
+                      {/* Rotating Ring */}
+                      <div className="absolute inset-0 rounded-lg sm:rounded-xl lg:rounded-2xl border border-white/40 group-hover:rotate-180 transition-transform duration-1000"></div>
                     </div>
                   </div>
                 </CardContent>
                 
-                {/* Mobile-Responsive Corner Indicators */}
-                <div className={cn(
-                  "absolute top-3 right-3 sm:top-4 sm:right-4 lg:top-6 lg:right-6 w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-3 lg:h-3 rounded-full transition-all duration-500",
-                  `bg-gradient-to-r ${service.gradient}`,
-                  isActive ? "scale-125 sm:scale-150 animate-pulse" : "group-hover:scale-110 sm:group-hover:scale-125",
-                  `shadow-sm sm:shadow-md lg:shadow-lg shadow-${service.glowColor}`
-                )}></div>
+                {/* Enhanced Mobile-Responsive Corner Indicators with Multiple Effects */}
+                <div className="absolute top-3 right-3 sm:top-4 sm:right-4 lg:top-6 lg:right-6 flex items-center gap-1">
+                  {/* Main Indicator */}
+                  <div className={cn(
+                    "w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-3 lg:h-3 rounded-full transition-all duration-500",
+                    `bg-gradient-to-r ${service.gradient}`,
+                    isActive ? "scale-150 sm:scale-175 animate-pulse" : "group-hover:scale-125 sm:group-hover:scale-150",
+                    `shadow-sm sm:shadow-md lg:shadow-lg shadow-${service.glowColor}`,
+                    "border border-white/50"
+                  )}></div>
+                  
+                  {/* Orbital Ring */}
+                  <div className={cn(
+                    "absolute w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full border border-blue-400/20 opacity-0 group-hover:opacity-100 transition-all duration-1000",
+                    isActive ? "animate-rotate" : "group-hover:animate-rotate"
+                  )}></div>
+                  
+                  {/* Pulsing Background */}
+                  <div className={cn(
+                    "absolute w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full opacity-0 group-hover:opacity-30 transition-all duration-500 blur-sm",
+                    `bg-gradient-to-r ${service.gradient}`
+                  )}></div>
+                </div>
               </Card>
             );
           })}
