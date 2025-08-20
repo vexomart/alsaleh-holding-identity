@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Star, ArrowRight, Sparkles, Package, Award, FileText, Mail, CreditCard, Heart, Receipt, ShoppingCart, Loader2, X } from "lucide-react";
 import businessStationeryImg from "@/assets/printing/business-stationery.jpg";
 import businessCardsImg from "@/assets/printing/business-cards-category.jpg";
@@ -17,7 +19,6 @@ import certificatesImg from "@/assets/printing/certificates-category.jpg";
 import idCardsImg from "@/assets/printing/id-cards-category.jpg";
 import invitationCardsImg from "@/assets/printing/invitation-cards-category.jpg";
 import invoicesNcrImg from "@/assets/printing/invoices-ncr-category.jpg";
-import { useState } from "react";
 
 const BusinessStationery = () => {
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
@@ -29,6 +30,7 @@ const BusinessStationery = () => {
     phone: '',
     notes: ''
   });
+
   const handlePayment = async (product) => {
     console.log('🚀 handlePayment started with product:', product);
     console.log('📋 customerInfo:', customerInfo);
@@ -68,27 +70,18 @@ const BusinessStationery = () => {
 
       console.log('📤 Sending payment data:', JSON.stringify(paymentData, null, 2));
 
-      const response = await fetch(`https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/paylink-payment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI`,
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI'
-        },
-        body: JSON.stringify(paymentData)
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: paymentData
       });
 
-      console.log('📥 Response status:', response.status, response.statusText);
+      console.log('📥 Response data:', data);
+      console.log('📥 Response error:', error);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Request failed:', errorText);
+      if (error) {
+        console.error('❌ Request failed:', error);
         toast.error('حدث خطأ أثناء إنشاء رابط الدفع');
         return;
       }
-
-      const data = await response.json();
-      console.log('✅ Response data:', data);
 
       if (data?.success && data?.payment_url) {
         toast.success('تم إنشاء رابط الدفع بنجاح');
