@@ -21,6 +21,7 @@ const EnhancedPaymentPage = () => {
   const serviceDescription = urlParams.get('description') || '';
   const serviceDiscount = urlParams.get('discount') || '';
   const serviceOriginalPrice = urlParams.get('originalPrice') || '';
+  const serviceDeliveryTime = urlParams.get('deliveryTime') || '1-2 أسابيع';
   const serviceFeatures = urlParams.get('features') ? urlParams.get('features')!.split('|') : [];
   
   const [formData, setFormData] = useState({
@@ -33,6 +34,7 @@ const EnhancedPaymentPage = () => {
     serviceDescription: serviceDescription,
     serviceDiscount: serviceDiscount,
     serviceOriginalPrice: serviceOriginalPrice,
+    serviceDeliveryTime: serviceDeliveryTime,
     serviceFeatures: serviceFeatures
   });
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
@@ -376,7 +378,7 @@ const EnhancedPaymentPage = () => {
 
                         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                           <p className="text-sm text-blue-800 text-center">
-                            ⏱️ مدة التسليم: {formData.serviceId === '1' ? '٢-٣ أسابيع' : '٣-٤ أسابيع'} + ضمان المراجعة والتعديل
+                            ⏱️ مدة التسليم: {formData.serviceDeliveryTime} + ضمان المراجعة والتعديل
                           </p>
                         </div>
                       </div>

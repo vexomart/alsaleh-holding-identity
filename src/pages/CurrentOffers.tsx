@@ -60,6 +60,7 @@ const CurrentOffers = () => {
         description: offer.description,
         discount: offer.discount,
         originalPrice: offer.originalPrice,
+        deliveryTime: offer.deliveryTime || "1-2 أسابيع",
         features: offer.features.join('|')
       });
 
@@ -86,6 +87,7 @@ const currentOffers = [
     currentPrice: "50",
     discount: "35%",
     timeLeft: "25 يوم",
+    deliveryTime: "٢-٣ أسابيع",
     features: [
       "تصميم مخصص وفريد احترافي",
       "استضافة مجانية لسنة كاملة",
@@ -113,6 +115,7 @@ const currentOffers = [
     currentPrice: "2999",
     discount: "61%",
     timeLeft: "25 يوم",
+    deliveryTime: "٣-٥ أسابيع",
     features: [
       "تصميم عصري ومتجاوب للمتجر",
       "نظام إدارة المنتجات والمخزون",
@@ -142,6 +145,7 @@ const currentOffers = [
     currentPrice: "499",
     discount: "50%",
     timeLeft: "25 يوم",
+    deliveryTime: "٤-٦ أيام",
     features: [
       "تحليل شامل للمنافسين",
       "بحث متقدم عن الكلمات المفتاحية",
