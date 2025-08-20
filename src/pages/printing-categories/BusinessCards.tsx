@@ -3,7 +3,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, ShoppingCart, Eye, CheckCircle, Ruler, CreditCard, Smartphone, QrCode, Palette, Sparkles } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import React, { useState } from "react";
+import { Star, ShoppingCart, Eye, CheckCircle, Ruler, CreditCard, Smartphone, QrCode, Palette, Sparkles, Loader2, Banknote, Wallet } from "lucide-react";
 import businessCardsHeroImg from "@/assets/printing/business-cards-hero-bg.jpg";
 import businessCardsProductImg from "@/assets/printing/business-cards-category.jpg";
 import ledBusinessCardsImg from "@/assets/printing/led-business-cards.jpg";
@@ -14,6 +17,111 @@ import texturedFabricBusinessCardsImg from "@/assets/printing/textured-fabric-bu
 import threeDEffectBusinessCardsImg from "@/assets/printing/3d-effect-business-cards.jpg";
 
 const BusinessCards = () => {
+  const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  // نظام الدفع المشابه للتسويق الرقمي
+  const handlePaymentMethod = async (product: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
+    setLoadingMethod(method);
+    
+    toast({
+      title: "جاري معالجة طلب الدفع...",
+      description: "يرجى الانتظار قليلاً"
+    });
+    
+    try {
+      const amount = parseInt(product.price.replace(/[^\d]/g, ''));
+      let functionName = '';
+      let payload: any = {
+        amount: amount,
+        currency: 'SAR',
+        customer_name: 'عميل كروت شخصية',
+        customer_email: 'customer@example.com',
+        customer_phone: '966500000000',
+        offer_title: product.title,
+        description: `طلب منتج: ${product.title} - كروت شخصية`
+      };
+
+      switch (method) {
+        case 'paylink':
+          functionName = 'paylink-payment';
+          payload.success_url = window.location.origin;
+          break;
+        case 'stc-pay':
+          functionName = 'stc-pay';
+          break;
+        case 'tamara':
+          functionName = 'tamara-payment';
+          break;
+      }
+
+      const { data, error } = await supabase.functions.invoke(functionName, {
+        body: payload,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (error) throw new Error(error.message);
+
+      if (data?.success || data?.url || data?.payment_url) {
+        toast({
+          title: "تم إنشاء رابط الدفع بنجاح",
+          description: "سيتم توجيهك إلى صفحة الدفع"
+        });
+
+        if (method === 'stc-pay') {
+          showSTCPayInstructions(data);
+        } else if (data.url || data.paymentUrl || data.payment_url) {
+          const paymentUrl = data.url || data.paymentUrl || data.payment_url;
+          setTimeout(() => {
+            if (method === 'paylink') {
+              window.location.href = paymentUrl;
+            } else {
+              window.open(paymentUrl, '_blank');
+              toast({
+                title: "تم توجيهك لصفحة الدفع",
+                description: "يرجى إكمال عملية الدفع في التبويب الجديد",
+              });
+            }
+          }, 500);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "خطأ في الدفع",
+        description: error instanceof Error ? error.message : "حدث خطأ أثناء عملية الدفع",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingMethod(null);
+    }
+  };
+
+  const showSTCPayInstructions = (data: any) => {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+      <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
+          <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white text-center">
+            <h3 class="text-2xl font-bold mb-2">تعليمات الدفع - STC Pay</h3>
+            <p class="text-orange-100">معاملة آمنة ومحمية</p>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="bg-purple-50 rounded-xl p-4">
+              <h4 class="font-bold text-purple-800 mb-2">المبلغ المطلوب:</h4>
+              <div class="text-center bg-white rounded-lg p-4">
+                <div class="text-3xl font-bold text-purple-600">${data.amount} ${data.currency}</div>
+                <div class="text-xl font-bold text-gray-800 mt-2">${data.merchant_number || data.merchantNumber}</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-6 bg-gray-50">
+            <button onclick="this.closest('.fixed').remove()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl">إغلاق</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  };
   const products = [
     {
       title: "كروت شخصية أساسية ورقمية",
@@ -140,14 +248,21 @@ const BusinessCards = () => {
         backButtonFallback="/printing/business-stationery"
       />
 
-      {/* Background Pattern */}
-      <div className="fixed inset-0 opacity-5 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/30 to-transparent"></div>
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-0 w-72 h-72 bg-blue-400/20 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+          <div className="absolute top-0 right-0 w-72 h-72 bg-purple-400/20 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-400/20 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+          <div className="absolute bottom-0 right-0 w-72 h-72 bg-yellow-400/20 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-6000"></div>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(147,51,234,0.1),transparent_50%)]"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 relative">
-        {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-6 py-8 relative z-10">
+        {/* Enhanced Hero Section */}
         <div className="relative h-96 rounded-3xl overflow-hidden mb-16 group shadow-2xl">
           <img 
             src={businessCardsHeroImg} 
@@ -156,6 +271,11 @@ const BusinessCards = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600/95 via-purple-600/90 to-pink-600/85"></div>
           <div className="absolute inset-0 backdrop-blur-[1px]"></div>
+          
+          {/* Floating Animation Elements */}
+          <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-bounce animation-delay-1000"></div>
+          <div className="absolute top-20 right-20 w-16 h-16 bg-yellow-400/20 rounded-full animate-pulse animation-delay-2000"></div>
+          <div className="absolute bottom-10 left-20 w-12 h-12 bg-pink-400/20 rounded-full animate-spin animation-delay-3000"></div>
           <div className="absolute inset-0 flex items-center justify-center text-center">
             <div className="animate-fade-in max-w-4xl mx-auto px-6">
               <div className="flex items-center justify-center mb-6">
@@ -186,20 +306,20 @@ const BusinessCards = () => {
           </div>
         </div>
 
-        {/* Benefits Section */}
+        {/* Enhanced Benefits Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {benefits.map((benefit, index) => {
             const IconComponent = benefit.icon;
             return (
               <div 
                 key={index} 
-                className="text-center p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 hover-scale animate-fade-in border border-gray-200 hover:border-blue-300 transition-all duration-300"
+                className="group text-center p-6 rounded-2xl bg-white/80 backdrop-blur-sm hover-scale animate-fade-in border border-gray-200 hover:border-blue-300 transition-all duration-500 hover:shadow-xl"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="bg-gradient-to-br from-blue-500 to-purple-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-lg">
                   <IconComponent className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-800 mb-2">{benefit.title}</h3>
+                <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">{benefit.title}</h3>
                 <p className="text-gray-600 text-sm">{benefit.description}</p>
               </div>
             );
@@ -223,16 +343,25 @@ const BusinessCards = () => {
               return (
                 <Card 
                   key={index} 
-                  className="group border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover-scale overflow-hidden bg-white animate-fade-in"
-                  style={{ animationDelay: `${index * 0.05}s` }}
+                  className="group border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover-scale overflow-hidden bg-white/90 backdrop-blur-sm animate-fade-in hover:bg-white"
+                  style={{ 
+                    animationDelay: `${index * 0.05}s`,
+                    transform: 'translateY(0px)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px) rotateY(5deg)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0px) rotateY(0deg)';
+                  }}
                 >
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={product.image} 
                       alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-80`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-75 group-hover:opacity-85 transition-opacity duration-300`}></div>
                     
                     <div className="absolute top-2 right-2">
                       <Badge className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-2 py-1 text-xs font-bold shadow-lg">
@@ -305,10 +434,76 @@ const BusinessCards = () => {
                     </div>
                     
                     <div className="flex gap-1">
-                      <Button className={`flex-1 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white text-xs py-2`}>
-                        <ShoppingCart className="w-3 h-3 mr-1" />
-                        اطلب الآن
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button 
+                          onClick={() => handlePaymentMethod(product, 'paylink')}
+                          disabled={loadingMethod !== null}
+                          className={`flex-1 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white text-xs py-2 transition-all duration-300 hover:shadow-lg`}
+                        >
+                          {loadingMethod === 'paylink' ? (
+                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                          ) : (
+                            <ShoppingCart className="w-3 h-3 mr-1" />
+                          )}
+                          اطلب الآن
+                        </Button>
+                        <div className="relative group">
+                          <Button variant="outline" size="sm" className="hover:bg-gray-50 px-2">
+                            <Wallet className="w-3 h-3" />
+                          </Button>
+                          
+                          {/* Payment Methods Dropdown */}
+                          <div className="absolute bottom-full left-0 mb-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div className="bg-white rounded-lg shadow-xl border p-2 min-w-48">
+                              <div className="text-xs font-bold text-gray-700 mb-2 text-center">طرق الدفع</div>
+                              <div className="space-y-1">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="w-full text-xs justify-start hover:bg-blue-50"
+                                  onClick={() => handlePaymentMethod(product, 'paylink')}
+                                  disabled={loadingMethod !== null}
+                                >
+                                  {loadingMethod === 'paylink' ? (
+                                    <Loader2 className="w-3 h-3 mr-2 animate-spin" />
+                                  ) : (
+                                    <CreditCard className="w-3 h-3 mr-2" />
+                                  )}
+                                  بايلينك
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="w-full text-xs justify-start hover:bg-orange-50"
+                                  onClick={() => handlePaymentMethod(product, 'stc-pay')}
+                                  disabled={loadingMethod !== null}
+                                >
+                                  {loadingMethod === 'stc-pay' ? (
+                                    <Loader2 className="w-3 h-3 mr-2 animate-spin" />
+                                  ) : (
+                                    <Smartphone className="w-3 h-3 mr-2" />
+                                  )}
+                                  STC Pay
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="w-full text-xs justify-start hover:bg-green-50"
+                                  onClick={() => handlePaymentMethod(product, 'tamara')}
+                                  disabled={loadingMethod !== null}
+                                >
+                                  {loadingMethod === 'tamara' ? (
+                                    <Loader2 className="w-3 h-3 mr-2 animate-spin" />
+                                  ) : (
+                                    <Banknote className="w-3 h-3 mr-2" />
+                                  )}
+                                  تمارا
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <Button variant="outline" size="sm" className="hover:bg-gray-50 px-2">
                         <Eye className="w-3 h-3" />
                       </Button>
@@ -320,22 +515,30 @@ const BusinessCards = () => {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-12 border border-blue-100 text-center">
-          <Sparkles className="w-12 h-12 text-blue-600 mx-auto mb-6 animate-pulse" />
-          <h3 className="text-3xl font-bold text-gray-800 mb-4">
-            احصل على استشارة مجانية
-          </h3>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            فريقنا من خبراء التصميم جاهز لمساعدتك في اختيار التصميم المثالي وتقديم النصائح المهنية
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg hover-scale">
-              احجز استشارة الآن
-            </Button>
-            <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg hover-scale">
-              عرض التصميمات
-            </Button>
+        {/* Enhanced Call to Action */}
+        <div className="relative bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-12 border border-blue-100 text-center overflow-hidden">
+          {/* Background Animation */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 left-0 w-32 h-32 bg-blue-400/30 rounded-full animate-pulse animation-delay-1000"></div>
+            <div className="absolute bottom-0 right-0 w-24 h-24 bg-purple-400/30 rounded-full animate-bounce animation-delay-2000"></div>
+          </div>
+          
+          <div className="relative z-10">
+            <Sparkles className="w-12 h-12 text-blue-600 mx-auto mb-6 animate-pulse" />
+            <h3 className="text-3xl font-bold text-gray-800 mb-4">
+              احصل على استشارة مجانية
+            </h3>
+            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+              فريقنا من خبراء التصميم جاهز لمساعدتك في اختيار التصميم المثالي وتقديم النصائح المهنية
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg hover-scale shadow-xl hover:shadow-2xl transition-all duration-300">
+                احجز استشارة الآن
+              </Button>
+              <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg hover-scale hover:border-blue-400 transition-all duration-300">
+                عرض التصميمات
+              </Button>
+            </div>
           </div>
         </div>
       </div>
