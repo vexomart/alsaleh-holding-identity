@@ -18,6 +18,10 @@ const EnhancedPaymentPage = () => {
   const serviceId = urlParams.get('service') || '1';
   const serviceTitle = urlParams.get('title') || 'خدمة تسويقية';
   const servicePrice = urlParams.get('price') || '1499';
+  const serviceDescription = urlParams.get('description') || '';
+  const serviceDiscount = urlParams.get('discount') || '';
+  const serviceOriginalPrice = urlParams.get('originalPrice') || '';
+  const serviceFeatures = urlParams.get('features') ? urlParams.get('features')!.split('|') : [];
   
   const [formData, setFormData] = useState({
     name: '',
@@ -25,7 +29,11 @@ const EnhancedPaymentPage = () => {
     phone: '',
     amount: servicePrice,
     serviceId: serviceId,
-    serviceTitle: serviceTitle
+    serviceTitle: serviceTitle,
+    serviceDescription: serviceDescription,
+    serviceDiscount: serviceDiscount,
+    serviceOriginalPrice: serviceOriginalPrice,
+    serviceFeatures: serviceFeatures
   });
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const { toast } = useToast();
@@ -310,6 +318,12 @@ const EnhancedPaymentPage = () => {
 
                       <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl border border-primary/20">
                         <div className="text-center mb-6">
+                          {formData.serviceOriginalPrice && formData.serviceDiscount && (
+                            <div className="mb-2">
+                              <span className="text-lg line-through text-gray-500">{formData.serviceOriginalPrice} ريال</span>
+                              <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm mr-2">خصم {formData.serviceDiscount}</span>
+                            </div>
+                          )}
                           <div className="text-4xl font-bold text-primary mb-2">
                             {formData.amount} ريال
                           </div>
@@ -322,29 +336,41 @@ const EnhancedPaymentPage = () => {
                             ما تحصل عليه:
                           </h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {formData.serviceId === '1' ? [
-                              "تحليل السوق والمنافسين",
-                              "تحديد الجمهور المستهدف", 
-                              "وضع الأهداف والاستراتيجيات",
-                              "خطة المحتوى والحملات",
-                              "جدولة زمنية للتنفيذ",
-                              "مؤشرات الأداء KPIs"
-                            ] : [
-                              "100 باك لينك يدوية 100%",
-                              "من مواقع عالية الجودة DA 50+",
-                              "روابط آمنة ومتنوعة",
-                              "تقرير مفصل بالروابط",
-                              "ضمان عدم الانخفاض",
-                              "متابعة شهرية للنتائج"
-                            ].map((feature, index) => (
-                              <div 
-                                key={index}
-                                className="flex items-center gap-3 p-3 rounded-lg bg-white/50"
-                              >
-                                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                                <span className="text-sm">{feature}</span>
-                              </div>
-                            ))}
+                            {formData.serviceFeatures.length > 0 ? 
+                              formData.serviceFeatures.map((feature, index) => (
+                                <div 
+                                  key={index}
+                                  className="flex items-center gap-3 p-3 rounded-lg bg-white/50"
+                                >
+                                  <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                  <span className="text-sm">{feature}</span>
+                                </div>
+                              )) :
+                              // بيانات احتياطية إذا لم تكن هناك ميزات محددة
+                              (formData.serviceId === '1' ? [
+                                "تحليل السوق والمنافسين",
+                                "تحديد الجمهور المستهدف", 
+                                "وضع الأهداف والاستراتيجيات",
+                                "خطة المحتوى والحملات",
+                                "جدولة زمنية للتنفيذ",
+                                "مؤشرات الأداء KPIs"
+                              ] : [
+                                "خدمة احترافية",
+                                "جودة عالية",
+                                "دعم فني متواصل",
+                                "ضمان الجودة",
+                                "تسليم في الوقت المحدد",
+                                "مراجعة وتعديل مجاني"
+                              ]).map((feature, index) => (
+                                <div 
+                                  key={index}
+                                  className="flex items-center gap-3 p-3 rounded-lg bg-white/50"
+                                >
+                                  <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                  <span className="text-sm">{feature}</span>
+                                </div>
+                              ))
+                            }
                           </div>
                         </div>
 
