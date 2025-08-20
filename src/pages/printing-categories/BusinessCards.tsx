@@ -21,9 +21,9 @@ const BusinessCards = () => {
   const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // نظام الدفع المبسط باستخدام Paylink فقط
+  // نظام الدفع المبسط باستخدام TAP
   const handlePaymentMethod = async (product: any) => {
-    setLoadingMethod('paylink');
+    setLoadingMethod('tap');
     
     toast({
       title: "جاري معالجة طلب الدفع...",
@@ -56,7 +56,7 @@ const BusinessCards = () => {
 
       console.log('إرسال بيانات الدفع:', payload);
 
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
         body: payload
       });
 
@@ -447,7 +447,7 @@ const BusinessCards = () => {
                         disabled={loadingMethod !== null}
                         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm py-3 font-bold hover-scale shadow-lg transition-all duration-300"
                       >
-                        {loadingMethod === 'paylink' ? (
+                        {loadingMethod === 'tap' ? (
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         ) : (
                           <CreditCard className="w-4 h-4 mr-2" />

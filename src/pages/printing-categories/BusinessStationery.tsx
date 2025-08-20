@@ -70,7 +70,7 @@ const BusinessStationery = () => {
 
       console.log('📤 Sending payment data:', JSON.stringify(paymentData, null, 2));
 
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
         body: paymentData
       });
 
