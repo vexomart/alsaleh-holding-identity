@@ -323,7 +323,6 @@ const OurServicesSection = () => {
           <div className="relative group max-w-3xl sm:max-w-4xl mx-auto">
             {/* Simplified Border Frame */}
             <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-0.5">
-              <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-rotate opacity-50" style={{ animationDuration: '12s' }}></div>
             </div>
             
             {/* Executive Glow */}
