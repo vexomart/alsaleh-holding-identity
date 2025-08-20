@@ -336,7 +336,7 @@ const App = () => {
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
                 <Route path="/digital-marketing" element={<DigitalMarketing />} />
           <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
+          <Route path="/enhanced-payment" element={<Suspense fallback={<PageLoader />}><EnhancedPaymentPage /></Suspense>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
                 </Routes>

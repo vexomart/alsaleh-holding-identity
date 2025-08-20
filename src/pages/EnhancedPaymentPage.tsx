@@ -1,556 +1,423 @@
-import React, { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Loader2, CheckCircle, ArrowLeft, Sparkles, Shield } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { PageContainer } from "@/components/ui/page-container";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { 
+  ShoppingCart, 
+  Clock, 
+  CheckCircle, 
+  CreditCard, 
+  Smartphone, 
+  Banknote, 
+  Loader2,
+  ArrowRight,
+  Star,
+  Sparkles
+} from "lucide-react";
+
+interface ServiceData {
+  service: string;
+  title: string;
+  price: string;
+  currency: string;
+  duration: string;
+  features: string[];
+}
 
 const EnhancedPaymentPage = () => {
-  const [step, setStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // استخراج معلومات الخدمة من URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const serviceId = urlParams.get('service') || '1';
-  const serviceTitle = urlParams.get('title') || 'خدمة تسويقية';
-  const servicePrice = urlParams.get('price') || '1499';
-  const serviceDescription = urlParams.get('description') || '';
-  const serviceDiscount = urlParams.get('discount') || '';
-  const serviceOriginalPrice = urlParams.get('originalPrice') || '';
-  const serviceDeliveryTime = urlParams.get('deliveryTime') || '1-2 أسابيع';
-  const serviceFeatures = urlParams.get('features') ? urlParams.get('features')!.split('|') : [];
-  
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    amount: servicePrice,
-    serviceId: serviceId,
-    serviceTitle: serviceTitle,
-    serviceDescription: serviceDescription,
-    serviceDiscount: serviceDiscount,
-    serviceOriginalPrice: serviceOriginalPrice,
-    serviceDeliveryTime: serviceDeliveryTime,
-    serviceFeatures: serviceFeatures
-  });
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const [serviceData, setServiceData] = useState<ServiceData | null>(null);
+  const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
-  };
+  useEffect(() => {
+    // استخراج البيانات من URL parameters
+    const service = searchParams.get('service') || '';
+    const title = searchParams.get('title') || '';
+    const price = searchParams.get('price') || '';
+    const currency = searchParams.get('currency') || 'ريال';
+    const duration = searchParams.get('duration') || '';
+    const featuresString = searchParams.get('features') || '';
+    
+    // تحويل الميزات من نص مفصول بـ | إلى مصفوفة
+    const features = featuresString ? featuresString.split('|').map(f => decodeURIComponent(f)) : [];
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.4 }
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const validateStep = (stepNumber: number) => {
-    switch (stepNumber) {
-      case 1:
-        return true; // السعر ثابت دائماً
-      case 2:
-        return formData.name && formData.email;
-      default:
-        return false;
-    }
-  };
-
-  const nextStep = () => {
-    if (validateStep(step)) {
-      setCompletedSteps([...completedSteps, step]);
-      setStep(step + 1);
-    } else {
-      toast({
-        title: "يرجى إكمال البيانات المطلوبة",
-        description: "تأكد من ملء جميع الحقول",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const prevStep = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
-
-  const handlePayment = async () => {
-    if (!validateStep(1) || !validateStep(2)) {
+    if (!title || !price) {
       toast({
         title: "خطأ في البيانات",
-        description: "يرجى التأكد من جميع البيانات",
-        variant: "destructive",
+        description: "معلومات الخدمة غير مكتملة",
+        variant: "destructive"
       });
+      navigate('/');
       return;
     }
 
-    setIsLoading(true);
+    setServiceData({
+      service,
+      title: decodeURIComponent(title),
+      price: decodeURIComponent(price),
+      currency: decodeURIComponent(currency),
+      duration: decodeURIComponent(duration),
+      features
+    });
+    
+    setIsLoading(false);
+  }, [searchParams, navigate, toast]);
+
+  const handlePaymentMethod = async (method: 'paylink' | 'stc-pay' | 'tamara') => {
+    if (!serviceData) return;
+
+    setLoadingMethod(method);
+    
+    toast({
+      title: "جاري معالجة طلب الدفع...",
+      description: "يرجى الانتظار قليلاً"
+    });
     
     try {
-      const payload = {
-        amount: parseFloat(formData.amount),
+      const amount = parseInt(serviceData.price.replace(/[^\d]/g, ''));
+      let functionName = '';
+      let payload: any = {
+        amount: amount,
         currency: 'SAR',
-        customer_name: formData.name,
-        customer_email: formData.email,
-        customer_phone: formData.phone || '966500000000',
-        offer_title: formData.serviceTitle,
-        description: `دفع ${formData.serviceTitle}`
+        customer_name: 'عميل محتمل',
+        customer_email: 'customer@example.com',
+        customer_phone: '966500000000',
+        offer_title: serviceData.title,
+        description: `دفع خدمة: ${serviceData.title}`
       };
 
-      console.log("🚀 بدء عملية الدفع: paylink");
-      console.log("📦 البيانات المرسلة:", payload);
+      switch (method) {
+        case 'paylink':
+          functionName = 'paylink-payment';
+          payload.success_url = window.location.origin + '/payment-success';
+          break;
+        case 'stc-pay':
+          functionName = 'stc-pay';
+          break;
+        case 'tamara':
+          functionName = 'tamara-payment';
+          break;
+      }
 
-      // استخدام Paylink كطريقة الدفع الافتراضية
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
-        body: payload
-      });
+      console.log(`استدعاء ${functionName} مع البيانات:`, payload);
 
-      console.log("📋 النتيجة:", { data, error });
+      // تحسين استدعاء Edge Function مع retry logic
+      let data, error;
+      let attempts = 0;
+      const maxAttempts = 3;
+      
+      while (attempts < maxAttempts) {
+        attempts++;
+        console.log(`محاولة ${attempts} من ${maxAttempts}`);
+        
+        try {
+          const result: any = await Promise.race([
+            supabase.functions.invoke(functionName, {
+              body: payload,
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 30000)
+            )
+          ]);
+          
+          data = result.data;
+          error = result.error;
+          
+          if (!error && data) {
+            console.log(`نجحت المحاولة ${attempts}:`, data);
+            break;
+          }
+          
+          if (attempts < maxAttempts) {
+            console.log(`فشلت المحاولة ${attempts}، سيتم إعادة المحاولة...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (attemptError) {
+          console.error(`خطأ في المحاولة ${attempts}:`, attemptError);
+          if (attempts === maxAttempts) {
+            throw attemptError;
+          }
+        }
+      }
 
       if (error) {
-        console.error("❌ خطأ في الاستدعاء:", error);
-        throw new Error(error.message || 'فشل في الاتصال بالخدمة');
+        console.error(`${method} error after ${attempts} attempts:`, error);
+        throw new Error(error.message || 'فشل في الاتصال بالخدمة بعد عدة محاولات');
       }
 
-      if (data?.success) {
-        if (data?.payment_url || data?.url) {
-          toast({
-            title: "✅ تم إنشاء رابط الدفع",
-            description: "سيتم توجيهك لصفحة الدفع الآمنة",
-          });
+      console.log(`${functionName} response:`, data);
+
+      if (data?.success || data?.url || data?.payment_url) {
+        toast({
+          title: "تم إنشاء رابط الدفع بنجاح",
+          description: "سيتم توجيهك إلى صفحة الدفع"
+        });
+
+        if (method === 'stc-pay') {
+          showSTCPayInstructions(data);
+        } else if (data.url || data.paymentUrl || data.payment_url) {
+          const paymentUrl = data.url || data.paymentUrl || data.payment_url;
           
           setTimeout(() => {
-            window.location.href = data.payment_url || data.url;
-          }, 1000);
+            if (method === 'paylink') {
+              window.location.href = paymentUrl;
+            } else {
+              window.open(paymentUrl, '_blank');
+              toast({
+                title: "تم توجيهك لصفحة الدفع",
+                description: "يرجى إكمال عملية الدفع في التبويب الجديد",
+              });
+            }
+          }, 500);
         }
       } else {
-        throw new Error(data?.message || 'فشل في إنشاء رابط الدفع');
+        throw new Error('لم يتم إرجاع رابط الدفع من الخدمة');
+      }
+    } catch (error) {
+      console.error(`خطأ نهائي في ${method}:`, error);
+      
+      let errorMessage = "حدث خطأ أثناء عملية الدفع";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('timeout') || error.message.includes('انتهت مهلة')) {
+          errorMessage = "انتهت مهلة الاتصال. يرجى المحاولة مرة أخرى";
+        } else if (error.message.includes('Network') || error.message.includes('Failed to fetch')) {
+          errorMessage = "مشكلة في الاتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى";
+        } else {
+          errorMessage = error.message;
+        }
       }
       
-    } catch (error: any) {
-      console.error("💥 خطأ:", error);
       toast({
-        title: "خطأ في عملية الدفع",
-        description: error.message || "حدث خطأ غير متوقع",
+        title: "خطأ في الدفع",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setLoadingMethod(null);
     }
   };
 
-  const getStepIcon = (stepNumber: number) => {
-    if (completedSteps.includes(stepNumber)) {
-      return <CheckCircle className="w-6 h-6 text-white" />;
-    }
-    return <span className="text-white font-bold">{stepNumber}</span>;
+  const showSTCPayInstructions = (data: any) => {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+      <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
+          <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white text-center">
+            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9M19 9H14V4H19V9Z"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">تعليمات الدفع - STC Pay</h3>
+            <p class="text-orange-100">معاملة آمنة ومحمية</p>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="bg-purple-50 rounded-xl p-4">
+              <h4 class="font-bold text-purple-800 mb-2">المبلغ المطلوب:</h4>
+              <div class="text-center bg-white rounded-lg p-4">
+                <div class="text-3xl font-bold text-purple-600">${data.amount} ${data.currency}</div>
+                <div class="text-xl font-bold text-gray-800 mt-2">${data.merchant_number || data.merchantNumber}</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-6 bg-gray-50">
+            <button onclick="this.closest('.fixed').remove()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl">إغلاق</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
   };
+
+  if (isLoading) {
+    return (
+      <PageContainer>
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </PageContainer>
+    );
+  }
+
+  if (!serviceData) {
+    return (
+      <PageContainer>
+        <div className="text-center py-16">
+          <p className="text-lg text-gray-600">خطأ في تحميل بيانات الخدمة</p>
+          <Button onClick={() => navigate('/')} className="mt-4">
+            العودة للرئيسية
+          </Button>
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4 flex items-center justify-center">
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className="w-full max-w-6xl"
-      >
-        {/* Header with Progress */}
-        <motion.div variants={itemVariants} className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/20 mb-4">
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.2, 1], 
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <Sparkles className="w-4 h-4 text-primary" />
-            </motion.div>
-            <span className="text-primary text-sm font-medium">نظام دفع آمن ومحمي</span>
+    <PageContainer>
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-0 w-72 h-72 bg-blue-400/20 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+          <div className="absolute top-0 right-0 w-72 h-72 bg-purple-400/20 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-400/20 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-6 py-8 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <Sparkles className="w-8 h-8 text-blue-600 animate-pulse mr-2" />
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              إتمام عملية الدفع
+            </h1>
+            <Sparkles className="w-8 h-8 text-blue-600 animate-pulse ml-2" />
           </div>
-          
-          <h1 className="text-4xl font-bold text-primary mb-4">
-            إتمام عملية الدفع
-          </h1>
-          <p className="text-muted-foreground">
-            اتبع الخطوات البسيطة لإكمال عملية الدفع الآمنة
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          {/* Progress Steps */}
-          <motion.div variants={itemVariants} className="space-y-6">
-            <Card className="shadow-lg border-0 bg-white/70 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <Shield className="w-6 h-6 text-green-500" />
-                  خطوات الدفع
-                </CardTitle>
-                <CardDescription>
-                  تتبع تقدمك في عملية الدفع الآمنة
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {[
-                  { number: 1, title: "تأكيد الخدمة", desc: `${formData.serviceTitle} - ${formData.amount} ريال` },
-                  { number: 2, title: "البيانات الشخصية", desc: "أدخل بياناتك الأساسية" },
-                  { number: 3, title: "تأكيد الدفع", desc: "راجع وأكد العملية" }
-                ].map((stepItem) => (
-                  <div
-                    key={stepItem.number}
-                    className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 ${
-                      step === stepItem.number
-                        ? 'bg-primary/10 border-2 border-primary/30'
-                        : completedSteps.includes(stepItem.number)
-                        ? 'bg-green-50 border-2 border-green-200'
-                        : 'bg-gray-50 border-2 border-gray-200'
-                    }`}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                        step === stepItem.number
-                          ? 'bg-primary text-white scale-110'
-                          : completedSteps.includes(stepItem.number)
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-300 text-gray-600'
-                      }`}
-                    >
-                      {getStepIcon(stepItem.number)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-semibold">{stepItem.title}</div>
-                      <div className="text-sm text-muted-foreground">{stepItem.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Security Features */}
-            <motion.div variants={itemVariants} className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
-              <h3 className="font-bold text-green-800 mb-4 flex items-center gap-2">
-                <Shield className="w-5 h-5" />
-                ضمانات الأمان
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-green-700">تشفير SSL 256-bit</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-green-700">حماية بيانات PCI DSS</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-green-700">مراقبة 24/7</span>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Payment Form */}
-          <motion.div variants={itemVariants}>
-            <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 relative">
-                <div className="absolute top-2 right-2">
-                  <Badge variant="secondary" className="bg-white/50">
-                    الخطوة {step} من 3
-                  </Badge>
-                </div>
-                <CardTitle className="text-2xl">
-                  {step === 1 && "تأكيد الخدمة"}
-                  {step === 2 && "البيانات الشخصية"}
-                  {step === 3 && "تأكيد الدفع"}
-                </CardTitle>
-                <CardDescription>
-                  {step === 1 && formData.serviceTitle}
-                  {step === 2 && "أدخل بياناتك الشخصية"}
-                  {step === 3 && "راجع البيانات وأكد الدفع"}
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="p-8">
-                <AnimatePresence mode="wait">
-                  {/* Step 1: Service Confirmation */}
-                  {step === 1 && (
-                    <motion.div
-                      key="step1"
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -50 }}
-                      className="space-y-6"
-                    >
-                      <div className="text-center">
-                        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <CheckCircle className="w-10 h-10 text-primary" />
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">{formData.serviceTitle}</h3>
-                        <p className="text-muted-foreground">خدمة متخصصة لتحقيق أهدافك</p>
-                      </div>
-
-                      <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl border border-primary/20">
-                        <div className="text-center mb-6">
-                          {formData.serviceOriginalPrice && formData.serviceDiscount && (
-                            <div className="mb-2">
-                              <span className="text-lg line-through text-gray-500">{formData.serviceOriginalPrice} ريال</span>
-                              <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm mr-2">خصم {formData.serviceDiscount}</span>
-                            </div>
-                          )}
-                          <div className="text-4xl font-bold text-primary mb-2">
-                            {formData.amount} ريال
-                          </div>
-                          <p className="text-sm text-muted-foreground">سعر شامل ضريبة القيمة المضافة</p>
-                        </div>
-                        
-                        <div className="space-y-4">
-                          <h4 className="font-semibold mb-3 flex items-center gap-2">
-                            <Sparkles className="w-4 h-4 text-primary" />
-                            ما تحصل عليه:
-                          </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {formData.serviceFeatures.length > 0 ? 
-                              formData.serviceFeatures.map((feature, index) => (
-                                <div 
-                                  key={index}
-                                  className="flex items-center gap-3 p-3 rounded-lg bg-white/50"
-                                >
-                                  <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                                  <span className="text-sm">{feature}</span>
-                                </div>
-                              )) :
-                              // بيانات احتياطية إذا لم تكن هناك ميزات محددة
-                              (formData.serviceId === '1' ? [
-                                "تحليل السوق والمنافسين",
-                                "تحديد الجمهور المستهدف", 
-                                "وضع الأهداف والاستراتيجيات",
-                                "خطة المحتوى والحملات",
-                                "جدولة زمنية للتنفيذ",
-                                "مؤشرات الأداء KPIs"
-                              ] : [
-                                "خدمة احترافية",
-                                "جودة عالية",
-                                "دعم فني متواصل",
-                                "ضمان الجودة",
-                                "تسليم في الوقت المحدد",
-                                "مراجعة وتعديل مجاني"
-                              ]).map((feature, index) => (
-                                <div 
-                                  key={index}
-                                  className="flex items-center gap-3 p-3 rounded-lg bg-white/50"
-                                >
-                                  <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                                  <span className="text-sm">{feature}</span>
-                                </div>
-                              ))
-                            }
-                          </div>
-                        </div>
-
-                        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                          <p className="text-sm text-blue-800 text-center">
-                            ⏱️ مدة التسليم: {formData.serviceDeliveryTime} + ضمان المراجعة والتعديل
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 2: Personal Info */}
-                  {step === 2 && (
-                    <motion.div
-                      key="step2"
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -50 }}
-                      className="space-y-6"
-                    >
-                      <div className="text-center">
-                        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Shield className="w-10 h-10 text-primary" />
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">البيانات الشخصية</h3>
-                        <p className="text-muted-foreground">معلوماتك محمية بأعلى معايير الأمان</p>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="name">الاسم الكامل *</Label>
-                          <Input
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            placeholder="أدخل اسمك الكامل"
-                            className="h-12"
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="email">البريد الإلكتروني *</Label>
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="example@email.com"
-                            className="h-12"
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="phone">رقم الجوال (اختياري)</Label>
-                          <Input
-                            id="phone"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            placeholder="966500000000"
-                            className="h-12"
-                          />
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 3: Confirmation */}
-                  {step === 3 && (
-                    <motion.div
-                      key="step3"
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -50 }}
-                      className="space-y-6"
-                    >
-                      <div className="text-center">
-                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <CheckCircle className="w-10 h-10 text-green-600" />
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">تأكيد الدفع</h3>
-                        <p className="text-muted-foreground">راجع بياناتك قبل إتمام العملية</p>
-                      </div>
-
-                      <div className="bg-gray-50 rounded-xl p-6 space-y-4">
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="font-medium">المبلغ:</span>
-                          <span className="text-xl font-bold text-primary">{formData.amount} ريال</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="font-medium">الاسم:</span>
-                          <span>{formData.name}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="font-medium">البريد الإلكتروني:</span>
-                          <span>{formData.email}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2">
-                          <span className="font-medium">طريقة الدفع:</span>
-                          <span>Paylink (فيزا • ماستركارد • مدى)</span>
-                        </div>
-                      </div>
-
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <p className="text-sm text-blue-800">
-                          ✨ بالضغط على "إتمام الدفع" سيتم توجيهك لصفحة الدفع الآمنة
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Navigation Buttons */}
-                <div className="flex justify-between mt-8 pt-6 border-t">
-                  {step > 1 && (
-                    <Button
-                      variant="outline"
-                      onClick={prevStep}
-                      className="flex items-center gap-2"
-                    >
-                      <ArrowLeft className="w-4 h-4" />
-                      السابق
-                    </Button>
-                  )}
-
-                  <div className="flex-1" />
-
-                  {step < 3 ? (
-                    <Button
-                      onClick={nextStep}
-                      disabled={!validateStep(step)}
-                      className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-variant hover:from-primary-variant hover:to-primary"
-                    >
-                      التالي
-                      <ArrowLeft className="w-4 h-4 rotate-180" />
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={handlePayment}
-                      disabled={isLoading}
-                      className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 text-lg font-semibold min-w-[200px]"
-                    >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          جاري المعالجة...
-                        </>
-                      ) : (
-                        <>
-                          <Shield className="w-5 h-5" />
-                          إتمام الدفع الآمن
-                        </>
-                      )}
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <p className="text-gray-600 text-lg">تأكيد طلب الخدمة والمتابعة للدفع الآمن</p>
         </div>
 
-        {/* Footer Security Notice */}
-        <motion.div 
-          variants={itemVariants}
-          className="text-center mt-8 bg-white/50 backdrop-blur-sm rounded-lg p-4"
-        >
-          <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
-            <Shield className="w-4 h-4 text-green-500" />
-            جميع المعاملات محمية بتشفير SSL وتحت إشراف البنك المركزي السعودي
-          </p>
-        </motion.div>
-      </motion.div>
-    </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Service Details */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-2xl font-bold text-gray-800">
+                    تفاصيل الخدمة
+                  </CardTitle>
+                  <Badge className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-3 py-1">
+                    خدمة متميزة
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-100">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    {serviceData.title}
+                  </h3>
+                  {serviceData.duration && (
+                    <div className="flex items-center text-gray-600 mb-4">
+                      <Clock className="w-4 h-4 mr-2" />
+                      <span>مدة التنفيذ: {serviceData.duration}</span>
+                    </div>
+                  )}
+                </div>
+
+                {serviceData.features.length > 0 && (
+                  <div>
+                    <h4 className="text-lg font-bold text-gray-800 mb-4">ما ستحصل عليه:</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {serviceData.features.map((feature, index) => (
+                        <div 
+                          key={index} 
+                          className="flex items-start gap-3 p-3 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl animate-fade-in"
+                          style={{ animationDelay: `${index * 0.1}s` }}
+                        >
+                          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-700 text-sm font-medium">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Payment Section */}
+          <div>
+            <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm sticky top-8">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-xl font-bold text-gray-800">
+                  اختر طريقة الدفع
+                </CardTitle>
+                <CardDescription>
+                  دفع آمن ومحمي 100%
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Price Display */}
+                <div className="text-center bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border-2 border-gray-200">
+                  <div className="text-3xl font-bold text-gray-800 mb-2">
+                    {serviceData.price} {serviceData.currency}
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <span className="text-sm text-gray-600">سعر شامل الضريبة</span>
+                  </div>
+                </div>
+
+                {/* Payment Methods */}
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => handlePaymentMethod('paylink')}
+                    disabled={loadingMethod !== null}
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 text-lg font-bold hover-scale shadow-xl transition-all duration-300"
+                  >
+                    {loadingMethod === 'paylink' ? (
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    ) : (
+                      <CreditCard className="w-5 h-5 mr-2" />
+                    )}
+                    الدفع بالبطاقة - Paylink
+                  </Button>
+
+                  <Button
+                    onClick={() => handlePaymentMethod('stc-pay')}
+                    disabled={loadingMethod !== null}
+                    variant="outline"
+                    className="w-full border-2 border-orange-200 text-orange-600 hover:bg-orange-50 py-4 text-lg font-bold hover-scale transition-all duration-300"
+                  >
+                    {loadingMethod === 'stc-pay' ? (
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    ) : (
+                      <Smartphone className="w-5 h-5 mr-2" />
+                    )}
+                    STC Pay
+                  </Button>
+
+                  <Button
+                    onClick={() => handlePaymentMethod('tamara')}
+                    disabled={loadingMethod !== null}
+                    variant="outline"
+                    className="w-full border-2 border-green-200 text-green-600 hover:bg-green-50 py-4 text-lg font-bold hover-scale transition-all duration-300"
+                  >
+                    {loadingMethod === 'tamara' ? (
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    ) : (
+                      <Banknote className="w-5 h-5 mr-2" />
+                    )}
+                    تمارا - اشتر الآن وادفع لاحقاً
+                  </Button>
+                </div>
+
+                {/* Security Note */}
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <span className="text-green-800 font-bold">دفع آمن ومحمي</span>
+                  </div>
+                  <p className="text-green-700 text-sm">
+                    جميع المعاملات مشفرة ومحمية بأعلى معايير الأمان
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </PageContainer>
   );
 };
 

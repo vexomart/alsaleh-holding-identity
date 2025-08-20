@@ -531,15 +531,22 @@ const BusinessCards = () => {
                     
                     <div className="flex gap-1">
                       <Button 
-                        onClick={() => handlePaymentMethod(product, 'paylink')}
+                        onClick={() => {
+                          // توجيه إلى صفحة الدفع المحسنة
+                          const params = new URLSearchParams({
+                            service: '1',
+                            title: product.title,
+                            price: product.price.replace(/[^\d]/g, ''),
+                            currency: 'ريال',
+                            duration: '',
+                            features: product.features.join('|')
+                          });
+                          window.location.href = `/enhanced-payment?${params.toString()}`;
+                        }}
                         disabled={loadingMethod !== null}
                         className={`flex-1 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white text-xs py-2 transition-all duration-300 hover:shadow-lg`}
                       >
-                        {loadingMethod === 'paylink' ? (
-                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                        ) : (
-                          <ShoppingCart className="w-3 h-3 mr-1" />
-                        )}
+                        <ShoppingCart className="w-3 h-3 mr-1" />
                         اطلب الآن
                       </Button>
                       <Button variant="outline" size="sm" className="hover:bg-gray-50 px-2">
