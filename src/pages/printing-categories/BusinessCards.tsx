@@ -21,9 +21,9 @@ const BusinessCards = () => {
   const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // نظام الدفع المطابق للنظام المحسن
-  const handlePaymentMethod = async (product: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
-    setLoadingMethod(method);
+  // نظام الدفع المبسط باستخدام Paylink فقط
+  const handlePaymentMethod = async (product: any) => {
+    setLoadingMethod('paylink');
     
     toast({
       title: "جاري معالجة طلب الدفع...",
@@ -33,132 +33,59 @@ const BusinessCards = () => {
     try {
       // استخراج السعر من النص بطريقة صحيحة
       const priceMatch = product.price.match(/(\d+)/);
-      const amount = priceMatch ? parseInt(priceMatch[1]) * 100 : 19900; // تحويل إلى هللة
+      const amount = priceMatch ? parseFloat(priceMatch[1]) : 199;
       
       console.log('معلومات المنتج:', { title: product.title, price: product.price, amount });
       
-      let functionName = '';
-      let payload: any = {
+      const payload = {
         amount: amount,
         currency: 'SAR',
         customer_name: 'عميل كروت شخصية',
-        customer_email: 'customer@example.com',
+        customer_email: 'customer@businesscards.com',
         customer_phone: '966500000000',
         offer_title: product.title,
-        description: `طلب منتج: ${product.title} - كروت شخصية`,
+        description: `طلب ${product.title} - ${product.description}`,
         product_details: {
-          product_id: 1,
+          product_id: Math.random(),
           product_name: product.title,
           product_version: "V 1.0",
-          customer_name: "عميل كروت شخصية",
-          customer_email: "customer@example.com",
-          customer_phone: "966500000000"
+          category: product.category,
+          features: product.features.join(', ')
         }
       };
 
-      switch (method) {
-        case 'paylink':
-          functionName = 'paylink-payment';
-          payload.success_url = window.location.origin;
-          break;
-        case 'stc-pay':
-          functionName = 'stc-pay';
-          break;
-        case 'tamara':
-          functionName = 'tamara-payment';
-          break;
-      }
+      console.log('إرسال بيانات الدفع:', payload);
 
-      console.log(`استدعاء ${functionName} مع البيانات:`, payload);
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: payload
+      });
 
-      // تحسين استدعاء Edge Function مع retry logic
-      let data, error;
-      let attempts = 0;
-      const maxAttempts = 3;
-      
-      while (attempts < maxAttempts) {
-        attempts++;
-        console.log(`محاولة ${attempts} من ${maxAttempts}`);
-        
-        try {
-          const result: any = await Promise.race([
-            supabase.functions.invoke(functionName, {
-              body: payload,
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 30000)
-            )
-          ]);
-          
-          data = result.data;
-          error = result.error;
-          
-          if (!error && data) {
-            console.log(`نجحت المحاولة ${attempts}:`, data);
-            break;
-          }
-          
-          if (attempts < maxAttempts) {
-            console.log(`فشلت المحاولة ${attempts}، سيتم إعادة المحاولة...`);
-            await new Promise(resolve => setTimeout(resolve, 2000));
-          }
-        } catch (attemptError) {
-          console.error(`خطأ في المحاولة ${attempts}:`, attemptError);
-          if (attempts === maxAttempts) {
-            throw attemptError;
-          }
-        }
-      }
+      console.log('استجابة الدفع:', { data, error });
 
       if (error) {
-        console.error(`${method} error after ${attempts} attempts:`, error);
-        throw new Error(error.message || 'فشل في الاتصال بالخدمة بعد عدة محاولات');
+        console.error('خطأ في الطلب:', error);
+        throw new Error(error.message || 'فشل في إنشاء رابط الدفع');
       }
 
-      console.log(`${functionName} response:`, data);
-
-      if (data?.success || data?.url || data?.payment_url) {
+      if (data?.success && data?.payment_url) {
         toast({
           title: "تم إنشاء رابط الدفع بنجاح",
           description: "سيتم توجيهك إلى صفحة الدفع"
         });
-
-        if (method === 'stc-pay') {
-          showSTCPayInstructions(data);
-        } else if (data.url || data.paymentUrl || data.payment_url) {
-          const paymentUrl = data.url || data.paymentUrl || data.payment_url;
-          
-          setTimeout(() => {
-            if (method === 'paylink') {
-              window.location.href = paymentUrl;
-            } else {
-              window.open(paymentUrl, '_blank');
-              toast({
-                title: "تم توجيهك لصفحة الدفع",
-                description: "يرجى إكمال عملية الدفع في التبويب الجديد",
-              });
-            }
-          }, 500);
-        }
+        
+        setTimeout(() => {
+          window.open(data.payment_url, '_blank');
+        }, 500);
       } else {
-        throw new Error('لم يتم إرجاع رابط الدفع من الخدمة');
+        throw new Error(data?.error || 'لم يتم إرجاع رابط الدفع');
       }
     } catch (error) {
-      console.error(`خطأ نهائي في ${method}:`, error);
+      console.error('خطأ في الدفع:', error);
       
       let errorMessage = "حدث خطأ أثناء عملية الدفع";
       
       if (error instanceof Error) {
-        if (error.message.includes('timeout') || error.message.includes('انتهت مهلة')) {
-          errorMessage = "انتهت مهلة الاتصال. يرجى المحاولة مرة أخرى";
-        } else if (error.message.includes('Network') || error.message.includes('Failed to fetch')) {
-          errorMessage = "مشكلة في الاتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى";
-        } else {
-          errorMessage = error.message;
-        }
+        errorMessage = error.message;
       }
       
       toast({
@@ -516,7 +443,7 @@ const BusinessCards = () => {
                     {/* زر الدفع بالبطاقة الائتمانية فقط */}
                     <div className="space-y-2">
                       <Button
-                        onClick={() => handlePaymentMethod(product, 'paylink')}
+                        onClick={() => handlePaymentMethod(product)}
                         disabled={loadingMethod !== null}
                         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm py-3 font-bold hover-scale shadow-lg transition-all duration-300"
                       >
