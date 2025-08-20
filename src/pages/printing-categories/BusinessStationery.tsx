@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, ShoppingCart, Eye, CheckCircle } from "lucide-react";
+import { Star, ShoppingCart, Eye, CheckCircle, Ruler } from "lucide-react";
 import businessStationeryImg from "@/assets/printing/business-stationery.jpg";
 import luxuryBusinessCardsImg from "@/assets/printing/luxury-business-cards.jpg";
 import officialLetterheadsImg from "@/assets/printing/official-letterheads.jpg";
@@ -22,6 +22,7 @@ const BusinessStationery = () => {
       image: luxuryBusinessCardsImg,
       rating: 4.8,
       reviews: 150,
+      sizes: ["9 × 5 سم", "8.5 × 5.4 سم", "10 × 6 سم"],
       features: ["طباعة ملونة", "ورق مقوى 350 جرام", "تشطيب لامع أو مطفي", "تصميم مجاني"]
     },
     {
@@ -32,6 +33,7 @@ const BusinessStationery = () => {
       image: officialLetterheadsImg,
       rating: 4.9,
       reviews: 89,
+      sizes: ["A4 (21 × 29.7 سم)", "A5 (14.8 × 21 سم)", "Letter (21.6 × 27.9 سم)"],
       features: ["ورق عالي الجودة", "طباعة الشعار", "ألوان مخصصة", "أحجام متنوعة"]
     },
     {
@@ -42,6 +44,7 @@ const BusinessStationery = () => {
       image: customFoldersImg,
       rating: 4.7,
       reviews: 120,
+      sizes: ["A4 (23 × 32 سم)", "A5 (16 × 23 سم)", "مقاس مخصص"],
       features: ["مواد فاخرة", "طباعة داخلية وخارجية", "جيوب متعددة", "تصميم مخصص"]
     },
     {
@@ -52,6 +55,7 @@ const BusinessStationery = () => {
       image: professionalEnvelopesImg,
       rating: 4.6,
       reviews: 95,
+      sizes: ["DL (11 × 22 سم)", "C5 (16.2 × 22.9 سم)", "A4 (21 × 29.7 سم)"],
       features: ["أحجام مختلفة", "طباعة الشعار", "ورق عالي الجودة", "ألوان مخصصة"]
     },
     {
@@ -62,6 +66,7 @@ const BusinessStationery = () => {
       image: invoiceBooksImg,
       rating: 4.8,
       reviews: 75,
+      sizes: ["A4 (21 × 29.7 سم)", "A5 (14.8 × 21 سم)", "1/4 Letter (13.9 × 21.6 سم)"],
       features: ["تصميم مخصص", "ترقيم تسلسلي", "كربون للنسخ", "أحجام متنوعة"]
     },
     {
@@ -72,6 +77,7 @@ const BusinessStationery = () => {
       image: employeeIdCardsImg,
       rating: 4.9,
       reviews: 110,
+      sizes: ["8.6 × 5.4 سم (ISO)", "9 × 5.5 سم", "مقاس مخصص"],
       features: ["خامة PVC", "طباعة ملونة", "تصميم احترافي", "شريحة اختيارية"]
     }
   ];
@@ -144,6 +150,21 @@ const BusinessStationery = () => {
               </CardHeader>
               
               <CardContent className="space-y-4">
+                {/* Available Sizes */}
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Ruler className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium text-gray-700">المقاسات المتاحة:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {product.sizes.map((size, sizeIndex) => (
+                      <Badge key={sizeIndex} variant="outline" className="text-xs px-2 py-1 border-blue-200 text-blue-700">
+                        {size}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
                 <ul className="space-y-2">
                   {product.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center gap-2 text-sm">
