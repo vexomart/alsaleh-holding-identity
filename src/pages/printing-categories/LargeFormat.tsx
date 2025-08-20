@@ -22,12 +22,14 @@ import {
   Zap,
   Star,
   Heart,
-  Loader2
+  Loader2,
+  X
 } from "lucide-react";
 
 const LargeFormat = () => {
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
@@ -248,142 +250,18 @@ const LargeFormat = () => {
                           </span>
                         )}
                       </div>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button 
-                              size="sm" 
-                              className="gap-1" 
-                              onClick={() => {
-                                console.log('🎯 Product selected:', product);
-                                setSelectedProduct(product);
-                              }}
-                            >
-                              <ShoppingCart className="h-4 w-4" />
-                              اطلب الآن
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                              <DialogTitle className="text-right">
-                                طلب {selectedProduct?.name || product.name}
-                              </DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4 mt-4">
-                              {/* Product Info */}
-                              <div className="bg-muted/50 p-4 rounded-lg">
-                                <div className="flex justify-between items-center mb-2">
-                                  <span className="font-semibold">{selectedProduct?.name || product.name}</span>
-                                  <Badge variant="secondary">{selectedProduct?.category || product.category}</Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground mb-3">{selectedProduct?.description || product.description}</p>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-lg font-bold text-primary">
-                                    {(selectedProduct || product).discount > 0 
-                                      ? `${(parseFloat((selectedProduct || product).price) * (1 - (selectedProduct || product).discount / 100)).toFixed(0)} ر.س`
-                                      : `${(selectedProduct || product).price} ر.س`
-                                    }
-                                  </span>
-                                  {(selectedProduct || product).discount > 0 && (
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm line-through text-muted-foreground">
-                                        {(selectedProduct || product).price} ر.س
-                                      </span>
-                                      <Badge variant="destructive" className="text-xs">
-                                        خصم {(selectedProduct || product).discount}%
-                                      </Badge>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Customer Info Form */}
-                              <div className="space-y-3">
-                                <div>
-                                  <Label htmlFor="name">الاسم الكامل *</Label>
-                                  <Input
-                                    id="name"
-                                    placeholder="اكتب اسمك الكامل"
-                                    value={customerInfo.name}
-                                    onChange={(e) => {
-                                      console.log('🔤 Name changed:', e.target.value);
-                                      setCustomerInfo({...customerInfo, name: e.target.value});
-                                    }}
-                                    required
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <Label htmlFor="email">البريد الإلكتروني *</Label>
-                                  <Input
-                                    id="email"
-                                    type="email"
-                                    placeholder="example@email.com"
-                                    value={customerInfo.email}
-                                    onChange={(e) => {
-                                      console.log('📧 Email changed:', e.target.value);
-                                      setCustomerInfo({...customerInfo, email: e.target.value});
-                                    }}
-                                    required
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <Label htmlFor="phone">رقم الهاتف *</Label>
-                                  <Input
-                                    id="phone"
-                                    placeholder="05xxxxxxxx"
-                                    value={customerInfo.phone}
-                                    onChange={(e) => {
-                                      console.log('📱 Phone changed:', e.target.value);
-                                      setCustomerInfo({...customerInfo, phone: e.target.value});
-                                    }}
-                                    required
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <Label htmlFor="notes">ملاحظات إضافية</Label>
-                                  <Textarea
-                                    id="notes"
-                                    placeholder="أي متطلبات خاصة أو ملاحظات..."
-                                    value={customerInfo.notes}
-                                    onChange={(e) => {
-                                      console.log('📝 Notes changed:', e.target.value);
-                                      setCustomerInfo({...customerInfo, notes: e.target.value});
-                                    }}
-                                    rows={3}
-                                  />
-                                </div>
-                              </div>
-
-                              <Button 
-                                onClick={() => {
-                                  console.log('💳 Payment button clicked!');
-                                  console.log('📦 Current product:', selectedProduct || product);
-                                  console.log('👤 Customer info:', customerInfo);
-                                  handlePayment(selectedProduct || product);
-                                }}
-                                disabled={isPaymentLoading}
-                                className="w-full"
-                              >
-                                {isPaymentLoading ? (
-                                  <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    جارٍ إنشاء رابط الدفع...
-                                  </>
-                                ) : (
-                                  <>
-                                    <ShoppingCart className="mr-2 h-4 w-4" />
-                                    اشتري الآن - {(selectedProduct || product).discount > 0 
-                                      ? `${(parseFloat((selectedProduct || product).price) * (1 - (selectedProduct || product).discount / 100)).toFixed(0)} ر.س`
-                                      : `${(selectedProduct || product).price} ر.س`
-                                    }
-                                  </>
-                                )}
-                              </Button>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
+                      <Button 
+                        size="sm" 
+                        className="gap-1" 
+                        onClick={() => {
+                          console.log('🎯 Product selected:', product);
+                          setSelectedProduct(product);
+                          setShowPaymentModal(true);
+                        }}
+                      >
+                        <ShoppingCart className="h-4 w-4" />
+                        اطلب الآن
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -432,6 +310,141 @@ const LargeFormat = () => {
             </div>
           </div>
         </section>
+
+        {/* Payment Modal */}
+        {showPaymentModal && selectedProduct && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold">طلب {selectedProduct.name}</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    console.log('❌ Modal closed');
+                    setShowPaymentModal(false);
+                    setSelectedProduct(null);
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              {/* Product Info */}
+              <div className="bg-muted/50 p-4 rounded-lg mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-semibold">{selectedProduct.name}</span>
+                  <Badge variant="secondary">{selectedProduct.category}</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground mb-3">{selectedProduct.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-bold text-primary">
+                    {selectedProduct.discount > 0 
+                      ? `${(parseFloat(selectedProduct.price) * (1 - selectedProduct.discount / 100)).toFixed(0)} ر.س`
+                      : `${selectedProduct.price} ر.س`
+                    }
+                  </span>
+                  {selectedProduct.discount > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm line-through text-muted-foreground">
+                        {selectedProduct.price} ر.س
+                      </span>
+                      <Badge variant="destructive" className="text-xs">
+                        خصم {selectedProduct.discount}%
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Customer Info Form */}
+              <div className="space-y-3 mb-4">
+                <div>
+                  <Label htmlFor="name">الاسم الكامل *</Label>
+                  <Input
+                    id="name"
+                    placeholder="اكتب اسمك الكامل"
+                    value={customerInfo.name}
+                    onChange={(e) => {
+                      console.log('🔤 Name changed:', e.target.value);
+                      setCustomerInfo({...customerInfo, name: e.target.value});
+                    }}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="email">البريد الإلكتروني *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="example@email.com"
+                    value={customerInfo.email}
+                    onChange={(e) => {
+                      console.log('📧 Email changed:', e.target.value);
+                      setCustomerInfo({...customerInfo, email: e.target.value});
+                    }}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="phone">رقم الهاتف *</Label>
+                  <Input
+                    id="phone"
+                    placeholder="05xxxxxxxx"
+                    value={customerInfo.phone}
+                    onChange={(e) => {
+                      console.log('📱 Phone changed:', e.target.value);
+                      setCustomerInfo({...customerInfo, phone: e.target.value});
+                    }}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="notes">ملاحظات إضافية</Label>
+                  <Textarea
+                    id="notes"
+                    placeholder="أي متطلبات خاصة أو ملاحظات..."
+                    value={customerInfo.notes}
+                    onChange={(e) => {
+                      console.log('📝 Notes changed:', e.target.value);
+                      setCustomerInfo({...customerInfo, notes: e.target.value});
+                    }}
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              <Button 
+                onClick={() => {
+                  console.log('💳 Payment button clicked!');
+                  console.log('📦 Current product:', selectedProduct);
+                  console.log('👤 Customer info:', customerInfo);
+                  handlePayment(selectedProduct);
+                }}
+                disabled={isPaymentLoading}
+                className="w-full"
+              >
+                {isPaymentLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    جارٍ إنشاء رابط الدفع...
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    اشتري الآن - {selectedProduct.discount > 0 
+                      ? `${(parseFloat(selectedProduct.price) * (1 - selectedProduct.discount / 100)).toFixed(0)} ر.س`
+                      : `${selectedProduct.price} ر.س`
+                    }
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
 
         <Footer />
       </div>
