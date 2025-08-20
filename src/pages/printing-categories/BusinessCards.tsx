@@ -500,47 +500,19 @@ const BusinessCards = () => {
                       </div>
                     </div>
                     
-                    {/* أزرار الدفع المتعددة */}
+                    {/* زر الدفع بالبطاقة الائتمانية فقط */}
                     <div className="space-y-2">
                       <Button
                         onClick={() => handlePaymentMethod(product, 'paylink')}
                         disabled={loadingMethod !== null}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xs py-2 font-bold hover-scale shadow-lg transition-all duration-300"
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm py-3 font-bold hover-scale shadow-lg transition-all duration-300"
                       >
                         {loadingMethod === 'paylink' ? (
-                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         ) : (
-                          <CreditCard className="w-3 h-3 mr-1" />
+                          <CreditCard className="w-4 h-4 mr-2" />
                         )}
-                        الدفع بالبطاقة - Paylink
-                      </Button>
-
-                      <Button
-                        onClick={() => handlePaymentMethod(product, 'stc-pay')}
-                        disabled={loadingMethod !== null}
-                        variant="outline"
-                        className="w-full border-orange-200 text-orange-600 hover:bg-orange-50 text-xs py-2 font-bold hover-scale transition-all duration-300"
-                      >
-                        {loadingMethod === 'stc-pay' ? (
-                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                        ) : (
-                          <Smartphone className="w-3 h-3 mr-1" />
-                        )}
-                        STC Pay
-                      </Button>
-
-                      <Button
-                        onClick={() => handlePaymentMethod(product, 'tamara')}
-                        disabled={loadingMethod !== null}
-                        variant="outline"
-                        className="w-full border-green-200 text-green-600 hover:bg-green-50 text-xs py-2 font-bold hover-scale transition-all duration-300"
-                      >
-                        {loadingMethod === 'tamara' ? (
-                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                        ) : (
-                          <Banknote className="w-3 h-3 mr-1" />
-                        )}
-                        تمارا - اشتر الآن وادفع لاحقاً
+                        الدفع بالبطاقة الائتمانية
                       </Button>
                     </div>
                   </CardContent>
