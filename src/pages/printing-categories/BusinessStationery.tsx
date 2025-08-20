@@ -3,7 +3,11 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, ArrowRight, Sparkles, Package, Award, FileText, Mail, CreditCard, Heart, Receipt } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { Star, ArrowRight, Sparkles, Package, Award, FileText, Mail, CreditCard, Heart, Receipt, ShoppingCart, Loader2, X } from "lucide-react";
 import businessStationeryImg from "@/assets/printing/business-stationery.jpg";
 import businessCardsImg from "@/assets/printing/business-cards-category.jpg";
 import letterheadsImg from "@/assets/printing/letterheads-category.jpg";
@@ -13,8 +17,97 @@ import certificatesImg from "@/assets/printing/certificates-category.jpg";
 import idCardsImg from "@/assets/printing/id-cards-category.jpg";
 import invitationCardsImg from "@/assets/printing/invitation-cards-category.jpg";
 import invoicesNcrImg from "@/assets/printing/invoices-ncr-category.jpg";
+import { useState } from "react";
 
 const BusinessStationery = () => {
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    notes: ''
+  });
+  const handlePayment = async (product) => {
+    console.log('🚀 handlePayment started with product:', product);
+    console.log('📋 customerInfo:', customerInfo);
+    
+    if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+      console.error('❌ Missing required fields');
+      toast.error('يرجى تعبئة جميع البيانات المطلوبة');
+      return;
+    }
+
+    setIsPaymentLoading(true);
+    console.log('💳 Payment loading started');
+    
+    try {
+      // تأكد من صحة رقم الهاتف
+      let formattedPhone = customerInfo.phone;
+      if (!formattedPhone.startsWith('966')) {
+        formattedPhone = formattedPhone.startsWith('0') 
+          ? `966${formattedPhone.substring(1)}` 
+          : `966${formattedPhone}`;
+      }
+
+      const paymentData = {
+        amount: parseFloat(product.price.replace(/[^0-9]/g, '')),
+        customer_name: customerInfo.name.trim(),
+        customer_email: customerInfo.email.trim(),
+        customer_phone: formattedPhone,
+        offer_title: product.title,
+        description: `${product.description}${customerInfo.notes ? ` - ملاحظات: ${customerInfo.notes}` : ''}`,
+        currency: 'SAR',
+        product_details: {
+          product_id: product.id || Math.random(),
+          product_name: product.title,
+          product_version: 'V 1.0'
+        }
+      };
+
+      console.log('📤 Sending payment data:', JSON.stringify(paymentData, null, 2));
+
+      const response = await fetch(`https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/paylink-payment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI`,
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI'
+        },
+        body: JSON.stringify(paymentData)
+      });
+
+      console.log('📥 Response status:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Request failed:', errorText);
+        toast.error('حدث خطأ أثناء إنشاء رابط الدفع');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('✅ Response data:', data);
+
+      if (data?.success && data?.payment_url) {
+        toast.success('تم إنشاء رابط الدفع بنجاح');
+        console.log('🔗 Opening payment URL:', data.payment_url);
+        setShowPaymentModal(false);
+        window.open(data.payment_url, '_blank');
+      } else {
+        console.error('❌ Invalid response:', data);
+        toast.error(data?.error || 'فشل في إنشاء رابط الدفع');
+      }
+    } catch (error) {
+      console.error('💥 Payment error:', error);
+      toast.error('حدث خطأ أثناء معالجة الطلب');
+    } finally {
+      console.log('🏁 Payment process finished');
+      setIsPaymentLoading(false);
+    }
+  };
+
   const categories = [
     {
       title: "كروت شخصية",
@@ -229,17 +322,30 @@ const BusinessStationery = () => {
                       ))}
                     </div>
                     
-                    <Button 
-                      className={`w-full bg-gradient-to-r ${category.gradient} hover:opacity-90 text-white group-hover:shadow-lg transition-all duration-300`}
-                      onClick={() => {
-                        if (category.title === "كروت شخصية") {
-                          window.location.href = "/printing/business-cards";
-                        }
-                      }}
-                    >
-                      <span>استكشف المنتجات</span>
-                      <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        className={`flex-1 bg-gradient-to-r ${category.gradient} hover:opacity-90 text-white group-hover:shadow-lg transition-all duration-300`}
+                        onClick={() => {
+                          if (category.title === "كروت شخصية") {
+                            window.location.href = "/printing/business-cards";
+                          }
+                        }}
+                      >
+                        <span>استكشف المنتجات</span>
+                        <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                      <Button 
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          console.log('🎯 Product selected for payment:', category);
+                          setSelectedProduct(category);
+                          setShowPaymentModal(true);
+                        }}
+                      >
+                        <ShoppingCart className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -267,6 +373,134 @@ const BusinessStationery = () => {
             </div>
           </div>
         </div>
+
+        {/* Payment Modal */}
+        {showPaymentModal && selectedProduct && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold">طلب {selectedProduct.title}</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    console.log('❌ Modal closed');
+                    setShowPaymentModal(false);
+                    setSelectedProduct(null);
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              {/* Product Info */}
+              <div className="bg-muted/50 p-4 rounded-lg mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-semibold">{selectedProduct.title}</span>
+                  <Badge variant="secondary">{selectedProduct.products} منتج</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground mb-3">{selectedProduct.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-bold text-primary">
+                    {selectedProduct.price}
+                  </span>
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <Star 
+                        key={i} 
+                        className={`w-4 h-4 ${i < Math.floor(selectedProduct.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                      />
+                    ))}
+                    <span className="text-sm text-muted-foreground mr-2">({selectedProduct.rating})</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Customer Info Form */}
+              <div className="space-y-3 mb-4">
+                <div>
+                  <Label htmlFor="name">الاسم الكامل *</Label>
+                  <Input
+                    id="name"
+                    placeholder="اكتب اسمك الكامل"
+                    value={customerInfo.name}
+                    onChange={(e) => {
+                      console.log('🔤 Name changed:', e.target.value);
+                      setCustomerInfo({...customerInfo, name: e.target.value});
+                    }}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="email">البريد الإلكتروني *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="example@email.com"
+                    value={customerInfo.email}
+                    onChange={(e) => {
+                      console.log('📧 Email changed:', e.target.value);
+                      setCustomerInfo({...customerInfo, email: e.target.value});
+                    }}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="phone">رقم الهاتف *</Label>
+                  <Input
+                    id="phone"
+                    placeholder="05xxxxxxxx"
+                    value={customerInfo.phone}
+                    onChange={(e) => {
+                      console.log('📱 Phone changed:', e.target.value);
+                      setCustomerInfo({...customerInfo, phone: e.target.value});
+                    }}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="notes">ملاحظات إضافية</Label>
+                  <Textarea
+                    id="notes"
+                    placeholder="أي متطلبات خاصة أو ملاحظات..."
+                    value={customerInfo.notes}
+                    onChange={(e) => {
+                      console.log('📝 Notes changed:', e.target.value);
+                      setCustomerInfo({...customerInfo, notes: e.target.value});
+                    }}
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              <Button 
+                onClick={() => {
+                  console.log('💳 Payment button clicked!');
+                  console.log('📦 Current product:', selectedProduct);
+                  console.log('👤 Customer info:', customerInfo);
+                  handlePayment(selectedProduct);
+                }}
+                disabled={isPaymentLoading}
+                className="w-full"
+              >
+                {isPaymentLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    جارٍ إنشاء رابط الدفع...
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    اشتري الآن - {selectedProduct.price}
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   );
