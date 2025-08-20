@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowRight, CheckCircle, BarChart3, DollarSign, FileText, Calculator, TrendingUp, Shield, CreditCard, Building2, Star, Sparkles, ArrowLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

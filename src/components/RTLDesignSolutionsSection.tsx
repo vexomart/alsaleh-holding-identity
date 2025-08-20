@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   Palette, Sparkles, ChevronLeft, CheckCircle, PenTool, Megaphone, 
   Share2, Printer, MonitorSmartphone, Layers, Clock, TrendingUp, 

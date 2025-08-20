@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import RTLDesignSolutionsSection from "@/components/RTLDesignSolutionsSection";
 import Footer from "@/components/Footer";
