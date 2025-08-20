@@ -25,6 +25,13 @@ import {
   ShoppingCart
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import businessStationeryImg from "@/assets/printing/business-stationery.jpg";
+import marketingMaterialsImg from "@/assets/printing/marketing-materials.jpg";
+import largeFormatImg from "@/assets/printing/large-format.jpg";
+import packagingBoxesImg from "@/assets/printing/packaging-boxes.jpg";
+import promotionalGiftsImg from "@/assets/printing/promotional-gifts.jpg";
+import apparelAccessoriesImg from "@/assets/printing/apparel-accessories.jpg";
+import corporateBrandingImg from "@/assets/printing/corporate-branding.jpg";
 
 const PrintingServices = () => {
   console.log('PrintingServices component is rendering...');
@@ -34,57 +41,64 @@ const PrintingServices = () => {
       title: "مستلزمات مكتبية للأعمال",
       description: "كروت شخصية، أوراق مراسلات، فولدرات وجميع المستلزمات المكتبية",
       icon: CreditCard,
-      image: "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png",
+      image: businessStationeryImg,
       count: "50+ منتج",
-      color: "from-blue-500 to-cyan-500"
+      color: "from-blue-500 to-cyan-500",
+      href: "/printing/business-stationery"
     },
     {
       title: "مطبوعات تسويقية",
       description: "بروشورات، فلايرز، كتالوجات وجميع المواد التسويقية",
       icon: FileText,
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png",
+      image: marketingMaterialsImg,
       count: "40+ منتج",
-      color: "from-green-500 to-emerald-500"
+      color: "from-green-500 to-emerald-500",
+      href: "/printing/marketing-materials"
     },
     {
       title: "مطبوعات كبيرة الحجم",
       description: "لافتات، بنرات، استاندات وجميع المطبوعات كبيرة الحجم",
       icon: Image,
-      image: "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png",
+      image: largeFormatImg,
       count: "30+ منتج",
-      color: "from-purple-500 to-pink-500"
+      color: "from-purple-500 to-pink-500",
+      href: "/printing/large-format"
     },
     {
       title: "التغليف والصناديق",
       description: "صناديق مخصصة، أكياس هدايا وحلول التغليف الاحترافية",
       icon: Package,
-      image: "/lovable-uploads/2f45c50e-e8b3-44e1-97f1-5923f0084b17.png",
+      image: packagingBoxesImg,
       count: "35+ منتج",
-      color: "from-orange-500 to-red-500"
+      color: "from-orange-500 to-red-500",
+      href: "/printing/packaging-boxes"
     },
     {
       title: "هدايا دعائية",
       description: "أقلام، دفاتر، أكواب وجميع الهدايا الدعائية المطبوعة",
       icon: Palette,
-      image: "/lovable-uploads/58f1dde7-91b4-4747-92a6-188055f11cee.png",
+      image: promotionalGiftsImg,
       count: "60+ منتج",
-      color: "from-indigo-500 to-blue-500"
+      color: "from-indigo-500 to-blue-500",
+      href: "/printing/promotional-gifts"
     },
     {
       title: "ملابس وإكسسوارات",
       description: "تيشيرتات، قبعات، حقائب وإكسسوارات مطبوعة",
       icon: Shirt,
-      image: "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png",
+      image: apparelAccessoriesImg,
       count: "25+ منتج",
-      color: "from-teal-500 to-green-500"
+      color: "from-teal-500 to-green-500",
+      href: "/printing/apparel-accessories"
     },
     {
       title: "براند الشركات والفعاليات",
       description: "هوية بصرية متكاملة للشركات والفعاليات",
       icon: Award,
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png",
+      image: corporateBrandingImg,
       count: "20+ منتج",
-      color: "from-rose-500 to-pink-500"
+      color: "from-rose-500 to-pink-500",
+      href: "/printing/corporate-branding"
     }
   ];
 
@@ -94,7 +108,7 @@ const PrintingServices = () => {
       description: "كروت شخصية بتصميمات عصرية وخامات فاخرة",
       price: "من 199 ريال",
       originalPrice: "299 ريال",
-      image: "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png",
+      image: businessStationeryImg,
       rating: 4.8,
       reviews: 150
     },
@@ -103,7 +117,7 @@ const PrintingServices = () => {
       description: "فولدرات احترافية لعرض أوراق الشركة بأناقة",
       price: "من 89 ريال",
       originalPrice: "120 ريال",
-      image: "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png",
+      image: packagingBoxesImg,
       rating: 4.9,
       reviews: 89
     },
@@ -112,7 +126,7 @@ const PrintingServices = () => {
       description: "بروشورات عالية الجودة لعرض خدماتك ومنتجاتك",
       price: "من 159 ريال",
       originalPrice: "200 ريال",
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png",
+      image: marketingMaterialsImg,
       rating: 4.7,
       reviews: 120
     },
@@ -121,7 +135,7 @@ const PrintingServices = () => {
       description: "صناديق أنيقة بتصميمك الخاص لمناسباتك المميزة",
       price: "من 79 ريال",
       originalPrice: "110 ريال",
-      image: "/lovable-uploads/2f45c50e-e8b3-44e1-97f1-5923f0084b17.png",
+      image: packagingBoxesImg,
       rating: 4.6,
       reviews: 95
     }
@@ -268,9 +282,14 @@ const PrintingServices = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full">
-                    <Eye className="w-4 h-4 mr-2" />
-                    استعرض المنتجات
+                  <Button 
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full"
+                    asChild
+                  >
+                    <Link to={category.href}>
+                      <Eye className="w-4 h-4 mr-2" />
+                      استعرض المنتجات
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
