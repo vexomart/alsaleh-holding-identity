@@ -5,6 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Star, ShoppingCart, Eye, CheckCircle } from "lucide-react";
 import businessStationeryImg from "@/assets/printing/business-stationery.jpg";
+import luxuryBusinessCardsImg from "@/assets/printing/luxury-business-cards.jpg";
+import officialLetterheadsImg from "@/assets/printing/official-letterheads.jpg";
+import customFoldersImg from "@/assets/printing/custom-folders.jpg";
+import professionalEnvelopesImg from "@/assets/printing/professional-envelopes.jpg";
+import invoiceBooksImg from "@/assets/printing/invoice-books.jpg";
+import employeeIdCardsImg from "@/assets/printing/employee-id-cards.jpg";
 
 const BusinessStationery = () => {
   const products = [
@@ -13,7 +19,7 @@ const BusinessStationery = () => {
       description: "كروت شخصية بخامات عالية الجودة وتصميمات احترافية",
       price: "من 199 ريال",
       originalPrice: "299 ريال",
-      image: businessStationeryImg,
+      image: luxuryBusinessCardsImg,
       rating: 4.8,
       reviews: 150,
       features: ["طباعة ملونة", "ورق مقوى 350 جرام", "تشطيب لامع أو مطفي", "تصميم مجاني"]
@@ -23,7 +29,7 @@ const BusinessStationery = () => {
       description: "أوراق مراسلات بشعار الشركة وتصميم احترافي",
       price: "من 149 ريال",
       originalPrice: "199 ريال",
-      image: businessStationeryImg,
+      image: officialLetterheadsImg,
       rating: 4.9,
       reviews: 89,
       features: ["ورق عالي الجودة", "طباعة الشعار", "ألوان مخصصة", "أحجام متنوعة"]
@@ -33,7 +39,7 @@ const BusinessStationery = () => {
       description: "فولدرات لحفظ الأوراق بتصميم شركتك",
       price: "من 89 ريال",
       originalPrice: "120 ريال",
-      image: businessStationeryImg,
+      image: customFoldersImg,
       rating: 4.7,
       reviews: 120,
       features: ["مواد فاخرة", "طباعة داخلية وخارجية", "جيوب متعددة", "تصميم مخصص"]
@@ -43,7 +49,7 @@ const BusinessStationery = () => {
       description: "أظرف رسمية بشعار وألوان الشركة",
       price: "من 79 ريال",
       originalPrice: "110 ريال",
-      image: businessStationeryImg,
+      image: professionalEnvelopesImg,
       rating: 4.6,
       reviews: 95,
       features: ["أحجام مختلفة", "طباعة الشعار", "ورق عالي الجودة", "ألوان مخصصة"]
@@ -53,7 +59,7 @@ const BusinessStationery = () => {
       description: "دفاتر فواتير مخصصة بتصميم شركتك",
       price: "من 69 ريال",
       originalPrice: "99 ريال",
-      image: businessStationeryImg,
+      image: invoiceBooksImg,
       rating: 4.8,
       reviews: 75,
       features: ["تصميم مخصص", "ترقيم تسلسلي", "كربون للنسخ", "أحجام متنوعة"]
@@ -63,7 +69,7 @@ const BusinessStationery = () => {
       description: "بطاقات هوية للموظفين بتقنية PVC",
       price: "من 25 ريال",
       originalPrice: "35 ريال",
-      image: businessStationeryImg,
+      image: employeeIdCardsImg,
       rating: 4.9,
       reviews: 110,
       features: ["خامة PVC", "طباعة ملونة", "تصميم احترافي", "شريحة اختيارية"]
