@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowRight, CheckCircle, Users, Clock, Award, TrendingUp, Shield, Calendar, FileText, BarChart3, Star, Sparkles, ArrowLeft, ChevronRight, Send, Phone, Mail, Building } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,9 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 const HRManagementSystem = () => {
+  console.log('HRManagementSystem component starting to render...');
+  console.log('React:', typeof React !== 'undefined' ? 'available' : 'not available');
+  
   const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
   const [activeModule, setActiveModule] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
