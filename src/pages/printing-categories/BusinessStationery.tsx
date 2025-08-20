@@ -41,9 +41,6 @@ const BusinessStationery = () => {
       return;
     }
 
-    // فتح النافذة فوراً لتجنب حظر المتصفح
-    const paymentWindow = window.open('about:blank', '_blank');
-
     setIsPaymentLoading(true);
     console.log('💳 Payment loading started');
     
@@ -82,7 +79,6 @@ const BusinessStationery = () => {
 
       if (error) {
         console.error('❌ Request failed:', error);
-        paymentWindow?.close();
         toast.error('حدث خطأ أثناء إنشاء رابط الدفع');
         return;
       }
@@ -91,15 +87,14 @@ const BusinessStationery = () => {
         toast.success('تم إنشاء رابط الدفع بنجاح');
         console.log('🔗 Redirecting to payment URL:', data.payment_url);
         setShowPaymentModal(false);
-        paymentWindow!.location.href = data.payment_url;
+        // التوجه إلى صفحة الدفع في نفس النافذة
+        window.location.href = data.payment_url;
       } else {
         console.error('❌ Invalid response:', data);
-        paymentWindow?.close();
         toast.error(data?.error || 'فشل في إنشاء رابط الدفع');
       }
     } catch (error) {
       console.error('💥 Payment error:', error);
-      paymentWindow?.close();
       toast.error('حدث خطأ أثناء معالجة الطلب');
     } finally {
       console.log('🏁 Payment process finished');

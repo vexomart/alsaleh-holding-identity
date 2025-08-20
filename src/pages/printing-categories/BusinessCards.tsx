@@ -26,9 +26,6 @@ const BusinessCards = () => {
     const productId = product.title; // استخدام العنوان كمعرف فريد
     setLoadingProducts(prev => new Set([...prev, productId]));
     
-    // فتح النافذة فوراً لتجنب حظر المتصفح
-    const paymentWindow = window.open('about:blank', '_blank');
-    
     toast({
       title: "جاري معالجة طلب الدفع...",
       description: "يرجى الانتظار قليلاً"
@@ -68,7 +65,6 @@ const BusinessCards = () => {
 
       if (error) {
         console.error('خطأ في الطلب:', error);
-        paymentWindow?.close();
         throw new Error(error.message || 'فشل في إنشاء رابط الدفع');
       }
 
@@ -78,14 +74,13 @@ const BusinessCards = () => {
           description: "سيتم توجيهك إلى صفحة الدفع"
         });
         
-        paymentWindow!.location.href = data.payment_url;
+        // التوجه إلى صفحة الدفع في نفس النافذة
+        window.location.href = data.payment_url;
       } else {
-        paymentWindow?.close();
         throw new Error(data?.error || 'لم يتم إرجاع رابط الدفع');
       }
     } catch (error) {
       console.error('خطأ في الدفع:', error);
-      paymentWindow?.close();
       
       let errorMessage = "حدث خطأ أثناء عملية الدفع";
       
