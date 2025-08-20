@@ -37,107 +37,35 @@ const CurrentOffers = () => {
   const offerEndDate = new Date();
   offerEndDate.setDate(offerEndDate.getDate() + 25);
 
-  // دالة للدفع عبر TAB
-  const handleTabPayment = async (offer: any) => {
+  // دالة للدفع الموحدة (نفس نظام التسويق الرقمي)
+  const handlePayment = async (offer: any) => {
     try {
-      console.log("🚀 Starting TAB payment for offer:", offer);
+      console.log("🚀 Starting payment for offer:", offer);
       
       // عرض رسالة تحضير الدفع
       toast({
         title: "🚀 جاري تحضير رابط الدفع...",
-        description: "سيتم توجيهك فوراً لإتمام الدفع الآمن",
+        description: "سيتم توجيهك فوراً لصفحة الدفع الآمنة",
         duration: 2000,
       });
 
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
       console.log("💰 Payment amount:", amount);
       
-      const payload = {
-        amount: amount,
-        currency: 'SAR',
-        customer_name: 'عميل مميز',
-        customer_email: 'customer@example.com',
-        customer_phone: '966500000000',
-        offer_title: offer.title,
-        description: `دفع عرض: ${offer.title} - ${offer.currentPrice} ريال سعودي`,
-        success_url: `${window.location.origin}/payment-success`,
-        cancel_url: `${window.location.origin}/payment-cancel`,
-        metadata: {
-          offer_id: offer.id,
-          original_price: offer.originalPrice,
-          current_price: offer.currentPrice,
-          discount: offer.discount,
-          timestamp: new Date().toISOString()
-        }
-      };
-
-      console.log("📤 Sending payload to TAB:", payload);
-
-      const { data, error } = await supabase.functions.invoke('tab-payment', {
-        body: payload,
+      // إعداد معاملات الخدمة للتوجيه لصفحة الدفع المحسنة
+      const serviceParams = new URLSearchParams({
+        service: offer.id,
+        title: offer.title,
+        price: amount.toString(),
+        description: offer.description,
+        discount: offer.discount,
+        originalPrice: offer.originalPrice,
+        features: offer.features.join('|')
       });
 
-      console.log("📥 TAB Response - data:", data);
-      console.log("📥 TAB Response - error:", error);
-
-      if (error) {
-        console.error("❌ TAB Payment Error:", error);
-        toast({
-          title: "⚠️ خطأ في الدفع",
-          description: error.message || "فشل في الاتصال بخدمة الدفع",
-          variant: "destructive",
-          duration: 5000,
-        });
-        return;
-      }
-
-      console.log("📥 TAB Response received:", data);
-
-      if (!data) {
-        throw new Error("لم يتم استلام رد من خدمة الدفع");
-      }
-
-      if (data.success && data.payment_url) {
-        console.log("✅ Payment URL received:", data.payment_url);
-        
-        toast({
-          title: "✅ تم إنشاء رابط الدفع بنجاح",
-          description: "سيتم توجيهك الآن لإتمام عملية الدفع الآمنة",
-          duration: 3000,
-        });
-
-        // إرسال بريد إلكتروني فوري بمعلومات الدفع
-        try {
-          await supabase.functions.invoke('send-invoice-email', {
-            body: {
-              customer_name: 'عميل مميز',
-              customer_email: 'customer@example.com',
-              amount: amount,
-              currency: 'SAR',
-              payment_url: data.payment_url,
-              transaction_id: data.transaction_id || 'N/A',
-              invoice_number: data.invoice_number || 'N/A',
-              status: data.status || 'pending',
-              payment_method: 'TAB',
-              offer_title: offer.title,
-              offer_description: offer.description,
-              original_price: offer.originalPrice,
-              current_price: offer.currentPrice,
-              discount: offer.discount
-            }
-          });
-        } catch (emailError) {
-          console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
-        }
-
-        // التحويل الفوري لبوابة الدفع
-        setTimeout(() => {
-          window.location.href = data.payment_url;
-        }, 1500);
-        
-      } else {
-        throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
-      }
+      // التوجيه إلى صفحة الدفع المحسنة
+      window.location.href = `/enhanced-payment?${serviceParams}`;
+      
     } catch (error: any) {
       console.error('Payment error:', error);
       toast({
@@ -464,7 +392,7 @@ const currentOffers = [
                   {/* زر الدفع الوحيد */}
                   <div className="space-y-3">
                     <Button 
-                      onClick={() => handleTabPayment(offer)}
+                      onClick={() => handlePayment(offer)}
                       className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group border-0 relative overflow-hidden"
                     >
                       <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
