@@ -3,10 +3,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import React, { useState } from "react";
-import { Star, ShoppingCart, Eye, CheckCircle, Ruler, CreditCard, Smartphone, QrCode, Palette, Sparkles, Loader2, Banknote, Wallet } from "lucide-react";
+import React from "react";
+import { Star, ShoppingCart, Eye, CheckCircle, Ruler, CreditCard, Smartphone, QrCode, Palette, Sparkles, ArrowRight } from "lucide-react";
 import businessCardsHeroImg from "@/assets/printing/business-cards-hero-bg.jpg";
 import businessCardsProductImg from "@/assets/printing/business-cards-category.jpg";
 import ledBusinessCardsImg from "@/assets/printing/led-business-cards.jpg";
@@ -17,207 +15,6 @@ import texturedFabricBusinessCardsImg from "@/assets/printing/textured-fabric-bu
 import threeDEffectBusinessCardsImg from "@/assets/printing/3d-effect-business-cards.jpg";
 
 const BusinessCards = () => {
-  const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
-  const { toast } = useToast();
-
-  // نظام الدفع المطابق لصفحة التسويق الرقمي
-  const handlePaymentMethod = async (product: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
-    setLoadingMethod(method);
-    
-    toast({
-      title: "جاري معالجة طلب الدفع...",
-      description: "يرجى الانتظار قليلاً"
-    });
-    
-    try {
-      const amount = parseInt(product.price.replace(/[^\d]/g, ''));
-      let functionName = '';
-      let payload: any = {
-        amount: amount,
-        currency: 'SAR',
-        customer_name: 'عميل كروت شخصية',
-        customer_email: 'customer@example.com',
-        customer_phone: '966500000000',
-        offer_title: product.title,
-        description: `طلب منتج: ${product.title} - كروت شخصية`
-      };
-
-      switch (method) {
-        case 'paylink':
-          functionName = 'paylink-payment';
-          payload.success_url = window.location.origin;
-          break;
-        case 'stc-pay':
-          functionName = 'stc-pay';
-          break;
-        case 'tamara':
-          functionName = 'tamara-payment';
-          break;
-      }
-
-      console.log(`استدعاء ${functionName} مع البيانات:`, payload);
-
-      // تحسين استدعاء Edge Function مع retry logic (مطابق للتسويق الرقمي)
-      let data, error;
-      let attempts = 0;
-      const maxAttempts = 3;
-      
-      while (attempts < maxAttempts) {
-        attempts++;
-        console.log(`محاولة ${attempts} من ${maxAttempts}`);
-        
-        try {
-          const result: any = await Promise.race([
-            supabase.functions.invoke(functionName, {
-              body: payload,
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 30000)
-            )
-          ]);
-          
-          data = result.data;
-          error = result.error;
-          
-          if (!error && data) {
-            console.log(`نجحت المحاولة ${attempts}:`, data);
-            break;
-          }
-          
-          if (attempts < maxAttempts) {
-            console.log(`فشلت المحاولة ${attempts}، سيتم إعادة المحاولة...`);
-            await new Promise(resolve => setTimeout(resolve, 2000));
-          }
-        } catch (attemptError) {
-          console.error(`خطأ في المحاولة ${attempts}:`, attemptError);
-          if (attempts === maxAttempts) {
-            throw attemptError;
-          }
-        }
-      }
-
-      if (error) {
-        console.error(`${method} error after ${attempts} attempts:`, error);
-        throw new Error(error.message || 'فشل في الاتصال بالخدمة بعد عدة محاولات');
-      }
-
-      console.log(`${functionName} response:`, data);
-
-      if (data?.success || data?.url || data?.payment_url) {
-        toast({
-          title: "تم إنشاء رابط الدفع بنجاح",
-          description: "سيتم توجيهك إلى صفحة الدفع"
-        });
-
-        if (method === 'stc-pay') {
-          // عرض تعليمات STC Pay
-          showSTCPayInstructions(data);
-        } else if (data.url || data.paymentUrl || data.payment_url) {
-          // استخدام الرابط المناسب
-          const paymentUrl = data.url || data.paymentUrl || data.payment_url;
-          
-          setTimeout(() => {
-            if (method === 'paylink') {
-              // فتح Paylink في نفس التبويب
-              window.location.href = paymentUrl;
-            } else {
-              // فتح باقي الطرق في تبويب جديد
-              window.open(paymentUrl, '_blank');
-              toast({
-                title: "تم توجيهك لصفحة الدفع",
-                description: "يرجى إكمال عملية الدفع في التبويب الجديد",
-              });
-            }
-          }, 500);
-        } else {
-          console.log("البيانات المرجعة من الخدمة:", data);
-          throw new Error('لم يتم إرجاع رابط الدفع من الخدمة');
-        }
-      } else {
-        const errorMsg = data?.error || data?.message || 'فشل في إنشاء رابط الدفع';
-        console.error('خطأ في البيانات المرجعة:', data);
-        throw new Error(errorMsg);
-      }
-    } catch (error) {
-      console.error(`خطأ نهائي في ${method}:`, error);
-      
-      let errorMessage = "حدث خطأ أثناء عملية الدفع";
-      
-      if (error instanceof Error) {
-        if (error.message.includes('timeout') || error.message.includes('انتهت مهلة')) {
-          errorMessage = "انتهت مهلة الاتصال. يرجى المحاولة مرة أخرى";
-        } else if (error.message.includes('Network') || error.message.includes('Failed to fetch')) {
-          errorMessage = "مشكلة في الاتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى";
-        } else {
-          errorMessage = error.message;
-        }
-      }
-      
-      toast({
-        title: "خطأ في الدفع",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setLoadingMethod(null);
-    }
-  };
-
-  const showSTCPayInstructions = (data: any) => {
-    const modal = document.createElement('div');
-    modal.innerHTML = `
-      <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
-          <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white text-center">
-            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9M19 9H14V4H19V9Z"/>
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold mb-2">تعليمات الدفع - STC Pay</h3>
-            <p class="text-orange-100">معاملة آمنة ومحمية</p>
-          </div>
-          <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
-            <div class="bg-blue-50 rounded-xl p-4 border-2 border-blue-100">
-              <h4 class="font-bold text-blue-800 mb-2">1. افتح تطبيق STC Pay</h4>
-            </div>
-            <div class="bg-green-50 rounded-xl p-4 border-2 border-green-100">
-              <h4 class="font-bold text-green-800 mb-2">2. اختر "إرسال أموال"</h4>
-            </div>
-            <div class="bg-purple-50 rounded-xl p-4 border-2 border-purple-100">
-              <h4 class="font-bold text-purple-800 mb-2">3. أرسل المبلغ:</h4>
-              <div class="bg-white rounded-lg p-4 border-2 border-purple-200 text-center">
-                <div class="text-3xl font-bold text-purple-600">${data.amount}</div>
-                <div class="text-lg text-purple-500">${data.currency}</div>
-                <div class="mt-2 text-sm text-gray-600">إلى الرقم</div>
-                <div class="text-xl font-bold text-gray-800 mt-2 font-mono bg-gray-50 rounded p-2">${data.merchant_number || data.merchantNumber}</div>
-              </div>
-            </div>
-            <div class="bg-orange-50 rounded-xl p-4 border-2 border-orange-100">
-              <h4 class="font-bold text-orange-800 mb-2">4. استخدم المرجع:</h4>
-              <div class="bg-white rounded-lg p-3 border-2 border-orange-200 text-center">
-                <div class="text-lg font-bold text-gray-800 font-mono bg-gray-50 rounded p-2">${data.reference || data.paymentReference}</div>
-                <button onclick="navigator.clipboard.writeText('${data.reference || data.paymentReference}'); this.innerHTML='✓ تم النسخ!'" 
-                        class="mt-2 bg-orange-100 hover:bg-orange-200 text-orange-800 text-sm font-medium py-2 px-4 rounded-lg">
-                  نسخ المرجع
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="p-6 bg-gray-50 border-t">
-            <button onclick="this.closest('.fixed').remove()" 
-                    class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl">
-              إغلاق
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-  };
   const products = [
     {
       title: "كروت شخصية أساسية ورقمية",
@@ -543,7 +340,7 @@ const BusinessCards = () => {
                           });
                           window.location.href = `/enhanced-payment?${params.toString()}`;
                         }}
-                        disabled={loadingMethod !== null}
+                        
                         className={`flex-1 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white text-xs py-2 transition-all duration-300 hover:shadow-lg`}
                       >
                         <ShoppingCart className="w-3 h-3 mr-1" />
