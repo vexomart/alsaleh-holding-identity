@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowRight, CheckCircle, Users, Clock, Award, TrendingUp, Shield, Calendar, FileText, BarChart3, Star, Sparkles, ArrowLeft, ChevronRight, Send, Phone, Mail, Building } from "lucide-react";
+import { ArrowRight, CheckCircle, Users, Clock, Award, TrendingUp, Shield, Calendar, FileText, BarChart3, Star, Sparkles, ArrowLeft, ChevronRight, Send, Phone, Mail, Building, Zap, Target, Rocket, Globe } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -219,101 +219,202 @@ const HRManagementSystem = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         <Navigation />
         
-        {/* Hero Section - تصميم جديد مستوحى من الصورة */}
-        <section className="relative pt-20 pb-20 overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800" data-section="0">
-          {/* Background Elements */}
+        {/* Hero Section - تصميم جديد مع أنيميشن متقدم */}
+        <section className="relative pt-20 pb-24 overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800" data-section="0">
+          {/* Animated Background Elements */}
           <div className="absolute inset-0">
-            <div className="absolute top-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-32 left-20 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-float-delayed"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            {/* Floating Orbs */}
+            <div className="absolute inset-0">
+              <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-[spin_20s_linear_infinite]"></div>
+              <div className="absolute bottom-32 left-20 w-80 h-80 bg-gradient-to-r from-indigo-400/20 to-pink-400/20 rounded-full blur-3xl animate-[spin_25s_linear_infinite_reverse]"></div>
+              <div className="absolute top-40 left-1/2 w-64 h-64 bg-gradient-to-r from-purple-400/20 to-blue-400/20 rounded-full blur-3xl animate-float"></div>
+            </div>
+            
+            {/* Animated Grid Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="h-full w-full bg-grid-pattern animate-pulse"></div>
+            </div>
+            
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
           </div>
           
           <div className="container mx-auto px-6 relative z-10 max-w-7xl">
-            {/* Breadcrumb */}
-            <div className="flex items-center gap-2 mb-12 text-sm text-white/70">
-              <Link to="/" className="hover:text-white transition-colors">الرئيسية</Link>
-              <ArrowLeft className="w-4 h-4" />
-              <Link to="/enterprise-systems" className="hover:text-white transition-colors">أنظمة الشركات</Link>
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-white font-medium">إدارة الموارد البشرية</span>
+            {/* Animated Breadcrumb */}
+            <div className="flex items-center gap-2 mb-16 text-sm text-white/70 animate-fade-in">
+              <Link to="/" className="hover:text-white transition-all duration-300 hover:scale-110 hover:shadow-lg">الرئيسية</Link>
+              <ArrowLeft className="w-4 h-4 animate-pulse" />
+              <Link to="/enterprise-systems" className="hover:text-white transition-all duration-300 hover:scale-110">أنظمة الشركات</Link>
+              <ArrowLeft className="w-4 h-4 animate-pulse" />
+              <span className="text-white font-medium bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">إدارة الموارد البشرية</span>
             </div>
             
-            <div className="text-center space-y-8">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg">
-                <Users className="w-5 h-5 text-white animate-pulse" />
-                <span className="text-sm font-bold text-white font-cairo">
+            <div className="text-center space-y-10">
+              {/* Animated Badge */}
+              <div className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-white/15 to-white/5 backdrop-blur-lg border border-white/20 shadow-2xl animate-scale-in">
+                <div className="relative">
+                  <Users className="w-6 h-6 text-white animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-ping"></div>
+                </div>
+                <span className="text-lg font-black text-white font-cairo">
                   نظام HR متطور
                 </span>
-                <Star className="w-4 h-4 text-yellow-400 animate-pulse" />
+                <Star className="w-5 h-5 text-yellow-400 animate-spin" />
+                <Sparkles className="w-5 h-5 text-blue-300 animate-pulse" />
               </div>
               
-              {/* Main Title */}
-              <div className="space-y-6 max-w-4xl mx-auto">
-                <h1 className="text-5xl lg:text-7xl font-black leading-tight font-cairo text-white">
-                  ابدأ رحلة التحول الرقمي لقسم
-                  <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-                    HR
-                  </span>
-                </h1>
+              {/* Main Title with Stagger Animation */}
+              <div className="space-y-8 max-w-5xl mx-auto">
+                <div className="space-y-4">
+                  <h1 className="text-6xl lg:text-8xl font-black leading-none font-cairo text-white">
+                    <span className="inline-block animate-fade-in">ابدأ</span>
+                    <span className="inline-block animate-fade-in delay-200"> رحلة</span>
+                    <span className="inline-block animate-fade-in delay-300"> التحول</span>
+                    <span className="inline-block animate-fade-in delay-400"> الرقمي</span>
+                  </h1>
+                  <h2 className="text-6xl lg:text-8xl font-black leading-none font-cairo">
+                    <span className="inline-block animate-fade-in delay-500">لقسم </span>
+                    <span className="inline-block bg-gradient-to-r from-yellow-300 via-orange-300 to-red-300 bg-clip-text text-transparent animate-scale-in delay-700 hover:animate-pulse">
+                      HR
+                    </span>
+                  </h2>
+                </div>
                 
-                <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-medium font-cairo max-w-3xl mx-auto">
-                  احصل على استشارة مجانية واكتشف كيف يمكن لنظامنا تحسين كفاءة إدارة الموارد البشرية في شركتك
+                <p className="text-2xl lg:text-3xl text-white/95 leading-relaxed font-bold font-cairo max-w-4xl mx-auto animate-fade-in delay-1000">
+                  احصل على استشارة مجانية واكتشف كيف يمكن لنظامنا 
+                  <span className="bg-gradient-to-r from-yellow-200 to-orange-200 bg-clip-text text-transparent"> تحسين كفاءة </span>
+                  إدارة الموارد البشرية في شركتك
                 </p>
               </div>
               
-              {/* Key Benefits */}
-              <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
-                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
-                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                  <span className="font-medium">استشارة مجانية خلال 24 ساعة</span>
+              {/* Animated Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-16 animate-fade-in delay-1200">
+                <div className="text-center group hover:scale-110 transition-all duration-300">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center animate-bounce">
+                    <Target className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-black text-white mb-1">99%</div>
+                  <div className="text-sm text-white/80">دقة النظام</div>
                 </div>
-                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
-                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                  <span className="font-medium">عرض توضيحي مخصص لشركتك</span>
+                <div className="text-center group hover:scale-110 transition-all duration-300">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center animate-bounce delay-100">
+                    <Rocket className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-black text-white mb-1">50%</div>
+                  <div className="text-sm text-white/80">توفير في الوقت</div>
                 </div>
-                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
-                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                  <span className="font-medium">حلول مصممة خصيصاً لاحتياجاتك</span>
+                <div className="text-center group hover:scale-110 transition-all duration-300">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center animate-bounce delay-200">
+                    <Zap className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-black text-white mb-1">24/7</div>
+                  <div className="text-sm text-white/80">دعم فني</div>
+                </div>
+                <div className="text-center group hover:scale-110 transition-all duration-300">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center animate-bounce delay-300">
+                    <Globe className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-black text-white mb-1">500+</div>
+                  <div className="text-sm text-white/80">شركة راضية</div>
                 </div>
               </div>
               
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+              {/* Enhanced Key Benefits */}
+              <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-16">
+                <div className="group animate-slide-in-right delay-1400">
+                  <div className="flex items-center gap-4 text-white bg-gradient-to-r from-white/15 to-white/5 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-white/20 hover:scale-105 hover:shadow-3xl transition-all duration-500">
+                    <div className="relative">
+                      <CheckCircle className="w-8 h-8 text-green-400 animate-pulse" />
+                      <div className="absolute inset-0 rounded-full bg-green-400/20 animate-ping"></div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-black text-lg mb-1">استشارة مجانية</div>
+                      <div className="text-sm opacity-80">خلال 24 ساعة</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="group animate-slide-in-right delay-1500">
+                  <div className="flex items-center gap-4 text-white bg-gradient-to-r from-white/15 to-white/5 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-white/20 hover:scale-105 hover:shadow-3xl transition-all duration-500">
+                    <div className="relative">
+                      <CheckCircle className="w-8 h-8 text-blue-400 animate-pulse" />
+                      <div className="absolute inset-0 rounded-full bg-blue-400/20 animate-ping delay-200"></div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-black text-lg mb-1">عرض توضيحي</div>
+                      <div className="text-sm opacity-80">مخصص لشركتك</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="group animate-slide-in-right delay-1600">
+                  <div className="flex items-center gap-4 text-white bg-gradient-to-r from-white/15 to-white/5 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-white/20 hover:scale-105 hover:shadow-3xl transition-all duration-500">
+                    <div className="relative">
+                      <CheckCircle className="w-8 h-8 text-purple-400 animate-pulse" />
+                      <div className="absolute inset-0 rounded-full bg-purple-400/20 animate-ping delay-400"></div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-black text-lg mb-1">حلول مخصصة</div>
+                      <div className="text-sm opacity-80">لاحتياجاتك تماماً</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Animated CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-12">
                 <Button 
                   size="lg" 
-                  className="bg-white text-blue-700 hover:bg-white/90 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-cairo text-lg"
+                  className="group relative bg-gradient-to-r from-white to-gray-100 text-blue-700 hover:from-yellow-100 hover:to-orange-100 font-black px-12 py-6 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 font-cairo text-xl animate-scale-in delay-1800 overflow-hidden"
                   onClick={() => document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  احصل على استشارة مجانية
-                  <ArrowRight className="w-5 h-5 mr-2" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative z-10">احصل على استشارة مجانية</span>
+                  <ArrowRight className="w-6 h-6 mr-3 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-50 transition-opacity duration-300"></div>
                 </Button>
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="border-2 border-white/30 text-white hover:bg-white/10 font-bold px-8 py-4 rounded-xl transition-all duration-300 font-cairo text-lg backdrop-blur-lg"
+                  className="group relative border-3 border-white/40 text-white hover:bg-white/20 font-black px-12 py-6 rounded-2xl transition-all duration-500 font-cairo text-xl backdrop-blur-lg animate-scale-in delay-2000 overflow-hidden"
                 >
-                  شاهد عرض توضيحي
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative z-10">شاهد عرض توضيحي</span>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-white/20 to-white/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* HR Modules */}
-        <section className="py-20 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800" data-section="1">
-          <div className="container mx-auto px-6 max-w-7xl">
+        {/* HR Modules - تصميم محسن مع أنيميشن متقدم */}
+        <section className="py-24 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 relative overflow-hidden" data-section="1">
+          {/* Background Animation Elements */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-blue-200/20 to-indigo-200/20 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-purple-200/20 to-pink-200/20 rounded-full blur-3xl animate-float-delayed"></div>
+          </div>
+          
+          <div className="container mx-auto px-6 max-w-7xl relative z-10">
             <div className={cn(
-              "text-center mb-16 animate-fade-in",
+              "text-center mb-20 animate-fade-in",
               visibleSections.has(1) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             )}>
-              <h2 className="text-4xl lg:text-6xl font-black mb-6 font-cairo">
-                <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200/50 dark:border-blue-700/50 mb-8 animate-scale-in">
+                <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400 animate-pulse" />
+                <span className="text-sm font-bold text-blue-700 dark:text-blue-300 font-cairo">
+                  وحدات متطورة ومتكاملة
+                </span>
+              </div>
+              
+              <h2 className="text-5xl lg:text-7xl font-black mb-8 font-cairo leading-tight">
+                <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent animate-scale-in delay-200">
                   وحدات النظام
                 </span>
               </h2>
-              <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-medium">
+              <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto font-bold leading-relaxed animate-fade-in delay-300">
                 مجموعة شاملة من الوحدات المتخصصة لتغطية جميع احتياجات إدارة الموارد البشرية
+                <span className="block text-lg mt-2 text-blue-600 dark:text-blue-400 font-medium">
+                  مع تقنيات الذكاء الاصطناعي والأتمتة المتقدمة
+                </span>
               </p>
             </div>
             
@@ -324,76 +425,162 @@ const HRManagementSystem = () => {
                   <Card 
                     key={module.id} 
                     className={cn(
-                      "group bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border border-slate-200/50 dark:border-slate-700/50 shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in overflow-hidden",
+                      "group relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg border border-slate-200/50 dark:border-slate-700/50 shadow-xl hover:shadow-3xl transition-all duration-700 animate-fade-in overflow-hidden rounded-3xl",
+                      "hover:scale-[1.02] hover:-translate-y-2",
                       visibleSections.has(1) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                     )}
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    style={{ animationDelay: `${index * 0.15}s` }}
                   >
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center gap-4 mb-4">
+                    {/* Gradient Border Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
+                    
+                    {/* Hover Glow Effect */}
+                    <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                    
+                    <CardHeader className="pb-6 relative z-10">
+                      <div className="flex items-start gap-5 mb-6">
                         <div className={cn(
-                          "w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-r shadow-lg",
+                          "relative w-20 h-20 rounded-3xl flex items-center justify-center bg-gradient-to-r shadow-xl group-hover:shadow-2xl transition-all duration-500 group-hover:scale-110",
                           module.color
                         )}>
-                          <IconComponent className="w-8 h-8 text-white" />
+                          <IconComponent className="w-10 h-10 text-white group-hover:animate-bounce" />
+                          
+                          {/* Icon Glow Effect */}
+                          <div className="absolute inset-0 rounded-3xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                          
+                          {/* Floating Particles */}
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping delay-200"></div>
+                          <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping delay-500"></div>
                         </div>
+                        
                         <div className="flex-1">
-                          <CardTitle className="text-xl font-bold text-slate-800 dark:text-white mb-2 font-cairo">
+                          <CardTitle className="text-2xl font-black text-slate-800 dark:text-white mb-3 font-cairo group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300">
                             {module.title}
                           </CardTitle>
-                          <p className="text-sm text-blue-600 dark:text-blue-400 font-medium font-poppins">
+                          <p className="text-base text-blue-600 dark:text-blue-400 font-bold font-poppins uppercase tracking-wide">
                             {module.titleEn}
                           </p>
                         </div>
                       </div>
-                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                      
+                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg font-medium">
                         {module.description}
                       </p>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div>
-                        <h4 className="font-bold text-slate-800 dark:text-white mb-3 font-cairo">الميزات الرئيسية:</h4>
-                        <ul className="space-y-2">
+                    
+                    <CardContent className="space-y-8 relative z-10">
+                      <div className="space-y-4">
+                        <h4 className="font-black text-slate-800 dark:text-white text-lg font-cairo flex items-center gap-2">
+                          <Zap className="w-5 h-5 text-yellow-500 animate-pulse" />
+                          الميزات الرئيسية:
+                        </h4>
+                        <ul className="space-y-3">
                           {module.features.map((feature, idx) => (
-                            <li key={idx} className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
-                              <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                              <span>{feature}</span>
+                            <li key={idx} className="flex items-center gap-4 text-slate-600 dark:text-slate-300 group/item hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
+                              <div className="relative">
+                                <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 group-hover/item:animate-pulse" />
+                                <div className="absolute inset-0 rounded-full bg-emerald-400/20 opacity-0 group-hover/item:opacity-100 animate-ping"></div>
+                              </div>
+                              <span className="font-medium group-hover/item:font-bold transition-all duration-300">{feature}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
                       
-                      <div>
-                        <h4 className="font-bold text-slate-800 dark:text-white mb-3 font-cairo">الفوائد:</h4>
-                        <ul className="space-y-2">
+                      <div className="space-y-4">
+                        <h4 className="font-black text-slate-800 dark:text-white text-lg font-cairo flex items-center gap-2">
+                          <Target className="w-5 h-5 text-purple-500 animate-pulse" />
+                          الفوائد:
+                        </h4>
+                        <ul className="space-y-3">
                           {module.benefits.map((benefit, idx) => (
-                            <li key={idx} className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
-                              <Star className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-                              <span>{benefit}</span>
+                            <li key={idx} className="flex items-center gap-4 text-slate-600 dark:text-slate-300 group/item hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">
+                              <div className="relative">
+                                <Star className="w-5 h-5 text-yellow-500 flex-shrink-0 group-hover/item:animate-spin" />
+                                <div className="absolute inset-0 rounded-full bg-yellow-400/20 opacity-0 group-hover/item:opacity-100 animate-ping"></div>
+                              </div>
+                              <span className="font-medium group-hover/item:font-bold transition-all duration-300">{benefit}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
+                      
+                      {/* Interactive Button */}
+                      <div className="pt-4">
+                        <Button
+                          variant="outline"
+                          className="w-full group/btn border-2 border-slate-200 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 rounded-2xl py-3 font-bold"
+                        >
+                          <span className="group-hover/btn:text-blue-600 dark:group-hover/btn:text-blue-400 transition-colors duration-300">
+                            تعرف على المزيد
+                          </span>
+                          <ChevronRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform duration-300 group-hover/btn:text-blue-600 dark:group-hover/btn:text-blue-400" />
+                        </Button>
+                      </div>
                     </CardContent>
+                    
+                    {/* Background Pattern */}
+                    <div className="absolute bottom-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-10 transition-opacity duration-500">
+                      <IconComponent className="w-full h-full" />
+                    </div>
                   </Card>
                 );
               })}
             </div>
+            
+            {/* Bottom CTA */}
+            <div className="text-center mt-16 animate-fade-in delay-1000">
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-3xl p-8 border border-blue-200/50 dark:border-blue-700/50">
+                <h3 className="text-3xl font-black text-slate-800 dark:text-white mb-4 font-cairo">
+                  هل تريد وحدات مخصصة؟
+                </h3>
+                <p className="text-slate-600 dark:text-slate-300 mb-6 text-lg">
+                  يمكننا تطوير وحدات إضافية تناسب احتياجات شركتك الخاصة
+                </p>
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 font-cairo text-lg group"
+                  onClick={() => document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  تواصل معنا للمزيد
+                  <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Key Benefits */}
-        <section className="py-20 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" data-section="2">
-          <div className="container mx-auto px-6 max-w-7xl">
+        {/* Key Benefits - تصميم محسن مع أنيميشن متقدم */}
+        <section className="py-24 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden" data-section="2">
+          {/* Animated Background */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-10 right-10 w-72 h-72 bg-gradient-to-r from-emerald-200/20 to-teal-200/20 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-10 left-10 w-96 h-96 bg-gradient-to-r from-blue-200/20 to-cyan-200/20 rounded-full blur-3xl animate-float-delayed"></div>
+          </div>
+          
+          <div className="container mx-auto px-6 max-w-7xl relative z-10">
             <div className={cn(
-              "text-center mb-16 animate-fade-in",
+              "text-center mb-20 animate-fade-in",
               visibleSections.has(2) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             )}>
-              <h2 className="text-4xl lg:text-6xl font-black mb-6 font-cairo">
-                <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 border border-emerald-200/50 dark:border-emerald-700/50 mb-8 animate-scale-in">
+                <Shield className="w-5 h-5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+                <span className="text-sm font-bold text-emerald-700 dark:text-emerald-300 font-cairo">
+                  مميزات استثنائية
+                </span>
+              </div>
+              
+              <h2 className="text-5xl lg:text-7xl font-black mb-8 font-cairo leading-tight">
+                <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent animate-scale-in delay-200">
                   لماذا تختار نظامنا؟
                 </span>
               </h2>
+              <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto font-bold leading-relaxed animate-fade-in delay-300">
+                نحن نقدم أكثر من مجرد نظام HR - نحن نقدم شريكاً استراتيجياً لنجاح شركتك
+                <span className="block text-lg mt-2 text-emerald-600 dark:text-emerald-400 font-medium">
+                  مع ضمانات الأمان والجودة والدعم المستمر
+                </span>
+              </p>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -403,23 +590,62 @@ const HRManagementSystem = () => {
                   <div 
                     key={index}
                     className={cn(
-                      "text-center group animate-fade-in",
+                      "group text-center animate-fade-in hover:scale-105 transition-all duration-500",
                       visibleSections.has(2) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                     )}
-                    style={{ animationDelay: `${index * 0.15}s` }}
+                    style={{ animationDelay: `${index * 0.2}s` }}
                   >
-                    <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-                      <IconComponent className="w-10 h-10 text-white" />
+                    <div className="relative mb-8">
+                      {/* Main Icon Container */}
+                      <div className="relative w-24 h-24 mx-auto bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 group-hover:scale-110">
+                        <IconComponent className="w-12 h-12 text-white group-hover:animate-bounce" />
+                        
+                        {/* Icon Glow Effect */}
+                        <div className="absolute inset-0 rounded-3xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      </div>
+                      
+                      {/* Floating Elements */}
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 animate-ping delay-100"></div>
+                      <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full opacity-0 group-hover:opacity-100 animate-ping delay-300"></div>
+                      
+                      {/* Background Glow */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-indigo-700/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-150"></div>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-4 font-cairo">
+                    
+                    <h3 className="text-2xl font-black text-slate-800 dark:text-white mb-4 font-cairo group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300">
                       {benefit.title}
                     </h3>
-                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                       {benefit.description}
                     </p>
+                    
+                    {/* Hover underline effect */}
+                    <div className="w-0 h-1 bg-gradient-to-r from-blue-600 to-indigo-700 mx-auto mt-4 group-hover:w-16 transition-all duration-500 rounded-full"></div>
                   </div>
                 );
               })}
+            </div>
+            
+            {/* Bottom Stats */}
+            <div className="mt-20 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-3xl p-8 border border-blue-200/50 dark:border-blue-700/50 animate-fade-in delay-800">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div className="group hover:scale-105 transition-all duration-300">
+                  <div className="text-4xl font-black text-blue-700 dark:text-blue-300 mb-2">500+</div>
+                  <div className="text-slate-600 dark:text-slate-300 font-medium">شركة راضية</div>
+                </div>
+                <div className="group hover:scale-105 transition-all duration-300">
+                  <div className="text-4xl font-black text-emerald-600 dark:text-emerald-400 mb-2">99.9%</div>
+                  <div className="text-slate-600 dark:text-slate-300 font-medium">وقت التشغيل</div>
+                </div>
+                <div className="group hover:scale-105 transition-all duration-300">
+                  <div className="text-4xl font-black text-purple-600 dark:text-purple-400 mb-2">24/7</div>
+                  <div className="text-slate-600 dark:text-slate-300 font-medium">دعم فني</div>
+                </div>
+                <div className="group hover:scale-105 transition-all duration-300">
+                  <div className="text-4xl font-black text-orange-600 dark:text-orange-400 mb-2">50%</div>
+                  <div className="text-slate-600 dark:text-slate-300 font-medium">توفير في التكلفة</div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
