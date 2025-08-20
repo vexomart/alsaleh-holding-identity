@@ -22,6 +22,7 @@ import {
 import { Link } from "react-router-dom";
 
 const PrintingServices = () => {
+  console.log('PrintingServices component is rendering...');
   const features = [
     {
       title: "جودة عالية",
