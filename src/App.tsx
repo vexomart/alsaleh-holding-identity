@@ -115,6 +115,9 @@ const CarBooking = lazy(() => import("./pages/CarBooking"));
 const EmailTest = lazy(() => import("./pages/EmailTest"));
 const EnhancedDesignCategory = lazy(() => import("./pages/EnhancedDesignCategory"));
 const EnterpriseSystems = lazy(() => import("./pages/EnterpriseSystems"));
+const HRManagementSystem = lazy(() => import("./pages/HRManagementSystem"));
+const FinancialSystem = lazy(() => import("./pages/FinancialSystem"));
+const ProjectManagementSystem = lazy(() => import("./pages/ProjectManagementSystem"));
 
 
 const TechEcosystem = lazy(() => import("./pages/TechEcosystem"));
@@ -260,6 +263,9 @@ const App = () => {
                 <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
                 <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
                 <Route path="/enterprise-systems" element={<Suspense fallback={<PageLoader />}><EnterpriseSystems /></Suspense>} />
+                <Route path="/hr-management-system" element={<Suspense fallback={<PageLoader />}><HRManagementSystem /></Suspense>} />
+                <Route path="/financial-system" element={<Suspense fallback={<PageLoader />}><FinancialSystem /></Suspense>} />
+                <Route path="/project-management-system" element={<Suspense fallback={<PageLoader />}><ProjectManagementSystem /></Suspense>} />
             <Route path="/department/:id" element={<DepartmentDetails />} />
             <Route path="/user-guide" element={<UserGuide />} />
             <Route path="/auth" element={<Auth />} />

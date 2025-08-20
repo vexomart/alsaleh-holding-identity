@@ -376,13 +376,20 @@ const EnterpriseSystems = () => {
                       </div>
                       
                       {/* CTA */}
-                      <Button className={cn(
-                        "w-full bg-gradient-to-r text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-cairo",
-                        system.color
-                      )}>
-                        تفاصيل أكثر
-                        <ArrowRight className="w-4 h-4 mr-2" />
-                      </Button>
+                      <Link to={
+                        system.id === 1 ? "/hr-management-system" :
+                        system.id === 2 ? "/financial-system" :
+                        system.id === 3 ? "/project-management-system" :
+                        "#"
+                      }>
+                        <Button className={cn(
+                          "w-full bg-gradient-to-r text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-cairo",
+                          system.color
+                        )}>
+                          تفاصيل أكثر
+                          <ArrowRight className="w-4 h-4 mr-2" />
+                        </Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 );
