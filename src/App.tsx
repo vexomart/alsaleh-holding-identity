@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useRef } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -163,7 +163,7 @@ const PageLoader = () => (
 
 
 const App = () => {
-  const queryClientRef = React.useRef<QueryClient | null>(null);
+  const queryClientRef = useRef<QueryClient | null>(null);
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient();
   }
