@@ -6,49 +6,93 @@ import { Button } from "@/components/ui/button";
 import { Star, ShoppingCart, Eye, CheckCircle, Ruler, CreditCard, Smartphone, QrCode, Palette, Sparkles } from "lucide-react";
 import businessCardsHeroImg from "@/assets/printing/business-cards-hero-bg.jpg";
 import businessCardsProductImg from "@/assets/printing/business-cards-category.jpg";
+import ledBusinessCardsImg from "@/assets/printing/led-business-cards.jpg";
+import spotUvBusinessCardsImg from "@/assets/printing/spot-uv-business-cards.jpg";
+import goldFoilBusinessCardsImg from "@/assets/printing/gold-foil-business-cards.jpg";
 
 const BusinessCards = () => {
-  const product = {
-    title: "كروت شخصية أساسية ورقمية",
-    description: "كروت شخصية عصرية تجمع بين الأناقة الكلاسيكية والتقنيات الذكية الحديثة",
-    price: "من 199 ريال",
-    originalPrice: "349 ريال",
-    image: businessCardsProductImg,
-    rating: 4.9,
-    reviews: 430,
-    features: [
-      "تصميم كلاسيكي أنيق مع لمسة عصرية",
-      "ورق مقوى فاخر 350 جرام",
-      "طباعة عالية الدقة بألوان زاهية",
-      "تشطيب لامع، مطفي، أو معدني",
-      "دعم تقنية NFC الذكية (اختياري)",
-      "كود QR مخصص للمشاركة السريعة",
-      "ربط مع الملف الشخصي الرقمي",
-      "تصميم مجاني مع مراجعات لا محدودة",
-      "تسليم سريع خلال 24-48 ساعة",
-      "ضمان الجودة 100%"
-    ],
-    types: [
-      {
-        name: "أساسية كلاسيكية",
-        price: "199 ريال",
-        description: "كروت شخصية تقليدية بتصميم احترافي أنيق"
-      },
-      {
-        name: "رقمية ذكية",
-        price: "299 ريال", 
-        description: "كروت بتقنية NFC وQR Code للمشاركة الفورية"
-      },
-      {
-        name: "مختلطة (الأفضل)",
-        price: "249 ريال",
-        description: "حزمة متكاملة تشمل الكروت التقليدية والرقمية"
-      }
-    ],
-    category: "متميز",
-    icon: CreditCard,
-    gradient: "from-blue-600 via-purple-600 to-pink-600"
-  };
+  const products = [
+    {
+      title: "كروت شخصية أساسية ورقمية",
+      description: "كروت شخصية عصرية تجمع بين الأناقة الكلاسيكية والتقنيات الذكية الحديثة",
+      price: "من 199 ريال",
+      originalPrice: "349 ريال",
+      image: businessCardsProductImg,
+      rating: 4.9,
+      reviews: 430,
+      features: [
+        "تصميم كلاسيكي أنيق مع لمسة عصرية",
+        "ورق مقوى فاخر 350 جرام",
+        "طباعة عالية الدقة بألوان زاهية",
+        "تشطيب لامع، مطفي، أو معدني",
+        "دعم تقنية NFC الذكية (اختياري)",
+        "كود QR مخصص للمشاركة السريعة"
+      ],
+      category: "متميز",
+      icon: CreditCard,
+      gradient: "from-blue-600 via-purple-600 to-pink-600"
+    },
+    {
+      title: "كروت شخصية ليد",
+      description: "كروت شخصية مضيئة بتقنية LED المتقدمة لانطباع لا يُنسى",
+      price: "من 399 ريال",
+      originalPrice: "599 ريال",
+      image: ledBusinessCardsImg,
+      rating: 4.8,
+      reviews: 185,
+      features: [
+        "إضاءة LED متقدمة",
+        "بطارية قابلة للشحن",
+        "تحكم في الألوان والأنماط",
+        "مقاومة للماء والغبار",
+        "عمر بطارية طويل",
+        "تصميم أنيق ومبتكر"
+      ],
+      category: "مبتكر",
+      icon: Smartphone,
+      gradient: "from-yellow-500 via-orange-500 to-red-500"
+    },
+    {
+      title: "كروت شخصية سبوت يوفي",
+      description: "كروت شخصية بطلاء سبوت UV اللامع للحصول على ملمس فاخر",
+      price: "من 299 ريال",
+      originalPrice: "449 ريال",
+      image: spotUvBusinessCardsImg,
+      rating: 4.7,
+      reviews: 298,
+      features: [
+        "طلاء سبوت UV عالي اللمعان",
+        "ملمس ناعم وفاخر",
+        "مقاومة للخدوش والتآكل",
+        "إبراز التفاصيل المهمة",
+        "تأثير بصري متميز",
+        "جودة طباعة عالية"
+      ],
+      category: "فاخر",
+      icon: Sparkles,
+      gradient: "from-purple-500 via-indigo-500 to-blue-500"
+    },
+    {
+      title: "كروت شخصية مع ختم ذهبي",
+      description: "كروت شخصية بختم ذهبي فاخر يضفي لمسة من الأناقة والرقي",
+      price: "من 349 ريال",
+      originalPrice: "499 ريال",
+      image: goldFoilBusinessCardsImg,
+      rating: 4.9,
+      reviews: 342,
+      features: [
+        "ختم ذهبي حقيقي 24 قيراط",
+        "تصميم مخصص للختم",
+        "ورق فاخر عالي الجودة",
+        "لمسة نهائية أنيقة",
+        "مظهر راقي ومميز",
+        "تفاصيل دقيقة ومتقنة"
+      ],
+      category: "ملكي",
+      icon: Star,
+      gradient: "from-yellow-400 via-yellow-500 to-yellow-600"
+    }
+  ];
 
   const benefits = [
     {
@@ -148,129 +192,119 @@ const BusinessCards = () => {
           })}
         </div>
 
-        {/* Product Showcase */}
+        {/* Products Grid */}
         <div className="space-y-12 mb-16">
           <div className="text-center animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
-              منتجنا المتميز
+              منتجاتنا المتميزة
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              كروت شخصية عصرية تجمع بين الأناقة التقليدية والتقنيات الذكية الحديثة لتترك انطباعاً لا يُنسى
+              اختر من مجموعة متنوعة من الكروت الشخصية المتطورة التي تناسب جميع الأذواق والمتطلبات
             </p>
           </div>
 
-          {/* Main Product Card */}
-          <Card className="group border-0 shadow-2xl hover:shadow-3xl transition-all duration-700 overflow-hidden bg-white animate-fade-in max-w-5xl mx-auto">
-            <div className="relative h-80 overflow-hidden">
-              <img 
-                src={product.image} 
-                alt={product.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-85`}></div>
-              <div className="absolute inset-0 backdrop-blur-[0.5px]"></div>
-              
-              <div className="absolute top-6 right-6">
-                <Badge className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-2 text-lg font-bold shadow-lg">
-                  وفر {Math.round(((parseInt(product.originalPrice.replace(/[^\d]/g, '')) - parseInt(product.price.replace(/[^\d]/g, ''))) / parseInt(product.originalPrice.replace(/[^\d]/g, ''))) * 100)}%
-                </Badge>
-              </div>
-              
-              <div className="absolute top-6 left-6">
-                <Badge className={`bg-gradient-to-r ${product.gradient} text-white px-4 py-2 text-lg font-bold shadow-lg`}>
-                  {product.category}
-                </Badge>
-              </div>
-              
-              <div className="absolute bottom-6 left-6">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-full px-3 py-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                      />
-                    ))}
-                  </div>
-                  <span className="text-lg text-white font-bold bg-black/30 backdrop-blur-sm rounded-full px-3 py-1">
-                    ({product.reviews} تقييم)
-                  </span>
-                </div>
-              </div>
-              
-              <div className="absolute bottom-6 right-6">
-                <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
-                  <CreditCard className="w-8 h-8 text-white" />
-                </div>
-              </div>
-              
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <h3 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                    {product.title}
-                  </h3>
-                  <p className="text-xl text-white/90 max-w-2xl mx-auto">
-                    {product.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <CardContent className="p-8 space-y-8">
-              {/* Product Types */}
-              <div className="space-y-4">
-                <h4 className="text-2xl font-bold text-gray-800 mb-6 text-center">اختر النوع المناسب لك</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {product.types.map((type, typeIndex) => (
-                    <div 
-                      key={typeIndex} 
-                      className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-400 transition-all duration-300 hover-scale text-center"
-                    >
-                      <h5 className="text-lg font-bold text-gray-800 mb-2">{type.name}</h5>
-                      <p className="text-gray-600 text-sm mb-4">{type.description}</p>
-                      <div className="text-2xl font-bold text-blue-600">{type.price}</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {products.map((product, index) => {
+              const IconComponent = product.icon;
+              return (
+                <Card 
+                  key={index} 
+                  className="group border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale overflow-hidden bg-white animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    <img 
+                      src={product.image} 
+                      alt={product.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-85`}></div>
+                    <div className="absolute inset-0 backdrop-blur-[0.5px]"></div>
+                    
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-3 py-1 text-sm font-bold shadow-lg">
+                        وفر {Math.round(((parseInt(product.originalPrice.replace(/[^\d]/g, '')) - parseInt(product.price.replace(/[^\d]/g, ''))) / parseInt(product.originalPrice.replace(/[^\d]/g, ''))) * 100)}%
+                      </Badge>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Features */}
-              <div className="space-y-4">
-                <h4 className="text-2xl font-bold text-gray-800 mb-6 text-center">المميزات الشاملة</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {product.features.map((feature, featureIndex) => (
-                    <div 
-                      key={featureIndex} 
-                      className="flex items-center gap-3 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 animate-fade-in"
-                      style={{ animationDelay: `${featureIndex * 0.1}s` }}
-                    >
-                      <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-full p-1">
-                        <CheckCircle className="w-5 h-5 text-white" />
+                    
+                    <div className="absolute top-4 left-4">
+                      <Badge className={`bg-gradient-to-r ${product.gradient} text-white px-3 py-1 text-sm font-bold shadow-lg`}>
+                        {product.category}
+                      </Badge>
+                    </div>
+                    
+                    <div className="absolute bottom-4 left-4">
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-white font-bold bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
+                          ({product.reviews})
+                        </span>
                       </div>
-                      <span className="text-gray-700 font-medium">{feature}</span>
                     </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between pt-6 border-t-2 border-gray-100">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-green-600 mb-2">{product.price}</div>
-                  <div className="text-lg text-gray-400 line-through">{product.originalPrice}</div>
-                </div>
-                <div className="flex gap-4">
-                  <Button className={`bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white px-8 py-4 text-lg font-bold hover-scale shadow-xl`}>
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    اطلب الآن
-                  </Button>
-                  <Button variant="outline" className="border-2 border-gray-300 hover:bg-gray-50 px-6 py-4 hover-scale">
-                    <Eye className="w-5 h-5 mr-2" />
-                    معاينة
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                    
+                    <div className="absolute bottom-4 right-4">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                        <IconComponent className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+                      {product.title}
+                    </CardTitle>
+                    <CardDescription className="text-gray-600">
+                      {product.description}
+                    </CardDescription>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-4">
+                    {/* Features */}
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">المميزات المتضمنة:</h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {product.features.slice(0, 4).map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-center gap-2 text-sm">
+                            <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                            <span className="text-gray-600">{feature}</span>
+                          </div>
+                        ))}
+                        {product.features.length > 4 && (
+                          <div className="text-xs text-blue-600 font-medium">
+                            +{product.features.length - 4} مميزات إضافية
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div>
+                        <span className="text-2xl font-bold text-green-600">{product.price}</span>
+                        <span className="text-sm text-gray-400 line-through mr-2">{product.originalPrice}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button className={`flex-1 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white`}>
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        اطلب الآن
+                      </Button>
+                      <Button variant="outline" size="icon" className="hover:bg-gray-50">
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
 
         {/* Call to Action */}
