@@ -54,36 +54,7 @@ const PaymentSuccess = () => {
           return;
         }
 
-        // Check if user is authenticated
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (!user) {
-          // For unauthenticated users, show limited success message without sensitive data
-          setPaymentStatus('success');
-          setTransactionDetails({
-            id: transactionId,
-            customer_name: 'Customer', // Generic name for security
-            customer_email: '***@***.com', // Masked email
-            customer_phone: '***-****', // Masked phone
-            amount: 0, // Don't show amount for security
-            currency: 'SAR',
-            offer_title: 'Service Payment', // Generic title
-            payment_method: 'Online Payment',
-            status: 'completed',
-            created_at: new Date().toISOString()
-          });
-          setLoading(false);
-          
-          // Show toast suggesting login to view full details
-          toast({
-            title: "تم الدفع بنجاح ✅",
-            description: "سجل دخولك لعرض تفاصيل المعاملة كاملة",
-            duration: 5000,
-          });
-          return;
-        }
-
-        // For authenticated users, fetch full transaction details
+        // Fetch transaction details
         const { data: transactions, error } = await supabase
           .from('payment_transactions')
           .select('*')
