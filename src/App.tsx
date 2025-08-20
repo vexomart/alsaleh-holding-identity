@@ -5,7 +5,6 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRef } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
 
 import { lazy, Suspense } from "react";
@@ -165,15 +164,14 @@ const PageLoader = () => (
 
 
 
+// Create QueryClient instance outside component to avoid hook issues
+const queryClient = new QueryClient();
+
 const App = () => {
-  const queryClientRef = useRef<QueryClient | null>(null);
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient();
-  }
   console.log('App component rendering...');
   
   return (
-    <QueryClientProvider client={queryClientRef.current!}>
+    <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={300} skipDelayDuration={0}>
         <MobileOptimizer>
           <BrowserRouter>
