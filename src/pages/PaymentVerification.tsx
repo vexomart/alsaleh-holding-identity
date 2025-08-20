@@ -65,7 +65,36 @@ const PaymentVerification = () => {
 
         setVerificationProgress(20);
 
-        // Fetch transaction details
+        // Check if user is authenticated
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          // For unauthenticated users, show limited verification without sensitive data
+          setTransaction({
+            id: transactionId,
+            customer_name: 'Customer', // Generic name for security
+            customer_email: '***@***.com', // Masked email
+            customer_phone: '***-****', // Masked phone
+            amount: 0, // Don't show amount for security
+            currency: 'SAR',
+            status: 'PENDING',
+            payment_method: 'Online Payment',
+            offer_title: 'Service Payment',
+            created_at: new Date().toISOString()
+          });
+          setVerificationStatus('success');
+          setVerificationProgress(100);
+          
+          // Show toast suggesting login to view full details
+          toast({
+            title: "جاري معالجة الدفع ⏳",
+            description: "سجل دخولك لعرض تفاصيل المعاملة كاملة",
+            duration: 5000,
+          });
+          return;
+        }
+
+        // For authenticated users, fetch full transaction details
         const { data: transactions, error: fetchError } = await supabase
           .from('payment_transactions')
           .select('*')
