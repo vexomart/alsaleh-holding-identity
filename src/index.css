@@ -236,13 +236,11 @@
 }
 
 @keyframes slideInRight {
-  0% {
+  from {
     transform: translateX(100%);
-    opacity: 0;
   }
-  100% {
+  to {
     transform: translateX(0);
-    opacity: 1;
   }
 }
 
@@ -282,52 +280,12 @@
   }
 }
 
-@keyframes floatDelayed {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes scaleIn {
-  0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInRight {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes bgGrid {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 40px 40px;
-  }
-}
-
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out;
 }
 
 .animate-slide-in-right {
-  animation: slideInRight 0.6s ease-out;
+  animation: slideInRight 0.3s ease-out;
 }
 
 .animate-glow {
@@ -336,23 +294,6 @@
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: floatDelayed 8s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.4s ease-out;
-}
-
-.bg-grid-pattern {
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
-  background-size: 40px 40px;
-  animation: bgGrid 20s linear infinite;
 }
 
 /* Professional Corporate Styles */
@@ -390,10 +331,9 @@
 /* Professional grid pattern */
 .bg-grid-pattern {
   background-image: 
-    linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
-  background-size: 40px 40px;
-  animation: bgGrid 20s linear infinite;
+    linear-gradient(hsl(220 15% 85% / 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(220 15% 85% / 0.3) 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 
 /* Glass effect for modern cards */
