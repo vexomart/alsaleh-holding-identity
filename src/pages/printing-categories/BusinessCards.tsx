@@ -500,7 +500,7 @@ const BusinessCards = () => {
                       </div>
                     </div>
                     
-                    {/* زر الدفع بالبطاقة الائتمانية فقط */}
+                    {/* زر ادفع الآن */}
                     <div className="space-y-2">
                       <Button
                         onClick={() => handlePaymentMethod(product, 'paylink')}
@@ -512,7 +512,7 @@ const BusinessCards = () => {
                         ) : (
                           <CreditCard className="w-4 h-4 mr-2" />
                         )}
-                        الدفع بالبطاقة الائتمانية
+                        ادفع الآن
                       </Button>
                     </div>
                   </CardContent>
