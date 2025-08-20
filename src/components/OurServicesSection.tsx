@@ -275,10 +275,16 @@ const OurServicesSection = () => {
                        "text-blue-600 dark:text-blue-400",
                        "opacity-100 translate-x-0 w-full" // Always visible and positioned
                      )}>
-                       <Link 
-                         to={service.id === 4 ? "/enterprise-systems" : "#"} 
-                         className="flex items-center gap-2 sm:gap-3 lg:gap-4"
-                       >
+                        <Link 
+                          to={
+                            service.id === 1 ? "/development" :
+                            service.id === 2 ? "/ready-projects" : 
+                            service.id === 3 ? "/digital-marketing" :
+                            service.id === 4 ? "/enterprise-systems" : 
+                            service.id === 5 ? "/content-creation" : "#"
+                          } 
+                          className="flex items-center gap-2 sm:gap-3 lg:gap-4"
+                        >
                          <span className="text-sm sm:text-base lg:text-lg font-black font-cairo relative whitespace-nowrap">
                            المزيد
                          </span>
