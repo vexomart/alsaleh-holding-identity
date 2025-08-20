@@ -150,6 +150,7 @@ const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
 const PrintingServices = lazy(() => import("./pages/PrintingServices"));
 const BusinessStationery = lazy(() => import("./pages/printing-categories/BusinessStationery"));
+const BusinessCards = lazy(() => import("./pages/printing-categories/BusinessCards"));
 const MarketingMaterials = lazy(() => import("./pages/printing-categories/MarketingMaterials"));
 
 
@@ -250,8 +251,9 @@ const App = () => {
                 <Route path="/design-solutions" element={<DesignSolutions />} />
                 <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
                 <Route path="/printing-services" element={<Suspense fallback={<PageLoader />}><PrintingServices /></Suspense>} />
-                <Route path="/printing/business-stationery" element={<Suspense fallback={<PageLoader />}><BusinessStationery /></Suspense>} />
-                <Route path="/printing/marketing-materials" element={<Suspense fallback={<PageLoader />}><MarketingMaterials /></Suspense>} />
+                 <Route path="/printing/business-stationery" element={<Suspense fallback={<PageLoader />}><BusinessStationery /></Suspense>} />
+                 <Route path="/printing/business-cards" element={<Suspense fallback={<PageLoader />}><BusinessCards /></Suspense>} />
+                 <Route path="/printing/marketing-materials" element={<Suspense fallback={<PageLoader />}><MarketingMaterials /></Suspense>} />
                 <Route path="/subsidiaries" element={<Subsidiaries />} />
                 <Route path="/payment-methods" element={<PaymentMethods />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />

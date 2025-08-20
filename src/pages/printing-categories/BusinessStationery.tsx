@@ -231,6 +231,11 @@ const BusinessStationery = () => {
                     
                     <Button 
                       className={`w-full bg-gradient-to-r ${category.gradient} hover:opacity-90 text-white group-hover:shadow-lg transition-all duration-300`}
+                      onClick={() => {
+                        if (category.title === "كروت شخصية") {
+                          window.location.href = "/printing/business-cards";
+                        }
+                      }}
                     >
                       <span>استكشف المنتجات</span>
                       <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
