@@ -3,82 +3,106 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, ShoppingCart, Eye, CheckCircle, Ruler } from "lucide-react";
+import { Star, ArrowRight, Sparkles, Package, Award, FileText, Mail, CreditCard, Heart, Receipt } from "lucide-react";
 import businessStationeryImg from "@/assets/printing/business-stationery.jpg";
-import luxuryBusinessCardsImg from "@/assets/printing/luxury-business-cards.jpg";
-import officialLetterheadsImg from "@/assets/printing/official-letterheads.jpg";
-import customFoldersImg from "@/assets/printing/custom-folders.jpg";
-import professionalEnvelopesImg from "@/assets/printing/professional-envelopes.jpg";
-import invoiceBooksImg from "@/assets/printing/invoice-books.jpg";
-import employeeIdCardsImg from "@/assets/printing/employee-id-cards.jpg";
+import businessCardsImg from "@/assets/printing/business-cards-category.jpg";
+import letterheadsImg from "@/assets/printing/letterheads-category.jpg";
+import foldersImg from "@/assets/printing/folders-category.jpg";
+import envelopesImg from "@/assets/printing/envelopes-category.jpg";
+import certificatesImg from "@/assets/printing/certificates-category.jpg";
+import idCardsImg from "@/assets/printing/id-cards-category.jpg";
+import invitationCardsImg from "@/assets/printing/invitation-cards-category.jpg";
+import invoicesNcrImg from "@/assets/printing/invoices-ncr-category.jpg";
 
 const BusinessStationery = () => {
-  const products = [
+  const categories = [
     {
-      title: "كروت شخصية فاخرة",
-      description: "كروت شخصية بخامات عالية الجودة وتصميمات احترافية",
+      title: "كروت شخصية",
+      description: "كروت شخصية احترافية بتصميمات فاخرة وخامات عالية الجودة",
+      image: businessCardsImg,
+      icon: CreditCard,
+      gradient: "from-blue-500 to-purple-600",
+      products: 25,
+      rating: 4.9,
       price: "من 199 ريال",
-      originalPrice: "299 ريال",
-      image: luxuryBusinessCardsImg,
-      rating: 4.8,
-      reviews: 150,
-      sizes: ["9 × 5 سم", "8.5 × 5.4 سم", "10 × 6 سم"],
-      features: ["طباعة ملونة", "ورق مقوى 350 جرام", "تشطيب لامع أو مطفي", "تصميم مجاني"]
+      features: ["تصميم مجاني", "طباعة فاخرة", "خامات متنوعة"]
     },
     {
-      title: "أوراق مراسلات رسمية",
-      description: "أوراق مراسلات بشعار الشركة وتصميم احترافي",
+      title: "ورق مراسلات",
+      description: "أوراق مراسلات رسمية بشعار الشركة وتصميم احترافي",
+      image: letterheadsImg,
+      icon: FileText,
+      gradient: "from-green-500 to-emerald-600",
+      products: 18,
+      rating: 4.8,
       price: "من 149 ريال",
-      originalPrice: "199 ريال",
-      image: officialLetterheadsImg,
-      rating: 4.9,
-      reviews: 89,
-      sizes: ["A4 (21 × 29.7 سم)", "A5 (14.8 × 21 سم)", "Letter (21.6 × 27.9 سم)"],
-      features: ["ورق عالي الجودة", "طباعة الشعار", "ألوان مخصصة", "أحجام متنوعة"]
+      features: ["شعار الشركة", "ورق فاخر", "ألوان مخصصة"]
     },
     {
-      title: "فولدرات مخصصة",
-      description: "فولدرات لحفظ الأوراق بتصميم شركتك",
-      price: "من 89 ريال",
-      originalPrice: "120 ريال",
-      image: customFoldersImg,
+      title: "فولدرات",
+      description: "فولدرات مخصصة لحفظ الأوراق والوثائق المهمة",
+      image: foldersImg,
+      icon: Package,
+      gradient: "from-orange-500 to-red-600",
+      products: 12,
       rating: 4.7,
-      reviews: 120,
-      sizes: ["A4 (23 × 32 سم)", "A5 (16 × 23 سم)", "مقاس مخصص"],
-      features: ["مواد فاخرة", "طباعة داخلية وخارجية", "جيوب متعددة", "تصميم مخصص"]
+      price: "من 89 ريال",
+      features: ["تصميم مخصص", "جيوب متعددة", "خامات فاخرة"]
     },
     {
-      title: "أظرف بتصميمات احترافية",
-      description: "أظرف رسمية بشعار وألوان الشركة",
-      price: "من 79 ريال",
-      originalPrice: "110 ريال",
-      image: professionalEnvelopesImg,
+      title: "ظروف",
+      description: "ظروف احترافية بتصميمات أنيقة لجميع المناسبات",
+      image: envelopesImg,
+      icon: Mail,
+      gradient: "from-pink-500 to-rose-600",
+      products: 20,
       rating: 4.6,
-      reviews: 95,
-      sizes: ["DL (11 × 22 سم)", "C5 (16.2 × 22.9 سم)", "A4 (21 × 29.7 سم)"],
-      features: ["أحجام مختلفة", "طباعة الشعار", "ورق عالي الجودة", "ألوان مخصصة"]
+      price: "من 79 ريال",
+      features: ["أحجام متنوعة", "طباعة الشعار", "ورق عالي الجودة"]
     },
     {
-      title: "دفاتر الفواتير",
-      description: "دفاتر فواتير مخصصة بتصميم شركتك",
-      price: "من 69 ريال",
-      originalPrice: "99 ريال",
-      image: invoiceBooksImg,
-      rating: 4.8,
-      reviews: 75,
-      sizes: ["A4 (21 × 29.7 سم)", "A5 (14.8 × 21 سم)", "1/4 Letter (13.9 × 21.6 سم)"],
-      features: ["تصميم مخصص", "ترقيم تسلسلي", "كربون للنسخ", "أحجام متنوعة"]
-    },
-    {
-      title: "بطاقات الهوية",
-      description: "بطاقات هوية للموظفين بتقنية PVC",
-      price: "من 25 ريال",
-      originalPrice: "35 ريال",
-      image: employeeIdCardsImg,
+      title: "شهادات",
+      description: "شهادات تقدير وجوائز بتصميمات فاخرة ومميزة",
+      image: certificatesImg,
+      icon: Award,
+      gradient: "from-yellow-500 to-amber-600",
+      products: 15,
       rating: 4.9,
-      reviews: 110,
-      sizes: ["8.6 × 5.4 سم (ISO)", "9 × 5.5 سم", "مقاس مخصص"],
-      features: ["خامة PVC", "طباعة ملونة", "تصميم احترافي", "شريحة اختيارية"]
+      price: "من 159 ريال",
+      features: ["تصميمات فاخرة", "ورق مقوى", "عناصر ذهبية"]
+    },
+    {
+      title: "بطاقات تعريفية",
+      description: "بطاقات هوية وتعريف للموظفين بتقنية PVC",
+      image: idCardsImg,
+      icon: Sparkles,
+      gradient: "from-indigo-500 to-purple-600",
+      products: 10,
+      rating: 4.8,
+      price: "من 25 ريال",
+      features: ["تقنية PVC", "تصميم احترافي", "شريحة اختيارية"]
+    },
+    {
+      title: "كروت دعوة",
+      description: "كروت دعوة أنيقة للأفراح والمناسبات الخاصة",
+      image: invitationCardsImg,
+      icon: Heart,
+      gradient: "from-rose-500 to-pink-600",
+      products: 30,
+      rating: 4.9,
+      price: "من 199 ريال",
+      features: ["تصميمات فاخرة", "ورق مقوى", "تشطيبات متنوعة"]
+    },
+    {
+      title: "فواتير وسندات NCR",
+      description: "دفاتر فواتير وسندات بتقنية الكربون للنسخ المتعددة",
+      image: invoicesNcrImg,
+      icon: Receipt,
+      gradient: "from-cyan-500 to-blue-600",
+      products: 8,
+      rating: 4.7,
+      price: "من 69 ريال",
+      features: ["تقنية NCR", "ترقيم تسلسلي", "نسخ متعددة"]
     }
   ];
 
@@ -91,108 +115,152 @@ const BusinessStationery = () => {
         backButtonFallback="/printing-services"
       />
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        {/* Hero Image */}
-        <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden mb-12">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Hero Section */}
+        <div className="relative h-80 rounded-3xl overflow-hidden mb-16 group">
           <img 
             src={businessStationeryImg} 
             alt="مستلزمات مكتبية للأعمال"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-purple-600/80 flex items-center justify-center">
-            <div className="text-center text-white">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                مستلزمات مكتبية احترافية
-              </h2>
-              <p className="text-xl">أكثر من 50 منتج متخصص</p>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-purple-600/80 to-pink-600/70"></div>
+          <div className="absolute inset-0 flex items-center justify-center text-center">
+            <div className="animate-fade-in">
+              <div className="flex items-center justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-yellow-300 animate-pulse mr-2" />
+                <h2 className="text-4xl md:text-5xl font-bold text-white">
+                  مستلزمات مكتبية فاخرة
+                </h2>
+                <Sparkles className="w-8 h-8 text-yellow-300 animate-pulse ml-2" />
+              </div>
+              <p className="text-xl text-white/90 mb-6">أكثر من 150 منتج احترافي</p>
+              <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-2 text-lg">
+                ✨ جودة عالمية - أسعار منافسة
+              </Badge>
             </div>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent"></div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 hover-scale animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <div className="text-3xl font-bold text-blue-600 mb-2">150+</div>
+            <div className="text-gray-600">منتج متخصص</div>
+          </div>
+          <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 hover-scale animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="text-3xl font-bold text-green-600 mb-2">4.8</div>
+            <div className="text-gray-600">تقييم العملاء</div>
+          </div>
+          <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 hover-scale animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <div className="text-3xl font-bold text-purple-600 mb-2">24</div>
+            <div className="text-gray-600">ساعة تسليم</div>
+          </div>
+          <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 hover-scale animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="text-3xl font-bold text-orange-600 mb-2">1000+</div>
+            <div className="text-gray-600">عميل راضي</div>
           </div>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product, index) => (
-            <Card key={index} className="group border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover-scale overflow-hidden bg-white">
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src={product.image} 
-                  alt={product.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                <div className="absolute top-4 right-4">
-                  <Badge className="bg-red-500 text-white px-2 py-1">
-                    وفر {Math.round(((parseInt(product.originalPrice.replace(/[^\d]/g, '')) - parseInt(product.price.replace(/[^\d]/g, ''))) / parseInt(product.originalPrice.replace(/[^\d]/g, ''))) * 100)}%
-                  </Badge>
+        {/* Categories Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {categories.map((category, index) => {
+            const IconComponent = category.icon;
+            return (
+              <Card 
+                key={index} 
+                className="group border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover-scale overflow-hidden bg-white animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={category.image} 
+                    alt={category.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-80`}></div>
+                  <div className="absolute top-4 right-4">
+                    <Badge className="bg-white/90 text-gray-800 backdrop-blur-sm">
+                      {category.products} منتج
+                    </Badge>
+                  </div>
+                  <div className="absolute top-4 left-4">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                      <IconComponent className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className={`w-4 h-4 ${i < Math.floor(category.rating) ? 'text-yellow-300 fill-current' : 'text-white/50'}`} 
+                          />
+                        ))}
+                        <span className="text-sm text-white mr-2">({category.rating})</span>
+                      </div>
+                      <div className="text-white font-bold">{category.price}</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                        />
+                
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors flex items-center gap-2">
+                    {category.title}
+                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 text-sm">
+                    {category.description}
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="pt-0">
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap gap-1">
+                      {category.features.map((feature, featureIndex) => (
+                        <Badge 
+                          key={featureIndex} 
+                          variant="outline" 
+                          className="text-xs border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-600 transition-colors"
+                        >
+                          {feature}
+                        </Badge>
                       ))}
                     </div>
-                    <span className="text-sm text-white">({product.reviews})</span>
+                    
+                    <Button 
+                      className={`w-full bg-gradient-to-r ${category.gradient} hover:opacity-90 text-white group-hover:shadow-lg transition-all duration-300`}
+                    >
+                      <span>استكشف المنتجات</span>
+                      <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
                   </div>
-                </div>
-              </div>
-              
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
-                  {product.title}
-                </CardTitle>
-                <CardDescription className="text-gray-600">
-                  {product.description}
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                {/* Available Sizes */}
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Ruler className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm font-medium text-gray-700">المقاسات المتاحة:</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {product.sizes.map((size, sizeIndex) => (
-                      <Badge key={sizeIndex} variant="outline" className="text-xs px-2 py-1 border-blue-200 text-blue-700">
-                        {size}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
 
-                <ul className="space-y-2">
-                  {product.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-600">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-xl font-bold text-green-600">{product.price}</span>
-                    <span className="text-sm text-gray-400 line-through mr-2">{product.originalPrice}</span>
-                  </div>
-                </div>
-                
-                <div className="flex gap-2">
-                  <Button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    اطلب الآن
-                  </Button>
-                  <Button variant="outline" size="icon">
-                    <Eye className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Call to Action */}
+        <div className="mt-20 text-center">
+          <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-12 border border-blue-100">
+            <Sparkles className="w-12 h-12 text-blue-600 mx-auto mb-6 animate-pulse" />
+            <h3 className="text-3xl font-bold text-gray-800 mb-4">
+              هل تحتاج تصميماً مخصصاً؟
+            </h3>
+            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+              فريقنا من المصممين المحترفين جاهز لإنشاء تصميمات فريدة تناسب هوية شركتك وتعكس رؤيتك بشكل احترافي
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg hover-scale">
+                احجز استشارة مجانية
+              </Button>
+              <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg hover-scale">
+                تصفح الباقات
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </PageLayout>
