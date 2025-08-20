@@ -79,7 +79,7 @@ const DigitalMarketingWebsite = () => {
     setProcessingServiceId(serviceId);
     
     try {
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
         body: {
           amount: parseInt(service.price),
           currency: 'SAR',

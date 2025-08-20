@@ -114,7 +114,7 @@ const BusinessServices = () => {
     setProcessingPayment(plan.id);
 
     try {
-      const { data, error } = await supabase.functions.invoke('paylink-subscription', {
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
         body: {
           plan_id: plan.id,
           return_url: `${window.location.origin}/payment-success`

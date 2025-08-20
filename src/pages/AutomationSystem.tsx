@@ -171,7 +171,7 @@ const AutomationSystem = () => {
         customer_phone: customerData.phone
       };
 
-      const { data, error } = await supabase.functions.invoke('paylink-subscription', {
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
         body: requestBody
       });
 

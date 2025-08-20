@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const PaymentPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('paylink');
+  const [paymentMethod, setPaymentMethod] = useState('tap');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -86,7 +86,7 @@ const PaymentPage = () => {
         }
       };
 
-      const functionName = paymentMethod === 'paylink' ? 'paylink-payment' : 'stc-pay';
+      const functionName = 'tap-payment';
       
       const { data, error } = await supabase.functions.invoke(functionName, {
         body: payload
@@ -109,7 +109,7 @@ const PaymentPage = () => {
           // رسالة نجاح مع معلومات إضافية
           toast({
             title: "✅ تم إنشاء رابط الدفع بنجاح",
-            description: "سيتم توجيهك الآن إلى Paylink لإتمام الدفع الآمن",
+            description: "سيتم توجيهك الآن إلى TAP لإتمام الدفع الآمن",
             duration: 3000,
           });
 
@@ -125,14 +125,14 @@ const PaymentPage = () => {
                 transaction_id: data.transaction_id || 'N/A',
                 invoice_number: data.invoice_number || 'N/A',
                 status: 'pending',
-                payment_method: 'Paylink'
+                payment_method: 'TAP'
               }
             });
           } catch (emailError) {
             console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
           }
 
-          // التحويل الفوري إلى Paylink
+          // التحويل الفوري إلى TAP
           setTimeout(() => {
             window.open(data.payment_url, '_blank');
           }, 1500);
@@ -223,11 +223,11 @@ const PaymentPage = () => {
             <Label className="text-base font-semibold">طريقة الدفع</Label>
             <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
               <div className="flex items-center space-x-2 space-x-reverse p-4 border rounded-lg hover:bg-primary/5 transition-colors">
-                <RadioGroupItem value="paylink" id="paylink" />
-                <Label htmlFor="paylink" className="flex items-center gap-3 cursor-pointer flex-1">
-                  <CreditCard className="w-5 h-5 text-blue-600" />
+                <RadioGroupItem value="tap" id="tap" />
+                <Label htmlFor="tap" className="flex items-center gap-3 cursor-pointer flex-1">
+                  <CreditCard className="w-5 h-5 text-primary" />
                   <div>
-                    <div className="font-medium">Paylink - البطاقة الائتمانية</div>
+                    <div className="font-medium">TAP - البطاقة الائتمانية</div>
                     <div className="text-sm text-muted-foreground">فيزا • ماستركارد • مدى</div>
                   </div>
                 </Label>

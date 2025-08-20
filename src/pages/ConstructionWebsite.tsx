@@ -103,7 +103,7 @@ const ConstructionWebsite = () => {
       };
 
       // Use Paylink as primary payment gateway
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
         body: paymentData
       });
 
