@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { PageLayout } from "@/components/PageLayout";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import React from "react";
-import { Star, ShoppingCart, Eye, CheckCircle, Ruler, CreditCard, Smartphone, QrCode, Palette, Sparkles, ArrowRight } from "lucide-react";
+import { Star, ShoppingCart, Eye, CheckCircle, Ruler, CreditCard, Smartphone, QrCode, Palette, Sparkles, Loader2, Banknote, Wallet, ArrowRight } from "lucide-react";
 import businessCardsHeroImg from "@/assets/printing/business-cards-hero-bg.jpg";
 import businessCardsProductImg from "@/assets/printing/business-cards-category.jpg";
 import ledBusinessCardsImg from "@/assets/printing/led-business-cards.jpg";
@@ -15,6 +18,177 @@ import texturedFabricBusinessCardsImg from "@/assets/printing/textured-fabric-bu
 import threeDEffectBusinessCardsImg from "@/assets/printing/3d-effect-business-cards.jpg";
 
 const BusinessCards = () => {
+  const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  // نظام الدفع المطابق للنظام المحسن
+  const handlePaymentMethod = async (product: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
+    setLoadingMethod(method);
+    
+    toast({
+      title: "جاري معالجة طلب الدفع...",
+      description: "يرجى الانتظار قليلاً"
+    });
+    
+    try {
+      const amount = parseInt(product.price.replace(/[^\d]/g, ''));
+      let functionName = '';
+      let payload: any = {
+        amount: amount,
+        currency: 'SAR',
+        customer_name: 'عميل كروت شخصية',
+        customer_email: 'customer@example.com',
+        customer_phone: '966500000000',
+        offer_title: product.title,
+        description: `طلب منتج: ${product.title} - كروت شخصية`
+      };
+
+      switch (method) {
+        case 'paylink':
+          functionName = 'paylink-payment';
+          payload.success_url = window.location.origin;
+          break;
+        case 'stc-pay':
+          functionName = 'stc-pay';
+          break;
+        case 'tamara':
+          functionName = 'tamara-payment';
+          break;
+      }
+
+      console.log(`استدعاء ${functionName} مع البيانات:`, payload);
+
+      // تحسين استدعاء Edge Function مع retry logic
+      let data, error;
+      let attempts = 0;
+      const maxAttempts = 3;
+      
+      while (attempts < maxAttempts) {
+        attempts++;
+        console.log(`محاولة ${attempts} من ${maxAttempts}`);
+        
+        try {
+          const result: any = await Promise.race([
+            supabase.functions.invoke(functionName, {
+              body: payload,
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 30000)
+            )
+          ]);
+          
+          data = result.data;
+          error = result.error;
+          
+          if (!error && data) {
+            console.log(`نجحت المحاولة ${attempts}:`, data);
+            break;
+          }
+          
+          if (attempts < maxAttempts) {
+            console.log(`فشلت المحاولة ${attempts}، سيتم إعادة المحاولة...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (attemptError) {
+          console.error(`خطأ في المحاولة ${attempts}:`, attemptError);
+          if (attempts === maxAttempts) {
+            throw attemptError;
+          }
+        }
+      }
+
+      if (error) {
+        console.error(`${method} error after ${attempts} attempts:`, error);
+        throw new Error(error.message || 'فشل في الاتصال بالخدمة بعد عدة محاولات');
+      }
+
+      console.log(`${functionName} response:`, data);
+
+      if (data?.success || data?.url || data?.payment_url) {
+        toast({
+          title: "تم إنشاء رابط الدفع بنجاح",
+          description: "سيتم توجيهك إلى صفحة الدفع"
+        });
+
+        if (method === 'stc-pay') {
+          showSTCPayInstructions(data);
+        } else if (data.url || data.paymentUrl || data.payment_url) {
+          const paymentUrl = data.url || data.paymentUrl || data.payment_url;
+          
+          setTimeout(() => {
+            if (method === 'paylink') {
+              window.location.href = paymentUrl;
+            } else {
+              window.open(paymentUrl, '_blank');
+              toast({
+                title: "تم توجيهك لصفحة الدفع",
+                description: "يرجى إكمال عملية الدفع في التبويب الجديد",
+              });
+            }
+          }, 500);
+        }
+      } else {
+        throw new Error('لم يتم إرجاع رابط الدفع من الخدمة');
+      }
+    } catch (error) {
+      console.error(`خطأ نهائي في ${method}:`, error);
+      
+      let errorMessage = "حدث خطأ أثناء عملية الدفع";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('timeout') || error.message.includes('انتهت مهلة')) {
+          errorMessage = "انتهت مهلة الاتصال. يرجى المحاولة مرة أخرى";
+        } else if (error.message.includes('Network') || error.message.includes('Failed to fetch')) {
+          errorMessage = "مشكلة في الاتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      toast({
+        title: "خطأ في الدفع",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingMethod(null);
+    }
+  };
+
+  const showSTCPayInstructions = (data: any) => {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+      <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="this.remove()">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-scale-in" dir="rtl" onclick="event.stopPropagation()">
+          <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white text-center">
+            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9M19 9H14V4H19V9Z"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">تعليمات الدفع - STC Pay</h3>
+            <p class="text-orange-100">معاملة آمنة ومحمية</p>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="bg-purple-50 rounded-xl p-4">
+              <h4 class="font-bold text-purple-800 mb-2">المبلغ المطلوب:</h4>
+              <div class="text-center bg-white rounded-lg p-4">
+                <div class="text-3xl font-bold text-purple-600">${data.amount} ${data.currency}</div>
+                <div class="text-xl font-bold text-gray-800 mt-2">${data.merchant_number || data.merchantNumber}</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-6 bg-gray-50">
+            <button onclick="this.closest('.fixed').remove()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-xl">إغلاق</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  };
   const products = [
     {
       title: "كروت شخصية أساسية ورقمية",
@@ -326,28 +500,47 @@ const BusinessCards = () => {
                       </div>
                     </div>
                     
-                    <div className="flex gap-1">
-                      <Button 
-                        onClick={() => {
-                          // توجيه إلى صفحة الدفع المحسنة
-                          const params = new URLSearchParams({
-                            service: '1',
-                            title: product.title,
-                            price: product.price.replace(/[^\d]/g, ''),
-                            currency: 'ريال',
-                            duration: '',
-                            features: product.features.join('|')
-                          });
-                          window.location.href = `/enhanced-payment?${params.toString()}`;
-                        }}
-                        
-                        className={`flex-1 bg-gradient-to-r ${product.gradient} hover:opacity-90 text-white text-xs py-2 transition-all duration-300 hover:shadow-lg`}
+                    {/* أزرار الدفع المتعددة */}
+                    <div className="space-y-2">
+                      <Button
+                        onClick={() => handlePaymentMethod(product, 'paylink')}
+                        disabled={loadingMethod !== null}
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xs py-2 font-bold hover-scale shadow-lg transition-all duration-300"
                       >
-                        <ShoppingCart className="w-3 h-3 mr-1" />
-                        اطلب الآن
+                        {loadingMethod === 'paylink' ? (
+                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                        ) : (
+                          <CreditCard className="w-3 h-3 mr-1" />
+                        )}
+                        الدفع بالبطاقة - Paylink
                       </Button>
-                      <Button variant="outline" size="sm" className="hover:bg-gray-50 px-2">
-                        <Eye className="w-3 h-3" />
+
+                      <Button
+                        onClick={() => handlePaymentMethod(product, 'stc-pay')}
+                        disabled={loadingMethod !== null}
+                        variant="outline"
+                        className="w-full border-orange-200 text-orange-600 hover:bg-orange-50 text-xs py-2 font-bold hover-scale transition-all duration-300"
+                      >
+                        {loadingMethod === 'stc-pay' ? (
+                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                        ) : (
+                          <Smartphone className="w-3 h-3 mr-1" />
+                        )}
+                        STC Pay
+                      </Button>
+
+                      <Button
+                        onClick={() => handlePaymentMethod(product, 'tamara')}
+                        disabled={loadingMethod !== null}
+                        variant="outline"
+                        className="w-full border-green-200 text-green-600 hover:bg-green-50 text-xs py-2 font-bold hover-scale transition-all duration-300"
+                      >
+                        {loadingMethod === 'tamara' ? (
+                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                        ) : (
+                          <Banknote className="w-3 h-3 mr-1" />
+                        )}
+                        تمارا - اشتر الآن وادفع لاحقاً
                       </Button>
                     </div>
                   </CardContent>
