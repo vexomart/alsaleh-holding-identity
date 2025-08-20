@@ -174,7 +174,7 @@ const App = () => {
   
   return (
     <QueryClientProvider client={queryClientRef.current!}>
-      <TooltipProvider>
+      <TooltipProvider delayDuration={300} skipDelayDuration={0}>
         <MobileOptimizer>
           <BrowserRouter>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
