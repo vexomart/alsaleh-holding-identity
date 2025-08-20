@@ -2998,6 +2998,10 @@ export type Database = {
         Args: { user_id?: string }
         Returns: boolean
       }
+      is_admin_user: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       log_sensitive_data_access: {
         Args: {
           p_access_type: string
@@ -3024,6 +3028,10 @@ export type Database = {
       mask_phone: {
         Args: { phone_input: string; user_requesting?: string }
         Returns: string
+      }
+      owns_payment_transaction: {
+        Args: { transaction_user_id: string }
+        Returns: boolean
       }
       record_automation_usage: {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
