@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
-import { ArrowRight, CheckCircle, Users, Clock, Award, TrendingUp, Shield, Calendar, FileText, BarChart3, Star, Sparkles, ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, CheckCircle, Users, Clock, Award, TrendingUp, Shield, Calendar, FileText, BarChart3, Star, Sparkles, ArrowLeft, ChevronRight, Send, Phone, Mail, Building } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -12,6 +18,17 @@ import { Link } from "react-router-dom";
 const HRManagementSystem = () => {
   const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
   const [activeModule, setActiveModule] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    companyName: '',
+    contactName: '',
+    email: '',
+    phone: '',
+    employeeCount: '',
+    message: '',
+    selectedModules: [] as string[]
+  });
+  const { toast } = useToast();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -119,35 +136,71 @@ const HRManagementSystem = () => {
     }
   ];
 
-  const pricingPlans = [
-    {
-      name: "الباقة الأساسية",
-      price: "1,499",
-      period: "شهرياً",
-      description: "مناسبة للشركات الصغيرة (حتى 50 موظف)",
-      features: ["إدارة بيانات الموظفين", "نظام الحضور والغياب", "إدارة الإجازات الأساسية", "تقارير أساسية", "دعم فني"],
-      popular: false,
-      color: "from-gray-600 to-gray-700"
-    },
-    {
-      name: "الباقة المتقدمة",
-      price: "2,999",
-      period: "شهرياً",
-      description: "الأمثل للشركات المتوسطة (حتى 200 موظف)",
-      features: ["جميع ميزات الباقة الأساسية", "نظام الرواتب الكامل", "تقييم الأداء", "التدريب الإلكتروني", "تقارير متقدمة", "تكامل مع البنوك"],
-      popular: true,
-      color: "from-blue-600 to-indigo-700"
-    },
-    {
-      name: "الباقة المؤسسية",
-      price: "حسب الطلب",
-      period: "",
-      description: "حلول مخصصة للمؤسسات الكبيرة",
-      features: ["موظفين غير محدودين", "تخصيص كامل", "تكامل مع الأنظمة الأخرى", "دعم مخصص", "تدريب شامل", "استشارات HR"],
-      popular: false,
-      color: "from-purple-600 to-violet-700"
+  const handleModuleToggle = (moduleTitle: string) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedModules: prev.selectedModules.includes(moduleTitle)
+        ? prev.selectedModules.filter(m => m !== moduleTitle)
+        : [...prev.selectedModules, moduleTitle]
+    }));
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.companyName || !formData.contactName || !formData.email || !formData.phone) {
+      toast({
+        title: "خطأ في البيانات",
+        description: "يرجى ملء جميع الحقول المطلوبة",
+        variant: "destructive",
+      });
+      return;
     }
-  ];
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.functions.invoke('hr-system-request', {
+        body: formData
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "تم إرسال طلبك بنجاح! ✅",
+        description: "سيتواصل معك فريقنا خلال 24 ساعة",
+      });
+
+      // Reset form
+      setFormData({
+        companyName: '',
+        contactName: '',
+        email: '',
+        phone: '',
+        employeeCount: '',
+        message: '',
+        selectedModules: []
+      });
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "خطأ في الإرسال",
+        description: "حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -211,16 +264,6 @@ const HRManagementSystem = () => {
                   نظام شامل ومتطور لإدارة جميع جوانب الموارد البشرية في شركتك. من إدارة بيانات الموظفين إلى الرواتب والتطوير، 
                   كل ما تحتاجه في منصة واحدة متكاملة.
                 </p>
-                
-                <div className="flex flex-wrap gap-4">
-                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-cairo">
-                    جرب النظام مجاناً
-                    <ArrowRight className="w-5 h-5 mr-2" />
-                  </Button>
-                  <Button variant="outline" size="lg" className="border-2 border-slate-300 dark:border-slate-600 font-bold px-8 py-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 font-cairo">
-                    عرض توضيحي
-                  </Button>
-                </div>
               </div>
               
               {/* Hero Visual */}
@@ -388,85 +431,181 @@ const HRManagementSystem = () => {
           </div>
         </section>
 
-        {/* Pricing */}
+        {/* Request Form Section */}
         <section className="py-20 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800" data-section="3">
-          <div className="container mx-auto px-6 max-w-7xl">
+          <div className="container mx-auto px-6 max-w-4xl">
             <div className={cn(
               "text-center mb-16 animate-fade-in",
               visibleSections.has(3) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             )}>
               <h2 className="text-4xl lg:text-6xl font-black mb-6 font-cairo">
                 <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
-                  خطط الأسعار
+                  احصل على نظام HR الخاص بك
                 </span>
               </h2>
               <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-medium">
-                اختر الباقة التي تناسب حجم شركتك واحتياجاتك
+                املأ النموذج أدناه وسيتواصل معك فريقنا المختص خلال 24 ساعة لتقديم حل مخصص لشركتك
               </p>
             </div>
             
-            <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {pricingPlans.map((plan, index) => (
-                <Card 
-                  key={index}
-                  className={cn(
-                    "relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in overflow-hidden",
-                    plan.popular ? "border-blue-500/50 shadow-blue-500/20 scale-105" : "border-slate-200/50 dark:border-slate-700/50",
-                    visibleSections.has(3) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                  )}
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  {plan.popular && (
-                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-center py-2 text-sm font-bold">
-                      الأكثر شعبية
+            <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border border-slate-200/50 dark:border-slate-700/50 shadow-2xl">
+              <CardContent className="p-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Company and Contact Info */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="companyName" className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">
+                        <Building className="w-4 h-4" />
+                        اسم الشركة *
+                      </Label>
+                      <Input
+                        id="companyName"
+                        name="companyName"
+                        value={formData.companyName}
+                        onChange={handleInputChange}
+                        className="border-slate-300 dark:border-slate-600 focus:border-blue-500"
+                        placeholder="اسم شركتك"
+                        required
+                      />
                     </div>
-                  )}
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="contactName" className="text-slate-700 dark:text-slate-300 font-bold">
+                        اسم الشخص المسؤول *
+                      </Label>
+                      <Input
+                        id="contactName"
+                        name="contactName"
+                        value={formData.contactName}
+                        onChange={handleInputChange}
+                        className="border-slate-300 dark:border-slate-600 focus:border-blue-500"
+                        placeholder="اسمك الكامل"
+                        required
+                      />
+                    </div>
+                  </div>
                   
-                  <CardContent className={cn("p-8", plan.popular ? "pt-12" : "")}>
-                    <div className="text-center mb-8">
-                      <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2 font-cairo">
-                        {plan.name}
-                      </h3>
-                      <p className="text-slate-600 dark:text-slate-300 mb-6">
-                        {plan.description}
-                      </p>
-                      <div className="mb-6">
-                        {plan.period ? (
-                          <>
-                            <span className="text-4xl font-black text-slate-800 dark:text-white">{plan.price}</span>
-                            <span className="text-slate-600 dark:text-slate-300 mr-2">ريال {plan.period}</span>
-                          </>
-                        ) : (
-                          <span className="text-2xl font-bold text-slate-800 dark:text-white">{plan.price}</span>
-                        )}
-                      </div>
+                  {/* Contact Details */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        البريد الإلكتروني *
+                      </Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="border-slate-300 dark:border-slate-600 focus:border-blue-500"
+                        placeholder="your@email.com"
+                        required
+                      />
                     </div>
                     
-                    <ul className="space-y-4 mb-8">
-                      {plan.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
-                          <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    <Button 
-                      className={cn(
-                        "w-full font-bold py-3 rounded-xl transition-all duration-300",
-                        plan.popular 
-                          ? "bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white shadow-lg hover:shadow-xl" 
-                          : "border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
-                      )}
-                      variant={plan.popular ? "default" : "outline"}
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">
+                        <Phone className="w-4 h-4" />
+                        رقم الهاتف *
+                      </Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="border-slate-300 dark:border-slate-600 focus:border-blue-500"
+                        placeholder="+966 50 123 4567"
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Employee Count */}
+                  <div className="space-y-2">
+                    <Label htmlFor="employeeCount" className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      عدد الموظفين في الشركة
+                    </Label>
+                    <select
+                      id="employeeCount"
+                      name="employeeCount"
+                      value={formData.employeeCount}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
                     >
-                      {plan.period ? "ابدأ الآن" : "تواصل معنا"}
-                      <ChevronRight className="w-4 h-4 mr-2" />
+                      <option value="">اختر العدد</option>
+                      <option value="1-10">1-10 موظفين</option>
+                      <option value="11-50">11-50 موظف</option>
+                      <option value="51-200">51-200 موظف</option>
+                      <option value="201-500">201-500 موظف</option>
+                      <option value="500+">أكثر من 500 موظف</option>
+                    </select>
+                  </div>
+                  
+                  {/* Modules Selection */}
+                  <div className="space-y-4">
+                    <Label className="text-slate-700 dark:text-slate-300 font-bold">
+                      الوحدات المطلوبة (اختياري)
+                    </Label>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {hrModules.map((module) => (
+                        <div key={module.id} className="flex items-center space-x-2 space-x-reverse">
+                          <Checkbox
+                            id={`module-${module.id}`}
+                            checked={formData.selectedModules.includes(module.title)}
+                            onCheckedChange={() => handleModuleToggle(module.title)}
+                            className="border-slate-300 dark:border-slate-600"
+                          />
+                          <Label 
+                            htmlFor={`module-${module.id}`} 
+                            className="text-sm text-slate-600 dark:text-slate-300 cursor-pointer"
+                          >
+                            {module.title}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Message */}
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-slate-700 dark:text-slate-300 font-bold">
+                      رسالة إضافية (اختياري)
+                    </Label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      className="border-slate-300 dark:border-slate-600 focus:border-blue-500 min-h-[100px]"
+                      placeholder="أخبرنا المزيد عن احتياجاتك..."
+                    />
+                  </div>
+                  
+                  {/* Submit Button */}
+                  <div className="text-center pt-6">
+                    <Button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold px-12 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-cairo"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-3"></div>
+                          جارٍ الإرسال...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-5 h-5 mr-2" />
+                          إرسال الطلب
+                        </>
+                      )}
                     </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </section>
 
@@ -484,14 +623,19 @@ const HRManagementSystem = () => {
                 احصل على استشارة مجانية واكتشف كيف يمكن لنظامنا تحسين كفاءة إدارة الموارد البشرية في شركتك
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-slate-50 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                  احصل على استشارة مجانية
-                  <ArrowRight className="w-5 h-5 mr-2" />
-                </Button>
-                <Button size="lg" variant="outline" className="border-2 border-white/50 text-white hover:bg-white/10 font-bold px-8 py-4 rounded-xl backdrop-blur-lg">
-                  جرب النظام الآن
-                </Button>
+              <div className="flex flex-col gap-4 max-w-md mx-auto">
+                <div className="flex items-center gap-3 text-lg">
+                  <CheckCircle className="w-6 h-6 text-emerald-300" />
+                  <span>استشارة مجانية خلال 24 ساعة</span>
+                </div>
+                <div className="flex items-center gap-3 text-lg">
+                  <CheckCircle className="w-6 h-6 text-emerald-300" />
+                  <span>عرض توضيحي مخصص لشركتك</span>
+                </div>
+                <div className="flex items-center gap-3 text-lg">
+                  <CheckCircle className="w-6 h-6 text-emerald-300" />
+                  <span>حلول مصممة خصيصاً لاحتياجاتك</span>
+                </div>
               </div>
             </div>
           </div>
