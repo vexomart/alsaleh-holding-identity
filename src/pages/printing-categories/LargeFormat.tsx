@@ -91,11 +91,19 @@ const LargeFormat = () => {
         ? parseFloat(product.price) * (1 - product.discount / 100)
         : parseFloat(product.price);
 
+      // تأكد من صحة رقم الهاتف
+      let formattedPhone = customerInfo.phone;
+      if (!formattedPhone.startsWith('966')) {
+        formattedPhone = formattedPhone.startsWith('0') 
+          ? `966${formattedPhone.substring(1)}` 
+          : `966${formattedPhone}`;
+      }
+
       const paymentData = {
         amount: finalPrice,
-        customer_name: customerInfo.name,
-        customer_email: customerInfo.email,
-        customer_phone: customerInfo.phone.startsWith('966') ? customerInfo.phone : `966${customerInfo.phone.replace(/^0+/, '')}`,
+        customer_name: customerInfo.name.trim(),
+        customer_email: customerInfo.email.trim(),
+        customer_phone: formattedPhone,
         offer_title: product.name,
         description: `${product.description}${customerInfo.notes ? ` - ملاحظات: ${customerInfo.notes}` : ''}`,
         currency: 'SAR',
@@ -106,17 +114,29 @@ const LargeFormat = () => {
         }
       };
 
-      console.log('إرسال بيانات الدفع:', paymentData);
+      console.log('إرسال بيانات الدفع:', JSON.stringify(paymentData, null, 2));
 
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
-        body: paymentData
+      const response = await fetch(`https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/paylink-payment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI`,
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliZmNnd2V5a3FremRvZHJmbWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwOTAxNDUsImV4cCI6MjA2OTY2NjE0NX0.m8uOkaZsoTRbG90TW7xHVFUJJ5zrF7QTP4zMO1NpuvI'
+        },
+        body: JSON.stringify(paymentData)
       });
 
-      if (error) {
-        console.error('خطأ في الدفع:', error);
+      console.log('استجابة الخادم:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('فشل الطلب:', errorText);
         toast.error('حدث خطأ أثناء إنشاء رابط الدفع');
         return;
       }
+
+      const data = await response.json();
+      console.log('بيانات الاستجابة:', data);
 
       if (data?.success && data?.payment_url) {
         toast.success('تم إنشاء رابط الدفع بنجاح');
