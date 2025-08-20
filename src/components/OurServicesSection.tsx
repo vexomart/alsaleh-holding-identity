@@ -75,50 +75,60 @@ const OurServicesSection = () => {
 
   return (
     <section className="relative py-8 sm:py-12 md:py-16 lg:py-20 xl:py-28 overflow-hidden font-inter">
-      {/* خلفية مميزة ومبتكرة */}
+      {/* خلفية مميزة ومحسنة */}
       <div className="absolute inset-0 z-0">
-        {/* الطبقة الرئيسية للخلفية */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100/30 dark:from-slate-900 dark:via-slate-800/90 dark:to-slate-900"></div>
+        {/* الطبقة الرئيسية للخلفية مع تحسينات */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50/80 to-purple-50/60 dark:from-slate-900 dark:via-blue-900/20 dark:to-indigo-900/10"></div>
         
-        {/* العناصر الجرافيكية المتحركة */}
+        {/* العناصر الجرافيكية المتحركة المحسنة */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-          {/* دوائر متدرجة متحركة */}
-          <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-indigo-600/15 rounded-full blur-3xl animate-float opacity-60"></div>
-          <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-gradient-to-tr from-purple-400/15 to-pink-500/10 rounded-full blur-3xl animate-float-delayed opacity-50"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-cyan-400/12 to-blue-500/8 rounded-full blur-2xl animate-pulse opacity-40" style={{ animationDuration: "6s" }}></div>
+          {/* دوائر متدرجة متحركة أكثر وضوحاً */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-indigo-600/25 rounded-full blur-3xl animate-float opacity-80"></div>
+          <div className="absolute bottom-1/3 right-1/4 w-[28rem] h-[28rem] bg-gradient-to-tr from-purple-400/25 to-pink-500/20 rounded-full blur-3xl animate-float-delayed opacity-70"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-cyan-400/20 to-blue-500/15 rounded-full blur-2xl animate-pulse opacity-60" style={{ animationDuration: "4s" }}></div>
           
-          {/* خطوط هندسية ديناميكية */}
-          <svg className="absolute inset-0 w-full h-full opacity-10 dark:opacity-5" xmlns="http://www.w3.org/2000/svg">
+          {/* خطوط هندسية ديناميكية محسنة */}
+          <svg className="absolute inset-0 w-full h-full opacity-20 dark:opacity-10" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="premium-grid" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.3"/>
-                <circle cx="30" cy="30" r="2" fill="currentColor" opacity="0.4"/>
-                <path d="M 20 20 L 40 20 L 40 40 L 20 40 Z" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.2"/>
+              <pattern id="premium-services-grid" width="80" height="80" patternUnits="userSpaceOnUse">
+                <path d="M 80 0 L 0 0 0 80" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+                <circle cx="40" cy="40" r="3" fill="currentColor" opacity="0.6"/>
+                <path d="M 25 25 L 55 25 L 55 55 L 25 55 Z" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.3"/>
+                <path d="M 10 40 L 70 40 M 40 10 L 40 70" stroke="currentColor" strokeWidth="0.5" opacity="0.2"/>
               </pattern>
-              <linearGradient id="grid-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.1"/>
+              <radialGradient id="services-radial" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.2"/>
                 <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.15"/>
                 <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.1"/>
-              </linearGradient>
+              </radialGradient>
             </defs>
-            <rect width="100%" height="100%" fill="url(#premium-grid)" className="text-blue-600 dark:text-blue-400"/>
+            <rect width="100%" height="100%" fill="url(#premium-services-grid)" className="text-blue-600 dark:text-blue-400"/>
+            <rect width="100%" height="100%" fill="url(#services-radial)" opacity="0.3"/>
           </svg>
           
-          {/* عناصر ضوئية متحركة */}
-          <div className="absolute top-16 right-16 w-3 h-24 bg-gradient-to-b from-blue-500/40 to-transparent rounded-full animate-pulse" style={{ animationDelay: "1s" }}></div>
-          <div className="absolute bottom-20 left-20 w-24 h-3 bg-gradient-to-r from-purple-500/40 to-transparent rounded-full animate-pulse" style={{ animationDelay: "2s" }}></div>
+          {/* عناصر ضوئية متحركة محسنة */}
+          <div className="absolute top-20 right-20 w-4 h-32 bg-gradient-to-b from-blue-500/60 to-transparent rounded-full animate-pulse" style={{ animationDelay: "1s" }}></div>
+          <div className="absolute bottom-24 left-24 w-32 h-4 bg-gradient-to-r from-purple-500/60 to-transparent rounded-full animate-pulse" style={{ animationDelay: "2s" }}></div>
+          <div className="absolute top-1/3 right-1/3 w-6 h-20 bg-gradient-to-b from-indigo-500/50 to-transparent rounded-full animate-pulse" style={{ animationDelay: "3s" }}></div>
           
-          {/* نجوم متلألئة */}
-          <div className="absolute top-32 left-1/3 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-60" style={{ animationDelay: "0.5s" }}></div>
-          <div className="absolute bottom-1/4 right-1/3 w-1.5 h-1.5 bg-blue-400 rounded-full animate-ping opacity-40" style={{ animationDelay: "1.5s" }}></div>
-          <div className="absolute top-2/3 left-16 w-1 h-1 bg-purple-400 rounded-full animate-ping opacity-50" style={{ animationDelay: "3s" }}></div>
+          {/* نجوم متلألئة محسنة */}
+          <div className="absolute top-32 left-1/3 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-80" style={{ animationDelay: "0.5s" }}></div>
+          <div className="absolute bottom-1/4 right-1/3 w-2.5 h-2.5 bg-blue-400 rounded-full animate-ping opacity-60" style={{ animationDelay: "1.5s" }}></div>
+          <div className="absolute top-2/3 left-16 w-2 h-2 bg-purple-400 rounded-full animate-ping opacity-70" style={{ animationDelay: "3s" }}></div>
+          <div className="absolute top-1/4 right-16 w-2 h-2 bg-green-400 rounded-full animate-ping opacity-50" style={{ animationDelay: "4s" }}></div>
+          <div className="absolute bottom-1/2 left-1/3 w-1.5 h-1.5 bg-pink-400 rounded-full animate-ping opacity-60" style={{ animationDelay: "2.5s" }}></div>
           
-          {/* تأثير الضباب اللامع */}
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/5 to-transparent pointer-events-none"></div>
+          {/* أشكال هندسية إضافية */}
+          <div className="absolute top-1/4 right-1/4 w-12 h-12 border-2 border-blue-400/30 rotate-45 animate-spin opacity-40" style={{ animationDuration: "20s" }}></div>
+          <div className="absolute bottom-1/3 left-1/3 w-8 h-8 border-2 border-purple-400/25 rotate-12 animate-bounce opacity-30" style={{ animationDuration: "3s" }}></div>
+          
+          {/* تأثير الضباب اللامع محسن */}
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/20 to-transparent pointer-events-none dark:via-blue-900/10"></div>
         </div>
         
-        {/* طبقة التشويش الأنيقة */}
-        <div className="absolute inset-0 backdrop-blur-[0.5px] bg-white/10 dark:bg-black/10"></div>
+        {/* طبقة تحسين الوضوح */}
+        <div className="absolute inset-0 backdrop-blur-[0.3px] bg-white/5 dark:bg-black/5"></div>
       </div>
       
       {/* المحتوى */}
