@@ -79,17 +79,24 @@ const LargeFormat = () => {
   ];
 
   const handlePayment = async (product) => {
+    console.log('🚀 handlePayment started with product:', product);
+    console.log('📋 customerInfo:', customerInfo);
+    
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+      console.error('❌ Missing required fields');
       toast.error('يرجى تعبئة جميع البيانات المطلوبة');
       return;
     }
 
     setIsPaymentLoading(true);
+    console.log('💳 Payment loading started');
     
     try {
       const finalPrice = product.discount > 0 
         ? parseFloat(product.price) * (1 - product.discount / 100)
         : parseFloat(product.price);
+
+      console.log('💰 Final price calculated:', finalPrice);
 
       // تأكد من صحة رقم الهاتف
       let formattedPhone = customerInfo.phone;
@@ -114,7 +121,7 @@ const LargeFormat = () => {
         }
       };
 
-      console.log('إرسال بيانات الدفع:', JSON.stringify(paymentData, null, 2));
+      console.log('📤 Sending payment data:', JSON.stringify(paymentData, null, 2));
 
       const response = await fetch(`https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/paylink-payment`, {
         method: 'POST',
@@ -126,30 +133,31 @@ const LargeFormat = () => {
         body: JSON.stringify(paymentData)
       });
 
-      console.log('استجابة الخادم:', response.status, response.statusText);
+      console.log('📥 Response status:', response.status, response.statusText);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('فشل الطلب:', errorText);
+        console.error('❌ Request failed:', errorText);
         toast.error('حدث خطأ أثناء إنشاء رابط الدفع');
         return;
       }
 
       const data = await response.json();
-      console.log('بيانات الاستجابة:', data);
+      console.log('✅ Response data:', data);
 
       if (data?.success && data?.payment_url) {
         toast.success('تم إنشاء رابط الدفع بنجاح');
-        console.log('رابط الدفع:', data.payment_url);
+        console.log('🔗 Opening payment URL:', data.payment_url);
         window.open(data.payment_url, '_blank');
       } else {
-        console.error('فشل في إنشاء رابط الدفع:', data);
+        console.error('❌ Invalid response:', data);
         toast.error(data?.error || 'فشل في إنشاء رابط الدفع');
       }
     } catch (error) {
-      console.error('خطأ في عملية الدفع:', error);
+      console.error('💥 Payment error:', error);
       toast.error('حدث خطأ أثناء معالجة الطلب');
     } finally {
+      console.log('🏁 Payment process finished');
       setIsPaymentLoading(false);
     }
   };
