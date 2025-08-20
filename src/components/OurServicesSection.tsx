@@ -74,73 +74,73 @@ const OurServicesSection = () => {
   }, []);
 
   return (
-    <section className="relative py-12 sm:py-16 md:py-20 lg:py-24 xl:py-36 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 font-inter">
+    <section className="relative py-8 sm:py-12 md:py-16 lg:py-20 xl:py-28 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 font-inter">
       {/* Premium Corporate Background */}
       <div className="absolute inset-0">
         {/* Geometric Pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-20 dark:opacity-10" xmlns="http://www.w3.org/2000/svg">
+        <svg className="absolute inset-0 w-full h-full opacity-10 sm:opacity-20 dark:opacity-5 sm:dark:opacity-10" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="enterprise-grid" width="60" height="60" patternUnits="userSpaceOnUse" className="sm:w-[80px] sm:h-[80px] lg:w-[100px] lg:h-[100px]">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.3"/>
-              <circle cx="30" cy="30" r="1" fill="currentColor" opacity="0.4" className="sm:cx-[40] sm:cy-[40] sm:r-[1.2] lg:cx-[50] lg:cy-[50] lg:r-[1.5]"/>
-              <path d="M 15 15 L 45 15 L 45 45 L 15 45 Z" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.2" className="sm:d-[M 20 20 L 60 20 L 60 60 L 20 60 Z] lg:d-[M 25 25 L 75 25 L 75 75 L 25 75 Z]"/>
+            <pattern id="enterprise-grid" width="40" height="40" patternUnits="userSpaceOnUse" className="sm:w-[60px] sm:h-[60px] lg:w-[80px] lg:h-[80px]">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.2" className="sm:strokeWidth-[0.4] lg:strokeWidth-[0.5]"/>
+              <circle cx="20" cy="20" r="0.8" fill="currentColor" opacity="0.3" className="sm:r-[1] lg:r-[1.2]"/>
+              <path d="M 10 10 L 30 10 L 30 30 L 10 30 Z" fill="none" stroke="currentColor" strokeWidth="0.2" opacity="0.15" className="sm:strokeWidth-[0.25] lg:strokeWidth-[0.3]"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#enterprise-grid)" className="text-blue-600 dark:text-blue-400"/>
         </svg>
         
-        {/* Responsive Floating Corporate Elements */}
-        <div className="absolute top-10 right-10 w-48 h-48 sm:top-15 sm:right-15 sm:w-64 sm:h-64 lg:top-20 lg:right-20 lg:w-96 lg:h-96 bg-gradient-to-br from-blue-400/8 to-indigo-600/12 rounded-full blur-2xl sm:blur-3xl animate-float"></div>
-        <div className="absolute bottom-16 left-10 w-40 h-40 sm:bottom-20 sm:left-15 sm:w-56 sm:h-56 lg:bottom-32 lg:left-20 lg:w-80 lg:h-80 bg-gradient-to-tr from-purple-400/8 to-pink-500/10 rounded-full blur-2xl sm:blur-3xl animate-float-delayed"></div>
-        <div className="absolute top-1/3 left-1/3 w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-gradient-to-r from-cyan-300/6 to-blue-400/8 rounded-full blur-2xl sm:blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
+        {/* Mobile-Optimized Floating Corporate Elements */}
+        <div className="absolute top-8 right-8 w-32 h-32 sm:top-12 sm:right-12 sm:w-48 sm:h-48 md:top-15 md:right-15 md:w-64 md:h-64 lg:top-20 lg:right-20 lg:w-96 lg:h-96 bg-gradient-to-br from-blue-400/6 to-indigo-600/8 sm:from-blue-400/8 sm:to-indigo-600/12 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-float"></div>
+        <div className="absolute bottom-12 left-8 w-28 h-28 sm:bottom-16 sm:left-12 sm:w-40 sm:h-40 md:bottom-20 md:left-15 md:w-56 md:h-56 lg:bottom-32 lg:left-20 lg:w-80 lg:h-80 bg-gradient-to-tr from-purple-400/6 to-pink-500/8 sm:from-purple-400/8 sm:to-pink-500/10 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-float-delayed"></div>
+        <div className="absolute top-1/3 left-1/3 w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-gradient-to-r from-cyan-300/4 to-blue-400/6 sm:from-cyan-300/6 sm:to-blue-400/8 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-pulse" style={{ animationDuration: "4s" }}></div>
         
-        {/* Responsive Corporate Lines */}
-        <div className="hidden sm:block absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-200/30 to-transparent"></div>
-        <div className="hidden sm:block absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-purple-200/30 to-transparent"></div>
+        {/* Mobile-Responsive Corporate Lines */}
+        <div className="hidden md:block absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-200/20 sm:via-blue-200/30 to-transparent"></div>
+        <div className="hidden md:block absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-purple-200/20 sm:via-purple-200/30 to-transparent"></div>
       </div>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
-        {/* Enterprise-Level Header */}
-        <div className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-28 animate-fade-in">
-          {/* Premium Badge */}
-          <div className="inline-flex items-center gap-2 sm:gap-3 lg:gap-4 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/10 border border-blue-500/20 backdrop-blur-lg mb-6 sm:mb-8 lg:mb-10 shadow-lg">
-            <div className="relative flex items-center gap-1 sm:gap-2">
-              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-blue-600 animate-pulse" />
-              <span className="text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 tracking-wider uppercase font-poppins">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 relative z-10 max-w-7xl">
+        {/* Mobile-First Enterprise Header */}
+        <div className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-28 animate-fade-in">
+          {/* Mobile-Optimized Premium Badge */}
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 lg:gap-3 px-3 sm:px-4 md:px-6 lg:px-8 py-1.5 sm:py-2 lg:py-3 rounded-full bg-gradient-to-r from-blue-600/8 via-indigo-600/8 to-purple-600/8 sm:from-blue-600/10 sm:via-indigo-600/10 sm:to-purple-600/10 border border-blue-500/15 sm:border-blue-500/20 backdrop-blur-lg mb-4 sm:mb-6 lg:mb-8 shadow-md sm:shadow-lg">
+            <div className="relative flex items-center gap-1 sm:gap-1.5 lg:gap-2">
+              <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-blue-600 animate-pulse" />
+              <span className="text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 tracking-wide font-cairo">
                 محفظة الخدمات المتميزة
               </span>
-              <Star className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-gold-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
+              <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 text-gold-500 animate-pulse" style={{ animationDelay: "0.5s" }} />
             </div>
           </div>
           
-          {/* Responsive Multilingual Heading */}
-          <div className="space-y-2 sm:space-y-3 lg:space-y-4 mb-4 sm:mb-6 lg:mb-8">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-black font-inter tracking-tight leading-tight">
+          {/* Mobile-Optimized Multilingual Heading */}
+          <div className="space-y-1 sm:space-y-2 md:space-y-3 lg:space-y-4 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-8xl font-black font-inter tracking-tight leading-tight px-2 sm:px-0">
               <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
                 خدماتنا
               </span>
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-500 dark:text-slate-400 font-poppins tracking-wide">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-bold text-slate-500 dark:text-slate-400 font-cairo tracking-wide">
               خدماتنا المتميزة
             </p>
           </div>
           
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-300 max-w-3xl sm:max-w-4xl lg:max-w-5xl mx-auto leading-relaxed font-medium font-inter px-4 sm:px-0">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-slate-600 dark:text-slate-300 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto leading-relaxed font-medium font-cairo px-2 sm:px-4 md:px-0">
             نقدم حلول تقنية متطورة ومبتكرة على مستوى عالمي، مصممة خصيصاً لتلبية احتياجات الشركات الحديثة وتحقيق أهدافها الرقمية الطموحة
           </p>
           
-          {/* Responsive Animated Corporate Divider */}
-          <div className="flex justify-center mt-6 sm:mt-8 lg:mt-12">
-            <div className="relative flex items-center gap-2 sm:gap-3 lg:gap-4">
-              <div className="w-8 sm:w-12 lg:w-16 h-0.5 sm:h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></div>
-              <Zap className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600 animate-pulse" />
-              <div className="w-8 sm:w-12 lg:w-16 h-0.5 sm:h-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full"></div>
+          {/* Mobile-Optimized Animated Corporate Divider */}
+          <div className="flex justify-center mt-4 sm:mt-6 md:mt-8 lg:mt-12">
+            <div className="relative flex items-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
+              <div className="w-6 sm:w-8 md:w-12 lg:w-16 h-0.5 sm:h-0.5 lg:h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></div>
+              <Zap className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-blue-600 animate-pulse" />
+              <div className="w-6 sm:w-8 md:w-12 lg:w-16 h-0.5 sm:h-0.5 lg:h-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full"></div>
             </div>
           </div>
         </div>
 
-        {/* Responsive Enterprise Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12 mb-12 sm:mb-16 md:mb-20 lg:mb-24">
+        {/* Mobile-First Enterprise Services Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 mb-8 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-24">
           {services.map((service, index) => {
             const IconComponent = service.icon;
             const isHovered = hoveredService === service.id;
@@ -151,83 +151,83 @@ const OurServicesSection = () => {
                 key={service.id}
                 className={cn(
                   "group relative overflow-hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl",
-                  "border border-slate-200/60 dark:border-slate-700/60 rounded-2xl sm:rounded-3xl",
-                  "transition-all duration-700 transform hover:scale-[1.02] sm:hover:scale-[1.03] hover:-translate-y-1 sm:hover:-translate-y-2 lg:hover:-translate-y-3",
-                  "shadow-lg sm:shadow-xl hover:shadow-xl sm:hover:shadow-2xl cursor-pointer",
-                  isHovered && `hover:shadow-${service.glowColor.split('/')[0]}-500/20`,
+                  "border border-slate-200/50 dark:border-slate-700/50 rounded-xl sm:rounded-2xl lg:rounded-3xl",
+                  "transition-all duration-700 transform hover:scale-[1.01] sm:hover:scale-[1.02] lg:hover:scale-[1.03] hover:-translate-y-0.5 sm:hover:-translate-y-1 lg:hover:-translate-y-2",
+                  "shadow-md sm:shadow-lg lg:shadow-xl hover:shadow-lg sm:hover:shadow-xl lg:hover:shadow-2xl cursor-pointer",
+                  isHovered && `hover:shadow-${service.glowColor.split("/")[0]}-500/15 sm:hover:shadow-${service.glowColor.split("/")[0]}-500/20`,
                   isActive && "animate-pulse",
                   "animate-fade-in w-full"
                 )}
                 style={{ 
-                  animationDelay: `${index * 0.15}s`,
+                  animationDelay: `${index * 0.1}s`,
                 }}
                 onMouseEnter={() => setHoveredService(service.id)}
                 onMouseLeave={() => setHoveredService(null)}
               >
                 {/* Premium Background Gradient */}
                 <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-all duration-1000",
+                  "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-3 sm:group-hover:opacity-5 transition-all duration-1000",
                   service.bgGradient
                 )}></div>
                 
-                {/* Animated Corporate Border */}
+                {/* Mobile-Optimized Animated Corporate Border */}
                 <div className={cn(
-                  "absolute inset-0 rounded-2xl sm:rounded-3xl transition-all duration-700",
+                  "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-700",
                   "bg-gradient-to-r p-px opacity-0 group-hover:opacity-100",
                   service.gradient
                 )}>
-                  <div className="w-full h-full bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl"></div>
+                  <div className="w-full h-full bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl lg:rounded-3xl"></div>
                 </div>
                 
                 {/* Shimmer effect */}
-                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full skew-x-12 rounded-2xl sm:rounded-3xl"></div>
+                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full skew-x-12 rounded-xl sm:rounded-2xl lg:rounded-3xl"></div>
                 
-                <CardContent className="relative z-10 p-6 sm:p-8 md:p-10 lg:p-12">
-                  {/* Responsive Animated Icon Container */}
-                  <div className="mb-6 sm:mb-8 lg:mb-10">
+                <CardContent className="relative z-10 p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
+                  {/* Mobile-First Responsive Animated Icon Container */}
+                  <div className="mb-4 sm:mb-6 lg:mb-8 xl:mb-10">
                     <div className={cn(
-                      "relative w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-2xl sm:rounded-3xl flex items-center justify-center transition-all duration-700",
-                      "bg-gradient-to-br shadow-lg sm:shadow-xl lg:shadow-2xl transform-gpu",
+                      "relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-xl sm:rounded-2xl lg:rounded-3xl flex items-center justify-center transition-all duration-700",
+                      "bg-gradient-to-br shadow-md sm:shadow-lg lg:shadow-xl xl:shadow-2xl transform-gpu",
                       service.gradient,
                       isActive ? "animate-icon-float" : "group-hover:animate-icon-pulse",
-                      "group-hover:scale-105 sm:group-hover:scale-110 group-hover:rotate-1 sm:group-hover:rotate-3",
+                      "group-hover:scale-105 sm:group-hover:scale-110 group-hover:rotate-1 sm:group-hover:rotate-2 lg:group-hover:rotate-3",
                       `shadow-${service.glowColor}`
                     )}>
                       <IconComponent 
                         className={cn(
-                          "w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 text-white transition-all duration-700 filter drop-shadow-lg",
+                          "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 text-white transition-all duration-700 filter drop-shadow-lg",
                           isActive ? "animate-bounce-slow" : "group-hover:scale-110 sm:group-hover:scale-125",
-                          "group-hover:rotate-6 sm:group-hover:rotate-12"
+                          "group-hover:rotate-3 sm:group-hover:rotate-6 lg:group-hover:rotate-12"
                         )}
                       />
                       
                       {/* Auto-rotating glow rings */}
                       <div className={cn(
-                        "absolute inset-0 rounded-2xl sm:rounded-3xl transition-all duration-1000",
-                        "bg-gradient-to-br opacity-0 group-hover:opacity-60 blur-lg sm:blur-xl",
+                        "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-1000",
+                        "bg-gradient-to-br opacity-0 group-hover:opacity-40 sm:group-hover:opacity-60 blur-md sm:blur-lg lg:blur-xl",
                         service.gradient,
-                        isActive && "animate-pulse opacity-40"
+                        isActive && "animate-pulse opacity-30 sm:opacity-40"
                       )}></div>
                       
                       <div className={cn(
-                        "absolute inset-0 rounded-2xl sm:rounded-3xl border-2 border-white/30 transition-all duration-1000",
+                        "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl border border-white/20 sm:border-2 sm:border-white/30 transition-all duration-1000",
                         isActive ? "animate-rotate" : "group-hover:rotate-180 group-hover:scale-110 sm:group-hover:scale-125"
                       )}></div>
                       
                       {/* Corner sparkles */}
                       <Sparkles className={cn(
-                        "absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-5 sm:h-5 text-white/80 transition-all duration-500",
+                        "absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 lg:-top-2 lg:-right-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white/80 transition-all duration-500",
                         isActive ? "animate-pulse" : "opacity-0 group-hover:opacity-100"
                       )} />
                     </div>
                   </div>
                   
-                  {/* Enhanced Responsive Content */}
-                  <div className="space-y-4 sm:space-y-5 lg:space-y-6">
-                    {/* Responsive Bilingual Title */}
-                    <div className="space-y-1 sm:space-y-2">
+                  {/* Mobile-First Enhanced Responsive Content */}
+                  <div className="space-y-3 sm:space-y-4 lg:space-y-5 xl:space-y-6">
+                    {/* Mobile-Optimized Bilingual Title */}
+                    <div className="space-y-1 sm:space-y-1.5 lg:space-y-2">
                       <h3 className={cn(
-                        "text-xl sm:text-2xl lg:text-3xl font-black leading-tight transition-all duration-500 font-inter",
+                        "text-lg sm:text-xl md:text-2xl lg:text-3xl font-black leading-tight transition-all duration-500 font-cairo",
                         "text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400"
                       )}>
                         {service.title}
@@ -239,21 +239,21 @@ const OurServicesSection = () => {
                     
                     <p className={cn(
                       "text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-medium",
-                      "group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors duration-500 font-inter"
+                      "group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors duration-500 font-cairo line-clamp-3 sm:line-clamp-none"
                     )}>
                       {service.description}
                     </p>
                     
-                    {/* Responsive Feature Tags */}
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    {/* Mobile-Optimized Feature Tags */}
+                    <div className="flex flex-wrap gap-1 sm:gap-1.5 lg:gap-2">
                       {service.features.map((feature, idx) => (
                         <span 
                           key={idx}
                           className={cn(
-                            "px-2 sm:px-3 py-1 text-xs font-semibold rounded-full transition-all duration-300",
+                            "px-2 sm:px-2.5 lg:px-3 py-0.5 sm:py-1 text-xs font-semibold rounded-full transition-all duration-300",
                             "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300",
                             "group-hover:bg-blue-100 dark:group-hover:bg-blue-900/20",
-                            "group-hover:text-blue-600 dark:group-hover:text-blue-400 font-poppins"
+                            "group-hover:text-blue-600 dark:group-hover:text-blue-400 font-cairo"
                           )}
                         >
                           {feature}
@@ -262,28 +262,28 @@ const OurServicesSection = () => {
                     </div>
                   </div>
                   
-                  {/* Responsive Premium Action Button */}
+                  {/* Mobile-First Responsive Premium Action Button */}
                   <div className={cn(
-                    "flex items-center gap-3 sm:gap-4 mt-6 sm:mt-8 font-bold transition-all duration-500",
+                    "flex items-center gap-2 sm:gap-3 lg:gap-4 mt-4 sm:mt-6 lg:mt-8 font-bold transition-all duration-500",
                     "text-blue-600 dark:text-blue-400"
                   )}>
-                    <span className="text-base sm:text-lg font-cairo">المزيد</span>
+                    <span className="text-sm sm:text-base lg:text-lg font-cairo">المزيد</span>
                     <div className={cn(
-                      "w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-r flex items-center justify-center transition-all duration-300",
+                      "w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-r flex items-center justify-center transition-all duration-300",
                       service.gradient,
-                      "group-hover:scale-105 sm:group-hover:scale-110 shadow-md sm:shadow-lg"
+                      "group-hover:scale-105 sm:group-hover:scale-110 shadow-sm sm:shadow-md lg:shadow-lg"
                     )}>
-                      <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:-translate-x-0.5 transition-transform duration-300" />
+                      <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white group-hover:-translate-x-0.5 transition-transform duration-300" />
                     </div>
                   </div>
                 </CardContent>
                 
-                {/* Responsive Corner Indicators */}
+                {/* Mobile-Responsive Corner Indicators */}
                 <div className={cn(
-                  "absolute top-4 right-4 sm:top-6 sm:right-6 w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-500",
+                  "absolute top-3 right-3 sm:top-4 sm:right-4 lg:top-6 lg:right-6 w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-3 lg:h-3 rounded-full transition-all duration-500",
                   `bg-gradient-to-r ${service.gradient}`,
                   isActive ? "scale-125 sm:scale-150 animate-pulse" : "group-hover:scale-110 sm:group-hover:scale-125",
-                  `shadow-md sm:shadow-lg shadow-${service.glowColor}`
+                  `shadow-sm sm:shadow-md lg:shadow-lg shadow-${service.glowColor}`
                 )}></div>
               </Card>
             );
