@@ -18,12 +18,13 @@ import texturedFabricBusinessCardsImg from "@/assets/printing/textured-fabric-bu
 import threeDEffectBusinessCardsImg from "@/assets/printing/3d-effect-business-cards.jpg";
 
 const BusinessCards = () => {
-  const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
+  const [loadingProducts, setLoadingProducts] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   // نظام الدفع المبسط باستخدام TAP
   const handlePaymentMethod = async (product: any) => {
-    setLoadingMethod('tap');
+    const productId = product.title; // استخدام العنوان كمعرف فريد
+    setLoadingProducts(prev => new Set([...prev, productId]));
     
     toast({
       title: "جاري معالجة طلب الدفع...",
@@ -94,7 +95,11 @@ const BusinessCards = () => {
         variant: "destructive",
       });
     } finally {
-      setLoadingMethod(null);
+      setLoadingProducts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(productId);
+        return newSet;
+      });
     }
   };
 
@@ -444,10 +449,10 @@ const BusinessCards = () => {
                     <div className="space-y-2">
                       <Button
                         onClick={() => handlePaymentMethod(product)}
-                        disabled={loadingMethod !== null}
+                        disabled={loadingProducts.has(product.title)}
                         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm py-3 font-bold hover-scale shadow-lg transition-all duration-300"
                       >
-                        {loadingMethod === 'tap' ? (
+                        {loadingProducts.has(product.title) ? (
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         ) : (
                           <CreditCard className="w-4 h-4 mr-2" />
