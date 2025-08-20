@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import SEO from "@/components/SEO";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { 
   Image, 
   Megaphone, 
@@ -15,10 +21,20 @@ import {
   ShoppingCart,
   Zap,
   Star,
-  Heart
+  Heart,
+  Loader2
 } from "lucide-react";
 
 const LargeFormat = () => {
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    notes: ''
+  });
+  
   const products = [
     {
       id: 1,
@@ -61,6 +77,62 @@ const LargeFormat = () => {
       discount: 10
     }
   ];
+
+  const handlePayment = async (product) => {
+    if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+      toast.error('يرجى تعبئة جميع البيانات المطلوبة');
+      return;
+    }
+
+    setIsPaymentLoading(true);
+    
+    try {
+      const finalPrice = product.discount > 0 
+        ? parseFloat(product.price) * (1 - product.discount / 100)
+        : parseFloat(product.price);
+
+      const paymentData = {
+        amount: finalPrice,
+        customer_name: customerInfo.name,
+        customer_email: customerInfo.email,
+        customer_phone: customerInfo.phone.startsWith('966') ? customerInfo.phone : `966${customerInfo.phone.replace(/^0+/, '')}`,
+        offer_title: product.name,
+        description: `${product.description}${customerInfo.notes ? ` - ملاحظات: ${customerInfo.notes}` : ''}`,
+        currency: 'SAR',
+        product_details: {
+          product_id: product.id,
+          product_name: product.name,
+          product_version: 'V 1.0'
+        }
+      };
+
+      console.log('إرسال بيانات الدفع:', paymentData);
+
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: paymentData
+      });
+
+      if (error) {
+        console.error('خطأ في الدفع:', error);
+        toast.error('حدث خطأ أثناء إنشاء رابط الدفع');
+        return;
+      }
+
+      if (data?.success && data?.payment_url) {
+        toast.success('تم إنشاء رابط الدفع بنجاح');
+        console.log('رابط الدفع:', data.payment_url);
+        window.open(data.payment_url, '_blank');
+      } else {
+        console.error('فشل في إنشاء رابط الدفع:', data);
+        toast.error(data?.error || 'فشل في إنشاء رابط الدفع');
+      }
+    } catch (error) {
+      console.error('خطأ في عملية الدفع:', error);
+      toast.error('حدث خطأ أثناء معالجة الطلب');
+    } finally {
+      setIsPaymentLoading(false);
+    }
+  };
 
   return (
     <>
@@ -148,10 +220,122 @@ const LargeFormat = () => {
                           </span>
                         )}
                       </div>
-                      <Button size="sm" className="gap-1">
-                        <ShoppingCart className="h-4 w-4" />
-                        اطلب الآن
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button 
+                            size="sm" 
+                            className="gap-1" 
+                            onClick={() => setSelectedProduct(product)}
+                          >
+                            <ShoppingCart className="h-4 w-4" />
+                            اطلب الآن
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle className="text-right">
+                              طلب {product.name}
+                            </DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4 mt-4">
+                            {/* Product Info */}
+                            <div className="bg-muted/50 p-4 rounded-lg">
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="font-semibold">{product.name}</span>
+                                <Badge variant="secondary">{product.category}</Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-3">{product.description}</p>
+                              <div className="flex items-center justify-between">
+                                <span className="text-lg font-bold text-primary">
+                                  {product.discount > 0 
+                                    ? `${(parseFloat(product.price) * (1 - product.discount / 100)).toFixed(0)} ر.س`
+                                    : `${product.price} ر.س`
+                                  }
+                                </span>
+                                {product.discount > 0 && (
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm line-through text-muted-foreground">
+                                      {product.price} ر.س
+                                    </span>
+                                    <Badge variant="destructive" className="text-xs">
+                                      خصم {product.discount}%
+                                    </Badge>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Customer Info Form */}
+                            <div className="space-y-3">
+                              <div>
+                                <Label htmlFor="name">الاسم الكامل *</Label>
+                                <Input
+                                  id="name"
+                                  placeholder="اكتب اسمك الكامل"
+                                  value={customerInfo.name}
+                                  onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
+                                  required
+                                />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="email">البريد الإلكتروني *</Label>
+                                <Input
+                                  id="email"
+                                  type="email"
+                                  placeholder="example@email.com"
+                                  value={customerInfo.email}
+                                  onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
+                                  required
+                                />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="phone">رقم الهاتف *</Label>
+                                <Input
+                                  id="phone"
+                                  placeholder="05xxxxxxxx"
+                                  value={customerInfo.phone}
+                                  onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
+                                  required
+                                />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="notes">ملاحظات إضافية</Label>
+                                <Textarea
+                                  id="notes"
+                                  placeholder="أي متطلبات خاصة أو ملاحظات..."
+                                  value={customerInfo.notes}
+                                  onChange={(e) => setCustomerInfo({...customerInfo, notes: e.target.value})}
+                                  rows={3}
+                                />
+                              </div>
+                            </div>
+
+                            <Button 
+                              onClick={() => handlePayment(product)}
+                              disabled={isPaymentLoading}
+                              className="w-full"
+                            >
+                              {isPaymentLoading ? (
+                                <>
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  جارٍ إنشاء رابط الدفع...
+                                </>
+                              ) : (
+                                <>
+                                  <ShoppingCart className="mr-2 h-4 w-4" />
+                                  اشتري الآن - {product.discount > 0 
+                                    ? `${(parseFloat(product.price) * (1 - product.discount / 100)).toFixed(0)} ر.س`
+                                    : `${product.price} ر.س`
+                                  }
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </CardContent>
                 </Card>
