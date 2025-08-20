@@ -107,7 +107,7 @@ const OurServicesSection = () => {
             <div className="relative flex items-center gap-1 sm:gap-2">
               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-blue-600 animate-pulse" />
               <span className="text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 tracking-wider uppercase font-poppins">
-                Elite Services Portfolio
+                محفظة الخدمات المتميزة
               </span>
               <Star className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-gold-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
             </div>
@@ -121,7 +121,7 @@ const OurServicesSection = () => {
               </span>
             </h2>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-500 dark:text-slate-400 font-poppins tracking-wide">
-              Our Premium Services
+              خدماتنا المتميزة
             </p>
           </div>
           
@@ -265,8 +265,7 @@ const OurServicesSection = () => {
                   {/* Responsive Premium Action Button */}
                   <div className={cn(
                     "flex items-center gap-3 sm:gap-4 mt-6 sm:mt-8 font-bold transition-all duration-500",
-                    "text-blue-600 dark:text-blue-400",
-                    isHovered ? "translate-x-0 opacity-100" : "translate-x-4 sm:translate-x-6 opacity-0"
+                    "text-blue-600 dark:text-blue-400"
                   )}>
                     <span className="text-base sm:text-lg font-cairo">المزيد</span>
                     <div className={cn(
@@ -324,7 +323,7 @@ const OurServicesSection = () => {
                   <div className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full bg-gradient-to-r from-gold-400/20 to-amber-500/30 border border-gold-400/40 backdrop-blur-lg">
                     <Star className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-amber-600 animate-pulse" />
                     <span className="text-xs sm:text-sm font-black text-amber-700 dark:text-amber-300 tracking-widest uppercase font-poppins">
-                      Executive Consultation
+                      الاستشارة التنفيذية
                     </span>
                     <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-gold-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
                   </div>
@@ -337,7 +336,7 @@ const OurServicesSection = () => {
                       هل تحتاج إلى استشارة مخصصة؟
                     </h3>
                     <p className="text-lg sm:text-xl font-bold text-slate-500 dark:text-slate-400 mb-4 sm:mb-6 lg:mb-8 font-poppins">
-                      Need a Custom Consultation?
+                      هل تحتاج لاستشارة مخصصة؟
                     </p>
                     
                     <div className="w-24 sm:w-32 h-0.5 sm:h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full mx-auto mb-6 sm:mb-8 lg:mb-10 animate-shimmer"></div>
@@ -392,18 +391,18 @@ const OurServicesSection = () => {
                   </div>
                   
                   {/* Responsive Executive Trust Indicators */}
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 lg:gap-12 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-bold font-poppins">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 lg:gap-12 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-bold font-cairo">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500 animate-pulse"></div>
-                      <span>24/7 Available</span>
+                      <span>متاح ٢٤/٧</span>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                      <span>Free Consultation</span>
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 animate-pulse" style={{ animationDelay: "0.5s" }}></div>
+                      <span>استشارة مجانية</span>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-purple-500 animate-pulse" style={{ animationDelay: '1s' }}></div>
-                      <span>Instant Response</span>
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-purple-500 animate-pulse" style={{ animationDelay: "1s" }}></div>
+                      <span>رد فوري</span>
                     </div>
                   </div>
                 </div>
