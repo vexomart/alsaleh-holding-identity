@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, startTransition } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -153,6 +153,13 @@ const BusinessStationery = lazy(() => import("./pages/printing-categories/Busine
 const BusinessCards = lazy(() => import("./pages/printing-categories/BusinessCards"));
 const MarketingMaterials = lazy(() => import("./pages/printing-categories/MarketingMaterials"));
 
+// Add missing printing categories
+const LargeFormat = lazy(() => import("./pages/printing-categories/LargeFormat"));
+const PackagingBoxes = lazy(() => import("./pages/printing-categories/PackagingBoxes"));
+const PromotionalGifts = lazy(() => import("./pages/printing-categories/PromotionalGifts"));
+const ApparelAccessories = lazy(() => import("./pages/printing-categories/ApparelAccessories"));
+const CorporateBranding = lazy(() => import("./pages/printing-categories/CorporateBranding"));
+
 
 // Loading component for better UX
 const PageLoader = () => (
@@ -254,6 +261,11 @@ const App = () => {
                  <Route path="/printing/business-stationery" element={<Suspense fallback={<PageLoader />}><BusinessStationery /></Suspense>} />
                  <Route path="/printing/business-cards" element={<Suspense fallback={<PageLoader />}><BusinessCards /></Suspense>} />
                  <Route path="/printing/marketing-materials" element={<Suspense fallback={<PageLoader />}><MarketingMaterials /></Suspense>} />
+                 <Route path="/printing/large-format" element={<Suspense fallback={<PageLoader />}><LargeFormat /></Suspense>} />
+                 <Route path="/printing/packaging-boxes" element={<Suspense fallback={<PageLoader />}><PackagingBoxes /></Suspense>} />
+                 <Route path="/printing/promotional-gifts" element={<Suspense fallback={<PageLoader />}><PromotionalGifts /></Suspense>} />
+                 <Route path="/printing/apparel-accessories" element={<Suspense fallback={<PageLoader />}><ApparelAccessories /></Suspense>} />
+                 <Route path="/printing/corporate-branding" element={<Suspense fallback={<PageLoader />}><CorporateBranding /></Suspense>} />
                 <Route path="/subsidiaries" element={<Subsidiaries />} />
                 <Route path="/payment-methods" element={<PaymentMethods />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
