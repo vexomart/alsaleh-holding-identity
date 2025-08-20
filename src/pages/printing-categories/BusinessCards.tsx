@@ -31,7 +31,12 @@ const BusinessCards = () => {
     });
     
     try {
-      const amount = parseInt(product.price.replace(/[^\d]/g, ''));
+      // استخراج السعر من النص بطريقة صحيحة
+      const priceMatch = product.price.match(/(\d+)/);
+      const amount = priceMatch ? parseInt(priceMatch[1]) * 100 : 19900; // تحويل إلى هللة
+      
+      console.log('معلومات المنتج:', { title: product.title, price: product.price, amount });
+      
       let functionName = '';
       let payload: any = {
         amount: amount,
@@ -40,7 +45,15 @@ const BusinessCards = () => {
         customer_email: 'customer@example.com',
         customer_phone: '966500000000',
         offer_title: product.title,
-        description: `طلب منتج: ${product.title} - كروت شخصية`
+        description: `طلب منتج: ${product.title} - كروت شخصية`,
+        product_details: {
+          product_id: 1,
+          product_name: product.title,
+          product_version: "V 1.0",
+          customer_name: "عميل كروت شخصية",
+          customer_email: "customer@example.com",
+          customer_phone: "966500000000"
+        }
       };
 
       switch (method) {
