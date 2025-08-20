@@ -152,21 +152,13 @@ const OurServicesSection = () => {
                 className={cn(
                   "group relative overflow-hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl",
                   "border-2 border-slate-200/60 dark:border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl",
-                  "transition-all duration-700 transform hover:scale-[1.01] sm:hover:scale-[1.02] lg:hover:scale-[1.03] hover:-translate-y-0.5 sm:hover:-translate-y-1 lg:hover:-translate-y-2",
-                  "shadow-md sm:shadow-lg lg:shadow-xl hover:shadow-lg sm:hover:shadow-xl lg:hover:shadow-2xl cursor-pointer",
-                  "hover:border-blue-400/60 dark:hover:border-blue-500/60",
-                  isHovered && `hover:shadow-${service.glowColor.split("/")[0]}-500/15 sm:hover:shadow-${service.glowColor.split("/")[0]}-500/20`,
+                  "transition-all duration-700 shadow-md sm:shadow-lg lg:shadow-xl",
                   isActive && "animate-pulse border-blue-400/80 dark:border-blue-500/80",
-                  "animate-fade-in w-full max-w-full", // Ensure full width responsiveness
-                  "before:absolute before:inset-0 before:rounded-xl sm:before:rounded-2xl lg:before:rounded-3xl",
-                  "before:bg-gradient-to-r before:from-blue-500/0 before:via-blue-500/5 before:to-purple-500/0",
-                  "before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-700"
+                  "animate-fade-in w-full max-w-full"
                 )}
                 style={{ 
                   animationDelay: `${index * 0.1}s`,
                 }}
-                onMouseEnter={() => setHoveredService(service.id)}
-                onMouseLeave={() => setHoveredService(null)}
               >
                 {/* Animated Gradient Border */}
                 <div className={cn(
