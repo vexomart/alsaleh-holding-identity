@@ -8,142 +8,78 @@ import { Link } from "react-router-dom";
 const services = [
   {
     id: 1,
-    title: "برمجة التطبيقات والمواقع",
-    titleEn: "Application & Web Development",
-    description: "نقوم بتطوير تطبيقات الجوال والمواقع الإلكترونية باستخدام أحدث التقنيات العالمية والمعايير الدولية للجودة",
-    icon: Code,
-    gradient: "from-blue-600 via-blue-700 to-indigo-800",
-    bgGradient: "from-blue-50/80 to-indigo-100/60",
-    glowColor: "blue-500/30",
-    features: ["تطبيقات الموبايل", "المواقع التفاعلية", "أنظمة إدارة المحتوى"]
+    title: "التسويق الإلكتروني",
+    titleEn: "DIGITAL MARKETING",
+    description: "استراتيجيات تسويقية رقمية متطورة ومدروسة لزيادة الوصول والتفاعل وتحقيق أعلى معدلات التحويل",
+    icon: Megaphone,
+    gradient: "from-purple-600 via-violet-700 to-purple-800",
+    bgGradient: "from-purple-100/50 via-violet-50/30 to-purple-50/20",
+    glowColor: "purple-500/20",
+    features: ["الإعلانات الرقمية", "إدارة وسائل التواصل", "تحسين محركات البحث"]
   },
   {
     id: 2,
     title: "المشاريع الجاهزة",
-    titleEn: "Ready-Made Solutions", 
+    titleEn: "READY-MADE SOLUTIONS", 
     description: "حلول برمجية متكاملة وجاهزة للاستخدام الفوري، مصممة لتلبية احتياجات الشركات المختلفة بكفاءة عالية",
     icon: Package,
-    gradient: "from-emerald-600 via-green-700 to-teal-800",
-    bgGradient: "from-emerald-50/80 to-teal-100/60",
-    glowColor: "emerald-500/30",
-    features: ["أنظمة جاهزة", "حلول سريعة", "دعم فني شامل"]
+    gradient: "from-emerald-500 via-green-600 to-teal-700",
+    bgGradient: "from-emerald-100/50 via-green-50/30 to-teal-50/20",
+    glowColor: "emerald-500/20",
+    features: ["حلول سريعة", "أنظمة جاهزة", "دعم فني شامل"]
   },
   {
     id: 3,
-    title: "التسويق الإلكتروني",
-    titleEn: "Digital Marketing",
-    description: "استراتيجيات تسويقية رقمية متطورة ومدروسة لزيادة الوصول والتفاعل وتحقيق أعلى معدلات التحويل",
-    icon: Megaphone,
-    gradient: "from-purple-600 via-violet-700 to-purple-800",
-    bgGradient: "from-purple-50/80 to-violet-100/60",
-    glowColor: "purple-500/30",
-    features: ["إدارة وسائل التواصل", "الإعلانات الرقمية", "تحسين محركات البحث"]
-  },
-  {
-    id: 4,
-    title: "أنظمة الشركات",
-    titleEn: "Enterprise Systems",
-    description: "أنظمة إدارة متطورة ومخصصة لتحسين العمليات التشغيلية وزيادة الإنتاجية وتعزيز الكفاءة المؤسسية",
-    icon: Building,
-    gradient: "from-orange-600 via-red-700 to-pink-800",
-    bgGradient: "from-orange-50/80 to-pink-100/60",
-    glowColor: "orange-500/30",
-    features: ["إدارة الموارد البشرية", "أنظمة المحاسبة", "إدارة المشاريع"]
-  },
-  {
-    id: 5,
-    title: "صناعة المحتوى",
-    titleEn: "Content Creation",
-    description: "إنتاج محتوى إبداعي ومؤثر عالي الجودة يعكس هوية علامتك التجارية ويجذب جمهورك المستهدف بفعالية",
-    icon: PenTool,
-    gradient: "from-cyan-600 via-blue-700 to-indigo-800",
-    bgGradient: "from-cyan-50/80 to-blue-100/60",
-    glowColor: "cyan-500/30",
-    features: ["المحتوى المرئي", "التصميم الجرافيكي", "إنتاج الفيديو"]
+    title: "برمجة التطبيقات والمواقع",
+    titleEn: "APPLICATION & WEB DEVELOPMENT",
+    description: "نقوم بتطوير تطبيقات الجوال والمواقع الإلكترونية باستخدام أحدث التقنيات العالمية والمعايير الدولية للجودة",
+    icon: Code,
+    gradient: "from-blue-500 via-blue-600 to-indigo-700",
+    bgGradient: "from-blue-100/50 via-blue-50/30 to-indigo-50/20",
+    glowColor: "blue-500/20",
+    features: ["المواقع التفاعلية", "تطبيقات الموبايل", "أنظمة إدارة المحتوى"]
   }
 ];
 
 const OurServicesSection = () => {
-  const [activeAnimation, setActiveAnimation] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveAnimation((prev) => (prev + 1) % services.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
-    <section className="relative py-8 sm:py-12 md:py-16 lg:py-20 xl:py-28 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 font-inter">
-      {/* Premium Corporate Background */}
+    <section className="relative py-16 md:py-24 lg:py-32 overflow-hidden bg-gradient-to-br from-gray-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      {/* Enhanced Background */}
       <div className="absolute inset-0">
-        {/* Geometric Pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-10 sm:opacity-20 dark:opacity-5 sm:dark:opacity-10" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="enterprise-grid" width="40" height="40" patternUnits="userSpaceOnUse" className="sm:w-[60px] sm:h-[60px] lg:w-[80px] lg:h-[80px]">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.2" className="sm:strokeWidth-[0.4] lg:strokeWidth-[0.5]"/>
-              <circle cx="20" cy="20" r="0.8" fill="currentColor" opacity="0.3" className="sm:r-[1] lg:r-[1.2]"/>
-              <path d="M 10 10 L 30 10 L 30 30 L 10 30 Z" fill="none" stroke="currentColor" strokeWidth="0.2" opacity="0.15" className="sm:strokeWidth-[0.25] lg:strokeWidth-[0.3]"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#enterprise-grid)" className="text-blue-600 dark:text-blue-400"/>
-        </svg>
-        
-        {/* Mobile-Optimized Floating Corporate Elements */}
-        <div className="absolute top-8 right-8 w-32 h-32 sm:top-12 sm:right-12 sm:w-48 sm:h-48 md:top-15 md:right-15 md:w-64 md:h-64 lg:top-20 lg:right-20 lg:w-96 lg:h-96 bg-gradient-to-br from-blue-400/6 to-indigo-600/8 sm:from-blue-400/8 sm:to-indigo-600/12 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-float"></div>
-        <div className="absolute bottom-12 left-8 w-28 h-28 sm:bottom-16 sm:left-12 sm:w-40 sm:h-40 md:bottom-20 md:left-15 md:w-56 md:h-56 lg:bottom-32 lg:left-20 lg:w-80 lg:h-80 bg-gradient-to-tr from-purple-400/6 to-pink-500/8 sm:from-purple-400/8 sm:to-pink-500/10 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-float-delayed"></div>
-        <div className="absolute top-1/3 left-1/3 w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-gradient-to-r from-cyan-300/4 to-blue-400/6 sm:from-cyan-300/6 sm:to-blue-400/8 rounded-full blur-xl sm:blur-2xl lg:blur-3xl animate-pulse" style={{ animationDuration: "4s" }}></div>
-        
-        {/* Mobile-Responsive Corporate Lines */}
-        <div className="hidden md:block absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-200/20 sm:via-blue-200/30 to-transparent"></div>
-        <div className="hidden md:block absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-purple-200/20 sm:via-purple-200/30 to-transparent"></div>
+        {/* Floating Elements */}
+        <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-purple-400/10 to-blue-600/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-tr from-emerald-400/8 to-teal-600/8 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-blue-300/6 to-indigo-400/6 rounded-full blur-3xl animate-float"></div>
       </div>
       
-      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 relative z-10 max-w-7xl">
-        {/* Mobile-First Enterprise Header */}
-        <div className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-28 animate-fade-in">
-          {/* Mobile-Optimized Premium Badge */}
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 lg:gap-3 px-3 sm:px-4 md:px-6 lg:px-8 py-1.5 sm:py-2 lg:py-3 rounded-full bg-gradient-to-r from-blue-600/8 via-indigo-600/8 to-purple-600/8 sm:from-blue-600/10 sm:via-indigo-600/10 sm:to-purple-600/10 border border-blue-500/15 sm:border-blue-500/20 backdrop-blur-lg mb-4 sm:mb-6 lg:mb-8 shadow-md sm:shadow-lg">
-            <div className="relative flex items-center gap-1 sm:gap-1.5 lg:gap-2">
-              <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-blue-600 animate-pulse" />
-              <span className="text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 tracking-wide font-cairo">
-                محفظة الخدمات المتميزة
-              </span>
-              <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 text-gold-500 animate-pulse" style={{ animationDelay: "0.5s" }} />
-            </div>
-          </div>
-          
-          {/* Mobile-Optimized Multilingual Heading */}
-          <div className="space-y-1 sm:space-y-2 md:space-y-3 lg:space-y-4 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-8xl font-black font-inter tracking-tight leading-tight px-2 sm:px-0">
-              <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
-                خدماتنا
-              </span>
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-bold text-slate-500 dark:text-slate-400 font-cairo tracking-wide">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10 max-w-6xl">
+        {/* Section Header */}
+        <div className="text-center mb-16 lg:mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-500/20 backdrop-blur-lg mb-6">
+            <Sparkles className="w-4 h-4 text-blue-600 animate-pulse" />
+            <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
               خدماتنا المتميزة
-            </p>
+            </span>
           </div>
           
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-slate-600 dark:text-slate-300 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto leading-relaxed font-medium font-cairo px-2 sm:px-4 md:px-0">
-            نقدم حلول تقنية متطورة ومبتكرة على مستوى عالمي، مصممة خصيصاً لتلبية احتياجات الشركات الحديثة وتحقيق أهدافها الرقمية الطموحة
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
+              خدماتنا
+            </span>
+          </h2>
+          
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            نقدم حلول تقنية متطورة ومبتكرة مصممة خصيصاً لتلبية احتياجات الشركات الحديثة
           </p>
-          
-          {/* Mobile-Optimized Animated Corporate Divider */}
-          <div className="flex justify-center mt-4 sm:mt-6 md:mt-8 lg:mt-12">
-            <div className="relative flex items-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
-              <div className="w-6 sm:w-8 md:w-12 lg:w-16 h-0.5 sm:h-0.5 lg:h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></div>
-              <Zap className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-blue-600 animate-pulse" />
-              <div className="w-6 sm:w-8 md:w-12 lg:w-16 h-0.5 sm:h-0.5 lg:h-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full"></div>
-            </div>
-          </div>
         </div>
 
         {/* Mobile-First Enterprise Services Grid - Fully Responsive */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 mb-8 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-24 w-full">
           {services.map((service, index) => {
             const IconComponent = service.icon;
-            const isActive = activeAnimation === index;
+            const isActive = hoveredCard === index;
             
             return (
               <Card
