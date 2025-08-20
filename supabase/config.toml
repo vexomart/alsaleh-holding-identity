@@ -29,9 +29,9 @@ verify_jwt = false
 [functions.hr-system-request]
 verify_jwt = false
 
-# SECURITY FIX: Enable JWT verification for critical payment functions
+# Public payment function - no JWT required for customer payments
 [functions.paylink-payment]
-verify_jwt = true
+verify_jwt = false
 
 [functions.tamara-payment]
 verify_jwt = true
