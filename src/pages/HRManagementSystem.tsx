@@ -219,89 +219,82 @@ const HRManagementSystem = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         <Navigation />
         
-        {/* Hero Section */}
-        <section className="relative pt-20 pb-16 overflow-hidden" data-section="0">
+        {/* Hero Section - تصميم جديد مستوحى من الصورة */}
+        <section className="relative pt-20 pb-20 overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800" data-section="0">
+          {/* Background Elements */}
           <div className="absolute inset-0">
-            <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-indigo-600/20 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-32 left-20 w-80 h-80 bg-gradient-to-tr from-purple-400/10 to-pink-500/15 rounded-full blur-3xl animate-float-delayed"></div>
+            <div className="absolute top-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-32 left-20 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-float-delayed"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           </div>
           
           <div className="container mx-auto px-6 relative z-10 max-w-7xl">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 mb-8 text-sm text-slate-600 dark:text-slate-400">
-              <Link to="/" className="hover:text-blue-600 transition-colors">الرئيسية</Link>
+            <div className="flex items-center gap-2 mb-12 text-sm text-white/70">
+              <Link to="/" className="hover:text-white transition-colors">الرئيسية</Link>
               <ArrowLeft className="w-4 h-4" />
-              <Link to="/enterprise-systems" className="hover:text-blue-600 transition-colors">أنظمة الشركات</Link>
+              <Link to="/enterprise-systems" className="hover:text-white transition-colors">أنظمة الشركات</Link>
               <ArrowLeft className="w-4 h-4" />
-              <span className="text-blue-600 font-medium">إدارة الموارد البشرية</span>
+              <span className="text-white font-medium">إدارة الموارد البشرية</span>
             </div>
             
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className={cn(
-                "space-y-8 animate-fade-in",
-                visibleSections.has(0) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              )}>
-                <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/10 border border-blue-500/20 backdrop-blur-lg shadow-lg">
-                  <Users className="w-5 h-5 text-blue-600 animate-pulse" />
-                  <span className="text-sm font-bold text-blue-700 dark:text-blue-300 font-cairo">
-                    نظام HR متطور
+            <div className="text-center space-y-8">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg">
+                <Users className="w-5 h-5 text-white animate-pulse" />
+                <span className="text-sm font-bold text-white font-cairo">
+                  نظام HR متطور
+                </span>
+                <Star className="w-4 h-4 text-yellow-400 animate-pulse" />
+              </div>
+              
+              {/* Main Title */}
+              <div className="space-y-6 max-w-4xl mx-auto">
+                <h1 className="text-5xl lg:text-7xl font-black leading-tight font-cairo text-white">
+                  ابدأ رحلة التحول الرقمي لقسم
+                  <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                    HR
                   </span>
-                  <Star className="w-4 h-4 text-yellow-500 animate-pulse" />
-                </div>
+                </h1>
                 
-                <div className="space-y-6">
-                  <h1 className="text-5xl lg:text-7xl font-black leading-tight font-cairo">
-                    <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
-                      إدارة الموارد البشرية
-                    </span>
-                  </h1>
-                  <p className="text-xl font-bold text-blue-600 dark:text-blue-400 font-poppins">
-                    Human Resources Management System
-                  </p>
-                </div>
-                
-                <p className="text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-medium font-cairo">
-                  نظام شامل ومتطور لإدارة جميع جوانب الموارد البشرية في شركتك. من إدارة بيانات الموظفين إلى الرواتب والتطوير، 
-                  كل ما تحتاجه في منصة واحدة متكاملة.
+                <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-medium font-cairo max-w-3xl mx-auto">
+                  احصل على استشارة مجانية واكتشف كيف يمكن لنظامنا تحسين كفاءة إدارة الموارد البشرية في شركتك
                 </p>
               </div>
               
-              {/* Hero Visual */}
-              <div className={cn(
-                "relative animate-fade-in",
-                visibleSections.has(0) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              )} style={{ animationDelay: "0.3s" }}>
-                <div className="relative bg-gradient-to-br from-white to-blue-50 dark:from-slate-800 dark:to-slate-900 rounded-3xl shadow-2xl p-8 border border-slate-200 dark:border-slate-700">
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center">
-                        <Users className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-slate-800 dark:text-white">لوحة HR الرئيسية</div>
-                        <div className="text-sm text-slate-600 dark:text-slate-400">إدارة شاملة للموظفين</div>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      {hrModules.slice(0, 4).map((module, index) => {
-                        const IconComponent = module.icon;
-                        return (
-                          <div key={module.id} className="p-4 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
-                            <div className={cn(
-                              "w-8 h-8 rounded-lg mb-3 flex items-center justify-center bg-gradient-to-r",
-                              module.color
-                            )}>
-                              <IconComponent className="w-4 h-4 text-white" />
-                            </div>
-                            <div className="text-sm font-bold text-slate-800 dark:text-white mb-1">{module.title}</div>
-                            <div className="text-xs text-slate-600 dark:text-slate-400">{module.titleEn}</div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+              {/* Key Benefits */}
+              <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
+                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                  <span className="font-medium">استشارة مجانية خلال 24 ساعة</span>
                 </div>
+                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
+                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                  <span className="font-medium">عرض توضيحي مخصص لشركتك</span>
+                </div>
+                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
+                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                  <span className="font-medium">حلول مصممة خصيصاً لاحتياجاتك</span>
+                </div>
+              </div>
+              
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+                <Button 
+                  size="lg" 
+                  className="bg-white text-blue-700 hover:bg-white/90 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-cairo text-lg"
+                  onClick={() => document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  احصل على استشارة مجانية
+                  <ArrowRight className="w-5 h-5 mr-2" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="border-2 border-white/30 text-white hover:bg-white/10 font-bold px-8 py-4 rounded-xl transition-all duration-300 font-cairo text-lg backdrop-blur-lg"
+                >
+                  شاهد عرض توضيحي
+                </Button>
               </div>
             </div>
           </div>
@@ -432,7 +425,7 @@ const HRManagementSystem = () => {
         </section>
 
         {/* Request Form Section */}
-        <section className="py-20 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800" data-section="3">
+        <section id="order-form" className="py-20 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800" data-section="3">
           <div className="container mx-auto px-6 max-w-4xl">
             <div className={cn(
               "text-center mb-16 animate-fade-in",
