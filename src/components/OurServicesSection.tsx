@@ -318,28 +318,28 @@ const OurServicesSection = () => {
           })}
         </div>
 
-        {/* Responsive Executive Call to Action */}
+        {/* Compact Executive Call to Action */}
         <div className="text-center px-2 sm:px-4">
-          <div className="relative group max-w-4xl sm:max-w-5xl lg:max-w-6xl mx-auto">
-            {/* Premium Animated Border Frame */}
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-0.5 sm:p-1">
-              <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-rotate opacity-75" style={{ animationDuration: '12s' }}></div>
+          <div className="relative group max-w-3xl sm:max-w-4xl mx-auto">
+            {/* Simplified Border Frame */}
+            <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-0.5">
+              <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-rotate opacity-50" style={{ animationDuration: '12s' }}></div>
             </div>
             
             {/* Executive Glow */}
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-blue-400/40 via-purple-400/40 to-pink-400/40 blur-lg sm:blur-xl animate-pulse opacity-70"></div>
+            <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-md animate-pulse opacity-50"></div>
             
             {/* Main Content Container */}
-            <div className="relative bg-white/98 dark:bg-slate-900/98 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-0.5 sm:p-1 shadow-xl sm:shadow-2xl">
-              <div className="relative p-8 sm:p-12 md:p-16 lg:p-20 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-slate-50/95 via-white/90 to-blue-50/80 dark:from-slate-800/95 dark:via-slate-700/90 dark:to-slate-800/80 overflow-hidden">
+            <div className="relative bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl rounded-xl sm:rounded-2xl p-0.5 shadow-lg sm:shadow-xl">
+              <div className="relative p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50/95 via-white/90 to-blue-50/80 dark:from-slate-800/95 dark:via-slate-700/90 dark:to-slate-800/80 overflow-hidden">
                 
                 {/* Executive Background Elements */}
-                <div className="absolute inset-0 opacity-30 dark:opacity-20">
+                <div className="absolute inset-0 opacity-20 dark:opacity-10">
                   <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                      <pattern id="executive-pattern" width="80" height="80" patternUnits="userSpaceOnUse" className="sm:w-[100px] sm:h-[100px] lg:w-[120px] lg:h-[120px]">
-                        <circle cx="40" cy="40" r="1.5" fill="currentColor" opacity="0.3" className="sm:cx-[50] sm:cy-[50] sm:r-[1.8] lg:cx-[60] lg:cy-[60] lg:r-[2]"/>
-                        <path d="M 20 20 L 60 20 L 60 60 L 20 60 Z" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.2" className="sm:d-[M 25 25 L 75 25 L 75 75 L 25 75 Z] lg:d-[M 30 30 L 90 30 L 90 90 L 30 90 Z]"/>
+                      <pattern id="executive-pattern" width="60" height="60" patternUnits="userSpaceOnUse">
+                        <circle cx="30" cy="30" r="1" fill="currentColor" opacity="0.2"/>
+                        <path d="M 15 15 L 45 15 L 45 45 L 15 45 Z" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.15"/>
                       </pattern>
                     </defs>
                     <rect width="100%" height="100%" fill="url(#executive-pattern)" className="text-blue-600"/>
@@ -347,99 +347,99 @@ const OurServicesSection = () => {
                 </div>
                 
                 {/* Executive Badge */}
-                <div className="absolute top-6 sm:top-8 lg:top-10 left-1/2 transform -translate-x-1/2">
-                  <div className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full bg-gradient-to-r from-gold-400/20 to-amber-500/30 border border-gold-400/40 backdrop-blur-lg">
-                    <Star className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-amber-600 animate-pulse" />
-                    <span className="text-xs sm:text-sm font-black text-amber-700 dark:text-amber-300 tracking-widest uppercase font-poppins">
+                <div className="absolute top-3 sm:top-4 left-1/2 transform -translate-x-1/2">
+                  <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-gold-400/20 to-amber-500/30 border border-gold-400/40 backdrop-blur-lg">
+                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-600 animate-pulse" />
+                    <span className="text-xs font-black text-amber-700 dark:text-amber-300 tracking-wide uppercase font-poppins">
                       الاستشارة التنفيذية
                     </span>
-                    <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-gold-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                    <Sparkles className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-gold-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
                   </div>
                 </div>
                 
                 {/* Executive Content */}
-                <div className="relative z-10 pt-12 sm:pt-16 space-y-6 sm:space-y-8 lg:space-y-10">
+                <div className="relative z-10 pt-8 sm:pt-10 space-y-3 sm:space-y-4">
                   <div className="text-center">
-                    <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent mb-2 sm:mb-4 leading-tight font-inter">
-                      هل تحتاج إلى استشارة مخصصة؟
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent mb-1 sm:mb-2 leading-tight font-inter">
+                      هل تحتاج إلى استشارة متخصصة؟
                     </h3>
-                    <p className="text-lg sm:text-xl font-bold text-slate-500 dark:text-slate-400 mb-4 sm:mb-6 lg:mb-8 font-poppins">
+                    <p className="text-sm sm:text-base font-bold text-slate-500 dark:text-slate-400 mb-2 sm:mb-3 font-poppins">
                       هل تحتاج لاستشارة مخصصة؟
                     </p>
                     
-                    <div className="w-24 sm:w-32 h-0.5 sm:h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full mx-auto mb-6 sm:mb-8 lg:mb-10 animate-shimmer"></div>
+                    <div className="w-16 sm:w-20 h-0.5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full mx-auto mb-3 sm:mb-4 animate-shimmer"></div>
                     
-                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl sm:max-w-4xl lg:max-w-5xl mx-auto font-medium font-inter">
+                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl sm:max-w-3xl mx-auto font-medium font-inter">
                       فريقنا من الخبراء والاستشاريين المتخصصين على مستوى عالمي جاهز لمساعدتك في تحقيق رؤيتك الرقمية وتطوير أعمالك باستخدام أحدث الحلول التقنية المبتكرة والمدروسة استراتيجياً
                     </p>
                   </div>
                   
-                  {/* Responsive Executive Action Buttons */}
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8">
+                  {/* Compact Executive Action Buttons */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
                     <Button 
-                      size="lg"
+                      size="default"
                       className={cn(
                         "relative group bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600",
                         "hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700",
-                        "text-white px-8 sm:px-12 lg:px-16 py-4 sm:py-6 lg:py-8 text-lg sm:text-xl font-black rounded-2xl sm:rounded-3xl font-poppins",
-                        "shadow-xl sm:shadow-2xl hover:shadow-2xl sm:hover:shadow-3xl transition-all duration-700 transform hover:scale-105 sm:hover:scale-110 hover:-translate-y-1 sm:hover:-translate-y-2",
+                        "text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold rounded-xl font-poppins",
+                        "shadow-md sm:shadow-lg hover:shadow-lg sm:hover:shadow-xl transition-all duration-500 transform hover:scale-105",
                         "border border-white/20 backdrop-blur-lg overflow-hidden w-full sm:w-auto"
                       )}
                     >
-                      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover:translate-x-full skew-x-12"></div>
+                      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full skew-x-12"></div>
                       
-                      <div className="relative flex items-center justify-center gap-3 sm:gap-4">
+                      <div className="relative flex items-center justify-center gap-2">
                         <span>تواصل معنا الآن</span>
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/20 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
-                          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:-translate-x-0.5" />
+                        <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+                          <ArrowLeft className="w-3 h-3 transition-transform duration-300 group-hover:-translate-x-0.5" />
                         </div>
                       </div>
                     </Button>
                     
                     <Button 
                       variant="outline"
-                      size="lg"
+                      size="default"
                       className={cn(
-                        "relative group border-2 px-8 sm:px-12 lg:px-16 py-4 sm:py-6 lg:py-8 text-lg sm:text-xl font-black rounded-2xl sm:rounded-3xl font-poppins",
-                        "border-gradient-to-r from-blue-500 to-purple-600 text-blue-600 dark:text-blue-400",
-                        "hover:text-white transition-all duration-700 transform hover:scale-105",
-                        "backdrop-blur-lg shadow-lg sm:shadow-xl hover:shadow-xl sm:hover:shadow-2xl overflow-hidden",
-                        "border-blue-500/50 hover:border-transparent w-full sm:w-auto"
+                        "relative group border-2 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold rounded-xl font-poppins",
+                        "border-blue-500/50 text-blue-600 dark:text-blue-400",
+                        "hover:text-white transition-all duration-500 transform hover:scale-105",
+                        "backdrop-blur-lg shadow-sm sm:shadow-md hover:shadow-md sm:hover:shadow-lg overflow-hidden",
+                        "hover:border-transparent w-full sm:w-auto"
                       )}
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
-                      <div className="relative flex items-center justify-center gap-3 sm:gap-4">
+                      <div className="relative flex items-center justify-center gap-2">
                         <span>مشاهدة أعمالنا</span>
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-current flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-180">
-                          <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-current"></div>
+                        <div className="w-5 h-5 rounded-full border border-current flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-180">
+                          <div className="w-1 h-1 rounded-full bg-current"></div>
                         </div>
                       </div>
                     </Button>
                   </div>
                   
-                  {/* Responsive Executive Trust Indicators */}
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 lg:gap-12 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-bold font-cairo">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500 animate-pulse"></div>
-                      <span>متاح ٢٤/٧</span>
+                  {/* Compact Executive Trust Indicators */}
+                  <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-slate-500 dark:text-slate-400 text-xs font-bold font-cairo">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                      <span>رد فوري</span>
                     </div>
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 animate-pulse" style={{ animationDelay: "0.5s" }}></div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" style={{ animationDelay: "0.5s" }}></div>
                       <span>استشارة مجانية</span>
                     </div>
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-purple-500 animate-pulse" style={{ animationDelay: "1s" }}></div>
-                      <span>رد فوري</span>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" style={{ animationDelay: "1s" }}></div>
+                      <span>متاح ٢٤/٧</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             
-            {/* Responsive Executive Corner Elements */}
-            <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 lg:-top-6 lg:-right-6 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 border-t-2 sm:border-t-4 border-r-2 sm:border-r-4 border-blue-600 rounded-tr-lg sm:rounded-tr-2xl animate-pulse"></div>
-            <div className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-4 lg:-bottom-6 lg:-left-6 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 border-b-2 sm:border-b-4 border-l-2 sm:border-l-4 border-purple-600 rounded-bl-lg sm:rounded-bl-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+            {/* Compact Corner Elements */}
+            <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-r-2 border-blue-600 rounded-tr-lg animate-pulse"></div>
+            <div className="absolute -bottom-2 -left-2 sm:-bottom-3 sm:-left-3 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-l-2 border-purple-600 rounded-bl-lg animate-pulse" style={{ animationDelay: '1s' }}></div>
           </div>
         </div>
       </div>
