@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef } from "react";
+import React, { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -162,15 +162,14 @@ const PageLoader = () => (
 
 
 
+// Create QueryClient instance outside component to avoid useRef issues
+const queryClient = new QueryClient();
+
 const App = () => {
-  const queryClientRef = useRef<QueryClient | null>(null);
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient();
-  }
   console.log('App component rendering...');
   
   return (
-    <QueryClientProvider client={queryClientRef.current!}>
+    <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={300} skipDelayDuration={0}>
         <MobileOptimizer>
           <BrowserRouter>
