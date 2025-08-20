@@ -171,7 +171,7 @@ const OurServicesSection = () => {
                     )}></div>
                     
                      <div className={cn(
-                       "relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 rounded-xl sm:rounded-2xl lg:rounded-3xl flex items-center justify-center transition-all duration-700",
+                       "relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18 rounded-xl sm:rounded-2xl lg:rounded-3xl flex items-center justify-center transition-all duration-700",
                        "bg-gradient-to-br shadow-md sm:shadow-lg lg:shadow-xl xl:shadow-2xl transform-gpu",
                        service.gradient,
                        isActive ? "animate-icon-float scale-110" : "",
@@ -180,7 +180,7 @@ const OurServicesSection = () => {
                      )}>
                        <IconComponent 
                          className={cn(
-                           "w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 text-white transition-all duration-700 filter drop-shadow-lg",
+                           "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-9 xl:h-9 text-white transition-all duration-700 filter drop-shadow-lg",
                            isActive ? "animate-bounce-slow scale-110" : ""
                          )}
                        />
