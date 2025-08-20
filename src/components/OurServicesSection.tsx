@@ -3,6 +3,7 @@ import { Code, Package, Megaphone, Building, PenTool, ArrowLeft, Sparkles, Zap, 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 const services = [
   {
@@ -265,21 +266,26 @@ const OurServicesSection = () => {
                        "text-blue-600 dark:text-blue-400",
                        "opacity-100 translate-x-0 w-full" // Always visible and positioned
                      )}>
-                       <span className="text-sm sm:text-base lg:text-lg font-black font-cairo relative whitespace-nowrap">
-                         المزيد
-                       </span>
-                       <div className={cn(
-                         "relative w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-r flex items-center justify-center transition-all duration-500 flex-shrink-0",
-                         service.gradient,
-                         "shadow-sm sm:shadow-md lg:shadow-lg",
-                         "border-2 border-white/30",
-                         "transform-gpu"
-                       )}>
-                         <ArrowLeft className="relative z-10 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white transition-transform duration-300" />
-                         
-                         {/* Rotating Ring */}
-                         <div className="absolute inset-0 rounded-lg sm:rounded-xl lg:rounded-2xl border border-white/40 transition-transform duration-1000"></div>
-                       </div>
+                       <Link 
+                         to={service.id === 4 ? "/enterprise-systems" : "#"} 
+                         className="flex items-center gap-2 sm:gap-3 lg:gap-4"
+                       >
+                         <span className="text-sm sm:text-base lg:text-lg font-black font-cairo relative whitespace-nowrap">
+                           المزيد
+                         </span>
+                         <div className={cn(
+                           "relative w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-r flex items-center justify-center transition-all duration-500 flex-shrink-0",
+                           service.gradient,
+                           "shadow-sm sm:shadow-md lg:shadow-lg",
+                           "border-2 border-white/30",
+                           "transform-gpu"
+                         )}>
+                           <ArrowLeft className="relative z-10 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white transition-transform duration-300" />
+                           
+                           {/* Rotating Ring */}
+                           <div className="absolute inset-0 rounded-lg sm:rounded-xl lg:rounded-2xl border border-white/40 transition-transform duration-1000"></div>
+                         </div>
+                       </Link>
                      </div>
                   </div>
                 </CardContent>
