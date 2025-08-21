@@ -10,12 +10,15 @@ const corsHeaders = {
 const resend = new Resend(Deno.env.get("RESEND_API_KEY") || "");
 
 serve(async (req) => {
+  console.log('🔍 Payment verification request started');
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const { transactionId } = await req.json();
+    console.log('📋 Transaction ID received:', transactionId);
     
     if (!transactionId) {
       throw new Error('Transaction ID is required');
@@ -120,20 +123,33 @@ serve(async (req) => {
       }
     }
 
-    // Update transaction status if changed and send email notifications
+    // Always send status update, regardless of change
     const statusChanged = newStatus !== transaction.status;
-    if (statusChanged) {
-      const { error: updateError } = await supabaseClient
-        .from('payment_transactions')
-        .update({ 
-          status: newStatus,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', transactionId);
+    console.log('💳 Status comparison:', { 
+      oldStatus: transaction.status, 
+      newStatus, 
+      statusChanged,
+      paymentVerified 
+    });
 
-      if (updateError) {
-        console.error('Error updating transaction:', updateError);
-      } else {
+    // Update transaction status and send notifications
+    const { error: updateError } = await supabaseClient
+      .from('payment_transactions')
+      .update({ 
+        status: newStatus,
+        updated_at: new Date().toISOString(),
+        metadata: {
+          ...(transaction.metadata || {}),
+          last_verification: new Date().toISOString(),
+          verification_count: ((transaction.metadata as any)?.verification_count || 0) + 1
+        }
+      })
+      .eq('id', transactionId);
+
+    if (updateError) {
+      console.error('❌ Error updating transaction:', updateError);
+    } else {
+      console.log('✅ Transaction status updated successfully to:', newStatus);
         try {
           // إنشاء وإرسال الفاتورة إذا كان الدفع ناجحاً
           if (newStatus === 'PAID') {
@@ -235,67 +251,103 @@ serve(async (req) => {
             }
           }
 
-          // إرسال إيميل تأكيد الدفع
+          // إرسال إيميل تأكيد الدفع دائماً مع إشعار محدث
           const to = transaction.customer_email as string | null;
           if (to) {
             const isPaid = newStatus === 'PAID' || newStatus === 'COMPLETED';
-            const subject = isPaid
-              ? `تم استلام دفعتك بنجاح - مرفق الفاتورة`
-              : `تعذر إتمام عملية الدفع`;
+            const isPending = newStatus === 'PENDING' || newStatus === 'PROCESSING';
+            
+            let subject, statusMessage;
+            if (isPaid) {
+              subject = `✅ تأكيد الدفع - تم استلام دفعتك بنجاح`;
+              statusMessage = "تم تأكيد دفعتك وسيتم البدء في تنفيذ الطلب خلال 24 ساعة";
+            } else if (isPending) {
+              subject = `⏳ تحديث حالة الدفع - قيد المعالجة`;
+              statusMessage = "دفعتك قيد المراجعة والمعالجة، سنرسل تأكيد نهائي عند الانتهاء";
+            } else {
+              subject = `❌ تحديث حالة الدفع - يرجى المراجعة`;
+              statusMessage = "نعتذر، لم تكتمل عملية الدفع. يرجى المحاولة مرة أخرى أو التواصل معنا";
+            }
+            
             const amountStr = `${transaction.amount} ${transaction.currency || 'SAR'}`;
             const trxNo = transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.tamara_order_id || transaction.stc_pay_reference || transactionId;
 
-            const html = isPaid
-              ? `
-                <div dir="rtl" style="font-family:Tahoma,Arial,sans-serif">
-                  <h2>تم الدفع بنجاح ✅</h2>
-                  <p>شكرًا لك ${transaction.customer_name || ''}، تم استلام دفعتك ومعالجة الطلب جاري الآن.</p>
-                  <ul>
-                    <li>العرض: ${transaction.offer_title || ''}</li>
-                    <li>المبلغ: <b>${amountStr}</b></li>
-                    <li>رقم المعاملة: <code>${trxNo}</code></li>
-                    <li>طريقة الدفع: ${transaction.payment_method || ''}</li>
-                  </ul>
-                  <p><strong>تم إرسال الفاتورة الرسمية إليك في إيميل منفصل.</strong></p>
-                  <p>سيتواصل معك فريق العمل خلال 24 ساعة لإتمام الإجراءات.</p>
-                  <p style="color:#666">شركة علي صالح الشهري القابضة</p>
+            const html = `
+              <div dir="rtl" style="font-family:Tahoma,Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#f8f9fa">
+                <div style="background:white;padding:30px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
+                  <div style="text-align:center;margin-bottom:30px">
+                    <img src="https://alialshehriholding.com/lovable-uploads/58f1dde7-91b4-4747-92a6-188055f11cee.png" alt="شعار الشركة" style="height:60px;margin-bottom:20px">
+                    <h1 style="color:${isPaid ? '#10b981' : isPending ? '#f59e0b' : '#ef4444'};margin:0;font-size:28px">
+                      ${isPaid ? '✅ تأكيد الدفع' : isPending ? '⏳ قيد المعالجة' : '❌ مشكلة في الدفع'}
+                    </h1>
+                  </div>
+                  
+                  <p style="font-size:18px;line-height:1.6;color:#374151;margin-bottom:25px">
+                    ${isPaid ? `مرحباً ${transaction.customer_name || 'عميلنا العزيز'}، ` : `عذراً ${transaction.customer_name || 'عميلنا العزيز'}، `}
+                    ${statusMessage}
+                  </p>
+                  
+                  <div style="background:${isPaid ? '#f0f9ff' : isPending ? '#fefce8' : '#fef2f2'};padding:20px;border-radius:8px;margin:25px 0">
+                    <h3 style="margin:0 0 15px 0;color:#374151;font-size:18px">تفاصيل المعاملة:</h3>
+                    <table style="width:100%;border-collapse:collapse">
+                      <tr><td style="padding:8px 0;border-bottom:1px solid #e5e7eb"><strong>المنتج/الخدمة:</strong></td><td style="padding:8px 0;border-bottom:1px solid #e5e7eb">${transaction.offer_title || 'غير محدد'}</td></tr>
+                      <tr><td style="padding:8px 0;border-bottom:1px solid #e5e7eb"><strong>المبلغ:</strong></td><td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-weight:bold;color:#059669">${amountStr}</td></tr>
+                      <tr><td style="padding:8px 0;border-bottom:1px solid #e5e7eb"><strong>رقم المرجع:</strong></td><td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-family:monospace">${trxNo}</td></tr>
+                      <tr><td style="padding:8px 0;border-bottom:1px solid #e5e7eb"><strong>طريقة الدفع:</strong></td><td style="padding:8px 0;border-bottom:1px solid #e5e7eb">${transaction.payment_method || 'غير محدد'}</td></tr>
+                      <tr><td style="padding:8px 0;border-bottom:1px solid #e5e7eb"><strong>الحالة:</strong></td><td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-weight:bold;color:${isPaid ? '#059669' : isPending ? '#d97706' : '#dc2626'}">${isPaid ? 'مكتمل ✅' : isPending ? 'قيد المعالجة ⏳' : 'غير مكتمل ❌'}</td></tr>
+                      <tr><td style="padding:8px 0"><strong>التاريخ:</strong></td><td style="padding:8px 0">${new Date().toLocaleDateString('ar-SA', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</td></tr>
+                    </table>
+                  </div>
+                  
+                  ${isPaid ? `
+                    <div style="background:#10b981;color:white;padding:20px;border-radius:8px;text-align:center;margin:25px 0">
+                      <h3 style="margin:0 0 10px 0">🎉 مبروك! تم تأكيد دفعتك</h3>
+                      <p style="margin:0;font-size:16px">سيتواصل معك فريق العمل خلال 24 ساعة لبدء التنفيذ</p>
+                    </div>
+                  ` : isPending ? `
+                    <div style="background:#f59e0b;color:white;padding:20px;border-radius:8px;text-align:center;margin:25px 0">
+                      <h3 style="margin:0 0 10px 0">⏳ دفعتك قيد المراجعة</h3>
+                      <p style="margin:0;font-size:16px">سنرسل إليك تأكيد نهائي خلال ساعات قليلة</p>
+                    </div>
+                  ` : `
+                    <div style="background:#ef4444;color:white;padding:20px;border-radius:8px;text-align:center;margin:25px 0">
+                      <h3 style="margin:0 0 10px 0">❌ يرجى المحاولة مرة أخرى</h3>
+                      <p style="margin:0;font-size:16px">أو تواصل معنا للمساعدة في إتمام عملية الدفع</p>
+                    </div>
+                  `}
+                  
+                  <div style="border-top:2px solid #e5e7eb;padding-top:20px;margin-top:30px;text-align:center">
+                    <h4 style="color:#374151;margin:0 0 15px 0">للاستفسارات والدعم:</h4>
+                    <p style="margin:5px 0;color:#6b7280">📧 البريد الإلكتروني: <a href="mailto:info@alialshehriholding.com" style="color:#3b82f6">info@alialshehriholding.com</a></p>
+                    <p style="margin:5px 0;color:#6b7280">📱 الجوال: <a href="tel:0555812567" style="color:#3b82f6">0555812567</a></p>
+                    <p style="margin:5px 0;color:#6b7280">🌐 الموقع: <a href="https://alialshehriholding.com" style="color:#3b82f6">alialshehriholding.com</a></p>
+                  </div>
+                  
+                  <div style="text-align:center;margin-top:25px;padding-top:20px;border-top:1px solid #e5e7eb;color:#9ca3af;font-size:14px">
+                    <p style="margin:0">شركة علي صالح الشهري القابضة</p>
+                    <p style="margin:5px 0 0 0">جميع الحقوق محفوظة © ${new Date().getFullYear()}</p>
+                  </div>
                 </div>
-              `
-              : `
-                <div dir="rtl" style="font-family:Tahoma,Arial,sans-serif">
-                  <h2>لم تكتمل عملية الدفع ❌</h2>
-                  <p>عذرًا ${transaction.customer_name || ''}، لم تكتمل عملية الدفع الخاصة بك.</p>
-                  <ul>
-                    <li>العرض: ${transaction.offer_title || ''}</li>
-                    <li>المبلغ: <b>${amountStr}</b></li>
-                    <li>الحالة: ${newStatus}</li>
-                    <li>رقم المرجع: <code>${trxNo}</code></li>
-                  </ul>
-                  <p>يمكنك إعادة المحاولة من صفحة العروض أو التواصل معنا للمساعدة.</p>
-                  <p style="color:#666">الدعم: info@alialshehriholding.com — 0555812567</p>
-                </div>
-              `;
+              </div>
+            `;
 
-            // Send email in background (non-blocking)
-            // @ts-ignore 
-            const sendPromise = resend.emails.send({
-              from: 'نظام المدفوعات <info@fekrahtech.com>',
-              to: [to],
-              bcc: ['info@fekrahtech.com'],
-              reply_to: 'info@fekrahtech.com',
-              subject,
-              html,
-            }).then((res) => {
-              console.log('Payment confirmation email sent successfully:', res);
-              return res;
-            }).catch((e) => {
-              console.error('Failed to send payment confirmation email:', e);
-              throw e;
-            });
-
-            // Wait for email to be sent
-            await sendPromise;
-            console.log('Payment confirmation email processing completed');
+            // Send email notification
+            console.log('📧 Sending payment notification email to:', to);
+            try {
+              const emailResult = await resend.emails.send({
+                from: 'نظام المدفوعات - شركة الشهري <info@fekrahtech.com>',
+                to: [to],
+                bcc: ['info@fekrahtech.com', 'info@alialshehriholding.com'],
+                reply_to: 'info@alialshehriholding.com',
+                subject,
+                html,
+              });
+              
+              console.log('✅ Payment notification email sent successfully:', emailResult.data?.id);
+            } catch (emailError) {
+              console.error('❌ Failed to send payment notification email:', emailError);
+              // Don't throw error, just log it so payment verification can continue
+            }
           }
         } catch (e) {
           console.error('Error preparing/sending email:', e);
@@ -303,11 +355,19 @@ serve(async (req) => {
       }
     }
 
+    console.log('🎯 Payment verification completed successfully');
+    
     return new Response(JSON.stringify({
       success: true,
       status: newStatus,
       verified: paymentVerified,
-      transaction
+      statusChanged,
+      transaction: {
+        ...transaction,
+        status: newStatus,
+        updated_at: new Date().toISOString()
+      },
+      verification_timestamp: new Date().toISOString()
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,

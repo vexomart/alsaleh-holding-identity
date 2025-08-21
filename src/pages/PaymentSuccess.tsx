@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, XCircle, Clock, AlertCircle, Home, Download, Receipt, FileText } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, AlertCircle, Home, Download, Receipt, FileText, CreditCard } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -40,11 +40,19 @@ const PaymentSuccess = () => {
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
+    let verificationAttempts = 0;
+    const maxAttempts = 5;
+    
     const verifyPayment = async () => {
       try {
+        verificationAttempts++;
+        console.log(`🔍 Payment verification attempt ${verificationAttempts}/${maxAttempts}`);
+        
         const transactionId = searchParams.get('transactionId') || 
                             searchParams.get('transaction_no') ||
-                            searchParams.get('paymentId');
+                            searchParams.get('paymentId') ||
+                            searchParams.get('tap_id') ||
+                            searchParams.get('charge_id');
         
         console.log('Verifying payment:', transactionId);
 
@@ -71,24 +79,46 @@ const PaymentSuccess = () => {
         const transaction = transactions[0];
         setTransactionDetails(transaction);
 
-        // Verify payment status
+        // Verify payment status with improved error handling
         const { data: verificationResult, error: verifyError } = await supabase.functions.invoke('verify-payment-status', {
           body: { transactionId: transaction.id }
         });
 
+        console.log('🔍 Verification result:', verificationResult);
+
         if (verifyError) {
           console.error('Payment verification error:', verifyError);
+          // If it's not the last attempt and status is still unknown, retry
+          if (verificationAttempts < maxAttempts && transaction.status === 'PENDING') {
+            setTimeout(verifyPayment, 3000); // Retry after 3 seconds
+            return;
+          }
           setPaymentStatus('failed');
-        } else if (verificationResult?.success && verificationResult?.status === 'PAID') {
-          setPaymentStatus('success');
-        } else if (verificationResult?.status === 'PENDING') {
-          setPaymentStatus('pending');
+        } else if (verificationResult?.success) {
+          const status = verificationResult.status;
+          if (status === 'PAID' || status === 'COMPLETED') {
+            setPaymentStatus('success');
+          } else if (status === 'PENDING' || status === 'PROCESSING') {
+            setPaymentStatus('pending');
+            // Auto-retry for pending payments
+            if (verificationAttempts < maxAttempts) {
+              setTimeout(verifyPayment, 5000); // Retry after 5 seconds
+              return;
+            }
+          } else {
+            setPaymentStatus('failed');
+          }
         } else {
           setPaymentStatus('failed');
         }
 
       } catch (error) {
         console.error('Payment verification failed:', error);
+        // Retry on error if not last attempt
+        if (verificationAttempts < maxAttempts) {
+          setTimeout(verifyPayment, 3000);
+          return;
+        }
         setPaymentStatus('failed');
       } finally {
         setLoading(false);
@@ -257,14 +287,33 @@ const PaymentSuccess = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         <SEO title="جاري التحقق من الدفع" description="التحقق من حالة الدفع" />
         <Navigation />
         <div className="container mx-auto px-4 py-20">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-8"></div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">جاري التحقق من حالة الدفع...</h2>
-            <p className="text-gray-600">يرجى الانتظار قليلاً</p>
+            <div className="relative mb-8">
+              <div className="animate-spin rounded-full h-32 w-32 border-8 border-blue-100 border-t-blue-600 mx-auto"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <CreditCard className="w-8 h-8 text-blue-600 animate-pulse" />
+              </div>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+              🔍 جاري التحقق من حالة الدفع
+            </h2>
+            <p className="text-lg text-gray-600 mb-6">
+              يرجى الانتظار قليلاً أثناء التحقق من المعاملة
+            </p>
+            <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-lg">
+              <div className="flex items-center justify-center space-x-1 text-blue-600">
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+              </div>
+              <p className="mt-4 text-sm text-gray-500">
+                قد تستغرق هذه العملية بضع ثواني...
+              </p>
+            </div>
           </div>
         </div>
         <Footer />
@@ -273,9 +322,9 @@ const PaymentSuccess = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       <SEO 
-        title={paymentStatus === 'success' ? 'تم الدفع بنجاح' : 'حالة الدفع'} 
+        title={paymentStatus === 'success' ? 'تم الدفع بنجاح' : paymentStatus === 'pending' ? 'الدفع قيد المعالجة' : 'مشكلة في الدفع'} 
         description="صفحة تأكيد حالة الدفع" 
       />
       <Navigation />
@@ -304,29 +353,39 @@ const PaymentSuccess = () => {
 
             {paymentStatus === 'pending' && (
               <>
-                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-yellow-100 mb-6">
-                  <Clock className="w-12 h-12 text-yellow-600" />
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-yellow-100 to-amber-100 mb-6 animate-pulse">
+                  <Clock className="w-12 h-12 text-amber-600 animate-spin" style={{animationDuration: '3s'}} />
                 </div>
                 <h1 className="text-4xl font-bold text-gray-800 mb-4">
                   ⏳ عملية الدفع قيد المعالجة
                 </h1>
-                <p className="text-xl text-gray-600">
+                <p className="text-xl text-gray-600 mb-4">
                   يتم معالجة دفعتك حالياً، سنرسل إليك تأكيد عند اكتمال العملية
                 </p>
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+                  <p className="text-amber-800 text-sm">
+                    💡 قد تستغرق عملية التحقق من بضع دقائق إلى ساعة حسب طريقة الدفع المستخدمة
+                  </p>
+                </div>
               </>
             )}
 
             {paymentStatus === 'failed' && (
               <>
-                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-100 mb-6">
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-red-100 to-pink-100 mb-6">
                   <XCircle className="w-12 h-12 text-red-600" />
                 </div>
                 <h1 className="text-4xl font-bold text-gray-800 mb-4">
                   ❌ لم تكتمل عملية الدفع
                 </h1>
-                <p className="text-xl text-gray-600">
+                <p className="text-xl text-gray-600 mb-4">
                   حدث خطأ في معالجة الدفع، يرجى المحاولة مرة أخرى
                 </p>
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                  <p className="text-red-800 text-sm">
+                    📞 إذا استمرت المشكلة، يرجى التواصل معنا على: 0555812567
+                  </p>
+                </div>
               </>
             )}
           </div>
