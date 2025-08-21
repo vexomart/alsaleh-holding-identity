@@ -62,11 +62,11 @@ const PaymentSuccess = () => {
           return;
         }
 
-        // Fetch transaction details
+        // Fetch transaction details - enhanced search
         const { data: transactions, error } = await supabase
           .from('payment_transactions')
           .select('*')
-          .or(`id.eq.${transactionId},paylink_transaction_no.eq.${transactionId},tap_charge_id.eq.${transactionId}`)
+          .or(`id.eq.${transactionId},transaction_id.eq.${transactionId},paylink_transaction_no.eq.${transactionId},tap_charge_id.eq.${transactionId}`)
           .limit(1);
 
         if (error || !transactions || transactions.length === 0) {

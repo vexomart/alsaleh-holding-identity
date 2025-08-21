@@ -97,15 +97,23 @@ serve(async (req) => {
       customer: customerEmail
     });
 
-    // Update payment transaction in database
-    if (transactionReference) {
+    // Update payment transaction in database - search by multiple criteria
+    const { data: existingTransactions, error: fetchError } = await supabase
+      .from('payment_transactions')
+      .select('*')
+      .or(`tap_charge_id.eq.${tapData.id},transaction_id.eq.${transactionReference}`)
+      .limit(1);
+
+    if (existingTransactions && existingTransactions.length > 0) {
+      const transaction = existingTransactions[0];
       const { data: updateData, error: updateError } = await supabase
         .from('payment_transactions')
         .update({
-          status: paymentStatus === 'CAPTURED' ? 'COMPLETED' : 
+          status: paymentStatus === 'CAPTURED' ? 'PAID' : 
                  paymentStatus === 'FAILED' ? 'FAILED' : 'PENDING',
           payment_date: paymentStatus === 'CAPTURED' ? new Date().toISOString() : null,
           metadata: {
+            ...((transaction.metadata as any) || {}),
             tap_charge_id: tapData.id,
             tap_status: paymentStatus,
             tap_response: tapData,
@@ -113,13 +121,30 @@ serve(async (req) => {
           },
           updated_at: new Date().toISOString()
         })
-        .eq('transaction_id', transactionReference);
+        .eq('id', transaction.id);
 
       if (updateError) {
         console.error('❌ Database update error:', updateError);
       } else {
         console.log('✅ Payment transaction updated successfully');
+        
+        // Call verify-payment-status for email notifications
+        try {
+          const { data: verifyResult, error: verifyError } = await supabase.functions.invoke('verify-payment-status', {
+            body: { transactionId: transaction.id }
+          });
+          
+          if (verifyError) {
+            console.error('❌ Error calling verify-payment-status:', verifyError);
+          } else {
+            console.log('✅ Payment verification and notification sent');
+          }
+        } catch (notificationError) {
+          console.error('❌ Error sending notifications:', notificationError);
+        }
       }
+    } else {
+      console.error('❌ Transaction not found in database for:', { tapChargeId: tapData.id, transactionRef: transactionReference });
     }
 
     // Return verification result

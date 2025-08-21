@@ -173,22 +173,27 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
+    const transactionRef = tapResult.reference?.transaction || `TAP-${Date.now()}`;
+    
     const { error: dbError } = await supabase
       .from('payment_transactions')
       .insert({
+        transaction_id: transactionRef,
         tap_charge_id: tapResult.id,
         amount: cleanedData.amount,
         currency: cleanedData.currency,
         customer_name: cleanedData.customer_name,
         customer_email: cleanedData.customer_email,
         customer_phone: cleanedData.customer_phone,
-        status: 'pending',
-        payment_method: 'tap',
+        offer_title: cleanedData.offer_title,
+        status: 'PENDING',
+        payment_method: 'TAB',
         description: cleanedData.description,
         metadata: {
-          offer_title: cleanedData.offer_title,
           product_details: product_details,
-          tap_response: tapResult
+          tap_response: tapResult,
+          tap_charge_id: tapResult.id,
+          transaction_reference: transactionRef
         }
       });
 
