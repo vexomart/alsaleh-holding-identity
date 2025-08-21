@@ -173,19 +173,17 @@ const PageLoader = () => (
 
 
 
-const App = () => {
-  console.log('App component rendering...');
-  
-  // Create QueryClient inside component to ensure React context is available
-  const queryClient = useMemo(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: 1,
-        staleTime: 1000 * 60 * 5, // 5 minutes
-      },
+// Create QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 1000 * 60 * 5, // 5 minutes
     },
-  }), []);
-  
+  },
+});
+
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={300} skipDelayDuration={0}>
