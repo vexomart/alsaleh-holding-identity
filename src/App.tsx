@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, startTransition } from "react";
+import React, { lazy, Suspense, startTransition, useMemo } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -173,11 +173,18 @@ const PageLoader = () => (
 
 
 
-// Create QueryClient instance outside component to avoid useRef issues
-const queryClient = new QueryClient();
-
 const App = () => {
   console.log('App component rendering...');
+  
+  // Create QueryClient inside component to ensure React context is available
+  const queryClient = useMemo(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+      },
+    },
+  }), []);
   
   return (
     <QueryClientProvider client={queryClient}>
