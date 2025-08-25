@@ -3,7 +3,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
 import Index from "./pages/Index";
@@ -173,20 +172,9 @@ const PageLoader = () => (
 
 
 
-// Create QueryClient instance outside component to avoid hooks issues
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-    },
-  },
-});
-
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider delayDuration={300} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={300} skipDelayDuration={0}>
         <MobileOptimizer>
           <BrowserRouter>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
@@ -361,8 +349,7 @@ const App = () => {
             </div>
           </BrowserRouter>
         </MobileOptimizer>
-      </TooltipProvider>
-    </QueryClientProvider>
+    </TooltipProvider>
   );
 };
 
