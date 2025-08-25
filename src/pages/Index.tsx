@@ -17,8 +17,6 @@ import OurServicesSection from "@/components/OurServicesSection";
 
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
-import { ImageOptimizer } from "@/components/ImageOptimizer";
 
 
 
@@ -30,8 +28,6 @@ const Index = () => {
       <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
       <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
       
-      <PerformanceOptimizer />
-      <ImageOptimizer />
       <Navigation />
       
       {/* Simplified Background Elements */}
