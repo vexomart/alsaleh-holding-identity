@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import React from 'react';
 
 interface FacebookPixelProps {
   pixelId: string;
 }
 
 const FacebookPixel = ({ pixelId }: FacebookPixelProps) => {
-  useEffect(() => {
+  React.useLayoutEffect(() => {
     // تحميل Facebook Pixel
     const script = document.createElement('script');
     script.innerHTML = `
@@ -31,8 +31,8 @@ const FacebookPixel = ({ pixelId }: FacebookPixelProps) => {
     document.head.appendChild(noscript);
 
     return () => {
-      document.head.removeChild(script);
-      document.head.removeChild(noscript);
+      if (document.head.contains(script)) document.head.removeChild(script);
+      if (document.head.contains(noscript)) document.head.removeChild(noscript);
     };
   }, [pixelId]);
 

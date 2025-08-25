@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
+import React from 'react';
 
 interface GoogleAnalyticsProps {
   trackingId: string;
 }
 
 const GoogleAnalytics = ({ trackingId }: GoogleAnalyticsProps) => {
-  useEffect(() => {
+  // تحميل Google Analytics مباشرة بدون hooks
+  React.useLayoutEffect(() => {
     // تحميل Google Analytics
     const script1 = document.createElement('script');
     script1.async = true;
@@ -29,8 +30,8 @@ const GoogleAnalytics = ({ trackingId }: GoogleAnalyticsProps) => {
     document.head.appendChild(script2);
 
     return () => {
-      document.head.removeChild(script1);
-      document.head.removeChild(script2);
+      if (document.head.contains(script1)) document.head.removeChild(script1);
+      if (document.head.contains(script2)) document.head.removeChild(script2);
     };
   }, [trackingId]);
 
