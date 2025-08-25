@@ -156,15 +156,10 @@ const PromotionalGifts = lazy(() => import("./pages/printing-categories/Promotio
 const ApparelAccessories = lazy(() => import("./pages/printing-categories/ApparelAccessories"));
 const CorporateBranding = lazy(() => import("./pages/printing-categories/CorporateBranding"));
 
-// Loading component for better UX
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="text-center">
-      <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-muted-foreground text-lg">جارٍ التحميل...</p>
-    </div>
-  </div>
-);
+import SimpleLoader from "@/components/SimpleLoader";
+
+// Loading component - simple without hooks
+const PageLoader = () => <SimpleLoader />;
 
 const App = () => {
   return (

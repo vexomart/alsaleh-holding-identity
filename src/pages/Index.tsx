@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+import SimpleNavigation from "@/components/SimpleNavigation";
 import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,10 +9,10 @@ import NewsletterSubscription from "@/components/marketing/NewsletterSubscriptio
 import SocialMediaLinks from "@/components/marketing/SocialMediaLinks";
 import MarketingBlog from "@/components/marketing/MarketingBlog";
 
-// Lazy load below-the-fold components for better performance
+// تأجيل تحميل المكونات الثقيلة
 import { lazy, Suspense } from "react";
 const Footer = lazy(() => import("@/components/Footer"));
-const ChatBot = lazy(() => import("@/components/ChatBot"));
+import SimpleChatBot from "@/components/SimpleChatBot";
 import OurServicesSection from "@/components/OurServicesSection";
 
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
@@ -28,7 +28,7 @@ const Index = () => {
       <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
       <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
       
-      <Navigation />
+      <SimpleNavigation />
       
       {/* Simplified Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -70,10 +70,8 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* ChatBot Component - Lazy Loaded */}
-      <Suspense fallback={null}>
-        <ChatBot />
-      </Suspense>
+      {/* ChatBot مبسط بدون hooks */}
+      <SimpleChatBot />
     </div>
   );
 };
