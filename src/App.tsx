@@ -6,8 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
-import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
-import { ImageOptimizer } from "@/components/ImageOptimizer";
 import Index from "./pages/Index";
 
 // Lazy load pages for better performance
@@ -192,10 +190,6 @@ const App = () => {
         <MobileOptimizer>
           <BrowserRouter>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
-              {/* Performance and Image Optimizers */}
-              <PerformanceOptimizer />
-              <ImageOptimizer />
-              
               {/* Subtle pattern overlay */}
               <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
               
