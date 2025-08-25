@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, startTransition, useMemo } from "react";
+import React, { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -173,16 +173,17 @@ const PageLoader = () => (
 
 
 
-const App = () => {
-  // Create QueryClient instance inside component to fix React hooks error
-  const queryClient = useMemo(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: 1,
-        staleTime: 1000 * 60 * 5, // 5 minutes
-      },
+// Create QueryClient instance outside component to avoid hooks issues
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 1000 * 60 * 5, // 5 minutes
     },
-  }), []);
+  },
+});
+
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={300} skipDelayDuration={0}>
