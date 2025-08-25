@@ -3,6 +3,11 @@ import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import GoogleAnalytics from "@/components/marketing/GoogleAnalytics";
+import FacebookPixel from "@/components/marketing/FacebookPixel";
+import NewsletterSubscription from "@/components/marketing/NewsletterSubscription";
+import SocialMediaLinks from "@/components/marketing/SocialMediaLinks";
+import MarketingBlog from "@/components/marketing/MarketingBlog";
 
 // Lazy load below-the-fold components for better performance
 import { lazy, Suspense } from "react";
@@ -21,6 +26,10 @@ import { ImageOptimizer } from "@/components/ImageOptimizer";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
+      {/* أدوات التسويق */}
+      <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
+      <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
+      
       <PerformanceOptimizer />
       <ImageOptimizer />
       <Navigation />
@@ -43,6 +52,15 @@ const Index = () => {
           <section className="relative">
             <OurServicesSection />
           </section>
+          
+          {/* Newsletter Subscription */}
+          <NewsletterSubscription />
+          
+          {/* Social Media Links */}
+          <SocialMediaLinks />
+          
+          {/* Marketing Blog */}
+          <MarketingBlog />
         </div>
       </main>
 
