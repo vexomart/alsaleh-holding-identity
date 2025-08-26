@@ -1,6 +1,6 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect, useRef, useCallback } from "react";
 import { 
   Calendar, 
   Trophy, 
@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { AnimatedCounter } from "./AnimatedCounter";
 
-const HeroSection = () => {
+const HeroSection: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -340,4 +340,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default React.memo(HeroSection);
