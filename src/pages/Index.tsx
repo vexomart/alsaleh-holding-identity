@@ -11,46 +11,53 @@ import OurServicesSection from "@/components/OurServicesSection";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
       {/* أدوات التسويق */}
       <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
       <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
       
       <Navigation />
       
-      {/* Simplified Background Elements */}
+      {/* Dark Theme Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/8 to-accent/6 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 left-3/4 w-48 h-48 bg-gradient-to-tr from-secondary/6 to-primary/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-blue-600/20 to-purple-600/15 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 left-3/4 w-48 h-48 bg-gradient-to-tr from-indigo-600/15 to-blue-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-gradient-to-bl from-purple-600/10 to-indigo-600/8 rounded-full blur-2xl animate-float" style={{ animationDelay: '1s' }}></div>
       </div>
       
       <main className="relative overflow-hidden z-10">
-        {/* Hero Section - Simplified */}
-        <section id="home" className="relative bg-gradient-to-br from-background via-primary/5 to-secondary/8">
+        {/* Hero Section - Dark Theme */}
+        <section id="home" className="relative bg-gradient-to-br from-slate-900 via-slate-800/80 to-slate-900">
           <HeroSection />
         </section>
 
-        {/* Content Sections with Professional Spacing */}
-        <div className="space-y-0">
+        {/* Content Sections with Dark Theme Spacing */}
+        <div className="space-y-0 bg-slate-800/30">
           {/* Our Services Section */}
-          <section className="relative">
+          <section className="relative bg-slate-800/20 backdrop-blur-sm">
             <OurServicesSection />
           </section>
           
           {/* Newsletter Subscription */}
-          <NewsletterSubscription />
+          <div className="bg-slate-800/40">
+            <NewsletterSubscription />
+          </div>
           
           {/* Social Media Links */}
-          <SocialMediaLinks />
+          <div className="bg-slate-900/60">
+            <SocialMediaLinks />
+          </div>
           
           {/* Marketing Blog */}
-          <MarketingBlog />
+          <div className="bg-slate-800/30">
+            <MarketingBlog />
+          </div>
         </div>
       </main>
 
-      {/* Footer with Enhanced Styling */}
+      {/* Footer with Dark Theme Styling */}
       <footer className="relative z-10 mt-8">
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-primary/5 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-800/60 to-transparent"></div>
         <div className="relative z-10">
           <Footer />
         </div>
