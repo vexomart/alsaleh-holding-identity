@@ -1,5 +1,5 @@
 import Navigation from "@/components/Navigation";
-import SafeHeroSection from "@/components/SafeHeroSection";
+import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,14 +9,16 @@ import NewsletterSubscription from "@/components/marketing/NewsletterSubscriptio
 import SocialMediaLinks from "@/components/marketing/SocialMediaLinks";
 import MarketingBlog from "@/components/marketing/MarketingBlog";
 
-// تأجيل تحميل المكونات الثقيلة
+// Lazy load below-the-fold components for better performance
 import { lazy, Suspense } from "react";
 const Footer = lazy(() => import("@/components/Footer"));
-import SafeChatBot from "@/components/SafeChatBot";
+const ChatBot = lazy(() => import("@/components/ChatBot"));
 import OurServicesSection from "@/components/OurServicesSection";
 
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
+import { ImageOptimizer } from "@/components/ImageOptimizer";
 
 
 
@@ -28,6 +30,8 @@ const Index = () => {
       <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
       <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
       
+      <PerformanceOptimizer />
+      <ImageOptimizer />
       <Navigation />
       
       {/* Simplified Background Elements */}
@@ -39,7 +43,7 @@ const Index = () => {
       <main className="relative overflow-hidden z-10">
         {/* Hero Section - Simplified */}
         <section id="home" className="relative bg-gradient-to-br from-background via-primary/5 to-secondary/8">
-          <SafeHeroSection />
+          <HeroSection />
         </section>
 
         {/* Content Sections with Professional Spacing */}
@@ -70,8 +74,10 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* ChatBot آمن بدون hooks */}
-      <SafeChatBot />
+      {/* ChatBot Component - Lazy Loaded */}
+      <Suspense fallback={null}>
+        <ChatBot />
+      </Suspense>
     </div>
   );
 };

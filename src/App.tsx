@@ -1,7 +1,10 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, startTransition, useMemo } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import ScrollToTop from "@/components/ScrollToTop";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppProviders } from "@/components/AppProviders";
-import { AppLayout } from "@/components/AppLayout";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
 import Index from "./pages/Index";
 
@@ -113,6 +116,7 @@ const HRManagementSystem = lazy(() => import("./pages/HRManagementSystem"));
 const FinancialSystem = lazy(() => import("./pages/FinancialSystem"));
 const ProjectManagementSystem = lazy(() => import("./pages/ProjectManagementSystem"));
 
+
 const TechEcosystem = lazy(() => import("./pages/TechEcosystem"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const ConstructionWebsite = lazy(() => import("./pages/ConstructionWebsite"));
@@ -156,168 +160,209 @@ const PromotionalGifts = lazy(() => import("./pages/printing-categories/Promotio
 const ApparelAccessories = lazy(() => import("./pages/printing-categories/ApparelAccessories"));
 const CorporateBranding = lazy(() => import("./pages/printing-categories/CorporateBranding"));
 
-import SimpleLoader from "@/components/SimpleLoader";
 
-// Loading component - simple without hooks
-const PageLoader = () => <SimpleLoader />;
+// Loading component for better UX
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="text-center">
+      <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-muted-foreground text-lg">جارٍ التحميل...</p>
+    </div>
+  </div>
+);
+
+
+
+// Create QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
 
 const App = () => {
   return (
-    <AppProviders>
-      <MobileOptimizer>
-        <BrowserRouter>
-          <AppLayout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />
-              <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
-              <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />
-              <Route path="/team" element={<Suspense fallback={<PageLoader />}><Team /></Suspense>} />
-              <Route path="/vision" element={<Suspense fallback={<PageLoader />}><Vision /></Suspense>} />
-              <Route path="/contact" element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
-              <Route path="/support" element={<Suspense fallback={<PageLoader />}><Support /></Suspense>} />
-              <Route path="/privacy" element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
-              <Route path="/cookie-policy" element={<Suspense fallback={<PageLoader />}><CookiePolicy /></Suspense>} />
-              <Route path="/terms" element={<Suspense fallback={<PageLoader />}><Terms /></Suspense>} />
-              <Route path="/careers" element={<Suspense fallback={<PageLoader />}><Careers /></Suspense>} />
-              <Route path="/jobs" element={<Suspense fallback={<PageLoader />}><Careers /></Suspense>} />
-              <Route path="/job-application" element={<Suspense fallback={<PageLoader />}><JobApplication /></Suspense>} />
-              <Route path="/tech-investment" element={<Suspense fallback={<PageLoader />}><TechInvestment /></Suspense>} />
-              <Route path="/development" element={<Suspense fallback={<PageLoader />}><Development /></Suspense>} />
-              <Route path="/strategic-consulting" element={<Suspense fallback={<PageLoader />}><StrategicConsulting /></Suspense>} />
-              <Route path="/integrated-solutions" element={<Suspense fallback={<PageLoader />}><IntegratedSolutions /></Suspense>} />
-              <Route path="/training" element={<Suspense fallback={<PageLoader />}><Training /></Suspense>} />
-              <Route path="/volunteer" element={<Suspense fallback={<PageLoader />}><Volunteer /></Suspense>} />
-              <Route path="/contracts" element={<Suspense fallback={<PageLoader />}><Contracts /></Suspense>} />
-              <Route path="/development-program" element={<Suspense fallback={<PageLoader />}><DevelopmentProgram /></Suspense>} />
-              <Route path="/company-news" element={<Suspense fallback={<PageLoader />}><CompanyNews /></Suspense>} />
-              <Route path="/press-releases" element={<Suspense fallback={<PageLoader />}><PressReleases /></Suspense>} />
-              <Route path="/upcoming-events" element={<Suspense fallback={<PageLoader />}><UpcomingEvents /></Suspense>} />
-              <Route path="/annual-reports" element={<Suspense fallback={<PageLoader />}><AnnualReports /></Suspense>} />
-              <Route path="/faq" element={<Suspense fallback={<PageLoader />}><FAQ /></Suspense>} />
-              <Route path="/digital-contracts" element={<Suspense fallback={<PageLoader />}><DigitalContracts /></Suspense>} />
-              <Route path="/ready-projects" element={<Suspense fallback={<PageLoader />}><ReadyProjects /></Suspense>} />
-              <Route path="/remote-work" element={<Suspense fallback={<PageLoader />}><RemoteWork /></Suspense>} />
-              <Route path="/project/:projectId" element={<Suspense fallback={<PageLoader />}><ProjectDetails /></Suspense>} />
-              <Route path="/ai-intelligence" element={<AIIntelligence />} />
-              <Route path="/ai-services/generative-ai" element={<GenerativeAI />} />
-              <Route path="/ai-services/computer-vision" element={<ComputerVision />} />
-              <Route path="/ai-services/natural-language-processing" element={<NaturalLanguageProcessing />} />
-              <Route path="/ai-services/predictive-analytics" element={<PredictiveAnalytics />} />
-              <Route path="/ai-services/smart-automation" element={<SmartAutomation />} />
-              <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
-              <Route path="/free-trial" element={<FreeTrial />} />
-              <Route path="/automation-system" element={<AutomationSystem />} />
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/ai-solutions" element={<AIIntelligence />} />
-              <Route path="/iot-solutions" element={<IoTSolutions />} />
-              <Route path="/cloud-solutions" element={<CloudSolutions />} />
-              <Route path="/security-solutions" element={<SecuritySolutions />} />
-              <Route path="/nlp-solutions" element={<NLPSolutions />} />
-              <Route path="/computer-vision" element={<ComputerVisionPage />} />
-              <Route path="/machine-learning" element={<MachineLearning />} />
-              <Route path="/smart-assistants" element={<SmartAssistants />} />
-              <Route path="/smart-analytics" element={<SmartAnalytics />} />
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider delayDuration={300} skipDelayDuration={0}>
+        <MobileOptimizer>
+          <BrowserRouter>
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
+              {/* Subtle pattern overlay */}
+              <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
               
-              <Route path="/global-presence" element={<GlobalPresence />} />
-              <Route path="/tech-projects" element={<TechProjects />} />
-              <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
-              <Route path="/technologies" element={<Technologies />} />
-              <Route path="/current-offers" element={<CurrentOffers />} />
-              <Route path="/professional-services" element={<ProfessionalServices />} />
-              
-              <Route path="/content-creation" element={<ContentCreation />} />
-              <Route path="/design-solutions" element={<DesignSolutions />} />
-              <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
-              <Route path="/subsidiaries" element={<Subsidiaries />} />
-              <Route path="/payment-methods" element={<PaymentMethods />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-              <Route path="/payment-verification" element={<PaymentVerification />} />
-              <Route path="/payment-cancel" element={<PaymentCancel />} />
-              <Route path="/partnerships" element={<Partnerships />} />
-              <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
-              <Route path="/business-services" element={<BusinessServices />} />
-              <Route path="/technical-services" element={<TechnicalServices />} />
-              <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
-              <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
-              <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
-              <Route path="/department/:deptId" element={<DepartmentDetails />} />
-              <Route path="/user-guide" element={<UserGuide />} />
-              <Route path="/start-with-us" element={<StartWithUs />} />
-              <Route path="/book-consultation" element={<BookConsultation />} />
-              <Route path="/hosting-services" element={<HostingServices />} />
-              <Route path="/company-updates" element={<CompanyUpdates />} />
-              <Route path="/software-products" element={<SoftwareProducts />} />
-              <Route path="/car-rental-website" element={<CarRentalWebsite />} />
-              <Route path="/careers-page" element={<CareersPage />} />
-              <Route path="/car-rental" element={<CarRentalLanding />} />
-              <Route path="/car-rental/about" element={<AboutUs />} />
-              <Route path="/car-rental/faq" element={<CarRentalFAQ />} />
-              <Route path="/car-rental/terms" element={<CarRentalTerms />} />
-              <Route path="/car-rental/privacy" element={<CarRentalPrivacy />} />
-              <Route path="/car-rental/user-guide" element={<CarRentalUserGuide />} />
-              <Route path="/car-rental/insurance-policy" element={<CarRentalInsurancePolicy />} />
-              <Route path="/car-rental/company-news" element={<CarRentalCompanyNews />} />
-              <Route path="/car-rental/services" element={<CarRentalServices />} />
-              <Route path="/car-rental/contact" element={<CarRentalContactUs />} />
-              <Route path="/car-rental/sub-services" element={<CarRentalSubServices />} />
-              <Route path="/car-rental/services/economy-cars" element={<CarRentalEconomyCars />} />
-              <Route path="/car-rental/services/luxury-cars" element={<CarRentalLuxuryCars />} />
-              <Route path="/car-rental/services/electric-cars" element={<CarRentalElectricCars />} />
-              <Route path="/car-rental/services/family-cars" element={<CarRentalFamilyCars />} />
-              <Route path="/car-rental/contact/branches" element={<CarRentalBranches />} />
-              <Route path="/car-rental/contact/complaints-suggestions" element={<CarRentalComplaints />} />
-              <Route path="/car-fleet" element={<CarFleet />} />
-              <Route path="/car-booking" element={<CarBooking />} />
-              <Route path="/email-test" element={<EmailTest />} />
-              <Route path="/enterprise-systems" element={<EnterpriseSystems />} />
-              <Route path="/hr-management-system" element={<HRManagementSystem />} />
-              <Route path="/financial-system" element={<FinancialSystem />} />
-              <Route path="/project-management-system" element={<ProjectManagementSystem />} />
-              <Route path="/tech-ecosystem" element={<TechEcosystem />} />
-              <Route path="/construction-website" element={<ConstructionWebsite />} />
-              <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
-              <Route path="/electronic-cards-store" element={<ElectronicCardsStore />} />
-              <Route path="/electronic-games-store" element={<ElectronicGamesStore />} />
-              <Route path="/electronic-cards-website" element={<ElectronicCardsWebsite />} />
-              <Route path="/cards-store/about" element={<CardsStoreAbout />} />
-              <Route path="/cards-store/contact" element={<CardsStoreContact />} />
-              <Route path="/cards-store/faq" element={<CardsStoreFAQ />} />
-              <Route path="/cards-store/privacy" element={<CardsStorePrivacy />} />
-              <Route path="/cards-store/terms" element={<CardsStoreTerms />} />
-              <Route path="/kashkha-abaya-store" element={<KashkhaAbayaStore />} />
-              <Route path="/cards-store/product/:id" element={<ProductDetails />} />
-              <Route path="/abaya-categories/luxury-abayas" element={<LuxuryAbayas />} />
-              <Route path="/abaya-categories/casual-abayas" element={<CasualAbayas />} />
-              <Route path="/abaya-categories/formal-abayas" element={<FormalAbayas />} />
-              <Route path="/abaya-categories/sports-abayas" element={<SportsAbayas />} />
-              <Route path="/abaya-categories/wedding-abayas" element={<WeddingAbayas />} />
-              <Route path="/abaya-categories/traditional-abayas" element={<TraditionalAbayas />} />
-              <Route path="/abaya-categories/about-us" element={<AbayaAboutUs />} />
-              <Route path="/abaya-categories/contact-us" element={<AbayaContactUs />} />
-              <Route path="/abaya-categories/shipping-delivery" element={<ShippingDelivery />} />
-              <Route path="/abaya-categories/return-procedures" element={<ReturnProcedures />} />
-              <Route path="/abaya-categories/return-policy" element={<ReturnPolicy />} />
-              <Route path="/abaya-categories/help-center" element={<HelpCenter />} />
-              <Route path="/services-catalog" element={<ServicesCatalog />} />
-              <Route path="/digital-marketing" element={<DigitalMarketing />} />
-              <Route path="/payment" element={<PaymentPage />} />
-              <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
-              <Route path="/printing-services" element={<PrintingServices />} />
-              <Route path="/printing-categories/business-stationery" element={<BusinessStationery />} />
-              <Route path="/printing-categories/business-cards" element={<BusinessCards />} />
-              <Route path="/printing-categories/marketing-materials" element={<MarketingMaterials />} />
-              <Route path="/printing-categories/large-format" element={<LargeFormat />} />
-              <Route path="/printing-categories/packaging-boxes" element={<PackagingBoxes />} />
-              <Route path="/printing-categories/promotional-gifts" element={<PromotionalGifts />} />
-              <Route path="/printing-categories/apparel-accessories" element={<ApparelAccessories />} />
-              <Route path="/printing-categories/corporate-branding" element={<CorporateBranding />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppLayout>
-        </BrowserRouter>
-      </MobileOptimizer>
-    </AppProviders>
+              {/* Main content with mobile optimizations */}
+              <div className="relative z-10 mobile-tap mobile-scroll">
+                
+                <ScrollToTop />
+                <Toaster />
+                <Sonner />
+                
+                <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />
+                <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
+                <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />
+                <Route path="/team" element={<Suspense fallback={<PageLoader />}><Team /></Suspense>} />
+                <Route path="/vision" element={<Suspense fallback={<PageLoader />}><Vision /></Suspense>} />
+                <Route path="/contact" element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
+                <Route path="/support" element={<Suspense fallback={<PageLoader />}><Support /></Suspense>} />
+                <Route path="/privacy" element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
+                <Route path="/cookie-policy" element={<Suspense fallback={<PageLoader />}><CookiePolicy /></Suspense>} />
+                <Route path="/terms" element={<Suspense fallback={<PageLoader />}><Terms /></Suspense>} />
+                <Route path="/careers" element={<Suspense fallback={<PageLoader />}><Careers /></Suspense>} />
+                <Route path="/jobs" element={<Suspense fallback={<PageLoader />}><Careers /></Suspense>} />
+                <Route path="/job-application" element={<Suspense fallback={<PageLoader />}><JobApplication /></Suspense>} />
+                <Route path="/tech-investment" element={<Suspense fallback={<PageLoader />}><TechInvestment /></Suspense>} />
+                <Route path="/development" element={<Suspense fallback={<PageLoader />}><Development /></Suspense>} />
+                <Route path="/strategic-consulting" element={<Suspense fallback={<PageLoader />}><StrategicConsulting /></Suspense>} />
+                <Route path="/integrated-solutions" element={<Suspense fallback={<PageLoader />}><IntegratedSolutions /></Suspense>} />
+                <Route path="/training" element={<Suspense fallback={<PageLoader />}><Training /></Suspense>} />
+                <Route path="/volunteer" element={<Suspense fallback={<PageLoader />}><Volunteer /></Suspense>} />
+                <Route path="/contracts" element={<Suspense fallback={<PageLoader />}><Contracts /></Suspense>} />
+                <Route path="/development-program" element={<Suspense fallback={<PageLoader />}><DevelopmentProgram /></Suspense>} />
+                <Route path="/company-news" element={<Suspense fallback={<PageLoader />}><CompanyNews /></Suspense>} />
+                <Route path="/press-releases" element={<Suspense fallback={<PageLoader />}><PressReleases /></Suspense>} />
+                <Route path="/upcoming-events" element={<Suspense fallback={<PageLoader />}><UpcomingEvents /></Suspense>} />
+                <Route path="/annual-reports" element={<Suspense fallback={<PageLoader />}><AnnualReports /></Suspense>} />
+                <Route path="/faq" element={<Suspense fallback={<PageLoader />}><FAQ /></Suspense>} />
+                <Route path="/digital-contracts" element={<Suspense fallback={<PageLoader />}><DigitalContracts /></Suspense>} />
+                <Route path="/ready-projects" element={<Suspense fallback={<PageLoader />}><ReadyProjects /></Suspense>} />
+                <Route path="/remote-work" element={<Suspense fallback={<PageLoader />}><RemoteWork /></Suspense>} />
+                <Route path="/project/:projectId" element={<Suspense fallback={<PageLoader />}><ProjectDetails /></Suspense>} />
+                <Route path="/ai-intelligence" element={<AIIntelligence />} />
+                <Route path="/ai-services/generative-ai" element={<GenerativeAI />} />
+                <Route path="/ai-services/computer-vision" element={<ComputerVision />} />
+                <Route path="/ai-services/natural-language-processing" element={<NaturalLanguageProcessing />} />
+                <Route path="/ai-services/predictive-analytics" element={<PredictiveAnalytics />} />
+                <Route path="/ai-services/smart-automation" element={<SmartAutomation />} />
+                 <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
+                 <Route path="/free-trial" element={<FreeTrial />} />
+                 <Route path="/automation-system" element={<AutomationSystem />} />
+                  <Route path="/pricing" element={<PricingPage />} />
+                 <Route path="/ai-solutions" element={<AIIntelligence />} />
+                <Route path="/iot-solutions" element={<IoTSolutions />} />
+                <Route path="/cloud-solutions" element={<CloudSolutions />} />
+                <Route path="/security-solutions" element={<SecuritySolutions />} />
+                <Route path="/nlp-solutions" element={<NLPSolutions />} />
+                <Route path="/computer-vision" element={<ComputerVisionPage />} />
+                <Route path="/machine-learning" element={<MachineLearning />} />
+                <Route path="/smart-assistants" element={<SmartAssistants />} />
+                <Route path="/smart-analytics" element={<SmartAnalytics />} />
+                
+                <Route path="/global-presence" element={<GlobalPresence />} />
+                <Route path="/tech-projects" element={<TechProjects />} />
+                <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
+                <Route path="/technologies" element={<Technologies />} />
+                <Route path="/current-offers" element={<CurrentOffers />} />
+                <Route path="/professional-services" element={<ProfessionalServices />} />
+                
+                <Route path="/content-creation" element={<ContentCreation />} />
+                <Route path="/design-solutions" element={<DesignSolutions />} />
+                <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
+                <Route path="/printing-services" element={<Suspense fallback={<PageLoader />}><PrintingServices /></Suspense>} />
+                 <Route path="/printing/business-stationery" element={<Suspense fallback={<PageLoader />}><BusinessStationery /></Suspense>} />
+                 <Route path="/printing/business-cards" element={<Suspense fallback={<PageLoader />}><BusinessCards /></Suspense>} />
+                 <Route path="/printing/marketing-materials" element={<Suspense fallback={<PageLoader />}><MarketingMaterials /></Suspense>} />
+                 <Route path="/printing/large-format" element={<Suspense fallback={<PageLoader />}><LargeFormat /></Suspense>} />
+                 <Route path="/printing/packaging-boxes" element={<Suspense fallback={<PageLoader />}><PackagingBoxes /></Suspense>} />
+                 <Route path="/printing/promotional-gifts" element={<Suspense fallback={<PageLoader />}><PromotionalGifts /></Suspense>} />
+                 <Route path="/printing/apparel-accessories" element={<Suspense fallback={<PageLoader />}><ApparelAccessories /></Suspense>} />
+                 <Route path="/printing/corporate-branding" element={<Suspense fallback={<PageLoader />}><CorporateBranding /></Suspense>} />
+                <Route path="/subsidiaries" element={<Subsidiaries />} />
+                <Route path="/payment-methods" element={<PaymentMethods />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-verification" element={<Suspense fallback={<PageLoader />}><PaymentVerification /></Suspense>} />
+                <Route path="/payment-cancel" element={<PaymentCancel />} />
+            <Route path="/partnerships" element={<Partnerships />} />
+            <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
+            <Route path="/business-services" element={<BusinessServices />} />
+            <Route path="/technical-services" element={<Suspense fallback={<PageLoader />}><TechnicalServices /></Suspense>} />
+                <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
+                <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
+                <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
+                <Route path="/enterprise-systems" element={<Suspense fallback={<PageLoader />}><EnterpriseSystems /></Suspense>} />
+                <Route path="/hr-management-system" element={<Suspense fallback={<PageLoader />}><HRManagementSystem /></Suspense>} />
+                <Route path="/financial-system" element={<Suspense fallback={<PageLoader />}><FinancialSystem /></Suspense>} />
+                <Route path="/project-management-system" element={<Suspense fallback={<PageLoader />}><ProjectManagementSystem /></Suspense>} />
+            <Route path="/department/:id" element={<DepartmentDetails />} />
+            <Route path="/user-guide" element={<UserGuide />} />
+            
+            
+            <Route path="/start-with-us" element={<StartWithUs />} />
+                <Route path="/book-consultation" element={<BookConsultation />} />
+                <Route path="/hosting-services" element={<HostingServices />} />
+                <Route path="/company-updates" element={<CompanyUpdates />} />
+                <Route path="/software-products" element={<Suspense fallback={<PageLoader />}><SoftwareProducts /></Suspense>} />
+                <Route path="/construction-website" element={<ConstructionWebsite />} />
+                <Route path="/digital-marketing-website" element={<DigitalMarketingWebsite />} />
+                <Route path="/electronic-cards-store" element={<ElectronicCardsStore />} />
+                <Route path="/electronic-games-store" element={<ElectronicGamesStore />} />
+                <Route path="/cards-store" element={<ElectronicCardsStore />} />
+                <Route path="/cards-store/product/:id" element={<ProductDetails />} />
+                <Route path="/cards-store/about" element={<CardsStoreAbout />} />
+                <Route path="/cards-store/contact" element={<CardsStoreContact />} />
+                <Route path="/cards-store/faq" element={<CardsStoreFAQ />} />
+                <Route path="/cards-store/cards" element={<ElectronicCardsWebsite />} />
+                <Route path="/cards-store/privacy" element={<CardsStorePrivacy />} />
+                <Route path="/cards-store/terms" element={<CardsStoreTerms />} />
+                <Route path="/abayati-store" element={<KashkhaAbayaStore />} />
+                <Route path="/abayati-store/luxury" element={<LuxuryAbayas />} />
+                <Route path="/abayati-store/casual" element={<CasualAbayas />} />
+                <Route path="/abayati-store/formal" element={<FormalAbayas />} />
+                <Route path="/abayati-store/sports" element={<SportsAbayas />} />
+                <Route path="/abayati-store/wedding" element={<WeddingAbayas />} />
+                <Route path="/abayati-store/traditional" element={<TraditionalAbayas />} />
+                <Route path="/abayati-store/about" element={<AbayaAboutUs />} />
+                <Route path="/abayati-store/contact" element={<AbayaContactUs />} />
+                <Route path="/abayati-store/shipping-delivery" element={<ShippingDelivery />} />
+                <Route path="/abayati-store/return-procedures" element={<ReturnProcedures />} />
+                <Route path="/abayati-store/return-policy" element={<ReturnPolicy />} />
+                <Route path="/abayati-store/help-center" element={<HelpCenter />} />
+                <Route path="/car-rental-preview" element={<CarRentalWebsite />} />
+                <Route path="/car-rental-landing" element={<CarRentalLanding />} />
+                <Route path="/car-rental" element={<CarRentalLanding />} />
+                <Route path="/car-rental-landing" element={<CarRentalLanding />} />
+                <Route path="/car-rental-website" element={<CarRentalWebsite />} />
+                <Route path="/car-rental/about" element={<AboutUs />} />
+                <Route path="/car-rental/faq" element={<CarRentalFAQ />} />
+                <Route path="/car-rental/terms" element={<CarRentalTerms />} />
+                <Route path="/car-rental/privacy" element={<CarRentalPrivacy />} />
+                <Route path="/car-rental/guide" element={<CarRentalUserGuide />} />
+                <Route path="/car-rental/insurance" element={<CarRentalInsurancePolicy />} />
+                <Route path="/car-rental/news" element={<CarRentalCompanyNews />} />
+                <Route path="/car-rental/services" element={<CarRentalServices />} />
+                <Route path="/car-rental/contact" element={<CarRentalContactUs />} />
+                <Route path="/car-rental/sub-services" element={<CarRentalSubServices />} />
+                <Route path="/car-rental/services/economy" element={<CarRentalEconomyCars />} />
+                <Route path="/car-rental/services/luxury" element={<CarRentalLuxuryCars />} />
+                <Route path="/car-rental/services/electric" element={<CarRentalElectricCars />} />
+                <Route path="/car-rental/services/family" element={<CarRentalFamilyCars />} />
+                <Route path="/car-rental/contact/branches" element={<CarRentalBranches />} />
+                <Route path="/car-rental/contact/complaints" element={<CarRentalComplaints />} />
+                <Route path="/car-rental/careers" element={<CareersPage />} />
+                
+                <Route path="/car-fleet" element={<CarFleet />} />
+                <Route path="/car-booking" element={<CarBooking />} />
+                <Route path="/email-test" element={<EmailTest />} />
+                
+                
+                <Route path="/tech-ecosystem" element={<TechEcosystem />} />
+                <Route path="/services-catalog" element={<ServicesCatalog />} />
+                <Route path="/digital-marketing" element={<DigitalMarketing />} />
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/enhanced-payment" element={<Suspense fallback={<PageLoader />}><EnhancedPaymentPage /></Suspense>} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+            </div>
+          </BrowserRouter>
+        </MobileOptimizer>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 
