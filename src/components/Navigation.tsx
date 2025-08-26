@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -44,9 +44,9 @@ const Navigation = () => {
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
   const location = useLocation();
-  const servicesHideRef = React.useRef<number | undefined>(undefined);
-  const productsHideRef = React.useRef<number | undefined>(undefined);
-  const othersHideRef = React.useRef<number | undefined>(undefined);
+  const servicesHideRef = useRef<number | undefined>(undefined);
+  const productsHideRef = useRef<number | undefined>(undefined);
+  const othersHideRef = useRef<number | undefined>(undefined);
   
   useEffect(() => {
     const handleScroll = () => {

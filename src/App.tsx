@@ -1,11 +1,14 @@
-import React, { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+
 import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useRef } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
+
+import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 
 // Lazy load pages for better performance
@@ -76,7 +79,7 @@ const DigitalTransformation = lazy(() => import("./pages/business-services/Digit
 const FinancialPlanning = lazy(() => import("./pages/business-services/FinancialPlanning"));
 const DepartmentDetails = lazy(() => import("./pages/DepartmentDetails"));
 const UserGuide = lazy(() => import("./pages/UserGuide"));
-
+const Auth = lazy(() => import("./pages/Auth"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
@@ -162,14 +165,15 @@ const PageLoader = () => (
 
 
 
-// Create QueryClient instance outside component to avoid useRef issues
-const queryClient = new QueryClient();
-
 const App = () => {
+  const queryClientRef = useRef<QueryClient | null>(null);
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient();
+  }
   console.log('App component rendering...');
   
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClientRef.current!}>
       <TooltipProvider delayDuration={300} skipDelayDuration={0}>
         <MobileOptimizer>
           <BrowserRouter>
@@ -264,7 +268,7 @@ const App = () => {
                 <Route path="/project-management-system" element={<Suspense fallback={<PageLoader />}><ProjectManagementSystem /></Suspense>} />
             <Route path="/department/:id" element={<DepartmentDetails />} />
             <Route path="/user-guide" element={<UserGuide />} />
-            
+            <Route path="/auth" element={<Auth />} />
             
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />

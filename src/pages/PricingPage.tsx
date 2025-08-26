@@ -29,13 +29,23 @@ const PricingPage = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processingPayment, setProcessingPayment] = useState(null);
+  const [user, setUser] = useState(null);
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const { toast } = useToast();
 
   useEffect(() => {
     fetchPlans();
+    checkAuth();
   }, []);
 
+  const checkAuth = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+    
+    if (user) {
+      await checkCurrentSubscription(user.id);
+    }
+  };
 
   const checkCurrentSubscription = async (userId) => {
     try {
@@ -86,7 +96,15 @@ const PricingPage = () => {
   };
 
   const handleSubscribe = async (plan) => {
-    // Remove user authentication requirement
+    if (!user) {
+      toast({
+        title: "تسجيل الدخول مطلوب",
+        description: "يرجى تسجيل الدخول أولاً للاشتراك",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (currentSubscription) {
       toast({
         title: "لديك اشتراك نشط",
@@ -130,7 +148,6 @@ const PricingPage = () => {
       setProcessingPayment(null);
     }
   };
-
 
   const getPlanIcon = (planName) => {
     if (planName.includes('Basic') || planName.includes('الأساسية')) return Star;
@@ -301,7 +318,7 @@ const PricingPage = () => {
                           <div className="pt-4">
                             <Button
                               onClick={() => handleSubscribe(plan)}
-                              disabled={processingPayment === plan.id || isCurrentPlan}
+                              disabled={processingPayment === plan.id || isCurrentPlan || !user}
                               className={`w-full ${
                                 isProfessional 
                                   ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700' 
@@ -316,6 +333,8 @@ const PricingPage = () => {
                                 </div>
                               ) : isCurrentPlan ? (
                                 'خطتك الحالية'
+                              ) : !user ? (
+                                'تسجيل الدخول مطلوب'
                               ) : (
                                 <div className="flex items-center gap-2">
                                   <CreditCard className="w-5 h-5" />
@@ -431,10 +450,10 @@ const PricingPage = () => {
                 <Button 
                   size="lg"
                   className="bg-white text-indigo-600 hover:bg-slate-100 border-0"
-                  onClick={() => document.getElementById('pricing')?.scrollIntoView()}
+                  onClick={() => user ? document.getElementById('pricing')?.scrollIntoView() : (window.location.href = '/auth')}
                 >
                   <Star className="w-5 h-5 mr-2" />
-                  اختر خطتك
+                  {user ? 'اختر خطتك' : 'ابدأ الآن'}
                 </Button>
                 <Button 
                   size="lg"
