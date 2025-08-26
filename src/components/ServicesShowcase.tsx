@@ -32,8 +32,7 @@ const services = [
     borderColor: "border-blue-500/20",
     textColor: "text-blue-400",
     features: ["React & Vue", "Flutter", "Laravel", "API Integration"],
-    link: "/development",
-    price: "ابتداءً من 5,000 ر.س"
+    link: "/development"
   },
   {
     id: 2,
@@ -45,8 +44,7 @@ const services = [
     borderColor: "border-purple-500/20",
     textColor: "text-purple-400",
     features: ["تصميم الشعار", "الهوية البصرية", "المطبوعات", "تصميم الإعلانات"],
-    link: "/design-solutions",
-    price: "ابتداءً من 1,500 ر.س"
+    link: "/design-solutions"
   },
   {
     id: 3,
@@ -58,8 +56,7 @@ const services = [
     borderColor: "border-green-500/20",
     textColor: "text-green-400",
     features: ["تصميم متجاوب", "إدارة المحتوى", "تحسين SEO", "استضافة مجانية"],
-    link: "/websites",
-    price: "ابتداءً من 3,000 ر.س"
+    link: "/websites"
   },
   {
     id: 4,
@@ -71,8 +68,7 @@ const services = [
     borderColor: "border-orange-500/20",
     textColor: "text-orange-400",
     features: ["iOS & Android", "واجهة مستخدم مبتكرة", "الإشعارات الفورية", "ربط قاعدة البيانات"],
-    link: "/mobile-apps",
-    price: "ابتداءً من 8,000 ر.س"
+    link: "/mobile-apps"
   },
   {
     id: 5,
@@ -84,8 +80,7 @@ const services = [
     borderColor: "border-cyan-500/20",
     textColor: "text-cyan-400",
     features: ["AWS & Azure", "نسخ احتياطية", "مراقبة الأداء", "أمان متقدم"],
-    link: "/cloud-solutions",
-    price: "ابتداءً من 2,000 ر.س"
+    link: "/cloud-solutions"
   },
   {
     id: 6,
@@ -97,8 +92,7 @@ const services = [
     borderColor: "border-red-500/20",
     textColor: "text-red-400",
     features: ["اختبار الاختراق", "تشفير البيانات", "مراقبة الأمان", "تدريب الموظفين"],
-    link: "/security-solutions",
-    price: "ابتداءً من 4,000 ر.س"
+    link: "/security-solutions"
   },
   {
     id: 7,
@@ -110,8 +104,7 @@ const services = [
     borderColor: "border-pink-500/20",
     textColor: "text-pink-400",
     features: ["إدارة حسابات", "إعلانات مدفوعة", "تحليل البيانات", "استراتيجية المحتوى"],
-    link: "/digital-marketing",
-    price: "ابتداءً من 2,500 ر.س"
+    link: "/digital-marketing"
   },
   {
     id: 8,
@@ -123,8 +116,7 @@ const services = [
     borderColor: "border-indigo-500/20",
     textColor: "text-indigo-400",
     features: ["تحليل البيانات", "الروبوتات الذكية", "التنبؤ", "أتمتة العمليات"],
-    link: "/ai-solutions",
-    price: "ابتداءً من 10,000 ر.س"
+    link: "/ai-solutions"
   }
 ];
 
@@ -166,50 +158,91 @@ const ServicesShowcase = () => {
           </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Services Grid with Mixed Shapes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {services.map((service, index) => {
             const IconComponent = service.icon;
             const isHovered = hoveredCard === service.id;
             
+            // تحديد الشكل والتخطيط بناءً على الفهرس
+            const getCardStyle = (index: number) => {
+              const patterns = [
+                // نمط 1: مستطيل عادي
+                "rounded-2xl",
+                // نمط 2: دائري من الأعلى
+                "rounded-t-3xl rounded-b-xl",
+                // نمط 3: مائل
+                "rounded-2xl transform hover:-rotate-1",
+                // نمط 4: سداسي مقطوع
+                "rounded-tl-3xl rounded-br-3xl rounded-tr-xl rounded-bl-xl",
+                // نمط 5: موجة
+                "rounded-3xl",
+                // نمط 6: مربع بزوايا مختلفة
+                "rounded-tl-2xl rounded-tr-3xl rounded-bl-3xl rounded-br-xl",
+                // نمط 7: شكل معين
+                "rounded-2xl transform hover:rotate-1",
+                // نمط 8: دائري كامل
+                "rounded-full p-8"
+              ];
+              return patterns[index % patterns.length];
+            };
+
+            const getSize = (index: number) => {
+              // جعل بعض البطاقات أكبر من الأخرى
+              const sizes = [
+                "col-span-1 row-span-1", // عادي
+                "col-span-1 row-span-1", // عادي  
+                "lg:col-span-2 row-span-1", // عريض
+                "col-span-1 row-span-1", // عادي
+                "col-span-1 row-span-1", // عادي
+                "lg:col-span-2 row-span-1", // عريض
+                "col-span-1 row-span-1", // عادي
+                "col-span-1 row-span-1"  // عادي
+              ];
+              return sizes[index % sizes.length];
+            };
+            
             return (
-              <Card
+              <div
                 key={service.id}
-                className={`
-                  group relative overflow-hidden transition-all duration-500 ease-out
-                  hover:scale-105 hover:shadow-2xl hover:shadow-primary/25
-                  ${service.bgColor} ${service.borderColor}
-                  backdrop-blur-sm border animate-fade-in
-                `}
+                className={`${getSize(index)} animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
-                onMouseEnter={() => setHoveredCard(service.id)}
-                onMouseLeave={() => setHoveredCard(null)}
               >
+                <Card
+                  className={`
+                    group relative overflow-hidden transition-all duration-500 ease-out h-full
+                    hover:scale-105 hover:shadow-2xl hover:shadow-primary/25
+                    ${service.bgColor} ${service.borderColor} ${getCardStyle(index)}
+                    backdrop-blur-sm border
+                  `}
+                  onMouseEnter={() => setHoveredCard(service.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
                 {/* Gradient Overlay */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
                 
                 {/* Animated Corner Element */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full transform translate-x-6 -translate-y-6 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-500"></div>
+                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/20 to-transparent rounded-bl-full transform translate-x-4 -translate-y-4 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-500"></div>
 
-                <CardContent className="p-6 relative z-10">
+                <CardContent className="p-6 relative z-10 h-full flex flex-col">
                   {/* Icon Section */}
-                  <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-start justify-between mb-4">
                     <div className={`
-                      w-14 h-14 rounded-xl ${service.bgColor} ${service.borderColor} border-2
+                      w-12 h-12 rounded-xl ${service.bgColor} ${service.borderColor} border-2
                       flex items-center justify-center group-hover:scale-110 transition-transform duration-300
                       shadow-lg group-hover:shadow-xl
                     `}>
-                      <IconComponent className={`w-7 h-7 ${service.textColor} group-hover:animate-pulse`} />
+                      <IconComponent className={`w-6 h-6 ${service.textColor} group-hover:animate-pulse`} />
                     </div>
                     
                     <Badge variant="outline" className="text-xs opacity-80 group-hover:opacity-100 transition-opacity">
-                      {index + 1}
+                      {String(index + 1).padStart(2, '0')}
                     </Badge>
                   </div>
 
                   {/* Content */}
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                  <div className="space-y-3 flex-1">
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">
                       {service.title}
                     </h3>
                     
@@ -218,8 +251,8 @@ const ServicesShowcase = () => {
                     </p>
 
                     {/* Features List */}
-                    <div className="space-y-2">
-                      {service.features.map((feature, featureIndex) => (
+                    <div className="space-y-1.5">
+                      {service.features.slice(0, 3).map((feature, featureIndex) => (
                         <div 
                           key={featureIndex}
                           className="flex items-center text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-300"
@@ -229,35 +262,31 @@ const ServicesShowcase = () => {
                         </div>
                       ))}
                     </div>
+                  </div>
 
-                    {/* Price */}
-                    <div className="pt-2 border-t border-border/50">
-                      <p className={`text-sm font-semibold ${service.textColor}`}>
-                        {service.price}
-                      </p>
-                    </div>
-
-                    {/* Action Button */}
+                  {/* Action Button */}
+                  <div className="mt-4">
                     <Link to={service.link} className="block">
                       <Button 
                         variant="outline" 
+                        size="sm"
                         className={`
-                          w-full mt-4 group-hover:bg-primary group-hover:text-primary-foreground
+                          w-full group-hover:bg-primary group-hover:text-primary-foreground
                           group-hover:border-primary transition-all duration-300 group-hover:shadow-lg
                         `}
                       >
-                        <span className="flex items-center justify-center">
+                        <span className="flex items-center justify-center text-sm">
                           اعرف المزيد
-                          <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                          <ArrowRight className="w-3 h-3 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                         </span>
                       </Button>
                     </Link>
                   </div>
                 </CardContent>
-
                 {/* Hover Effect Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
               </Card>
+              </div>
             );
           })}
         </div>
