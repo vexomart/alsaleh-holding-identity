@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { PageContainer } from "@/components/ui/page-container";
 import { PageHeader } from "@/components/ui/page-header";
@@ -8,7 +8,7 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbS
 const ProfessionalServices = () => {
   useEffect(() => {
     // SEO: title, meta description, canonical
-    document.title = "خدماتنا الاحترافية | شركة علي الشهري القابضة";
+    document.title = "خدماتنا الاحترافية | شركة ASH HOLDING";
 
     const desc =
       "خدماتنا الاحترافية التقنية والتسويقية بمعايير عالمية لرفع المبيعات وتحقيق أهداف عملك";

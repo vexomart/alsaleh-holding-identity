@@ -29,9 +29,12 @@ export default {
     },
     extend: {
       fontFamily: {
+        'inter': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        'poppins': ['Poppins', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         'arabic': ['Cairo', 'Amiri', 'Segoe UI', 'Tahoma', 'sans-serif'],
         'amiri': ['Amiri', 'serif'],
         'cairo': ['Cairo', 'sans-serif'],
+        'corporate': ['Inter', 'Poppins', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -130,9 +133,31 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-5px)" },
         },
-        "glow": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)" },
-          "50%": { boxShadow: "0 0 30px rgba(59, 130, 246, 0.8)" },
+        "pulse": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+        "rotate": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "bounce-slow": {
+          "0%, 100%": { transform: "translateY(0)", animationTimingFunction: "cubic-bezier(0.8, 0, 1, 1)" },
+          "50%": { transform: "translateY(-10%)", animationTimingFunction: "cubic-bezier(0, 0, 0.2, 1)" },
+        },
+        "icon-float": {
+          "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
+          "25%": { transform: "translateY(-3px) rotate(2deg)" },
+          "50%": { transform: "translateY(-6px) rotate(0deg)" },
+          "75%": { transform: "translateY(-3px) rotate(-2deg)" },
+        },
+        "icon-pulse": {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.05)", opacity: "0.8" },
+        },
+        "shimmer": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
         },
       },
       animation: {
@@ -144,7 +169,12 @@ export default {
         "float": "float 6s ease-in-out infinite",
         "float-delayed": "float-delayed 6s ease-in-out infinite 2s",
         "bounce-gentle": "bounce-gentle 2s ease-in-out infinite",
-        "glow": "glow 3s ease-in-out infinite",
+        "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "rotate": "rotate 1s linear infinite",
+        "bounce-slow": "bounce-slow 3s ease-in-out infinite",
+        "icon-float": "icon-float 4s ease-in-out infinite",
+        "icon-pulse": "icon-pulse 3s ease-in-out infinite",
+        "animate-rotate-slow": "rotate 8s linear infinite",
       },
     },
   },

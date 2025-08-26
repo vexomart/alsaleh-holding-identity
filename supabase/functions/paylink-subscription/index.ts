@@ -28,6 +28,44 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
+    // SECURITY: Authenticate user first (required since JWT verification is enabled)
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      logStep("Authentication failed - no authorization header");
+      return new Response(JSON.stringify({ 
+        error: "Authentication required",
+        message: "يجب تسجيل الدخول أولاً" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+    
+    // Initialize Supabase client 
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
+
+    // Verify user token
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+    if (userError || !userData?.user?.email) {
+      logStep("Authentication failed - invalid token", { error: userError?.message });
+      return new Response(JSON.stringify({ 
+        error: "Invalid authentication",
+        message: "فشل في التحقق من الهوية" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
+
+    const user = userData.user;
+    logStep("User authenticated", { userId: user.id, email: user.email });
+
     // Get environment variables
     const paylinkApiKey = Deno.env.get("PAYLINK_API_KEY");
     const paylinkApiId = Deno.env.get("PAYLINK_API_ID");
@@ -37,38 +75,61 @@ serve(async (req) => {
     }
     logStep("Paylink credentials verified");
 
-    // Initialize Supabase client with service role
-    const supabaseClient = createClient(
+    // Parse and validate request body
+    const requestBody = await req.json();
+    const { plan_id, return_url, customer_name, customer_email, customer_phone } = requestBody;
+
+    // SECURITY: Input validation and sanitization
+    if (!plan_id || typeof plan_id !== 'string') {
+      throw new Error("Valid plan ID is required");
+    }
+
+    if (plan_id.length > 100) {
+      throw new Error("Plan ID too long");
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const finalEmail = customer_email || user.email;
+    if (!finalEmail || !emailRegex.test(finalEmail)) {
+      throw new Error("Valid email address is required");
+    }
+
+    // Sanitize and validate phone number if provided
+    let sanitizedPhone = customer_phone;
+    if (sanitizedPhone) {
+      sanitizedPhone = sanitizedPhone.replace(/[^\d+]/g, '');
+      if (sanitizedPhone.length > 20) {
+        throw new Error("Phone number too long");
+      }
+    }
+
+    // Sanitize customer name
+    let sanitizedName = customer_name;
+    if (sanitizedName) {
+      sanitizedName = sanitizedName.substring(0, 100); // Limit length
+    }
+
+    // Validate return URL if provided
+    if (return_url) {
+      try {
+        new URL(return_url);
+      } catch {
+        throw new Error("Invalid return URL format");
+      }
+    }
+
+    logStep("Request validated", { plan_id, email: finalEmail, name: sanitizedName });
+
+    // Use service role client for database operations
+    const serviceClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       { auth: { persistSession: false } }
     );
 
-    // Parse request body first
-    const { plan_id, return_url, customer_name, customer_email, customer_phone }: PaymentRequest = await req.json();
-    if (!plan_id) {
-      throw new Error("Plan ID is required");
-    }
-    
-    if (!customer_email) {
-      throw new Error("Customer email is required");
-    }
-    logStep("Request parsed", { plan_id, return_url, customer_email, customer_name });
-
-    // Authenticate user (optional for guest checkout)
-    let user = null;
-    const authHeader = req.headers.get("Authorization");
-    if (authHeader) {
-      const token = authHeader.replace("Bearer ", "");
-      const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-      if (userData?.user?.email) {
-        user = userData.user;
-        logStep("User authenticated", { userId: user.id, email: user.email });
-      }
-    }
-
     // Get subscription plan details
-    const { data: plan, error: planError } = await supabaseClient
+    const { data: plan, error: planError } = await serviceClient
       .from('subscription_plans')
       .select('*')
       .eq('id', plan_id)
@@ -80,62 +141,54 @@ serve(async (req) => {
     }
     logStep("Plan found", { planName: plan.name_ar, price: plan.price });
 
-    // Check if user already has an active subscription (only for authenticated users)
-    if (user) {
-      const { data: existingSubscription, error: subError } = await supabaseClient
-        .from('subscriptions')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .gt('current_period_end', new Date().toISOString())
-        .maybeSingle();
+    // Check if user already has an active subscription
+    const { data: existingSubscription, error: subError } = await serviceClient
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .gt('current_period_end', new Date().toISOString())
+      .maybeSingle();
 
-      if (subError) {
-        logStep("Error checking existing subscription", { error: subError.message });
-      }
+    if (subError) {
+      logStep("Error checking existing subscription", { error: subError.message });
+    }
 
-      if (existingSubscription) {
-        logStep("User already has active subscription");
-        return new Response(JSON.stringify({ 
-          error: "لديك اشتراك نشط بالفعل",
-          existing_subscription: existingSubscription 
-        }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        });
-      }
+    if (existingSubscription) {
+      logStep("User already has active subscription");
+      return new Response(JSON.stringify({ 
+        error: "لديك اشتراك نشط بالفعل",
+        existing_subscription: existingSubscription 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400,
+      });
     }
 
     // Get client name (from request or user profile)
-    let clientName = customer_name || 'عميل';
-    if (user) {
-      const { data: profile } = await supabaseClient
-        .from('profiles')
-        .select('full_name')
-        .eq('user_id', user.id)
-        .single();
-      
-      clientName = profile?.full_name || customer_name || user.email || 'عميل';
-    }
+    let clientName = sanitizedName || 'عميل';
+    const { data: profile } = await serviceClient
+      .from('profiles')
+      .select('full_name')
+      .eq('user_id', user.id)
+      .single();
+    
+    clientName = profile?.full_name || sanitizedName || user.email || 'عميل';
 
     // Create subscription record with pending status
     const subscriptionEndDate = new Date();
     subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1); // 1 month subscription
 
-    const subscriptionData: any = {
+    const subscriptionData = {
+      user_id: user.id,
       plan_id: plan.id,
-      status: 'pending',
+      status: 'pending' as const,
       current_period_start: new Date().toISOString(),
       current_period_end: subscriptionEndDate.toISOString(),
-      payment_status: 'pending'
+      payment_status: 'pending' as const
     };
 
-    // Only add user_id if user is authenticated
-    if (user?.id) {
-      subscriptionData.user_id = user.id;
-    }
-
-    const { data: subscription, error: createSubError } = await supabaseClient
+    const { data: subscription, error: createSubError } = await serviceClient
       .from('subscriptions')
       .insert(subscriptionData)
       .select()
@@ -155,8 +208,8 @@ serve(async (req) => {
       amount: plan.price,
       callBackUrl: successUrl,
       cancelUrl: cancelUrl,
-      clientEmail: customer_email,
-      clientMobile: customer_phone || "966500000000",
+      clientEmail: finalEmail,
+      clientMobile: sanitizedPhone || "966500000000",
       clientName: clientName,
       note: `اشتراك ${plan.name_ar} - ${plan.description_ar}`,
       orderNumber: subscription.id,
@@ -192,7 +245,7 @@ serve(async (req) => {
     }
 
     // Update subscription with Paylink transaction ID
-    await supabaseClient
+    await serviceClient
       .from('subscriptions')
       .update({ 
         paylink_transaction_id: paylinkData.transactionNo.toString()

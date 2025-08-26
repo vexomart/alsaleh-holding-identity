@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -44,9 +44,9 @@ const Navigation = () => {
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [mobileOthersOpen, setMobileOthersOpen] = useState(false);
   const location = useLocation();
-  const servicesHideRef = useRef<number | undefined>(undefined);
-  const productsHideRef = useRef<number | undefined>(undefined);
-  const othersHideRef = useRef<number | undefined>(undefined);
+  const servicesHideRef = React.useRef<number | undefined>(undefined);
+  const productsHideRef = React.useRef<number | undefined>(undefined);
+  const othersHideRef = React.useRef<number | undefined>(undefined);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -58,12 +58,14 @@ const Navigation = () => {
 
   const services = [
     { name: "العروض الحالية", href: "/current-offers", icon: Gift },
+    { name: "الخدمات التقنية", href: "/technical-services", icon: Code },
     { name: "خدمات الأعمال", href: "/business-services", icon: Building2 },
     { name: "الاستضافات و الخوادم", href: "/hosting-services", icon: Globe },
     { name: "خدماتنا الاحترافية", href: "/professional-services", icon: Settings },
     { name: "خدماتنا الأخرى", href: "/services-catalog", icon: Package },
     { name: "صناعة المحتوى", href: "/content-creation", icon: PenTool },
     { name: "حلول التصميم", href: "/design-solutions", icon: Palette },
+    { name: "خدمات الطباعة", href: "/printing-services", icon: BookOpen },
     { name: "الاستثمار التقني", href: "/tech-investment", icon: Zap },
     { name: "التطوير والابتكار", href: "/development", icon: Building2 },
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Users },
@@ -142,11 +144,17 @@ const Navigation = () => {
                   {/* Logo */}
                   <div className="relative">
                     <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 touch-manipulation">
-                      <img 
-                        src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
-                        alt="ASH Holdings" 
-                        className="h-4 w-auto sm:h-5 lg:h-6 object-contain filter brightness-0 invert"
-                      />
+                      <picture>
+                        <source srcSet="/logo-small.webp" type="image/webp" />
+                        <source srcSet="/logo-small.png" type="image/png" />
+                        <img 
+                          src="/logo-small.png" 
+                          alt="ASH Holdings" 
+                          className="h-4 w-auto sm:h-5 lg:h-6 object-contain filter brightness-0 invert"
+                          decoding="async"
+                          loading="eager"
+                        />
+                      </picture>
                     </div>
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></div>
                   </div>
@@ -415,11 +423,16 @@ const Navigation = () => {
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <img 
-                        src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
-                        alt="ASH Holdings" 
-                        className="h-5 w-auto object-contain filter brightness-0 invert"
-                      />
+                      <picture>
+                        <source srcSet="/logo-small.webp" type="image/webp" />
+                        <source srcSet="/logo-small.png" type="image/png" />
+                        <img 
+                          src="/logo-small.png" 
+                          alt="ASH Holdings" 
+                          className="h-5 w-auto object-contain filter brightness-0 invert"
+                          decoding="async"
+                        />
+                      </picture>
                     </div>
                     <div className="absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full border-2 border-white flex items-center justify-center">
                       <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
@@ -427,7 +440,7 @@ const Navigation = () => {
                   </div>
                   <div>
                     <h2 className="text-lg font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                      علي الشهري القابضة
+                      ASH HOLDING
                     </h2>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="flex items-center gap-0.5">

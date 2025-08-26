@@ -1,14 +1,11 @@
+import React, { lazy, Suspense, startTransition, useMemo } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-
 import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRef } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
-
-import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 
 // Lazy load pages for better performance
@@ -62,7 +59,6 @@ const TechProjects = lazy(() => import("./pages/TechProjects"));
 const TechProjectDetails = lazy(() => import("./pages/TechProjectDetails"));
 const Technologies = lazy(() => import("./pages/Technologies"));
 const CurrentOffers = lazy(() => import("./pages/CurrentOffers"));
-const OfferDetails = lazy(() => import("./pages/OfferDetails"));
 const ProfessionalServices = lazy(() => import("./pages/ProfessionalServices"));
 const ContentCreation = lazy(() => import("./pages/ContentCreation"));
 const DesignSolutions = lazy(() => import("./pages/DesignSolutions"));
@@ -74,18 +70,18 @@ const PaymentCancel = lazy(() => import("./pages/PaymentCancel"));
 const Partnerships = lazy(() => import("./pages/Partnerships"));
 const AffiliateMarketing = lazy(() => import("./pages/AffiliateMarketing"));
 const BusinessServices = lazy(() => import("./pages/BusinessServices"));
+const TechnicalServices = lazy(() => import("./pages/TechnicalServices"));
 const BusinessConsulting = lazy(() => import("./pages/business-services/BusinessConsulting"));
 const DigitalTransformation = lazy(() => import("./pages/business-services/DigitalTransformation"));
 const FinancialPlanning = lazy(() => import("./pages/business-services/FinancialPlanning"));
 const DepartmentDetails = lazy(() => import("./pages/DepartmentDetails"));
 const UserGuide = lazy(() => import("./pages/UserGuide"));
-const Auth = lazy(() => import("./pages/Auth"));
+
 const NotFound = lazy(() => import("./pages/NotFound"));
 const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
-const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
 const HostingServices = lazy(() => import("./pages/HostingServices"));
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
@@ -115,6 +111,10 @@ const CarFleet = lazy(() => import("./pages/CarFleet"));
 const CarBooking = lazy(() => import("./pages/CarBooking"));
 const EmailTest = lazy(() => import("./pages/EmailTest"));
 const EnhancedDesignCategory = lazy(() => import("./pages/EnhancedDesignCategory"));
+const EnterpriseSystems = lazy(() => import("./pages/EnterpriseSystems"));
+const HRManagementSystem = lazy(() => import("./pages/HRManagementSystem"));
+const FinancialSystem = lazy(() => import("./pages/FinancialSystem"));
+const ProjectManagementSystem = lazy(() => import("./pages/ProjectManagementSystem"));
 
 
 const TechEcosystem = lazy(() => import("./pages/TechEcosystem"));
@@ -148,6 +148,17 @@ const ServicesCatalog = lazy(() => import("./pages/ServicesCatalog"));
 const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
+const PrintingServices = lazy(() => import("./pages/PrintingServices"));
+const BusinessStationery = lazy(() => import("./pages/printing-categories/BusinessStationery"));
+const BusinessCards = lazy(() => import("./pages/printing-categories/BusinessCards"));
+const MarketingMaterials = lazy(() => import("./pages/printing-categories/MarketingMaterials"));
+
+// Add missing printing categories
+const LargeFormat = lazy(() => import("./pages/printing-categories/LargeFormat"));
+const PackagingBoxes = lazy(() => import("./pages/printing-categories/PackagingBoxes"));
+const PromotionalGifts = lazy(() => import("./pages/printing-categories/PromotionalGifts"));
+const ApparelAccessories = lazy(() => import("./pages/printing-categories/ApparelAccessories"));
+const CorporateBranding = lazy(() => import("./pages/printing-categories/CorporateBranding"));
 
 
 // Loading component for better UX
@@ -162,16 +173,20 @@ const PageLoader = () => (
 
 
 
+// Create QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
+
 const App = () => {
-  const queryClientRef = useRef<QueryClient | null>(null);
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient();
-  }
-  console.log('App component rendering...');
-  
   return (
-    <QueryClientProvider client={queryClientRef.current!}>
-      <TooltipProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider delayDuration={300} skipDelayDuration={0}>
         <MobileOptimizer>
           <BrowserRouter>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
@@ -226,9 +241,8 @@ const App = () => {
                  <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
                  <Route path="/free-trial" element={<FreeTrial />} />
                  <Route path="/automation-system" element={<AutomationSystem />} />
-                 <Route path="/pricing" element={<PricingPage />} />
-                 <Route path="/payment-success" element={<PaymentSuccessPage />} />
-                <Route path="/ai-solutions" element={<AIIntelligence />} />
+                  <Route path="/pricing" element={<PricingPage />} />
+                 <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
                 <Route path="/security-solutions" element={<SecuritySolutions />} />
@@ -243,12 +257,20 @@ const App = () => {
                 <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
                 <Route path="/technologies" element={<Technologies />} />
                 <Route path="/current-offers" element={<CurrentOffers />} />
-                <Route path="/offer-details/:id" element={<OfferDetails />} />
                 <Route path="/professional-services" element={<ProfessionalServices />} />
                 
                 <Route path="/content-creation" element={<ContentCreation />} />
                 <Route path="/design-solutions" element={<DesignSolutions />} />
                 <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
+                <Route path="/printing-services" element={<Suspense fallback={<PageLoader />}><PrintingServices /></Suspense>} />
+                 <Route path="/printing/business-stationery" element={<Suspense fallback={<PageLoader />}><BusinessStationery /></Suspense>} />
+                 <Route path="/printing/business-cards" element={<Suspense fallback={<PageLoader />}><BusinessCards /></Suspense>} />
+                 <Route path="/printing/marketing-materials" element={<Suspense fallback={<PageLoader />}><MarketingMaterials /></Suspense>} />
+                 <Route path="/printing/large-format" element={<Suspense fallback={<PageLoader />}><LargeFormat /></Suspense>} />
+                 <Route path="/printing/packaging-boxes" element={<Suspense fallback={<PageLoader />}><PackagingBoxes /></Suspense>} />
+                 <Route path="/printing/promotional-gifts" element={<Suspense fallback={<PageLoader />}><PromotionalGifts /></Suspense>} />
+                 <Route path="/printing/apparel-accessories" element={<Suspense fallback={<PageLoader />}><ApparelAccessories /></Suspense>} />
+                 <Route path="/printing/corporate-branding" element={<Suspense fallback={<PageLoader />}><CorporateBranding /></Suspense>} />
                 <Route path="/subsidiaries" element={<Subsidiaries />} />
                 <Route path="/payment-methods" element={<PaymentMethods />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
@@ -257,12 +279,17 @@ const App = () => {
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
             <Route path="/business-services" element={<BusinessServices />} />
-            <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
-            <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
-            <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
+            <Route path="/technical-services" element={<Suspense fallback={<PageLoader />}><TechnicalServices /></Suspense>} />
+                <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
+                <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
+                <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
+                <Route path="/enterprise-systems" element={<Suspense fallback={<PageLoader />}><EnterpriseSystems /></Suspense>} />
+                <Route path="/hr-management-system" element={<Suspense fallback={<PageLoader />}><HRManagementSystem /></Suspense>} />
+                <Route path="/financial-system" element={<Suspense fallback={<PageLoader />}><FinancialSystem /></Suspense>} />
+                <Route path="/project-management-system" element={<Suspense fallback={<PageLoader />}><ProjectManagementSystem /></Suspense>} />
             <Route path="/department/:id" element={<DepartmentDetails />} />
             <Route path="/user-guide" element={<UserGuide />} />
-            <Route path="/auth" element={<Auth />} />
+            
             
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
@@ -326,7 +353,7 @@ const App = () => {
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
                 <Route path="/digital-marketing" element={<DigitalMarketing />} />
           <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
+          <Route path="/enhanced-payment" element={<Suspense fallback={<PageLoader />}><EnhancedPaymentPage /></Suspense>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
                 </Routes>

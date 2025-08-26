@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { 
   Megaphone, 
   ArrowRight,
@@ -28,11 +28,11 @@ const DigitalMarketing = () => {
   const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
   const { toast } = useToast();
   
-  const title = "التسويق الرقمي | شركة علي الشهري القابضة";
+  const title = "التسويق الرقمي | شركة ASH HOLDING";
   const description = "خدمات التسويق الرقمي الاحترافية - بناء خطط تسويقية متكاملة وحلول رقمية مبتكرة لنمو أعمالك";
   const canonical = `${window.location.origin}/digital-marketing`;
 
-  const handlePaymentMethod = async (service: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
+  const handlePaymentMethod = async (service: any, method: 'tap' | 'stc-pay' | 'tamara') => {
     setLoadingMethod(method);
     
     // إشعار فوري للمستخدم
@@ -55,8 +55,8 @@ const DigitalMarketing = () => {
       };
 
       switch (method) {
-        case 'paylink':
-          functionName = 'paylink-payment';
+        case 'tap':
+          functionName = 'tap-payment';
           payload.success_url = window.location.origin;
           break;
         case 'stc-pay':
@@ -132,8 +132,8 @@ const DigitalMarketing = () => {
           const paymentUrl = data.url || data.paymentUrl || data.payment_url;
           
           setTimeout(() => {
-            if (method === 'paylink') {
-              // فتح Paylink في نفس التبويب
+            if (method === 'tap') {
+              // فتح TAP في نفس التبويب
               window.location.href = paymentUrl;
             } else {
               // فتح باقي الطرق في تبويب جديد

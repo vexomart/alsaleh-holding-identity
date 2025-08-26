@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { TrendingUp, BarChart3, Target, Users, Mail, Phone, MapPin, Calendar, CheckCircle2, ArrowRight, Star, Globe, Zap, Shield, Award, Eye, MousePointer, Search, MessageSquare, AlertTriangle, Menu, X, Home, Briefcase, FileText, Building2, ChevronRight, PlayCircle, Rocket, Trophy, Heart, Lightbulb, DollarSign, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -79,7 +79,7 @@ const DigitalMarketingWebsite = () => {
     setProcessingServiceId(serviceId);
     
     try {
-      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+      const { data, error } = await supabase.functions.invoke('tap-payment', {
         body: {
           amount: parseInt(service.price),
           currency: 'SAR',
@@ -156,7 +156,7 @@ const DigitalMarketingWebsite = () => {
       company: "شركة النور للتكنولوجيا",
       review: "خدمة متميزة وفريق يفهم احتياجاتنا. حققوا أهدافنا التسويقية بشكل يفوق التوقعات",
       rating: 5,
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png"
+      image: "/avatar-placeholder.png"
     },
     {
       name: "خالد الرشيد",
@@ -204,7 +204,7 @@ const DigitalMarketingWebsite = () => {
       role: "مطور تقنيات الويب",
       experience: "12+ سنة خبرة",
       speciality: "تطوير المنصات الرقمية",
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png"
+      image: "/avatar-placeholder.webp"
     },
     {
       name: "لينا المنصوري",

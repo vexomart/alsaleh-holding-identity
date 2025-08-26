@@ -1,116 +1,50 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-
-// Remove direct imports, they are now lazy loaded
-
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
-import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette } from "lucide-react";
-import { Link } from "react-router-dom";
-import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
-import { ImageOptimizer } from "@/components/ImageOptimizer";
-import { lazy, Suspense } from "react";
-
-// Lazy load heavy components
-const DepartmentsSection = lazy(() => import("@/components/DepartmentsSection"));
-const CommitmentsSection = lazy(() => import("@/components/CommitmentsSection"));
-const CurrentOffersSection = lazy(() => import("@/components/CurrentOffersSection"));
-
-
-
+import GoogleAnalytics from "@/components/marketing/GoogleAnalytics";
+import FacebookPixel from "@/components/marketing/FacebookPixel";
+import NewsletterSubscription from "@/components/marketing/NewsletterSubscription";
+import SocialMediaLinks from "@/components/marketing/SocialMediaLinks";
+import MarketingBlog from "@/components/marketing/MarketingBlog";
+import OurServicesSection from "@/components/OurServicesSection";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
-      <PerformanceOptimizer />
-      <ImageOptimizer />
+      {/* أدوات التسويق */}
+      <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
+      <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
+      
       <Navigation />
       
-      {/* Optimized Animated Background Elements - Reduced for performance */}
+      {/* Simplified Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/8 via-secondary/4 to-accent/6 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 left-3/4 w-48 h-48 bg-gradient-to-tr from-secondary/6 via-accent/4 to-primary/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-        
-        {/* Minimal Geometric Patterns */}
-        <div className="absolute top-20 right-20 w-3 h-3 bg-primary/15 rotate-45 animate-pulse"></div>
-        <div className="absolute bottom-40 left-16 w-4 h-4 bg-accent/10 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/8 to-accent/6 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 left-3/4 w-48 h-48 bg-gradient-to-tr from-secondary/6 to-primary/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
       
       <main className="relative overflow-hidden z-10">
-        {/* Hero Section with Enhanced Background */}
-        <section id="home" className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/8"></div>
-          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent"></div>
-          <div className="relative z-10">
-            <HeroSection />
-          </div>
+        {/* Hero Section - Simplified */}
+        <section id="home" className="relative bg-gradient-to-br from-background via-primary/5 to-secondary/8">
+          <HeroSection />
         </section>
 
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
-
-          {/* Current Offers Section */}
-          <Suspense fallback={
-            <div className="py-20 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
-          }>
-            <CurrentOffersSection />
-          </Suspense>
-
-
-          {/* Departments Section - Professional Corporate */}
-          <section id="departments" className="relative py-20 lg:py-32 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-bl from-secondary/6 via-background to-accent/8"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--secondary))_0%,transparent_40%),radial-gradient(ellipse_at_30%_70%,hsl(var(--accent))_0%,transparent_40%)] opacity-20"></div>
-            
-            {/* Corporate Design Elements */}
-            <div className="absolute top-24 left-24 w-72 h-72 bg-gradient-to-br from-secondary/15 to-accent/10 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-24 right-24 w-96 h-96 bg-gradient-to-tl from-accent/12 to-primary/8 rounded-full blur-3xl animate-float-delayed"></div>
-            
-            {/* Professional Grid Overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:120px_120px] opacity-20"></div>
-            
-            <div className="relative z-10">
-              <Suspense fallback={
-                <div className="flex items-center justify-center py-20">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              }>
-                <DepartmentsSection />
-              </Suspense>
-            </div>
+          {/* Our Services Section */}
+          <section className="relative">
+            <OurServicesSection />
           </section>
-
-
-
-          {/* Commitments Section - Global Enterprise Style */}
-          <section id="commitments" className="relative py-20 lg:py-32 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-background to-secondary/12"></div>
-            <div className="absolute inset-0 bg-[conic-gradient(from_270deg_at_20%_80%,transparent,hsl(var(--primary))_15%,transparent_35%,hsl(var(--secondary))_55%,transparent)] opacity-25"></div>
-            
-            {/* Enterprise-grade Visual Elements */}
-            <div className="absolute top-16 left-16 w-80 h-80 bg-gradient-to-br from-primary/12 to-secondary/8 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-16 right-16 w-64 h-64 bg-gradient-to-tl from-secondary/15 to-accent/10 rounded-full blur-2xl animate-float-delayed"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-accent/8 to-primary/6 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-            
-            {/* Corporate Grid Pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:80px_80px] opacity-25"></div>
-            
-            <div className="relative z-10">
-              <Suspense fallback={
-                <div className="flex items-center justify-center py-20">
-                  <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              }>
-                <CommitmentsSection />
-              </Suspense>
-            </div>
-          </section>
-
+          
+          {/* Newsletter Subscription */}
+          <NewsletterSubscription />
+          
+          {/* Social Media Links */}
+          <SocialMediaLinks />
+          
+          {/* Marketing Blog */}
+          <MarketingBlog />
         </div>
       </main>
 

@@ -243,7 +243,7 @@ const DigitalContracts = () => {
         selectedServices: formData.selectedServices.map(s => ({ id: s.id, name: s.name, description: s.description, basePrice: s.basePrice })),
       };
 
-      const { data: resp, error } = await supabase.functions.invoke('paylink-payment', {
+      const { data: resp, error } = await supabase.functions.invoke('tap-payment', {
         body: {
           amount: depositAmount,
           currency: 'SAR',

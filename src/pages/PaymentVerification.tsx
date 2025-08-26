@@ -83,10 +83,17 @@ const PaymentVerification = () => {
         setVerificationProgress(40);
 
         // Fetch related product order if exists
+        const metadata = transactionData.metadata as any;
+        const paymentReference = 
+          metadata?.paylink_transaction_no || 
+          metadata?.tab_charge_id || 
+          metadata?.tamara_order_id ||
+          transactionData.transaction_id;
+          
         const { data: orders } = await supabase
           .from('product_orders')
           .select('*')
-          .eq('payment_reference', transactionData.paylink_transaction_no || transactionData.tap_charge_id || transactionData.tamara_order_id)
+          .eq('payment_reference', paymentReference)
           .limit(1);
 
         if (orders && orders.length > 0) {

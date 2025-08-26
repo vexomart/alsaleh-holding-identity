@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -673,7 +673,7 @@ const EnhancedDesignCategory = () => {
   useEffect(() => {
     if (!currentCategory) return;
     
-    document.title = `${currentCategory.title} | شركة علي الشهري القابضة`;
+    document.title = `${currentCategory.title} | شركة ASH HOLDING`;
     const desc = currentCategory.description;
 
     let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;

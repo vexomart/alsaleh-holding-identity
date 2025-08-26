@@ -23,7 +23,7 @@ function CookieAnimation() {
 }
 
 export default function CookiePolicy() {
-  const title = "سياسة ملفات تعريف الارتباط | علي الشهري القابضة";
+  const title = "سياسة ملفات تعريف الارتباط | ASH HOLDING";
   const description = "تعرّف على كيفية استخدامنا لملفات تعريف الارتباط لتحسين تجربتك، وأنواع الكوكيز وخيارات التحكم بها.";
 
   return (

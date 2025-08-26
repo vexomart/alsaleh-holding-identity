@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 interface SEOProps {
   title: string;
@@ -9,7 +9,7 @@ interface SEOProps {
 
 // Lightweight SEO component without external deps
 const SEO: React.FC<SEOProps> = ({ title, description, canonicalUrl, jsonLd }) => {
-  useEffect(() => {
+  React.useEffect(() => {
     document.title = title;
 
     // Meta description

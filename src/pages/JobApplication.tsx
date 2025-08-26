@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,12 +39,11 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { JobApplicationSteps } from "@/components/JobApplicationSteps";
 import { supabase } from "@/integrations/supabase/client";
-import type { User } from "@supabase/supabase-js";
+
 
 
 const JobApplication = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -76,47 +75,9 @@ const JobApplication = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Check authentication status
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.user) {
-        toast({
-          title: "مطلوب تسجيل الدخول",
-          description: "يرجى تسجيل الدخول أولاً للتقدم للوظائف",
-          variant: "destructive"
-        });
-        navigate('/auth');
-        return;
-      }
-      
-      setUser(session.user);
-      // Pre-fill email from user profile
-      setFormData(prev => ({
-        ...prev,
-        email: session.user.email || ""
-      }));
-      setLoading(false);
-    };
-
-    checkAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session?.user) {
-        navigate('/auth');
-      } else {
-        setUser(session.user);
-        setFormData(prev => ({
-          ...prev,
-          email: session.user.email || ""
-        }));
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate, toast]);
+    setLoading(false);
+  }, []);
 
   const handleInputChange = (field: string, value: string | string[]) => {
     setFormData(prev => ({
@@ -241,7 +202,7 @@ const JobApplication = () => {
         // Security: Use user-specific path and sanitized filename
         const fileExt = formData.cv.name.split('.').pop()?.toLowerCase();
         const sanitizedName = formData.cv.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const fileName = `${user.id}/${Date.now()}_${sanitizedName}`;
+        const fileName = `anonymous/${Date.now()}_${sanitizedName}`;
         
         // Log file upload attempt for security monitoring
         console.log('CV upload attempt:', {
@@ -288,7 +249,7 @@ const JobApplication = () => {
       // Reset form and go back to step 1
       setFormData({
         fullName: "",
-        email: user.email || "",
+        email: "",
         phone: "",
         city: "",
         position: "",

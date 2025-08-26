@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -196,7 +196,7 @@ export default function DesignCategory() {
 
     setLoading(true);
     try {
-      const { data: resp, error } = await supabase.functions.invoke("paylink-payment", {
+      const { data: resp, error } = await supabase.functions.invoke("tap-payment", {
         body: {
           amount: selected.price,
           currency: "SAR",

@@ -6,6 +6,13 @@ verify_jwt = false
 [functions.domain-email]
 verify_jwt = false
 
+# TAP Payment functions - Public access for customer payments
+[functions.tap-payment]
+verify_jwt = false
+
+[functions.verify-tap-payment]
+verify_jwt = false
+
 # Public functions (no JWT required)
 [functions.contact-form]
 verify_jwt = false
@@ -22,17 +29,13 @@ verify_jwt = false
 [functions.email-test]
 verify_jwt = false
 
-# Secure payment and sensitive functions - require authentication
-[functions.paylink-payment]
-verify_jwt = true
+[functions.hr-system-request]
+verify_jwt = false
 
 [functions.tamara-payment]
 verify_jwt = true
 
 [functions.stc-pay]
-verify_jwt = true
-
-[functions.tap-payment]
 verify_jwt = true
 
 [functions.invoice-system]
@@ -47,12 +50,12 @@ verify_jwt = true
 [functions.contract-form]
 verify_jwt = true
 
-# Subscription payment functions
+# SECURITY FIX: Critical subscription functions now require authentication
 [functions.paylink-subscription]
-verify_jwt = false
+verify_jwt = true
 
 [functions.verify-subscription]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-invoice-email]
-verify_jwt = false
+verify_jwt = true
