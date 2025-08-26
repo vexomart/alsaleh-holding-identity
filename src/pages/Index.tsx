@@ -1,5 +1,5 @@
 import Navigation from "@/components/Navigation";
-import HeroSection from "@/components/HeroSection";
+import SafeHeroSection from "@/components/SafeHeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +12,7 @@ import MarketingBlog from "@/components/marketing/MarketingBlog";
 // تأجيل تحميل المكونات الثقيلة
 import { lazy, Suspense } from "react";
 const Footer = lazy(() => import("@/components/Footer"));
-import SimpleChatBot from "@/components/SimpleChatBot";
+import SafeChatBot from "@/components/SafeChatBot";
 import OurServicesSection from "@/components/OurServicesSection";
 
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
@@ -39,7 +39,7 @@ const Index = () => {
       <main className="relative overflow-hidden z-10">
         {/* Hero Section - Simplified */}
         <section id="home" className="relative bg-gradient-to-br from-background via-primary/5 to-secondary/8">
-          <HeroSection />
+          <SafeHeroSection />
         </section>
 
         {/* Content Sections with Professional Spacing */}
@@ -70,8 +70,8 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* ChatBot مبسط بدون hooks */}
-      <SimpleChatBot />
+      {/* ChatBot آمن بدون hooks */}
+      <SafeChatBot />
     </div>
   );
 };
