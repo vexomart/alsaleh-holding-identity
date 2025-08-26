@@ -17,7 +17,6 @@ import {
   UserCheck,
   Zap,
   Clock,
-  Heart,
   Star,
   Users,
   Phone,
@@ -546,7 +545,6 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                 {currentAgent.experience}
               </span>
               <span className="flex items-center gap-1">
-                <Heart className="w-3 h-3 text-red-300" />
                 {currentAgent.department}
               </span>
               <span className="flex items-center gap-1">

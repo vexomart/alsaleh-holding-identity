@@ -13,7 +13,6 @@ import {
   Briefcase,
   Crown,
   Lightbulb,
-  Heart,
   Handshake,
   ArrowRight,
   Clock,
@@ -164,7 +163,6 @@ const AboutSection = () => {
         <div className="mb-16">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-3 mb-6 p-3 bg-white/10 rounded-full backdrop-blur-sm">
-              <Heart className="w-6 h-6 text-primary animate-pulse" />
               <span className="text-sm font-medium text-primary">قيمنا الأساسية</span>
             </div>
             <h3 className="text-4xl md:text-5xl font-bold text-primary mb-4">
