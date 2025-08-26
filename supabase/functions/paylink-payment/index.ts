@@ -13,31 +13,42 @@ serve(async (req) => {
 
   try {
     console.log("🚀 Paylink Payment Started");
-    console.log("📋 Request method:", req.method);
-    console.log("📋 Content-Type:", req.headers.get('content-type'));
     
-    // Read JSON body directly - works with both fetch() and supabase.functions.invoke()
-    let body;
-    try {
-      body = await req.json();
-      console.log("📦 Request Body parsed successfully:", JSON.stringify(body, null, 2));
-    } catch (parseError) {
-      console.error("❌ Failed to parse request body:", parseError);
+    // Check if request has body content
+    const contentType = req.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      console.error("❌ Invalid content type:", contentType);
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "البيانات المرسلة غير صحيحة - يرجى المحاولة مرة أخرى" 
+        error: "Invalid content type - application/json required" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400
       });
     }
 
-    // Check if body has required data
-    if (!body || typeof body !== 'object') {
-      console.error("❌ Invalid request body - not an object");
+    const bodyText = await req.text();
+    console.log("📄 Raw body:", bodyText);
+    
+    if (!bodyText || bodyText.trim() === '') {
+      console.error("❌ Empty request body");
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "بيانات الطلب مطلوبة" 
+        error: "Request body is required" 
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400
+      });
+    }
+
+    let body;
+    try {
+      body = JSON.parse(bodyText);
+    } catch (parseError) {
+      console.error("❌ JSON parse error:", parseError);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Invalid JSON format" 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400
