@@ -91,35 +91,36 @@ const services = [
 
 const OurServicesSection = () => {
   return (
-    <section className="relative py-12 lg:py-16 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-gray-50">
+    <section className="relative py-12 lg:py-16 overflow-hidden bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Animated Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:60px_60px] opacity-30"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px] opacity-40"></div>
         
         {/* Floating Elements */}
-        <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-gradient-to-r from-emerald-400/10 to-cyan-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+        <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+        <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-gradient-to-r from-emerald-400/15 to-teal-400/15 rounded-full blur-2xl animate-pulse" style={{ animationDelay: "4s" }}></div>
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header Section - Compact */}
         <div className="text-center mb-8 lg:mb-12">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100/50 rounded-full mb-4 hover:scale-105 transition-transform duration-300">
-            <Sparkles className="w-3 h-3 text-blue-600 animate-pulse" />
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 border border-cyan-300/30 rounded-full mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
+            <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
+            <span className="text-sm font-bold text-white uppercase tracking-wider">
               خدماتنا المتميزة
             </span>
           </div>
           
           {/* Main Title */}
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4 leading-tight">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent mb-4 leading-tight">
             حلول تقنية متطورة
           </h2>
           
           {/* Subtitle */}
-          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed">
             نقدم حلولاً تقنية مبتكرة ومتخصصة لتحقيق أهدافك الرقمية
           </p>
         </div>
@@ -132,7 +133,7 @@ const OurServicesSection = () => {
             return (
               <Card
                 key={service.id}
-                className={`group relative overflow-hidden ${service.bgPattern} backdrop-blur-sm border border-white/20 rounded-xl transition-all duration-500 hover:shadow-lg hover:-translate-y-1 hover:scale-105 cursor-pointer animate-fade-in h-full`}
+                className="group relative overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-xl transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-1 hover:scale-105 cursor-pointer animate-fade-in h-full"
                 style={{ 
                   animationDelay: `${index * 0.1}s`,
                 }}
@@ -160,25 +161,25 @@ const OurServicesSection = () => {
                   {/* Content */}
                   <div className="flex-1 space-y-2">
                     {/* Title */}
-                    <h3 className="text-sm lg:text-base font-bold text-slate-900 leading-tight">
+                    <h3 className="text-sm lg:text-base font-bold text-white leading-tight">
                       {service.title}
                     </h3>
                     
                     {/* English Title */}
-                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    <p className="text-xs font-bold text-gray-300 uppercase tracking-wider">
                       {service.titleEn}
                     </p>
                     
                     {/* Description - Short */}
-                    <p className="text-slate-600 text-xs leading-relaxed">
+                    <p className="text-gray-200 text-xs leading-relaxed">
                       {service.description.substring(0, 50)}...
                     </p>
                     
                     {/* Metrics - Very Compact */}
-                    <div className="grid grid-cols-1 gap-1 p-2 bg-white/60 rounded-lg border border-white/50">
+                    <div className="grid grid-cols-1 gap-1 p-2 bg-white/10 rounded-lg border border-white/20">
                       <div className="text-center">
-                        <div className={`text-xs font-bold ${service.accentColor}`}>{service.metrics.projects}</div>
-                        <div className="text-xs text-slate-500">مشروع</div>
+                        <div className="text-xs font-bold text-cyan-300">{service.metrics.projects}</div>
+                        <div className="text-xs text-gray-300">مشروع</div>
                       </div>
                     </div>
                     
@@ -186,8 +187,8 @@ const OurServicesSection = () => {
                     <div className="space-y-1">
                       {service.features.slice(0, 2).map((feature, idx) => (
                         <div key={idx} className="flex items-center justify-center gap-1 text-xs">
-                          <CheckCircle className={`w-3 h-3 ${service.accentColor}`} />
-                          <span className="text-slate-700 font-medium truncate">{feature}</span>
+                          <CheckCircle className="w-3 h-3 text-cyan-400" />
+                          <span className="text-gray-200 font-medium truncate">{feature}</span>
                         </div>
                       ))}
                     </div>
@@ -213,12 +214,12 @@ const OurServicesSection = () => {
 
         {/* Call to Action Section - Compact */}
         <div className="text-center">
-          <div className="inline-flex flex-col items-center gap-6 p-8 bg-gradient-to-r from-slate-50 to-blue-50/50 rounded-2xl border border-white/50 backdrop-blur-sm max-w-4xl mx-auto">
+          <div className="inline-flex flex-col items-center gap-6 p-8 bg-gradient-to-r from-white/10 to-cyan-500/10 rounded-2xl border border-white/20 backdrop-blur-md max-w-4xl mx-auto">
             <div className="space-y-3">
-              <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
+              <h3 className="text-2xl md:text-3xl font-bold text-white">
                 مستعد لبدء مشروعك؟
               </h3>
-              <p className="text-lg text-slate-600 max-w-2xl">
+              <p className="text-lg text-gray-200 max-w-2xl">
                 انضم إلى أكثر من 1000 عميل واكتشف كيف يمكن لحلولنا تحويل فكرتك إلى واقع رقمي ناجح
               </p>
             </div>
@@ -239,7 +240,7 @@ const OurServicesSection = () => {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 px-8 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-bold group"
+                  className="border-2 border-white/30 hover:border-white/50 text-white hover:text-white bg-white/10 hover:bg-white/20 px-8 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-bold group"
                 >
                   <Users className="w-5 h-5 ml-2 group-hover:scale-110 transition-transform duration-300" />
                   <span className="mx-2">تحدث معنا</span>
@@ -248,18 +249,18 @@ const OurServicesSection = () => {
             </div>
             
             {/* Trust Indicators */}
-            <div className="flex items-center gap-8 mt-4 pt-4 border-t border-slate-200">
+            <div className="flex items-center gap-8 mt-4 pt-4 border-t border-white/20">
               <div className="flex items-center gap-2 text-sm">
-                <Award className="w-4 h-4 text-yellow-500" />
-                <span className="text-slate-600 font-medium">معتمد عالمياً</span>
+                <Award className="w-4 h-4 text-yellow-400" />
+                <span className="text-gray-200 font-medium">معتمد عالمياً</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <Shield className="w-4 h-4 text-green-500" />
-                <span className="text-slate-600 font-medium">أمان مضمون</span>
+                <Shield className="w-4 h-4 text-green-400" />
+                <span className="text-gray-200 font-medium">أمان مضمون</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <BarChart3 className="w-4 h-4 text-blue-500" />
-                <span className="text-slate-600 font-medium">نتائج مثبتة</span>
+                <BarChart3 className="w-4 h-4 text-cyan-400" />
+                <span className="text-gray-200 font-medium">نتائج مثبتة</span>
               </div>
             </div>
           </div>
