@@ -86,7 +86,7 @@ const Index = () => {
                     icon: Building2, 
                     href: "/business-services",
                     color: "from-emerald-600 to-teal-600",
-                    stats: "حلول متكاملة"
+                    stats: "استشارات مهنية"
                   },
                   { 
                     title: "العروض الحالية", 
