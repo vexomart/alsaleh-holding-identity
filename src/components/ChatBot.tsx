@@ -20,7 +20,17 @@ import {
   Heart,
   Star,
   Users,
-  Phone
+  Phone,
+  Sparkles,
+  Shield,
+  Award,
+  Building,
+  Lightbulb,
+  ChevronDown,
+  Mic,
+  Image,
+  FileText,
+  Video
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -28,6 +38,8 @@ import { useToast } from '@/hooks/use-toast';
 interface ChatButton {
   text: string;
   url: string;
+  icon?: React.ReactNode;
+  variant?: 'primary' | 'secondary' | 'success' | 'warning';
 }
 
 interface ChatMessage {
@@ -37,6 +49,7 @@ interface ChatMessage {
   timestamp: Date;
   buttons?: ChatButton[];
   agent?: Agent;
+  type?: 'text' | 'media' | 'system';
 }
 
 interface Agent {
@@ -48,6 +61,8 @@ interface Agent {
   status: 'online' | 'busy' | 'away';
   specialties: string[];
   responseTime: string;
+  color: string;
+  experience: string;
 }
 
 interface ChatBotProps {
@@ -56,66 +71,77 @@ interface ChatBotProps {
 
 const agents: Agent[] = [
   {
-    id: 'sarah',
-    name: 'سارة أحمد',
-    title: 'مستشارة التصميم',
-    avatar: '👩‍💼',
-    department: 'التصميم والإبداع',
+    id: 'noor',
+    name: 'نور الهدى',
+    title: 'مديرة العلاقات العامة',
+    avatar: '✨',
+    department: 'إدارة العملاء',
     status: 'online',
-    specialties: ['التصميم الجرافيكي', 'هوية العلامة التجارية', 'التصميم الرقمي'],
-    responseTime: 'فوري'
+    specialties: ['استقبال العملاء', 'التوجيه العام', 'المساعدة الفورية'],
+    responseTime: 'فوري',
+    color: 'from-purple-500 to-pink-500',
+    experience: '5+ سنوات'
   },
   {
-    id: 'mohammed',
-    name: 'محمد عبدالله',
-    title: 'مختص تطوير البرمجيات',
-    avatar: '👨‍💻',
+    id: 'khalid',
+    name: 'خالد الأحمد',
+    title: 'خبير الحلول التقنية',
+    avatar: '🚀',
     department: 'التطوير التقني',
     status: 'online',
-    specialties: ['تطوير المواقع', 'تطبيقات الجوال', 'الأنظمة المخصصة'],
-    responseTime: '< 2 دقيقة'
+    specialties: ['ذكاء اصطناعي', 'تطوير مخصص', 'حلول متقدمة'],
+    responseTime: '< 3 دقائق',
+    color: 'from-blue-500 to-cyan-500',
+    experience: '8+ سنوات'
   },
   {
-    id: 'fatima',
-    name: 'فاطمة العلي',
-    title: 'استشارية الأعمال',
-    avatar: '👩‍🎓',
+    id: 'layla',
+    name: 'ليلى العتيبي',
+    title: 'مصممة رقمية رئيسية',
+    avatar: '🎨',
+    department: 'الإبداع والتصميم',
+    status: 'online',
+    specialties: ['هوية بصرية', 'تصميم رقمي', 'تجربة مستخدم'],
+    responseTime: 'فوري',
+    color: 'from-orange-500 to-red-500',
+    experience: '6+ سنوات'
+  },
+  {
+    id: 'hassan',
+    name: 'حسن المالكي',
+    title: 'استشاري أعمال أول',
+    avatar: '💼',
     department: 'الاستشارات التجارية',
-    status: 'online',
-    specialties: ['التخطيط الاستراتيجي', 'دراسة الجدوى', 'التطوير التنظيمي'],
-    responseTime: 'فوري'
-  },
-  {
-    id: 'omar',
-    name: 'عمر خالد',
-    title: 'خبير التسويق الرقمي',
-    avatar: '👨‍🚀',
-    department: 'التسويق الرقمي',
     status: 'busy',
-    specialties: ['حملات الإعلان', 'السوشيال ميديا', 'تحليل البيانات'],
-    responseTime: '5 دقائق'
+    specialties: ['استراتيجية', 'دراسات جدوى', 'تحليل مالي'],
+    responseTime: '10 دقائق',
+    color: 'from-green-500 to-emerald-500',
+    experience: '10+ سنوات'
   },
   {
-    id: 'aisha',
-    name: 'عائشة محمد',
-    title: 'مديرة خدمة العملاء',
-    avatar: '👩‍💼',
-    department: 'خدمة العملاء',
+    id: 'maha',
+    name: 'مها الزهراني',
+    title: 'خبيرة التسويق الرقمي',
+    avatar: '📱',
+    department: 'التسويق والإعلان',
     status: 'online',
-    specialties: ['الدعم الفني', 'حلول المشاكل', 'المتابعة'],
-    responseTime: 'فوري'
+    specialties: ['حملات رقمية', 'سوشيال ميديا', 'إعلانات ممولة'],
+    responseTime: '< 5 دقائق',
+    color: 'from-indigo-500 to-purple-500',
+    experience: '7+ سنوات'
   }
 ];
 
 const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [currentAgent, setCurrentAgent] = useState<Agent>(agents[4]); // Default to customer service manager
+  const [currentAgent, setCurrentAgent] = useState<Agent>(agents[0]);
   const [showAgentSelector, setShowAgentSelector] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -125,16 +151,17 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
     const welcomeMessage: ChatMessage = {
       id: '1',
       role: 'assistant',
-      content: `أهلاً وسهلاً بك في **ASH HOLDING** 🌟\n\nأنا **${currentAgent.name}** - ${currentAgent.title}\n\n✨ **ماذا يمكنني أن أقدم لك اليوم؟**\n\n🎯 **خدماتنا المتميزة:**\n• **حلول التصميم الاحترافية** - هوية بصرية مميزة\n• **تطوير البرمجيات المتقدمة** - مواقع وتطبيقات ذكية\n• **الاستشارات التجارية** - استراتيجيات نمو مضمونة\n• **التسويق الرقمي** - وصول أوسع ونتائج أفضل\n• **الدعم التقني** - مساعدة فورية ومتخصصة\n\n💡 **اختر ما يناسبك أو اسألني عن أي شيء!**`,
+      content: `🌟 أهلاً وسهلاً بك في عالم **ASH HOLDING** \n\nأنا **${currentAgent.name}** ${currentAgent.avatar}\n${currentAgent.title} | ${currentAgent.experience} خبرة\n\n✨ **رحلتك نحو التميز تبدأ من هنا!**\n\n🎯 **ماذا نقدم لك اليوم؟**\n\n🏆 **خدمات متميزة وحلول إبداعية**\n• حلول ذكية مبتكرة\n• تصاميم عصرية جذابة  \n• استشارات تجارية احترافية\n• تسويق رقمي فعال\n• دعم تقني متواصل\n\n💡 **اختر ما يناسبك وسنرشدك للأفضل!**`,
       timestamp: new Date(),
       agent: currentAgent,
+      type: 'text',
       buttons: [
-        { text: '🎨 حلول التصميم', url: 'design-info' },
-        { text: '💻 تطوير البرمجيات', url: 'dev-info' },
-        { text: '💼 استشارات الأعمال', url: 'business-info' },
-        { text: '📱 التسويق الرقمي', url: 'marketing-info' },
-        { text: '🚀 خدمات متقدمة', url: 'tech-info' },
-        { text: '📞 استشارة مجانية', url: '/consultation' }
+        { text: '🚀 حلول تقنية متطورة', url: 'tech-info', icon: <Zap className="w-4 h-4" />, variant: 'primary' },
+        { text: '🎨 تصميم إبداعي مميز', url: 'design-info', icon: <Sparkles className="w-4 h-4" />, variant: 'secondary' },
+        { text: '💼 استشارات أعمال', url: 'business-info', icon: <Building className="w-4 h-4" />, variant: 'success' },
+        { text: '📱 تسويق رقمي', url: 'marketing-info', icon: <Phone className="w-4 h-4" />, variant: 'warning' },
+        { text: '🎯 استشارة مجانية', url: '/consultation', icon: <Award className="w-4 h-4" />, variant: 'primary' },
+        { text: '💬 تحدث مع خبير', url: 'expert-chat', icon: <Users className="w-4 h-4" />, variant: 'secondary' }
       ]
     };
     setMessages([welcomeMessage]);
@@ -162,15 +189,16 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
     const transferMessage: ChatMessage = {
       id: Date.now().toString(),
       role: 'assistant',
-      content: `تم تحويلك إلى **${agent.name}** 🔄\n\n${agent.title} في قسم ${agent.department}\n\n**تخصصاتي:**\n${agent.specialties.map(s => `• ${s}`).join('\n')}\n\n✨ **كيف يمكنني مساعدتك؟**`,
+      content: `🔄 **تم التحويل بنجاح**\n\nمرحباً! أنا **${agent.name}** ${agent.avatar}\n\n🏅 **تخصصي وخبرتي:**\n• ${agent.title}\n• ${agent.experience} في ${agent.department}\n• ${agent.specialties.join(' • ')}\n\n⚡ **وقت الاستجابة:** ${agent.responseTime}\n\n✨ **كيف يمكنني مساعدتك بخبرتي؟**`,
       timestamp: new Date(),
-      agent: agent
+      agent: agent,
+      type: 'system'
     };
     
     setMessages(prev => [...prev, transferMessage]);
     
     toast({
-      title: "تم التحويل بنجاح",
+      title: "✅ تم التحويل",
       description: `الآن تتحدث مع ${agent.name}`,
     });
   };
@@ -182,12 +210,14 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
       id: Date.now().toString(),
       role: 'user',
       content: inputMessage,
-      timestamp: new Date()
+      timestamp: new Date(),
+      type: 'text'
     };
 
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
     setIsLoading(true);
+    setIsTyping(true);
 
     try {
       const conversationHistory = messages.map(msg => ({
@@ -205,7 +235,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
 
       if (error) throw error;
 
-      const responseText = data.response || 'أعتذر، دعني أحولك لزميل آخر قد يساعدك بشكل أفضل.';
+      const responseText = data.response || 'أعتذر، دعني أتأكد من المعلومات وأعاود الإجابة...';
       const buttonRegex = /\[BUTTON:(.*?):(.*?)\]/g;
       const buttons: ChatButton[] = [];
       let cleanedContent = responseText;
@@ -214,42 +244,51 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
       while ((match = buttonRegex.exec(responseText)) !== null) {
         buttons.push({
           text: match[1],
-          url: match[2]
+          url: match[2],
+          variant: 'primary'
         });
         cleanedContent = cleanedContent.replace(match[0], '');
       }
 
-      const assistantMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: cleanedContent.trim(),
-        timestamp: new Date(),
-        agent: currentAgent,
-        buttons: buttons.length > 0 ? buttons : undefined
-      };
+      setTimeout(() => {
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: cleanedContent.trim(),
+          timestamp: new Date(),
+          agent: currentAgent,
+          type: 'text',
+          buttons: buttons.length > 0 ? buttons : undefined
+        };
 
-      setMessages(prev => [...prev, assistantMessage]);
+        setMessages(prev => [...prev, assistantMessage]);
+        setIsTyping(false);
+      }, 1000);
 
     } catch (error: any) {
       console.error('Chat error:', error);
       
-      const errorMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: `أعتذر ${currentAgent.name}، حدث خطأ تقني مؤقت 😔\n\n**البدائل المتاحة:**\n• إعادة المحاولة\n• التواصل عبر الواتساب: 0555812567\n• طلب معاودة الاتصال\n\nنحن هنا لخدمتك دائماً! 💪`,
-        timestamp: new Date(),
-        agent: currentAgent,
-        buttons: [
-          { text: '📱 واتساب مباشر', url: 'https://wa.me/966555812567' },
-          { text: '📞 طلب اتصال', url: '/contact' }
-        ]
-      };
+      setTimeout(() => {
+        const errorMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: `😔 **عذراً، حدث خطأ مؤقت**\n\nلا تقلق! يمكننا مساعدتك بطرق أخرى:\n\n📱 **واتساب مباشر:** 0555812567\n📞 **مكالمة فورية**\n💌 **رسالة إلكترونية**\n\n🌟 نحن هنا دائماً لخدمتك!`,
+          timestamp: new Date(),
+          agent: currentAgent,
+          type: 'system',
+          buttons: [
+            { text: '📱 واتساب', url: 'https://wa.me/966555812567', icon: <Phone className="w-4 h-4" />, variant: 'success' },
+            { text: '📞 اتصال فوري', url: '/contact', icon: <Phone className="w-4 h-4" />, variant: 'warning' }
+          ]
+        };
 
-      setMessages(prev => [...prev, errorMessage]);
+        setMessages(prev => [...prev, errorMessage]);
+        setIsTyping(false);
+      }, 800);
       
       toast({
-        title: "خطأ مؤقت",
-        description: "يرجى المحاولة مرة أخرى",
+        title: "⚠️ خطأ مؤقت",
+        description: "جارٍ إعادة المحاولة...",
         variant: "destructive",
       });
     } finally {
@@ -260,11 +299,12 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
   const handleButtonClick = async (button: ChatButton) => {
     if (button.url.endsWith('-info')) {
       const serviceRequests: { [key: string]: string } = {
-        'design-info': `أريد معرفة تفاصيل كاملة عن خدمات التصميم والأسعار والباقات`,
-        'business-info': `أريد معرفة تفاصيل الاستشارات التجارية والخدمات والأسعار`,
-        'tech-info': `أريد معرفة تفاصيل التقنيات المتقدمة والذكاء الاصطناعي والأسعار`,
-        'dev-info': `أريد معرفة تفاصيل تطوير البرمجيات والمواقع والتطبيقات والأسعار`,
-        'marketing-info': `أريد معرفة تفاصيل خدمات التسويق الرقمي والباقات والأسعار`
+        'design-info': `أريد معرفة تفاصيل شاملة عن خدمات التصميم الإبداعي والأسعار والباقات المتاحة`,
+        'business-info': `أريد معرفة تفاصيل كاملة عن الاستشارات التجارية والخدمات المتخصصة والأسعار`,
+        'tech-info': `أريد معرفة تفاصيل الحلول التقنية المتطورة والذكاء الاصطناعي والأسعار`,
+        'dev-info': `أريد معرفة تفاصيل تطوير البرمجيات والمواقع والتطبيقات الذكية والأسعار`,
+        'marketing-info': `أريد معرفة تفاصيل خدمات التسويق الرقمي المتقدمة والباقات والأسعار`,
+        'expert-chat': `أريد التحدث مع خبير متخصص في مجالي`
       };
 
       const serviceRequest = serviceRequests[button.url];
@@ -273,11 +313,13 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
           id: Date.now().toString(),
           role: 'user',
           content: button.text,
-          timestamp: new Date()
+          timestamp: new Date(),
+          type: 'text'
         };
 
         setMessages(prev => [...prev, userMessage]);
         setIsLoading(true);
+        setIsTyping(true);
 
         try {
           const { data, error } = await supabase.functions.invoke('chatbot', {
@@ -293,43 +335,38 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
 
           if (error) throw error;
 
-          const responseText = data.response || 'عذراً، لم أتمكن من جلب المعلومات. دعني أحولك لمختص.';
-          const buttonRegex = /\[BUTTON:(.*?):(.*?)\]/g;
-          const buttons: ChatButton[] = [];
-          let cleanedContent = responseText;
+          const responseText = data.response || 'دعني أحولك لخبير متخصص للحصول على معلومات دقيقة...';
+          
+          setTimeout(() => {
+            const assistantMessage: ChatMessage = {
+              id: (Date.now() + 1).toString(),
+              role: 'assistant',
+              content: responseText.trim(),
+              timestamp: new Date(),
+              agent: currentAgent,
+              type: 'text'
+            };
 
-          let match;
-          while ((match = buttonRegex.exec(responseText)) !== null) {
-            buttons.push({
-              text: match[1],
-              url: match[2]
-            });
-            cleanedContent = cleanedContent.replace(match[0], '');
-          }
-
-          const assistantMessage: ChatMessage = {
-            id: (Date.now() + 1).toString(),
-            role: 'assistant',
-            content: cleanedContent.trim(),
-            timestamp: new Date(),
-            agent: currentAgent,
-            buttons: buttons.length > 0 ? buttons : undefined
-          };
-
-          setMessages(prev => [...prev, assistantMessage]);
+            setMessages(prev => [...prev, assistantMessage]);
+            setIsTyping(false);
+          }, 1500);
 
         } catch (error: any) {
           console.error('Chat error:', error);
           
-          const errorMessage: ChatMessage = {
-            id: (Date.now() + 1).toString(),
-            role: 'assistant',
-            content: 'أعتذر، حدث خطأ في جلب المعلومات. دعني أحولك لزميل مختص.',
-            timestamp: new Date(),
-            agent: currentAgent
-          };
+          setTimeout(() => {
+            const errorMessage: ChatMessage = {
+              id: (Date.now() + 1).toString(),
+              role: 'assistant',
+              content: 'دعني أحولك لزميل مختص يمكنه مساعدتك بشكل أفضل.',
+              timestamp: new Date(),
+              agent: currentAgent,
+              type: 'system'
+            };
 
-          setMessages(prev => [...prev, errorMessage]);
+            setMessages(prev => [...prev, errorMessage]);
+            setIsTyping(false);
+          }, 800);
         } finally {
           setIsLoading(false);
         }
@@ -351,17 +388,15 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
   const formatMessage = (content: string) => {
     let processedContent = content;
     
-    // Enhanced formatting
-    processedContent = processedContent.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>');
-    processedContent = processedContent.replace(/✅/g, '<span class="inline-flex items-center justify-center w-5 h-5 bg-green-100 text-green-600 rounded-full text-xs mr-2">✓</span>');
-    processedContent = processedContent.replace(/### (.*?)$/gm, '<h3 class="text-lg font-bold text-primary mt-4 mb-2 border-r-4 border-primary pr-3">$1</h3>');
-    processedContent = processedContent.replace(/^\*\*(.*?)\*\*$/gm, '<h4 class="font-bold text-secondary-foreground mt-3 mb-1 bg-secondary/20 px-2 py-1 rounded">$1</h4>');
-    processedContent = processedContent.replace(/^• (.*?)$/gm, '<div class="flex items-start gap-2 my-1"><span class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span><span>$1</span></div>');
+    // Enhanced formatting with more style
+    processedContent = processedContent.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">$1</span>');
+    processedContent = processedContent.replace(/### (.*?)$/gm, '<h3 class="text-lg font-bold text-gradient mt-4 mb-2 flex items-center gap-2"><span class="w-1 h-6 bg-gradient-to-b from-purple-500 to-blue-500 rounded"></span>$1</h3>');
+    processedContent = processedContent.replace(/^• (.*?)$/gm, '<div class="flex items-start gap-3 my-2"><span class="w-2 h-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mt-2 flex-shrink-0 animate-pulse"></span><span class="text-gray-700">$1</span></div>');
     
-    // Convert emojis to styled spans
-    processedContent = processedContent.replace(/([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])/gu, '<span class="text-lg">$1</span>');
+    // Style emojis larger
+    processedContent = processedContent.replace(/([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])/gu, '<span class="text-xl inline-block animate-bounce">$1</span>');
     
-    processedContent = processedContent.replace(/\n\n/g, '<br><br>');
+    processedContent = processedContent.replace(/\n\n/g, '<div class="h-2"></div>');
     processedContent = processedContent.replace(/\n/g, '<br>');
     
     return <div dangerouslySetInnerHTML={{ __html: processedContent }} />;
@@ -369,9 +404,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': return 'bg-green-400';
-      case 'busy': return 'bg-yellow-400';
-      case 'away': return 'bg-gray-400';
+      case 'online': return 'bg-green-400 shadow-green-400/50';
+      case 'busy': return 'bg-yellow-400 shadow-yellow-400/50';
+      case 'away': return 'bg-gray-400 shadow-gray-400/50';
       default: return 'bg-gray-400';
     }
   };
@@ -385,136 +420,186 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
     }
   };
 
+  const getButtonVariantClass = (variant: string = 'primary') => {
+    switch (variant) {
+      case 'primary': return 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl';
+      case 'secondary': return 'bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white border-0 shadow-lg hover:shadow-xl';
+      case 'success': return 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 shadow-lg hover:shadow-xl';
+      case 'warning': return 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl';
+      default: return 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl';
+    }
+  };
+
   if (!isOpen) {
     return (
-      <div className={`fixed bottom-4 right-4 z-50 ${className}`}>
-        <div className="relative">
+      <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+        <div className="relative group">
+          {/* Floating animation rings */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-spin-slow opacity-75 scale-110"></div>
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 animate-ping opacity-40"></div>
+          
           <Button
             onClick={() => setIsOpen(true)}
-            className="h-14 w-14 rounded-full bg-gradient-to-r from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary/80 hover:to-primary/70 shadow-xl hover:shadow-2xl transition-all duration-500 animate-pulse group"
+            className="relative h-16 w-16 rounded-full bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 hover:from-purple-700 hover:via-blue-700 hover:to-indigo-800 shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 group-hover:scale-110 border-2 border-white/20"
             size="icon"
           >
-            <MessageCircle className="h-6 w-6 group-hover:scale-110 transition-transform duration-300" />
+            <div className="absolute inset-2 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm">
+              <MessageCircle className="h-7 w-7 text-white drop-shadow-lg animate-pulse" />
+            </div>
+            
+            {/* Sparkle effects */}
+            <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-yellow-300 animate-bounce" />
+            <Sparkles className="absolute -bottom-1 -left-1 h-3 w-3 text-blue-300 animate-bounce delay-150" />
           </Button>
           
           {unreadCount > 0 && (
-            <Badge className="absolute -top-2 -left-2 h-6 w-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center animate-bounce">
+            <Badge className="absolute -top-2 -left-2 h-6 w-6 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs flex items-center justify-center animate-bounce shadow-lg">
               {unreadCount}
             </Badge>
           )}
-          
-          {/* Floating indicators */}
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`fixed inset-x-0 bottom-0 sm:bottom-4 sm:right-4 sm:left-auto sm:inset-x-auto z-50 ${className}`}>
-      <Card className={`w-full sm:w-[420px] sm:max-w-[420px] transition-all duration-500 shadow-2xl border-0 mobile-scroll bg-card/98 backdrop-blur-lg ${
-        isMinimized ? 'h-16 sm:h-16' : 'h-[85vh] sm:h-[650px] max-h-[85vh] sm:max-h-[650px]'
-      } sm:rounded-xl rounded-t-xl sm:rounded-t-xl rounded-b-none sm:rounded-b-xl overflow-hidden`}>
+    <div className={`fixed inset-x-0 bottom-0 sm:bottom-6 sm:right-6 sm:left-auto sm:inset-x-auto z-50 ${className}`}>
+      <Card className={`w-full sm:w-[440px] sm:max-w-[440px] transition-all duration-700 shadow-2xl border-0 mobile-scroll backdrop-blur-xl bg-white/95 ${
+        isMinimized ? 'h-20 sm:h-20' : 'h-[90vh] sm:h-[700px] max-h-[90vh] sm:max-h-[700px]'
+      } sm:rounded-3xl rounded-t-3xl sm:rounded-t-3xl rounded-b-none sm:rounded-b-3xl overflow-hidden`}>
         
-        {/* Enhanced Header */}
-        <CardHeader className="p-0 bg-gradient-to-r from-primary via-primary/95 to-primary/90 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyIi8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
+        {/* Revolutionary Header Design */}
+        <CardHeader className="p-0 relative overflow-hidden">
+          {/* Animated background */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${currentAgent.color} opacity-90`}></div>
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.1)_50%,transparent_75%)] animate-shimmer"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 animate-pulse"></div>
           
-          <div className="relative p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-lg backdrop-blur-sm">
-                  {currentAgent.avatar}
+          <div className="relative p-5 text-white">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl backdrop-blur-md border border-white/30 shadow-xl">
+                    {currentAgent.avatar}
+                  </div>
+                  <div className={`absolute -bottom-1 -right-1 w-5 h-5 ${getStatusColor(currentAgent.status)} rounded-full border-2 border-white shadow-lg animate-pulse`}></div>
+                  <div className="absolute -top-1 -left-1 w-3 h-3 bg-yellow-300 rounded-full animate-ping"></div>
                 </div>
-                <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${getStatusColor(currentAgent.status)} rounded-full border-2 border-white animate-pulse`}></div>
+                
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-lg text-white drop-shadow-lg">
+                      {currentAgent.name}
+                    </h3>
+                    <Shield className="w-4 h-4 text-yellow-300" />
+                  </div>
+                  <p className="text-sm text-white/90 font-medium">
+                    {currentAgent.title}
+                  </p>
+                  <div className="flex items-center gap-3 mt-1">
+                    <Badge className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                      {getStatusText(currentAgent.status)}
+                    </Badge>
+                    <span className="text-xs text-white/80 flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {currentAgent.responseTime}
+                    </span>
+                  </div>
+                </div>
               </div>
               
-              <div className="flex-1">
-                <h3 className="font-bold text-sm flex items-center gap-2">
-                  {currentAgent.name}
-                  <Badge variant="secondary" className="text-xs bg-white/20 text-white border-0">
-                    {getStatusText(currentAgent.status)}
-                  </Badge>
-                </h3>
-                <p className="text-xs opacity-90 flex items-center gap-1">
-                  <HeadphonesIcon className="w-3 h-3" />
-                  {currentAgent.title} • {currentAgent.department}
-                </p>
-                <p className="text-xs opacity-75 flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  يرد خلال {currentAgent.responseTime}
-                </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowAgentSelector(!showAgentSelector)}
+                  className="h-10 w-10 text-white hover:bg-white/20 backdrop-blur-sm rounded-xl"
+                  title="تغيير المستشار"
+                >
+                  <Users className="h-5 w-5" />
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMinimized(!isMinimized)}
+                  className="h-10 w-10 text-white hover:bg-white/20 backdrop-blur-sm rounded-xl"
+                >
+                  {isMinimized ? <Maximize2 className="h-5 w-5" /> : <Minimize2 className="h-5 w-5" />}
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                  className="h-10 w-10 text-white hover:bg-white/20 backdrop-blur-sm rounded-xl"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowAgentSelector(!showAgentSelector)}
-                className="h-8 w-8 text-white hover:bg-white/20 mobile-tap"
-                title="تغيير المستشار"
-              >
-                <Users className="h-4 w-4" />
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMinimized(!isMinimized)}
-                className="h-8 w-8 text-white hover:bg-white/20 mobile-tap"
-              >
-                {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="h-8 w-8 text-white hover:bg-white/20 mobile-tap"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+            {/* Agent stats */}
+            <div className="mt-3 flex items-center justify-between text-xs text-white/80">
+              <span className="flex items-center gap-1">
+                <Award className="w-3 h-3" />
+                {currentAgent.experience}
+              </span>
+              <span className="flex items-center gap-1">
+                <Heart className="w-3 h-3 text-red-300" />
+                {currentAgent.department}
+              </span>
+              <span className="flex items-center gap-1">
+                <Star className="w-3 h-3 text-yellow-300" />
+                4.9/5
+              </span>
             </div>
           </div>
           
-          {/* Agent Selector */}
+          {/* Enhanced Agent Selector */}
           {showAgentSelector && !isMinimized && (
-            <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-b-lg shadow-xl z-10 max-h-64 overflow-y-auto">
-              <div className="p-3 border-b bg-gray-50">
-                <h4 className="font-semibold text-sm text-gray-900 flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  اختر المستشار المناسب
+            <div className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border border-gray-200/50 rounded-b-2xl shadow-2xl z-20 max-h-80 overflow-y-auto">
+              <div className="p-4 border-b bg-gradient-to-r from-gray-50 to-gray-100">
+                <h4 className="font-bold text-lg text-gray-900 flex items-center gap-2">
+                  <Users className="w-5 h-5 text-purple-600" />
+                  اختر خبيرك المفضل
                 </h4>
+                <p className="text-sm text-gray-600 mt-1">فريق من المختصين في خدمتك</p>
               </div>
               
-              {agents.map((agent) => (
+              {agents.map((agent, index) => (
                 <div
                   key={agent.id}
                   onClick={() => switchAgent(agent)}
-                  className="p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0 transition-colors"
+                  className="p-4 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 cursor-pointer border-b last:border-b-0 transition-all duration-300 transform hover:scale-[1.02]"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <div className="relative">
-                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm">
+                      <div className={`w-12 h-12 bg-gradient-to-br ${agent.color} rounded-2xl flex items-center justify-center text-lg shadow-lg`}>
                         {agent.avatar}
                       </div>
-                      <div className={`absolute -bottom-1 -right-1 w-3 h-3 ${getStatusColor(agent.status)} rounded-full border border-white`}></div>
+                      <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${getStatusColor(agent.status)} rounded-full border-2 border-white`}></div>
                     </div>
                     
                     <div className="flex-1">
-                      <p className="font-medium text-sm text-gray-900 flex items-center gap-2">
-                        {agent.name}
-                        {agent.status === 'online' && <UserCheck className="w-3 h-3 text-green-600" />}
+                      <div className="flex items-center gap-2">
+                        <p className="font-bold text-gray-900">{agent.name}</p>
+                        {agent.status === 'online' && <UserCheck className="w-4 h-4 text-green-600" />}
+                        <Badge className={`text-xs ${agent.status === 'online' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                          {getStatusText(agent.status)}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 font-medium">{agent.title}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {agent.specialties.slice(0, 2).join(' • ')}
                       </p>
-                      <p className="text-xs text-gray-600">{agent.title}</p>
-                      <p className="text-xs text-gray-500">{agent.specialties.slice(0, 2).join(' • ')}</p>
                     </div>
                     
-                    <Badge variant={agent.status === 'online' ? 'default' : 'secondary'} className="text-xs">
-                      {getStatusText(agent.status)}
-                    </Badge>
+                    <div className="text-right">
+                      <Badge className="bg-purple-100 text-purple-700 text-xs">
+                        {agent.experience}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -523,68 +608,84 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
         </CardHeader>
 
         {!isMinimized && (
-          <CardContent className="p-0 flex flex-col h-[calc(85vh-5rem)] sm:h-[586px] bg-gradient-to-b from-background to-background/95">
-            {/* Messages Area */}
-            <ScrollArea className="flex-1 p-4 mobile-scroll">
+          <CardContent className="p-0 flex flex-col h-[calc(90vh-9rem)] sm:h-[616px] bg-gradient-to-b from-gray-50/50 to-white">
+            {/* Messages Area with enhanced design */}
+            <ScrollArea className="flex-1 p-5 mobile-scroll">
               <div className="space-y-6">
-                {messages.map((message) => (
+                {messages.map((message, index) => (
                   <div
                     key={message.id}
-                    className={`flex items-start gap-3 ${
+                    className={`flex items-start gap-4 ${
                       message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-                    }`}
+                    } animate-fade-in`}
+                    style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-md ${
+                    <div className={`flex-shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg ${
                       message.role === 'user' 
-                        ? 'bg-gradient-to-r from-secondary to-secondary/80' 
-                        : 'bg-gradient-to-r from-primary to-primary/80 text-white'
+                        ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white' 
+                        : `bg-gradient-to-br ${message.agent?.color || 'from-gray-500 to-gray-600'} text-white`
                     }`}>
                       {message.role === 'user' ? (
-                        <User className="h-4 w-4" />
+                        <User className="h-5 w-5" />
                       ) : (
-                        <span className="text-sm">{message.agent?.avatar || '🤖'}</span>
+                        <span className="text-lg">{message.agent?.avatar || '🤖'}</span>
                       )}
                     </div>
                     
-                    <div className={`flex-1 max-w-[85%] sm:max-w-[320px] ${
+                    <div className={`flex-1 max-w-[85%] sm:max-w-[340px] ${
                       message.role === 'user' ? 'text-right' : 'text-right'
                     }`}>
-                      {/* Agent info for assistant messages */}
+                      {/* Enhanced agent info */}
                       {message.role === 'assistant' && message.agent && (
-                        <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
-                          <span>{message.agent.name}</span>
-                          <Badge variant="outline" className="text-xs px-1 py-0">
+                        <div className="flex items-center gap-2 mb-3 text-sm text-gray-600">
+                          <span className="font-semibold">{message.agent.name}</span>
+                          <Badge variant="outline" className="text-xs px-2 py-0.5 bg-purple-50 text-purple-700 border-purple-200">
                             {message.agent.title}
                           </Badge>
                         </div>
                       )}
                       
-                      <div className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm border ${
+                      <div className={`p-5 rounded-3xl text-sm leading-relaxed shadow-lg border backdrop-blur-sm relative overflow-hidden ${
                         message.role === 'user'
-                          ? 'bg-gradient-to-r from-secondary to-secondary/90 text-secondary-foreground border-secondary/20'
-                          : 'bg-gradient-to-r from-white to-gray-50 text-gray-900 border-gray-100'
+                          ? 'bg-gradient-to-br from-indigo-600 to-purple-700 text-white border-indigo-200 shadow-indigo-200/50'
+                          : message.type === 'system'
+                          ? 'bg-gradient-to-br from-yellow-50 to-orange-50 text-gray-800 border-yellow-200 shadow-yellow-200/50'
+                          : 'bg-gradient-to-br from-white to-gray-50 text-gray-800 border-gray-200 shadow-gray-200/50'
                       }`}>
-                        {message.role === 'assistant' ? formatMessage(message.content) : message.content}
+                        {/* Message decoration */}
+                        <div className={`absolute top-0 left-0 w-full h-1 ${
+                          message.role === 'user' 
+                            ? 'bg-gradient-to-r from-white/50 to-white/20' 
+                            : message.type === 'system'
+                            ? 'bg-gradient-to-r from-yellow-400 to-orange-400'
+                            : 'bg-gradient-to-r from-purple-400 to-blue-400'
+                        }`}></div>
+                        
+                        {message.role === 'assistant' ? formatMessage(message.content) : (
+                          <div className="text-white font-medium">{message.content}</div>
+                        )}
                       </div>
                       
-                      {/* Enhanced Buttons */}
+                      {/* Enhanced Buttons with gradients */}
                       {message.buttons && message.buttons.length > 0 && (
-                        <div className="mt-4 grid grid-cols-1 gap-2">
+                        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {message.buttons.map((button, index) => (
                             <Button
                               key={index}
                               onClick={() => handleButtonClick(button)}
-                              variant="outline"
-                              size="sm"
-                              className="text-sm h-12 bg-gradient-to-r from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/20 border-primary/30 text-primary hover:text-primary/90 transition-all duration-300 mobile-tap shadow-sm hover:shadow-md rounded-xl justify-center font-medium"
+                              className={`h-14 text-sm font-semibold rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${getButtonVariantClass(button.variant)} animate-slide-up`}
+                              style={{ animationDelay: `${index * 0.1}s` }}
                             >
-                              {button.text}
+                              <div className="flex items-center gap-3">
+                                {button.icon}
+                                <span>{button.text}</span>
+                              </div>
                             </Button>
                           ))}
                         </div>
                       )}
                       
-                      <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
+                      <p className="text-xs text-gray-500 mt-4 flex items-center gap-2">
                         <Clock className="w-3 h-3" />
                         {message.timestamp.toLocaleTimeString('ar-SA', { 
                           hour: '2-digit', 
@@ -595,21 +696,21 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                   </div>
                 ))}
                 
-                {/* Enhanced Loading Animation */}
-                {isLoading && (
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-9 h-9 rounded-full bg-gradient-to-r from-primary to-primary/80 text-white flex items-center justify-center shadow-md">
-                      <span className="text-sm">{currentAgent.avatar}</span>
+                {/* Enhanced typing indicator */}
+                {isTyping && (
+                  <div className="flex items-start gap-4 animate-fade-in">
+                    <div className={`flex-shrink-0 w-11 h-11 rounded-2xl bg-gradient-to-br ${currentAgent.color} text-white flex items-center justify-center shadow-lg animate-pulse`}>
+                      <span className="text-lg">{currentAgent.avatar}</span>
                     </div>
-                    <div className="flex-1 max-w-[85%] sm:max-w-[320px]">
-                      <div className="p-4 rounded-2xl bg-gradient-to-r from-white to-gray-50 border border-gray-100 shadow-sm">
+                    <div className="flex-1 max-w-[85%] sm:max-w-[340px]">
+                      <div className="p-5 rounded-3xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-lg">
                         <div className="flex gap-2 items-center">
                           <div className="flex gap-1">
-                            <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce delay-100"></div>
-                            <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce delay-200"></div>
+                            <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce"></div>
+                            <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce delay-100"></div>
+                            <div className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce delay-200"></div>
                           </div>
-                          <span className="text-xs text-muted-foreground">{currentAgent.name} يكتب...</span>
+                          <span className="text-sm text-gray-600 font-medium">{currentAgent.name} يكتب...</span>
                         </div>
                       </div>
                     </div>
@@ -620,39 +721,62 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
               </div>
             </ScrollArea>
 
-            {/* Enhanced Input Area */}
-            <div className="p-4 border-t bg-white/80 backdrop-blur-sm safe-bottom">
-              <div className="flex gap-3 items-end">
-                <div className="flex-1">
+            {/* Revolutionary Input Area */}
+            <div className="p-5 border-t border-gray-200/50 bg-white/80 backdrop-blur-xl">
+              <div className="flex gap-4 items-end">
+                <div className="flex-1 relative">
                   <Input
                     ref={inputRef}
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="اكتب رسالتك هنا..."
+                    placeholder="اكتب رسالتك الإبداعية هنا..."
                     disabled={isLoading}
-                    className="text-right text-base h-12 mobile-tap rounded-xl border-gray-200 focus:border-primary transition-colors bg-white shadow-sm"
+                    className="text-right text-base h-14 rounded-2xl border-2 border-gray-200 focus:border-purple-400 transition-all duration-300 bg-white/70 backdrop-blur-sm shadow-lg pr-5 pl-16"
                     dir="rtl"
                   />
+                  
+                  {/* Input decorations */}
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl"
+                    >
+                      <Image className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl"
+                    >
+                      <Mic className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 
                 <Button
                   onClick={sendMessage}
                   disabled={isLoading || !inputMessage.trim()}
-                  size="icon"
-                  className="flex-shrink-0 h-12 w-12 mobile-tap rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-md hover:shadow-lg transition-all duration-300"
+                  className="h-14 w-14 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:scale-100"
                 >
-                  <Send className="h-5 w-5" />
+                  <Send className="h-6 w-6 text-white" />
                 </Button>
               </div>
               
-              {/* Enhanced Footer */}
-              <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Heart className="w-3 h-3 text-red-500" />
-                  <span>مدعوم بالذكاء الاصطناعي</span>
+              {/* Enhanced Footer with company branding */}
+              <div className="mt-4 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-3 text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-purple-500" />
+                    <span>مدعوم بالذكاء الاصطناعي</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Shield className="w-3 h-3 text-green-500" />
+                    <span>محادثة آمنة</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-purple-600 font-semibold">
                   <Phone className="w-3 h-3" />
                   <span>0555812567</span>
                 </div>
