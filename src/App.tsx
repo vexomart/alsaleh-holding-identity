@@ -85,6 +85,7 @@ const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
+const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
 const HostingServices = lazy(() => import("./pages/HostingServices"));
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
@@ -225,8 +226,9 @@ const App = () => {
                  <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
                  <Route path="/free-trial" element={<FreeTrial />} />
                  <Route path="/automation-system" element={<AutomationSystem />} />
-                  <Route path="/pricing" element={<PricingPage />} />
-                 <Route path="/ai-solutions" element={<AIIntelligence />} />
+                 <Route path="/pricing" element={<PricingPage />} />
+                 <Route path="/payment-success" element={<PaymentSuccessPage />} />
+                <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
                 <Route path="/security-solutions" element={<SecuritySolutions />} />

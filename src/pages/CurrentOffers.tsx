@@ -40,17 +40,14 @@ const CurrentOffers = () => {
   // دالة للدفع عبر TAB
   const handleTabPayment = async (offer: any) => {
     try {
-      console.log("🚀 Starting TAB payment for offer:", offer);
-      
       // عرض رسالة تحضير الدفع
       toast({
         title: "🚀 جاري تحضير رابط الدفع...",
-        description: "سيتم توجيهك فوراً لإتمام الدفع الآمن",
+        description: "سيتم توجيهك فوراً إلى TAB لإتمام الدفع الآمن",
         duration: 2000,
       });
 
       const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
-      console.log("💰 Payment amount:", amount);
       
       const payload = {
         amount: amount,
@@ -71,38 +68,18 @@ const CurrentOffers = () => {
         }
       };
 
-      console.log("📤 Sending payload to TAB:", payload);
-
       const { data, error } = await supabase.functions.invoke('tab-payment', {
         body: payload,
       });
 
-      console.log("📥 TAB Response - data:", data);
-      console.log("📥 TAB Response - error:", error);
-
       if (error) {
-        console.error("❌ TAB Payment Error:", error);
-        toast({
-          title: "⚠️ خطأ في الدفع",
-          description: error.message || "فشل في الاتصال بخدمة الدفع",
-          variant: "destructive",
-          duration: 5000,
-        });
-        return;
+        throw new Error(error.message || 'فشل في الاتصال بالخدمة');
       }
 
-      console.log("📥 TAB Response received:", data);
-
-      if (!data) {
-        throw new Error("لم يتم استلام رد من خدمة الدفع");
-      }
-
-      if (data.success && data.payment_url) {
-        console.log("✅ Payment URL received:", data.payment_url);
-        
+      if (data?.success && data?.payment_url) {
         toast({
           title: "✅ تم إنشاء رابط الدفع بنجاح",
-          description: "سيتم توجيهك الآن لإتمام عملية الدفع الآمنة",
+          description: "سيتم توجيهك الآن إلى TAB لإتمام الدفع الآمن",
           duration: 3000,
         });
 
@@ -117,7 +94,7 @@ const CurrentOffers = () => {
               payment_url: data.payment_url,
               transaction_id: data.transaction_id || 'N/A',
               invoice_number: data.invoice_number || 'N/A',
-              status: data.status || 'pending',
+              status: 'pending',
               payment_method: 'TAB',
               offer_title: offer.title,
               offer_description: offer.description,
@@ -130,10 +107,10 @@ const CurrentOffers = () => {
           console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
         }
 
-        // التحويل الفوري لبوابة الدفع
+        // التحويل الفوري إلى TAB
         setTimeout(() => {
           window.location.href = data.payment_url;
-        }, 1500);
+        }, 1000);
         
       } else {
         throw new Error(data?.message || 'لم يتم إنشاء رابط الدفع بشكل صحيح');
