@@ -87,7 +87,7 @@ const DigitalTransformation = lazy(() => import("./pages/business-services/Digit
 const FinancialPlanning = lazy(() => import("./pages/business-services/FinancialPlanning"));
 const DepartmentDetails = lazy(() => import("./pages/DepartmentDetails"));
 const UserGuide = lazy(() => import("./pages/UserGuide"));
-const Auth = lazy(() => import("./pages/Auth"));
+// Auth page removed
 const NotFound = lazy(() => import("./pages/NotFound"));
 const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
@@ -281,7 +281,7 @@ const App = () => {
             <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
             <Route path="/department/:id" element={<DepartmentDetails />} />
             <Route path="/user-guide" element={<UserGuide />} />
-            <Route path="/auth" element={<Auth />} />
+            {/* Auth route removed */}
             
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
