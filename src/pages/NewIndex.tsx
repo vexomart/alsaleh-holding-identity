@@ -122,7 +122,7 @@ const Index = () => {
     <PageLayout>
       {/* Hero Section */}
       <PageHeader
-        title="شركة الصالح القابضة"
+        title="شركة علي صالح الشهري القابضة"
         description="شريكك الموثوق في الحلول التقنية والخدمات الرقمية المتقدمة"
       >
         {/* CTA buttons hidden as requested */}

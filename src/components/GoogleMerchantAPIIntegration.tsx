@@ -51,7 +51,7 @@ export const GoogleMerchantAPIIntegration = () => {
       currency: 'SAR',
       availability: 'in_stock',
       condition: 'new',
-      brand: 'الصالح القابضة',
+      brand: 'شركة علي صالح الشهري القابضة',
       imageUrl: '/src/assets/services/logo-design.jpg',
       category: 'خدمات التصميم',
       status: 'approved'
@@ -64,7 +64,7 @@ export const GoogleMerchantAPIIntegration = () => {
       currency: 'SAR',
       availability: 'in_stock',
       condition: 'new',
-      brand: 'الصالح القابضة',
+      brand: 'شركة علي صالح الشهري القابضة',
       imageUrl: '/src/assets/services/brand-package.jpg',
       category: 'خدمات التصميم',
       status: 'pending'
@@ -77,7 +77,7 @@ export const GoogleMerchantAPIIntegration = () => {
       currency: 'SAR',
       availability: 'in_stock',
       condition: 'new',
-      brand: 'الصالح القابضة',
+      brand: 'شركة علي صالح الشهري القابضة',
       imageUrl: '/src/assets/services/brochure-design.jpg',
       category: 'خدمات التصميم والطباعة',
       status: 'approved'
