@@ -10,6 +10,7 @@ import PartnersSection from "@/components/PartnersSection";
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
+import { AnimatedConsultationButton } from "@/components/AnimatedConsultationButton";
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
@@ -65,6 +66,9 @@ const Index = () => {
 
       {/* ChatBot Component */}
       <ChatBot />
+      
+      {/* Animated Consultation Button */}
+      <AnimatedConsultationButton />
     </div>
   );
 };
