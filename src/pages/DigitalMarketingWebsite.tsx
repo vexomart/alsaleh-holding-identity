@@ -204,7 +204,7 @@ const DigitalMarketingWebsite = () => {
       role: "مطور تقنيات الويب",
       experience: "12+ سنة خبرة",
       speciality: "تطوير المنصات الرقمية",
-      image: "/avatar-placeholder.webp"
+      image: "/avatar-placeholder.png"
     },
     {
       name: "لينا المنصوري",

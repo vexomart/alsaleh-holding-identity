@@ -126,12 +126,6 @@
     --warning: 40 90% 55%;
     --warning-foreground: 210 15% 15%;
     
-    /* Gold/Amber System for Premium Elements */
-    --gold-400: 43 96% 56%;
-    --gold-500: 38 92% 50%;
-    --amber-400: 45 93% 58%;
-    --amber-500: 43 96% 56%;
-    
     /* Unified Gradients System */
     --gradient-primary: linear-gradient(135deg, hsl(220 85% 35%), hsl(220 75% 45%));
     --gradient-secondary: linear-gradient(135deg, hsl(45 95% 55%), hsl(40 85% 45%));
@@ -271,15 +265,6 @@
   }
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out;
 }
@@ -290,10 +275,6 @@
 
 .animate-glow {
   animation: glow 2s ease-in-out infinite;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
 }
 
 /* Professional Corporate Styles */

@@ -17,61 +17,23 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/favicon.ico">
     
-    <!-- Highest Priority Resource Hints for FCP and LCP -->
+    <!-- Critical Image Preload for LCP -->
+    <link rel="preload" href="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=60" as="image" fetchpriority="high">
+    
+    <!-- Critical Font Files Preload - Break dependency chain -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscRiyS8p4_RA.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS8p4_RHH1.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Enhanced Resource Hints for Performance -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://images.unsplash.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Critical for LCP - Preconnect to Unsplash with high priority -->
-    <link rel="preconnect" href="https://images.unsplash.com" crossorigin fetchpriority="high">
-    
-    <!-- LCP Image Preload - Hero Background (First slide) -->
-    <link rel="preload" href="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" as="image" type="image/jpeg" fetchpriority="high" crossorigin>
-    
-    <!-- Critical Font Files Preload for immediate text render -->
-    <link rel="preload" href="https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscRiyS8p4_RA.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
-    <link rel="preload" href="https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS8p4_RHH1.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
-    
-    <!-- Defer image loading to prioritize text rendering -->
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     
-    <!-- Eliminate render blocking with media trick -->
-    <link rel="preload" href="/assets/index-DBuaRAC3.css" as="style" onload="this.onload=null;this.rel='stylesheet';">
-    <noscript><link rel="stylesheet" href="/assets/index-DBuaRAC3.css"></noscript>
-    
-    <!-- Critical inline styles for immediate FCP -->
+    <!-- Inline Critical Font CSS to eliminate request chain -->
     <style>
-      /* Critical font stack with system fallbacks for instant text render */
-      * {
-        font-family: 'Cairo', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-      }
-      
-      /* Critical reset for immediate layout */
-      html, body {
-        margin: 0;
-        padding: 0;
-        background-color: #ffffff;
-        color: #1f2937;
-        line-height: 1.5;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      
-      /* Prevent layout shift with size-adjust for fallbacks */
-      @font-face {
-        font-family: 'Cairo-fallback';
-        font-style: normal;
-        font-weight: 400;
-        src: local('system-ui'), local('-apple-system'), local('Segoe UI');
-        size-adjust: 103%;
-        ascent-override: 98%;
-        descent-override: 25%;
-        line-gap-override: 0%;
-      }
-      
-      /* Optimized Cairo font faces for FCP */
       @font-face {
         font-family: 'Cairo';
         font-style: normal;
@@ -88,54 +50,30 @@
         src: url(https://fonts.gstatic.com/s/cairo/v30/SLXVc1nY6HkvangtZmpQdkhzfH5lkSscQyyS8p4_RHH1.woff2) format('woff2');
         unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE80-FEFC;
       }
-      
-      /* Loading state optimization */
-      #root {
-        min-height: 100vh;
-      }
-      
-      /* Critical spinner for immediate visual feedback */
-      .app-loading {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 40px;
-        height: 40px;
-        border: 3px solid #f3f4f6;
-        border-top: 3px solid #3b82f6;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-      
-      @keyframes spin {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
-      }
     </style>
     
-    <!-- Highly optimized non-critical font loading -->
+    <!-- Non-Critical Fonts - Async Loading -->
     <script>
-      // Streamlined font loading for better FCP
-      function loadAdditionalFonts() {
+      // Load remaining font weights asynchronously
+      function loadRemainingFonts() {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Cairo:wght@300;400;600;700&display=swap&subset=arabic';
-        link.media = 'print';
-        link.onload = function() { this.media = 'all'; };
+        link.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;700&display=swap&subset=arabic';
         document.head.appendChild(link);
       }
       
-      // More aggressive deferral for FCP optimization
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadAdditionalFonts, { timeout: 1000 });
+      // Load after critical rendering
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          requestIdleCallback ? requestIdleCallback(loadRemainingFonts) : setTimeout(loadRemainingFonts, 0);
+        });
       } else {
-        setTimeout(loadAdditionalFonts, 500);
+        requestIdleCallback ? requestIdleCallback(loadRemainingFonts) : setTimeout(loadRemainingFonts, 0);
       }
     </script>
     
     <!-- Fallback for no-script -->
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Cairo:wght@300;400;600;700&display=swap&subset=arabic" rel="stylesheet"></noscript>
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap&subset=arabic" rel="stylesheet"></noscript>
     
     <!-- Cache Control Headers -->
     <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable" />
@@ -161,31 +99,7 @@
   </head>
 
   <body>
-    <div id="root">
-      <!-- Critical loading indicator for immediate FCP -->
-      <div class="app-loading" id="initial-loader"></div>
-    </div>
-    
-    <!-- Optimized script loading for faster execution -->
-    <script type="module">
-      // Remove loader once React takes over
-      const loader = document.getElementById('initial-loader');
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.addedNodes.length > 0) {
-            loader?.remove();
-            observer.disconnect();
-          }
-        });
-      });
-      observer.observe(document.getElementById('root'), { childList: true });
-      
-      // Timeout fallback to remove loader
-      setTimeout(() => {
-        loader?.remove();
-      }, 3000);
-    </script>
-    
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
     <!-- Service Worker Registration -->

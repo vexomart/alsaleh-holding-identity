@@ -26,7 +26,7 @@ verify_jwt = false
 [functions.email-test]
 verify_jwt = false
 
-# SECURITY FIX: Enable JWT verification for critical payment functions
+# Secure payment and sensitive functions - require authentication
 [functions.paylink-payment]
 verify_jwt = true
 
@@ -51,12 +51,12 @@ verify_jwt = true
 [functions.contract-form]
 verify_jwt = true
 
-# SECURITY FIX: Critical subscription functions now require authentication
+# Subscription payment functions
 [functions.paylink-subscription]
-verify_jwt = true
+verify_jwt = false
 
 [functions.verify-subscription]
-verify_jwt = true
+verify_jwt = false
 
 [functions.send-invoice-email]
-verify_jwt = true
+verify_jwt = false

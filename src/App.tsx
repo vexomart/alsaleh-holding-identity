@@ -114,7 +114,6 @@ const CarFleet = lazy(() => import("./pages/CarFleet"));
 const CarBooking = lazy(() => import("./pages/CarBooking"));
 const EmailTest = lazy(() => import("./pages/EmailTest"));
 const EnhancedDesignCategory = lazy(() => import("./pages/EnhancedDesignCategory"));
-const EnterpriseSystems = lazy(() => import("./pages/EnterpriseSystems"));
 
 
 const TechEcosystem = lazy(() => import("./pages/TechEcosystem"));
@@ -256,10 +255,9 @@ const App = () => {
             <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
             <Route path="/business-services" element={<BusinessServices />} />
             <Route path="/technical-services" element={<Suspense fallback={<PageLoader />}><TechnicalServices /></Suspense>} />
-                <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
-                <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
-                <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
-                <Route path="/enterprise-systems" element={<Suspense fallback={<PageLoader />}><EnterpriseSystems /></Suspense>} />
+            <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
+            <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
+            <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
             <Route path="/department/:id" element={<DepartmentDetails />} />
             <Route path="/user-guide" element={<UserGuide />} />
             <Route path="/auth" element={<Auth />} />
