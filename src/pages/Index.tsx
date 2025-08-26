@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 
 // Remove direct imports, they are now lazy loaded
 import ServicesShowcase from "@/components/ServicesShowcase";
-import PartnersSection from "@/components/PartnersSection";
 
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
@@ -50,9 +49,6 @@ const Index = () => {
         <div className="space-y-0">
           {/* Services Showcase Section */}
           <ServicesShowcase />
-          
-          {/* Partners Section */}
-          <PartnersSection />
         </div>
       </main>
 
