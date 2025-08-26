@@ -40,7 +40,10 @@ import {
   Code,
   GraduationCap,
   Calendar,
-  Brain
+  Brain,
+  Radio,
+  Scale,
+  Building
 } from "lucide-react";
 
 const Footer = () => {
@@ -723,12 +726,8 @@ const Footer = () => {
             <div className="group relative">
               <div className="bg-gradient-to-br from-emerald-500/10 to-green-600/10 backdrop-blur-sm border border-emerald-500/20 rounded-xl p-6 transition-all duration-500 hover:from-emerald-500/20 hover:to-green-600/20 hover:border-emerald-500/40 hover:shadow-lg hover:shadow-emerald-500/25 hover:scale-105 animate-fade-in">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/50 transition-all duration-300 relative overflow-hidden p-2">
-                    <img 
-                      src="/src/assets/logos/ministry-commerce-logo.png" 
-                      alt="وزارة التجارة السعودية" 
-                      className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                    />
+                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/50 transition-all duration-300 relative overflow-hidden">
+                    <Shield className="w-8 h-8 text-white" />
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-white text-sm">وزارة التجارة</p>
@@ -745,22 +744,8 @@ const Footer = () => {
             <div className="group relative">
               <div className="bg-gradient-to-br from-blue-500/10 to-indigo-600/10 backdrop-blur-sm border border-blue-500/20 rounded-xl p-6 transition-all duration-500 hover:from-blue-500/20 hover:to-indigo-600/20 hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 animate-fade-in delay-150">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300 relative overflow-hidden">
-                    {/* هيئة الاتصالات - تصميم مستوحى من التقنية والاتصالات */}
-                    <div className="relative z-10">
-                      <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 48 48">
-                        {/* برج اتصالات مع إشارات */}
-                        <rect x="22" y="8" width="4" height="32" fill="currentColor"/>
-                        <circle cx="24" cy="12" r="8" fill="none" stroke="white" strokeWidth="1.5" opacity="0.6"/>
-                        <circle cx="24" cy="12" r="12" fill="none" stroke="white" strokeWidth="1" opacity="0.4"/>
-                        <circle cx="24" cy="12" r="16" fill="none" stroke="white" strokeWidth="0.5" opacity="0.2"/>
-                        <path d="M16 20L20 16L28 16L32 20M16 24L20 20L28 20L32 24" stroke="white" strokeWidth="1.5"/>
-                        <rect x="18" y="40" width="12" height="4" fill="currentColor"/>
-                        <circle cx="24" cy="8" r="2" fill="gold"/>
-                        <text x="24" y="46" textAnchor="middle" fontSize="3" fill="white">اتصالات</text>
-                      </svg>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-indigo-700/20 rounded-lg"></div>
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300 relative overflow-hidden">
+                    <Radio className="w-8 h-8 text-white" />
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-white text-sm">هيئة الاتصالات</p>
@@ -777,12 +762,8 @@ const Footer = () => {
             <div className="group relative">
               <div className="bg-gradient-to-br from-amber-500/10 to-orange-600/10 backdrop-blur-sm border border-amber-500/20 rounded-xl p-6 transition-all duration-500 hover:from-amber-500/20 hover:to-orange-600/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/25 hover:scale-105 animate-fade-in delay-300">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-amber-500/50 transition-all duration-300 relative overflow-hidden p-2">
-                    <img 
-                      src="/src/assets/logos/zatca-official.svg" 
-                      alt="هيئة الزكاة والضريبة والجمارك السعودية" 
-                      className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                    />
+                  <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-amber-500/50 transition-all duration-300 relative overflow-hidden">
+                    <Scale className="w-8 h-8 text-white" />
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-white text-sm">هيئة الزكاة</p>
@@ -799,33 +780,8 @@ const Footer = () => {
             <div className="group relative">
               <div className="bg-gradient-to-br from-purple-500/10 to-pink-600/10 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6 transition-all duration-500 hover:from-purple-500/20 hover:to-pink-600/20 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/25 hover:scale-105 animate-fade-in delay-450">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-purple-500/50 transition-all duration-300 relative overflow-hidden">
-                    {/* المركز السعودي للأعمال - تصميم مستوحى من الأعمال والتجارة */}
-                    <div className="relative z-10">
-                      <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 48 48">
-                        {/* مبنى مع نجمة سعودية */}
-                        <rect x="12" y="16" width="24" height="24" fill="currentColor" opacity="0.8"/>
-                        <rect x="14" y="18" width="4" height="4" fill="white"/>
-                        <rect x="18" y="18" width="4" height="4" fill="white"/>
-                        <rect x="22" y="18" width="4" height="4" fill="white"/>
-                        <rect x="26" y="18" width="4" height="4" fill="white"/>
-                        <rect x="30" y="18" width="4" height="4" fill="white"/>
-                        <rect x="14" y="24" width="4" height="4" fill="white"/>
-                        <rect x="18" y="24" width="4" height="4" fill="white"/>
-                        <rect x="26" y="24" width="4" height="4" fill="white"/>
-                        <rect x="30" y="24" width="4" height="4" fill="white"/>
-                        <rect x="14" y="30" width="4" height="4" fill="white"/>
-                        <rect x="18" y="30" width="4" height="4" fill="white"/>
-                        <rect x="26" y="30" width="4" height="4" fill="white"/>
-                        <rect x="30" y="30" width="4" height="4" fill="white"/>
-                        <rect x="14" y="36" width="4" height="4" fill="white"/>
-                        <rect x="30" y="36" width="4" height="4" fill="white"/>
-                        <path d="M24 8L26 12L30 12L27 15L28 19L24 17L20 19L21 15L18 12L22 12L24 8Z" fill="gold"/>
-                        <rect x="10" y="40" width="28" height="4" fill="currentColor"/>
-                        <text x="24" y="46" textAnchor="middle" fontSize="3" fill="white">أعمال</text>
-                      </svg>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-pink-700/20 rounded-lg"></div>
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-purple-500/50 transition-all duration-300 relative overflow-hidden">
+                    <Building className="w-8 h-8 text-white" />
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-white text-sm">المركز السعودي</p>
