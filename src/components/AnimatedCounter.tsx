@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { NumberFormatter } from "./NumberFormatter";
 
 interface AnimatedCounterProps {
@@ -9,36 +9,18 @@ interface AnimatedCounterProps {
   className?: string;
 }
 
-export const AnimatedCounter = ({ 
+const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ 
   end, 
   duration = 2000, 
   prefix = "", 
   suffix = "",
   className = "" 
-}: AnimatedCounterProps) => {
+}) => {
   const [count, setCount] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    const element = document.getElementById(`counter-${end}`);
-    if (element) {
-      observer.observe(element);
-    }
-
-    return () => observer.disconnect();
-  }, [end]);
-
-  useEffect(() => {
+  const startAnimation = useCallback(() => {
     if (!isVisible) return;
 
     let startTime: number;
@@ -66,9 +48,35 @@ export const AnimatedCounter = ({
     };
   }, [isVisible, end, duration]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    const element = elementRef.current;
+    if (element) {
+      observer.observe(element);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const cleanup = startAnimation();
+    return cleanup;
+  }, [startAnimation]);
+
   return (
     <span 
-      id={`counter-${end}`}
+      ref={elementRef}
       className={`font-bold ${className} transition-all duration-300`}
     >
       {prefix}
@@ -79,3 +87,5 @@ export const AnimatedCounter = ({
     </span>
   );
 };
+
+export { AnimatedCounter };
