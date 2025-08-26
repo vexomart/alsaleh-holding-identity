@@ -12,6 +12,7 @@ import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
 import { ImageOptimizer } from "@/components/ImageOptimizer";
 import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
+import { TemplateVariableBlocker } from "@/components/TemplateVariableBlocker";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
@@ -193,6 +194,7 @@ const App = () => {
               <div className="relative z-10 mobile-tap mobile-scroll">
                 
                 <SecurityHeaders />
+                <TemplateVariableBlocker />
                 <PerformanceOptimizer />
                 <ImageOptimizer />
                 <AnalyticsProvider />

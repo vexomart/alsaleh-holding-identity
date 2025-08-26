@@ -15,12 +15,18 @@ export const SecurityHeaders = () => {
     // Add security-related meta tags
     addMetaTag('referrer', 'strict-origin-when-cross-origin');
     addMetaTag('format-detection', 'telephone=no');
-    addMetaTag('robots', window.location.pathname.includes('/auth') || 
-                       window.location.pathname.includes('/login') || 
-                       window.location.pathname.includes('/register') || 
-                       window.location.pathname.includes('/profile') || 
-                       window.location.pathname.includes('/consultation') ? 
-                       'noindex, nofollow' : 'index, follow');
+    
+    // Check for template variables in URL and add noindex
+    const hasTemplateVars = window.location.href.includes('{{') || 
+                           window.location.href.includes('%7B%7B') ||
+                           window.location.pathname.includes('{{') ||
+                           window.location.pathname.includes('%7B%7B');
+    
+    // Check if current path should be noindexed
+    const sensitivePathPattern = /(auth|login|register|profile|tickets|account|admin|consultation)/;
+    const isSensitivePath = sensitivePathPattern.test(window.location.pathname);
+    
+    addMetaTag('robots', (isSensitivePath || hasTemplateVars) ? 'noindex, nofollow' : 'index, follow');
 
     // Add canonical link
     const canonical = document.querySelector('link[rel="canonical"]');
@@ -63,6 +69,14 @@ export const SecurityHeaders = () => {
       }
     });
 
+    // Security: Block access to template variable URLs
+    const currentUrl = window.location.href;
+    if (currentUrl.includes('{{') || currentUrl.includes('%7B%7B')) {
+      // Redirect to 404 page for template variable URLs
+      window.location.replace('/404.html');
+      return;
+    }
+
     // Security: Disable right-click context menu on production
     if (process.env.NODE_ENV === 'production') {
       const handleContextMenu = (e: MouseEvent) => {
@@ -70,10 +84,26 @@ export const SecurityHeaders = () => {
         return false;
       };
       
+      // Disable F12 and other developer tools shortcuts
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+          (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+          (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+          (e.ctrlKey && e.key === 'U')
+        ) {
+          e.preventDefault();
+          return false;
+        }
+      };
+      
       document.addEventListener('contextmenu', handleContextMenu);
+      document.addEventListener('keydown', handleKeyDown);
       
       return () => {
         document.removeEventListener('contextmenu', handleContextMenu);
+        document.removeEventListener('keydown', handleKeyDown);
       };
     }
   }, []);

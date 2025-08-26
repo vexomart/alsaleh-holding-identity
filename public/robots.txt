@@ -11,7 +11,7 @@ Disallow: /account
 Disallow: /admin
 Disallow: /consultation
 
-# Block internal directories
+# Block internal directories and sensitive paths
 Disallow: /src/
 Disallow: /node_modules/
 Disallow: /supabase/
@@ -22,13 +22,19 @@ Disallow: /vendor/
 Disallow: /views/
 Disallow: /backups/
 
-# Block sensitive files
+# Block template files and sensitive extensions
 Disallow: /*.env
 Disallow: /*.config
 Disallow: /*.log
 Disallow: /*.sql
 Disallow: /*.bak
 Disallow: /*.backup
+Disallow: /*.twig
+Disallow: /*.tpl
+
+# Block URLs with template variables
+Disallow: /*{{*
+Disallow: /*%7B%7B*
 
 # Sitemap
 Sitemap: https://alialshehriholding.com/sitemap.xml
