@@ -331,7 +331,7 @@ const App = () => {
                 
                 <Route path="/tech-ecosystem" element={<TechEcosystem />} />
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
-                <Route path="/digital-marketing" element={<DigitalMarketing />} />
+                <Route path="/digital-marketing" element={<Suspense fallback={<PageLoader />}><DigitalMarketing /></Suspense>} />
                 <Route path="/websites" element={<Suspense fallback={<PageLoader />}><Websites /></Suspense>} />
                 <Route path="/mobile-apps" element={<Suspense fallback={<PageLoader />}><MobileApps /></Suspense>} />
           <Route path="/payment" element={<PaymentPage />} />
