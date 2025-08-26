@@ -20,9 +20,12 @@ import {
   Eye,
   Heart,
   Rocket,
-  Building2
+  Building2,
+  MessageCircle,
+  ArrowRight
 } from "lucide-react";
 import { AnimatedCounter } from "./AnimatedCounter";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -144,6 +147,28 @@ const HeroSection = () => {
             top: mousePosition.y - 80,
           }}
         />
+      </div>
+      
+      {/* Top Right Consultation Button */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 z-20 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+        <Link to="/consultation">
+          <Button 
+            size="lg"
+            className="bg-gradient-to-r from-orange-500 via-pink-600 to-purple-700 hover:from-orange-600 hover:via-pink-700 hover:to-purple-800 text-white font-bold px-4 sm:px-6 py-3 sm:py-4 rounded-full shadow-2xl border-2 border-white/20 backdrop-blur-sm transition-all duration-500 hover:scale-110 group"
+          >
+            <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+            <span className="text-sm sm:text-base">استشارة مجانية</span>
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+            
+            {/* Pulse effect */}
+            <div className="absolute inset-0 bg-white rounded-full opacity-20 scale-0 group-hover:scale-100 group-hover:opacity-0 transition-all duration-500" />
+            
+            {/* Floating badge */}
+            <div className="absolute -top-2 -left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+              مجاناً
+            </div>
+          </Button>
+        </Link>
       </div>
       
       {/* Enhanced Content */}
