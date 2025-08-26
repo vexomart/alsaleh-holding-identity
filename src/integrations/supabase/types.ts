@@ -2868,10 +2868,6 @@ export type Database = {
         Args: { subscriber_email: string }
         Returns: boolean
       }
-      check_sensitive_operation_limit: {
-        Args: { p_operation_type: string; p_user_id: string }
-        Returns: boolean
-      }
       create_admin_session: {
         Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
@@ -3030,14 +3026,6 @@ export type Database = {
         Returns: string
       }
       mask_phone: {
-        Args: { phone_input: string; user_requesting?: string }
-        Returns: string
-      }
-      mask_sensitive_email: {
-        Args: { email_input: string; user_requesting?: string }
-        Returns: string
-      }
-      mask_sensitive_phone: {
         Args: { phone_input: string; user_requesting?: string }
         Returns: string
       }

@@ -196,7 +196,7 @@ export default function DesignCategory() {
 
     setLoading(true);
     try {
-      const { data: resp, error } = await supabase.functions.invoke("tap-payment", {
+      const { data: resp, error } = await supabase.functions.invoke("paylink-payment", {
         body: {
           amount: selected.price,
           currency: "SAR",

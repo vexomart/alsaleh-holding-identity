@@ -26,72 +26,78 @@ const SoftwareProducts = () => {
   const [loadingProducts, setLoadingProducts] = useState<{[key: number]: boolean}>({});
   const [searchTerm, setSearchTerm] = useState("");
 
+  const paymentMethods = [
+    {
+      id: 'paylink',
+      name: '💳 البطاقة الائتمانية',
+      icon: CreditCard,
+      color: 'from-blue-500 to-blue-600',
+      description: 'مدى، فيزا، ماستركارد، أبل باي',
+      emoji: '💳'
+    }
+  ];
+
   const handlePurchase = async (product: any) => {
     setLoadingProducts(prev => ({ ...prev, [product.id]: true }));
     
-    toast({
-      title: "جاري معالجة طلب الدفع...",
-      description: "يرجى الانتظار قليلاً"
-    });
+    const priceAmount = parseInt(product.price.replace(/[^\d]/g, ''));
     
     try {
-      const priceAmount = parseInt(product.price.replace(/[^\d]/g, ''));
-      console.log('معلومات المنتج:', { name: product.name, price: product.price, amount: priceAmount });
-      
-      const payload = {
-        amount: priceAmount,
-        currency: 'SAR',
-        customer_name: 'عميل المنتجات البرمجية',
-        customer_email: 'customer@softwareproducts.com',
-        customer_phone: '966500000000',
-        offer_title: product.name,
-        description: `شراء منتج: ${product.name} - ${product.description}`,
-        product_details: {
-          product_id: product.id,
-          product_name: product.name,
-          product_version: product.version || "V 1.0",
-          category: product.category,
-          features: product.features ? product.features.join(', ') : 'منتج برمجي متقدم'
+      // Create order and payment session via edge function (bypasses RLS)
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
+        body: {
+          amount: priceAmount,
+          currency: 'SAR',
+          offer_title: product.name,
+          description: `شراء منتج: ${product.name}`,
+          success_url: window.location.origin,
+          // Product details for order creation
+          product_details: {
+            product_id: product.id,
+            product_name: product.name,
+            product_version: product.version || 'V 1.0',
+            customer_name: 'عميل شركة علي صالح الشهري القابضة',
+            customer_email: 'customer@alialshehriholding.com',
+            customer_phone: '966500000000'
+          }
         }
-      };
-
-      console.log('إرسال بيانات الدفع:', payload);
-
-      const { data, error } = await supabase.functions.invoke('tap-payment', {
-        body: payload
       });
 
-      console.log('استجابة الدفع:', { data, error });
-
       if (error) {
-        console.error('خطأ في الطلب:', error);
-        throw new Error(error.message || 'فشل في إنشاء رابط الدفع');
+        console.error('Payment error:', error);
+        toast({
+          title: "❌ خطأ في الدفع",
+          description: "حدث خطأ أثناء معالجة الدفعة. يرجى المحاولة مرة أخرى.",
+          variant: "destructive"
+        });
+        return;
       }
 
-      if (data?.success && data?.payment_url) {
+      let paymentUrl = data?.payment_url || data?.transactionUrl || data?.checkout_url || data?.url;
+
+      if (paymentUrl) {
+        // If order was created successfully, get order number for success message
+        const orderNumber = data?.order_number;
+        
         toast({
-          title: "تم إنشاء رابط الدفع بنجاح",
-          description: "سيتم توجيهك إلى صفحة الدفع"
+          title: "✅ تم إنشاء الطلب بنجاح",
+          description: orderNumber ? `رقم الطلب: ${orderNumber} - يتم توجيهكم لصفحة الدفع` : "يتم توجيهكم لصفحة الدفع الآمنة",
         });
         
-        // التوجه إلى صفحة الدفع في نفس النافذة
-        window.location.href = data.payment_url;
+        window.location.href = paymentUrl;
       } else {
-        throw new Error(data?.error || 'لم يتم إرجاع رابط الدفع');
+        toast({
+          title: "❌ خطأ في الدفع",
+          description: "لم يتم الحصول على رابط الدفع. يرجى المحاولة مرة أخرى.",
+          variant: "destructive"
+        });
       }
     } catch (error) {
-      console.error('خطأ في الدفع:', error);
-      
-      let errorMessage = "حدث خطأ أثناء عملية الدفع";
-      
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      
+      console.error('Purchase error:', error);
       toast({
-        title: "خطأ في الدفع",
-        description: errorMessage,
-        variant: "destructive",
+        title: "❌ خطأ في العملية",
+        description: "حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.",
+        variant: "destructive"
       });
     } finally {
       setLoadingProducts(prev => ({ ...prev, [product.id]: false }));

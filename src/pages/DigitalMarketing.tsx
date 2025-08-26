@@ -32,7 +32,7 @@ const DigitalMarketing = () => {
   const description = "خدمات التسويق الرقمي الاحترافية - بناء خطط تسويقية متكاملة وحلول رقمية مبتكرة لنمو أعمالك";
   const canonical = `${window.location.origin}/digital-marketing`;
 
-  const handlePaymentMethod = async (service: any, method: 'tap' | 'stc-pay' | 'tamara') => {
+  const handlePaymentMethod = async (service: any, method: 'paylink' | 'stc-pay' | 'tamara') => {
     setLoadingMethod(method);
     
     // إشعار فوري للمستخدم
@@ -55,8 +55,8 @@ const DigitalMarketing = () => {
       };
 
       switch (method) {
-        case 'tap':
-          functionName = 'tap-payment';
+        case 'paylink':
+          functionName = 'paylink-payment';
           payload.success_url = window.location.origin;
           break;
         case 'stc-pay':
@@ -132,8 +132,8 @@ const DigitalMarketing = () => {
           const paymentUrl = data.url || data.paymentUrl || data.payment_url;
           
           setTimeout(() => {
-            if (method === 'tap') {
-              // فتح TAP في نفس التبويب
+            if (method === 'paylink') {
+              // فتح Paylink في نفس التبويب
               window.location.href = paymentUrl;
             } else {
               // فتح باقي الطرق في تبويب جديد
@@ -457,31 +457,31 @@ const DigitalMarketing = () => {
       <div className="pt-[48px] lg:pt-[112px]" />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-16 sm:py-20 md:py-32 min-h-[70vh] sm:min-h-[80vh] flex items-center">
+      <section className="relative overflow-hidden py-20 md:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-red-600 opacity-90" />
         <div className="absolute inset-0 bg-grid-pattern opacity-20" />
         
-        <div className="container-fluid relative z-10 text-center w-full px-4 sm:px-6">
-          <div className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-4 sm:mb-6 animate-fade-in text-sm">
-            <Megaphone className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-            <span className="text-white/90 text-xs sm:text-sm">حلول تسويقية احترافية</span>
+        <div className="container-fluid relative z-10 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6 animate-fade-in">
+            <Megaphone className="w-4 h-4 text-white" />
+            <span className="text-white/90 text-sm">حلول تسويقية احترافية</span>
           </div>
           
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 animate-fade-in leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-fade-in">
             خدمات <span className="text-gradient bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">التسويق الرقمي</span>
           </h1>
           
-          <p className="text-base sm:text-lg md:text-xl text-white/80 max-w-3xl mx-auto mb-6 sm:mb-8 animate-fade-in px-2">
+          <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8 animate-fade-in">
             نساعدك في بناء استراتيجية تسويقية قوية وفعالة تحقق أهدافك التجارية وتعزز نمو أعمالك
           </p>
           
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 animate-fade-in">
-            <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-xs sm:text-sm">
-              <Star className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
+          <div className="flex flex-wrap justify-center gap-4 animate-fade-in">
+            <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+              <Star className="w-4 h-4 ml-2" />
               خبرة ١٠+ سنوات
             </Badge>
-            <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-xs sm:text-sm">
-              <Users className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
+            <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+              <Users className="w-4 h-4 ml-2" />
               ١٠٠+ عميل راضي
             </Badge>
           </div>
@@ -489,21 +489,21 @@ const DigitalMarketing = () => {
       </section>
 
       {/* Services Section */}
-      <section className="relative py-12 sm:py-16 md:py-20 -mt-6 sm:-mt-10 z-20 overflow-hidden">
+      <section className="relative py-20 -mt-10 z-20 overflow-hidden">
         {/* Marketing Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20" />
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-        <div className="absolute top-5 left-5 sm:top-10 sm:left-10 w-16 h-16 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-5 right-5 sm:bottom-10 sm:right-10 w-20 h-20 sm:w-40 sm:h-40 bg-gradient-to-br from-pink-400/20 to-red-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/3 w-12 h-12 sm:w-24 sm:h-24 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-br from-pink-400/20 to-red-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
         
-        <div className="container-fluid relative z-10 px-4 sm:px-6">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">خدماتنا المتاحة</h2>
-            <p className="text-base sm:text-lg text-muted-foreground px-4">اختر الخدمة المناسبة لاحتياجاتك</p>
+        <div className="container-fluid relative z-10">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">خدماتنا المتاحة</h2>
+            <p className="text-lg text-muted-foreground">اختر الخدمة المناسبة لاحتياجاتك</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {services.map((service, index) => (
               <Card 
                 key={service.id} 

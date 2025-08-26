@@ -8,9 +8,6 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    hmr: {
-      overlay: true,
-    },
   },
   plugins: [
     react(),
@@ -21,23 +18,5 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-  },
-  build: {
-    // Optimize chunk splitting for better loading
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['framer-motion', 'lucide-react'],
-        },
-      },
-    },
-    // Enable source maps for better debugging
-    sourcemap: mode === 'development',
-  },
-  optimizeDeps: {
-    // Include commonly used dependencies for faster dev server startup
-    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
   },
 }));

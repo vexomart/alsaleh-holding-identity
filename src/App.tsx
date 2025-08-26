@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, startTransition, useMemo } from "react";
+import React, { lazy, Suspense, startTransition } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -173,17 +173,12 @@ const PageLoader = () => (
 
 
 
-// Create QueryClient instance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-    },
-  },
-});
+// Create QueryClient instance outside component to avoid useRef issues
+const queryClient = new QueryClient();
 
 const App = () => {
+  console.log('App component rendering...');
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={300} skipDelayDuration={0}>
@@ -351,7 +346,7 @@ const App = () => {
                 
                 <Route path="/tech-ecosystem" element={<TechEcosystem />} />
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
-                <Route path="/digital-marketing" element={<Suspense fallback={<PageLoader />}><DigitalMarketing /></Suspense>} />
+                <Route path="/digital-marketing" element={<DigitalMarketing />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/enhanced-payment" element={<Suspense fallback={<PageLoader />}><EnhancedPaymentPage /></Suspense>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

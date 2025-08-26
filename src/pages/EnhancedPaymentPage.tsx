@@ -70,7 +70,7 @@ const EnhancedPaymentPage = () => {
     setIsLoading(false);
   }, [searchParams, navigate, toast]);
 
-  const handlePaymentMethod = async (method: 'tap' | 'stc-pay' | 'tamara') => {
+  const handlePaymentMethod = async (method: 'paylink' | 'stc-pay' | 'tamara') => {
     if (!serviceData) return;
 
     setLoadingMethod(method);
@@ -94,8 +94,8 @@ const EnhancedPaymentPage = () => {
       };
 
       switch (method) {
-        case 'tap':
-          functionName = 'tap-payment';
+        case 'paylink':
+          functionName = 'paylink-payment';
           payload.success_url = window.location.origin + '/payment-success';
           break;
         case 'stc-pay':
@@ -169,7 +169,7 @@ const EnhancedPaymentPage = () => {
           const paymentUrl = data.url || data.paymentUrl || data.payment_url;
           
           setTimeout(() => {
-            if (method === 'tap') {
+            if (method === 'paylink') {
               window.location.href = paymentUrl;
             } else {
               window.open(paymentUrl, '_blank');
@@ -361,16 +361,16 @@ const EnhancedPaymentPage = () => {
                 {/* Payment Methods */}
                 <div className="space-y-3">
                   <Button
-                    onClick={() => handlePaymentMethod('tap')}
+                    onClick={() => handlePaymentMethod('paylink')}
                     disabled={loadingMethod !== null}
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 text-lg font-bold hover-scale shadow-xl transition-all duration-300"
                   >
-                    {loadingMethod === 'tap' ? (
+                    {loadingMethod === 'paylink' ? (
                       <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     ) : (
                       <CreditCard className="w-5 h-5 mr-2" />
                     )}
-                    الدفع بالبطاقة - TAP
+                    الدفع بالبطاقة - Paylink
                   </Button>
 
                   <Button

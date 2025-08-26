@@ -70,7 +70,7 @@ const BusinessStationery = () => {
 
       console.log('📤 Sending payment data:', JSON.stringify(paymentData, null, 2));
 
-      const { data, error } = await supabase.functions.invoke('tap-payment', {
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
         body: paymentData
       });
 
@@ -85,10 +85,9 @@ const BusinessStationery = () => {
 
       if (data?.success && data?.payment_url) {
         toast.success('تم إنشاء رابط الدفع بنجاح');
-        console.log('🔗 Redirecting to payment URL:', data.payment_url);
+        console.log('🔗 Opening payment URL:', data.payment_url);
         setShowPaymentModal(false);
-        // التوجه إلى صفحة الدفع في نفس النافذة
-        window.location.href = data.payment_url;
+        window.open(data.payment_url, '_blank');
       } else {
         console.error('❌ Invalid response:', data);
         toast.error(data?.error || 'فشل في إنشاء رابط الدفع');

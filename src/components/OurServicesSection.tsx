@@ -1,287 +1,464 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Code, Package, TrendingUp, ArrowRight, Globe, Sparkles, Zap, Star, CheckCircle, Shield, BarChart3, Users, Award, Target, Rocket } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Code, Package, Megaphone, Building, PenTool, ArrowLeft, Sparkles, Zap, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 const services = [
   {
     id: 1,
-    title: "تطوير التطبيقات والمواقع",
-    titleEn: "DEVELOPMENT",
-    subtitle: "حلول تقنية متطورة",
-    description: "نصمم ونطور تطبيقات ومواقع إلكترونية متقدمة باستخدام أحدث التقنيات العالمية",
+    title: "برمجة التطبيقات والمواقع",
+    titleEn: "Application & Web Development",
+    description: "نقوم بتطوير تطبيقات الجوال والمواقع الإلكترونية باستخدام أحدث التقنيات العالمية والمعايير الدولية للجودة",
     icon: Code,
-    primaryGradient: "from-blue-500 to-indigo-600",
-    glowColor: "blue-500/20",
-    accentColor: "text-blue-600",
-    bgPattern: "bg-gradient-to-br from-blue-50/80 to-indigo-50/60",
-    features: [
-      "تطبيقات ويب متقدمة",
-      "تطبيقات موبايل أصلية", 
-      "أنظمة إدارة متكاملة",
-      "واجهات برمجية آمنة"
-    ],
-    metrics: {
-      projects: "500+",
-      clients: "200+",
-      satisfaction: "99%"
-    },
-    technologies: ["React", "Node.js", "Python", "AWS"],
-    route: "/development",
-    badge: "الأكثر طلباً",
-    badgeGradient: "from-blue-500 to-indigo-600"
+    gradient: "from-blue-600 via-blue-700 to-indigo-800",
+    bgGradient: "from-blue-50/80 to-indigo-100/60",
+    glowColor: "blue-500/30",
+    features: ["تطبيقات الموبايل", "المواقع التفاعلية", "أنظمة إدارة المحتوى"]
   },
   {
     id: 2,
-    title: "الحلول الجاهزة",
-    titleEn: "READY SOLUTIONS", 
-    subtitle: "نشر سريع وفعال",
-    description: "حلول برمجية جاهزة ومختبرة لتسريع نمو أعمالك الرقمية",
+    title: "المشاريع الجاهزة",
+    titleEn: "Ready-Made Solutions", 
+    description: "حلول برمجية متكاملة وجاهزة للاستخدام الفوري، مصممة لتلبية احتياجات الشركات المختلفة بكفاءة عالية",
     icon: Package,
-    primaryGradient: "from-emerald-500 to-teal-600",
-    glowColor: "emerald-500/20",
-    accentColor: "text-emerald-600",
-    bgPattern: "bg-gradient-to-br from-emerald-50/80 to-teal-50/60",
-    features: [
-      "نشر فوري في 24 ساعة",
-      "تخصيص العلامة التجارية",
-      "دعم فني 24/7",
-      "تحديثات تلقائية"
-    ],
-    metrics: {
-      projects: "150+",
-      clients: "80+", 
-      satisfaction: "97%"
-    },
-    technologies: ["Cloud", "Docker", "MongoDB", "APIs"],
-    route: "/ready-projects",
-    badge: "الأكثر شعبية",
-    badgeGradient: "from-emerald-500 to-teal-600"
+    gradient: "from-emerald-600 via-green-700 to-teal-800",
+    bgGradient: "from-emerald-50/80 to-teal-100/60",
+    glowColor: "emerald-500/30",
+    features: ["أنظمة جاهزة", "حلول سريعة", "دعم فني شامل"]
   },
   {
     id: 3,
-    title: "التسويق الرقمي",
-    titleEn: "DIGITAL MARKETING",
-    subtitle: "نمو مدعوم بالذكاء الاصطناعي", 
-    description: "استراتيجيات تسويقية ذكية لزيادة المبيعات وتحقيق أعلى عائد استثمار",
-    icon: TrendingUp,
-    primaryGradient: "from-purple-500 to-pink-600",
-    glowColor: "purple-500/20",
-    accentColor: "text-purple-600",
-    bgPattern: "bg-gradient-to-br from-purple-50/80 to-pink-50/60",
-    features: [
-      "حملات ذكية بالذكاء الاصطناعي",
-      "تحليلات متقدمة", 
-      "استهداف دقيق",
-      "تقارير شاملة"
-    ],
-    metrics: {
-      projects: "800+",
-      clients: "300+",
-      satisfaction: "98%"
-    },
-    technologies: ["AI/ML", "Analytics", "Automation", "CRM"],
-    route: "/digital-marketing",
-    badge: "الأحدث",
-    badgeGradient: "from-purple-500 to-pink-600"
+    title: "التسويق الإلكتروني",
+    titleEn: "Digital Marketing",
+    description: "استراتيجيات تسويقية رقمية متطورة ومدروسة لزيادة الوصول والتفاعل وتحقيق أعلى معدلات التحويل",
+    icon: Megaphone,
+    gradient: "from-purple-600 via-violet-700 to-purple-800",
+    bgGradient: "from-purple-50/80 to-violet-100/60",
+    glowColor: "purple-500/30",
+    features: ["إدارة وسائل التواصل", "الإعلانات الرقمية", "تحسين محركات البحث"]
+  },
+  {
+    id: 4,
+    title: "أنظمة الشركات",
+    titleEn: "Enterprise Systems",
+    description: "أنظمة إدارة متطورة ومخصصة لتحسين العمليات التشغيلية وزيادة الإنتاجية وتعزيز الكفاءة المؤسسية",
+    icon: Building,
+    gradient: "from-orange-600 via-red-700 to-pink-800",
+    bgGradient: "from-orange-50/80 to-pink-100/60",
+    glowColor: "orange-500/30",
+    features: ["إدارة الموارد البشرية", "أنظمة المحاسبة", "إدارة المشاريع"]
+  },
+  {
+    id: 5,
+    title: "صناعة المحتوى",
+    titleEn: "Content Creation",
+    description: "إنتاج محتوى إبداعي ومؤثر عالي الجودة يعكس هوية علامتك التجارية ويجذب جمهورك المستهدف بفعالية",
+    icon: PenTool,
+    gradient: "from-cyan-600 via-blue-700 to-indigo-800",
+    bgGradient: "from-cyan-50/80 to-blue-100/60",
+    glowColor: "cyan-500/30",
+    features: ["المحتوى المرئي", "التصميم الجرافيكي", "إنتاج الفيديو"]
   }
 ];
 
 const OurServicesSection = () => {
+  const [activeAnimation, setActiveAnimation] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveAnimation((prev) => (prev + 1) % services.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <section className="relative py-12 lg:py-16 overflow-hidden bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Animated Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px] opacity-60 animate-pulse"></div>
+    <section className="relative py-8 sm:py-12 md:py-16 lg:py-20 xl:py-28 overflow-hidden font-inter">
+      {/* خلفية مميزة ومحسنة */}
+      <div className="absolute inset-0 z-0">
+        {/* الطبقة الرئيسية للخلفية مع تحسينات */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50/80 to-purple-50/60 dark:from-slate-900 dark:via-blue-900/20 dark:to-indigo-900/10"></div>
         
-        {/* Enhanced Floating Elements with Smooth Animation */}
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full blur-3xl animate-bounce" style={{ animationDuration: "6s" }}></div>
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-to-r from-purple-400/25 to-pink-400/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s", animationDuration: "4s" }}></div>
-        <div className="absolute top-1/2 left-1/2 w-36 h-36 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-full blur-2xl animate-bounce" style={{ animationDelay: "4s", animationDuration: "8s" }}></div>
+        {/* العناصر الجرافيكية المتحركة المحسنة */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+          {/* دوائر متدرجة متحركة أكثر وضوحاً */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-indigo-600/25 rounded-full blur-3xl animate-float opacity-80"></div>
+          <div className="absolute bottom-1/3 right-1/4 w-[28rem] h-[28rem] bg-gradient-to-tr from-purple-400/25 to-pink-500/20 rounded-full blur-3xl animate-float-delayed opacity-70"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-cyan-400/20 to-blue-500/15 rounded-full blur-2xl animate-pulse opacity-60" style={{ animationDuration: "4s" }}></div>
+          
+          {/* خطوط هندسية ديناميكية محسنة */}
+          <svg className="absolute inset-0 w-full h-full opacity-20 dark:opacity-10" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="premium-services-grid" width="80" height="80" patternUnits="userSpaceOnUse">
+                <path d="M 80 0 L 0 0 0 80" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.4"/>
+                <circle cx="40" cy="40" r="3" fill="currentColor" opacity="0.6"/>
+                <path d="M 25 25 L 55 25 L 55 55 L 25 55 Z" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.3"/>
+                <path d="M 10 40 L 70 40 M 40 10 L 40 70" stroke="currentColor" strokeWidth="0.5" opacity="0.2"/>
+              </pattern>
+              <radialGradient id="services-radial" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.2"/>
+                <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.15"/>
+                <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.1"/>
+              </radialGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#premium-services-grid)" className="text-blue-600 dark:text-blue-400"/>
+            <rect width="100%" height="100%" fill="url(#services-radial)" opacity="0.3"/>
+          </svg>
+          
+          {/* عناصر ضوئية متحركة محسنة */}
+          <div className="absolute top-20 right-20 w-4 h-32 bg-gradient-to-b from-blue-500/60 to-transparent rounded-full animate-pulse" style={{ animationDelay: "1s" }}></div>
+          <div className="absolute bottom-24 left-24 w-32 h-4 bg-gradient-to-r from-purple-500/60 to-transparent rounded-full animate-pulse" style={{ animationDelay: "2s" }}></div>
+          <div className="absolute top-1/3 right-1/3 w-6 h-20 bg-gradient-to-b from-indigo-500/50 to-transparent rounded-full animate-pulse" style={{ animationDelay: "3s" }}></div>
+          
+          {/* نجوم متلألئة محسنة */}
+          <div className="absolute top-32 left-1/3 w-3 h-3 bg-yellow-400 rounded-full animate-ping opacity-80" style={{ animationDelay: "0.5s" }}></div>
+          <div className="absolute bottom-1/4 right-1/3 w-2.5 h-2.5 bg-blue-400 rounded-full animate-ping opacity-60" style={{ animationDelay: "1.5s" }}></div>
+          <div className="absolute top-2/3 left-16 w-2 h-2 bg-purple-400 rounded-full animate-ping opacity-70" style={{ animationDelay: "3s" }}></div>
+          <div className="absolute top-1/4 right-16 w-2 h-2 bg-green-400 rounded-full animate-ping opacity-50" style={{ animationDelay: "4s" }}></div>
+          <div className="absolute bottom-1/2 left-1/3 w-1.5 h-1.5 bg-pink-400 rounded-full animate-ping opacity-60" style={{ animationDelay: "2.5s" }}></div>
+          
+          {/* أشكال هندسية إضافية */}
+          <div className="absolute top-1/4 right-1/4 w-12 h-12 border-2 border-blue-400/30 rotate-45 animate-spin opacity-40" style={{ animationDuration: "20s" }}></div>
+          <div className="absolute bottom-1/3 left-1/3 w-8 h-8 border-2 border-purple-400/25 rotate-12 animate-bounce opacity-30" style={{ animationDuration: "3s" }}></div>
+          
+          {/* تأثير الضباب اللامع محسن */}
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/20 to-transparent pointer-events-none dark:via-blue-900/10"></div>
+        </div>
         
-        {/* Moving Particles */}
-        <div className="absolute top-10 left-10 w-2 h-2 bg-cyan-400 rounded-full animate-ping" style={{ animationDelay: "1s" }}></div>
-        <div className="absolute top-20 right-20 w-3 h-3 bg-purple-400 rounded-full animate-ping" style={{ animationDelay: "3s" }}></div>
-        <div className="absolute bottom-20 left-20 w-2 h-2 bg-emerald-400 rounded-full animate-ping" style={{ animationDelay: "5s" }}></div>
+        {/* طبقة تحسين الوضوح */}
+        <div className="absolute inset-0 backdrop-blur-[0.3px] bg-white/5 dark:bg-black/5"></div>
       </div>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header Section - Compact */}
-        <div className="text-center mb-8 lg:mb-12">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 border border-cyan-300/30 rounded-full mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
-            <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
-            <span className="text-sm font-bold text-white uppercase tracking-wider">
-              خدماتنا المتميزة
-            </span>
+      {/* المحتوى */}
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 relative z-10 max-w-7xl">
+        {/* Mobile-First Enterprise Header */}
+        <div className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-28 animate-fade-in">
+          {/* Mobile-Optimized Premium Badge */}
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 lg:gap-3 px-3 sm:px-4 md:px-6 lg:px-8 py-1.5 sm:py-2 lg:py-3 rounded-full bg-gradient-to-r from-blue-600/8 via-indigo-600/8 to-purple-600/8 sm:from-blue-600/10 sm:via-indigo-600/10 sm:to-purple-600/10 border border-blue-500/15 sm:border-blue-500/20 backdrop-blur-lg mb-4 sm:mb-6 lg:mb-8 shadow-md sm:shadow-lg">
+            <div className="relative flex items-center gap-1 sm:gap-1.5 lg:gap-2">
+              <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-blue-600 animate-pulse" />
+              <span className="text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 tracking-wide font-cairo">
+                محفظة الخدمات المتميزة
+              </span>
+              <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 text-gold-500 animate-pulse" style={{ animationDelay: "0.5s" }} />
+            </div>
           </div>
           
-          {/* Main Title */}
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent mb-4 leading-tight">
-            حلول تقنية متطورة
-          </h2>
+          {/* Mobile-Optimized Multilingual Heading */}
+          <div className="space-y-1 sm:space-y-2 md:space-y-3 lg:space-y-4 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-8xl font-black font-inter tracking-tight leading-tight px-2 sm:px-0">
+              <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
+                خدماتنا
+              </span>
+            </h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-bold text-slate-500 dark:text-slate-400 font-cairo tracking-wide">
+              خدماتنا المتميزة
+            </p>
+          </div>
           
-          {/* Subtitle */}
-          <p className="text-base md:text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed">
-            نقدم حلولاً تقنية مبتكرة ومتخصصة لتحقيق أهدافك الرقمية
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-slate-600 dark:text-slate-300 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto leading-relaxed font-medium font-cairo px-2 sm:px-4 md:px-0">
+            نقدم حلول تقنية متطورة ومبتكرة على مستوى عالمي، مصممة خصيصاً لتلبية احتياجات الشركات الحديثة وتحقيق أهدافها الرقمية الطموحة
           </p>
+          
+          {/* Mobile-Optimized Animated Corporate Divider */}
+          <div className="flex justify-center mt-4 sm:mt-6 md:mt-8 lg:mt-12">
+            <div className="relative flex items-center gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
+              <div className="w-6 sm:w-8 md:w-12 lg:w-16 h-0.5 sm:h-0.5 lg:h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full"></div>
+              <Zap className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-blue-600 animate-pulse" />
+              <div className="w-6 sm:w-8 md:w-12 lg:w-16 h-0.5 sm:h-0.5 lg:h-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full"></div>
+            </div>
+          </div>
         </div>
 
-        {/* Services Grid - Three Large Beautiful Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
+        {/* Mobile-First Enterprise Services Grid - Fully Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 mb-8 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-24 w-full">
           {services.map((service, index) => {
             const IconComponent = service.icon;
+            const isActive = activeAnimation === index;
             
             return (
               <Card
                 key={service.id}
-                className="group relative overflow-hidden bg-white/95 backdrop-blur-lg border-0 rounded-2xl transition-all duration-700 hover:shadow-2xl hover:-translate-y-2 hover:scale-105 cursor-pointer animate-fade-in h-full shadow-xl hover:rotate-1"
+                className={cn(
+                  "group relative overflow-hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl",
+                  "border-2 border-slate-200/60 dark:border-slate-700/60 rounded-xl sm:rounded-2xl lg:rounded-3xl",
+                  "transition-all duration-700 shadow-md sm:shadow-lg lg:shadow-xl",
+                  isActive && "animate-pulse border-blue-400/80 dark:border-blue-500/80",
+                  "animate-fade-in w-full max-w-full"
+                )}
                 style={{ 
-                  animationDelay: `${index * 0.2}s`,
+                  animationDelay: `${index * 0.1}s`,
                 }}
               >
-                {/* Enhanced Glow Effect */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.primaryGradient} opacity-0 group-hover:opacity-10 transition-all duration-700`}></div>
-                <div className={`absolute -inset-2 bg-gradient-to-r ${service.primaryGradient} opacity-0 group-hover:opacity-20 blur-xl transition-all duration-700`}></div>
                 
-                <CardContent className="relative z-10 p-6 lg:p-8 h-full flex flex-col">
-                  {/* Badge with Animation */}
-                  <div className="mb-6">
-                    <Badge 
-                      className={`bg-gradient-to-r ${service.badgeGradient} text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg border-0 animate-pulse hover:animate-bounce`}
-                    >
-                      {service.badge}
-                    </Badge>
+                <CardContent className="relative z-10 p-3 sm:p-4 md:p-6 lg:p-8 xl:p-10 w-full">
+                  {/* Mobile-First Responsive Animated Icon Container with Enhanced Effects */}
+                  <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-10 relative flex justify-center sm:justify-start">
+                     <div className={cn(
+                       "relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18 rounded-xl sm:rounded-2xl lg:rounded-3xl flex items-center justify-center transition-all duration-700",
+                       "bg-slate-100 dark:bg-slate-700 shadow-md sm:shadow-lg lg:shadow-xl xl:shadow-2xl transform-gpu",
+                       isActive ? "animate-icon-float scale-110" : "",
+                       "border-2 border-slate-200 dark:border-slate-600"
+                     )}>
+                       <IconComponent 
+                         className={cn(
+                           "w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-9 xl:h-9 text-slate-600 dark:text-slate-300 transition-all duration-700",
+                           isActive ? "animate-bounce-slow scale-110" : ""
+                         )}
+                       />
+                       
+                       <div className={cn(
+                         "absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl border border-slate-300/30 dark:border-slate-500/30 transition-all duration-1000",
+                         isActive ? "border-slate-400/50 dark:border-slate-400/50" : ""
+                       )}></div>
+                       
+                       {/* Enhanced Corner Sparkles */}
+                       <Sparkles className={cn(
+                         "absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 lg:-top-2 lg:-right-2 w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 text-slate-500 dark:text-slate-400 transition-all duration-500",
+                         isActive ? "animate-pulse scale-125" : "opacity-0"
+                       )} />
+                     </div>
                   </div>
 
-                  {/* Icon with Enhanced Animation */}
-                  <div className="mb-6">
-                    <div className={`relative w-20 h-20 bg-gradient-to-br ${service.primaryGradient} rounded-2xl flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-700 shadow-2xl mx-auto`}>
-                      <IconComponent className="w-10 h-10 text-white relative z-10 group-hover:animate-pulse" />
-                      <div className={`absolute inset-0 bg-gradient-to-r ${service.primaryGradient} opacity-50 blur-md rounded-2xl group-hover:animate-ping`}></div>
-                    </div>
-                  </div>
-
-                  {/* Content with Better Typography */}
-                  <div className="flex-1 space-y-4 text-center">
-                    {/* Title with Gradient */}
-                    <h3 className={`text-xl lg:text-2xl font-bold bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent leading-tight group-hover:scale-105 transition-transform duration-500`}>
-                      {service.title}
-                    </h3>
-                    
-                    {/* English Title with Shadow */}
-                    <p className="text-sm font-bold text-gray-600 uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity duration-500">
-                      {service.titleEn}
-                    </p>
-                    
-                    {/* Full Description */}
-                    <p className="text-gray-700 text-base leading-relaxed font-medium">
-                      {service.description}
-                    </p>
-                    
-                    {/* Enhanced Metrics */}
-                    <div className="grid grid-cols-3 gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100 group-hover:bg-gray-100 transition-colors duration-500">
-                      <div className="text-center">
-                        <div className={`text-lg font-bold bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent`}>{service.metrics.projects}</div>
-                        <div className="text-sm text-gray-600">مشروع</div>
-                      </div>
-                      <div className="text-center">
-                        <div className={`text-lg font-bold bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent`}>{service.metrics.clients}</div>
-                        <div className="text-sm text-gray-600">عميل</div>
-                      </div>
-                      <div className="text-center">
-                        <div className={`text-lg font-bold bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent`}>{service.metrics.satisfaction}</div>
-                        <div className="text-sm text-gray-600">رضا</div>
-                      </div>
+                  {/* Mobile-First Enhanced Content with Better Typography - Fully Responsive */}
+                  <div className="space-y-2.5 sm:space-y-3 md:space-y-4 lg:space-y-5 xl:space-y-6 w-full">
+                    {/* Enhanced Mobile-Optimized Title with Custom Typography */}
+                    <div className="space-y-1 sm:space-y-1.5 lg:space-y-2 text-center sm:text-right">
+                     <h3 className={cn(
+                         "text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-black leading-tight transition-all duration-500",
+                         "text-slate-800 dark:text-white",
+                         "font-cairo tracking-wide break-words",
+                         "relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r",
+                         `after:${service.gradient} after:transition-all after:duration-500`,
+                         "transform transition-transform duration-300"
+                       )}>
+                         {service.title}
+                       </h3>
+                       <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 font-poppins tracking-wider uppercase opacity-80 transition-opacity duration-300">
+                         {service.titleEn}
+                       </p>
                     </div>
                     
-                    {/* All Features */}
-                    <div className="space-y-3">
-                      {service.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center gap-3 text-sm group-hover:translate-x-1 transition-transform duration-300" style={{ transitionDelay: `${idx * 100}ms` }}>
-                          <CheckCircle className={`w-5 h-5 bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent`} />
-                          <span className="text-gray-700 font-medium">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Enhanced CTA Button */}
-                  <div className="mt-6">
-                    <Link to={service.route}>
-                      <Button 
-                        size="lg"
-                        className={`w-full bg-gradient-to-r ${service.primaryGradient} hover:shadow-2xl text-white border-0 rounded-xl py-4 font-bold text-base transition-all duration-500 group-hover:scale-105 relative overflow-hidden`}
-                      >
-                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
-                        <span className="relative z-10">اكتشف المزيد</span>
-                        <ArrowRight className="w-5 h-5 mr-2 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
-                      </Button>
-                    </Link>
+                     <p className={cn(
+                       "text-xs sm:text-sm md:text-base lg:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-medium text-center sm:text-right",
+                       "transition-colors duration-500",
+                       "font-cairo line-clamp-3 sm:line-clamp-4 lg:line-clamp-none break-words",
+                       "relative pl-2 sm:pl-3 border-l-2 border-transparent transition-all duration-500"
+                     )}>
+                       {service.description}
+                     </p>
+                     
+                     {/* Enhanced Mobile-Optimized Feature Tags */}
+                     <div className="flex flex-wrap justify-center sm:justify-start gap-1 sm:gap-1.5 lg:gap-2">
+                       {service.features.map((feature, idx) => (
+                         <span 
+                           key={idx}
+                           className={cn(
+                             "px-1.5 sm:px-2 lg:px-2.5 xl:px-3 py-0.5 sm:py-1 text-xs font-bold rounded-full transition-all duration-300",
+                             "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300",
+                             "font-cairo",
+                             "border border-transparent",
+                             "shadow-sm whitespace-nowrap"
+                           )}
+                            style={{ animationDelay: `${idx * 0.1}s` }}
+                         >
+                           {feature}
+                         </span>
+                       ))}
+                     </div>
+                     
+                     {/* Enhanced Mobile-First Premium Action Button - Always Visible & Fully Responsive */}
+                     <div className={cn(
+                       "flex items-center justify-center sm:justify-start gap-2 sm:gap-3 lg:gap-4 mt-3 sm:mt-4 md:mt-6 lg:mt-8 font-bold transition-all duration-500",
+                       "text-blue-600 dark:text-blue-400",
+                       "opacity-100 translate-x-0 w-full" // Always visible and positioned
+                     )}>
+                        <Link 
+                          to={
+                            service.id === 1 ? "/development" :
+                            service.id === 2 ? "/ready-projects" : 
+                            service.id === 3 ? "/digital-marketing" :
+                            service.id === 4 ? "/enterprise-systems" : 
+                            service.id === 5 ? "/content-creation" : "#"
+                          } 
+                          className="flex items-center gap-2 sm:gap-3 lg:gap-4"
+                        >
+                         <span className="text-sm sm:text-base lg:text-lg font-black font-cairo relative whitespace-nowrap">
+                           المزيد
+                         </span>
+                          <div className={cn(
+                            "relative w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-slate-200 dark:bg-slate-600 flex items-center justify-center transition-all duration-500 flex-shrink-0",
+                            "shadow-sm sm:shadow-md lg:shadow-lg",
+                            "border-2 border-slate-300 dark:border-slate-500",
+                            "transform-gpu"
+                          )}>
+                           <ArrowLeft className="relative z-10 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-slate-600 dark:text-slate-300 transition-transform duration-300" />
+                           
+                           {/* Rotating Ring */}
+                           <div className="absolute inset-0 rounded-lg sm:rounded-xl lg:rounded-2xl border border-white/40 transition-transform duration-1000"></div>
+                         </div>
+                       </Link>
+                     </div>
                   </div>
                 </CardContent>
+                
+                {/* Enhanced Mobile-Responsive Corner Indicators with Multiple Effects */}
+                <div className="absolute top-3 right-3 sm:top-4 sm:right-4 lg:top-6 lg:right-6 flex items-center gap-1">
+                  {/* Main Indicator */}
+                   <div className={cn(
+                     "w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-3 lg:h-3 rounded-full transition-all duration-500",
+                     `bg-gradient-to-r ${service.gradient}`,
+                     isActive ? "scale-150 sm:scale-175 animate-pulse" : "",
+                     `shadow-sm sm:shadow-md lg:shadow-lg shadow-${service.glowColor}`,
+                     "border border-white/50"
+                   )}></div>
+                   
+                   {/* Orbital Ring */}
+                   <div className={cn(
+                     "absolute w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full border border-blue-400/20 transition-all duration-1000",
+                     isActive ? "animate-rotate opacity-100" : "opacity-0"
+                   )}></div>
+                   
+                   {/* Pulsing Background */}
+                   <div className={cn(
+                     "absolute w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full transition-all duration-500 blur-sm opacity-0",
+                     `bg-gradient-to-r ${service.gradient}`
+                   )}></div>
+                </div>
               </Card>
             );
           })}
         </div>
 
-        {/* Call to Action Section - Compact */}
-        <div className="text-center">
-          <div className="inline-flex flex-col items-center gap-6 p-8 bg-gradient-to-r from-white/10 to-cyan-500/10 rounded-2xl border border-white/20 backdrop-blur-md max-w-4xl mx-auto">
-            <div className="space-y-3">
-              <h3 className="text-2xl md:text-3xl font-bold text-white">
-                مستعد لبدء مشروعك؟
-              </h3>
-              <p className="text-lg text-gray-200 max-w-2xl">
-                انضم إلى أكثر من 1000 عميل واكتشف كيف يمكن لحلولنا تحويل فكرتك إلى واقع رقمي ناجح
-              </p>
+        {/* Compact Executive Call to Action */}
+        <div className="text-center px-2 sm:px-4">
+          <div className="relative group max-w-3xl sm:max-w-4xl mx-auto">
+            {/* Simplified Border Frame */}
+            <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-0.5">
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/services">
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-bold group"
-                >
-                  <Globe className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform duration-300" />
-                  <span className="mx-2">استكشف جميع الخدمات</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </Link>
-              
-              <Link to="/contact">
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="border-2 border-white/30 hover:border-white/50 text-white hover:text-white bg-white/10 hover:bg-white/20 px-8 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-bold group"
-                >
-                  <Users className="w-5 h-5 ml-2 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="mx-2">تحدث معنا</span>
-                </Button>
-              </Link>
+            {/* Executive Glow */}
+            <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-md animate-pulse opacity-50"></div>
+            
+            {/* Main Content Container */}
+            <div className="relative bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl rounded-xl sm:rounded-2xl p-0.5 shadow-lg sm:shadow-xl">
+              <div className="relative p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50/95 via-white/90 to-blue-50/80 dark:from-slate-800/95 dark:via-slate-700/90 dark:to-slate-800/80 overflow-hidden">
+                
+                {/* Executive Background Elements */}
+                <div className="absolute inset-0 opacity-20 dark:opacity-10">
+                  <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="executive-pattern" width="60" height="60" patternUnits="userSpaceOnUse">
+                        <circle cx="30" cy="30" r="1" fill="currentColor" opacity="0.2"/>
+                        <path d="M 15 15 L 45 15 L 45 45 L 15 45 Z" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.15"/>
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#executive-pattern)" className="text-blue-600"/>
+                  </svg>
+                </div>
+                
+                {/* Executive Badge */}
+                <div className="absolute top-3 sm:top-4 left-1/2 transform -translate-x-1/2">
+                  <div className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-gold-400/20 to-amber-500/30 border border-gold-400/40 backdrop-blur-lg">
+                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-600 animate-pulse" />
+                    <span className="text-xs font-black text-amber-700 dark:text-amber-300 tracking-wide uppercase font-poppins">
+                      الاستشارة التنفيذية
+                    </span>
+                    <Sparkles className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-gold-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                  </div>
+                </div>
+                
+                {/* Executive Content */}
+                <div className="relative z-10 pt-8 sm:pt-10 space-y-3 sm:space-y-4">
+                  <div className="text-center">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent mb-1 sm:mb-2 leading-tight font-inter">
+                      هل تحتاج إلى استشارة متخصصة؟
+                    </h3>
+                    <p className="text-sm sm:text-base font-bold text-slate-500 dark:text-slate-400 mb-2 sm:mb-3 font-poppins">
+                      هل تحتاج لاستشارة مخصصة؟
+                    </p>
+                    
+                    <div className="w-16 sm:w-20 h-0.5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full mx-auto mb-3 sm:mb-4 animate-shimmer"></div>
+                    
+                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl sm:max-w-3xl mx-auto font-medium font-inter">
+                      فريقنا من الخبراء والاستشاريين المتخصصين على مستوى عالمي جاهز لمساعدتك في تحقيق رؤيتك الرقمية وتطوير أعمالك باستخدام أحدث الحلول التقنية المبتكرة والمدروسة استراتيجياً
+                    </p>
+                  </div>
+                  
+                  {/* Compact Executive Action Buttons */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                    <Button 
+                      size="default"
+                      className={cn(
+                        "relative group bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600",
+                        "hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700",
+                        "text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold rounded-xl font-poppins",
+                        "shadow-md sm:shadow-lg hover:shadow-lg sm:hover:shadow-xl transition-all duration-500 transform hover:scale-105",
+                        "border border-white/20 backdrop-blur-lg overflow-hidden w-full sm:w-auto"
+                      )}
+                    >
+                      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full skew-x-12"></div>
+                      
+                      <div className="relative flex items-center justify-center gap-2">
+                        <span>تواصل معنا الآن</span>
+                        <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+                          <ArrowLeft className="w-3 h-3 transition-transform duration-300 group-hover:-translate-x-0.5" />
+                        </div>
+                      </div>
+                    </Button>
+                    
+                    <Button 
+                      variant="outline"
+                      size="default"
+                      className={cn(
+                        "relative group border-2 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold rounded-xl font-poppins",
+                        "border-blue-500/50 text-blue-600 dark:text-blue-400",
+                        "hover:text-white transition-all duration-500 transform hover:scale-105",
+                        "backdrop-blur-lg shadow-sm sm:shadow-md hover:shadow-md sm:hover:shadow-lg overflow-hidden",
+                        "hover:border-transparent w-full sm:w-auto"
+                      )}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      <div className="relative flex items-center justify-center gap-2">
+                        <span>مشاهدة أعمالنا</span>
+                        <div className="w-5 h-5 rounded-full border border-current flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-180">
+                          <div className="w-1 h-1 rounded-full bg-current"></div>
+                        </div>
+                      </div>
+                    </Button>
+                  </div>
+                  
+                  {/* Compact Executive Trust Indicators */}
+                  <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-slate-500 dark:text-slate-400 text-xs font-bold font-cairo">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                      <span>رد فوري</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" style={{ animationDelay: "0.5s" }}></div>
+                      <span>استشارة مجانية</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" style={{ animationDelay: "1s" }}></div>
+                      <span>متاح ٢٤/٧</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
-            {/* Trust Indicators */}
-            <div className="flex items-center gap-8 mt-4 pt-4 border-t border-white/20">
-              <div className="flex items-center gap-2 text-sm">
-                <Award className="w-4 h-4 text-yellow-400" />
-                <span className="text-gray-200 font-medium">معتمد عالمياً</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Shield className="w-4 h-4 text-green-400" />
-                <span className="text-gray-200 font-medium">أمان مضمون</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <BarChart3 className="w-4 h-4 text-cyan-400" />
-                <span className="text-gray-200 font-medium">نتائج مثبتة</span>
-              </div>
-            </div>
+            {/* Compact Corner Elements */}
+            <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-r-2 border-blue-600 rounded-tr-lg animate-pulse"></div>
+            <div className="absolute -bottom-2 -left-2 sm:-bottom-3 sm:-left-3 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-l-2 border-purple-600 rounded-bl-lg animate-pulse" style={{ animationDelay: '1s' }}></div>
           </div>
         </div>
       </div>
+      
+      {/* Bottom Executive Gradient */}
+      <div className="absolute bottom-0 inset-x-0 h-20 sm:h-32 lg:h-40 bg-gradient-to-t from-background via-primary/5 to-transparent"></div>
     </section>
   );
 };

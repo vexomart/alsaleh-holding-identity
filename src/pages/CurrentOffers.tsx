@@ -31,90 +31,48 @@ import {
 } from "lucide-react";
 
 const CurrentOffers = () => {
-  const [loadingOffers, setLoadingOffers] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   
   // تاريخ انتهاء العروض (25 يوم من الآن)  
   const offerEndDate = new Date();
   offerEndDate.setDate(offerEndDate.getDate() + 25);
 
-  // دالة للدفع باستخدام TAP (نفس النظام المستخدم في الكروت الشخصية)
+  // دالة للدفع الموحدة (نفس نظام التسويق الرقمي)
   const handlePayment = async (offer: any) => {
-    const offerId = offer.id;
-    setLoadingOffers(prev => new Set([...prev, offerId]));
-    
-    toast({
-      title: "جاري معالجة طلب الدفع...",
-      description: "يرجى الانتظار قليلاً"
-    });
-    
     try {
-      const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
-      console.log('معلومات العرض:', { title: offer.title, currentPrice: offer.currentPrice, amount });
+      console.log("🚀 Starting payment for offer:", offer);
       
-      const payload = {
-        amount: amount,
-        currency: 'SAR',
-        customer_name: 'عميل العروض الحالية',
-        customer_email: 'customer@currentoffers.com',
-        customer_phone: '966500000000',
-        offer_title: offer.title,
-        description: `طلب ${offer.title} - ${offer.description}`,
-        product_details: {
-          product_id: offer.id,
-          product_name: offer.title,
-          product_version: "V 1.0",
-          category: offer.category,
-          features: offer.features.join(', '),
-          original_price: offer.originalPrice,
-          discount: offer.discount,
-          delivery_time: offer.deliveryTime
-        }
-      };
-
-      console.log('إرسال بيانات الدفع:', payload);
-
-      const { data, error } = await supabase.functions.invoke('tap-payment', {
-        body: payload
-      });
-
-      console.log('استجابة الدفع:', { data, error });
-
-      if (error) {
-        console.error('خطأ في الطلب:', error);
-        throw new Error(error.message || 'فشل في إنشاء رابط الدفع');
-      }
-
-      if (data?.success && data?.payment_url) {
-        toast({
-          title: "تم إنشاء رابط الدفع بنجاح",
-          description: "سيتم توجيهك إلى صفحة الدفع"
-        });
-        
-        // التوجه إلى صفحة الدفع في نفس النافذة
-        window.location.href = data.payment_url;
-      } else {
-        throw new Error(data?.error || 'لم يتم إرجاع رابط الدفع');
-      }
-    } catch (error) {
-      console.error('خطأ في الدفع:', error);
-      
-      let errorMessage = "حدث خطأ أثناء عملية الدفع";
-      
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      
+      // عرض رسالة تحضير الدفع
       toast({
-        title: "خطأ في الدفع",
-        description: errorMessage,
-        variant: "destructive",
+        title: "🚀 جاري تحضير رابط الدفع...",
+        description: "سيتم توجيهك فوراً لصفحة الدفع الآمنة",
+        duration: 2000,
       });
-    } finally {
-      setLoadingOffers(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(offerId);
-        return newSet;
+
+      const amount = parseFloat(offer.currentPrice.replace(/,/g, ''));
+      console.log("💰 Payment amount:", amount);
+      
+      // إعداد معاملات الخدمة للتوجيه لصفحة الدفع المحسنة
+      const serviceParams = new URLSearchParams({
+        service: offer.id,
+        title: offer.title,
+        price: amount.toString(),
+        description: offer.description,
+        discount: offer.discount,
+        originalPrice: offer.originalPrice,
+        deliveryTime: offer.deliveryTime || "1-2 أسابيع",
+        features: offer.features.join('|')
+      });
+
+      // التوجيه إلى صفحة الدفع المحسنة
+      window.location.href = `/enhanced-payment?${serviceParams}`;
+      
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      toast({
+        title: "❌ خطأ في عملية الدفع",
+        description: error.message || "حدث خطأ أثناء إنشاء عملية الدفع. يرجى المحاولة مرة أخرى",
+        variant: "destructive",
       });
     }
   };
@@ -439,23 +397,13 @@ const currentOffers = [
                   <div className="space-y-3">
                     <Button 
                       onClick={() => handlePayment(offer)}
-                      disabled={loadingOffers.has(offer.id)}
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group border-0 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group border-0 relative overflow-hidden"
                     >
                       <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
                       <div className="relative flex items-center justify-center gap-3">
-                        {loadingOffers.has(offer.id) ? (
-                          <>
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                            <span className="font-bold">جاري المعالجة...</span>
-                          </>
-                        ) : (
-                          <>
-                            <CreditCard className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-                            <span className="font-bold">ادفع الآن</span>
-                            <Sparkles className="w-5 h-5 animate-pulse group-hover:animate-spin transition-all duration-300" />
-                          </>
-                        )}
+                        <CreditCard className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+                        <span className="font-bold">ادفع الآن</span>
+                        <Sparkles className="w-5 h-5 animate-pulse group-hover:animate-spin transition-all duration-300" />
                       </div>
                     </Button>
                   </div>
