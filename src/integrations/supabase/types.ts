@@ -66,6 +66,8 @@ export type Database = {
           ip_address: unknown | null
           is_revoked: boolean | null
           last_activity: string | null
+          revoked_at: string | null
+          session_secret: string | null
           session_token: string
           user_agent: string | null
         }
@@ -78,6 +80,8 @@ export type Database = {
           ip_address?: unknown | null
           is_revoked?: boolean | null
           last_activity?: string | null
+          revoked_at?: string | null
+          session_secret?: string | null
           session_token: string
           user_agent?: string | null
         }
@@ -90,6 +94,8 @@ export type Database = {
           ip_address?: unknown | null
           is_revoked?: boolean | null
           last_activity?: string | null
+          revoked_at?: string | null
+          session_secret?: string | null
           session_token?: string
           user_agent?: string | null
         }
@@ -1314,15 +1320,7 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "invoices_transaction_id_fkey"
-            columns: ["transaction_id"]
-            isOneToOne: false
-            referencedRelation: "payment_transactions"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       job_applicants: {
         Row: {
@@ -1763,77 +1761,67 @@ export type Database = {
             referencedRelation: "invoices"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "payment_history_transaction_id_fkey"
-            columns: ["transaction_id"]
-            isOneToOne: false
-            referencedRelation: "payment_transactions"
-            referencedColumns: ["id"]
-          },
         ]
       }
       payment_transactions: {
         Row: {
           amount: number
-          contract_data: Json | null
           contract_id: string | null
-          created_at: string
-          currency: string
+          created_at: string | null
+          currency: string | null
           customer_email: string
           customer_name: string
           customer_phone: string | null
+          description: string | null
           id: string
-          offer_title: string
-          paylink_transaction_no: string | null
-          payment_method: string | null
-          status: string
-          stc_pay_reference: string | null
-          tamara_order_id: string | null
-          tap_charge_id: string | null
-          tap_payment_id: string | null
-          updated_at: string
+          invoice_number: string | null
+          metadata: Json | null
+          offer_title: string | null
+          payment_date: string | null
+          payment_method: string
+          status: string | null
+          transaction_id: string
+          updated_at: string | null
           user_id: string
         }
         Insert: {
           amount: number
-          contract_data?: Json | null
           contract_id?: string | null
-          created_at?: string
-          currency?: string
+          created_at?: string | null
+          currency?: string | null
           customer_email: string
           customer_name: string
           customer_phone?: string | null
+          description?: string | null
           id?: string
-          offer_title: string
-          paylink_transaction_no?: string | null
-          payment_method?: string | null
-          status?: string
-          stc_pay_reference?: string | null
-          tamara_order_id?: string | null
-          tap_charge_id?: string | null
-          tap_payment_id?: string | null
-          updated_at?: string
+          invoice_number?: string | null
+          metadata?: Json | null
+          offer_title?: string | null
+          payment_date?: string | null
+          payment_method?: string
+          status?: string | null
+          transaction_id: string
+          updated_at?: string | null
           user_id: string
         }
         Update: {
           amount?: number
-          contract_data?: Json | null
           contract_id?: string | null
-          created_at?: string
-          currency?: string
+          created_at?: string | null
+          currency?: string | null
           customer_email?: string
           customer_name?: string
           customer_phone?: string | null
+          description?: string | null
           id?: string
-          offer_title?: string
-          paylink_transaction_no?: string | null
-          payment_method?: string | null
-          status?: string
-          stc_pay_reference?: string | null
-          tamara_order_id?: string | null
-          tap_charge_id?: string | null
-          tap_payment_id?: string | null
-          updated_at?: string
+          invoice_number?: string | null
+          metadata?: Json | null
+          offer_title?: string | null
+          payment_date?: string | null
+          payment_method?: string
+          status?: string | null
+          transaction_id?: string
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
@@ -2880,6 +2868,10 @@ export type Database = {
         Args: { subscriber_email: string }
         Returns: boolean
       }
+      check_sensitive_operation_limit: {
+        Args: { p_operation_type: string; p_user_id: string }
+        Returns: boolean
+      }
       create_admin_session: {
         Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
@@ -2888,11 +2880,24 @@ export type Database = {
         Args: { plain_password: string }
         Returns: Json
       }
+      create_secure_admin_password_v2: {
+        Args: { plain_password: string }
+        Returns: Json
+      }
       create_secure_admin_session: {
         Args:
           | { admin_user_id: string; session_data?: Json }
           | { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
+      }
+      create_ultra_secure_admin_session: {
+        Args: {
+          additional_entropy?: string
+          admin_user_id: string
+          user_agent?: string
+          user_ip?: unknown
+        }
+        Returns: Json
       }
       decrypt_sensitive_admin_data: {
         Args: { encrypted_data: string }
@@ -2905,6 +2910,15 @@ export type Database = {
       encrypt_sensitive_admin_data: {
         Args: { data_text: string }
         Returns: string
+      }
+      enhanced_admin_rate_limit_check: {
+        Args: {
+          p_action_type: string
+          p_admin_id: string
+          p_limit?: number
+          p_window_minutes?: number
+        }
+        Returns: boolean
       }
       enhanced_rate_limit_check: {
         Args: {
@@ -2988,6 +3002,10 @@ export type Database = {
         Args: { user_id?: string }
         Returns: boolean
       }
+      is_admin_user: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       log_sensitive_data_access: {
         Args: {
           p_access_type: string
@@ -3015,12 +3033,28 @@ export type Database = {
         Args: { phone_input: string; user_requesting?: string }
         Returns: string
       }
+      mask_sensitive_email: {
+        Args: { email_input: string; user_requesting?: string }
+        Returns: string
+      }
+      mask_sensitive_phone: {
+        Args: { phone_input: string; user_requesting?: string }
+        Returns: string
+      }
+      owns_payment_transaction: {
+        Args: { transaction_user_id: string }
+        Returns: boolean
+      }
       record_automation_usage: {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
       }
       validate_admin_session: {
         Args: { session_id: string } | { token: string; user_agent?: string }
+        Returns: Json
+      }
+      validate_ultra_secure_admin_session: {
+        Args: { token: string; user_agent?: string; user_ip?: unknown }
         Returns: Json
       }
       verify_admin_password: {
