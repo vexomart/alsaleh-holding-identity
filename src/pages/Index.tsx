@@ -63,9 +63,6 @@ const Index = () => {
             <div className="container mx-auto px-6 relative z-10">
               <div className="text-center mb-16 animate-fade-in">
                 
-                <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-                  خدماتنا <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">المتميزة</span>
-                </h2>
                 
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
                   نقدم مجموعة شاملة من الخدمات المتطورة في مختلف المجالات التقنية والإبداعية لتلبية احتياجاتكم المتنوعة
