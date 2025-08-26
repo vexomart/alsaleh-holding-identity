@@ -98,6 +98,8 @@ const AboutUs = lazy(() => import("./pages/car-rental/AboutUs"));
 const CompanyProfile = lazy(() => import("./pages/CompanyProfile"));
 
 // Continue lazy loading for remaining pages
+const Websites = lazy(() => import("./pages/Websites"));
+const MobileApps = lazy(() => import("./pages/MobileApps"));
 const CarRentalFAQ = lazy(() => import("./pages/car-rental/FAQ"));
 const CarRentalTerms = lazy(() => import("./pages/car-rental/Terms"));
 const CarRentalPrivacy = lazy(() => import("./pages/car-rental/Privacy"));
@@ -330,6 +332,8 @@ const App = () => {
                 <Route path="/tech-ecosystem" element={<TechEcosystem />} />
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
                 <Route path="/digital-marketing" element={<DigitalMarketing />} />
+                <Route path="/websites" element={<Suspense fallback={<PageLoader />}><Websites /></Suspense>} />
+                <Route path="/mobile-apps" element={<Suspense fallback={<PageLoader />}><MobileApps /></Suspense>} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
