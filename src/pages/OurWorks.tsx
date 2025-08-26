@@ -68,7 +68,7 @@ const OurWorks = () => {
       type: "موقع إلكتروني",
       status: "مكتمل",
       rating: 5,
-      duration: "3 أشهر"
+      duration: "35 يوم"
     }
   ];
 
@@ -179,127 +179,127 @@ const OurWorks = () => {
             {filteredWorks.length > 0 ? (
               <div className="space-y-16">
                 {/* Works Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {filteredWorks.map((work, index) => (
-                    <Card key={work.id} className="group overflow-hidden bg-background/80 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl rounded-3xl">
-                      {/* Image Section with Enhanced Overlay */}
-                      <div className="relative overflow-hidden h-64">
+                    <Card key={work.id} className="group overflow-hidden bg-background/80 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.01] hover:shadow-xl rounded-2xl">
+                      {/* Compact Image Section */}
+                      <div className="relative overflow-hidden h-48">
                         <img 
                           src={work.image} 
                           alt={work.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         
                         {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
                         
                         {/* Top Badges */}
-                        <div className="absolute top-4 left-4 flex gap-2">
-                          <Badge className={`${work.status === 'مكتمل' ? 'bg-emerald-500' : 'bg-amber-500'} text-white border-0`}>
+                        <div className="absolute top-3 left-3 flex gap-2">
+                          <Badge className={`${work.status === 'مكتمل' ? 'bg-emerald-500' : 'bg-amber-500'} text-white border-0 text-xs`}>
                             {work.status}
                           </Badge>
-                          <Badge variant="secondary" className="bg-white/90 text-slate-800 border-0">
+                          <Badge variant="secondary" className="bg-white/90 text-slate-800 border-0 text-xs">
                             {work.type}
                           </Badge>
                         </div>
 
                         {/* Rating */}
-                        <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
+                        <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1">
                           {[...Array(work.rating)].map((_, i) => (
-                            <Star key={i} className="w-3 h-3 text-amber-500 fill-current" />
+                            <Star key={i} className="w-2.5 h-2.5 text-amber-500 fill-current" />
                           ))}
                         </div>
                         
                         {/* Bottom Action */}
-                        <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                          <Button size="sm" asChild className="w-full bg-white/20 backdrop-blur-md text-white border-white/30 hover:bg-white/30 rounded-xl">
+                        <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                          <Button size="sm" asChild className="w-full bg-white/20 backdrop-blur-md text-white border-white/30 hover:bg-white/30 rounded-lg text-xs">
                             <a href={work.url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-4 h-4 mr-2" />
+                              <ExternalLink className="w-3 h-3 mr-1" />
                               زيارة الموقع
-                              <ArrowUpRight className="w-4 h-4 ml-2" />
+                              <ArrowUpRight className="w-3 h-3 ml-1" />
                             </a>
                           </Button>
                         </div>
                       </div>
                       
-                      <CardContent className="p-8">
-                        {/* Header */}
-                        <div className="mb-6">
-                          <div className="flex items-start justify-between mb-3">
-                            <div>
-                              <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors mb-1">
+                      <CardContent className="p-5">
+                        {/* Compact Header */}
+                        <div className="mb-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex-1">
+                              <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                                 {work.title}
                               </h3>
-                              <p className="text-sm font-medium text-primary/80">
+                              <p className="text-xs font-medium text-primary/80 mb-2">
                                 {work.subtitle}
                               </p>
                             </div>
-                            <div className="text-right text-sm text-muted-foreground">
+                            <div className="text-right text-xs text-muted-foreground ml-3">
                               <div className="flex items-center gap-1 mb-1">
                                 <Calendar className="w-3 h-3" />
                                 {work.year}
                               </div>
-                              <div>{work.duration}</div>
+                              <div className="font-medium text-primary">{work.duration}</div>
                             </div>
                           </div>
                           
-                          <p className="text-muted-foreground leading-relaxed text-sm mb-6">
+                          <p className="text-muted-foreground leading-relaxed text-xs mb-4 line-clamp-2">
                             {work.description}
                           </p>
                         </div>
 
-                        {/* Technologies Section */}
-                        <div className="mb-6">
-                          <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                            <Code2 className="w-4 h-4" />
-                            التقنيات المستخدمة
+                        {/* Compact Technologies */}
+                        <div className="mb-4">
+                          <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
+                            <Code2 className="w-3 h-3" />
+                            التقنيات
                           </h4>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-1">
                             {work.technologies.map((tech, techIndex) => (
                               <Badge 
                                 key={techIndex} 
-                                className={`${tech.color} text-white border-0 text-xs font-medium px-3 py-1 hover:scale-110 transition-transform cursor-default`}
+                                className={`${tech.color} text-white border-0 text-xs font-medium px-2 py-0.5 hover:scale-105 transition-transform cursor-default`}
                               >
-                                <span className="mr-1">{tech.icon}</span>
+                                <span className="mr-1 text-xs">{tech.icon}</span>
                                 {tech.name}
                               </Badge>
                             ))}
                           </div>
                         </div>
 
-                        {/* Features Section */}
-                        <div className="mb-6">
-                          <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                            <Star className="w-4 h-4" />
-                            المميزات الرئيسية
+                        {/* Compact Features */}
+                        <div className="mb-4">
+                          <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
+                            <Star className="w-3 h-3" />
+                            المميزات
                           </h4>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-2 gap-1.5">
                             {work.features.map((feature, featureIndex) => (
                               <div 
                                 key={featureIndex}
-                                className="group/feature p-3 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-border/30 hover:border-primary/40 transition-all duration-300 hover:scale-105 cursor-default"
+                                className="group/feature p-2 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-border/30 hover:border-primary/40 transition-all duration-300 hover:scale-105 cursor-default"
                               >
-                                <div className="flex items-center gap-2 mb-1">
-                                  <feature.icon className="w-4 h-4 text-primary group-hover/feature:scale-110 transition-transform" />
+                                <div className="flex items-center gap-1.5 mb-1">
+                                  <feature.icon className="w-3 h-3 text-primary group-hover/feature:scale-110 transition-transform" />
                                   <span className="text-xs font-medium text-foreground">{feature.name}</span>
                                 </div>
-                                <p className="text-xs text-muted-foreground">{feature.description}</p>
+                                <p className="text-xs text-muted-foreground leading-tight">{feature.description}</p>
                               </div>
                             ))}
                           </div>
                         </div>
 
-                        {/* Client Info */}
-                        <div className="flex items-center justify-between pt-4 border-t border-border/50">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Users className="w-4 h-4" />
-                            {work.client}
+                        {/* Compact Footer */}
+                        <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <Users className="w-3 h-3" />
+                            <span className="truncate">{work.client}</span>
                           </div>
                           
-                          <Button variant="outline" size="sm" asChild className="group/btn hover:bg-primary hover:text-primary-foreground border-primary/20 hover:border-primary">
+                          <Button variant="outline" size="sm" asChild className="group/btn hover:bg-primary hover:text-primary-foreground border-primary/20 hover:border-primary text-xs px-3 py-1">
                             <a href={work.url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
-                              مشاهدة المشروع
+                              <ExternalLink className="w-3 h-3 mr-1 group-hover/btn:scale-110 transition-transform" />
+                              المشروع
                             </a>
                           </Button>
                         </div>
