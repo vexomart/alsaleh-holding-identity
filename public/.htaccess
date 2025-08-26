@@ -53,10 +53,39 @@ RewriteRule ^views$ - [F,L]
 </FilesMatch>
 
 # Block ALL sensitive file extensions - ABSOLUTE 403
-<FilesMatch "\.(twig|tpl|env|log|sql|bak|swp|git|ini)$">
+<FilesMatch "\.(env|ini|conf|json|log|sql|bak|old|zip|tar|gz|7z|swp|git|hg|svn|twig|tpl|blade\.php)$">
     Options -Indexes -MultiViews
     Require all denied
 </FilesMatch>
+
+# Block environment and secret files specifically
+<FilesMatch "^(\.env|\.env\.|config\.php|database\.php|wp-config\.php|secrets\.json|keys\.json)$">
+    Options -Indexes -MultiViews
+    Require all denied
+</FilesMatch>
+
+# Disable PHP execution in upload directories
+<Directory "/public/uploads">
+    php_flag engine off
+    <FilesMatch "\.php$">
+        Options -Indexes -MultiViews
+        Require all denied
+    </FilesMatch>
+</Directory>
+
+<Directory "/public/lovable-uploads">
+    php_flag engine off
+    <FilesMatch "\.php$">
+        Options -Indexes -MultiViews
+        Require all denied
+    </FilesMatch>
+</Directory>
+
+# Force downloads for uploaded files (prevent execution)
+<LocationMatch "^/(uploads|lovable-uploads)/">
+    Header set Content-Disposition "attachment"
+    Header set Content-Type "application/octet-stream"
+</LocationMatch>
 
 # Additional Twig blocking rule
 RewriteRule \.twig$ - [F,L]
