@@ -212,7 +212,7 @@ const OurWorks = () => {
                   {filteredWorks.map((work, index) => (
                     <Card 
                       key={work.id} 
-                      className="group overflow-hidden bg-background/80 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl rounded-2xl animate-fade-in-up opacity-0"
+                      className="group overflow-hidden bg-background/80 backdrop-blur-sm border-2 border-primary/20 hover:border-primary/60 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl rounded-2xl animate-fade-in-up opacity-0 relative before:absolute before:inset-0 before:rounded-2xl before:p-[2px] before:bg-gradient-to-r before:from-primary/30 before:via-secondary/30 before:to-accent/30 before:-z-10 hover:before:from-primary/60 hover:before:via-secondary/60 hover:before:to-accent/60 before:transition-all before:duration-500"
                       style={{
                         animationDelay: `${index * 0.2}s`,
                         animationFillMode: 'forwards'
@@ -347,11 +347,11 @@ const OurWorks = () => {
                             variant="outline" 
                             size="sm" 
                             asChild 
-                            className="group/btn hover:bg-primary hover:text-primary-foreground border-primary/20 hover:border-primary text-xs px-2 py-1 h-7 transition-all duration-300 hover:scale-105 shadow-sm"
+                            className="group/btn hover:bg-primary hover:text-primary-foreground border-primary/20 hover:border-primary text-xs px-2 py-1 h-7 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-lg"
                           >
                             <a href={work.url} target="_blank" rel="noopener noreferrer">
                               <ExternalLink className="w-3 h-3 mr-1 group-hover/btn:scale-110 transition-transform" />
-                              المشروع
+                              زيارة المشروع
                             </a>
                           </Button>
                         </div>
