@@ -1,7 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 export const PerformanceOptimizer = () => {
   useEffect(() => {
+    // Enable fast refresh indicators
+    if (import.meta.env.DEV) {
+      console.log('🚀 Performance optimizer loaded');
+    }
+
     // Preload critical resources
     const preloadLinks = [
       '/src/assets/hero-bg.jpg',
@@ -22,37 +27,76 @@ export const PerformanceOptimizer = () => {
       document.body.classList.add('reduce-animations');
     }
 
-    // Prefetch important pages on idle (reduced list for better performance)
-    const prefetchPages = [
-      '/current-offers',
-      '/about',
-      '/contact'
-    ];
+    // Reduce prefetching in development for faster updates
+    if (import.meta.env.PROD) {
+      const prefetchPages = [
+        '/current-offers',
+        '/about',
+        '/contact'
+      ];
 
-    const prefetchOnIdle = () => {
-      prefetchPages.forEach(path => {
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.href = path;
-        document.head.appendChild(link);
-      });
-    };
+      const prefetchOnIdle = () => {
+        prefetchPages.forEach(path => {
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.href = path;
+          document.head.appendChild(link);
+        });
+      };
 
-    // Use requestIdleCallback if available, otherwise setTimeout
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(prefetchOnIdle);
-    } else {
-      setTimeout(prefetchOnIdle, 2000);
+      // Use requestIdleCallback if available, otherwise setTimeout
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(prefetchOnIdle);
+      } else {
+        setTimeout(prefetchOnIdle, 2000);
+      }
     }
 
-    // Optimize images loading
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-      if (!img.loading) {
-        img.loading = 'lazy';
+    // Optimize images loading with intersection observer for better performance
+    const optimizeImages = () => {
+      const images = document.querySelectorAll('img:not([data-optimized])');
+      
+      if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target as HTMLImageElement;
+              if (!img.loading) {
+                img.loading = 'lazy';
+              }
+              img.setAttribute('data-optimized', 'true');
+              imageObserver.unobserve(img);
+            }
+          });
+        });
+
+        images.forEach(img => imageObserver.observe(img));
+      } else {
+        // Fallback for browsers without IntersectionObserver
+        images.forEach(img => {
+          const htmlImg = img as HTMLImageElement;
+          if (!htmlImg.loading) {
+            htmlImg.loading = 'lazy';
+          }
+          htmlImg.setAttribute('data-optimized', 'true');
+        });
       }
+    };
+
+    // Initial optimization
+    optimizeImages();
+
+    // Re-optimize when new images are added
+    const observer = new MutationObserver(() => {
+      optimizeImages();
     });
 
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   return null;
