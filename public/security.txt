@@ -1,0 +1,8 @@
+Contact: mailto:info@alialshehriholding.com
+Contact: tel:+966555812567
+Encryption: https://alialshehriholding.com/pgp-key.txt
+Acknowledgments: https://alialshehriholding.com/security-acknowledgments
+Preferred-Languages: ar, en
+Canonical: https://alialshehriholding.com/.well-known/security.txt
+Policy: https://alialshehriholding.com/security-policy
+Hiring: https://alialshehriholding.com/careers

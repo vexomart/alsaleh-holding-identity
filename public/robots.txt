@@ -1,14 +1,37 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
+
+# Block authentication and admin areas
+Disallow: /auth
+Disallow: /login
+Disallow: /register
+Disallow: /profile
+Disallow: /tickets
+Disallow: /account
+Disallow: /admin
+Disallow: /consultation
+
+# Block internal directories
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /supabase/
+Disallow: /.git/
+Disallow: /config/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /views/
+Disallow: /backups/
+
+# Block sensitive files
+Disallow: /*.env
+Disallow: /*.config
+Disallow: /*.log
+Disallow: /*.sql
+Disallow: /*.bak
+Disallow: /*.backup
+
+# Sitemap
+Sitemap: https://alialshehriholding.com/sitemap.xml
+
+# Crawl delay for polite crawling
+Crawl-delay: 1

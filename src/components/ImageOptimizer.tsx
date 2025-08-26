@@ -15,6 +15,16 @@ export const ImageOptimizer = () => {
         // Add decoding optimization
         img.decoding = 'async';
         
+        // Add security and performance attributes
+        if (!img.getAttribute('alt')) {
+          img.setAttribute('alt', 'صورة من علي الشهري القابضة');
+        }
+        
+        // Add loading optimization
+        if (!img.style.aspectRatio && img.width && img.height) {
+          img.style.aspectRatio = `${img.width}/${img.height}`;
+        }
+        
         // Reduce image quality on slower connections
         if ('connection' in navigator) {
           const connection = (navigator as any).connection;

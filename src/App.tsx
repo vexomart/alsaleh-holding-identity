@@ -7,6 +7,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRef } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
+import { SecurityHeaders } from "@/components/SecurityHeaders";
+import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
+import { ImageOptimizer } from "@/components/ImageOptimizer";
+import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
+import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
@@ -177,7 +182,8 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClientRef.current!}>
       <TooltipProvider>
-        <MobileOptimizer>
+        <ReCaptchaProvider>
+          <MobileOptimizer>
           <BrowserRouter>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
               {/* Subtle pattern overlay */}
@@ -186,6 +192,10 @@ const App = () => {
               {/* Main content with mobile optimizations */}
               <div className="relative z-10 mobile-tap mobile-scroll">
                 
+                <SecurityHeaders />
+                <PerformanceOptimizer />
+                <ImageOptimizer />
+                <AnalyticsProvider />
                 <ScrollToTop />
                 <Toaster />
                 <Sonner />
@@ -344,7 +354,8 @@ const App = () => {
               </div>
             </div>
           </BrowserRouter>
-        </MobileOptimizer>
+          </MobileOptimizer>
+        </ReCaptchaProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

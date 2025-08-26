@@ -1,0 +1,97 @@
+# Security Headers and HTTPS Enforcement
+# Force HTTPS with permanent redirect
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# HSTS Header - 6 months with subdomains and preload
+Header always set Strict-Transport-Security "max-age=15552000; includeSubDomains; preload"
+
+# Security Headers
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "DENY"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+
+# Content Security Policy - Conservative approach
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.whatsapp.com; frame-ancestors 'none';"
+
+# Disable Directory Browsing
+Options -Indexes
+
+# Block access to internal directories
+<DirectoryMatch "(src|node_modules|supabase|\.git|config|storage|vendor|views|backups)">
+    Require all denied
+</DirectoryMatch>
+
+# Block access to sensitive files
+<FilesMatch "\.(env|config|log|sql|bak|backup|md)$">
+    Require all denied
+</FilesMatch>
+
+# Protect authentication and admin pages from search engines
+<LocationMatch "^/(auth|login|register|profile|tickets|account|admin|consultation)">
+    Header set X-Robots-Tag "noindex, nofollow"
+</LocationMatch>
+
+# Gzip Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# Cache Control for Static Files
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # HTML - No cache
+    ExpiresByType text/html "access plus 0 seconds"
+    
+    # CSS, JS, Images - 1 year with immutable
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/x-javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# Cache-Control headers
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|svg|webp|woff|woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# Rate Limiting for Forms (if mod_security is available)
+<IfModule mod_security.c>
+    SecRuleEngine On
+    SecRule REQUEST_METHOD "@streq POST" "id:1001,phase:2,pass,setvar:ip.post_count=+1,expirevar:ip.post_count=60"
+    SecRule IP:POST_COUNT "@gt 10" "id:1002,phase:2,deny,status:429,msg:'Rate limit exceeded'"
+</IfModule>
+
+# Custom Error Pages
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+ErrorDocument 403 /403.html
+
+# Canonical URL enforcement
+RewriteCond %{HTTP_HOST} !^alialshehriholding\.com$ [NC]
+RewriteRule ^(.*)$ https://alialshehriholding.com/$1 [R=301,L]
