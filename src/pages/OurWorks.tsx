@@ -29,6 +29,7 @@ import {
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import masterEduPathScreenshot from "@/assets/works/masteredupath-screenshot.png";
+import fekrahAcademyScreenshot from "@/assets/works/fekrah-academy-screenshot.png";
 
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -69,6 +70,34 @@ const OurWorks = () => {
       status: "مكتمل",
       rating: 5,
       duration: "35 يوم"
+    },
+    {
+      id: 2,
+      title: "فكرة أكاديمي",
+      subtitle: "الشريك الموثوق للنشر العلمي المعتمد",
+      description: "تحول أفكارك العلمية إلى أبحاث منشورة في أرقى المجلات العالمية. نحن نوفر خدمة عالية الجودة مع نسبة نجاح 98% ودعم مستمر للباحثين.",
+      image: fekrahAcademyScreenshot,
+      url: "https://fekrah-academy.com",
+      category: "websites",
+      technologies: [
+        { name: "WordPress", color: "bg-blue-700", icon: "🔷" },
+        { name: "PHP", color: "bg-purple-600", icon: "🐘" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "JavaScript", color: "bg-yellow-500", icon: "⚡" },
+        { name: "CSS3", color: "bg-blue-500", icon: "🎨" }
+      ],
+      features: [
+        { name: "نظام إدارة محتوى", icon: Database, description: "إدارة سهلة وفعالة" },
+        { name: "تصميم احترافي", icon: Palette, description: "واجهة جذابة ومتميزة" },
+        { name: "أمان عالي", icon: Shield, description: "حماية متقدمة للبيانات" },
+        { name: "دعم متعدد اللغات", icon: Globe, description: "متاح بلغات متعددة" }
+      ],
+      year: "2024",
+      client: "Fekrah Academy",
+      type: "موقع إلكتروني",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين"
     }
   ];
 
