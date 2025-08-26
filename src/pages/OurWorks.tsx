@@ -80,11 +80,11 @@ const OurWorks = () => {
       url: "https://fekrah-academy.com",
       category: "websites",
       technologies: [
-        { name: "WordPress", color: "bg-blue-700", icon: "🔷" },
         { name: "PHP", color: "bg-purple-600", icon: "🐘" },
         { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
         { name: "JavaScript", color: "bg-yellow-500", icon: "⚡" },
-        { name: "CSS3", color: "bg-blue-500", icon: "🎨" }
+        { name: "CSS3", color: "bg-blue-500", icon: "🎨" },
+        { name: "HTML5", color: "bg-red-500", icon: "📝" }
       ],
       features: [
         { name: "نظام إدارة محتوى", icon: Database, description: "إدارة سهلة وفعالة" },
@@ -212,29 +212,47 @@ const OurWorks = () => {
                   {filteredWorks.map((work, index) => (
                     <Card 
                       key={work.id} 
-                      className="group overflow-hidden relative bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-xl border-0 transition-all duration-700 hover:scale-[1.03] rounded-3xl animate-fade-in-up opacity-0 shadow-lg hover:shadow-2xl"
+                      className={`group overflow-hidden relative bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-xl border-0 transition-all duration-700 hover:scale-[1.03] rounded-3xl animate-fade-in-up opacity-0 shadow-lg hover:shadow-2xl ${
+                        index === 0 
+                          ? 'before:absolute before:inset-0 before:rounded-3xl before:p-[3px] before:bg-gradient-to-r before:from-blue-500 before:via-purple-500 before:to-pink-500 before:-z-10' 
+                          : 'before:absolute before:inset-0 before:rounded-3xl before:p-[3px] before:bg-gradient-to-r before:from-emerald-500 before:via-teal-500 before:to-cyan-500 before:-z-10'
+                      } hover:before:from-primary hover:before:via-secondary hover:before:to-accent`}
                       style={{
                         animationDelay: `${index * 0.2}s`,
                         animationFillMode: 'forwards',
-                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                        boxShadow: index === 0 
+                          ? '0 8px 32px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                          : '0 8px 32px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                       }}
                     >
-                      {/* Premium Border Effect */}
-                      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary/20 via-secondary/15 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm"></div>
+                      {/* Colorful Premium Border Effect */}
+                      <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm ${
+                        index === 0 
+                          ? 'bg-gradient-to-r from-blue-500/30 via-purple-500/20 to-pink-500/30' 
+                          : 'bg-gradient-to-r from-emerald-500/30 via-teal-500/20 to-cyan-500/30'
+                      }`}></div>
                       <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-background via-background/98 to-background/95 z-10"></div>
                       
-                      {/* Luxury Image Section */}
+                      {/* Luxury Image Section with Colored Overlay */}
                       <div className="relative overflow-hidden h-40 rounded-t-3xl z-20">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5"></div>
+                        <div className={`absolute inset-0 ${
+                          index === 0 
+                            ? 'bg-gradient-to-br from-blue-500/8 via-transparent to-purple-500/8' 
+                            : 'bg-gradient-to-br from-emerald-500/8 via-transparent to-teal-500/8'
+                        }`}></div>
                         <img 
                           src={work.image} 
                           alt={work.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 filter group-hover:brightness-110"
                         />
                         
-                        {/* Elegant Gradient Overlay */}
+                        {/* Elegant Gradient Overlay with Colored Accents */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-60 group-hover:opacity-90 transition-all duration-700"></div>
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
+                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-700 ${
+                          index === 0 
+                            ? 'bg-gradient-to-br from-blue-500/15 via-transparent to-purple-500/15' 
+                            : 'bg-gradient-to-br from-emerald-500/15 via-transparent to-teal-500/15'
+                        }`}></div>
                         
                         {/* Premium Status Badges */}
                         <div className="absolute top-3 left-3 flex gap-2 z-30">
@@ -307,7 +325,9 @@ const OurWorks = () => {
                         {/* Premium Technologies Section */}
                         <div className="mb-4">
                           <h4 className="text-xs font-bold text-foreground mb-2 flex items-center gap-2">
-                            <div className="w-1 h-4 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
+                            <div className={`w-1 h-4 rounded-full ${
+                              index === 0 ? 'bg-gradient-to-b from-blue-500 to-purple-500' : 'bg-gradient-to-b from-emerald-500 to-teal-500'
+                            }`}></div>
                             <Code2 className="w-3 h-3 text-primary group-hover:rotate-12 transition-transform" />
                             التقنيات المستخدمة
                           </h4>
@@ -334,7 +354,9 @@ const OurWorks = () => {
                         {/* Luxury Features Grid */}
                         <div className="mb-4">
                           <h4 className="text-xs font-bold text-foreground mb-2 flex items-center gap-2">
-                            <div className="w-1 h-4 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
+                            <div className={`w-1 h-4 rounded-full ${
+                              index === 0 ? 'bg-gradient-to-b from-amber-400 to-orange-500' : 'bg-gradient-to-b from-green-400 to-emerald-500'
+                            }`}></div>
                             <Star className="w-3 h-3 text-amber-500 group-hover:rotate-12 transition-transform" />
                             المميزات الأساسية
                           </h4>
@@ -357,9 +379,15 @@ const OurWorks = () => {
                         </div>
 
                         {/* Premium Footer */}
-                        <div className="flex items-center justify-between pt-3 border-t border-gradient-to-r from-border/50 via-primary/20 to-border/50">
+                        <div className={`flex items-center justify-between pt-3 border-t ${
+                          index === 0 
+                            ? 'border-gradient-to-r from-blue-500/30 via-purple-500/20 to-pink-500/30' 
+                            : 'border-gradient-to-r from-emerald-500/30 via-teal-500/20 to-cyan-500/30'
+                        }`}>
                           <div className="flex items-center gap-2 text-xs">
-                            <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full animate-pulse"></div>
+                            <div className={`w-2 h-2 rounded-full animate-pulse ${
+                              index === 0 ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gradient-to-r from-emerald-500 to-teal-500'
+                            }`}></div>
                             <Users className="w-3 h-3 text-primary" />
                             <span className="truncate text-xs font-medium text-foreground group-hover:text-primary transition-colors">{work.client}</span>
                           </div>
