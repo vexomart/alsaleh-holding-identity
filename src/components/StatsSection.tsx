@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Trophy, Building2, Calendar, Star, TrendingUp, Globe, Award, Sparkles, Zap, Target, CheckCircle } from "lucide-react";
 import { AnimatedCounter } from "./AnimatedCounter";
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const StatsSection = () => {
   const [isVisible, setIsVisible] = useState(false);

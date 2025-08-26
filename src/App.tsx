@@ -148,10 +148,6 @@ const ServicesCatalog = lazy(() => import("./pages/ServicesCatalog"));
 const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
-const PrintingServices = lazy(() => import("./pages/PrintingServices"));
-const BusinessStationery = lazy(() => import("./pages/printing-categories/BusinessStationery"));
-const BusinessCards = lazy(() => import("./pages/printing-categories/BusinessCards"));
-const MarketingMaterials = lazy(() => import("./pages/printing-categories/MarketingMaterials"));
 
 
 // Loading component for better UX
@@ -250,10 +246,6 @@ const App = () => {
                 <Route path="/content-creation" element={<ContentCreation />} />
                 <Route path="/design-solutions" element={<DesignSolutions />} />
                 <Route path="/design-solutions/:slug" element={<EnhancedDesignCategory />} />
-                <Route path="/printing-services" element={<Suspense fallback={<PageLoader />}><PrintingServices /></Suspense>} />
-                 <Route path="/printing/business-stationery" element={<Suspense fallback={<PageLoader />}><BusinessStationery /></Suspense>} />
-                 <Route path="/printing/business-cards" element={<Suspense fallback={<PageLoader />}><BusinessCards /></Suspense>} />
-                 <Route path="/printing/marketing-materials" element={<Suspense fallback={<PageLoader />}><MarketingMaterials /></Suspense>} />
                 <Route path="/subsidiaries" element={<Subsidiaries />} />
                 <Route path="/payment-methods" element={<PaymentMethods />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
@@ -336,7 +328,7 @@ const App = () => {
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
                 <Route path="/digital-marketing" element={<DigitalMarketing />} />
           <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/enhanced-payment" element={<Suspense fallback={<PageLoader />}><EnhancedPaymentPage /></Suspense>} />
+          <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
                 </Routes>

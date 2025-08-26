@@ -65,7 +65,6 @@ const Navigation = () => {
     { name: "خدماتنا الأخرى", href: "/services-catalog", icon: Package },
     { name: "صناعة المحتوى", href: "/content-creation", icon: PenTool },
     { name: "حلول التصميم", href: "/design-solutions", icon: Palette },
-    { name: "خدمات الطباعة", href: "/printing-services", icon: BookOpen },
     { name: "الاستثمار التقني", href: "/tech-investment", icon: Zap },
     { name: "التطوير والابتكار", href: "/development", icon: Building2 },
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Users },

@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const categories = [
   {

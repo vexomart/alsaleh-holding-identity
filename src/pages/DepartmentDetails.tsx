@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Star, TrendingUp, Users, Award, ExternalLink, CheckCircle, Zap } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Department data - complete with all sections
 const departments = [

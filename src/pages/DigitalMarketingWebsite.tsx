@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { TrendingUp, BarChart3, Target, Users, Mail, Phone, MapPin, Calendar, CheckCircle2, ArrowRight, Star, Globe, Zap, Shield, Award, Eye, MousePointer, Search, MessageSquare, AlertTriangle, Menu, X, Home, Briefcase, FileText, Building2, ChevronRight, PlayCircle, Rocket, Trophy, Heart, Lightbulb, DollarSign, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";

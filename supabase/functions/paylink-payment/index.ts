@@ -13,48 +13,7 @@ serve(async (req) => {
 
   try {
     console.log("🚀 Paylink Payment Started");
-    
-    // Check if request has body content
-    const contentType = req.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      console.error("❌ Invalid content type:", contentType);
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "Invalid content type - application/json required" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400
-      });
-    }
-
-    const bodyText = await req.text();
-    console.log("📄 Raw body:", bodyText);
-    
-    if (!bodyText || bodyText.trim() === '') {
-      console.error("❌ Empty request body");
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "Request body is required" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400
-      });
-    }
-
-    let body;
-    try {
-      body = JSON.parse(bodyText);
-    } catch (parseError) {
-      console.error("❌ JSON parse error:", parseError);
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: "Invalid JSON format" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400
-      });
-    }
-    
+    const body = await req.json();
     console.log("📦 Request Body:", JSON.stringify(body, null, 2));
 
     // Input validation and sanitization

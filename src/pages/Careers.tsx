@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Briefcase, 
