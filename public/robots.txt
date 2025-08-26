@@ -1,47 +1,29 @@
 User-agent: *
 Allow: /
 
-# Block authentication and admin areas
-Disallow: /login
-Disallow: /auth
-Disallow: /register
-Disallow: /profile
-Disallow: /tickets
-Disallow: /account
-Disallow: /admin
-
 # Block internal directories and sensitive paths
 Disallow: /views
 Disallow: /vendor
 Disallow: /storage
 Disallow: /node_modules
-Disallow: /src/
-Disallow: /supabase/
-Disallow: /.git/
-Disallow: /config/
-Disallow: /backups/
-Disallow: /emails/
-Disallow: /cache/
-Disallow: /logs/
-Disallow: /tmp/
-Disallow: /temp/
+Disallow: /config
+Disallow: /backups
 
-# Block knowledge base paths with template variables
-Disallow: /page/knowledge-base/
+# Block authentication and admin areas
+Disallow: /auth
+Disallow: /login
+Disallow: /register
+Disallow: /profile
+Disallow: /tickets
+Disallow: /admin
 
 # Block template files and sensitive extensions
+Disallow: /*.twig
+Disallow: /*.tpl
 Disallow: /*.env
-Disallow: /*.config
 Disallow: /*.log
 Disallow: /*.sql
 Disallow: /*.bak
-Disallow: /*.backup
-Disallow: /*.twig
-Disallow: /*.tpl
-
-# Block URLs with template variables
-Disallow: /*{{*
-Disallow: /*%7B%7B*
 
 # Sitemap
 Sitemap: https://alialshehriholding.com/sitemap.xml
