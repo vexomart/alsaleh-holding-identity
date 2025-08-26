@@ -27,8 +27,11 @@ Options -Indexes -MultiViews
     Require all denied
 </DirectoryMatch>
 
+# Block specific paths that should never be accessible
+RewriteRule ^(views|vendor|storage|node_modules|config|backups)/ - [F,L]
+
 # Block access to sensitive file extensions
-<FilesMatch "\.(twig|tpl|env|log|sql|bak|swp|git|ini|config)$">
+<FilesMatch "\.(twig|tpl|env|log|sql|bak|backup|swp|git|ini|config)$">
     Require all denied
 </FilesMatch>
 
@@ -50,23 +53,10 @@ RewriteRule .* - [F,L]
     Header set X-Robots-Tag "noindex, nofollow"
 </LocationMatch>
 
-# Block access to sensitive file extensions
-<FilesMatch "\.(env|config|log|sql|bak|backup|twig|tpl)$">
-    Require all denied
-</FilesMatch>
-
-# Block specific paths that should never be accessible
-RewriteRule ^(views|vendor|storage|node_modules|config|backups)/ - [F,L]
-
 # Protect authentication and admin pages from search engines
 <LocationMatch "^/(auth|login|register|profile|tickets|account|admin|consultation)">
     Header always set X-Robots-Tag "noindex, nofollow"
 </LocationMatch>
-
-# Add X-Robots-Tag for template variable URLs
-<If "%{REQUEST_URI} =~ /\{\{.*\}\}/ || %{REQUEST_URI} =~ /%7B%7B.*%7D%7D/">
-    Header set X-Robots-Tag "noindex, nofollow"
-</If>
 
 # Gzip Compression
 <IfModule mod_deflate.c>
