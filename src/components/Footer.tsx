@@ -723,20 +723,12 @@ const Footer = () => {
             <div className="group relative">
               <div className="bg-gradient-to-br from-emerald-500/10 to-green-600/10 backdrop-blur-sm border border-emerald-500/20 rounded-xl p-6 transition-all duration-500 hover:from-emerald-500/20 hover:to-green-600/20 hover:border-emerald-500/40 hover:shadow-lg hover:shadow-emerald-500/25 hover:scale-105 animate-fade-in">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/50 transition-all duration-300 relative overflow-hidden">
-                    {/* وزارة التجارة - تصميم مستوحى من الهوية الرسمية */}
-                    <div className="relative z-10">
-                      <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 48 48">
-                        {/* نخلة سعودية مع تاج */}
-                        <path d="M24 4C22 4 20 6 20 8C20 10 22 12 24 12C26 12 28 10 28 8C28 6 26 4 24 4Z"/>
-                        <path d="M24 12L18 20L16 18L14 24L16 30L18 28L24 36L30 28L32 30L34 24L32 18L30 20L24 12Z"/>
-                        <circle cx="24" cy="8" r="2" fill="gold"/>
-                        <path d="M14 24L34 24M16 20L32 20M16 28L32 28" stroke="white" strokeWidth="1"/>
-                        <rect x="22" y="36" width="4" height="8" fill="currentColor"/>
-                        <text x="24" y="46" textAnchor="middle" fontSize="4" fill="white">وزارة</text>
-                      </svg>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/20 to-green-700/20 rounded-lg"></div>
+                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/50 transition-all duration-300 relative overflow-hidden p-2">
+                    <img 
+                      src="/src/assets/logos/ministry-commerce-logo.png" 
+                      alt="وزارة التجارة السعودية" 
+                      className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                    />
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-white text-sm">وزارة التجارة</p>
@@ -753,7 +745,7 @@ const Footer = () => {
             <div className="group relative">
               <div className="bg-gradient-to-br from-blue-500/10 to-indigo-600/10 backdrop-blur-sm border border-blue-500/20 rounded-xl p-6 transition-all duration-500 hover:from-blue-500/20 hover:to-indigo-600/20 hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 animate-fade-in delay-150">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300 relative overflow-hidden">
+                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300 relative overflow-hidden">
                     {/* هيئة الاتصالات - تصميم مستوحى من التقنية والاتصالات */}
                     <div className="relative z-10">
                       <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 48 48">
@@ -785,23 +777,12 @@ const Footer = () => {
             <div className="group relative">
               <div className="bg-gradient-to-br from-amber-500/10 to-orange-600/10 backdrop-blur-sm border border-amber-500/20 rounded-xl p-6 transition-all duration-500 hover:from-amber-500/20 hover:to-orange-600/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/25 hover:scale-105 animate-fade-in delay-300">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-amber-500/50 transition-all duration-300 relative overflow-hidden">
-                    {/* هيئة الزكاة - تصميم مستوحى من الزكاة والضرائب */}
-                    <div className="relative z-10">
-                      <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 48 48">
-                        {/* ميزان العدالة مع هلال ونجمة */}
-                        <path d="M24 6L28 14L36 14L30 20L32 28L24 24L16 28L18 20L12 14L20 14L24 6Z" fill="gold"/>
-                        <rect x="22" y="24" width="4" height="16" fill="currentColor"/>
-                        <circle cx="16" cy="32" r="6" fill="none" stroke="white" strokeWidth="2"/>
-                        <circle cx="32" cy="32" r="6" fill="none" stroke="white" strokeWidth="2"/>
-                        <path d="M16 32L32 32" stroke="white" strokeWidth="2"/>
-                        <rect x="12" y="30" width="8" height="4" fill="white" opacity="0.8"/>
-                        <rect x="28" y="30" width="8" height="4" fill="white" opacity="0.8"/>
-                        <rect x="20" y="40" width="8" height="4" fill="currentColor"/>
-                        <text x="24" y="46" textAnchor="middle" fontSize="3" fill="white">زكاة</text>
-                      </svg>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-orange-700/20 rounded-lg"></div>
+                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-amber-500/50 transition-all duration-300 relative overflow-hidden p-2">
+                    <img 
+                      src="/src/assets/logos/zatca-official.svg" 
+                      alt="هيئة الزكاة والضريبة والجمارك السعودية" 
+                      className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                    />
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-white text-sm">هيئة الزكاة</p>
@@ -818,7 +799,7 @@ const Footer = () => {
             <div className="group relative">
               <div className="bg-gradient-to-br from-purple-500/10 to-pink-600/10 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6 transition-all duration-500 hover:from-purple-500/20 hover:to-pink-600/20 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/25 hover:scale-105 animate-fade-in delay-450">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-purple-500/50 transition-all duration-300 relative overflow-hidden">
+                  <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-purple-500/50 transition-all duration-300 relative overflow-hidden">
                     {/* المركز السعودي للأعمال - تصميم مستوحى من الأعمال والتجارة */}
                     <div className="relative z-10">
                       <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 48 48">
