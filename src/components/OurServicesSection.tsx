@@ -91,7 +91,7 @@ const services = [
 
 const OurServicesSection = () => {
   return (
-    <section className="relative py-16 lg:py-20 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-gray-50">
+    <section className="relative py-12 lg:py-16 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-gray-50">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Animated Grid */}
@@ -103,43 +103,36 @@ const OurServicesSection = () => {
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header Section */}
-        <div className="text-center mb-12 lg:mb-16">
+        {/* Header Section - Compact */}
+        <div className="text-center mb-8 lg:mb-12">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100/50 rounded-full mb-6 hover:scale-105 transition-transform duration-300">
-            <Sparkles className="w-4 h-4 text-blue-600 animate-pulse" />
-            <span className="text-sm font-bold text-slate-700 uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100/50 rounded-full mb-4 hover:scale-105 transition-transform duration-300">
+            <Sparkles className="w-3 h-3 text-blue-600 animate-pulse" />
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
               خدماتنا المتميزة
             </span>
-            <Globe className="w-4 h-4 text-slate-500" />
           </div>
           
           {/* Main Title */}
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6 leading-tight">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4 leading-tight">
             حلول تقنية متطورة
-            <br />
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              لنجاح أعمالك
-            </span>
           </h2>
           
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
             نقدم حلولاً تقنية مبتكرة ومتخصصة لتحقيق أهدافك الرقمية
-            <br />
-            <span className="text-slate-500">مع ضمان الجودة والكفاءة العالية</span>
           </p>
         </div>
 
-        {/* Services Grid - Responsive and Compact */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
+        {/* Services Grid - Small Cards Side by Side */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 lg:gap-4 mb-12">
           {services.map((service, index) => {
             const IconComponent = service.icon;
             
             return (
               <Card
                 key={service.id}
-                className={`group relative overflow-hidden ${service.bgPattern} backdrop-blur-sm border border-white/20 rounded-2xl transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] cursor-pointer animate-fade-in h-full`}
+                className={`group relative overflow-hidden ${service.bgPattern} backdrop-blur-sm border border-white/20 rounded-xl transition-all duration-500 hover:shadow-lg hover:-translate-y-1 hover:scale-105 cursor-pointer animate-fade-in h-full`}
                 style={{ 
                   animationDelay: `${index * 0.1}s`,
                 }}
@@ -147,105 +140,68 @@ const OurServicesSection = () => {
                 {/* Hover Glow Effect */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.primaryGradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
                 
-                <CardContent className="relative z-10 p-6 lg:p-8 h-full flex flex-col">
-                  {/* Header */}
-                  <div className="flex justify-between items-start mb-6">
+                <CardContent className="relative z-10 p-3 lg:p-4 h-full flex flex-col text-center">
+                  {/* Badge */}
+                  <div className="mb-3">
                     <Badge 
-                      className={`bg-gradient-to-r ${service.badgeGradient} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg hover:scale-105 transition-transform duration-300 border-0`}
+                      className={`bg-gradient-to-r ${service.badgeGradient} text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm border-0`}
                     >
                       {service.badge}
                     </Badge>
-                    <div className="flex gap-1">
-                      {[...Array(3)].map((_, i) => (
-                        <div 
-                          key={i}
-                          className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.primaryGradient} opacity-${60 - i * 20} group-hover:animate-pulse`}
-                          style={{ animationDelay: `${i * 0.2}s` }}
-                        ></div>
-                      ))}
-                    </div>
                   </div>
 
-                  {/* Icon - Smaller Size */}
-                  <div className="mb-6">
-                    <div className={`relative w-16 h-16 bg-gradient-to-br ${service.primaryGradient} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg`}>
-                      <IconComponent className="w-8 h-8 text-white relative z-10" />
-                      <Sparkles className="absolute -top-2 -right-2 w-4 h-4 text-yellow-400 opacity-0 group-hover:opacity-100 group-hover:animate-spin transition-all duration-500" />
+                  {/* Icon - Very Small */}
+                  <div className="mb-3">
+                    <div className={`relative w-12 h-12 bg-gradient-to-br ${service.primaryGradient} rounded-xl flex items-center justify-center mx-auto group-hover:scale-110 transition-all duration-500 shadow-md`}>
+                      <IconComponent className="w-6 h-6 text-white relative z-10" />
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 space-y-4">
-                    {/* Title Section */}
-                    <div className="text-right">
-                      <h3 className="text-xl lg:text-2xl font-bold text-slate-900 mb-2 leading-tight">
-                        {service.title}
-                      </h3>
-                      <div className="flex items-center justify-end gap-2 mb-2">
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                          {service.titleEn}
-                        </p>
-                        <Globe className="w-3 h-3 text-slate-400" />
-                      </div>
-                      <p className="text-xs text-slate-400 italic">
-                        {service.subtitle}
-                      </p>
-                    </div>
+                  <div className="flex-1 space-y-2">
+                    {/* Title */}
+                    <h3 className="text-sm lg:text-base font-bold text-slate-900 leading-tight">
+                      {service.title}
+                    </h3>
                     
-                    {/* Description */}
-                    <p className="text-slate-600 leading-relaxed text-right text-sm">
-                      {service.description}
+                    {/* English Title */}
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      {service.titleEn}
                     </p>
                     
-                    {/* Metrics - Compact */}
-                    <div className="grid grid-cols-3 gap-2 p-3 bg-white/60 rounded-xl border border-white/50">
+                    {/* Description - Short */}
+                    <p className="text-slate-600 text-xs leading-relaxed">
+                      {service.description.substring(0, 50)}...
+                    </p>
+                    
+                    {/* Metrics - Very Compact */}
+                    <div className="grid grid-cols-1 gap-1 p-2 bg-white/60 rounded-lg border border-white/50">
                       <div className="text-center">
-                        <div className={`text-sm font-bold ${service.accentColor}`}>{service.metrics.projects}</div>
+                        <div className={`text-xs font-bold ${service.accentColor}`}>{service.metrics.projects}</div>
                         <div className="text-xs text-slate-500">مشروع</div>
                       </div>
-                      <div className="text-center">
-                        <div className={`text-sm font-bold ${service.accentColor}`}>{service.metrics.clients}</div>
-                        <div className="text-xs text-slate-500">عميل</div>
-                      </div>
-                      <div className="text-center">
-                        <div className={`text-sm font-bold ${service.accentColor}`}>{service.metrics.satisfaction}</div>
-                        <div className="text-xs text-slate-500">رضا</div>
-                      </div>
                     </div>
                     
-                    {/* Features - Compact */}
-                    <div className="space-y-2">
-                      {service.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center justify-end gap-2 text-sm">
-                          <span className="text-slate-700 font-medium">{feature}</span>
-                          <CheckCircle className={`w-4 h-4 ${service.accentColor}`} />
+                    {/* Features - Only 2 */}
+                    <div className="space-y-1">
+                      {service.features.slice(0, 2).map((feature, idx) => (
+                        <div key={idx} className="flex items-center justify-center gap-1 text-xs">
+                          <CheckCircle className={`w-3 h-3 ${service.accentColor}`} />
+                          <span className="text-slate-700 font-medium truncate">{feature}</span>
                         </div>
-                      ))}
-                    </div>
-                    
-                    {/* Technologies */}
-                    <div className="flex flex-wrap gap-1 justify-end">
-                      {service.technologies.map((tech, idx) => (
-                        <Badge 
-                          key={idx}
-                          variant="outline" 
-                          className="text-xs px-2 py-1 border-slate-200"
-                        >
-                          {tech}
-                        </Badge>
                       ))}
                     </div>
                   </div>
                   
-                  {/* CTA Button */}
-                  <div className="mt-6">
+                  {/* CTA Button - Small */}
+                  <div className="mt-3">
                     <Link to={service.route}>
                       <Button 
-                        className={`w-full bg-gradient-to-r ${service.primaryGradient} hover:shadow-lg text-white border-0 rounded-xl py-3 font-bold transition-all duration-300 group-hover:scale-105 text-sm`}
+                        size="sm"
+                        className={`w-full bg-gradient-to-r ${service.primaryGradient} hover:shadow-md text-white border-0 rounded-lg py-2 font-bold transition-all duration-300 text-xs`}
                       >
-                        <Zap className="w-4 h-4 ml-2" />
-                        <span className="mx-2">اكتشف الخدمة</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <span>اكتشف</span>
+                        <ArrowRight className="w-3 h-3 mr-1" />
                       </Button>
                     </Link>
                   </div>
