@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageContainer } from "@/components/ui/page-container";
 import { PageHeader } from "@/components/ui/page-header";
-import { Monitor, Smartphone, Globe } from "lucide-react";
+import { Monitor, Smartphone, Globe, ExternalLink, Calendar, Users } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import masterEduPathScreenshot from "@/assets/works/masteredupath-screenshot.png";
 
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -16,6 +17,27 @@ const OurWorks = () => {
     { id: "websites", label: "المواقع الإلكترونية", color: "bg-gradient-to-r from-blue-500 to-indigo-500" },
     { id: "mobile", label: "تطبيقات الجوال", color: "bg-gradient-to-r from-purple-500 to-pink-500" },
   ];
+
+  // أعمالنا
+  const works = [
+    {
+      id: 1,
+      title: "وكالة ماستر إيدو باث",
+      description: "شريكك الموثوق في التعليم العالي والبحث العلمي. نقدم حلولاً متطورة ومعتمدة للجامعات والمراكز البحثية والطلاب المتميزين حول العالم.",
+      image: masterEduPathScreenshot,
+      url: "https://masteredupath.com",
+      category: "websites",
+      technologies: ["React", "Next.js", "Tailwind CSS", "TypeScript"],
+      year: "2024",
+      client: "MasterEduPath Agency",
+      type: "موقع إلكتروني"
+    }
+  ];
+
+  // تصفية الأعمال
+  const filteredWorks = activeFilter === "all" 
+    ? works 
+    : works.filter(work => work.category === activeFilter);
 
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]">
@@ -72,63 +94,100 @@ const OurWorks = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-background to-secondary/5"></div>
           
           <div className="container mx-auto px-6 relative z-10">
-            {/* Empty State */}
-            <div className="text-center py-20">
-              <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-muted to-muted/50 rounded-full flex items-center justify-center">
-                <Monitor className="w-16 h-16 text-muted-foreground" />
-              </div>
-              
-              <h2 className="text-3xl font-bold text-foreground mb-4">
-                قريباً... أعمال مذهلة
-              </h2>
-              
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                نعمل حالياً على إضافة مجموعة متميزة من أعمالنا وإنجازاتنا. 
-                ستتمكن قريباً من استكشاف مشاريعنا المتنوعة في مختلف المجالات.
-              </p>
-
-              {/* Feature Preview Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-4xl mx-auto">
-                {[
-                  {
-                    icon: Globe,
-                    title: "المواقع الإلكترونية",
-                    description: "مواقع احترافية متجاوبة مع جميع الأجهزة",
-                    color: "from-blue-500 to-indigo-600"
-                  },
-                  {
-                    icon: Smartphone,
-                    title: "تطبيقات الجوال",
-                    description: "تطبيقات ذكية وسهلة الاستخدام",
-                    color: "from-purple-500 to-pink-600"
-                  },
-                  {
-                    icon: Monitor,
-                    title: "أنظمة إدارية",
-                    description: "حلول تقنية متكاملة للأعمال",
-                    color: "from-emerald-500 to-teal-600"
-                  }
-                ].map((feature, index) => (
-                  <Card key={index} className="group hover:scale-105 transition-all duration-300 bg-background/80 backdrop-blur-sm border-border/50 hover:border-primary/30">
-                    <CardContent className="p-8 text-center">
-                      <div className={`w-16 h-16 mx-auto mb-6 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <feature.icon className="w-8 h-8 text-white" />
+            {filteredWorks.length > 0 ? (
+              /* Works Grid */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                {filteredWorks.map((work, index) => (
+                  <Card key={work.id} className="group hover:scale-105 transition-all duration-300 bg-background/80 backdrop-blur-sm border-border/50 hover:border-primary/30 overflow-hidden">
+                    <div className="relative overflow-hidden">
+                      <img 
+                        src={work.image} 
+                        alt={work.title}
+                        className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute top-4 right-4">
+                        <Badge variant="secondary" className="bg-white/90 text-slate-800">
+                          {work.type}
+                        </Badge>
+                      </div>
+                      <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Button size="sm" asChild className="bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30">
+                          <a href={work.url} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            زيارة الموقع
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                          {work.title}
+                        </h3>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="w-4 h-4" />
+                          {work.year}
+                        </div>
                       </div>
                       
-                      <h3 className="text-xl font-bold text-foreground mb-3">
-                        {feature.title}
-                      </h3>
-                      
-                      <p className="text-muted-foreground leading-relaxed">
-                        {feature.description}
+                      <p className="text-muted-foreground mb-4 leading-relaxed text-sm">
+                        {work.description}
                       </p>
+                      
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Users className="w-4 h-4" />
+                          {work.client}
+                        </div>
+                      </div>
+                      
+                      {/* Technologies */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {work.technologies.map((tech, techIndex) => (
+                          <Badge key={techIndex} variant="outline" className="text-xs">
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" asChild className="flex-1">
+                          <a href={work.url} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            زيارة الموقع
+                          </a>
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
+            ) : (
+              /* Empty State for filtered results */
+              <div className="text-center py-20">
+                <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-muted to-muted/50 rounded-full flex items-center justify-center">
+                  <Monitor className="w-12 h-12 text-muted-foreground" />
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-3">
+                  لا توجد أعمال في هذا القسم بعد
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  نعمل على إضافة المزيد من الأعمال في هذا القسم قريباً
+                </p>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setActiveFilter("all")}
+                >
+                  عرض جميع الأعمال
+                </Button>
+              </div>
+            )}
 
-              {/* CTA Section */}
-              <div className="mt-16 p-8 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-2xl border border-border/50">
+            {/* CTA Section */}
+            {filteredWorks.length > 0 && (
+              <div className="mt-16 p-8 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-2xl border border-border/50 text-center">
                 <h3 className="text-2xl font-bold text-foreground mb-4">
                   هل تريد أن يكون مشروعك ضمن أعمالنا المميزة؟
                 </h3>
@@ -144,7 +203,7 @@ const OurWorks = () => {
                   </Button>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
       </PageContainer>
