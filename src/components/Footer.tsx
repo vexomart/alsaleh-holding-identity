@@ -710,11 +710,81 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Registered With Section */}
+        <div className="py-12 border-t border-white/10">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-white mb-2">مسجلة في</h3>
+            <p className="text-gray-400">شركة معتمدة ومسجلة في الجهات الرسمية</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {/* وزارة التجارة */}
+            <div className="flex flex-col items-center group">
+              <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
+                <div className="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-green-700"></div>
+                  <svg className="w-10 h-10 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  </svg>
+                </div>
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2 text-center">وزارة التجارة</h4>
+              <p className="text-gray-400 text-sm text-center">المملكة العربية السعودية</p>
+            </div>
+
+            {/* هيئة الاتصالات */}
+            <div className="flex flex-col items-center group">
+              <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
+                <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-700"></div>
+                  <svg className="w-10 h-10 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.27-.27.35-.67.24-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/>
+                  </svg>
+                </div>
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2 text-center">هيئة الاتصالات</h4>
+              <p className="text-gray-400 text-sm text-center">وتقنية المعلومات</p>
+            </div>
+
+            {/* المركز السعودي للأعمال */}
+            <div className="flex flex-col items-center group">
+              <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
+                <div className="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-700"></div>
+                  <svg className="w-10 h-10 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2 text-center">المركز السعودي</h4>
+              <p className="text-gray-400 text-sm text-center">للأعمال</p>
+            </div>
+          </div>
+
+          {/* Additional Certifications */}
+          <div className="mt-12 pt-8 border-t border-white/10">
+            <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-green-400" />
+                <span>معتمدة من وزارة التجارة</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4 text-blue-400" />
+                <span>مرخصة من هيئة الاتصالات</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-purple-400" />
+                <span>عضو في المركز السعودي للأعمال</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
         <div className="border-t border-white/10 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
             <div className="text-center md:text-right">
-              © 2024 ASH HOLDING. جميع الحقوق محفوظة.
+              © 2025 ASH HOLDING. جميع الحقوق محفوظة.
             </div>
             <div className="flex flex-wrap justify-center gap-6">
               <a href="/privacy" className="hover:text-white transition-colors duration-200">
