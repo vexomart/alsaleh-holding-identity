@@ -273,7 +273,7 @@ const App = () => {
             
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
-                <Route path="/consultation" element={<Consultation />} />
+                <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
                 <Route path="/hosting-services" element={<HostingServices />} />
                 <Route path="/company-updates" element={<CompanyUpdates />} />
                 <Route path="/software-products" element={<Suspense fallback={<PageLoader />}><SoftwareProducts /></Suspense>} />
