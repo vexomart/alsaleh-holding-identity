@@ -351,7 +351,7 @@ const App = () => {
                 
                 <Route path="/tech-ecosystem" element={<TechEcosystem />} />
                 <Route path="/services-catalog" element={<ServicesCatalog />} />
-                <Route path="/digital-marketing" element={<DigitalMarketing />} />
+                <Route path="/digital-marketing" element={<Suspense fallback={<PageLoader />}><DigitalMarketing /></Suspense>} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/enhanced-payment" element={<Suspense fallback={<PageLoader />}><EnhancedPaymentPage /></Suspense>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
