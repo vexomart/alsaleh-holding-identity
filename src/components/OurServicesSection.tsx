@@ -95,12 +95,17 @@ const OurServicesSection = () => {
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Animated Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:60px_60px] opacity-40"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px] opacity-60 animate-pulse"></div>
         
-        {/* Floating Elements */}
-        <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
-        <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-gradient-to-r from-emerald-400/15 to-teal-400/15 rounded-full blur-2xl animate-pulse" style={{ animationDelay: "4s" }}></div>
+        {/* Enhanced Floating Elements with Smooth Animation */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full blur-3xl animate-bounce" style={{ animationDuration: "6s" }}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-to-r from-purple-400/25 to-pink-400/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s", animationDuration: "4s" }}></div>
+        <div className="absolute top-1/2 left-1/2 w-36 h-36 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-full blur-2xl animate-bounce" style={{ animationDelay: "4s", animationDuration: "8s" }}></div>
+        
+        {/* Moving Particles */}
+        <div className="absolute top-10 left-10 w-2 h-2 bg-cyan-400 rounded-full animate-ping" style={{ animationDelay: "1s" }}></div>
+        <div className="absolute top-20 right-20 w-3 h-3 bg-purple-400 rounded-full animate-ping" style={{ animationDelay: "3s" }}></div>
+        <div className="absolute bottom-20 left-20 w-2 h-2 bg-emerald-400 rounded-full animate-ping" style={{ animationDelay: "5s" }}></div>
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -125,84 +130,95 @@ const OurServicesSection = () => {
           </p>
         </div>
 
-        {/* Services Grid - Small Cards Side by Side */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 lg:gap-4 mb-12">
+        {/* Services Grid - Three Large Beautiful Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
           {services.map((service, index) => {
             const IconComponent = service.icon;
             
             return (
               <Card
                 key={service.id}
-                className="group relative overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-xl transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-1 hover:scale-105 cursor-pointer animate-fade-in h-full"
+                className="group relative overflow-hidden bg-white/95 backdrop-blur-lg border-0 rounded-2xl transition-all duration-700 hover:shadow-2xl hover:-translate-y-2 hover:scale-105 cursor-pointer animate-fade-in h-full shadow-xl hover:rotate-1"
                 style={{ 
-                  animationDelay: `${index * 0.1}s`,
+                  animationDelay: `${index * 0.2}s`,
                 }}
               >
-                {/* Hover Glow Effect */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.primaryGradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+                {/* Enhanced Glow Effect */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${service.primaryGradient} opacity-0 group-hover:opacity-10 transition-all duration-700`}></div>
+                <div className={`absolute -inset-2 bg-gradient-to-r ${service.primaryGradient} opacity-0 group-hover:opacity-20 blur-xl transition-all duration-700`}></div>
                 
-                <CardContent className="relative z-10 p-3 lg:p-4 h-full flex flex-col text-center">
-                  {/* Badge */}
-                  <div className="mb-3">
+                <CardContent className="relative z-10 p-6 lg:p-8 h-full flex flex-col">
+                  {/* Badge with Animation */}
+                  <div className="mb-6">
                     <Badge 
-                      className={`bg-gradient-to-r ${service.badgeGradient} text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm border-0`}
+                      className={`bg-gradient-to-r ${service.badgeGradient} text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg border-0 animate-pulse hover:animate-bounce`}
                     >
                       {service.badge}
                     </Badge>
                   </div>
 
-                  {/* Icon - Very Small */}
-                  <div className="mb-3">
-                    <div className={`relative w-12 h-12 bg-gradient-to-br ${service.primaryGradient} rounded-xl flex items-center justify-center mx-auto group-hover:scale-110 transition-all duration-500 shadow-md`}>
-                      <IconComponent className="w-6 h-6 text-white relative z-10" />
+                  {/* Icon with Enhanced Animation */}
+                  <div className="mb-6">
+                    <div className={`relative w-20 h-20 bg-gradient-to-br ${service.primaryGradient} rounded-2xl flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-700 shadow-2xl mx-auto`}>
+                      <IconComponent className="w-10 h-10 text-white relative z-10 group-hover:animate-pulse" />
+                      <div className={`absolute inset-0 bg-gradient-to-r ${service.primaryGradient} opacity-50 blur-md rounded-2xl group-hover:animate-ping`}></div>
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1 space-y-2">
-                    {/* Title */}
-                    <h3 className="text-sm lg:text-base font-bold text-white leading-tight">
+                  {/* Content with Better Typography */}
+                  <div className="flex-1 space-y-4 text-center">
+                    {/* Title with Gradient */}
+                    <h3 className={`text-xl lg:text-2xl font-bold bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent leading-tight group-hover:scale-105 transition-transform duration-500`}>
                       {service.title}
                     </h3>
                     
-                    {/* English Title */}
-                    <p className="text-xs font-bold text-gray-300 uppercase tracking-wider">
+                    {/* English Title with Shadow */}
+                    <p className="text-sm font-bold text-gray-600 uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity duration-500">
                       {service.titleEn}
                     </p>
                     
-                    {/* Description - Short */}
-                    <p className="text-gray-200 text-xs leading-relaxed">
-                      {service.description.substring(0, 50)}...
+                    {/* Full Description */}
+                    <p className="text-gray-700 text-base leading-relaxed font-medium">
+                      {service.description}
                     </p>
                     
-                    {/* Metrics - Very Compact */}
-                    <div className="grid grid-cols-1 gap-1 p-2 bg-white/10 rounded-lg border border-white/20">
+                    {/* Enhanced Metrics */}
+                    <div className="grid grid-cols-3 gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100 group-hover:bg-gray-100 transition-colors duration-500">
                       <div className="text-center">
-                        <div className="text-xs font-bold text-cyan-300">{service.metrics.projects}</div>
-                        <div className="text-xs text-gray-300">مشروع</div>
+                        <div className={`text-lg font-bold bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent`}>{service.metrics.projects}</div>
+                        <div className="text-sm text-gray-600">مشروع</div>
+                      </div>
+                      <div className="text-center">
+                        <div className={`text-lg font-bold bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent`}>{service.metrics.clients}</div>
+                        <div className="text-sm text-gray-600">عميل</div>
+                      </div>
+                      <div className="text-center">
+                        <div className={`text-lg font-bold bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent`}>{service.metrics.satisfaction}</div>
+                        <div className="text-sm text-gray-600">رضا</div>
                       </div>
                     </div>
                     
-                    {/* Features - Only 2 */}
-                    <div className="space-y-1">
-                      {service.features.slice(0, 2).map((feature, idx) => (
-                        <div key={idx} className="flex items-center justify-center gap-1 text-xs">
-                          <CheckCircle className="w-3 h-3 text-cyan-400" />
-                          <span className="text-gray-200 font-medium truncate">{feature}</span>
+                    {/* All Features */}
+                    <div className="space-y-3">
+                      {service.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center gap-3 text-sm group-hover:translate-x-1 transition-transform duration-300" style={{ transitionDelay: `${idx * 100}ms` }}>
+                          <CheckCircle className={`w-5 h-5 bg-gradient-to-r ${service.primaryGradient} bg-clip-text text-transparent`} />
+                          <span className="text-gray-700 font-medium">{feature}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                   
-                  {/* CTA Button - Small */}
-                  <div className="mt-3">
+                  {/* Enhanced CTA Button */}
+                  <div className="mt-6">
                     <Link to={service.route}>
                       <Button 
-                        size="sm"
-                        className={`w-full bg-gradient-to-r ${service.primaryGradient} hover:shadow-md text-white border-0 rounded-lg py-2 font-bold transition-all duration-300 text-xs`}
+                        size="lg"
+                        className={`w-full bg-gradient-to-r ${service.primaryGradient} hover:shadow-2xl text-white border-0 rounded-xl py-4 font-bold text-base transition-all duration-500 group-hover:scale-105 relative overflow-hidden`}
                       >
-                        <span>اكتشف</span>
-                        <ArrowRight className="w-3 h-3 mr-1" />
+                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+                        <span className="relative z-10">اكتشف المزيد</span>
+                        <ArrowRight className="w-5 h-5 mr-2 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                       </Button>
                     </Link>
                   </div>
