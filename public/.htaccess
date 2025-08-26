@@ -30,8 +30,18 @@ Options -Indexes -MultiViews
 # Block specific paths that should never be accessible
 RewriteRule ^(views|vendor|storage|node_modules|config|backups)/ - [F,L]
 
+# Block additional internal directories that may contain sensitive data
+<DirectoryMatch "^(.*)/(emails|admin|cache|logs|tmp|temp|uploads/temp)/">
+    Require all denied
+</DirectoryMatch>
+
 # Block access to sensitive file extensions
 <FilesMatch "\.(twig|tpl|env|log|sql|bak|backup|swp|git|ini|config)$">
+    Require all denied
+</FilesMatch>
+
+# Block specific template files and configuration files
+<FilesMatch "^(\.env|\.config|config\.php|database\.php|wp-config\.php)$">
     Require all denied
 </FilesMatch>
 

@@ -21,6 +21,12 @@ Disallow: /storage/
 Disallow: /vendor/
 Disallow: /views/
 Disallow: /backups/
+Disallow: /emails/
+Disallow: /admin/
+Disallow: /cache/
+Disallow: /logs/
+Disallow: /tmp/
+Disallow: /temp/
 
 # Block knowledge base paths with template variables
 Disallow: /page/knowledge-base/
