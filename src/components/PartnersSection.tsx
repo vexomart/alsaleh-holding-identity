@@ -205,7 +205,7 @@ const PartnersSection = () => {
         </div>
 
         {/* Partners Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 mb-16">
           {partners.map((partner, index) => {
             const partnerStyle = partnerTypes[partner.type as keyof typeof partnerTypes];
             const isHovered = hoveredPartner === partner.id;
@@ -215,75 +215,67 @@ const PartnersSection = () => {
                 key={partner.id}
                 className={`
                   group relative overflow-hidden transition-all duration-500 ease-out
-                  hover:scale-105 hover:shadow-2xl hover:shadow-primary/25
+                  hover:scale-110 hover:shadow-xl hover:shadow-primary/20
                   ${partnerStyle.bgColor} ${partnerStyle.borderColor}
-                  backdrop-blur-sm border animate-fade-in h-full
+                  backdrop-blur-sm border animate-fade-in aspect-square
                 `}
-                style={{ animationDelay: `${index * 0.1}s` }}
+                style={{ animationDelay: `${index * 0.05}s` }}
                 onMouseEnter={() => setHoveredPartner(partner.id)}
                 onMouseLeave={() => setHoveredPartner(null)}
               >
                 {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${partnerStyle.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${partnerStyle.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
                 
-                {/* Partner Type Badge */}
-                <div className="absolute top-2 right-2 z-20">
-                  <Badge variant="outline" className={`text-xs ${partnerStyle.textColor} border-current bg-background/80`}>
-                    {partnerStyle.label}
-                  </Badge>
+                {/* Partner Type Badge - Only for larger screens */}
+                <div className="absolute top-1 right-1 z-20 hidden sm:block">
+                  <div className={`w-2 h-2 rounded-full ${partnerStyle.color.replace('from-', 'bg-').replace(' to-slate-600', '').replace(' to-yellow-600', '').replace(' to-gray-600', '')} opacity-60`}></div>
                 </div>
 
-                {/* Animated Corner Element */}
-                <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-primary/10 to-transparent rounded-br-full transform -translate-x-4 -translate-y-4 group-hover:-translate-x-2 group-hover:-translate-y-2 transition-transform duration-500"></div>
+                {/* Simplified Corner Element */}
+                <div className="absolute top-0 left-0 w-8 h-8 bg-gradient-to-br from-primary/5 to-transparent rounded-br-full transform -translate-x-2 -translate-y-2 group-hover:-translate-x-1 group-hover:-translate-y-1 transition-transform duration-500"></div>
 
-                <CardContent className="p-6 relative z-10 h-full flex flex-col">
-                  {/* Logo Section */}
-                  <div className="flex items-center justify-center mb-4 h-16">
-                    <div className="w-full h-full bg-white/90 rounded-lg flex items-center justify-center p-2 group-hover:bg-white transition-colors duration-300 shadow-sm">
+                <CardContent className="p-3 relative z-10 h-full flex flex-col items-center justify-center">
+                  {/* Logo Section - Simplified */}
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-full h-full bg-white/95 rounded-lg flex items-center justify-center p-2 group-hover:bg-white transition-colors duration-300 shadow-sm max-w-[80px] max-h-[80px]">
                       <img 
                         src={partner.logo} 
                         alt={`${partner.name} logo`} 
-                        className="max-w-full max-h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                        className="max-w-full max-h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
-                          e.currentTarget.parentElement!.innerHTML = `<div class="text-2xl font-bold ${partnerStyle.textColor}">${partner.nameEn.substring(0, 2)}</div>`;
+                          e.currentTarget.parentElement!.innerHTML = `<div class="text-lg font-bold ${partnerStyle.textColor}">${partner.nameEn.substring(0, 2)}</div>`;
                         }}
                       />
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="space-y-3 flex-1 flex flex-col">
-                    <div className="text-center">
-                      <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-1">
-                        {partner.name}
-                      </h3>
-                      <p className="text-xs text-muted-foreground opacity-80">
-                        {partner.nameEn}
-                      </p>
-                    </div>
-                    
-                    <div className="text-center flex-1">
-                      <Badge variant="secondary" className="text-xs mb-2">
-                        {partner.category}
-                      </Badge>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        {partner.description}
-                      </p>
-                    </div>
-
-                    {/* Partnership Since */}
-                    <div className="text-center pt-3 border-t border-border/50">
-                      <div className="flex items-center justify-center text-xs text-muted-foreground">
-                        <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
-                        <span>شريك منذ {partner.since}</span>
+                  {/* Tooltip Content - Shows on Hover */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-30">
+                    <div className="bg-background/95 backdrop-blur-sm border border-border/50 rounded-lg p-3 shadow-lg min-w-[200px]">
+                      <div className="text-center">
+                        <h4 className="text-sm font-semibold text-foreground mb-1">
+                          {partner.name}
+                        </h4>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          {partner.category}
+                        </p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          {partner.description}
+                        </p>
+                        <div className="flex items-center justify-center mt-2 text-xs">
+                          <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
+                          <span className="text-muted-foreground">شريك منذ {partner.since}</span>
+                        </div>
                       </div>
+                      {/* Tooltip Arrow */}
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-background/95"></div>
                     </div>
                   </div>
                 </CardContent>
 
-                {/* Hover Effect Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                {/* Subtle Hover Effect */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
               </Card>
             );
           })}
