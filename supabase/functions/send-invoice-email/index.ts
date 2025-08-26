@@ -274,7 +274,7 @@ const handler = async (req: Request): Promise<Response> => {
       html: `
         <div style="direction: rtl; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <img src="https://alialshehriholding.com/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" alt="شعار الشركة" style="max-width: 200px; height: auto;" />
+            <img src="https://alialshehriholding.com/favicon.ico" alt="شعار الشركة" style="max-width: 200px; height: auto;" />
           </div>
           <h2 style="color: #1e40af; text-align: center;">إشعار فاتورة جديدة</h2>
           <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">

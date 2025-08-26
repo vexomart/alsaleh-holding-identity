@@ -33,7 +33,7 @@ import {
 // Import company logos
 import tabbyLogo from "@/assets/tabby-logo.png";
 import madfuLogo from "@/assets/madfu-logo.png";
-import companyLogo from "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png";
+import companyLogo from "@/assets/madfu-logo.png";
 import tasaheelLogo from "@/assets/alrajhi-bank-logo.png";
 
 const PaymentMethodsSection = () => {

@@ -80,9 +80,9 @@ const offersData = [
     bgPattern: "bg-blue-50",
     category: "تطوير الويب",
     galleryImages: [
-      "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png",
-      "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png",
-      "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png"
+      "/favicon.ico",
+      "/favicon.ico",
+      "/favicon.ico"
     ]
   },
   {
@@ -120,9 +120,9 @@ const offersData = [
     bgPattern: "bg-orange-50",
     category: "التجارة الإلكترونية",
     galleryImages: [
-      "/lovable-uploads/2f45c50e-e8b3-44e1-97f1-5923f0084b17.png",
-      "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png",
-      "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png"
+      "/favicon.ico",
+      "/favicon.ico",
+      "/favicon.ico"
     ]
   },
   {
@@ -158,9 +158,9 @@ const offersData = [
     bgPattern: "bg-green-50",
     category: "التسويق الرقمي",
     galleryImages: [
-      "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png",
-      "/lovable-uploads/2f45c50e-e8b3-44e1-97f1-5923f0084b17.png",
-      "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png"
+      "/favicon.ico",
+      "/favicon.ico",
+      "/favicon.ico"
     ]
   },
   {
@@ -196,9 +196,9 @@ const offersData = [
     bgPattern: "bg-purple-50",
     category: "التصميم والهوية",
     galleryImages: [
-      "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png",
-      "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png",
-      "/lovable-uploads/2f45c50e-e8b3-44e1-97f1-5923f0084b17.png"
+      "/favicon.ico",
+      "/favicon.ico",
+      "/favicon.ico"
     ]
   }
 ];

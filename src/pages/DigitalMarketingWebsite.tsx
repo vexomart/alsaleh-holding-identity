@@ -149,21 +149,21 @@ const DigitalMarketingWebsite = () => {
       company: "مجموعة الفلاح التجارية",
       review: "فريق احترافي حقق لنا نتائج مذهلة في تطوير حضورنا الرقمي وزيادة المبيعات بنسبة 300%",
       rating: 5,
-      image: "/lovable-uploads/2f45c50e-e8b3-44e1-97f1-5923f0084b17.png"
+      image: "/favicon.ico"
     },
     {
       name: "فاطمة العلي",
       company: "شركة النور للتكنولوجيا",
       review: "خدمة متميزة وفريق يفهم احتياجاتنا. حققوا أهدافنا التسويقية بشكل يفوق التوقعات",
       rating: 5,
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png"
+      image: "/favicon.ico"
     },
     {
       name: "خالد الرشيد",
       company: "مؤسسة الابتكار الطبي",
       review: "شراكة استراتيجية حقيقية ساعدتنا في الوصول لأسواق جديدة وتحقيق نمو مستدام",
       rating: 5,
-      image: "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png"
+      image: "/favicon.ico"
     }
   ];
 
@@ -172,21 +172,21 @@ const DigitalMarketingWebsite = () => {
       title: "حملة التسويق الرقمي لمجموعة الفطيم",
       description: "زيادة المبيعات بنسبة 400% خلال 6 أشهر",
       category: "تسويق رقمي",
-      image: "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png",
+      image: "/favicon.ico",
       results: ["400% زيادة في المبيعات", "250% نمو في حركة الموقع", "60% تحسن في معدل التحويل"]
     },
     {
       title: "تطوير منصة التجارة الإلكترونية لسوق دبي",
       description: "بناء منصة متطورة بتقنيات الذكاء الاصطناعي",
       category: "تطوير ويب",
-      image: "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png",
+      image: "/favicon.ico",
       results: ["منصة بـ 5 لغات", "تكامل مع 20 بوابة دفع", "مليون مستخدم نشط"]
     },
     {
       title: "استراتيجية المحتوى لشركة إعمار",
       description: "بناء حضور رقمي قوي على جميع المنصات",
       category: "استراتيجية محتوى",
-      image: "/lovable-uploads/11949ba3-ce73-4843-be21-760250e11b50.png",
+      image: "/favicon.ico",
       results: ["10 مليون مشاهدة", "500% نمو في المتابعين", "85% معدل تفاعل"]
     }
   ];
@@ -197,21 +197,21 @@ const DigitalMarketingWebsite = () => {
       role: "مديرة التسويق الرقمي",
       experience: "15+ سنة خبرة",
       speciality: "استراتيجيات التسويق العالمية",
-      image: "/lovable-uploads/2f45c50e-e8b3-44e1-97f1-5923f0084b17.png"
+      image: "/favicon.ico"
     },
     {
       name: "محمد الزهراني",
       role: "مطور تقنيات الويب",
       experience: "12+ سنة خبرة",
       speciality: "تطوير المنصات الرقمية",
-      image: "/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png"
+      image: "/favicon.ico"
     },
     {
       name: "لينا المنصوري",
       role: "مصممة تجربة المستخدم",
       experience: "10+ سنة خبرة",
       speciality: "تصميم واجهات المستخدم",
-      image: "/lovable-uploads/2cc6f009-6ed2-49cd-ac12-04f70b684a4d.png"
+      image: "/favicon.ico"
     }
   ];
 
