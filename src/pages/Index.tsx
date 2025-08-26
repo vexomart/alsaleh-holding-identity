@@ -11,14 +11,10 @@ const ChatBot = lazy(() => import("@/components/ChatBot"));
 
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
-import { ImageOptimizer } from "@/components/ImageOptimizer";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
-      <PerformanceOptimizer />
-      <ImageOptimizer />
       <Navigation />
       
       {/* Simplified Background Elements */}

@@ -1,31 +1,39 @@
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-// Optimized for FCP - minimal execution before render
+// Performance optimizations
+const optimizeApp = () => {
+  // Add lazy loading to images
+  document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+      if (!img.loading) {
+        img.loading = 'lazy';
+      }
+    });
+  });
+
+  // Preload critical fonts
+  const fontLink = document.createElement('link');
+  fontLink.rel = 'preload';
+  fontLink.as = 'style';
+  fontLink.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap';
+  document.head.appendChild(fontLink);
+};
+
+// Initialize optimizations
+optimizeApp();
+
 const rootElement = document.getElementById("root");
 
 if (rootElement) {
-  createRoot(rootElement).render(<App />);
+  createRoot(rootElement).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
 } else {
   console.error('Root element not found!');
-}
-
-// Defer debugging and error handling to after initial render
-if (import.meta.env.DEV) {
-  // Only add debugging in development mode
-  console.log('Main.tsx loaded successfully');
-  console.log('Document state:', document.readyState);
-  console.log('Current URL:', window.location.href);
-
-  // Defer error handlers to not block FCP
-  setTimeout(() => {
-    window.addEventListener('error', (e) => {
-      console.error('Global error:', e.error, e.message, e.filename);
-    });
-
-    window.addEventListener('unhandledrejection', (e) => {
-      console.error('Unhandled promise rejection:', e.reason);
-    });
-  }, 0);
 }
