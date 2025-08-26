@@ -241,7 +241,6 @@ const HeroSection = () => {
               visionSection?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
-            <Heart className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 group-hover:scale-125 group-hover:text-destructive transition-all duration-300" />
             <span className="hidden sm:block">اكتشف رؤيتنا التفصيلية</span>
             <span className="sm:hidden">رؤيتنا</span>
           </Button>
