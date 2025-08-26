@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
-export const ImageOptimizer = () => {
+const ImageOptimizer = React.memo(() => {
   useEffect(() => {
     // Optimize all images for lazy loading and performance
     const optimizeImages = () => {
@@ -54,4 +54,8 @@ export const ImageOptimizer = () => {
   }, []);
 
   return null;
-};
+});
+
+ImageOptimizer.displayName = 'ImageOptimizer';
+
+export { ImageOptimizer };

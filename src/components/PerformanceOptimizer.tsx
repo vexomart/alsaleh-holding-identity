@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
-export const PerformanceOptimizer = () => {
+const PerformanceOptimizer = React.memo(() => {
   useEffect(() => {
     // Preload critical resources
     const preloadLinks = [
@@ -56,4 +56,8 @@ export const PerformanceOptimizer = () => {
   }, []);
 
   return null;
-};
+});
+
+PerformanceOptimizer.displayName = 'PerformanceOptimizer';
+
+export { PerformanceOptimizer };
