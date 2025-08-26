@@ -712,85 +712,125 @@ const Footer = () => {
 
         {/* Registered With Section */}
         <div className="py-12 border-t border-white/10">
-          <div className="text-center mb-8">
+          <div className="text-center mb-12">
             <h3 className="text-2xl font-bold text-white mb-2">مسجلة في</h3>
             <p className="text-gray-400">شركة معتمدة ومسجلة في الجهات الرسمية</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          {/* Logos Row */}
+          <div className="flex justify-center items-center gap-8 flex-wrap max-w-5xl mx-auto mb-8">
             {/* وزارة التجارة */}
-            <div className="flex flex-col items-center group">
-              <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
-                <div className="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-green-700"></div>
-                  <svg className="w-10 h-10 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                  </svg>
+            <div className="group relative">
+              <div className="bg-gradient-to-br from-emerald-500/10 to-green-600/10 backdrop-blur-sm border border-emerald-500/20 rounded-xl p-6 transition-all duration-500 hover:from-emerald-500/20 hover:to-green-600/20 hover:border-emerald-500/40 hover:shadow-lg hover:shadow-emerald-500/25 hover:scale-105 animate-fade-in">
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/50 transition-all duration-300">
+                    {/* وزارة التجارة الشعار الأصلي */}
+                    <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-semibold text-white text-sm">وزارة التجارة</p>
+                    <p className="text-xs text-emerald-300">المملكة العربية السعودية</p>
+                  </div>
                 </div>
               </div>
-              <h4 className="text-lg font-bold text-white mb-2 text-center">وزارة التجارة</h4>
-              <p className="text-gray-400 text-sm text-center">المملكة العربية السعودية</p>
+              {/* Animated decoration */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full animate-pulse"></div>
+              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full animate-pulse delay-500"></div>
             </div>
 
-            {/* هيئة الاتصالات */}
-            <div className="flex flex-col items-center group">
-              <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
-                <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-700"></div>
-                  <svg className="w-10 h-10 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.27-.27.35-.67.24-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/>
-                  </svg>
+            {/* هيئة الاتصالات وتقنية المعلومات */}
+            <div className="group relative">
+              <div className="bg-gradient-to-br from-blue-500/10 to-indigo-600/10 backdrop-blur-sm border border-blue-500/20 rounded-xl p-6 transition-all duration-500 hover:from-blue-500/20 hover:to-indigo-600/20 hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 animate-fade-in delay-150">
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300">
+                    {/* هيئة الاتصالات الشعار الأصلي */}
+                    <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.27-.27.35-.67.24-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/>
+                      <circle cx="12" cy="12" r="2"/>
+                      <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                    </svg>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-semibold text-white text-sm">هيئة الاتصالات</p>
+                    <p className="text-xs text-blue-300">وتقنية المعلومات</p>
+                  </div>
                 </div>
               </div>
-              <h4 className="text-lg font-bold text-white mb-2 text-center">هيئة الاتصالات</h4>
-              <p className="text-gray-400 text-sm text-center">وتقنية المعلومات</p>
+              {/* Animated decoration */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full animate-pulse delay-200"></div>
+              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-full animate-pulse delay-700"></div>
             </div>
 
             {/* هيئة الزكاة والضريبة والجمارك */}
-            <div className="flex flex-col items-center group">
-              <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
-                <div className="w-16 h-16 bg-amber-600 rounded-xl flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-700"></div>
-                  <svg className="w-10 h-10 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L15.09 8.26L22 9L15.09 9.74L12 16L8.91 9.74L2 9L8.91 8.26L12 2Z"/>
-                    <path d="M7 13h10v1H7z"/>
-                    <path d="M9 16h6v1H9z"/>
-                  </svg>
+            <div className="group relative">
+              <div className="bg-gradient-to-br from-amber-500/10 to-orange-600/10 backdrop-blur-sm border border-amber-500/20 rounded-xl p-6 transition-all duration-500 hover:from-amber-500/20 hover:to-orange-600/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/25 hover:scale-105 animate-fade-in delay-300">
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-amber-500/50 transition-all duration-300">
+                    {/* هيئة الزكاة الشعار الأصلي */}
+                    <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L15.09 8.26L22 9L15.09 9.74L12 16L8.91 9.74L2 9L8.91 8.26L12 2Z"/>
+                      <path d="M12 6L14 10L18 10L15 13L16 17L12 15L8 17L9 13L6 10L10 10L12 6Z"/>
+                      <circle cx="12" cy="19" r="2"/>
+                      <path d="M5 19h14M7 15l5 2 5-2"/>
+                    </svg>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-semibold text-white text-sm">هيئة الزكاة</p>
+                    <p className="text-xs text-amber-300">والضريبة والجمارك</p>
+                  </div>
                 </div>
               </div>
-              <h4 className="text-lg font-bold text-white mb-2 text-center">هيئة الزكاة</h4>
-              <p className="text-gray-400 text-sm text-center">والضريبة والجمارك</p>
+              {/* Animated decoration */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full animate-pulse delay-400"></div>
+              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-br from-orange-400 to-amber-500 rounded-full animate-pulse delay-900"></div>
             </div>
 
             {/* المركز السعودي للأعمال */}
-            <div className="flex flex-col items-center group">
-              <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
-                <div className="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-700"></div>
-                  <svg className="w-10 h-10 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
+            <div className="group relative">
+              <div className="bg-gradient-to-br from-purple-500/10 to-pink-600/10 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6 transition-all duration-500 hover:from-purple-500/20 hover:to-pink-600/20 hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/25 hover:scale-105 animate-fade-in delay-450">
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-purple-500/50 transition-all duration-300">
+                    {/* المركز السعودي للأعمال الشعار الأصلي */}
+                    <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      <path d="M12 7l1.5 3 3.5.5-2.5 2.5.5 3.5-2.5-1.5L9.5 16l.5-3.5L7.5 10.5l3.5-.5L12 7z"/>
+                      <circle cx="12" cy="2" r="1"/>
+                      <circle cx="2" cy="9.27" r="1"/>
+                      <circle cx="22" cy="9.27" r="1"/>
+                    </svg>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-semibold text-white text-sm">المركز السعودي</p>
+                    <p className="text-xs text-purple-300">للأعمال</p>
+                  </div>
                 </div>
               </div>
-              <h4 className="text-lg font-bold text-white mb-2 text-center">المركز السعودي</h4>
-              <p className="text-gray-400 text-sm text-center">للأعمال</p>
+              {/* Animated decoration */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full animate-pulse delay-600"></div>
+              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full animate-pulse delay-1000"></div>
             </div>
           </div>
 
-          {/* Additional Certifications */}
-          <div className="mt-12 pt-8 border-t border-white/10">
-            <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-gray-400">
-              <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-green-400" />
-                <span>معتمدة من وزارة التجارة</span>
+          {/* Additional Certifications with Enhanced Styling */}
+          <div className="pt-8 border-t border-white/10">
+            <div className="flex flex-wrap justify-center items-center gap-8 text-sm">
+              <div className="flex items-center gap-3 bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20 hover:bg-emerald-500/20 transition-all duration-300 animate-fade-in">
+                <Shield className="w-4 h-4 text-emerald-400" />
+                <span className="text-emerald-300 font-medium">معتمدة من وزارة التجارة</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 bg-blue-500/10 px-4 py-2 rounded-full border border-blue-500/20 hover:bg-blue-500/20 transition-all duration-300 animate-fade-in delay-150">
                 <Award className="w-4 h-4 text-blue-400" />
-                <span>مرخصة من هيئة الاتصالات</span>
+                <span className="text-blue-300 font-medium">مرخصة من هيئة الاتصالات</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 bg-amber-500/10 px-4 py-2 rounded-full border border-amber-500/20 hover:bg-amber-500/20 transition-all duration-300 animate-fade-in delay-300">
+                <Star className="w-4 h-4 text-amber-400" />
+                <span className="text-amber-300 font-medium">مسجلة في هيئة الزكاة</span>
+              </div>
+              <div className="flex items-center gap-3 bg-purple-500/10 px-4 py-2 rounded-full border border-purple-500/20 hover:bg-purple-500/20 transition-all duration-300 animate-fade-in delay-450">
                 <Star className="w-4 h-4 text-purple-400" />
-                <span>عضو في المركز السعودي للأعمال</span>
+                <span className="text-purple-300 font-medium">عضو في المركز السعودي للأعمال</span>
               </div>
             </div>
           </div>
