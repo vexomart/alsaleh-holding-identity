@@ -1,4 +1,4 @@
-import SimpleNavigation from "@/components/SimpleNavigation";
+import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,7 +28,7 @@ const Index = () => {
       <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
       <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
       
-      <SimpleNavigation />
+      <Navigation />
       
       {/* Simplified Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
