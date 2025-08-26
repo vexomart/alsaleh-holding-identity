@@ -2,27 +2,25 @@ User-agent: *
 Allow: /
 
 # Block authentication and admin areas
-Disallow: /auth
 Disallow: /login
+Disallow: /auth
 Disallow: /register
 Disallow: /profile
 Disallow: /tickets
 Disallow: /account
 Disallow: /admin
-Disallow: /consultation
 
 # Block internal directories and sensitive paths
+Disallow: /views
+Disallow: /vendor
+Disallow: /storage
+Disallow: /node_modules
 Disallow: /src/
-Disallow: /node_modules/
 Disallow: /supabase/
 Disallow: /.git/
 Disallow: /config/
-Disallow: /storage/
-Disallow: /vendor/
-Disallow: /views/
 Disallow: /backups/
 Disallow: /emails/
-Disallow: /admin/
 Disallow: /cache/
 Disallow: /logs/
 Disallow: /tmp/
