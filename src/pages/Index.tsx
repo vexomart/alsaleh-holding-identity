@@ -1,27 +1,13 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import Footer from "@/components/Footer";
+import ChatBot from "@/components/ChatBot";
 import GoogleAnalytics from "@/components/marketing/GoogleAnalytics";
 import FacebookPixel from "@/components/marketing/FacebookPixel";
 import NewsletterSubscription from "@/components/marketing/NewsletterSubscription";
 import SocialMediaLinks from "@/components/marketing/SocialMediaLinks";
 import MarketingBlog from "@/components/marketing/MarketingBlog";
-
-// Lazy load below-the-fold components for better performance
-import { lazy, Suspense } from "react";
-const Footer = lazy(() => import("@/components/Footer"));
-const ChatBot = lazy(() => import("@/components/ChatBot"));
 import OurServicesSection from "@/components/OurServicesSection";
-
-import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
-import { ImageOptimizer } from "@/components/ImageOptimizer";
-
-
-
 
 const Index = () => {
   return (
@@ -30,8 +16,6 @@ const Index = () => {
       <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
       <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
       
-      <PerformanceOptimizer />
-      <ImageOptimizer />
       <Navigation />
       
       {/* Simplified Background Elements */}
@@ -64,20 +48,16 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Footer with Enhanced Styling - Lazy Loaded */}
+      {/* Footer with Enhanced Styling */}
       <footer className="relative z-10 mt-8">
         <div className="absolute inset-0 bg-gradient-to-t from-background via-primary/5 to-transparent"></div>
         <div className="relative z-10">
-          <Suspense fallback={<div className="h-96 bg-muted/10 animate-pulse" />}>
-            <Footer />
-          </Suspense>
+          <Footer />
         </div>
       </footer>
 
-      {/* ChatBot Component - Lazy Loaded */}
-      <Suspense fallback={null}>
-        <ChatBot />
-      </Suspense>
+      {/* ChatBot Component */}
+      <ChatBot />
     </div>
   );
 };
