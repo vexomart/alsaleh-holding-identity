@@ -1,73 +1,3 @@
-/* Advanced Strategic Animations */
-@keyframes float {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% { 
-    transform: translateY(-20px) rotate(5deg);
-  }
-}
-
-@keyframes strategic-pulse {
-  0%, 100% { 
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% { 
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-@keyframes strategic-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 0 60px rgba(147, 51, 234, 0.4);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-@keyframes orbital {
-  0% {
-    transform: rotate(0deg) translateX(30px) rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg) translateX(30px) rotate(-360deg);
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-strategic-pulse {
-  animation: strategic-pulse 3s ease-in-out infinite;
-}
-
-.animate-strategic-glow {
-  animation: strategic-glow 4s ease-in-out infinite;
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
-
-.animate-orbital {
-  animation: orbital 20s linear infinite;
-}
-
 /* PWA and Mobile-First Responsive Additions */
 @supports (padding: max(0px)) {
   .pt-safe {
@@ -108,6 +38,46 @@
     user-select: none;
   }
 }
+
+/* Text Shadow Utilities */
+.text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.text-shadow-md {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.text-shadow-xl {
+  text-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Backdrop Blur Utilities */
+.backdrop-blur-xs {
+  backdrop-filter: blur(2px);
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(12px);
+}
+
+.backdrop-blur-xl {
+  backdrop-filter: blur(16px);
+}
+
+@import url('./styles/rtl-fixes.css');
 
 @tailwind base;
 @tailwind components;
@@ -155,12 +125,6 @@
     --success-foreground: 0 0% 98%;
     --warning: 40 90% 55%;
     --warning-foreground: 210 15% 15%;
-    
-    /* Gold/Amber System for Premium Elements */
-    --gold-400: 43 96% 56%;
-    --gold-500: 38 92% 50%;
-    --amber-400: 45 93% 58%;
-    --amber-500: 43 96% 56%;
     
     /* Unified Gradients System */
     --gradient-primary: linear-gradient(135deg, hsl(220 85% 35%), hsl(220 75% 45%));
@@ -301,15 +265,6 @@
   }
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out;
 }
@@ -320,10 +275,6 @@
 
 .animate-glow {
   animation: glow 2s ease-in-out infinite;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
 }
 
 /* Professional Corporate Styles */
@@ -757,36 +708,4 @@
   .print-visible {
     @apply block;
   }
-}
-
-/* Animation utilities */
-@keyframes blob {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
-  100% { transform: translate(0px, 0px) scale(1); }
-}
-
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-.animation-delay-6000 {
-  animation-delay: 6s;
-}
-
-.animation-delay-1000 {
-  animation-delay: 1s;
-}
-
-.animation-delay-3000 {
-  animation-delay: 3s;
 }

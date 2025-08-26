@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { NumberFormatter } from "./NumberFormatter";
 
 interface AnimatedCounterProps {
@@ -9,18 +9,36 @@ interface AnimatedCounterProps {
   className?: string;
 }
 
-const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ 
+export const AnimatedCounter = ({ 
   end, 
   duration = 2000, 
   prefix = "", 
   suffix = "",
   className = "" 
-}) => {
+}: AnimatedCounterProps) => {
   const [count, setCount] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const elementRef = useRef<HTMLSpanElement>(null);
 
-  const startAnimation = useCallback(() => {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    const element = document.getElementById(`counter-${end}`);
+    if (element) {
+      observer.observe(element);
+    }
+
+    return () => observer.disconnect();
+  }, [end]);
+
+  useEffect(() => {
     if (!isVisible) return;
 
     let startTime: number;
@@ -48,35 +66,9 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
     };
   }, [isVisible, end, duration]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    const element = elementRef.current;
-    if (element) {
-      observer.observe(element);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    const cleanup = startAnimation();
-    return cleanup;
-  }, [startAnimation]);
-
   return (
     <span 
-      ref={elementRef}
+      id={`counter-${end}`}
       className={`font-bold ${className} transition-all duration-300`}
     >
       {prefix}
@@ -87,5 +79,3 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
     </span>
   );
 };
-
-export { AnimatedCounter };

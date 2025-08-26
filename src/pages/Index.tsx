@@ -1,21 +1,27 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-import Footer from "@/components/Footer";
-import ChatBot from "@/components/ChatBot";
-import GoogleAnalytics from "@/components/marketing/GoogleAnalytics";
-import FacebookPixel from "@/components/marketing/FacebookPixel";
-import NewsletterSubscription from "@/components/marketing/NewsletterSubscription";
-import SocialMediaLinks from "@/components/marketing/SocialMediaLinks";
-import MarketingBlog from "@/components/marketing/MarketingBlog";
-import OurServicesSection from "@/components/OurServicesSection";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+// Lazy load below-the-fold components for better performance
+import { lazy, Suspense } from "react";
+const Footer = lazy(() => import("@/components/Footer"));
+const ChatBot = lazy(() => import("@/components/ChatBot"));
+
+import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
+import { ImageOptimizer } from "@/components/ImageOptimizer";
+
+
+
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
-      {/* أدوات التسويق */}
-      <GoogleAnalytics trackingId="G-XXXXXXXXXX" />
-      <FacebookPixel pixelId="XXXXXXXXXXXXXXXXX" />
-      
+      <PerformanceOptimizer />
+      <ImageOptimizer />
       <Navigation />
       
       {/* Simplified Background Elements */}
@@ -32,32 +38,30 @@ const Index = () => {
 
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
-          {/* Our Services Section */}
-          <section className="relative">
-            <OurServicesSection />
-          </section>
-          
-          {/* Newsletter Subscription */}
-          <NewsletterSubscription />
-          
-          {/* Social Media Links */}
-          <SocialMediaLinks />
-          
-          {/* Marketing Blog */}
-          <MarketingBlog />
+
+
+
+
+
+
+
         </div>
       </main>
 
-      {/* Footer with Enhanced Styling */}
+      {/* Footer with Enhanced Styling - Lazy Loaded */}
       <footer className="relative z-10 mt-8">
         <div className="absolute inset-0 bg-gradient-to-t from-background via-primary/5 to-transparent"></div>
         <div className="relative z-10">
-          <Footer />
+          <Suspense fallback={<div className="h-96 bg-muted/10 animate-pulse" />}>
+            <Footer />
+          </Suspense>
         </div>
       </footer>
 
-      {/* ChatBot Component */}
-      <ChatBot />
+      {/* ChatBot Component - Lazy Loaded */}
+      <Suspense fallback={null}>
+        <ChatBot />
+      </Suspense>
     </div>
   );
 };

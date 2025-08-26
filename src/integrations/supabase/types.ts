@@ -1782,7 +1782,7 @@ export type Database = {
           status: string | null
           transaction_id: string
           updated_at: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           amount: number
@@ -1802,7 +1802,7 @@ export type Database = {
           status?: string | null
           transaction_id: string
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           amount?: number
@@ -1822,7 +1822,7 @@ export type Database = {
           status?: string | null
           transaction_id?: string
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -2868,10 +2868,6 @@ export type Database = {
         Args: { subscriber_email: string }
         Returns: boolean
       }
-      check_sensitive_operation_limit: {
-        Args: { p_operation_type: string; p_user_id: string }
-        Returns: boolean
-      }
       create_admin_session: {
         Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
@@ -3002,10 +2998,6 @@ export type Database = {
         Args: { user_id?: string }
         Returns: boolean
       }
-      is_admin_user: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
       log_sensitive_data_access: {
         Args: {
           p_access_type: string
@@ -3032,18 +3024,6 @@ export type Database = {
       mask_phone: {
         Args: { phone_input: string; user_requesting?: string }
         Returns: string
-      }
-      mask_sensitive_email: {
-        Args: { email_input: string; user_requesting?: string }
-        Returns: string
-      }
-      mask_sensitive_phone: {
-        Args: { phone_input: string; user_requesting?: string }
-        Returns: string
-      }
-      owns_payment_transaction: {
-        Args: { transaction_user_id: string }
-        Returns: boolean
       }
       record_automation_usage: {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }

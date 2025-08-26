@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 export const PerformanceOptimizer = () => {
   useEffect(() => {
@@ -22,16 +22,11 @@ export const PerformanceOptimizer = () => {
       document.body.classList.add('reduce-animations');
     }
 
-    // تحسين التحديث السريع في التطوير
-    if (import.meta.env.DEV) {
-      // تقليل عمليات DOM في وضع التطوير
-      return;
-    }
-
     // Prefetch important pages on idle (reduced list for better performance)
     const prefetchPages = [
       '/current-offers',
-      '/about'
+      '/about',
+      '/contact'
     ];
 
     const prefetchOnIdle = () => {
@@ -45,9 +40,9 @@ export const PerformanceOptimizer = () => {
 
     // Use requestIdleCallback if available, otherwise setTimeout
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(prefetchOnIdle, { timeout: 5000 });
+      requestIdleCallback(prefetchOnIdle);
     } else {
-      setTimeout(prefetchOnIdle, 3000);
+      setTimeout(prefetchOnIdle, 2000);
     }
 
     // Optimize images loading

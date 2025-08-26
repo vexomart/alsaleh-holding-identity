@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Building2, Award, Truck, CheckCircle2, Star, Users, Clock, Phone, Mail, MapPin, Calendar, Shield, Zap, Globe, Wrench, Quote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -103,7 +103,7 @@ const ConstructionWebsite = () => {
       };
 
       // Use Paylink as primary payment gateway
-      const { data, error } = await supabase.functions.invoke('tap-payment', {
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
         body: paymentData
       });
 

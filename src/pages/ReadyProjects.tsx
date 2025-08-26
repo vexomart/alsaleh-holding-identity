@@ -43,7 +43,7 @@ import {
   Info
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const ReadyProjects = () => {
   const [selectedCategory, setSelectedCategory] = useState("الكل");

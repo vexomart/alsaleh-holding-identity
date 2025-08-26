@@ -6,11 +6,8 @@ verify_jwt = false
 [functions.domain-email]
 verify_jwt = false
 
-# TAP Payment functions - Public access for customer payments
-[functions.tap-payment]
-verify_jwt = false
-
-[functions.verify-tap-payment]
+# TAB Payment functions - Public access
+[functions.tab-payment]
 verify_jwt = false
 
 # Public functions (no JWT required)
@@ -29,13 +26,17 @@ verify_jwt = false
 [functions.email-test]
 verify_jwt = false
 
-[functions.hr-system-request]
-verify_jwt = false
+# SECURITY FIX: Enable JWT verification for critical payment functions
+[functions.paylink-payment]
+verify_jwt = true
 
 [functions.tamara-payment]
 verify_jwt = true
 
 [functions.stc-pay]
+verify_jwt = true
+
+[functions.tap-payment]
 verify_jwt = true
 
 [functions.invoice-system]

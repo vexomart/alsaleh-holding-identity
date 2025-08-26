@@ -12,9 +12,3 @@ Allow: /
 
 User-agent: *
 Allow: /
-
-# Sitemap location
-Sitemap: https://ash-holding.com/sitemap.xml
-
-# Crawl delay for specific bots
-Crawl-delay: 1

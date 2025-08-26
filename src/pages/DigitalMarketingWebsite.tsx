@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { TrendingUp, BarChart3, Target, Users, Mail, Phone, MapPin, Calendar, CheckCircle2, ArrowRight, Star, Globe, Zap, Shield, Award, Eye, MousePointer, Search, MessageSquare, AlertTriangle, Menu, X, Home, Briefcase, FileText, Building2, ChevronRight, PlayCircle, Rocket, Trophy, Heart, Lightbulb, DollarSign, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -79,7 +79,7 @@ const DigitalMarketingWebsite = () => {
     setProcessingServiceId(serviceId);
     
     try {
-      const { data, error } = await supabase.functions.invoke('tap-payment', {
+      const { data, error } = await supabase.functions.invoke('paylink-payment', {
         body: {
           amount: parseInt(service.price),
           currency: 'SAR',
