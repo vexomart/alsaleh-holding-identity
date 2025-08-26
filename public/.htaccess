@@ -16,44 +16,50 @@ Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment
 # Content Security Policy - Conservative approach
 Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.whatsapp.com; frame-ancestors 'none';"
 
-# Disable Directory Browsing completely - NO LISTING ANYWHERE
+# Disable Directory Listing COMPLETELY - NO BROWSING ALLOWED
 Options -Indexes -MultiViews -ExecCGI
 <IfModule mod_autoindex.c>
     IndexOptions -FancyIndexing
     IndexIgnore *
     Options -Indexes
+    DirectoryIndex disabled
 </IfModule>
 
-# Block access to internal directories - STRICT 403
-<DirectoryMatch "^(.*)/(views|vendor|storage|node_modules|config|backups)(/|$)">
-    Options -Indexes
+# Block access to ALL views directories - STRICT 403
+<DirectoryMatch "^(.*)/(views)(/|$)">
+    Options -Indexes -MultiViews
     Require all denied
 </DirectoryMatch>
 
-# Block specific paths that should never be accessible - 403
-RewriteRule ^(views|vendor|storage|node_modules|config|backups)(/|$) - [F,L]
+# Block specific views subdirectories - STRICT 403
+<DirectoryMatch "^(.*)/(views)/(cache|front|admin)(/|$)">
+    Options -Indexes -MultiViews
+    Require all denied
+</DirectoryMatch>
 
-# Block ANY access to views directory and subdirectories
+# Block ALL paths starting with views - 403
 RewriteRule ^views/ - [F,L]
+RewriteRule ^views$ - [F,L]
 
 # Block additional internal directories that may contain sensitive data
 <DirectoryMatch "^(.*)/(emails|admin|cache|logs|tmp|temp|uploads/temp)(/|$)">
     Require all denied
 </DirectoryMatch>
 
-# Block access to sensitive file extensions GLOBALLY - STRICT 403
+# Block ALL .twig files ANYWHERE - ABSOLUTE 403
+<FilesMatch "\.twig$">
+    Options -Indexes -MultiViews
+    Require all denied
+</FilesMatch>
+
+# Block ALL sensitive file extensions - ABSOLUTE 403
 <FilesMatch "\.(twig|tpl|env|log|sql|bak|swp|git|ini)$">
-    Options -Indexes
+    Options -Indexes -MultiViews
     Require all denied
 </FilesMatch>
 
-# Block ALL Twig files ANYWHERE - NO ACCESS
+# Additional Twig blocking rule
 RewriteRule \.twig$ - [F,L]
-
-# Block specific template files and configuration files
-<FilesMatch "^(\.env|\.config|config\.php|database\.php|wp-config\.php)$">
-    Require all denied
-</FilesMatch>
 
 # Block access to template variables in URLs - RETURN 404
 RewriteCond %{REQUEST_URI} \{\{.*\}\} [OR]
