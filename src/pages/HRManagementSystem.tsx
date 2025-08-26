@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react";
-import { ArrowRight, CheckCircle, Users, Clock, Award, TrendingUp, Shield, Calendar, FileText, BarChart3, Star, Sparkles, ArrowLeft, ChevronRight, Send, Phone, Mail, Building } from "lucide-react";
+import { ArrowRight, CheckCircle, Users, Clock, Award, TrendingUp, Shield, Calendar, FileText, BarChart3, Star, Sparkles, ArrowLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -18,17 +12,6 @@ import { Link } from "react-router-dom";
 const HRManagementSystem = () => {
   const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
   const [activeModule, setActiveModule] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    companyName: '',
-    contactName: '',
-    email: '',
-    phone: '',
-    employeeCount: '',
-    message: '',
-    selectedModules: [] as string[]
-  });
-  const { toast } = useToast();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -136,71 +119,35 @@ const HRManagementSystem = () => {
     }
   ];
 
-  const handleModuleToggle = (moduleTitle: string) => {
-    setFormData(prev => ({
-      ...prev,
-      selectedModules: prev.selectedModules.includes(moduleTitle)
-        ? prev.selectedModules.filter(m => m !== moduleTitle)
-        : [...prev.selectedModules, moduleTitle]
-    }));
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.companyName || !formData.contactName || !formData.email || !formData.phone) {
-      toast({
-        title: "خطأ في البيانات",
-        description: "يرجى ملء جميع الحقول المطلوبة",
-        variant: "destructive",
-      });
-      return;
+  const pricingPlans = [
+    {
+      name: "الباقة الأساسية",
+      price: "1,499",
+      period: "شهرياً",
+      description: "مناسبة للشركات الصغيرة (حتى 50 موظف)",
+      features: ["إدارة بيانات الموظفين", "نظام الحضور والغياب", "إدارة الإجازات الأساسية", "تقارير أساسية", "دعم فني"],
+      popular: false,
+      color: "from-gray-600 to-gray-700"
+    },
+    {
+      name: "الباقة المتقدمة",
+      price: "2,999",
+      period: "شهرياً",
+      description: "الأمثل للشركات المتوسطة (حتى 200 موظف)",
+      features: ["جميع ميزات الباقة الأساسية", "نظام الرواتب الكامل", "تقييم الأداء", "التدريب الإلكتروني", "تقارير متقدمة", "تكامل مع البنوك"],
+      popular: true,
+      color: "from-blue-600 to-indigo-700"
+    },
+    {
+      name: "الباقة المؤسسية",
+      price: "حسب الطلب",
+      period: "",
+      description: "حلول مخصصة للمؤسسات الكبيرة",
+      features: ["موظفين غير محدودين", "تخصيص كامل", "تكامل مع الأنظمة الأخرى", "دعم مخصص", "تدريب شامل", "استشارات HR"],
+      popular: false,
+      color: "from-purple-600 to-violet-700"
     }
-
-    setIsSubmitting(true);
-
-    try {
-      const { error } = await supabase.functions.invoke('hr-system-request', {
-        body: formData
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "تم إرسال طلبك بنجاح! ✅",
-        description: "سيتواصل معك فريقنا خلال 24 ساعة",
-      });
-
-      // Reset form
-      setFormData({
-        companyName: '',
-        contactName: '',
-        email: '',
-        phone: '',
-        employeeCount: '',
-        message: '',
-        selectedModules: []
-      });
-
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast({
-        title: "خطأ في الإرسال",
-        description: "حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -219,82 +166,99 @@ const HRManagementSystem = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         <Navigation />
         
-        {/* Hero Section - تصميم جديد مستوحى من الصورة */}
-        <section className="relative pt-20 pb-20 overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800" data-section="0">
-          {/* Background Elements */}
+        {/* Hero Section */}
+        <section className="relative pt-20 pb-16 overflow-hidden" data-section="0">
           <div className="absolute inset-0">
-            <div className="absolute top-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-float"></div>
-            <div className="absolute bottom-32 left-20 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-float-delayed"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-indigo-600/20 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-32 left-20 w-80 h-80 bg-gradient-to-tr from-purple-400/10 to-pink-500/15 rounded-full blur-3xl animate-float-delayed"></div>
           </div>
           
           <div className="container mx-auto px-6 relative z-10 max-w-7xl">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 mb-12 text-sm text-white/70">
-              <Link to="/" className="hover:text-white transition-colors">الرئيسية</Link>
+            <div className="flex items-center gap-2 mb-8 text-sm text-slate-600 dark:text-slate-400">
+              <Link to="/" className="hover:text-blue-600 transition-colors">الرئيسية</Link>
               <ArrowLeft className="w-4 h-4" />
-              <Link to="/enterprise-systems" className="hover:text-white transition-colors">أنظمة الشركات</Link>
+              <Link to="/enterprise-systems" className="hover:text-blue-600 transition-colors">أنظمة الشركات</Link>
               <ArrowLeft className="w-4 h-4" />
-              <span className="text-white font-medium">إدارة الموارد البشرية</span>
+              <span className="text-blue-600 font-medium">إدارة الموارد البشرية</span>
             </div>
             
-            <div className="text-center space-y-8">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg">
-                <Users className="w-5 h-5 text-white animate-pulse" />
-                <span className="text-sm font-bold text-white font-cairo">
-                  نظام HR متطور
-                </span>
-                <Star className="w-4 h-4 text-yellow-400 animate-pulse" />
-              </div>
-              
-              {/* Main Title */}
-              <div className="space-y-6 max-w-4xl mx-auto">
-                <h1 className="text-5xl lg:text-7xl font-black leading-tight font-cairo text-white">
-                  ابدأ رحلة التحول الرقمي لقسم
-                  <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-                    HR
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className={cn(
+                "space-y-8 animate-fade-in",
+                visibleSections.has(0) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              )}>
+                <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/10 border border-blue-500/20 backdrop-blur-lg shadow-lg">
+                  <Users className="w-5 h-5 text-blue-600 animate-pulse" />
+                  <span className="text-sm font-bold text-blue-700 dark:text-blue-300 font-cairo">
+                    نظام HR متطور
                   </span>
-                </h1>
+                  <Star className="w-4 h-4 text-yellow-500 animate-pulse" />
+                </div>
                 
-                <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-medium font-cairo max-w-3xl mx-auto">
-                  احصل على استشارة مجانية واكتشف كيف يمكن لنظامنا تحسين كفاءة إدارة الموارد البشرية في شركتك
+                <div className="space-y-6">
+                  <h1 className="text-5xl lg:text-7xl font-black leading-tight font-cairo">
+                    <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
+                      إدارة الموارد البشرية
+                    </span>
+                  </h1>
+                  <p className="text-xl font-bold text-blue-600 dark:text-blue-400 font-poppins">
+                    Human Resources Management System
+                  </p>
+                </div>
+                
+                <p className="text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-medium font-cairo">
+                  نظام شامل ومتطور لإدارة جميع جوانب الموارد البشرية في شركتك. من إدارة بيانات الموظفين إلى الرواتب والتطوير، 
+                  كل ما تحتاجه في منصة واحدة متكاملة.
                 </p>
-              </div>
-              
-              {/* Key Benefits */}
-              <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
-                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
-                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                  <span className="font-medium">استشارة مجانية خلال 24 ساعة</span>
-                </div>
-                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
-                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                  <span className="font-medium">عرض توضيحي مخصص لشركتك</span>
-                </div>
-                <div className="flex items-center gap-3 text-white bg-white/10 backdrop-blur-lg rounded-xl p-4">
-                  <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                  <span className="font-medium">حلول مصممة خصيصاً لاحتياجاتك</span>
+                
+                <div className="flex flex-wrap gap-4">
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-cairo">
+                    جرب النظام مجاناً
+                    <ArrowRight className="w-5 h-5 mr-2" />
+                  </Button>
+                  <Button variant="outline" size="lg" className="border-2 border-slate-300 dark:border-slate-600 font-bold px-8 py-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 font-cairo">
+                    عرض توضيحي
+                  </Button>
                 </div>
               </div>
               
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-                <Button 
-                  size="lg" 
-                  className="bg-white text-blue-700 hover:bg-white/90 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-cairo text-lg"
-                  onClick={() => document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  احصل على استشارة مجانية
-                  <ArrowRight className="w-5 h-5 mr-2" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="border-2 border-white/30 text-white hover:bg-white/10 font-bold px-8 py-4 rounded-xl transition-all duration-300 font-cairo text-lg backdrop-blur-lg"
-                >
-                  شاهد عرض توضيحي
-                </Button>
+              {/* Hero Visual */}
+              <div className={cn(
+                "relative animate-fade-in",
+                visibleSections.has(0) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              )} style={{ animationDelay: "0.3s" }}>
+                <div className="relative bg-gradient-to-br from-white to-blue-50 dark:from-slate-800 dark:to-slate-900 rounded-3xl shadow-2xl p-8 border border-slate-200 dark:border-slate-700">
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center">
+                        <Users className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-lg font-bold text-slate-800 dark:text-white">لوحة HR الرئيسية</div>
+                        <div className="text-sm text-slate-600 dark:text-slate-400">إدارة شاملة للموظفين</div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      {hrModules.slice(0, 4).map((module, index) => {
+                        const IconComponent = module.icon;
+                        return (
+                          <div key={module.id} className="p-4 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
+                            <div className={cn(
+                              "w-8 h-8 rounded-lg mb-3 flex items-center justify-center bg-gradient-to-r",
+                              module.color
+                            )}>
+                              <IconComponent className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="text-sm font-bold text-slate-800 dark:text-white mb-1">{module.title}</div>
+                            <div className="text-xs text-slate-600 dark:text-slate-400">{module.titleEn}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -424,181 +388,85 @@ const HRManagementSystem = () => {
           </div>
         </section>
 
-        {/* Request Form Section */}
-        <section id="order-form" className="py-20 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800" data-section="3">
-          <div className="container mx-auto px-6 max-w-4xl">
+        {/* Pricing */}
+        <section className="py-20 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800" data-section="3">
+          <div className="container mx-auto px-6 max-w-7xl">
             <div className={cn(
               "text-center mb-16 animate-fade-in",
               visibleSections.has(3) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             )}>
               <h2 className="text-4xl lg:text-6xl font-black mb-6 font-cairo">
                 <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
-                  احصل على نظام HR الخاص بك
+                  خطط الأسعار
                 </span>
               </h2>
               <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-medium">
-                املأ النموذج أدناه وسيتواصل معك فريقنا المختص خلال 24 ساعة لتقديم حل مخصص لشركتك
+                اختر الباقة التي تناسب حجم شركتك واحتياجاتك
               </p>
             </div>
             
-            <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border border-slate-200/50 dark:border-slate-700/50 shadow-2xl">
-              <CardContent className="p-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Company and Contact Info */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="companyName" className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">
-                        <Building className="w-4 h-4" />
-                        اسم الشركة *
-                      </Label>
-                      <Input
-                        id="companyName"
-                        name="companyName"
-                        value={formData.companyName}
-                        onChange={handleInputChange}
-                        className="border-slate-300 dark:border-slate-600 focus:border-blue-500"
-                        placeholder="اسم شركتك"
-                        required
-                      />
+            <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {pricingPlans.map((plan, index) => (
+                <Card 
+                  key={index}
+                  className={cn(
+                    "relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in overflow-hidden",
+                    plan.popular ? "border-blue-500/50 shadow-blue-500/20 scale-105" : "border-slate-200/50 dark:border-slate-700/50",
+                    visibleSections.has(3) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                  )}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  {plan.popular && (
+                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-center py-2 text-sm font-bold">
+                      الأكثر شعبية
+                    </div>
+                  )}
+                  
+                  <CardContent className={cn("p-8", plan.popular ? "pt-12" : "")}>
+                    <div className="text-center mb-8">
+                      <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2 font-cairo">
+                        {plan.name}
+                      </h3>
+                      <p className="text-slate-600 dark:text-slate-300 mb-6">
+                        {plan.description}
+                      </p>
+                      <div className="mb-6">
+                        {plan.period ? (
+                          <>
+                            <span className="text-4xl font-black text-slate-800 dark:text-white">{plan.price}</span>
+                            <span className="text-slate-600 dark:text-slate-300 mr-2">ريال {plan.period}</span>
+                          </>
+                        ) : (
+                          <span className="text-2xl font-bold text-slate-800 dark:text-white">{plan.price}</span>
+                        )}
+                      </div>
                     </div>
                     
-                    <div className="space-y-2">
-                      <Label htmlFor="contactName" className="text-slate-700 dark:text-slate-300 font-bold">
-                        اسم الشخص المسؤول *
-                      </Label>
-                      <Input
-                        id="contactName"
-                        name="contactName"
-                        value={formData.contactName}
-                        onChange={handleInputChange}
-                        className="border-slate-300 dark:border-slate-600 focus:border-blue-500"
-                        placeholder="اسمك الكامل"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Contact Details */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        البريد الإلكتروني *
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="border-slate-300 dark:border-slate-600 focus:border-blue-500"
-                        placeholder="your@email.com"
-                        required
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">
-                        <Phone className="w-4 h-4" />
-                        رقم الهاتف *
-                      </Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="border-slate-300 dark:border-slate-600 focus:border-blue-500"
-                        placeholder="+966 50 123 4567"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Employee Count */}
-                  <div className="space-y-2">
-                    <Label htmlFor="employeeCount" className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      عدد الموظفين في الشركة
-                    </Label>
-                    <select
-                      id="employeeCount"
-                      name="employeeCount"
-                      value={formData.employeeCount}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
-                    >
-                      <option value="">اختر العدد</option>
-                      <option value="1-10">1-10 موظفين</option>
-                      <option value="11-50">11-50 موظف</option>
-                      <option value="51-200">51-200 موظف</option>
-                      <option value="201-500">201-500 موظف</option>
-                      <option value="500+">أكثر من 500 موظف</option>
-                    </select>
-                  </div>
-                  
-                  {/* Modules Selection */}
-                  <div className="space-y-4">
-                    <Label className="text-slate-700 dark:text-slate-300 font-bold">
-                      الوحدات المطلوبة (اختياري)
-                    </Label>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      {hrModules.map((module) => (
-                        <div key={module.id} className="flex items-center space-x-2 space-x-reverse">
-                          <Checkbox
-                            id={`module-${module.id}`}
-                            checked={formData.selectedModules.includes(module.title)}
-                            onCheckedChange={() => handleModuleToggle(module.title)}
-                            className="border-slate-300 dark:border-slate-600"
-                          />
-                          <Label 
-                            htmlFor={`module-${module.id}`} 
-                            className="text-sm text-slate-600 dark:text-slate-300 cursor-pointer"
-                          >
-                            {module.title}
-                          </Label>
-                        </div>
+                    <ul className="space-y-4 mb-8">
+                      {plan.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
+                          <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                          <span>{feature}</span>
+                        </li>
                       ))}
-                    </div>
-                  </div>
-                  
-                  {/* Message */}
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-slate-700 dark:text-slate-300 font-bold">
-                      رسالة إضافية (اختياري)
-                    </Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      className="border-slate-300 dark:border-slate-600 focus:border-blue-500 min-h-[100px]"
-                      placeholder="أخبرنا المزيد عن احتياجاتك..."
-                    />
-                  </div>
-                  
-                  {/* Submit Button */}
-                  <div className="text-center pt-6">
+                    </ul>
+                    
                     <Button 
-                      type="submit" 
-                      disabled={isSubmitting}
-                      className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold px-12 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-cairo"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-3"></div>
-                          جارٍ الإرسال...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-5 h-5 mr-2" />
-                          إرسال الطلب
-                        </>
+                      className={cn(
+                        "w-full font-bold py-3 rounded-xl transition-all duration-300",
+                        plan.popular 
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white shadow-lg hover:shadow-xl" 
+                          : "border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
                       )}
+                      variant={plan.popular ? "default" : "outline"}
+                    >
+                      {plan.period ? "ابدأ الآن" : "تواصل معنا"}
+                      <ChevronRight className="w-4 h-4 mr-2" />
                     </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -616,19 +484,14 @@ const HRManagementSystem = () => {
                 احصل على استشارة مجانية واكتشف كيف يمكن لنظامنا تحسين كفاءة إدارة الموارد البشرية في شركتك
               </p>
               
-              <div className="flex flex-col gap-4 max-w-md mx-auto">
-                <div className="flex items-center gap-3 text-lg">
-                  <CheckCircle className="w-6 h-6 text-emerald-300" />
-                  <span>استشارة مجانية خلال 24 ساعة</span>
-                </div>
-                <div className="flex items-center gap-3 text-lg">
-                  <CheckCircle className="w-6 h-6 text-emerald-300" />
-                  <span>عرض توضيحي مخصص لشركتك</span>
-                </div>
-                <div className="flex items-center gap-3 text-lg">
-                  <CheckCircle className="w-6 h-6 text-emerald-300" />
-                  <span>حلول مصممة خصيصاً لاحتياجاتك</span>
-                </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-slate-50 font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                  احصل على استشارة مجانية
+                  <ArrowRight className="w-5 h-5 mr-2" />
+                </Button>
+                <Button size="lg" variant="outline" className="border-2 border-white/50 text-white hover:bg-white/10 font-bold px-8 py-4 rounded-xl backdrop-blur-lg">
+                  جرب النظام الآن
+                </Button>
               </div>
             </div>
           </div>
