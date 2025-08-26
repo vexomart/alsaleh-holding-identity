@@ -18,7 +18,6 @@ import {
   ChevronDown,
   MousePointer,
   Eye,
-  Heart,
   Rocket,
   Building2,
   MessageCircle,
