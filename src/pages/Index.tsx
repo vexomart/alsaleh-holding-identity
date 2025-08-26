@@ -62,11 +62,6 @@ const Index = () => {
             
             <div className="container mx-auto px-6 relative z-10">
               <div className="text-center mb-16 animate-fade-in">
-                <div className="inline-flex items-center gap-3 mb-6 p-4 bg-white/10 rounded-full backdrop-blur-sm border border-white/20 shadow-lg">
-                  <Sparkles className="w-6 h-6 text-primary animate-pulse" />
-                  <span className="text-sm font-medium text-primary">خدمات شاملة • حلول متكاملة</span>
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                </div>
                 
                 <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
                   خدماتنا <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">المتميزة</span>
