@@ -208,124 +208,147 @@ const OurWorks = () => {
             {filteredWorks.length > 0 ? (
               <div className="space-y-16">
                 {/* Works Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
                   {filteredWorks.map((work, index) => (
-                    <Card key={work.id} className="group overflow-hidden bg-background/80 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.01] hover:shadow-xl rounded-2xl">
+                    <Card 
+                      key={work.id} 
+                      className="group overflow-hidden bg-background/80 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl rounded-2xl animate-fade-in-up opacity-0"
+                      style={{
+                        animationDelay: `${index * 0.2}s`,
+                        animationFillMode: 'forwards'
+                      }}
+                    >
                       {/* Compact Image Section */}
-                      <div className="relative overflow-hidden h-48">
+                      <div className="relative overflow-hidden h-40">
                         <img 
                           src={work.image} 
                           alt={work.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                         
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-50 group-hover:opacity-70 transition-opacity duration-300"></div>
+                        {/* Enhanced Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-40 group-hover:opacity-80 transition-all duration-500"></div>
                         
-                        {/* Top Badges */}
-                        <div className="absolute top-3 left-3 flex gap-2">
-                          <Badge className={`${work.status === 'مكتمل' ? 'bg-emerald-500' : 'bg-amber-500'} text-white border-0 text-xs`}>
+                        {/* Top Badges with Animation */}
+                        <div className="absolute top-2 left-2 flex gap-1.5">
+                          <Badge className={`${work.status === 'مكتمل' ? 'bg-emerald-500' : 'bg-amber-500'} text-white border-0 text-xs transform transition-all duration-300 group-hover:scale-105`}>
                             {work.status}
                           </Badge>
-                          <Badge variant="secondary" className="bg-white/90 text-slate-800 border-0 text-xs">
+                          <Badge variant="secondary" className="bg-white/90 text-slate-800 border-0 text-xs transform transition-all duration-300 group-hover:scale-105">
                             {work.type}
                           </Badge>
                         </div>
 
-                        {/* Rating */}
-                        <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1">
+                        {/* Animated Rating */}
+                        <div className="absolute top-2 right-2 flex items-center gap-0.5 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 transform transition-all duration-300 group-hover:scale-110">
                           {[...Array(work.rating)].map((_, i) => (
-                            <Star key={i} className="w-2.5 h-2.5 text-amber-500 fill-current" />
+                            <Star 
+                              key={i} 
+                              className="w-2.5 h-2.5 text-amber-500 fill-current transition-all duration-300 group-hover:rotate-12" 
+                              style={{ animationDelay: `${i * 0.1}s` }}
+                            />
                           ))}
                         </div>
                         
-                        {/* Bottom Action */}
-                        <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                          <Button size="sm" asChild className="w-full bg-white/20 backdrop-blur-md text-white border-white/30 hover:bg-white/30 rounded-lg text-xs">
-                            <a href={work.url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-3 h-3 mr-1" />
+                        {/* Enhanced Bottom Action */}
+                        <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                          <Button size="sm" asChild className="w-full bg-white/20 backdrop-blur-md text-white border-white/30 hover:bg-white/40 rounded-lg text-xs shadow-lg">
+                            <a href={work.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1">
+                              <ExternalLink className="w-3 h-3 transition-transform group-hover:scale-110" />
                               زيارة الموقع
-                              <ArrowUpRight className="w-3 h-3 ml-1" />
+                              <ArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                             </a>
                           </Button>
                         </div>
                       </div>
                       
-                      <CardContent className="p-5">
-                        {/* Compact Header */}
-                        <div className="mb-4">
+                      <CardContent className="p-4">
+                        {/* Compact Header with Animation */}
+                        <div className="mb-3">
                           <div className="flex items-start justify-between mb-2">
-                            <div className="flex-1">
-                              <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                            <div className="flex-1 pr-2">
+                              <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-all duration-300">
                                 {work.title}
                               </h3>
-                              <p className="text-xs font-medium text-primary/80 mb-2">
+                              <p className="text-xs font-medium text-primary/80 mb-1 line-clamp-1">
                                 {work.subtitle}
                               </p>
                             </div>
-                            <div className="text-right text-xs text-muted-foreground ml-3">
-                              <div className="flex items-center gap-1 mb-1">
+                            <div className="text-right text-xs text-muted-foreground">
+                              <div className="flex items-center gap-1 mb-1 group-hover:text-primary transition-colors">
                                 <Calendar className="w-3 h-3" />
                                 {work.year}
                               </div>
-                              <div className="font-medium text-primary">{work.duration}</div>
+                              <div className="font-medium text-primary text-xs">{work.duration}</div>
                             </div>
                           </div>
                           
-                          <p className="text-muted-foreground leading-relaxed text-xs mb-4 line-clamp-2">
+                          <p className="text-muted-foreground leading-relaxed text-xs mb-3 line-clamp-2">
                             {work.description}
                           </p>
                         </div>
 
-                        {/* Compact Technologies */}
-                        <div className="mb-4">
+                        {/* Compact Technologies with Enhanced Animation */}
+                        <div className="mb-3">
                           <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
-                            <Code2 className="w-3 h-3" />
+                            <Code2 className="w-3 h-3 group-hover:rotate-12 transition-transform" />
                             التقنيات
                           </h4>
                           <div className="flex flex-wrap gap-1">
-                            {work.technologies.map((tech, techIndex) => (
+                            {work.technologies.slice(0, 4).map((tech, techIndex) => (
                               <Badge 
                                 key={techIndex} 
-                                className={`${tech.color} text-white border-0 text-xs font-medium px-2 py-0.5 hover:scale-105 transition-transform cursor-default`}
+                                className={`${tech.color} text-white border-0 text-xs font-medium px-1.5 py-0.5 hover:scale-110 transition-all duration-300 cursor-default shadow-sm`}
+                                style={{ animationDelay: `${techIndex * 0.1}s` }}
                               >
                                 <span className="mr-1 text-xs">{tech.icon}</span>
                                 {tech.name}
                               </Badge>
                             ))}
+                            {work.technologies.length > 4 && (
+                              <Badge variant="outline" className="text-xs px-1.5 py-0.5">
+                                +{work.technologies.length - 4}
+                              </Badge>
+                            )}
                           </div>
                         </div>
 
-                        {/* Compact Features */}
-                        <div className="mb-4">
+                        {/* Compact Features Grid with Stagger Animation */}
+                        <div className="mb-3">
                           <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
-                            <Star className="w-3 h-3" />
+                            <Star className="w-3 h-3 group-hover:rotate-12 transition-transform text-amber-500" />
                             المميزات
                           </h4>
-                          <div className="grid grid-cols-2 gap-1.5">
+                          <div className="grid grid-cols-2 gap-1">
                             {work.features.map((feature, featureIndex) => (
                               <div 
                                 key={featureIndex}
-                                className="group/feature p-2 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-border/30 hover:border-primary/40 transition-all duration-300 hover:scale-105 cursor-default"
+                                className="group/feature p-1.5 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-border/30 hover:border-primary/40 transition-all duration-300 hover:scale-105 cursor-default"
+                                style={{ animationDelay: `${featureIndex * 0.1}s` }}
                               >
-                                <div className="flex items-center gap-1.5 mb-1">
+                                <div className="flex items-center gap-1 mb-0.5">
                                   <feature.icon className="w-3 h-3 text-primary group-hover/feature:scale-110 transition-transform" />
-                                  <span className="text-xs font-medium text-foreground">{feature.name}</span>
+                                  <span className="text-xs font-medium text-foreground truncate">{feature.name}</span>
                                 </div>
-                                <p className="text-xs text-muted-foreground leading-tight">{feature.description}</p>
+                                <p className="text-xs text-muted-foreground leading-tight line-clamp-1">{feature.description}</p>
                               </div>
                             ))}
                           </div>
                         </div>
 
-                        {/* Compact Footer */}
-                        <div className="flex items-center justify-between pt-3 border-t border-border/50">
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        {/* Enhanced Footer with Hover Effects */}
+                        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors">
                             <Users className="w-3 h-3" />
-                            <span className="truncate">{work.client}</span>
+                            <span className="truncate text-xs">{work.client}</span>
                           </div>
                           
-                          <Button variant="outline" size="sm" asChild className="group/btn hover:bg-primary hover:text-primary-foreground border-primary/20 hover:border-primary text-xs px-3 py-1">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            asChild 
+                            className="group/btn hover:bg-primary hover:text-primary-foreground border-primary/20 hover:border-primary text-xs px-2 py-1 h-7 transition-all duration-300 hover:scale-105 shadow-sm"
+                          >
                             <a href={work.url} target="_blank" rel="noopener noreferrer">
                               <ExternalLink className="w-3 h-3 mr-1 group-hover/btn:scale-110 transition-transform" />
                               المشروع
