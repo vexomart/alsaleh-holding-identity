@@ -12,6 +12,7 @@ import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 
 // Lazy load pages for better performance
+const OurWorks = lazy(() => import("./pages/OurWorks"));
 const About = lazy(() => import("./pages/About"));
 const Story = lazy(() => import("./pages/Story"));
 const Team = lazy(() => import("./pages/Team"));
@@ -255,6 +256,7 @@ const App = () => {
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/payment-verification" element={<Suspense fallback={<PageLoader />}><PaymentVerification /></Suspense>} />
                 <Route path="/payment-cancel" element={<PaymentCancel />} />
+            <Route path="/our-works" element={<Suspense fallback={<PageLoader />}><OurWorks /></Suspense>} />
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
             <Route path="/business-services" element={<BusinessServices />} />

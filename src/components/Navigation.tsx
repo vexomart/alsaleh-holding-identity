@@ -88,6 +88,7 @@ const Navigation = () => {
   ];
 
   const othersItems = [
+    { name: "أعمالنا", href: "/our-works", icon: Award },
     { name: "العمل عن بُعد", href: "/remote-work", icon: Globe },
     { name: "الشراكات", href: "/partnerships", icon: Users },
     { name: "التسويق بالعمولة", href: "/affiliate-marketing", icon: TrendingUp },
