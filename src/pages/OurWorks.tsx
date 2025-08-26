@@ -212,145 +212,167 @@ const OurWorks = () => {
                   {filteredWorks.map((work, index) => (
                     <Card 
                       key={work.id} 
-                      className="group overflow-hidden bg-background/80 backdrop-blur-sm border-2 border-primary/20 hover:border-primary/60 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl rounded-2xl animate-fade-in-up opacity-0 relative before:absolute before:inset-0 before:rounded-2xl before:p-[2px] before:bg-gradient-to-r before:from-primary/30 before:via-secondary/30 before:to-accent/30 before:-z-10 hover:before:from-primary/60 hover:before:via-secondary/60 hover:before:to-accent/60 before:transition-all before:duration-500"
+                      className="group overflow-hidden relative bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-xl border-0 transition-all duration-700 hover:scale-[1.03] rounded-3xl animate-fade-in-up opacity-0 shadow-lg hover:shadow-2xl"
                       style={{
                         animationDelay: `${index * 0.2}s`,
-                        animationFillMode: 'forwards'
+                        animationFillMode: 'forwards',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                       }}
                     >
-                      {/* Compact Image Section */}
-                      <div className="relative overflow-hidden h-40">
+                      {/* Premium Border Effect */}
+                      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary/20 via-secondary/15 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm"></div>
+                      <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-background via-background/98 to-background/95 z-10"></div>
+                      
+                      {/* Luxury Image Section */}
+                      <div className="relative overflow-hidden h-40 rounded-t-3xl z-20">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5"></div>
                         <img 
                           src={work.image} 
                           alt={work.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 filter group-hover:brightness-110"
                         />
                         
-                        {/* Enhanced Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-40 group-hover:opacity-80 transition-all duration-500"></div>
+                        {/* Elegant Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-60 group-hover:opacity-90 transition-all duration-700"></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
                         
-                        {/* Top Badges with Animation */}
-                        <div className="absolute top-2 left-2 flex gap-1.5">
-                          <Badge className={`${work.status === 'مكتمل' ? 'bg-emerald-500' : 'bg-amber-500'} text-white border-0 text-xs transform transition-all duration-300 group-hover:scale-105`}>
-                            {work.status}
+                        {/* Premium Status Badges */}
+                        <div className="absolute top-3 left-3 flex gap-2 z-30">
+                          <Badge className={`${work.status === 'مكتمل' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' : 'bg-gradient-to-r from-amber-500 to-amber-600'} text-white border-0 text-xs font-semibold px-3 py-1 shadow-lg transform transition-all duration-300 group-hover:scale-110 backdrop-blur-sm`}>
+                            ✨ {work.status}
                           </Badge>
-                          <Badge variant="secondary" className="bg-white/90 text-slate-800 border-0 text-xs transform transition-all duration-300 group-hover:scale-105">
+                          <Badge className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 text-white border-0 text-xs font-medium px-3 py-1 shadow-lg backdrop-blur-md transform transition-all duration-300 group-hover:scale-110">
                             {work.type}
                           </Badge>
                         </div>
 
-                        {/* Animated Rating */}
-                        <div className="absolute top-2 right-2 flex items-center gap-0.5 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 transform transition-all duration-300 group-hover:scale-110">
+                        {/* Luxury Rating */}
+                        <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/95 backdrop-blur-md rounded-full px-3 py-2 shadow-xl transform transition-all duration-300 group-hover:scale-110 border border-white/20 z-30">
                           {[...Array(work.rating)].map((_, i) => (
                             <Star 
                               key={i} 
-                              className="w-2.5 h-2.5 text-amber-500 fill-current transition-all duration-300 group-hover:rotate-12" 
-                              style={{ animationDelay: `${i * 0.1}s` }}
+                              className="w-3 h-3 text-amber-500 fill-current transition-all duration-300 group-hover:text-amber-400" 
+                              style={{ 
+                                animationDelay: `${i * 0.1}s`,
+                                filter: 'drop-shadow(0 1px 2px rgba(245, 158, 11, 0.3))'
+                              }}
                             />
                           ))}
+                          <span className="text-xs font-bold text-slate-700 ml-1">{work.rating}.0</span>
                         </div>
                         
-                        {/* Enhanced Bottom Action */}
-                        <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                          <Button size="sm" asChild className="w-full bg-white/20 backdrop-blur-md text-white border-white/30 hover:bg-white/40 rounded-lg text-xs shadow-lg">
-                            <a href={work.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1">
-                              <ExternalLink className="w-3 h-3 transition-transform group-hover:scale-110" />
-                              زيارة الموقع
-                              <ArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                        {/* Enhanced Action Button */}
+                        <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-y-4 group-hover:translate-y-0 z-30">
+                          <Button size="sm" asChild className="w-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-xl text-white border border-white/30 hover:from-white/30 hover:to-white/20 rounded-xl text-xs font-semibold shadow-2xl hover:shadow-white/20 transition-all duration-500">
+                            <a href={work.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                              مشاهدة المشروع
+                              <ArrowUpRight className="w-3 h-3 transition-transform group-hover:scale-125 group-hover:rotate-12" />
                             </a>
                           </Button>
                         </div>
                       </div>
                       
-                      <CardContent className="p-4">
-                        {/* Compact Header with Animation */}
-                        <div className="mb-3">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex-1 pr-2">
-                              <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-all duration-300">
-                                {work.title}
-                              </h3>
-                              <p className="text-xs font-medium text-primary/80 mb-1 line-clamp-1">
-                                {work.subtitle}
-                              </p>
-                            </div>
-                            <div className="text-right text-xs text-muted-foreground">
-                              <div className="flex items-center gap-1 mb-1 group-hover:text-primary transition-colors">
-                                <Calendar className="w-3 h-3" />
-                                {work.year}
+                      <CardContent className="p-5 relative z-20 bg-gradient-to-br from-background/95 to-background/90">
+                        {/* Luxury Header with Glass Effect */}
+                        <div className="mb-4 relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 rounded-xl opacity-50"></div>
+                          <div className="relative p-3 bg-gradient-to-br from-white/5 to-white/2 rounded-xl border border-white/10 backdrop-blur-sm">
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex-1 pr-2">
+                                <h3 className="text-base font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-secondary transition-all duration-500">
+                                  {work.title}
+                                </h3>
+                                <p className="text-xs font-medium text-primary/80 mb-1 line-clamp-1">
+                                  {work.subtitle}
+                                </p>
                               </div>
-                              <div className="font-medium text-primary text-xs">{work.duration}</div>
+                              <div className="text-right text-xs">
+                                <div className="flex items-center gap-1 mb-1 px-2 py-1 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-colors">
+                                  <Calendar className="w-3 h-3 text-primary" />
+                                  <span className="font-semibold text-primary">{work.year}</span>
+                                </div>
+                                <div className="font-bold text-xs text-center mt-1 px-2 py-1 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full text-secondary">
+                                  {work.duration}
+                                </div>
+                              </div>
                             </div>
+                            
+                            <p className="text-muted-foreground leading-relaxed text-xs mb-3 line-clamp-2 opacity-80">
+                              {work.description}
+                            </p>
                           </div>
-                          
-                          <p className="text-muted-foreground leading-relaxed text-xs mb-3 line-clamp-2">
-                            {work.description}
-                          </p>
                         </div>
 
-                        {/* Compact Technologies with Enhanced Animation */}
-                        <div className="mb-3">
-                          <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
-                            <Code2 className="w-3 h-3 group-hover:rotate-12 transition-transform" />
-                            التقنيات
+                        {/* Premium Technologies Section */}
+                        <div className="mb-4">
+                          <h4 className="text-xs font-bold text-foreground mb-2 flex items-center gap-2">
+                            <div className="w-1 h-4 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
+                            <Code2 className="w-3 h-3 text-primary group-hover:rotate-12 transition-transform" />
+                            التقنيات المستخدمة
                           </h4>
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-1.5">
                             {work.technologies.slice(0, 4).map((tech, techIndex) => (
                               <Badge 
                                 key={techIndex} 
-                                className={`${tech.color} text-white border-0 text-xs font-medium px-1.5 py-0.5 hover:scale-110 transition-all duration-300 cursor-default shadow-sm`}
+                                className={`${tech.color} text-white border-0 text-xs font-semibold px-2 py-1 hover:scale-110 transition-all duration-500 cursor-default shadow-lg relative overflow-hidden`}
                                 style={{ animationDelay: `${techIndex * 0.1}s` }}
                               >
-                                <span className="mr-1 text-xs">{tech.icon}</span>
-                                {tech.name}
+                                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                <span className="mr-1 text-xs relative z-10">{tech.icon}</span>
+                                <span className="relative z-10">{tech.name}</span>
                               </Badge>
                             ))}
                             {work.technologies.length > 4 && (
-                              <Badge variant="outline" className="text-xs px-1.5 py-0.5">
+                              <Badge className="bg-gradient-to-r from-slate-600 to-slate-700 text-white text-xs px-2 py-1 shadow-lg">
                                 +{work.technologies.length - 4}
                               </Badge>
                             )}
                           </div>
                         </div>
 
-                        {/* Compact Features Grid with Stagger Animation */}
-                        <div className="mb-3">
-                          <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
-                            <Star className="w-3 h-3 group-hover:rotate-12 transition-transform text-amber-500" />
-                            المميزات
+                        {/* Luxury Features Grid */}
+                        <div className="mb-4">
+                          <h4 className="text-xs font-bold text-foreground mb-2 flex items-center gap-2">
+                            <div className="w-1 h-4 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
+                            <Star className="w-3 h-3 text-amber-500 group-hover:rotate-12 transition-transform" />
+                            المميزات الأساسية
                           </h4>
-                          <div className="grid grid-cols-2 gap-1">
+                          <div className="grid grid-cols-2 gap-1.5">
                             {work.features.map((feature, featureIndex) => (
                               <div 
                                 key={featureIndex}
-                                className="group/feature p-1.5 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg border border-border/30 hover:border-primary/40 transition-all duration-300 hover:scale-105 cursor-default"
+                                className="group/feature p-2 bg-gradient-to-br from-primary/8 via-primary/5 to-secondary/8 rounded-xl border border-primary/20 hover:border-primary/40 transition-all duration-500 hover:scale-105 cursor-default shadow-sm hover:shadow-lg backdrop-blur-sm relative overflow-hidden"
                                 style={{ animationDelay: `${featureIndex * 0.1}s` }}
                               >
-                                <div className="flex items-center gap-1 mb-0.5">
-                                  <feature.icon className="w-3 h-3 text-primary group-hover/feature:scale-110 transition-transform" />
-                                  <span className="text-xs font-medium text-foreground truncate">{feature.name}</span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 translate-x-[-100%] group-hover/feature:translate-x-[100%] transition-transform duration-1000"></div>
+                                <div className="flex items-center gap-1.5 mb-1 relative z-10">
+                                  <feature.icon className="w-3 h-3 text-primary group-hover/feature:scale-125 group-hover/feature:rotate-12 transition-all duration-300" />
+                                  <span className="text-xs font-semibold text-foreground truncate">{feature.name}</span>
                                 </div>
-                                <p className="text-xs text-muted-foreground leading-tight line-clamp-1">{feature.description}</p>
+                                <p className="text-xs text-muted-foreground leading-tight line-clamp-1 relative z-10">{feature.description}</p>
                               </div>
                             ))}
                           </div>
                         </div>
 
-                        {/* Enhanced Footer with Hover Effects */}
-                        <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary transition-colors">
-                            <Users className="w-3 h-3" />
-                            <span className="truncate text-xs">{work.client}</span>
+                        {/* Premium Footer */}
+                        <div className="flex items-center justify-between pt-3 border-t border-gradient-to-r from-border/50 via-primary/20 to-border/50">
+                          <div className="flex items-center gap-2 text-xs">
+                            <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full animate-pulse"></div>
+                            <Users className="w-3 h-3 text-primary" />
+                            <span className="truncate text-xs font-medium text-foreground group-hover:text-primary transition-colors">{work.client}</span>
                           </div>
                           
                           <Button 
                             variant="outline" 
                             size="sm" 
                             asChild 
-                            className="group/btn hover:bg-primary hover:text-primary-foreground border-primary/20 hover:border-primary text-xs px-2 py-1 h-7 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-lg"
+                            className="group/btn bg-gradient-to-r from-primary/10 to-secondary/10 hover:from-primary hover:to-secondary hover:text-white border-primary/30 hover:border-primary text-xs px-3 py-1.5 h-auto transition-all duration-500 hover:scale-110 shadow-lg hover:shadow-xl backdrop-blur-sm font-semibold"
                           >
-                            <a href={work.url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-3 h-3 mr-1 group-hover/btn:scale-110 transition-transform" />
+                            <a href={work.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
+                              <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse"></div>
+                              <ExternalLink className="w-3 h-3 group-hover/btn:scale-125 transition-transform" />
                               زيارة المشروع
                             </a>
                           </Button>
