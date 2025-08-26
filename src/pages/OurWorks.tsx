@@ -64,7 +64,7 @@ const OurWorks = () => {
         { name: "أمان متقدم", icon: Shield, description: "حماية شاملة للبيانات" },
         { name: "تجربة مستخدم ممتازة", icon: Star, description: "واجهة سهلة وجذابة" }
       ],
-      year: "2024",
+      year: "2025",
       client: "MasterEduPath Agency",
       type: "موقع إلكتروني",
       status: "مكتمل",
@@ -92,7 +92,7 @@ const OurWorks = () => {
         { name: "أمان عالي", icon: Shield, description: "حماية متقدمة للبيانات" },
         { name: "دعم متعدد اللغات", icon: Globe, description: "متاح بلغات متعددة" }
       ],
-      year: "2024",
+      year: "2025",
       client: "Fekrah Academy",
       type: "موقع إلكتروني",
       status: "مكتمل",
