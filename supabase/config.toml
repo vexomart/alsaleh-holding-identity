@@ -6,10 +6,6 @@ verify_jwt = false
 [functions.domain-email]
 verify_jwt = false
 
-# TAB Payment functions - Public access
-[functions.tab-payment]
-verify_jwt = false
-
 # Public functions (no JWT required)
 [functions.contact-form]
 verify_jwt = false

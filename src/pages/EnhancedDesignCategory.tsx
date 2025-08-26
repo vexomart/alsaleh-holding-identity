@@ -673,7 +673,7 @@ const EnhancedDesignCategory = () => {
   useEffect(() => {
     if (!currentCategory) return;
     
-    document.title = `${currentCategory.title} | شركة ASH HOLDING`;
+    document.title = `${currentCategory.title} | شركة علي الشهري القابضة`;
     const desc = currentCategory.description;
 
     let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;

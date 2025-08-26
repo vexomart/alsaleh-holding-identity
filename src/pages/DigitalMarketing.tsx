@@ -28,7 +28,7 @@ const DigitalMarketing = () => {
   const [loadingMethod, setLoadingMethod] = useState<string | null>(null);
   const { toast } = useToast();
   
-  const title = "التسويق الرقمي | شركة ASH HOLDING";
+  const title = "التسويق الرقمي | شركة علي الشهري القابضة";
   const description = "خدمات التسويق الرقمي الاحترافية - بناء خطط تسويقية متكاملة وحلول رقمية مبتكرة لنمو أعمالك";
   const canonical = `${window.location.origin}/digital-marketing`;
 

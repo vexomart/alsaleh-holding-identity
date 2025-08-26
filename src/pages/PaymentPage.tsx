@@ -27,22 +27,10 @@ const PaymentPage = () => {
   };
 
   const handlePayment = async () => {
-    // التحقق من صحة البيانات
     if (!formData.name || !formData.email || !formData.amount) {
       toast({
         title: "خطأ في البيانات",
         description: "يرجى ملء جميع الحقول المطلوبة",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // التحقق من صحة البريد الإلكتروني
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(formData.email)) {
-      toast({
-        title: "خطأ في البريد الإلكتروني",
-        description: "يرجى إدخال بريد إلكتروني صحيح",
         variant: "destructive",
       });
       return;
@@ -60,37 +48,27 @@ const PaymentPage = () => {
     setIsLoading(true);
     
     try {
-      // عرض رسالة تحضير الدفع
-      toast({
-        title: "جاري تحضير رابط الدفع...",
-        description: "سيتم توجيهك فوراً إلى صفحة الدفع الآمنة",
-        duration: 2000,
-      });
-
+      console.log("🚀 بدء عملية الدفع:", paymentMethod);
+      
       const payload = {
         amount: parseFloat(formData.amount),
         currency: 'SAR',
         customer_name: formData.name,
         customer_email: formData.email,
         customer_phone: formData.phone || '966500000000',
-        offer_title: 'العروض الحالية - المميزة والحصرية',
-        description: `دفع خدمة ${formData.name} - ${formData.amount} ريال سعودي`,
-        success_url: `${window.location.origin}/payment-success`,
-        cancel_url: `${window.location.origin}/payment-cancel`,
-        // إضافة معلومات إضافية للفاتورة
-        metadata: {
-          customer_name: formData.name,
-          customer_email: formData.email,
-          payment_type: paymentMethod,
-          timestamp: new Date().toISOString()
-        }
+        offer_title: 'خدمة تسويقية',
+        description: 'دفع خدمة تسويقية'
       };
+
+      console.log("📦 البيانات المرسلة:", payload);
 
       const functionName = paymentMethod === 'paylink' ? 'paylink-payment' : 'stc-pay';
       
       const { data, error } = await supabase.functions.invoke(functionName, {
         body: payload
       });
+
+      console.log("📋 النتيجة:", { data, error });
 
       if (error) {
         console.error("❌ خطأ في الاستدعاء:", error);
@@ -99,53 +77,33 @@ const PaymentPage = () => {
 
       if (data?.success) {
         if (paymentMethod === 'stc_pay') {
+          // Show STC Pay instructions
           toast({
-            title: "✅ تم إنشاء طلب الدفع",
-            description: "تم إرسال تعليمات الدفع إلى بريدك الإلكتروني",
+            title: "تم إنشاء طلب الدفع",
+            description: "يرجى اتباع التعليمات لإتمام الدفع عبر STC Pay",
             duration: 5000,
           });
           
+          // You can add STC Pay instructions modal here
+          
         } else if (data?.payment_url) {
-          // رسالة نجاح مع معلومات إضافية
           toast({
-            title: "✅ تم إنشاء رابط الدفع بنجاح",
-            description: "سيتم توجيهك الآن إلى Paylink لإتمام الدفع الآمن",
-            duration: 3000,
+            title: "تم إنشاء رابط الدفع",
+            description: "سيتم توجيهك لصفحة الدفع",
           });
-
-          // إرسال بريد إلكتروني فوري بمعلومات الدفع
-          try {
-            await supabase.functions.invoke('send-invoice-email', {
-              body: {
-                customer_name: formData.name,
-                customer_email: formData.email,
-                amount: parseFloat(formData.amount),
-                currency: 'SAR',
-                payment_url: data.payment_url,
-                transaction_id: data.transaction_id || 'N/A',
-                invoice_number: data.invoice_number || 'N/A',
-                status: 'pending',
-                payment_method: 'Paylink'
-              }
-            });
-          } catch (emailError) {
-            console.warn("تحذير: فشل في إرسال البريد الإلكتروني:", emailError);
-          }
-
-          // التحويل الفوري إلى Paylink
-          setTimeout(() => {
-            window.open(data.payment_url, '_blank');
-          }, 1500);
+          
+          // Redirect to payment page
+          window.location.href = data.payment_url;
         }
       } else {
-        throw new Error(data?.message || 'فشل في إنشاء رابط الدفع');
+        throw new Error('فشل في إنشاء رابط الدفع');
       }
       
     } catch (error: any) {
       console.error("💥 خطأ:", error);
       toast({
-        title: "❌ خطأ في عملية الدفع",
-        description: error.message || "حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى",
+        title: "خطأ في عملية الدفع",
+        description: error.message || "حدث خطأ غير متوقع",
         variant: "destructive",
       });
     } finally {

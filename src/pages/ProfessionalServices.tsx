@@ -8,7 +8,7 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbS
 const ProfessionalServices = () => {
   useEffect(() => {
     // SEO: title, meta description, canonical
-    document.title = "خدماتنا الاحترافية | شركة ASH HOLDING";
+    document.title = "خدماتنا الاحترافية | شركة علي الشهري القابضة";
 
     const desc =
       "خدماتنا الاحترافية التقنية والتسويقية بمعايير عالمية لرفع المبيعات وتحقيق أهداف عملك";

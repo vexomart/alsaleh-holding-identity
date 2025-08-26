@@ -154,7 +154,7 @@ const CarRentalFooter = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">تأجير السيارات</h3>
-                  <p className="text-sm text-gray-400">ASH HOLDING</p>
+                  <p className="text-sm text-gray-400">علي الشهري القابضة</p>
                 </div>
               </div>
               
@@ -270,7 +270,7 @@ const CarRentalFooter = () => {
               {/* Copyright */}
               <div className="text-center md:text-right">
                 <p className="text-gray-400 text-sm">
-                  © 2024 ASH HOLDING - خدمات تأجير السيارات. جميع الحقوق محفوظة.
+                  © 2024 علي الشهري القابضة - خدمات تأجير السيارات. جميع الحقوق محفوظة.
                 </p>
                 <p className="text-gray-500 text-xs mt-1">
                   مرخص من وزارة النقل والخدمات اللوجستية - المملكة العربية السعودية

@@ -79,7 +79,7 @@ const initialNodes: Node[] = [
     type: 'coreService',
     position: { x: 400, y: 300 },
     data: {
-      label: 'ASH HOLDING',
+      label: 'علي الشهري القابضة',
       icon: Zap,
     },
     style: { zIndex: 10 },
@@ -311,7 +311,7 @@ export default function TechEcosystem() {
     setSelectedNode(node.id);
   }, []);
 
-  const title = "المنظومة التقنية المتكاملة | ASH HOLDING";
+  const title = "المنظومة التقنية المتكاملة | علي الشهري القابضة";
   const description = "استكشف منظومتنا التقنية المتكاملة وكيفية تفاعل خدماتنا المختلفة لتقديم حلول شاملة ومبتكرة.";
 
   return (

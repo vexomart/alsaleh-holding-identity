@@ -62,6 +62,7 @@ const TechProjects = lazy(() => import("./pages/TechProjects"));
 const TechProjectDetails = lazy(() => import("./pages/TechProjectDetails"));
 const Technologies = lazy(() => import("./pages/Technologies"));
 const CurrentOffers = lazy(() => import("./pages/CurrentOffers"));
+const OfferDetails = lazy(() => import("./pages/OfferDetails"));
 const ProfessionalServices = lazy(() => import("./pages/ProfessionalServices"));
 const ContentCreation = lazy(() => import("./pages/ContentCreation"));
 const DesignSolutions = lazy(() => import("./pages/DesignSolutions"));
@@ -73,7 +74,6 @@ const PaymentCancel = lazy(() => import("./pages/PaymentCancel"));
 const Partnerships = lazy(() => import("./pages/Partnerships"));
 const AffiliateMarketing = lazy(() => import("./pages/AffiliateMarketing"));
 const BusinessServices = lazy(() => import("./pages/BusinessServices"));
-const TechnicalServices = lazy(() => import("./pages/TechnicalServices"));
 const BusinessConsulting = lazy(() => import("./pages/business-services/BusinessConsulting"));
 const DigitalTransformation = lazy(() => import("./pages/business-services/DigitalTransformation"));
 const FinancialPlanning = lazy(() => import("./pages/business-services/FinancialPlanning"));
@@ -243,6 +243,7 @@ const App = () => {
                 <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
                 <Route path="/technologies" element={<Technologies />} />
                 <Route path="/current-offers" element={<CurrentOffers />} />
+                <Route path="/offer-details/:id" element={<OfferDetails />} />
                 <Route path="/professional-services" element={<ProfessionalServices />} />
                 
                 <Route path="/content-creation" element={<ContentCreation />} />
@@ -256,7 +257,6 @@ const App = () => {
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/affiliate-marketing" element={<AffiliateMarketing />} />
             <Route path="/business-services" element={<BusinessServices />} />
-            <Route path="/technical-services" element={<Suspense fallback={<PageLoader />}><TechnicalServices /></Suspense>} />
             <Route path="/business-services/business-consulting" element={<BusinessConsulting />} />
             <Route path="/business-services/digital-transformation" element={<DigitalTransformation />} />
             <Route path="/business-services/financial-planning" element={<FinancialPlanning />} />
