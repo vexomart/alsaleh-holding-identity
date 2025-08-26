@@ -22,6 +22,9 @@ Disallow: /vendor/
 Disallow: /views/
 Disallow: /backups/
 
+# Block knowledge base paths with template variables
+Disallow: /page/knowledge-base/
+
 # Block template files and sensitive extensions
 Disallow: /*.env
 Disallow: /*.config
