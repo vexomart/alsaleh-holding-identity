@@ -717,7 +717,7 @@ const Footer = () => {
             <p className="text-gray-400">شركة معتمدة ومسجلة في الجهات الرسمية</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {/* وزارة التجارة */}
             <div className="flex flex-col items-center group">
               <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
@@ -744,6 +744,22 @@ const Footer = () => {
               </div>
               <h4 className="text-lg font-bold text-white mb-2 text-center">هيئة الاتصالات</h4>
               <p className="text-gray-400 text-sm text-center">وتقنية المعلومات</p>
+            </div>
+
+            {/* هيئة الزكاة والضريبة والجمارك */}
+            <div className="flex flex-col items-center group">
+              <div className="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300 border border-white/20 group-hover:border-white/40">
+                <div className="w-16 h-16 bg-amber-600 rounded-xl flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-700"></div>
+                  <svg className="w-10 h-10 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9L15.09 9.74L12 16L8.91 9.74L2 9L8.91 8.26L12 2Z"/>
+                    <path d="M7 13h10v1H7z"/>
+                    <path d="M9 16h6v1H9z"/>
+                  </svg>
+                </div>
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2 text-center">هيئة الزكاة</h4>
+              <p className="text-gray-400 text-sm text-center">والضريبة والجمارك</p>
             </div>
 
             {/* المركز السعودي للأعمال */}
