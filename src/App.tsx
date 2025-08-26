@@ -62,6 +62,7 @@ const TechProjects = lazy(() => import("./pages/TechProjects"));
 const TechProjectDetails = lazy(() => import("./pages/TechProjectDetails"));
 const Technologies = lazy(() => import("./pages/Technologies"));
 const CurrentOffers = lazy(() => import("./pages/CurrentOffers"));
+const OfferDetails = lazy(() => import("./pages/OfferDetails"));
 const ProfessionalServices = lazy(() => import("./pages/ProfessionalServices"));
 const ContentCreation = lazy(() => import("./pages/ContentCreation"));
 const DesignSolutions = lazy(() => import("./pages/DesignSolutions"));
@@ -85,6 +86,7 @@ const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
+const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
 const HostingServices = lazy(() => import("./pages/HostingServices"));
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
@@ -225,8 +227,9 @@ const App = () => {
                  <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
                  <Route path="/free-trial" element={<FreeTrial />} />
                  <Route path="/automation-system" element={<AutomationSystem />} />
-                  <Route path="/pricing" element={<PricingPage />} />
-                 <Route path="/ai-solutions" element={<AIIntelligence />} />
+                 <Route path="/pricing" element={<PricingPage />} />
+                 <Route path="/payment-success" element={<PaymentSuccessPage />} />
+                <Route path="/ai-solutions" element={<AIIntelligence />} />
                 <Route path="/iot-solutions" element={<IoTSolutions />} />
                 <Route path="/cloud-solutions" element={<CloudSolutions />} />
                 <Route path="/security-solutions" element={<SecuritySolutions />} />
@@ -241,6 +244,7 @@ const App = () => {
                 <Route path="/tech-project/:projectId" element={<TechProjectDetails />} />
                 <Route path="/technologies" element={<Technologies />} />
                 <Route path="/current-offers" element={<CurrentOffers />} />
+                <Route path="/offer-details/:id" element={<OfferDetails />} />
                 <Route path="/professional-services" element={<ProfessionalServices />} />
                 
                 <Route path="/content-creation" element={<ContentCreation />} />
@@ -276,6 +280,7 @@ const App = () => {
                 <Route path="/cards-store/about" element={<CardsStoreAbout />} />
                 <Route path="/cards-store/contact" element={<CardsStoreContact />} />
                 <Route path="/cards-store/faq" element={<CardsStoreFAQ />} />
+                <Route path="/offer/:offerId" element={<Suspense fallback={<PageLoader />}><OfferDetails /></Suspense>} />
                 <Route path="/cards-store/cards" element={<ElectronicCardsWebsite />} />
                 <Route path="/cards-store/privacy" element={<CardsStorePrivacy />} />
                 <Route path="/cards-store/terms" element={<CardsStoreTerms />} />

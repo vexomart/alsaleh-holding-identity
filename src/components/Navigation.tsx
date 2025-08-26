@@ -143,17 +143,11 @@ const Navigation = () => {
                   {/* Logo */}
                   <div className="relative">
                     <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 touch-manipulation">
-                      <picture>
-                        <source srcSet="/logo-small.webp" type="image/webp" />
-                        <source srcSet="/logo-small.png" type="image/png" />
-                        <img 
-                          src="/logo-small.png" 
-                          alt="ASH Holdings" 
-                          className="h-4 w-auto sm:h-5 lg:h-6 object-contain filter brightness-0 invert"
-                          decoding="async"
-                          loading="eager"
-                        />
-                      </picture>
+                      <img 
+                        src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+                        alt="ASH Holdings" 
+                        className="h-4 w-auto sm:h-5 lg:h-6 object-contain filter brightness-0 invert"
+                      />
                     </div>
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></div>
                   </div>
@@ -422,16 +416,11 @@ const Navigation = () => {
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                      <picture>
-                        <source srcSet="/logo-small.webp" type="image/webp" />
-                        <source srcSet="/logo-small.png" type="image/png" />
-                        <img 
-                          src="/logo-small.png" 
-                          alt="ASH Holdings" 
-                          className="h-5 w-auto object-contain filter brightness-0 invert"
-                          decoding="async"
-                        />
-                      </picture>
+                      <img 
+                        src="/lovable-uploads/1b40cb28-9cbb-4fdf-9a92-f739dad1a3a7.png" 
+                        alt="ASH Holdings" 
+                        className="h-5 w-auto object-contain filter brightness-0 invert"
+                      />
                     </div>
                     <div className="absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full border-2 border-white flex items-center justify-center">
                       <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>

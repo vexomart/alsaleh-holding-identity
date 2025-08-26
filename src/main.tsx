@@ -1,39 +1,35 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-// Performance optimizations
-const optimizeApp = () => {
-  // Add lazy loading to images
-  document.addEventListener('DOMContentLoaded', () => {
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-      if (!img.loading) {
-        img.loading = 'lazy';
-      }
-    });
-  });
+console.log('Main.tsx loaded successfully');
+console.log('CSS file check - starting build process');
 
-  // Preload critical fonts
-  const fontLink = document.createElement('link');
-  fontLink.rel = 'preload';
-  fontLink.as = 'style';
-  fontLink.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap';
-  document.head.appendChild(fontLink);
-};
+// Debug DOM and errors
+console.log('Document state:', document.readyState);
+console.log('Current URL:', window.location.href);
 
-// Initialize optimizations
-optimizeApp();
+// Check for any existing errors
+window.addEventListener('error', (e) => {
+  console.error('Global error:', e.error, e.message, e.filename);
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+  console.error('Unhandled promise rejection:', e.reason);
+});
 
 const rootElement = document.getElementById("root");
+console.log('Root element found:', rootElement);
+console.log('Root element HTML:', rootElement?.outerHTML);
 
 if (rootElement) {
-  createRoot(rootElement).render(
-    <StrictMode>
-      <App />
-    </StrictMode>
-  );
+  console.log('Creating React app...');
+  try {
+    createRoot(rootElement).render(<App />);
+    console.log('React app rendered successfully');
+  } catch (error) {
+    console.error('Error rendering React app:', error);
+  }
 } else {
   console.error('Root element not found!');
 }

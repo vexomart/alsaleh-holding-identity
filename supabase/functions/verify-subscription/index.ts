@@ -20,44 +20,6 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    // SECURITY: Authenticate user first (required since JWT verification is enabled)
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      logStep("Authentication failed - no authorization header");
-      return new Response(JSON.stringify({ 
-        error: "Authentication required",
-        message: "يجب تسجيل الدخول أولاً" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 401,
-      });
-    }
-
-    const token = authHeader.replace("Bearer ", "");
-    
-    // Initialize Supabase client 
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      { auth: { persistSession: false } }
-    );
-
-    // Verify user token
-    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError || !userData?.user?.email) {
-      logStep("Authentication failed - invalid token", { error: userError?.message });
-      return new Response(JSON.stringify({ 
-        error: "Invalid authentication",
-        message: "فشل في التحقق من الهوية" 
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 401,
-      });
-    }
-
-    const user = userData.user;
-    logStep("User authenticated", { userId: user.id, email: user.email });
-
     // Get environment variables
     const paylinkApiKey = Deno.env.get("PAYLINK_API_KEY");
     
@@ -65,55 +27,41 @@ serve(async (req) => {
       throw new Error("Paylink API key not found");
     }
 
-    // Parse and validate request body
-    const requestBody = await req.json();
-    const { subscription_id, transaction_id } = requestBody;
-
-    // SECURITY: Input validation and sanitization
-    if (!subscription_id && !transaction_id) {
-      throw new Error("Subscription ID or Transaction ID is required");
-    }
-
-    // Validate subscription_id format if provided
-    if (subscription_id && (typeof subscription_id !== 'string' || subscription_id.length > 100)) {
-      throw new Error("Invalid subscription ID format");
-    }
-
-    // Validate transaction_id format if provided  
-    if (transaction_id && (typeof transaction_id !== 'string' || transaction_id.length > 100)) {
-      throw new Error("Invalid transaction ID format");
-    }
-
-    logStep("Request validated", { subscription_id, transaction_id });
-
-    // Use service role client for database operations
-    const serviceClient = createClient(
+    // Initialize Supabase client with service role
+    const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       { auth: { persistSession: false } }
     );
 
-    // Get subscription details (verify ownership)
+    // Parse request body
+    const { subscription_id, transaction_id } = await req.json();
+    
+    if (!subscription_id && !transaction_id) {
+      throw new Error("Subscription ID or Transaction ID is required");
+    }
+
+    logStep("Request parsed", { subscription_id, transaction_id });
+
+    // Get subscription details
     let subscription;
     if (subscription_id) {
-      const { data, error } = await serviceClient
+      const { data, error } = await supabaseClient
         .from('subscriptions')
         .select('*')
         .eq('id', subscription_id)
-        .eq('user_id', user.id) // SECURITY: Ensure user owns this subscription
         .single();
       
-      if (error) throw new Error(`Subscription not found or access denied: ${error.message}`);
+      if (error) throw new Error(`Subscription not found: ${error.message}`);
       subscription = data;
     } else {
-      const { data, error } = await serviceClient
+      const { data, error } = await supabaseClient
         .from('subscriptions')
         .select('*')
         .eq('paylink_transaction_id', transaction_id)
-        .eq('user_id', user.id) // SECURITY: Ensure user owns this subscription
         .single();
       
-      if (error) throw new Error(`Subscription not found or access denied: ${error.message}`);
+      if (error) throw new Error(`Subscription not found: ${error.message}`);
       subscription = data;
     }
 
@@ -163,7 +111,7 @@ serve(async (req) => {
     
     if (isPaymentCompleted) {
       // Update subscription to active
-      const { error: updateError } = await serviceClient
+      const { error: updateError } = await supabaseClient
         .from('subscriptions')
         .update({
           status: 'active',
@@ -195,7 +143,7 @@ serve(async (req) => {
       const status = paylinkData.orderStatus === 'Pending' ? 'pending' : 'failed';
       
       if (status === 'failed') {
-        await serviceClient
+        await supabaseClient
           .from('subscriptions')
           .update({
             status: 'cancelled',

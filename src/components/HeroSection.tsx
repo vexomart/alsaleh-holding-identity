@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { 
   Calendar, 
   Trophy, 
@@ -28,15 +28,14 @@ const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const rafId = useRef<number>();
   
   const businessImages = [
     "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=70",
-    "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=70",
-    "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=70",
-    "https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=70",
-    "https://images.unsplash.com/photo-1497604401993-f2e922e5cb0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=70",
+    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    "https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    "https://images.unsplash.com/photo-1497604401993-f2e922e5cb0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
   ];
 
   const achievements = [
@@ -87,72 +86,32 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, [businessImages.length]);
 
-  // Handle mouse movement with optimized performance
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    // Cancel previous animation frame to prevent accumulation
-    if (rafId.current) {
-      cancelAnimationFrame(rafId.current);
-    }
-    
-    // Use requestAnimationFrame to avoid forced reflows
-    rafId.current = requestAnimationFrame(() => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    });
-  }, []);
-
   useEffect(() => {
-    // Throttle mouse events for better performance
-    let throttleTimer: number;
-    const throttledMouseMove = (e: MouseEvent) => {
-      if (throttleTimer) return;
-      
-      throttleTimer = window.setTimeout(() => {
-        handleMouseMove(e);
-        throttleTimer = 0;
-      }, 16); // ~60fps
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
-    window.addEventListener('mousemove', throttledMouseMove, { passive: true });
-    
-    return () => {
-      window.removeEventListener('mousemove', throttledMouseMove);
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current);
-      }
-      if (throttleTimer) {
-        clearTimeout(throttleTimer);
-      }
-    };
-  }, [handleMouseMove]);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden mobile-scroll"
       onTouchStart={(e) => e.currentTarget.classList.add('touch-active')}
       onTouchEnd={(e) => e.currentTarget.classList.remove('touch-active')}
     >
-      {/* Enhanced Dynamic Background Slider with Modern Transitions - LCP Optimized */}
+      {/* Enhanced Dynamic Background Slider with Modern Transitions */}
       <div className="absolute inset-0">
         {businessImages.map((image, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-all duration-[3000ms] ease-in-out transform ${
+            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-[3000ms] ease-in-out transform ${
               index === currentSlide 
                 ? 'opacity-100 scale-110 blur-0' 
                 : 'opacity-0 scale-100 blur-sm'
             }`}
-          >
-            <img
-              src={image}
-              alt={`Business background ${index + 1}`}
-              className="absolute inset-0 w-full h-full object-cover object-center"
-              fetchPriority={index === 0 ? "high" : "low"}
-              loading={index === 0 ? "eager" : "lazy"}
-              decoding="async"
-              sizes="100vw"
-              width="1920"
-              height="1080"
-            />
-          </div>
+            style={{ backgroundImage: `url(${image})` }}
+          />
         ))}
         
         {/* Modern Parallax Effect Overlay */}
@@ -177,12 +136,12 @@ const HeroSection = () => {
         {/* Professional grid overlay */}
         <div className="absolute inset-0 bg-grid-pattern opacity-10 animate-pulse" />
         
-        {/* Interactive mouse follower with corporate colors - Optimized */}
+        {/* Interactive mouse follower with corporate colors */}
         <div 
-          className="absolute w-40 h-40 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full blur-3xl pointer-events-none will-change-transform"
+          className="absolute w-40 h-40 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full blur-3xl pointer-events-none transition-all duration-1000"
           style={{
-            transform: `translate(${mousePosition.x - 80}px, ${mousePosition.y - 80}px)`,
-            transition: 'transform 0.1s ease-out'
+            left: mousePosition.x - 80,
+            top: mousePosition.y - 80,
           }}
         />
       </div>
