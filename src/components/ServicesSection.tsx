@@ -25,10 +25,7 @@ import {
   Mic,
   Camera,
   Wrench,
-  Truck,
-  Target,
-  Rocket,
-  Layers
+  Truck
 } from "lucide-react";
 
 const services = [
