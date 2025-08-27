@@ -273,16 +273,17 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <noreply@resend.dev>",
+      from: "شركة علي صالح الشهري القابضة <info@alialshehriholding.com>",
       to: [orderData.customerEmail],
+      bcc: ["info@alialshehriholding.com"],
       subject: `🎉 تأكيد الطلب ${orderData.orderNumber} - شركة علي صالح الشهري القابضة`,
       html: getCustomerEmailTemplate(formattedOrder),
     });
 
     // Send notification to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الطلبات <noreply@resend.dev>",
-      to: ["info@fekrahtech.com"], // Add your admin emails here
+      from: "نظام الطلبات <info@alialshehriholding.com>",
+      to: ["info@alialshehriholding.com"],
       subject: `🚨 طلب جديد رقم ${orderData.orderNumber} - ${orderData.productName}`,
       html: getAdminEmailTemplate(formattedOrder),
     });
