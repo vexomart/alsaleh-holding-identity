@@ -2903,6 +2903,10 @@ export type Database = {
         Args: { encrypted_data: string }
         Returns: string
       }
+      emergency_lock_customer_data: {
+        Args: { reason?: string }
+        Returns: boolean
+      }
       encrypt_admin_password: {
         Args: { plain_password: string }
         Returns: Json
@@ -3020,6 +3024,14 @@ export type Database = {
       make_user_admin: {
         Args: { target_email: string }
         Returns: boolean
+      }
+      mask_customer_email: {
+        Args: { email_input: string; user_requesting?: string }
+        Returns: string
+      }
+      mask_customer_phone: {
+        Args: { phone_input: string; user_requesting?: string }
+        Returns: string
       }
       mask_email: {
         Args: { email_input: string; user_requesting?: string }
