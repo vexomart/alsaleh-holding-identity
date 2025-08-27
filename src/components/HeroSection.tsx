@@ -148,27 +148,6 @@ const HeroSection = () => {
         />
       </div>
       
-      {/* Top Right Consultation Button */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 z-20 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-        <Link to="/consultation">
-          <Button 
-            size="lg"
-            className="bg-gradient-to-r from-orange-500 via-pink-600 to-purple-700 hover:from-orange-600 hover:via-pink-700 hover:to-purple-800 text-white font-bold px-4 sm:px-6 py-3 sm:py-4 rounded-full shadow-2xl border-2 border-white/20 backdrop-blur-sm transition-all duration-500 hover:scale-110 group"
-          >
-            <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-            <span className="text-sm sm:text-base">استشارة مجانية</span>
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-            
-            {/* Pulse effect */}
-            <div className="absolute inset-0 bg-white rounded-full opacity-20 scale-0 group-hover:scale-100 group-hover:opacity-0 transition-all duration-500" />
-            
-            {/* Floating badge */}
-            <div className="absolute -top-2 -left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
-              مجاناً
-            </div>
-          </Button>
-        </Link>
-      </div>
       
       {/* Enhanced Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-7xl">
@@ -236,14 +215,21 @@ const HeroSection = () => {
           
           <Link to="/consultation">
             <Button 
-              variant="outline" 
               size="lg"
-              className="border-3 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground hover:text-primary w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold transition-all duration-500 hover:scale-110 glass-effect rounded-2xl group"
+              className="bg-gradient-to-r from-orange-500 via-pink-600 to-purple-700 hover:from-orange-600 hover:via-pink-700 hover:to-purple-800 text-white font-bold w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl shadow-2xl border-2 border-white/20 backdrop-blur-sm transition-all duration-500 hover:scale-110 group rounded-full relative"
             >
               <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 group-hover:rotate-12 transition-transform duration-300" />
               <span className="hidden sm:block">استشارة مجانية</span>
               <span className="sm:hidden">استشارة</span>
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform duration-300" />
+              
+              {/* Pulse effect */}
+              <div className="absolute inset-0 bg-white rounded-full opacity-20 scale-0 group-hover:scale-100 group-hover:opacity-0 transition-all duration-500" />
+              
+              {/* Floating badge */}
+              <div className="absolute -top-2 -left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+                مجاناً
+              </div>
             </Button>
           </Link>
 
