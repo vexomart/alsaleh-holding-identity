@@ -29,6 +29,9 @@ const AdminNotifications = lazy(() => import("./pages/admin/AdminNotifications")
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const Wallet = lazy(() => import("./pages/Wallet"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
+const ClientLayout = lazy(() => import("./components/client/ClientLayout"));
+const ClientDashboard = lazy(() => import("./pages/client/ClientDashboard"));
+const ClientProjects = lazy(() => import("./pages/client/ClientProjects"));
 const Story = lazy(() => import("./pages/Story"));
 const Team = lazy(() => import("./pages/Team"));
 const Vision = lazy(() => import("./pages/Vision"));
