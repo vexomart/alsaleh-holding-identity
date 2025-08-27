@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 interface ResponsiveGridProps {
   children: ReactNode;
   className?: string;
-  cols?: '1-2' | '1-2-3' | '1-2-4' | '2-4';
+  cols?: '1-2' | '1-2-3' | '1-2-4' | '1-2-5' | '2-4';
   gap?: 'sm' | 'md' | 'lg';
 }
 
@@ -18,6 +18,7 @@ export function ResponsiveGrid({
     '1-2': 'grid-responsive-1-2',
     '1-2-3': 'grid-responsive-1-2-3', 
     '1-2-4': 'grid-responsive-1-2-4',
+    '1-2-5': 'grid-responsive-1-2-5',
     '2-4': 'grid-responsive-2-4'
   };
 

@@ -297,7 +297,7 @@ const AdminProjects = () => {
       </div>
 
       {/* Stats Cards */}
-      <ResponsiveGrid cols="1-2-4" gap="md" className="mb-6">
+      <ResponsiveGrid cols="1-2-5" gap="md" className="mb-6">
         <ResponsiveCard size="sm" className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20 hover-scale">
           <div className="flex items-center justify-between">
             <div className="text-right">
