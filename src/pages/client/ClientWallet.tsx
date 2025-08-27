@@ -239,7 +239,7 @@ export default function ClientWallet() {
           amount,
           payment_method: paymentMethod,
           description: `شحن المحفظة بمبلغ ${amount} ريال سعودي`,
-          receipt_file: receiptFile ? await fileToBase64(receiptFile) : null
+          receipt_file: receiptFile ? receiptFile.name : null
         },
         headers: {
           Authorization: `Bearer ${session.access_token}`
@@ -259,7 +259,7 @@ export default function ClientWallet() {
           // Payment was processed immediately (bank transfer)
           toast({
             title: "تم إرسال طلب الشحن",
-            description: "سيتم مراجعة إيصال التحويل وإضافة المبلغ خلال 24 ساعة",
+            description: data.message || "سيتم مراجعة إيصال التحويل وإضافة المبلغ خلال 24 ساعة",
             variant: "default"
           });
           
