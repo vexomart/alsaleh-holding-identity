@@ -20,6 +20,8 @@ import Index from "./pages/Index";
 // Lazy load pages for better performance
 const OurWorks = lazy(() => import("./pages/OurWorks"));
 const About = lazy(() => import("./pages/About"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
 const Story = lazy(() => import("./pages/Story"));
 const Team = lazy(() => import("./pages/Team"));
 const Vision = lazy(() => import("./pages/Vision"));
@@ -317,6 +319,8 @@ const App = () => {
                 <Route path="/my-projects" element={<Suspense fallback={<PageLoader />}><MyProjects /></Suspense>} />
                 <Route path="/admin-projects" element={<Suspense fallback={<PageLoader />}><AdminProjects /></Suspense>} />
                 <Route path="/admin-login" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
+                <Route path="/admin-dashboard" element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>} />
+                <Route path="/admin-clients" element={<Suspense fallback={<PageLoader />}><AdminClients /></Suspense>} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />

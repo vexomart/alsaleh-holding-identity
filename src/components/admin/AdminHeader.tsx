@@ -1,0 +1,169 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Bell,
+  Search,
+  Settings,
+  LogOut,
+  User,
+  Moon,
+  Sun,
+  Globe,
+  ChevronDown,
+} from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
+
+export const AdminHeader = () => {
+  const [user, setUser] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [notifications, setNotifications] = useState(3);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser(session.user);
+      }
+    };
+    getUser();
+  }, []);
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "خطأ في تسجيل الخروج",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "تم تسجيل الخروج بنجاح",
+        description: "سيتم إعادة توجيهك إلى صفحة تسجيل الدخول",
+      });
+      navigate('/admin-login');
+    }
+  };
+
+  return (
+    <header className="h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/50 flex items-center justify-between px-6 sticky top-0 z-50">
+      {/* Left side - Navigation & Search */}
+      <div className="flex items-center gap-4">
+        <SidebarTrigger className="h-8 w-8" />
+        
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            placeholder="البحث..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-80 pl-10 pr-4 h-9 bg-muted/50 border-muted focus:bg-background"
+            dir="rtl"
+          />
+        </div>
+      </div>
+
+      {/* Right side - Actions & User */}
+      <div className="flex items-center gap-3">
+        {/* Quick Stats */}
+        <div className="hidden lg:flex items-center gap-4 mr-4">
+          <div className="text-sm">
+            <span className="text-muted-foreground">المشاريع النشطة: </span>
+            <span className="font-semibold text-green-600">12</span>
+          </div>
+          <div className="text-sm">
+            <span className="text-muted-foreground">العملاء الجدد: </span>
+            <span className="font-semibold text-blue-600">5</span>
+          </div>
+        </div>
+
+        {/* Notifications */}
+        <Button variant="ghost" size="sm" className="relative h-9 w-9 p-0">
+          <Bell className="h-4 w-4" />
+          {notifications > 0 && (
+            <Badge 
+              variant="destructive" 
+              className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs"
+            >
+              {notifications}
+            </Badge>
+          )}
+        </Button>
+
+        {/* Settings */}
+        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+          <Settings className="h-4 w-4" />
+        </Button>
+
+        {/* Language */}
+        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+          <Globe className="h-4 w-4" />
+        </Button>
+
+        {/* Theme Toggle */}
+        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+          <Sun className="h-4 w-4 dark:hidden" />
+          <Moon className="h-4 w-4 hidden dark:block" />
+        </Button>
+
+        {/* User Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-9 gap-2 px-3">
+              <Avatar className="h-7 w-7">
+                <AvatarImage src="/placeholder-avatar.png" />
+                <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                  {user?.email?.charAt(0).toUpperCase() || 'A'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="hidden md:flex flex-col items-start">
+                <span className="text-sm font-medium">المدير العام</span>
+                <span className="text-xs text-muted-foreground truncate max-w-20">
+                  {user?.email || 'admin@company.com'}
+                </span>
+              </div>
+              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            </Button>
+          </DropdownMenuTrigger>
+          
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>حسابي</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              الملف الشخصي
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              الإعدادات
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator />
+            
+            <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
+              <LogOut className="mr-2 h-4 w-4" />
+              تسجيل الخروج
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  );
+};
