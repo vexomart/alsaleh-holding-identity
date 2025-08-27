@@ -425,7 +425,24 @@ const App = () => {
           <Route path="/enterprise/branding" element={<Suspense fallback={<PageLoader />}><EnterpriseBranding /></Suspense>} />
           
           {/* Wallet Route */}
-          <Route path="/wallet" element={<Suspense fallback={<PageLoader />}><Wallet /></Suspense>} />
+                <Route path="/wallet" element={<Suspense fallback={<PageLoader />}><Wallet /></Suspense>} />
+          
+                {/* Client Dashboard Routes */}
+                <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
+                <Route path="/my-projects" element={<Navigate to="/client/projects" replace />} />
+                <Route path="/client/*" element={<Suspense fallback={<PageLoader />}><ClientLayout /></Suspense>}>
+                  <Route path="dashboard" element={<ClientDashboard />} />
+                  <Route path="projects" element={<ClientProjects />} />
+                  <Route path="service-requests" element={<div className="p-6 text-center text-muted-foreground">صفحة طلبات الخدمة قيد التطوير</div>} />
+                  <Route path="invoices" element={<div className="p-6 text-center text-muted-foreground">صفحة الفواتير قيد التطوير</div>} />
+                  <Route path="payments" element={<div className="p-6 text-center text-muted-foreground">صفحة المدفوعات قيد التطوير</div>} />
+                  <Route path="wallet" element={<div className="p-6 text-center text-muted-foreground">صفحة المحفظة قيد التطوير</div>} />
+                  <Route path="receipts" element={<div className="p-6 text-center text-muted-foreground">صفحة الإيصالات قيد التطوير</div>} />
+                  <Route path="messages" element={<div className="p-6 text-center text-muted-foreground">صفحة الرسائل قيد التطوير</div>} />
+                  <Route path="support-tickets" element={<div className="p-6 text-center text-muted-foreground">صفحة تذاكر الدعم قيد التطوير</div>} />
+                  <Route path="profile" element={<div className="p-6 text-center text-muted-foreground">صفحة الملف الشخصي قيد التطوير</div>} />
+                  <Route path="settings" element={<div className="p-6 text-center text-muted-foreground">صفحة الإعدادات قيد التطوير</div>} />
+                </Route>
           
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
