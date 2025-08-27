@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { useCustomerNotifications } from '@/hooks/useCustomerNotifications';
 
 interface Project {
   id: string;
@@ -63,6 +64,7 @@ const AdminProjects = () => {
     user_id: ''
   });
   const navigate = useNavigate();
+  const { sendProjectUpdate } = useCustomerNotifications();
 
   // تحقق من المصادقة والصلاحيات
   useEffect(() => {
@@ -127,13 +129,55 @@ const AdminProjects = () => {
         user_id: formData.user_id
       };
 
-      const { error } = await supabase
+      const { data: insertedData, error } = await supabase
         .from('projects')
-        .insert([insertData]);
+        .insert([insertData])
+        .select('*')
+        .single();
 
       if (error) throw error;
       
-      toast.success('تم إنشاء المشروع بنجاح');
+      // إرسال إشعار بإنشاء المشروع الجديد
+      if (insertedData && formData.user_id) {
+        const clientInfo = clients.find(c => c.user_id === formData.user_id);
+        if (clientInfo?.full_name) {
+          try {
+            // الحصول على بيانات العميل المفصلة
+            const { data: clientProfile } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('user_id', formData.user_id)
+              .single();
+
+            if (clientProfile) {
+              await sendProjectUpdate(
+                clientProfile.user_id + '@example.com', // يجب استبدال هذا بالإيميل الحقيقي
+                clientProfile.full_name || 'عميل كريم',
+                {
+                  projectName: insertedData.name,
+                  projectNumber: insertedData.project_number,
+                  projectType: insertedData.project_type,
+                  status: getStatusText(insertedData.status || ''),
+                  progressPercentage: insertedData.progress_percentage || 0,
+                  description: insertedData.description,
+                  startDate: insertedData.start_date,
+                  dueDate: insertedData.due_date,
+                  budget: insertedData.budget,
+                  currency: insertedData.currency,
+                  updateType: 'created',
+                  nextSteps: ['تم إنشاء المشروع', 'سيتم البدء في التنفيذ قريباً'],
+                  completedTasks: []
+                }
+              );
+              console.log('تم إرسال إشعار إنشاء المشروع بنجاح');
+            }
+          } catch (notificationError) {
+            console.error('خطأ في إرسال إشعار إنشاء المشروع:', notificationError);
+          }
+        }
+      }
+      
+      toast.success('تم إنشاء المشروع بنجاح وإرسال الإشعار للعميل');
       setCreateDialogOpen(false);
       resetForm();
       await fetchProjects();
@@ -147,6 +191,9 @@ const AdminProjects = () => {
     if (!selectedProject) return;
 
     try {
+      const oldStatus = selectedProject.status;
+      const oldProgress = selectedProject.progress_percentage || 0;
+      
       const updateData = {
         name: formData.name,
         description: formData.description,
@@ -160,14 +207,84 @@ const AdminProjects = () => {
         user_id: formData.user_id
       };
 
-      const { error } = await supabase
+      const { data: updatedData, error } = await supabase
         .from('projects')
         .update(updateData)
-        .eq('id', selectedProject.id);
+        .eq('id', selectedProject.id)
+        .select('*')
+        .single();
 
       if (error) throw error;
       
-      toast.success('تم تحديث المشروع بنجاح');
+      // إرسال إشعار تحديث المشروع
+      if (updatedData && formData.user_id) {
+        const clientInfo = clients.find(c => c.user_id === formData.user_id);
+        if (clientInfo?.full_name) {
+          try {
+            // الحصول على بيانات العميل المفصلة
+            const { data: clientProfile } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('user_id', formData.user_id)
+              .single();
+
+            if (clientProfile) {
+              // تحديد نوع التحديث
+              const statusChanged = oldStatus !== formData.status;
+              const progressChanged = oldProgress !== formData.progress_percentage;
+              
+              let completedTasks = [];
+              let nextSteps = [];
+              
+              // تحديد المهام المكتملة والخطوات القادمة حسب الحالة والتقدم
+              if (statusChanged || progressChanged) {
+                if (formData.status === 'in_progress') {
+                  completedTasks = ['تم البدء في المشروع', 'تم تجهيز الخطة الأولية'];
+                  nextSteps = ['تطوير النماذج الأولية', 'مراجعة مع العميل'];
+                } else if (formData.status === 'review') {
+                  completedTasks = ['تم الانتهاء من التطوير', 'تم اختبار الوظائف الأساسية'];
+                  nextSteps = ['مراجعة العميل', 'تطبيق التعديلات المطلوبة'];
+                } else if (formData.status === 'completed') {
+                  completedTasks = ['تم إنجاز جميع المتطلبات', 'تم التسليم النهائي', 'تم تدريب العميل'];
+                  nextSteps = ['الدعم الفني', 'المتابعة الدورية'];
+                }
+                
+                if (progressChanged && formData.progress_percentage > oldProgress) {
+                  completedTasks.push(`تم رفع نسبة الإنجاز إلى ${formData.progress_percentage}%`);
+                }
+              }
+
+              await sendProjectUpdate(
+                clientProfile.user_id + '@example.com', // يجب استبدال هذا بالإيميل الحقيقي
+                clientProfile.full_name || 'عميل كريم',
+                {
+                  projectName: updatedData.name,
+                  projectNumber: updatedData.project_number,
+                  projectType: updatedData.project_type,
+                  status: getStatusText(updatedData.status || ''),
+                  progressPercentage: updatedData.progress_percentage || 0,
+                  description: updatedData.description,
+                  startDate: updatedData.start_date,
+                  dueDate: updatedData.due_date,
+                  budget: updatedData.budget,
+                  currency: updatedData.currency,
+                  updateType: 'updated',
+                  oldStatus: getStatusText(oldStatus || ''),
+                  newStatus: getStatusText(formData.status || ''),
+                  progressIncrease: formData.progress_percentage - oldProgress,
+                  completedTasks,
+                  nextSteps
+                }
+              );
+              console.log('تم إرسال إشعار تحديث المشروع بنجاح');
+            }
+          } catch (notificationError) {
+            console.error('خطأ في إرسال إشعار تحديث المشروع:', notificationError);
+          }
+        }
+      }
+      
+      toast.success('تم تحديث المشروع بنجاح وإرسال الإشعار للعميل');
       setEditDialogOpen(false);
       setSelectedProject(null);
       await fetchProjects();
