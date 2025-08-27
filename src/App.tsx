@@ -33,6 +33,10 @@ const TechInvestment = lazy(() => import("./pages/TechInvestment"));
 const Development = lazy(() => import("./pages/Development"));
 const StrategicConsulting = lazy(() => import("./pages/StrategicConsulting"));
 const IntegratedSolutions = lazy(() => import("./pages/IntegratedSolutions"));
+const TechSolutions = lazy(() => import("./pages/services/TechSolutions"));
+const BusinessSolutions = lazy(() => import("./pages/services/BusinessSolutions"));
+const CloudSolutions = lazy(() => import("./pages/services/CloudSolutions"));
+const SecuritySolutions = lazy(() => import("./pages/services/SecuritySolutions"));
 const Training = lazy(() => import("./pages/Training"));
 const Volunteer = lazy(() => import("./pages/Volunteer"));
 const DevelopmentProgram = lazy(() => import("./pages/DevelopmentProgram"));
@@ -62,8 +66,7 @@ const SmartAutomation = lazy(() => import("./pages/ai-services/SmartAutomation")
 const SmartSecurity = lazy(() => import("./pages/ai-services/SmartSecurity"));
 const FreeTrial = lazy(() => import("./pages/FreeTrial"));
 const IoTSolutions = lazy(() => import("./pages/IoTSolutions"));
-const CloudSolutions = lazy(() => import("./pages/CloudSolutions"));
-const SecuritySolutions = lazy(() => import("./pages/SecuritySolutions"));
+// Old pages replaced with new service pages
 const NLPSolutions = lazy(() => import("./pages/NLPSolutions"));
 const ComputerVisionPage = lazy(() => import("./pages/ComputerVision"));
 const MachineLearning = lazy(() => import("./pages/MachineLearning"));
@@ -233,6 +236,10 @@ const App = () => {
                 <Route path="/development" element={<Suspense fallback={<PageLoader />}><Development /></Suspense>} />
                 <Route path="/strategic-consulting" element={<Suspense fallback={<PageLoader />}><StrategicConsulting /></Suspense>} />
                 <Route path="/integrated-solutions" element={<Suspense fallback={<PageLoader />}><IntegratedSolutions /></Suspense>} />
+                <Route path="/services/tech-solutions" element={<Suspense fallback={<PageLoader />}><TechSolutions /></Suspense>} />
+                <Route path="/services/business-solutions" element={<Suspense fallback={<PageLoader />}><BusinessSolutions /></Suspense>} />
+                <Route path="/services/cloud-solutions" element={<Suspense fallback={<PageLoader />}><CloudSolutions /></Suspense>} />
+                <Route path="/services/security-solutions" element={<Suspense fallback={<PageLoader />}><SecuritySolutions /></Suspense>} />
                 <Route path="/training" element={<Suspense fallback={<PageLoader />}><Training /></Suspense>} />
                 <Route path="/volunteer" element={<Suspense fallback={<PageLoader />}><Volunteer /></Suspense>} />
                 <Route path="/contracts" element={<Suspense fallback={<PageLoader />}><Contracts /></Suspense>} />
