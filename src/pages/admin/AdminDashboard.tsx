@@ -92,6 +92,7 @@ const AdminDashboard = () => {
   const [deviceData, setDeviceData] = useState<DeviceData[]>([]);
   const [projectStatusData, setProjectStatusData] = useState<ProjectStatusData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [animationKey, setAnimationKey] = useState(0);
 
   useEffect(() => {
     fetchDashboardData();
@@ -385,36 +386,56 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/20 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 font-corporate" dir="rtl">
-      {/* Executive Header - Responsive */}
-      <div className="relative bg-gradient-to-l from-primary/10 via-blue-50/50 to-slate-50/30 dark:from-primary/5 dark:via-slate-800 dark:to-slate-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-border/50 shadow-sm overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-0">
-          <div className="text-right space-y-2 sm:space-y-3 order-2 lg:order-1">
-            <div className="flex items-center gap-2 sm:gap-3 justify-end flex-wrap">
-              <Badge variant="secondary" className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/15 transition-all duration-300 text-xs sm:text-sm">
-                <Building2 className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
-                لوحة التحكم التنفيذية
-              </Badge>
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-primary/5 dark:from-background dark:via-card/50 dark:to-primary/5 font-corporate" dir="rtl">
+      <div className="container-fluid py-8 space-y-8">
+        {/* Executive Header - Ultra Modern */}
+        <div key={animationKey} className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-card via-card/95 to-card/90 border border-border/60 shadow-xl backdrop-blur-sm animate-fade-in">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5 opacity-50"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl transform rotate-12 -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-secondary/10 to-primary/10 rounded-full blur-3xl transform -rotate-12 translate-y-1/2 -translate-x-1/2"></div>
+          <div className="relative z-10 p-8 lg:p-12">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div className="flex-1 text-center lg:text-right space-y-6">
+                <div className="flex items-center justify-center lg:justify-end gap-4 flex-wrap">
+                  <Badge className="px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 animate-scale-in delay-100">
+                    <Building2 className="w-5 h-5 ml-2" />
+                    Executive Command Center
+                  </Badge>
+                  <Badge variant="outline" className="px-4 py-2 bg-background/80 backdrop-blur border-primary/20 hover:border-primary/40 transition-all duration-300 animate-scale-in delay-200">
+                    <Shield className="w-4 h-4 ml-2" />
+                    Admin Level Access
+                  </Badge>
+                </div>
+                <div className="space-y-4">
+                  <h1 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent leading-tight animate-fade-in delay-300">
+                    مركز القيادة التنفيذية
+                  </h1>
+                  <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto lg:mx-0 leading-relaxed animate-fade-in delay-400">
+                    نظام إدارة متطور بتقنيات الذكاء الاصطناعي لمراقبة الأداء والتحكم في العمليات التجارية على مستوى عالمي
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 animate-fade-in delay-500">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-3xl blur opacity-75 animate-pulse"></div>
+                  <div className="relative bg-gradient-to-br from-primary via-accent to-secondary p-6 rounded-3xl shadow-2xl">
+                    <Activity className="w-12 h-12 text-white animate-bounce" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
+                    <span className="text-sm font-medium text-muted-foreground">النظام يعمل بكفاءة</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-muted-foreground">آخر تحديث: الآن</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-l from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent leading-tight">
-              إدارة الأعمال المتقدمة
-            </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-full lg:max-w-2xl leading-relaxed">
-              نظام إدارة شامل لمراقبة الأداء وتحليل البيانات وإدارة العمليات التجارية بكفاءة عالية
-            </p>
-          </div>
-          <div className="flex items-center gap-3 sm:gap-4 justify-end lg:justify-start order-1 lg:order-2">
-            <div className="bg-primary/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-primary/20">
-              <Activity className="w-6 h-6 sm:w-8 sm:h-8 text-primary animate-pulse" />
-            </div>
-            <Badge variant="outline" className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 bg-background/80 backdrop-blur border-border/50 hover:bg-background transition-all duration-300">
-              <Clock className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
-              آخر تحديث: الآن
-            </Badge>
           </div>
         </div>
-      </div>
 
       {/* Executive KPI Cards - Responsive Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
@@ -814,6 +835,7 @@ const AdminDashboard = () => {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };

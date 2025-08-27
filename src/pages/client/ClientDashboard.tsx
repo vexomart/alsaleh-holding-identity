@@ -236,122 +236,137 @@ export default function ClientDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-muted/30 font-cairo">
-      <div className="space-y-8 p-6">
-        {/* Enhanced Welcome Section */}
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10 to-secondary/5 rounded-2xl"></div>
-          <div className="absolute top-4 right-4 text-primary/20">
-            <Sparkles className="w-12 h-12 animate-pulse" />
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 dark:from-background dark:via-card/30 dark:to-primary/5 font-corporate">
+      <div className="container-fluid py-8 space-y-8">
+        {/* Executive Client Portal Header */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-card via-card/98 to-card/95 border border-border/60 shadow-2xl backdrop-blur-sm animate-fade-in">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/8 via-accent/8 to-secondary/8 rounded-full blur-3xl transform rotate-45 -translate-y-1/3 translate-x-1/3"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-secondary/8 via-primary/8 to-accent/8 rounded-full blur-3xl transform -rotate-45 translate-y-1/3 -translate-x-1/3"></div>
+            <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]"></div>
           </div>
-          <div className="relative p-8 rounded-2xl border border-primary/20 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-secondary shadow-lg animate-bounce">
-                <Users className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-                  مرحباً بك في لوحة تحكم العميل المتطورة
-                </h1>
-                <p className="text-lg text-muted-foreground">
-                  إدارة شاملة ومتقدمة لجميع مشاريعك وخدماتك المالية بتقنية عالية
-                </p>
-              </div>
-            </div>
-            
-            {/* Achievement Badges */}
-            <div className="flex flex-wrap gap-3 mb-4">
-              <Badge variant="secondary" className="px-3 py-1 bg-gradient-to-r from-green-100 to-green-200 text-green-800 border-green-300">
-                <Award className="w-4 h-4 mr-1" />
-                عميل متميز
-              </Badge>
-              <Badge variant="secondary" className="px-3 py-1 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border-blue-300">
-                <Shield className="w-4 h-4 mr-1" />
-                حساب محقق
-              </Badge>
-              <Badge variant="secondary" className="px-3 py-1 bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border-purple-300">
-                <Star className="w-4 h-4 mr-1" />
-                تقييم عالي
-              </Badge>
-            </div>
-
-            {/* Quick Stats Banner */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-              <div className="text-center p-3 rounded-lg bg-white/70 dark:bg-gray-800/70 border border-primary/10">
-                <div className="text-2xl font-bold text-primary">
-                  <NumberFormatter number={stats.totalProjects} />
+          
+          <div className="relative z-10 p-8 lg:p-12">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div className="flex-1 text-center lg:text-right space-y-6">
+                <div className="flex items-center justify-center lg:justify-end gap-4 flex-wrap">
+                  <Badge className="px-6 py-3 bg-gradient-to-r from-primary via-accent to-secondary text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-500 animate-scale-in delay-100">
+                    <Award className="w-5 h-5 ml-2" />
+                    Client Executive Portal
+                  </Badge>
+                  <Badge variant="outline" className="px-4 py-2 bg-success/10 border-success/30 text-success hover:bg-success/20 transition-all duration-300 animate-scale-in delay-200">
+                    <Shield className="w-4 h-4 ml-2" />
+                    حساب محقق ومتميز
+                  </Badge>
                 </div>
-                <div className="text-sm text-muted-foreground">مشاريع إجمالية</div>
-              </div>
-              <div className="text-center p-3 rounded-lg bg-white/70 dark:bg-gray-800/70 border border-green-200">
-                <div className="text-2xl font-bold text-green-600">
-                  <NumberFormatter number={stats.completedProjects} />
+                
+                <div className="space-y-4">
+                  <h1 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent leading-tight animate-fade-in delay-300">
+                    بوابة العميل التنفيذية
+                  </h1>
+                  <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto lg:mx-0 leading-relaxed animate-fade-in delay-400">
+                    منصة إدارة متطورة بتقنيات عالمية لمتابعة مشاريعك والخدمات المالية بكفاءة احترافية
+                  </p>
                 </div>
-                <div className="text-sm text-muted-foreground">مشاريع مكتملة</div>
-              </div>
-              <div className="text-center p-3 rounded-lg bg-white/70 dark:bg-gray-800/70 border border-blue-200">
-                <div className="text-2xl font-bold text-blue-600">
-                  <NumberFormatter number={stats.totalSpent} suffix=" ريال" />
+                
+                {/* Performance Metrics */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in delay-500">
+                  <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-4 rounded-2xl border border-primary/20 backdrop-blur-sm">
+                    <div className="text-2xl lg:text-3xl font-bold text-primary mb-1">
+                      <NumberFormatter number={stats.totalProjects} />
+                    </div>
+                    <div className="text-xs lg:text-sm text-muted-foreground font-medium">مشاريع إجمالية</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-success/10 to-success/5 p-4 rounded-2xl border border-success/20 backdrop-blur-sm">
+                    <div className="text-2xl lg:text-3xl font-bold text-success mb-1">
+                      <NumberFormatter number={stats.completedProjects} />
+                    </div>
+                    <div className="text-xs lg:text-sm text-muted-foreground font-medium">مشاريع مكتملة</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-accent/10 to-accent/5 p-4 rounded-2xl border border-accent/20 backdrop-blur-sm">
+                    <div className="text-xl lg:text-2xl font-bold text-accent mb-1">
+                      <NumberFormatter number={stats.totalSpent} suffix="K" />
+                    </div>
+                    <div className="text-xs lg:text-sm text-muted-foreground font-medium">إجمالي الاستثمار</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 p-4 rounded-2xl border border-secondary/20 backdrop-blur-sm">
+                    <div className="text-2xl lg:text-3xl font-bold text-secondary mb-1">98%</div>
+                    <div className="text-xs lg:text-sm text-muted-foreground font-medium">تقييم الأداء</div>
+                  </div>
                 </div>
-                <div className="text-sm text-muted-foreground">إجمالي الإنفاق</div>
               </div>
-              <div className="text-center p-3 rounded-lg bg-white/70 dark:bg-gray-800/70 border border-orange-200">
-                <div className="text-2xl font-bold text-orange-600">98%</div>
-                <div className="text-sm text-muted-foreground">معدل الرضا</div>
+              
+              <div className="flex flex-col items-center gap-6 animate-fade-in delay-600">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-secondary rounded-full blur-lg opacity-60 animate-pulse"></div>
+                  <div className="relative bg-gradient-to-br from-primary via-accent to-secondary p-8 rounded-full shadow-2xl">
+                    <Users className="w-16 h-16 text-white animate-float" />
+                  </div>
+                </div>
+                
+                <div className="text-center space-y-3">
+                  <div className="flex items-center gap-2 justify-center">
+                    <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
+                    <span className="text-sm font-semibold text-success">متصل - نشط</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-center">
+                    <Star className="w-4 h-4 text-secondary" />
+                    <span className="text-sm font-medium text-muted-foreground">مستوى VIP</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Enhanced Stats Cards */}
-        <ResponsiveGrid cols="1-2-3" gap="lg" className="mt-8">
+        {/* Enhanced Executive Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
           {statsCards.map((card, index) => (
-            <div
+            <Card 
               key={index}
-              className={`group relative overflow-hidden rounded-2xl border ${card.borderColor} ${card.bgColor} p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/10 cursor-pointer`}
+              className={`group relative overflow-hidden border-2 ${card.borderColor} ${card.bgColor} transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 cursor-pointer animate-fade-in`}
+              style={{ animationDelay: `${index * 150}ms` }}
             >
-              {/* Background Pattern */}
-              <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
-                <div className={`w-full h-full bg-gradient-to-br ${card.color} rounded-full blur-3xl`}></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-20">
+                <div className={`w-full h-full bg-gradient-to-br ${card.color} rounded-full blur-3xl transform rotate-45 group-hover:scale-150 transition-transform duration-700`}></div>
               </div>
               
-              {/* Content */}
-              <div className="relative z-10">
+              <CardContent className="relative z-10 p-6 lg:p-8">
                 <div className="flex items-center justify-between mb-6">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${card.color} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <card.icon className="w-7 h-7 text-white" />
+                  <div className={`p-4 lg:p-5 rounded-2xl bg-gradient-to-br ${card.color} shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                    <card.icon className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
                   </div>
                   <div className="text-right">
-                    <div className="text-3xl font-bold text-foreground mb-1 animate-fade-in">
+                    <div className="text-3xl lg:text-4xl font-bold text-foreground mb-1 group-hover:scale-110 transition-transform duration-300">
                       {typeof card.value === 'number' ? (
                         <NumberFormatter number={card.value} />
                       ) : (
                         card.value
                       )}
                     </div>
-                    <div className="text-sm font-medium text-muted-foreground">{card.title}</div>
+                    <div className="text-sm lg:text-base font-medium text-muted-foreground">{card.title}</div>
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <card.trendIcon className="w-4 h-4 text-green-600" />
-                    <span className="text-sm font-bold text-green-600">{card.trend}</span>
+                    <card.trendIcon className="w-4 h-4 text-success" />
+                    <span className="text-sm font-bold text-success">{card.trend}</span>
                   </div>
                   <span className="text-sm text-muted-foreground">{card.description}</span>
                 </div>
                 
-                {/* Progress Indicator */}
-                <div className="mt-4 h-1 bg-muted rounded-full overflow-hidden">
+                <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
                   <div 
-                    className={`h-full bg-gradient-to-r ${card.color} rounded-full transition-all duration-1000 animate-[scale-in_1s_ease-out]`}
-                    style={{ width: `${Math.min(Math.random() * 100 + 20, 100)}%` }}
+                    className={`h-full bg-gradient-to-r ${card.color} rounded-full transition-all duration-1000 group-hover:animate-pulse`}
+                    style={{ width: `${Math.min(Math.random() * 100 + 30, 100)}%` }}
                   ></div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
-        </ResponsiveGrid>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Enhanced Recent Activities */}
