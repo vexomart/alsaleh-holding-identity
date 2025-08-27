@@ -27,6 +27,7 @@ const AdminPayments = lazy(() => import("./pages/admin/AdminPayments"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
 const AdminNotifications = lazy(() => import("./pages/admin/AdminNotifications"));
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
+const Wallet = lazy(() => import("./pages/Wallet"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const Story = lazy(() => import("./pages/Story"));
 const Team = lazy(() => import("./pages/Team"));
@@ -419,6 +420,9 @@ const App = () => {
           {/* Enterprise Services Routes */}
           <Route path="/enterprise/development" element={<Suspense fallback={<PageLoader />}><EnterpriseDevelopment /></Suspense>} />
           <Route path="/enterprise/branding" element={<Suspense fallback={<PageLoader />}><EnterpriseBranding /></Suspense>} />
+          
+          {/* Wallet Route */}
+          <Route path="/wallet" element={<Suspense fallback={<PageLoader />}><Wallet /></Suspense>} />
           
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
