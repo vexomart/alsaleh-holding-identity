@@ -326,7 +326,7 @@ const App = () => {
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
                 <Route path="/auth" element={<Suspense fallback={<PageLoader />}><Auth /></Suspense>} />
-                <Route path="/my-projects" element={<Suspense fallback={<PageLoader />}><MyProjects /></Suspense>} />
+                
                 <Route path="/admin-login" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
                 
                 {/* Admin Routes with Layout */}
