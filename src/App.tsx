@@ -32,6 +32,7 @@ const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const ClientLayout = lazy(() => import("./components/client/ClientLayout"));
 const ClientDashboard = lazy(() => import("./pages/client/ClientDashboard"));
 const ClientProjects = lazy(() => import("./pages/client/ClientProjects"));
+const ClientInvoices = lazy(() => import("./pages/client/ClientInvoices"));
 const ServiceRequests = lazy(() => import("./pages/client/ServiceRequests"));
 const ClientPayments = lazy(() => import("./pages/client/ClientPayments"));
 const ClientWallet = lazy(() => import("./pages/client/ClientWallet"));
