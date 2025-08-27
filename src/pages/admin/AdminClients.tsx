@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Table,
   TableBody,
@@ -72,6 +74,23 @@ const AdminClients = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sectorFilter, setSectorFilter] = useState('all');
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [newClient, setNewClient] = useState({
+    legal_name: '',
+    display_name: '',
+    billing_email: '',
+    phone: '',
+    website: '',
+    status: 'prospect' as const,
+    sector: 'private' as const,
+    city: '',
+    country: 'SA',
+    tax_number: '',
+    commercial_register: '',
+    address: '',
+    notes: ''
+  });
 
   useEffect(() => {
     fetchClients();
@@ -162,6 +181,91 @@ const AdminClients = () => {
     }
   };
 
+  const handleCreateClient = async () => {
+    if (!newClient.legal_name || !newClient.billing_email) {
+      toast({
+        title: "خطأ في البيانات",
+        description: "يرجى ملء الحقول المطلوبة (الاسم القانوني والبريد الإلكتروني)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!newClient.billing_email.includes('@') || !newClient.billing_email.includes('.')) {
+      toast({
+        title: "بريد إلكتروني غير صالح",
+        description: "يرجى إدخال بريد إلكتروني صحيح",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setCreating(true);
+    
+    try {
+      const { data, error } = await supabase
+        .from('clients')
+        .insert([{
+          legal_name: newClient.legal_name,
+          display_name: newClient.display_name || null,
+          billing_email: newClient.billing_email.toLowerCase().trim(),
+          phone: newClient.phone || null,
+          website: newClient.website || null,
+          status: newClient.status,
+          sector: newClient.sector,
+          city: newClient.city || null,
+          country: newClient.country,
+          tax_number: newClient.tax_number || null,
+          commercial_register: newClient.commercial_register || null,
+          address: newClient.address || null,
+          notes: newClient.notes || null,
+          created_by: (await supabase.auth.getUser()).data.user?.id
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setClients([data, ...clients]);
+      setShowAddDialog(false);
+      setNewClient({
+        legal_name: '',
+        display_name: '',
+        billing_email: '',
+        phone: '',
+        website: '',
+        status: 'prospect',
+        sector: 'private',
+        city: '',
+        country: 'SA',
+        tax_number: '',
+        commercial_register: '',
+        address: '',
+        notes: ''
+      });
+
+      toast({
+        title: "تم إنشاء العميل بنجاح",
+        description: `تم إضافة ${newClient.legal_name} إلى قاعدة العملاء`,
+      });
+    } catch (error: any) {
+      console.error('Error creating client:', error);
+      
+      let errorMessage = "حدث خطأ أثناء إنشاء العميل";
+      if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      toast({
+        title: "خطأ في إنشاء العميل",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setCreating(false);
+    }
+  };
+
   const stats = {
     total: clients.length,
     active: clients.filter(c => c.status === 'active').length,
@@ -196,10 +300,162 @@ const AdminClients = () => {
           </h1>
           <p className="text-muted-foreground mt-2">إدارة ومتابعة قاعدة عملاء الشركة</p>
         </div>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          إضافة عميل جديد
-        </Button>
+        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" />
+              إضافة عميل جديد
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
+            <DialogHeader>
+              <DialogTitle>إضافة عميل جديد</DialogTitle>
+              <DialogDescription>
+                أدخل بيانات العميل الجديد لإضافته إلى قاعدة البيانات
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="legal_name">الاسم القانوني *</Label>
+                <Input
+                  id="legal_name"
+                  value={newClient.legal_name}
+                  onChange={(e) => setNewClient({...newClient, legal_name: e.target.value})}
+                  placeholder="أدخل الاسم القانوني للعميل"
+                  dir="rtl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="display_name">الاسم التجاري</Label>
+                <Input
+                  id="display_name"
+                  value={newClient.display_name}
+                  onChange={(e) => setNewClient({...newClient, display_name: e.target.value})}
+                  placeholder="الاسم التجاري (اختياري)"
+                  dir="rtl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="billing_email">البريد الإلكتروني *</Label>
+                <Input
+                  id="billing_email"
+                  type="email"
+                  value={newClient.billing_email}
+                  onChange={(e) => setNewClient({...newClient, billing_email: e.target.value.toLowerCase().trim()})}
+                  placeholder="example@company.com"
+                  dir="ltr"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">رقم الهاتف</Label>
+                <Input
+                  id="phone"
+                  value={newClient.phone}
+                  onChange={(e) => setNewClient({...newClient, phone: e.target.value})}
+                  placeholder="+966501234567"
+                  dir="ltr"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">الحالة</Label>
+                <Select value={newClient.status} onValueChange={(value: any) => setNewClient({...newClient, status: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="اختر الحالة" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="prospect">محتمل</SelectItem>
+                    <SelectItem value="active">نشط</SelectItem>
+                    <SelectItem value="inactive">غير نشط</SelectItem>
+                    <SelectItem value="blocked">محظور</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sector">القطاع</Label>
+                <Select value={newClient.sector} onValueChange={(value: any) => setNewClient({...newClient, sector: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="اختر القطاع" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="private">خاص</SelectItem>
+                    <SelectItem value="government">حكومي</SelectItem>
+                    <SelectItem value="nonprofit">غير ربحي</SelectItem>
+                    <SelectItem value="semi_government">شبه حكومي</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="city">المدينة</Label>
+                <Input
+                  id="city"
+                  value={newClient.city}
+                  onChange={(e) => setNewClient({...newClient, city: e.target.value})}
+                  placeholder="الرياض"
+                  dir="rtl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="website">الموقع الإلكتروني</Label>
+                <Input
+                  id="website"
+                  value={newClient.website}
+                  onChange={(e) => setNewClient({...newClient, website: e.target.value})}
+                  placeholder="https://example.com"
+                  dir="ltr"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tax_number">الرقم الضريبي</Label>
+                <Input
+                  id="tax_number"
+                  value={newClient.tax_number}
+                  onChange={(e) => setNewClient({...newClient, tax_number: e.target.value})}
+                  placeholder="123456789012345"
+                  dir="ltr"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="commercial_register">السجل التجاري</Label>
+                <Input
+                  id="commercial_register"
+                  value={newClient.commercial_register}
+                  onChange={(e) => setNewClient({...newClient, commercial_register: e.target.value})}
+                  placeholder="1234567890"
+                  dir="ltr"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="address">العنوان</Label>
+                <Input
+                  id="address"
+                  value={newClient.address}
+                  onChange={(e) => setNewClient({...newClient, address: e.target.value})}
+                  placeholder="العنوان الكامل"
+                  dir="rtl"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="notes">ملاحظات</Label>
+                <Textarea
+                  id="notes"
+                  value={newClient.notes}
+                  onChange={(e) => setNewClient({...newClient, notes: e.target.value})}
+                  placeholder="ملاحظات إضافية عن العميل"
+                  dir="rtl"
+                  rows={3}
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 justify-end pt-4">
+              <Button variant="outline" onClick={() => setShowAddDialog(false)}>
+                إلغاء
+              </Button>
+              <Button onClick={handleCreateClient} disabled={creating}>
+                {creating ? 'جارٍ الإنشاء...' : 'إنشاء العميل'}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Stats Cards */}
