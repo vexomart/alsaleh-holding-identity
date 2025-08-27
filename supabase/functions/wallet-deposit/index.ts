@@ -142,23 +142,32 @@ serve(async (req) => {
 
           console.log('Wallet found/created:', wallet.id);
 
-          // Create transaction record with wallet_id
+          // Get current balance
+          const currentBalance = wallet.balance || 0;
+          console.log('Current wallet balance:', currentBalance);
+
+          // Create transaction record with all required fields
           console.log('Inserting transaction record...');
           const { data: transaction, error: insertError } = await supabaseClient
             .from('wallet_transactions')
             .insert({
               user_id: user.id,
-              wallet_id: wallet.id, // This was missing!
+              wallet_id: wallet.id,
               transaction_type: 'deposit',
               amount: amount,
+              balance_before: currentBalance,
+              balance_after: currentBalance, // Will be updated later when approved
               description: description || `Deposit via ${paymentMethodConfig.name_ar}`,
               reference_id: reference_id,
               status: 'pending',
+              payment_method: payment_method,
+              payment_reference: reference_id,
               metadata: { 
                 payment_method: payment_method,
                 payment_provider: paymentMethodConfig.provider,
                 receipt_uploaded: !!receipt_file,
-                receipt_file: receipt_file || null
+                receipt_file: receipt_file || null,
+                bank_info: paymentMethodConfig.configuration
               }
             })
             .select()

@@ -274,9 +274,21 @@ export default function ClientWallet() {
       }
     } catch (error) {
       console.error('Deposit error:', error);
+      let errorMessage = 'حدث خطأ أثناء شحن المحفظة';
+      
+      if (error?.message?.includes('wallet_id')) {
+        errorMessage = 'خطأ في إعدادات المحفظة. يرجى المحاولة مرة أخرى';
+      } else if (error?.message?.includes('payment_method')) {
+        errorMessage = 'طريقة الدفع غير مدعومة';
+      } else if (error?.message?.includes('amount')) {
+        errorMessage = 'المبلغ المدخل غير صحيح';
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "خطأ في الشحن",
-        description: "حدث خطأ أثناء شحن المحفظة، يرجى المحاولة مرة أخرى",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
