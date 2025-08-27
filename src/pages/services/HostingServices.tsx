@@ -302,101 +302,195 @@ const HostingServices = () => {
             ))}
           </div>
           
-          {/* Enhanced Guarantees Section */}
-          <div className="mt-16 text-center">
-            <div className="mb-12">
-              <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-2 mb-4">
-                <CheckCircle className="w-4 h-4 mr-2" />
-                ضماناتنا لك
+          {/* Enhanced Interactive Guarantees Section */}
+          <div className="mt-20 text-center">
+            <div className="mb-16">
+              <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-8 py-3 mb-6 text-lg font-semibold shadow-lg animate-pulse">
+                <CheckCircle className="w-5 h-5 mr-3 animate-bounce" />
+                ضماناتنا المتميزة
               </Badge>
-              <h3 className="text-2xl font-bold text-slate-800 mb-2">التزامنا بخدمة متميزة</h3>
-              <p className="text-slate-600">نقدم لك ضمانات شاملة لراحة بالك الكاملة</p>
+              <h3 className="text-4xl font-bold text-slate-800 mb-4 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                التزامنا بخدمة استثنائية
+              </h3>
+              <p className="text-slate-600 text-xl max-w-3xl mx-auto leading-relaxed">
+                نقدم لك ضمانات شاملة وخدمات متطورة لضمان تجربة مثالية بلا منازع
+              </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
               {[
                 {
                   icon: Shield,
-                  title: "ضمان الحماية الكاملة",
-                  description: "حماية متقدمة ضد جميع التهديدات السيبرانية مع مراقبة 24/7",
-                  gradient: "from-blue-500 to-cyan-500",
-                  bgGradient: "from-blue-50 to-cyan-50",
-                  features: ["SSL مجاني", "جدار ناري متقدم", "مراقبة أمنية"]
+                  title: "حماية أمنية متقدمة",
+                  subtitle: "أمان شامل 24/7",
+                  description: "نظام حماية متعدد الطبقات مع مراقبة مستمرة وتشفير متقدم",
+                  gradient: "from-blue-500 via-blue-600 to-cyan-600",
+                  bgGradient: "from-blue-50/70 via-cyan-50/50 to-blue-100/30",
+                  glowColor: "blue-500/20",
+                  features: [
+                    { text: "SSL متقدم مجاني", icon: "🔒" },
+                    { text: "جدار ناري ذكي", icon: "🛡️" },
+                    { text: "مراقبة أمنية مستمرة", icon: "👁️" },
+                    { text: "نسخ احتياطية آمنة", icon: "💾" }
+                  ]
                 },
                 {
                   icon: Clock,
-                  title: "دعم فني متواصل",
-                  description: "فريق دعم فني متخصص متاح على مدار الساعة طوال أيام الأسبوع",
-                  gradient: "from-purple-500 to-pink-500",
-                  bgGradient: "from-purple-50 to-pink-50",
-                  features: ["استجابة فورية", "خبراء متخصصون", "دعم باللغة العربية"]
+                  title: "دعم فني احترافي",
+                  subtitle: "خبراء متاحون دائماً",
+                  description: "فريق متخصص من الخبراء متاح على مدار الساعة لحل جميع استفساراتك",
+                  gradient: "from-purple-500 via-purple-600 to-pink-600",
+                  bgGradient: "from-purple-50/70 via-pink-50/50 to-purple-100/30",
+                  glowColor: "purple-500/20",
+                  features: [
+                    { text: "استجابة فورية < 5 دقائق", icon: "⚡" },
+                    { text: "خبراء معتمدون", icon: "🎓" },
+                    { text: "دعم باللغة العربية", icon: "🇸🇦" },
+                    { text: "مساعدة عن بُعد", icon: "🖥️" }
+                  ]
                 },
                 {
                   icon: Zap,
                   title: "أداء فائق السرعة",
-                  description: "خوادم SSD عالية الأداء مع ضمان وقت تشغيل 99.9%",
-                  gradient: "from-emerald-500 to-green-500",
-                  bgGradient: "from-emerald-50 to-green-50",
-                  features: ["خوادم SSD", "CDN مجاني", "تحسين السرعة"]
+                  subtitle: "تقنيات متطورة",
+                  description: "خوادم SSD عالية الأداء مع تقنيات تسريع متقدمة وشبكة توزيع عالمية",
+                  gradient: "from-emerald-500 via-green-600 to-teal-600",
+                  bgGradient: "from-emerald-50/70 via-green-50/50 to-emerald-100/30",
+                  glowColor: "emerald-500/20",
+                  features: [
+                    { text: "خوادم SSD NVMe", icon: "💨" },
+                    { text: "CDN عالمي مجاني", icon: "🌍" },
+                    { text: "تحسين تلقائي", icon: "🚀" },
+                    { text: "ضغط متقدم", icon: "📦" }
+                  ]
                 }
               ].map((guarantee, index) => (
                 <div key={index} 
-                     className="group relative bg-white rounded-2xl p-8 shadow-lg border border-slate-200 hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer overflow-hidden animate-fade-in"
-                     style={{ animationDelay: `${index * 0.2}s` }}>
+                     className="group relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-700 hover:scale-105 cursor-pointer overflow-hidden animate-fade-in"
+                     style={{ 
+                       animationDelay: `${index * 0.3}s`,
+                       background: `linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)`
+                     }}>
                   
-                  {/* Animated Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${guarantee.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                  {/* Animated Background with Gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${guarantee.bgGradient} opacity-0 group-hover:opacity-100 transition-all duration-700`}></div>
                   
-                  {/* Floating Elements */}
-                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-white/20 to-transparent rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700"></div>
-                  <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-tr from-white/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-700"></div>
+                  {/* Floating Animated Elements */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div className={`absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br ${guarantee.gradient} rounded-full opacity-0 group-hover:opacity-10 transform rotate-45 group-hover:rotate-90 group-hover:scale-150 transition-all duration-1000`}></div>
+                    <div className={`absolute -bottom-8 -left-8 w-40 h-40 bg-gradient-to-tr ${guarantee.gradient} rounded-full opacity-0 group-hover:opacity-5 transform -rotate-45 group-hover:-rotate-90 group-hover:scale-125 transition-all duration-1000 delay-300`}></div>
+                    <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-${guarantee.glowColor} rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-all duration-1000`}></div>
+                  </div>
                   
                   <div className="relative z-10">
-                    {/* Enhanced Icon */}
-                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-r ${guarantee.gradient} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg group-hover:shadow-xl`}>
-                      <guarantee.icon className="w-10 h-10 text-white group-hover:scale-110 transition-transform duration-300" />
+                    {/* Enhanced Interactive Icon */}
+                    <div className="relative mb-8">
+                      <div className={`w-24 h-24 rounded-3xl bg-gradient-to-r ${guarantee.gradient} flex items-center justify-center mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-2xl group-hover:shadow-3xl`}>
+                        <guarantee.icon className="w-12 h-12 text-white group-hover:scale-125 transition-all duration-500 drop-shadow-lg" />
+                        
+                        {/* Rotating Border */}
+                        <div className={`absolute inset-0 rounded-3xl border-4 border-transparent bg-gradient-to-r ${guarantee.gradient} opacity-0 group-hover:opacity-100 animate-spin transition-opacity duration-500`} style={{ animationDuration: '3s' }}></div>
+                        
+                        {/* Pulse Effects */}
+                        <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${guarantee.gradient} opacity-0 group-hover:opacity-20 animate-pulse`}></div>
+                        <div className={`absolute -inset-2 rounded-3xl bg-gradient-to-r ${guarantee.gradient} opacity-0 group-hover:opacity-10 animate-ping`}></div>
+                      </div>
                       
-                      {/* Pulse Effect */}
-                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${guarantee.gradient} opacity-0 group-hover:opacity-30 animate-pulse`}></div>
+                      {/* Floating Particles */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                        {[...Array(6)].map((_, i) => (
+                          <div key={i}
+                               className={`absolute w-2 h-2 bg-gradient-to-r ${guarantee.gradient} rounded-full animate-bounce`}
+                               style={{
+                                 left: `${20 + (i * 10)}%`,
+                                 top: `${30 + (i % 2) * 40}%`,
+                                 animationDelay: `${i * 0.2}s`,
+                                 animationDuration: '2s'
+                               }}></div>
+                        ))}
+                      </div>
                     </div>
                     
-                    {/* Content */}
-                    <h4 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-slate-900 transition-colors">
-                      {guarantee.title}
-                    </h4>
-                    <p className="text-slate-600 text-sm leading-relaxed mb-6 group-hover:text-slate-700 transition-colors">
-                      {guarantee.description}
-                    </p>
+                    {/* Enhanced Content */}
+                    <div className="text-center mb-8">
+                      <h4 className="text-2xl font-bold text-slate-800 mb-2 group-hover:text-slate-900 transition-colors duration-300">
+                        {guarantee.title}
+                      </h4>
+                      <p className={`text-sm font-semibold bg-gradient-to-r ${guarantee.gradient} bg-clip-text text-transparent mb-4 opacity-80 group-hover:opacity-100 transition-opacity duration-300`}>
+                        {guarantee.subtitle}
+                      </p>
+                      <p className="text-slate-600 leading-relaxed group-hover:text-slate-700 transition-colors duration-300">
+                        {guarantee.description}
+                      </p>
+                    </div>
                     
-                    {/* Features List */}
-                    <div className="space-y-2">
+                    {/* Interactive Features List */}
+                    <div className="space-y-4 mb-8">
                       {guarantee.features.map((feature, featureIndex) => (
                         <div key={featureIndex} 
-                             className="flex items-center text-sm text-slate-600 group-hover:text-slate-700 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300"
-                             style={{ transitionDelay: `${featureIndex * 0.1}s` }}>
-                          <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${guarantee.gradient} mr-3 opacity-0 group-hover:opacity-100 animate-pulse`}></div>
-                          {feature}
+                             className="flex items-start p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-500 hover:bg-white/80 hover:scale-105"
+                             style={{ 
+                               transitionDelay: `${300 + (featureIndex * 100)}ms`,
+                               animationFillMode: 'forwards'
+                             }}>
+                          <div className="text-xl mr-3 animate-bounce" style={{ animationDelay: `${featureIndex * 0.2}s` }}>
+                            {feature.icon}
+                          </div>
+                          <span className="text-slate-700 font-medium text-sm">{feature.text}</span>
                         </div>
                       ))}
                     </div>
                     
-                    {/* Hover Indicator */}
-                    <div className="mt-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <div className={`w-8 h-1 rounded-full bg-gradient-to-r ${guarantee.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500`}></div>
+                    {/* Interactive Bottom Indicator */}
+                    <div className="flex items-center justify-center">
+                      <div className={`h-1 rounded-full bg-gradient-to-r ${guarantee.gradient} transition-all duration-700 opacity-0 group-hover:opacity-100 transform scale-x-0 group-hover:scale-x-100 w-20`}></div>
+                    </div>
+                    
+                    {/* Hover Action Button */}
+                    <div className="mt-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                      <Button className={`w-full bg-gradient-to-r ${guarantee.gradient} hover:shadow-xl hover:scale-105 transition-all duration-300 text-white border-0 rounded-xl py-3`}>
+                        <span className="flex items-center justify-center">
+                          اكتشف المزيد
+                          <ArrowRight className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-200" />
+                        </span>
+                      </Button>
                     </div>
                   </div>
+                  
+                  {/* Corner Badge */}
+                  <div className={`absolute top-4 right-4 w-3 h-3 bg-gradient-to-r ${guarantee.gradient} rounded-full opacity-60 group-hover:opacity-100 group-hover:scale-150 transition-all duration-300 animate-pulse`}></div>
                 </div>
               ))}
             </div>
             
-            {/* Bottom CTA */}
-            <div className="mt-12 p-6 bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl border border-slate-200">
-              <h4 className="text-lg font-bold text-slate-800 mb-2">مدعوم بضمان استرداد الأموال</h4>
-              <p className="text-slate-600 text-sm mb-4">نضمن لك استرداد أموالك كاملة خلال 30 يوم إذا لم تكن راضياً عن خدمتنا</p>
-              <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2">
-                <CheckCircle className="w-4 h-4 mr-2" />
-                ضمان 30 يوم
-              </Badge>
+            {/* Enhanced Bottom CTA with Animation */}
+            <div className="mt-20 relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/50 via-green-100/30 to-emerald-100/50 rounded-3xl transform rotate-1"></div>
+              <div className="relative bg-gradient-to-r from-white via-emerald-50/50 to-white p-8 rounded-3xl border border-emerald-200/50 shadow-xl backdrop-blur-sm">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                    <CheckCircle className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+                <h4 className="text-2xl font-bold text-slate-800 mb-3">ضمان استرداد الأموال</h4>
+                <p className="text-slate-600 mb-6 max-w-2xl mx-auto leading-relaxed">
+                  نثق في جودة خدمتنا لدرجة أننا نضمن لك استرداد أموالك كاملة خلال 30 يوم إذا لم تكن راضياً تماماً
+                </p>
+                <div className="flex flex-wrap gap-4 justify-center items-center">
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 text-lg shadow-lg hover:scale-105 transition-transform duration-300">
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    ضمان 30 يوم
+                  </Badge>
+                  <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 text-lg shadow-lg hover:scale-105 transition-transform duration-300">
+                    <Clock className="w-5 h-5 mr-2" />
+                    استرداد فوري
+                  </Badge>
+                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 text-lg shadow-lg hover:scale-105 transition-transform duration-300">
+                    <Shield className="w-5 h-5 mr-2" />
+                    بدون شروط معقدة
+                  </Badge>
+                </div>
+              </div>
             </div>
           </div>
         </div>
