@@ -20,7 +20,7 @@ import {
   Palette,
   Code
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const serviceTypes = [
   { id: 'web-development', label: 'تطوير المواقع', icon: Code, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' },
@@ -63,6 +63,7 @@ const mockRequests = [
 ];
 
 export default function ServiceRequests() {
+  const navigate = useNavigate();
   const [requests, setRequests] = useState(mockRequests);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -125,7 +126,10 @@ export default function ServiceRequests() {
           <h1 className="text-2xl font-bold text-foreground">طلبات الخدمة</h1>
           <p className="text-muted-foreground">إدارة ومتابعة جميع طلبات الخدمة</p>
         </div>
-        <Button className="w-full sm:w-auto">
+        <Button 
+          className="w-full sm:w-auto"
+          onClick={() => navigate('/client/new-service-request')}
+        >
           <Plus className="w-4 h-4 mr-2" />
           طلب خدمة جديدة
         </Button>
@@ -289,7 +293,7 @@ export default function ServiceRequests() {
               }
             </p>
             {!searchTerm && statusFilter === 'all' && serviceFilter === 'all' && (
-              <Button>
+              <Button onClick={() => navigate('/client/new-service-request')}>
                 <Plus className="w-4 h-4 mr-2" />
                 طلب خدمة جديدة
               </Button>

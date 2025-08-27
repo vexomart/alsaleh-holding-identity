@@ -34,6 +34,7 @@ const ClientDashboard = lazy(() => import("./pages/client/ClientDashboard"));
 const ClientProjects = lazy(() => import("./pages/client/ClientProjects"));
 const ClientInvoices = lazy(() => import("./pages/client/ClientInvoices"));
 const ServiceRequests = lazy(() => import("./pages/client/ServiceRequests"));
+const NewServiceRequest = lazy(() => import("./pages/client/NewServiceRequest"));
 const ClientPayments = lazy(() => import("./pages/client/ClientPayments"));
 const ClientWallet = lazy(() => import("./pages/client/ClientWallet"));
 const ClientReceipts = lazy(() => import("./pages/client/ClientReceipts"));
@@ -443,6 +444,7 @@ const App = () => {
                   <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><ClientDashboard /></Suspense>} />
                   <Route path="projects" element={<Suspense fallback={<PageLoader />}><ClientProjects /></Suspense>} />
                   <Route path="service-requests" element={<Suspense fallback={<PageLoader />}><ServiceRequests /></Suspense>} />
+                  <Route path="new-service-request" element={<Suspense fallback={<PageLoader />}><NewServiceRequest /></Suspense>} />
                   <Route path="invoices" element={<Suspense fallback={<PageLoader />}><ClientInvoices /></Suspense>} />
                   <Route path="payments" element={<Suspense fallback={<PageLoader />}><ClientPayments /></Suspense>} />
                   <Route path="wallet" element={<Suspense fallback={<PageLoader />}><ClientWallet /></Suspense>} />
