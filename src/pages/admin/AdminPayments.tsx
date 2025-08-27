@@ -211,11 +211,14 @@ const AdminPayments = () => {
         return;
       }
       
-      // Update payment status
+      // Update payment status - use selectedPayment.id instead of undefined paymentId
       const { error: updateError } = await supabase
         .from(tableName)
-        .update({ status: newStatus })
-        .eq('id', paymentId);
+        .update({ 
+          status: newStatus,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', selectedPayment.id);
 
       if (updateError) {
         console.error('Update error:', updateError);
@@ -247,9 +250,16 @@ const AdminPayments = () => {
         }
       }
 
-      // Refresh payments data
+      // Refresh payments data immediately
       await fetchPayments();
       
+      // Force UI update by updating state directly
+      setPayments(prev => prev.map(p => 
+        p.id === selectedPayment.id 
+          ? { ...p, status: newStatus, updated_at: new Date().toISOString() }
+          : p
+      ));
+
       // Update selected payment
       setSelectedPayment(prev => prev ? { ...prev, status: newStatus } : null);
 
