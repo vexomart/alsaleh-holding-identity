@@ -55,6 +55,12 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [isEndingChat, setIsEndingChat] = useState(false);
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [contactFormData, setContactFormData] = useState({
+    name: '',
+    email: '',
+    whatsapp: ''
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -183,6 +189,22 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
 
+    // Check if user wants contact form
+    if (inputMessage.toLowerCase().includes('فورم') || inputMessage.toLowerCase().includes('تواصل مباشر')) {
+      setTimeout(() => {
+        const botResponse: CustomerMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'support',
+          content: generateBotResponse(inputMessage),
+          timestamp: new Date(),
+          type: 'text'
+        };
+        setMessages(prev => [...prev, botResponse]);
+        setShowContactForm(true);
+      }, 1500);
+      return;
+    }
+
     // Simulate bot response
     setTimeout(() => {
       const botResponse: CustomerMessage = {
@@ -308,23 +330,23 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
 • الهاتف: 0555812567
 
 **💌 البريد الإلكتروني:**
-• الإيميل الرئيسي: info@ashholding.com
-• المبيعات: sales@ashholding.com
-• الدعم التقني: support@ashholding.com
+• الإيميل الرئيسي: info@alialshehriholding.com
+• المبيعات: sales@alialshehriholding.com
+• الدعم التقني: support@alialshehriholding.com
 
 **🏢 العنوان:**
-• المقر الرئيسي: الرياض، المملكة العربية السعودية
-• فرع جدة: جدة، المملكة العربية السعودية
+• المقر الرئيسي: المملكة العربية السعودية
+• فرع جدة الرقمي: جدة، المملكة العربية السعودية
 
 **🕐 أوقات العمل:**
 • الأحد - الخميس: 9:00 ص - 6:00 م
 • نتوفر خارج أوقات العمل للحالات العاجلة
 
 **🌐 تابعنا على:**
-• الموقع الإلكتروني: ashholding.com
-• لينكدإن: linkedin.com/company/ash-holding
+• الموقع الإلكتروني: https://alialshehriholding.com
 • تويتر: @AshHolding
 
+هل تريد تعبئة فورم للتواصل المباشر؟ 📝
 لأي استفسار عاجل، لا تتردد في الاتصال! 📞`;
     }
     
@@ -470,6 +492,20 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
 أي طريقة دفع تفضل؟ 🤔`;
     }
     
+    // Contact form request
+    if (input.includes('فورم') || input.includes('تواصل مباشر') || input.includes('اتصال مباشر') || input.includes('تعبئة')) {
+      return `سأقوم بعرض فورم التواصل المباشر لك الآن! 📝
+
+يمكنك تعبئة البيانات وسيتم التواصل معك مباشرة من فريق المبيعات خلال 30 دقيقة خلال أوقات العمل.
+
+**📋 البيانات المطلوبة:**
+• الاسم الكامل
+• البريد الإلكتروني  
+• رقم الواتساب
+
+انقر على "عرض فورم التواصل" لتعبئة البيانات 👇`;
+    }
+    
     // General response for unclear queries
     return `شكراً لك على تواصلك معنا! 🙏
 
@@ -485,8 +521,9 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
 • طلب استشارة مجانية
 • حجز موعد مع خبرائنا
 • الحصول على دراسة مشروعك
+• تعبئة فورم للتواصل المباشر
 
-لتوضيح استفسارك أكثر، أو اكتب "إنهاء المحادثة" لإرسال تقرير كامل عبر الإيميل 📧
+لتوضيح استفسارك أكثر، أو اكتب "فورم" لطلب التواصل المباشر، أو "إنهاء المحادثة" لإرسال تقرير كامل عبر الإيميل 📧
 
 كيف يمكنني خدمتك بشكل أفضل؟ 😊`;
   };
@@ -646,6 +683,61 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
     }
   };
 
+  const handleContactFormSubmit = async () => {
+    if (!contactFormData.name || !contactFormData.email || !contactFormData.whatsapp) {
+      toast({
+        title: "⚠️ معلومات مطلوبة",
+        description: "يرجى إدخال جميع البيانات المطلوبة",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.functions.invoke('contact-form', {
+        body: {
+          name: contactFormData.name,
+          email: contactFormData.email,
+          phone: contactFormData.whatsapp,
+          message: `طلب تواصل مباشر من العميل: ${contactFormData.name}\nالبريد الإلكتروني: ${contactFormData.email}\nرقم الواتساب: ${contactFormData.whatsapp}`,
+          subject: `طلب تواصل مباشر - ${contactFormData.name}`,
+          type: 'direct_contact_request'
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "✅ تم الإرسال بنجاح",
+        description: "سيتم التواصل معك خلال 30 دقيقة",
+      });
+
+      setShowContactForm(false);
+      
+      // Add confirmation message to chat
+      const confirmationMessage: CustomerMessage = {
+        id: Date.now().toString(),
+        role: 'support',
+        content: `✅ تم استلام طلب التواصل المباشر بنجاح!
+
+سيقوم فريق المبيعات بالتواصل معك خلال 30 دقيقة على رقم الواتساب: ${contactFormData.whatsapp}
+
+شكراً لثقتك بنا! 🙏`,
+        timestamp: new Date(),
+        type: 'system'
+      };
+      setMessages(prev => [...prev, confirmationMessage]);
+
+    } catch (error: any) {
+      console.error('Error submitting contact form:', error);
+      toast({
+        title: "❌ خطأ في الإرسال",
+        description: "حدث خطأ، يرجى المحاولة مرة أخرى",
+        variant: "destructive",
+      });
+    }
+  };
+
   const submitRating = async () => {
     if (serviceRating === 0) {
       toast({
@@ -787,6 +879,8 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
                   setCustomerInfo({ name: '', email: '', phone: '' });
                   setIsChatEnded(false);
                   setIsEndingChat(false);
+                  setShowContactForm(false);
+                  setContactFormData({ name: '', email: '', whatsapp: '' });
                 }}
                 className="h-8 w-8 text-white hover:bg-white/20"
               >
@@ -926,6 +1020,64 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
                 </ScrollArea>
 
                 <div className="p-4 border-t bg-gray-50">
+                  {showContactForm && !isChatEnded && (
+                    <div className="mt-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+                      <h3 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
+                        <Phone className="h-5 w-5" />
+                        فورم التواصل المباشر
+                      </h3>
+                      <div className="space-y-3">
+                        <div>
+                          <Label htmlFor="contact-name">الاسم الكامل *</Label>
+                          <Input
+                            id="contact-name"
+                            value={contactFormData.name}
+                            onChange={(e) => setContactFormData(prev => ({ ...prev, name: e.target.value }))}
+                            placeholder="أدخل اسمك الكامل"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="contact-email">البريد الإلكتروني *</Label>
+                          <Input
+                            id="contact-email"
+                            type="email"
+                            value={contactFormData.email}
+                            onChange={(e) => setContactFormData(prev => ({ ...prev, email: e.target.value }))}
+                            placeholder="example@email.com"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="contact-whatsapp">رقم الواتساب *</Label>
+                          <Input
+                            id="contact-whatsapp"
+                            value={contactFormData.whatsapp}
+                            onChange={(e) => setContactFormData(prev => ({ ...prev, whatsapp: e.target.value }))}
+                            placeholder="05xxxxxxxx"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={handleContactFormSubmit}
+                            className="bg-green-600 hover:bg-green-700"
+                            size="sm"
+                          >
+                            إرسال الطلب
+                          </Button>
+                          <Button
+                            onClick={() => setShowContactForm(false)}
+                            variant="outline"
+                            size="sm"
+                          >
+                            إلغاء
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   {!isChatEnded ? (
                     <>
                       <div className="flex gap-2" dir="rtl">
@@ -954,23 +1106,34 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
                           <Clock className="h-3 w-3" />
                           <span>متوسط الرد: فوري</span>
                         </div>
-                        <Button
-                          onClick={endChat}
-                          disabled={isEndingChat || messages.length <= 1}
-                          className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 h-6"
-                        >
-                          {isEndingChat ? (
-                            <div className="flex items-center gap-1">
-                              <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
-                              إنهاء...
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-1">
-                              <StopCircle className="h-3 w-3" />
-                              إنهاء المحادثة
-                            </div>
+                        <div className="flex gap-2">
+                          {!showContactForm && (
+                            <Button
+                              onClick={() => setShowContactForm(true)}
+                              className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 h-6"
+                            >
+                              <Phone className="h-3 w-3 mr-1" />
+                              فورم التواصل
+                            </Button>
                           )}
-                        </Button>
+                          <Button
+                            onClick={endChat}
+                            disabled={isEndingChat || messages.length <= 1}
+                            className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 h-6"
+                          >
+                            {isEndingChat ? (
+                              <div className="flex items-center gap-1">
+                                <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
+                                إنهاء...
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1">
+                                <StopCircle className="h-3 w-3" />
+                                إنهاء المحادثة
+                              </div>
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </>
                   ) : (
