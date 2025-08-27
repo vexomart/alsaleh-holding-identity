@@ -1,11 +1,8 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
-// Import the new Enterprise Services Showcase
-import EnterpriseServicesShowcase from "@/components/EnterpriseServicesShowcase";
+// Import the simple departments section
+import DepartmentsIconsSection from "@/components/DepartmentsIconsSection";
 
 import Footer from "@/components/Footer";
 import CustomerService from "@/components/CustomerService";
@@ -45,11 +42,8 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Content Sections with Professional Spacing */}
-        <div className="space-y-0">
-          {/* Services Showcase Section */}
-          <EnterpriseServicesShowcase />
-        </div>
+        {/* Departments Icons Section */}
+        <DepartmentsIconsSection />
       </main>
 
       {/* Footer with Enhanced Styling */}
