@@ -98,7 +98,9 @@ const AdminDashboard = () => {
   }, []);
 
   const fetchDashboardData = async () => {
-    await Promise.all([fetchStatsData(), fetchRecentActivities(), fetchChartData()]);
+    await Promise.all([fetchStatsData(), fetchRecentActivities()]);
+    // Fetch chart data after stats are available
+    await fetchChartData();
   };
 
   const fetchStatsData = async () => {
@@ -130,16 +132,19 @@ const AdminDashboard = () => {
       
       // Calculate real growth rate based on actual data
       const currentMonth = new Date().getMonth();
-      const lastMonth = currentMonth - 1;
+      const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      const currentYear = new Date().getFullYear();
+      const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+      
       const thisMonthRevenue = payments?.filter(p => {
         const paymentDate = new Date(p.created_at);
-        return paymentDate.getMonth() === currentMonth;
+        return paymentDate.getMonth() === currentMonth && paymentDate.getFullYear() === currentYear;
       }).reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
       
       const lastMonthRevenue = payments?.filter(p => {
         const paymentDate = new Date(p.created_at);
-        return paymentDate.getMonth() === lastMonth;
-      }).reduce((sum, payment) => sum + Number(payment.amount), 0) || 1;
+        return paymentDate.getMonth() === lastMonth && paymentDate.getFullYear() === lastMonthYear;
+      }).reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
       
       const growthRate = lastMonthRevenue > 0 ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue * 100) : 0;
 
@@ -149,7 +154,7 @@ const AdminDashboard = () => {
         totalClients: clients?.length || 0,
         totalRevenue,
         monthlyGrowth: Math.round(growthRate * 10) / 10,
-        pendingTasks: completedProjects, // Use completed projects as pending tasks
+        pendingTasks: completedProjects,
       });
 
     } catch (error: any) {
@@ -164,38 +169,87 @@ const AdminDashboard = () => {
     }
   };
 
-  // Fetch chart data for analytics
+  // Fetch real chart data from database
   const fetchChartData = async () => {
     try {
-      // Generate sample monthly data for the past 6 months
+      // Get real monthly revenue data from payment_transactions
+      const { data: payments } = await supabase
+        .from('payment_transactions')
+        .select('amount, created_at, status')
+        .eq('status', 'COMPLETED')
+        .order('created_at', { ascending: false });
+
+      // Get real projects data
+      const { data: projectsData } = await supabase
+        .from('projects')
+        .select('created_at, status')
+        .order('created_at', { ascending: false });
+
+      // Get real clients data
+      const { data: clientsData } = await supabase
+        .from('clients')
+        .select('created_at')
+        .order('created_at', { ascending: false });
+
+      // Process real monthly data for the past 6 months
       const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'];
-      const generatedChartData: ChartData[] = months.map((month, index) => ({
-        month,
-        revenue: Math.floor(Math.random() * 50000) + 10000,
-        projects: Math.floor(Math.random() * 20) + 5,
-        clients: Math.floor(Math.random() * 30) + 10,
-      }));
-      setChartData(generatedChartData);
+      const now = new Date();
+      const chartData: ChartData[] = [];
 
-      // Device usage data
-      const devices: DeviceData[] = [
-        { device: 'سطح المكتب', users: 2547, percentage: 45 },
-        { device: 'الهاتف المحمول', users: 1986, percentage: 35 },
-        { device: 'اللوحي', users: 1134, percentage: 20 },
-      ];
-      setDeviceData(devices);
+      for (let i = 5; i >= 0; i--) {
+        const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
+        
+        const monthlyRevenue = payments?.filter(p => {
+          const paymentDate = new Date(p.created_at);
+          return paymentDate >= monthStart && paymentDate <= monthEnd;
+        }).reduce((sum, p) => sum + Number(p.amount), 0) || 0;
 
-      // Project status data
+        const monthlyProjects = projectsData?.filter(p => {
+          const projectDate = new Date(p.created_at);
+          return projectDate >= monthStart && projectDate <= monthEnd;
+        }).length || 0;
+
+        const monthlyClients = clientsData?.filter(c => {
+          const clientDate = new Date(c.created_at);
+          return clientDate >= monthStart && clientDate <= monthEnd;
+        }).length || 0;
+
+        chartData.push({
+          month: months[5 - i] || `الشهر ${6 - i}`,
+          revenue: monthlyRevenue,
+          projects: monthlyProjects,
+          clients: monthlyClients,
+        });
+      }
+      
+      setChartData(chartData);
+
+      // Real project status data based on actual project statuses
+      const statusCounts = projectsData?.reduce((acc, project) => {
+        const status = project.status || 'draft';
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>) || {};
+
       const statusData: ProjectStatusData[] = [
-        { status: 'مكتمل', count: stats.pendingTasks, color: '#10b981' },
-        { status: 'قيد التنفيذ', count: stats.activeProjects, color: '#3b82f6' },
-        { status: 'معلق', count: Math.max(0, stats.totalProjects - stats.activeProjects - stats.pendingTasks), color: '#f59e0b' },
-        { status: 'ملغي', count: Math.floor(Math.random() * 3), color: '#ef4444' },
+        { status: 'مكتمل', count: statusCounts.completed || 0, color: '#10b981' },
+        { status: 'قيد التنفيذ', count: statusCounts.in_progress || 0, color: '#3b82f6' },
+        { status: 'معلق', count: statusCounts.pending || 0, color: '#f59e0b' },
+        { status: 'مسودة', count: statusCounts.draft || 0, color: '#6b7280' },
       ];
       setProjectStatusData(statusData);
 
+      // Remove fake device data - use real data if available or hide the section
+      setDeviceData([]);
+
     } catch (error) {
-      console.error('Error fetching chart data:', error);
+      console.error('Error fetching real chart data:', error);
+      toast({
+        title: "خطأ في تحميل البيانات",
+        description: "تعذر تحميل البيانات الحقيقية",
+        variant: "destructive",
+      });
     }
   };
 
@@ -412,185 +466,140 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* Analytics Charts Section - Responsive */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-        
-        {/* Revenue Chart */}
-        <Card className="lg:col-span-2 xl:col-span-2 border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-          <CardHeader className="pb-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
-              <div className="text-right space-y-2">
-                <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
-                  <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
-                    <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+      {/* Analytics Charts Section - Responsive (Only show if real data exists) */}
+      {(chartData.length > 0 || projectStatusData.length > 0) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          
+          {/* Revenue Chart - Only show if revenue data exists */}
+          {chartData.some(item => item.revenue > 0) && (
+            <Card className="lg:col-span-2 xl:col-span-2 border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <CardHeader className="pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
+                  <div className="text-right space-y-2">
+                    <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
+                      <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                        <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </div>
+                      تحليل الإيرادات الشهرية
+                    </CardTitle>
+                    <CardDescription className="text-right text-sm sm:text-base">
+                      الإيرادات الحقيقية من المعاملات المكتملة
+                    </CardDescription>
                   </div>
-                  تحليل الإيرادات الشهرية
-                </CardTitle>
-                <CardDescription className="text-right text-sm sm:text-base">
-                  نمو الإيرادات والمشاريع خلال الأشهر الماضية
-                </CardDescription>
-              </div>
-              <Badge variant="outline" className="bg-blue-50/50 text-blue-700 border-blue-200 px-3 py-1 text-xs sm:text-sm self-end sm:self-auto">
-                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
-                +{stats.monthlyGrowth}%
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64 sm:h-80 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis 
-                    dataKey="month" 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 12, fill: '#64748b' }}
-                  />
-                  <YAxis 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 12, fill: '#64748b' }}
-                  />
-                  <Tooltip 
-                    contentStyle={{
-                      backgroundColor: 'white',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '8px',
-                      direction: 'rtl'
-                    }}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="revenue" 
-                    stroke="#3b82f6" 
-                    fillOpacity={1} 
-                    fill="url(#revenueGradient)"
-                    strokeWidth={2}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Project Status Pie Chart */}
-        <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-          <CardHeader className="pb-4">
-            <div className="text-right space-y-2">
-              <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
-                <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
-                  <PieChartIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Badge variant="outline" className="bg-blue-50/50 text-blue-700 border-blue-200 px-3 py-1 text-xs sm:text-sm self-end sm:self-auto">
+                    <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+                    بيانات حقيقية
+                  </Badge>
                 </div>
-                حالة المشاريع
-              </CardTitle>
-              <CardDescription className="text-right text-sm sm:text-base">
-                توزيع المشاريع حسب الحالة
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-48 sm:h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={projectStatusData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={window.innerWidth < 640 ? 30 : 40}
-                    outerRadius={window.innerWidth < 640 ? 70 : 90}
-                    paddingAngle={5}
-                    dataKey="count"
-                  >
-                    {projectStatusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{
-                      backgroundColor: 'white',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '8px',
-                      direction: 'rtl'
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="mt-4 space-y-2">
-              {projectStatusData.map((item, index) => (
-                <div key={index} className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{item.count}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">{item.status}</span>
-                    <div 
-                      className="w-3 h-3 rounded-full" 
-                      style={{ backgroundColor: item.color }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Device Analytics */}
-      <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-        <CardHeader className="pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
-            <div className="text-right space-y-2">
-              <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
-                <div className="p-2 rounded-xl bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
-                  <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
-                </div>
-                تحليل استخدام الأجهزة
-              </CardTitle>
-              <CardDescription className="text-right text-sm sm:text-base">
-                إحصائيات الوصول من الأجهزة المختلفة
-              </CardDescription>
-            </div>
-            <Badge variant="outline" className="bg-green-50/50 text-green-700 border-green-200 px-3 py-1 text-xs sm:text-sm self-end sm:self-auto">
-              <Activity className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
-              نشاط حي
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-            {deviceData.map((device, index) => {
-              const IconComponent = device.device === 'سطح المكتب' ? Monitor : 
-                                   device.device === 'الهاتف المحمول' ? Smartphone : Tablet;
-              return (
-                <div key={index} className="group p-4 sm:p-6 rounded-xl border border-border/30 bg-gradient-to-br from-muted/20 via-background/50 to-muted/20 hover:shadow-md transition-all duration-300 text-center">
-                  <div className="space-y-3 sm:space-y-4">
-                    <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-                    </div>
-                    <div className="space-y-1 sm:space-y-2">
-                      <h3 className="font-semibold text-sm sm:text-base text-foreground">{device.device}</h3>
-                      <p className="text-xl sm:text-2xl font-bold text-primary">{device.users.toLocaleString()}</p>
-                      <p className="text-xs sm:text-sm text-muted-foreground">({device.percentage}% من المستخدمين)</p>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <div 
-                        className="bg-gradient-to-r from-primary to-primary-glow h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${device.percentage}%` }}
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 sm:h-80 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis 
+                        dataKey="month" 
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: '#64748b' }}
                       />
-                    </div>
-                  </div>
+                      <YAxis 
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: '#64748b' }}
+                      />
+                      <Tooltip 
+                        contentStyle={{
+                          backgroundColor: 'white',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '8px',
+                          direction: 'rtl'
+                        }}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="revenue" 
+                        stroke="#3b82f6" 
+                        fillOpacity={1} 
+                        fill="url(#revenueGradient)"
+                        strokeWidth={2}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Project Status Pie Chart - Only show if project data exists */}
+          {projectStatusData.some(item => item.count > 0) && (
+            <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <CardHeader className="pb-4">
+                <div className="text-right space-y-2">
+                  <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
+                    <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
+                      <PieChartIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    </div>
+                    حالة المشاريع الحقيقية
+                  </CardTitle>
+                  <CardDescription className="text-right text-sm sm:text-base">
+                    توزيع المشاريع حسب الحالة الفعلية
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-48 sm:h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={projectStatusData.filter(item => item.count > 0)}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={window.innerWidth < 640 ? 30 : 40}
+                        outerRadius={window.innerWidth < 640 ? 70 : 90}
+                        paddingAngle={5}
+                        dataKey="count"
+                      >
+                        {projectStatusData.filter(item => item.count > 0).map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{
+                          backgroundColor: 'white',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '8px',
+                          direction: 'rtl'
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="mt-4 space-y-2">
+                  {projectStatusData.filter(item => item.count > 0).map((item, index) => (
+                    <div key={index} className="flex items-center justify-between text-sm">
+                      <span className="font-medium">{item.count}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground">{item.status}</span>
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: item.color }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {/* Enterprise Activity Center */}
