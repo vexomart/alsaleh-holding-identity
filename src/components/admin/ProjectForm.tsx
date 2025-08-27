@@ -203,7 +203,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
               <p className="text-sm text-muted-foreground">ابدأ بإدخال المعلومات الأساسية للمشروع</p>
             </div>
 
-            <ResponsiveGrid cols="1" gap="md">
+            <ResponsiveGrid cols="1-2" gap="md">
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-right flex items-center gap-2">
                   <Target className="w-4 h-4" />
