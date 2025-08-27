@@ -9,10 +9,18 @@ const corsHeaders = {
 };
 
 interface NotificationRequest {
-  type: 'welcome' | 'order_confirmed' | 'order_updated' | 'payment_received' | 'contract_signed' | 'project_update' | 'invoice_sent';
-  customerEmail: string;
-  customerName: string;
-  data: any;
+  type: 'welcome' | 'order_confirmed' | 'order_updated' | 'payment_received' | 'contract_signed' | 'project_update' | 'invoice_sent' | 'payment_status_update' | 'wallet_deposit';
+  customerEmail?: string;
+  customerName?: string;
+  email?: string;
+  customer_name?: string;
+  payment_id?: string;
+  amount?: number;
+  currency?: string;
+  old_status?: string;
+  new_status?: string;
+  payment_method?: string;
+  data?: any;
 }
 
 // القوالب المختلفة للإشعارات
@@ -248,57 +256,155 @@ const getProjectUpdateTemplate = (customerName: string, data: any) => `
 </html>
 `;
 
+const getStatusText = (status: string) => {
+  switch (status?.toLowerCase()) {
+    case 'completed': 
+    case 'success': 
+    case 'paid': 
+      return 'مكتملة';
+    case 'pending': 
+      return 'في الانتظار';
+    case 'processing': 
+      return 'قيد المعالجة';
+    case 'failed': 
+      return 'فاشلة';
+    case 'rejected': 
+      return 'مرفوضة';
+    case 'cancelled': 
+      return 'ملغية';
+    case 'refunded': 
+      return 'مسترد';
+    default: 
+      return status || 'غير محدد';
+  }
+};
+
+const getPaymentStatusTemplate = (customerName: string, paymentData: any) => `
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديث حالة الدفع</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { padding: 30px; }
+        .status-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin: 10px 0; }
+        .status-completed { background-color: #d4edda; color: #155724; }
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-failed { background-color: #f8d7da; color: #721c24; }
+        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 تحديث حالة الدفع</h1>
+        </div>
+        <div class="content">
+            <p>مرحباً <strong>${customerName}</strong>,</p>
+            <p>نود إعلامك بتحديث حالة دفعتك:</p>
+            
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3>تفاصيل المعاملة:</h3>
+                <p><strong>رقم المعاملة:</strong> ${paymentData.payment_id}</p>
+                <p><strong>المبلغ:</strong> ${paymentData.amount} ${paymentData.currency || 'SAR'}</p>
+                <p><strong>طريقة الدفع:</strong> ${paymentData.payment_method}</p>
+                <p><strong>الحالة السابقة:</strong> <span class="status-badge">${getStatusText(paymentData.old_status || '')}</span></p>
+                <p><strong>الحالة الجديدة:</strong> <span class="status-badge status-${paymentData.new_status}">${getStatusText(paymentData.new_status || '')}</span></p>
+            </div>
+
+            ${paymentData.new_status === 'completed' ? '<p style="color: #28a745; font-weight: bold;">✅ تم الدفع بنجاح! شكراً لك.</p>' : ''}
+            ${paymentData.new_status === 'failed' ? '<p style="color: #dc3545; font-weight: bold;">❌ فشل في الدفع. يرجى المحاولة مرة أخرى أو التواصل معنا.</p>' : ''}
+            
+            <p>إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.</p>
+            
+            <p>مع تحياتنا،<br>فريق الدعم الفني</p>
+        </div>
+        <div class="footer">
+            <p>هذا إيميل تلقائي، يرجى عدم الرد عليه مباشرة.</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { type, customerEmail, customerName, data }: NotificationRequest = await req.json();
+    const requestData: NotificationRequest = await req.json();
+    console.log("Notification request received:", requestData);
+
+    // Handle different input formats
+    const type = requestData.type;
+    const customerEmail = requestData.customerEmail || requestData.email;
+    const customerName = requestData.customerName || requestData.customer_name;
+    const data = requestData.data || requestData;
+
+    if (!customerEmail || !customerName) {
+      console.error("Missing required fields:", { customerEmail, customerName });
+      return new Response(JSON.stringify({ error: "Missing required email or name" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
 
     let html = '';
     let subject = '';
     
-    switch (type) {
-      case 'welcome':
-        html = getWelcomeTemplate(customerName);
-        subject = `🎉 مرحباً بك في شركة علي صالح الشهري القابضة - ${customerName}`;
-        break;
-        
-      case 'order_confirmed':
-        html = getOrderUpdateTemplate(customerName, { ...data, newStatus: 'تم تأكيد الطلب' });
-        subject = `✅ تم تأكيد طلبكم رقم ${data.orderNumber || ''} - شركة علي صالح الشهري القابضة`;
-        break;
-        
-      case 'order_updated':
-        html = getOrderUpdateTemplate(customerName, data);
-        subject = `📋 تحديث حالة الطلب ${data.orderNumber || ''} - شركة علي صالح الشهري القابضة`;
-        break;
-        
-      case 'payment_received':
-        html = getOrderUpdateTemplate(customerName, { ...data, newStatus: 'تم استلام الدفعة بنجاح' });
-        subject = `💰 تم استلام دفعتكم بنجاح - شركة علي صالح الشهري القابضة`;
-        break;
-        
-      case 'contract_signed':
-        html = getOrderUpdateTemplate(customerName, { ...data, newStatus: 'تم توقيع العقد بنجاح' });
-        subject = `📝 تم توقيع العقد بنجاح - شركة علي صالح الشهري القابضة`;
-        break;
-        
-      case 'project_update':
-        html = getProjectUpdateTemplate(customerName, data);
-        subject = `🚀 تحديث مشروعكم: ${data.projectName || ''} - شركة علي صالح الشهري القابضة`;
-        break;
-        
-      case 'invoice_sent':
-        html = getOrderUpdateTemplate(customerName, { ...data, newStatus: 'تم إرسال الفاتورة' });
-        subject = `🧾 فاتورة جديدة من شركة علي صالح الشهري القابضة`;
-        break;
-        
-      default:
-        throw new Error('نوع الإشعار غير مدعوم');
+    if (type === 'payment_status_update') {
+      html = getPaymentStatusTemplate(customerName, data);
+      subject = `تحديث حالة الدفع - ${data.payment_id}`;
+    } else {
+      // Handle existing notification types
+      switch (type) {
+        case 'welcome':
+          html = getWelcomeTemplate(customerName);
+          subject = `🎉 مرحباً بك في شركة علي صالح الشهري القابضة - ${customerName}`;
+          break;
+          
+        case 'order_confirmed':
+          html = getOrderUpdateTemplate(customerName, { ...data, newStatus: 'تم تأكيد الطلب' });
+          subject = `✅ تم تأكيد طلبكم رقم ${data.orderNumber || ''} - شركة علي صالح الشهري القابضة`;
+          break;
+          
+        case 'order_updated':
+          html = getOrderUpdateTemplate(customerName, data);
+          subject = `📋 تحديث حالة الطلب ${data.orderNumber || ''} - شركة علي صالح الشهري القابضة`;
+          break;
+          
+        case 'payment_received':
+          html = getOrderUpdateTemplate(customerName, { ...data, newStatus: 'تم استلام الدفعة بنجاح' });
+          subject = `💰 تم استلام دفعتكم بنجاح - شركة علي صالح الشهري القابضة`;
+          break;
+          
+        case 'contract_signed':
+          html = getOrderUpdateTemplate(customerName, { ...data, newStatus: 'تم توقيع العقد بنجاح' });
+          subject = `📝 تم توقيع العقد بنجاح - شركة علي صالح الشهري القابضة`;
+          break;
+          
+        case 'project_update':
+          html = getProjectUpdateTemplate(customerName, data);
+          subject = `🚀 تحديث مشروعكم: ${data.projectName || ''} - شركة علي صالح الشهري القابضة`;
+          break;
+          
+        case 'invoice_sent':
+          html = getOrderUpdateTemplate(customerName, { ...data, newStatus: 'تم إرسال الفاتورة' });
+          subject = `🧾 فاتورة جديدة من شركة علي صالح الشهري القابضة`;
+          break;
+          
+        default:
+          throw new Error('نوع الإشعار غير مدعوم');
+      }
     }
 
+    console.log("Sending email to:", customerEmail);
+    
     // إرسال الإيميل للعميل
     const customerEmailResponse = await resend.emails.send({
       from: "شركة علي صالح الشهري القابضة <info@alialshehriholding.com>",
@@ -308,33 +414,12 @@ const handler = async (req: Request): Promise<Response> => {
       html,
     });
 
-    // إرسال نسخة للإدارة مع تفاصيل إضافية
-    const adminNotification = await resend.emails.send({
-      from: "نظام الإشعارات <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
-      subject: `[إشعار إداري] ${subject}`,
-      html: `
-        <div style="direction: rtl; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #1e40af;">تم إرسال إشعار للعميل</h2>
-          <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>نوع الإشعار:</strong> ${type}</p>
-            <p><strong>اسم العميل:</strong> ${customerName}</p>
-            <p><strong>إيميل العميل:</strong> ${customerEmail}</p>
-            <p><strong>الوقت:</strong> ${new Date().toLocaleString('ar-SA')}</p>
-            <p><strong>البيانات:</strong> ${JSON.stringify(data, null, 2)}</p>
-          </div>
-        </div>
-      `,
-    });
-
     console.log("تم إرسال الإشعار للعميل:", customerEmailResponse);
-    console.log("تم إرسال نسخة للإدارة:", adminNotification);
 
     return new Response(JSON.stringify({ 
       success: true, 
       message: "تم إرسال الإشعار بنجاح",
-      customerEmail: customerEmailResponse,
-      adminNotification
+      customerEmail: customerEmailResponse
     }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },

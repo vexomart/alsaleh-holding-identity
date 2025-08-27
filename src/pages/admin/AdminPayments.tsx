@@ -182,18 +182,23 @@ const AdminPayments = () => {
 
     setIsUpdating(true);
     try {
+      const tableName = selectedPayment.transaction_type === 'deposit' ? 'wallet_transactions' : 'payment_transactions';
+      
       // Update payment status
       const { error: updateError } = await supabase
-        .from(selectedPayment.transaction_type === 'deposit' ? 'wallet_transactions' : 'payment_transactions')
+        .from(tableName)
         .update({ status: newStatus })
         .eq('id', paymentId);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('Update error:', updateError);
+        throw updateError;
+      }
 
-      // Send notification email
+      // Send notification email if customer email exists
       if (selectedPayment.customer_email) {
         try {
-          await supabase.functions.invoke('customer-notifications', {
+          const { error: emailError } = await supabase.functions.invoke('customer-notifications', {
             body: {
               type: 'payment_status_update',
               email: selectedPayment.customer_email,
@@ -206,6 +211,10 @@ const AdminPayments = () => {
               payment_method: selectedPayment.payment_method
             }
           });
+
+          if (emailError) {
+            console.warn('Email notification failed:', emailError);
+          }
         } catch (emailError) {
           console.warn('Failed to send notification email:', emailError);
         }
