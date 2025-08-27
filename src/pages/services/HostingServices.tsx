@@ -302,32 +302,101 @@ const HostingServices = () => {
             ))}
           </div>
           
-          {/* Additional Info */}
+          {/* Enhanced Guarantees Section */}
           <div className="mt-16 text-center">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-                <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-6 h-6 text-blue-600" />
+            <div className="mb-12">
+              <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-2 mb-4">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                ضماناتنا لك
+              </Badge>
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">التزامنا بخدمة متميزة</h3>
+              <p className="text-slate-600">نقدم لك ضمانات شاملة لراحة بالك الكاملة</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {[
+                {
+                  icon: Shield,
+                  title: "ضمان الحماية الكاملة",
+                  description: "حماية متقدمة ضد جميع التهديدات السيبرانية مع مراقبة 24/7",
+                  gradient: "from-blue-500 to-cyan-500",
+                  bgGradient: "from-blue-50 to-cyan-50",
+                  features: ["SSL مجاني", "جدار ناري متقدم", "مراقبة أمنية"]
+                },
+                {
+                  icon: Clock,
+                  title: "دعم فني متواصل",
+                  description: "فريق دعم فني متخصص متاح على مدار الساعة طوال أيام الأسبوع",
+                  gradient: "from-purple-500 to-pink-500",
+                  bgGradient: "from-purple-50 to-pink-50",
+                  features: ["استجابة فورية", "خبراء متخصصون", "دعم باللغة العربية"]
+                },
+                {
+                  icon: Zap,
+                  title: "أداء فائق السرعة",
+                  description: "خوادم SSD عالية الأداء مع ضمان وقت تشغيل 99.9%",
+                  gradient: "from-emerald-500 to-green-500",
+                  bgGradient: "from-emerald-50 to-green-50",
+                  features: ["خوادم SSD", "CDN مجاني", "تحسين السرعة"]
+                }
+              ].map((guarantee, index) => (
+                <div key={index} 
+                     className="group relative bg-white rounded-2xl p-8 shadow-lg border border-slate-200 hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer overflow-hidden animate-fade-in"
+                     style={{ animationDelay: `${index * 0.2}s` }}>
+                  
+                  {/* Animated Background */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${guarantee.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                  
+                  {/* Floating Elements */}
+                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-white/20 to-transparent rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700"></div>
+                  <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-tr from-white/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-700"></div>
+                  
+                  <div className="relative z-10">
+                    {/* Enhanced Icon */}
+                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-r ${guarantee.gradient} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg group-hover:shadow-xl`}>
+                      <guarantee.icon className="w-10 h-10 text-white group-hover:scale-110 transition-transform duration-300" />
+                      
+                      {/* Pulse Effect */}
+                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${guarantee.gradient} opacity-0 group-hover:opacity-30 animate-pulse`}></div>
+                    </div>
+                    
+                    {/* Content */}
+                    <h4 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-slate-900 transition-colors">
+                      {guarantee.title}
+                    </h4>
+                    <p className="text-slate-600 text-sm leading-relaxed mb-6 group-hover:text-slate-700 transition-colors">
+                      {guarantee.description}
+                    </p>
+                    
+                    {/* Features List */}
+                    <div className="space-y-2">
+                      {guarantee.features.map((feature, featureIndex) => (
+                        <div key={featureIndex} 
+                             className="flex items-center text-sm text-slate-600 group-hover:text-slate-700 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300"
+                             style={{ transitionDelay: `${featureIndex * 0.1}s` }}>
+                          <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${guarantee.gradient} mr-3 opacity-0 group-hover:opacity-100 animate-pulse`}></div>
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Hover Indicator */}
+                    <div className="mt-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <div className={`w-8 h-1 rounded-full bg-gradient-to-r ${guarantee.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500`}></div>
+                    </div>
+                  </div>
                 </div>
-                <h4 className="font-semibold text-slate-800 mb-2">ضمان الحماية</h4>
-                <p className="text-slate-600 text-sm">حماية متقدمة ضد جميع التهديدات</p>
-              </div>
-              
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-                <div className="bg-cyan-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Clock className="w-6 h-6 text-cyan-600" />
-                </div>
-                <h4 className="font-semibold text-slate-800 mb-2">دعم 24/7</h4>
-                <p className="text-slate-600 text-sm">فريق دعم متاح على مدار الساعة</p>
-              </div>
-              
-              <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200">
-                <div className="bg-emerald-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Zap className="w-6 h-6 text-emerald-600" />
-                </div>
-                <h4 className="font-semibold text-slate-800 mb-2">أداء فائق</h4>
-                <p className="text-slate-600 text-sm">سرعة تحميل استثنائية مضمونة</p>
-              </div>
+              ))}
+            </div>
+            
+            {/* Bottom CTA */}
+            <div className="mt-12 p-6 bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl border border-slate-200">
+              <h4 className="text-lg font-bold text-slate-800 mb-2">مدعوم بضمان استرداد الأموال</h4>
+              <p className="text-slate-600 text-sm mb-4">نضمن لك استرداد أموالك كاملة خلال 30 يوم إذا لم تكن راضياً عن خدمتنا</p>
+              <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                ضمان 30 يوم
+              </Badge>
             </div>
           </div>
         </div>
