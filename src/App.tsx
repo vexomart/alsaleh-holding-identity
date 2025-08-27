@@ -32,6 +32,14 @@ const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const ClientLayout = lazy(() => import("./components/client/ClientLayout"));
 const ClientDashboard = lazy(() => import("./pages/client/ClientDashboard"));
 const ClientProjects = lazy(() => import("./pages/client/ClientProjects"));
+const ServiceRequests = lazy(() => import("./pages/client/ServiceRequests"));
+const ClientPayments = lazy(() => import("./pages/client/ClientPayments"));
+const ClientWallet = lazy(() => import("./pages/client/ClientWallet"));
+const ClientReceipts = lazy(() => import("./pages/client/ClientReceipts"));
+const ClientMessages = lazy(() => import("./pages/client/ClientMessages"));
+const ClientSupportTickets = lazy(() => import("./pages/client/ClientSupportTickets"));
+const ClientProfile = lazy(() => import("./pages/client/ClientProfile"));
+const ClientSettings = lazy(() => import("./pages/client/ClientSettings"));
 const Story = lazy(() => import("./pages/Story"));
 const Team = lazy(() => import("./pages/Team"));
 const Vision = lazy(() => import("./pages/Vision"));
@@ -433,15 +441,15 @@ const App = () => {
                 <Route path="/client/*" element={<Suspense fallback={<PageLoader />}><ClientLayout /></Suspense>}>
                   <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><ClientDashboard /></Suspense>} />
                   <Route path="projects" element={<Suspense fallback={<PageLoader />}><ClientProjects /></Suspense>} />
-                  <Route path="service-requests" element={<div className="p-6 text-center text-muted-foreground">صفحة طلبات الخدمة قيد التطوير</div>} />
-                  <Route path="invoices" element={<div className="p-6 text-center text-muted-foreground">صفحة الفواتير قيد التطوير</div>} />
-                  <Route path="payments" element={<div className="p-6 text-center text-muted-foreground">صفحة المدفوعات قيد التطوير</div>} />
-                  <Route path="wallet" element={<div className="p-6 text-center text-muted-foreground">صفحة المحفظة قيد التطوير</div>} />
-                  <Route path="receipts" element={<div className="p-6 text-center text-muted-foreground">صفحة الإيصالات قيد التطوير</div>} />
-                  <Route path="messages" element={<div className="p-6 text-center text-muted-foreground">صفحة الرسائل قيد التطوير</div>} />
-                  <Route path="support-tickets" element={<div className="p-6 text-center text-muted-foreground">صفحة تذاكر الدعم قيد التطوير</div>} />
-                  <Route path="profile" element={<div className="p-6 text-center text-muted-foreground">صفحة الملف الشخصي قيد التطوير</div>} />
-                  <Route path="settings" element={<div className="p-6 text-center text-muted-foreground">صفحة الإعدادات قيد التطوير</div>} />
+                  <Route path="service-requests" element={<Suspense fallback={<PageLoader />}><ServiceRequests /></Suspense>} />
+                  <Route path="invoices" element={<Suspense fallback={<PageLoader />}><ClientInvoices /></Suspense>} />
+                  <Route path="payments" element={<Suspense fallback={<PageLoader />}><ClientPayments /></Suspense>} />
+                  <Route path="wallet" element={<Suspense fallback={<PageLoader />}><ClientWallet /></Suspense>} />
+                  <Route path="receipts" element={<Suspense fallback={<PageLoader />}><ClientReceipts /></Suspense>} />
+                  <Route path="messages" element={<Suspense fallback={<PageLoader />}><ClientMessages /></Suspense>} />
+                  <Route path="support-tickets" element={<Suspense fallback={<PageLoader />}><ClientSupportTickets /></Suspense>} />
+                  <Route path="profile" element={<Suspense fallback={<PageLoader />}><ClientProfile /></Suspense>} />
+                  <Route path="settings" element={<Suspense fallback={<PageLoader />}><ClientSettings /></Suspense>} />
                 </Route>
           
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

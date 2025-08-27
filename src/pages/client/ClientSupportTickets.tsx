@@ -1,0 +1,408 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ResponsiveGrid } from '@/components/ResponsiveGrid';
+import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { 
+  HelpCircle, 
+  Plus, 
+  Search, 
+  Calendar, 
+  Clock,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  MessageSquare,
+  Eye,
+  User,
+  Tag
+} from 'lucide-react';
+
+const mockTickets = [
+  {
+    id: '1',
+    ticket_number: 'TKT-2024-001',
+    subject: 'مشكلة في تسجيل الدخول',
+    description: 'لا أستطيع تسجيل الدخول إلى حسابي رغم إدخال كلمة المرور الصحيحة',
+    status: 'open',
+    priority: 'high',
+    category: 'technical',
+    created_at: '2024-01-20',
+    last_response: '2024-01-20',
+    assigned_to: 'فريق الدعم الفني',
+    responses_count: 3
+  },
+  {
+    id: '2',
+    ticket_number: 'TKT-2024-002',
+    subject: 'استفسار حول الفواتير',
+    description: 'أريد الحصول على تفاصيل أكثر حول فاتورة الشهر الماضي',
+    status: 'in_progress',
+    priority: 'medium',
+    category: 'billing',
+    created_at: '2024-01-18',
+    last_response: '2024-01-19',
+    assigned_to: 'قسم المحاسبة',
+    responses_count: 2
+  },
+  {
+    id: '3',
+    ticket_number: 'TKT-2024-003',
+    subject: 'طلب تعديل في المشروع',
+    description: 'أريد إضافة ميزات جديدة للمشروع الحالي',
+    status: 'resolved',
+    priority: 'low',
+    category: 'project',
+    created_at: '2024-01-15',
+    last_response: '2024-01-17',
+    assigned_to: 'مدير المشروع',
+    responses_count: 5
+  }
+];
+
+export default function ClientSupportTickets() {
+  const [tickets, setTickets] = useState(mockTickets);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [showNewTicketForm, setShowNewTicketForm] = useState(false);
+
+  const getStatusText = (status: string) => {
+    const statusMap: { [key: string]: string } = {
+      'open': 'مفتوح',
+      'in_progress': 'قيد المعالجة',
+      'resolved': 'محلول',
+      'closed': 'مغلق'
+    };
+    return statusMap[status] || status;
+  };
+
+  const getStatusColor = (status: string) => {
+    const colorMap: { [key: string]: string } = {
+      'open': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      'in_progress': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      'resolved': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      'closed': 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+    };
+    return colorMap[status] || 'bg-gray-100 text-gray-800';
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'open':
+        return <AlertCircle className="w-4 h-4" />;
+      case 'in_progress':
+        return <Clock className="w-4 h-4" />;
+      case 'resolved':
+        return <CheckCircle className="w-4 h-4" />;
+      case 'closed':
+        return <XCircle className="w-4 h-4" />;
+      default:
+        return <HelpCircle className="w-4 h-4" />;
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    const colorMap: { [key: string]: string } = {
+      'high': 'text-red-600',
+      'medium': 'text-yellow-600',
+      'low': 'text-green-600'
+    };
+    return colorMap[priority] || 'text-gray-600';
+  };
+
+  const getPriorityText = (priority: string) => {
+    const priorityMap: { [key: string]: string } = {
+      'high': 'عالية',
+      'medium': 'متوسطة',
+      'low': 'منخفضة'
+    };
+    return priorityMap[priority] || priority;
+  };
+
+  const getCategoryText = (category: string) => {
+    const categoryMap: { [key: string]: string } = {
+      'technical': 'مشكلة تقنية',
+      'billing': 'مسائل مالية',
+      'project': 'مشاريع',
+      'general': 'عام'
+    };
+    return categoryMap[category] || category;
+  };
+
+  const filteredTickets = tickets.filter(ticket => {
+    const matchesSearch = ticket.ticket_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         ticket.subject.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || ticket.status === statusFilter;
+    const matchesPriority = priorityFilter === 'all' || ticket.priority === priorityFilter;
+    const matchesCategory = categoryFilter === 'all' || ticket.category === categoryFilter;
+    
+    return matchesSearch && matchesStatus && matchesPriority && matchesCategory;
+  });
+
+  const stats = {
+    total: tickets.length,
+    open: tickets.filter(t => t.status === 'open').length,
+    inProgress: tickets.filter(t => t.status === 'in_progress').length,
+    resolved: tickets.filter(t => t.status === 'resolved').length
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">تذاكر الدعم</h1>
+          <p className="text-muted-foreground">إدارة طلبات الدعم والمساعدة الفنية</p>
+        </div>
+        <Button onClick={() => setShowNewTicketForm(true)} className="w-full sm:w-auto">
+          <Plus className="w-4 h-4 mr-2" />
+          تذكرة دعم جديدة
+        </Button>
+      </div>
+
+      {/* Stats Cards */}
+      <ResponsiveGrid cols="1-2-4" gap="md">
+        <ResponsiveCard size="sm" className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-blue-200 dark:border-blue-800">
+          <div className="flex items-center justify-between">
+            <div className="text-right">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.total}</div>
+              <div className="text-sm text-blue-700 dark:text-blue-300">إجمالي التذاكر</div>
+            </div>
+            <HelpCircle className="w-8 h-8 text-blue-500" />
+          </div>
+        </ResponsiveCard>
+
+        <ResponsiveCard size="sm" className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 border-red-200 dark:border-red-800">
+          <div className="flex items-center justify-between">
+            <div className="text-right">
+              <div className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.open}</div>
+              <div className="text-sm text-red-700 dark:text-red-300">مفتوحة</div>
+            </div>
+            <AlertCircle className="w-8 h-8 text-red-500" />
+          </div>
+        </ResponsiveCard>
+
+        <ResponsiveCard size="sm" className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-950 dark:to-yellow-900 border-yellow-200 dark:border-yellow-800">
+          <div className="flex items-center justify-between">
+            <div className="text-right">
+              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.inProgress}</div>
+              <div className="text-sm text-yellow-700 dark:text-yellow-300">قيد المعالجة</div>
+            </div>
+            <Clock className="w-8 h-8 text-yellow-500" />
+          </div>
+        </ResponsiveCard>
+
+        <ResponsiveCard size="sm" className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-200 dark:border-green-800">
+          <div className="flex items-center justify-between">
+            <div className="text-right">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.resolved}</div>
+              <div className="text-sm text-green-700 dark:text-green-300">محلولة</div>
+            </div>
+            <CheckCircle className="w-8 h-8 text-green-500" />
+          </div>
+        </ResponsiveCard>
+      </ResponsiveGrid>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                placeholder="البحث في التذاكر..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="الحالة" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">جميع الحالات</SelectItem>
+                <SelectItem value="open">مفتوح</SelectItem>
+                <SelectItem value="in_progress">قيد المعالجة</SelectItem>
+                <SelectItem value="resolved">محلول</SelectItem>
+                <SelectItem value="closed">مغلق</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="الأولوية" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">جميع الأولويات</SelectItem>
+                <SelectItem value="high">عالية</SelectItem>
+                <SelectItem value="medium">متوسطة</SelectItem>
+                <SelectItem value="low">منخفضة</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="الفئة" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">جميع الفئات</SelectItem>
+                <SelectItem value="technical">تقنية</SelectItem>
+                <SelectItem value="billing">مالية</SelectItem>
+                <SelectItem value="project">مشاريع</SelectItem>
+                <SelectItem value="general">عام</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* New Ticket Form */}
+      {showNewTicketForm && (
+        <Card>
+          <CardHeader>
+            <CardTitle>تذكرة دعم جديدة</CardTitle>
+            <CardDescription>أنشئ تذكرة دعم جديدة للحصول على المساعدة</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">الموضوع</label>
+                <Input placeholder="موضوع التذكرة" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">الفئة</label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="اختر الفئة" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="technical">مشكلة تقنية</SelectItem>
+                    <SelectItem value="billing">مسائل مالية</SelectItem>
+                    <SelectItem value="project">مشاريع</SelectItem>
+                    <SelectItem value="general">عام</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">الأولوية</label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر الأولوية" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="high">عالية</SelectItem>
+                  <SelectItem value="medium">متوسطة</SelectItem>
+                  <SelectItem value="low">منخفضة</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">الوصف</label>
+              <Textarea placeholder="اشرح المشكلة أو الاستفسار بالتفصيل" rows={4} />
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex-1">
+                إنشاء التذكرة
+              </Button>
+              <Button variant="outline" onClick={() => setShowNewTicketForm(false)}>
+                إلغاء
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tickets Grid */}
+      {filteredTickets.length > 0 ? (
+        <ResponsiveGrid cols="1-2-3" gap="md">
+          {filteredTickets.map((ticket) => (
+            <ResponsiveCard key={ticket.id} size="md" className="hover-scale">
+              <div className="p-6 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg text-foreground mb-1">
+                      {ticket.ticket_number}
+                    </h3>
+                    <h4 className="font-medium text-base text-foreground mb-2">
+                      {ticket.subject}
+                    </h4>
+                    <p className="text-sm text-muted-foreground line-clamp-3">
+                      {ticket.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Badge className={getStatusColor(ticket.status)}>
+                    {getStatusIcon(ticket.status)}
+                    <span className="mr-1">{getStatusText(ticket.status)}</span>
+                  </Badge>
+                  <Badge variant="outline" className={getPriorityColor(ticket.priority)}>
+                    {getPriorityText(ticket.priority)}
+                  </Badge>
+                </div>
+
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between">
+                    <span>الفئة:</span>
+                    <Badge variant="outline">
+                      <Tag className="w-3 h-3 mr-1" />
+                      {getCategoryText(ticket.category)}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>تاريخ الإنشاء:</span>
+                    <span>{new Date(ticket.created_at).toLocaleDateString('ar-SA')}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>مُكلف إلى:</span>
+                    <span className="font-medium">{ticket.assigned_to}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>عدد الردود:</span>
+                    <span className="font-medium">{ticket.responses_count}</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-4 border-t">
+                  <Button size="sm" variant="outline" className="flex-1">
+                    <Eye className="w-4 h-4 mr-2" />
+                    عرض التفاصيل
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    <MessageSquare className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </ResponsiveCard>
+          ))}
+        </ResponsiveGrid>
+      ) : (
+        <Card>
+          <CardContent className="p-12 text-center">
+            <HelpCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">لا توجد تذاكر دعم</h3>
+            <p className="text-muted-foreground mb-6">
+              {searchTerm || statusFilter !== 'all' || priorityFilter !== 'all' || categoryFilter !== 'all'
+                ? 'لا توجد تذاكر مطابقة لمعايير البحث'
+                : 'لم يتم إنشاء أي تذاكر دعم حتى الآن'
+              }
+            </p>
+            {!searchTerm && statusFilter === 'all' && priorityFilter === 'all' && categoryFilter === 'all' && (
+              <Button onClick={() => setShowNewTicketForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                إنشاء تذكرة دعم
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
