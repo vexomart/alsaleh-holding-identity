@@ -189,6 +189,28 @@ const AdminPayments = () => {
     try {
       const tableName = selectedPayment.transaction_type === 'deposit' ? 'wallet_transactions' : 'payment_transactions';
       
+      // Validate status based on table type
+      const validWalletStatuses = ['pending', 'completed', 'failed', 'cancelled'];
+      const validPaymentStatuses = ['pending', 'processing', 'completed', 'failed', 'refunded'];
+      
+      if (tableName === 'wallet_transactions' && !validWalletStatuses.includes(newStatus)) {
+        toast({
+          title: "حالة غير صالحة",
+          description: "الحالات المسموحة لمعاملات المحفظة: في الانتظار، مكتملة، فاشلة، ملغية",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (tableName === 'payment_transactions' && !validPaymentStatuses.includes(newStatus)) {
+        toast({
+          title: "حالة غير صالحة", 
+          description: "الحالات المسموحة للمدفوعات: في الانتظار، قيد المعالجة، مكتملة، فاشلة، مسترد",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       // Update payment status
       const { error: updateError } = await supabase
         .from(tableName)
@@ -613,10 +635,16 @@ const AdminPayments = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="pending">في الانتظار</SelectItem>
-                      <SelectItem value="processing">قيد المعالجة</SelectItem>
+                      {selectedPayment.transaction_type !== 'deposit' && (
+                        <SelectItem value="processing">قيد المعالجة</SelectItem>
+                      )}
                       <SelectItem value="completed">مكتملة</SelectItem>
                       <SelectItem value="failed">فاشلة</SelectItem>
-                      <SelectItem value="refunded">مسترد</SelectItem>
+                      {selectedPayment.transaction_type === 'deposit' ? (
+                        <SelectItem value="cancelled">ملغية</SelectItem>
+                      ) : (
+                        <SelectItem value="refunded">مسترد</SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                   {isUpdating && (
