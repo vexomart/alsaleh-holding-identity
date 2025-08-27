@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { 
   Users, 
   Search, 
@@ -14,7 +16,8 @@ import {
   Calendar,
   Mail,
   Shield,
-  Clock
+  Clock,
+  UserPlus
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -46,6 +49,14 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [newUser, setNewUser] = useState({
+    email: '',
+    password: '',
+    fullName: '',
+    role: 'user'
+  });
 
   useEffect(() => {
     Promise.all([fetchUsers(), fetchUserRoles()]);
@@ -118,6 +129,64 @@ const AdminUsers = () => {
     const matchesRole = roleFilter === 'all' || userRole === roleFilter || user.user_role === roleFilter;
     return matchesSearch && matchesRole;
   });
+
+  const handleCreateUser = async () => {
+    if (!newUser.email || !newUser.password || !newUser.fullName) {
+      toast({
+        title: "خطأ في البيانات",
+        description: "يرجى ملء جميع الحقول المطلوبة",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setCreating(true);
+    
+    try {
+      const { error } = await supabase.functions.invoke('create-admin-user', {
+        body: {
+          email: newUser.email,
+          password: newUser.password,
+          fullName: newUser.fullName,
+          role: newUser.role
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "تم إنشاء المستخدم بنجاح",
+        description: `تم إنشاء حساب ${newUser.fullName} بنجاح`,
+      });
+
+      // إرسال إيميل ترحيب
+      await supabase.functions.invoke('customer-notifications', {
+        body: {
+          type: 'welcome',
+          customerEmail: newUser.email,
+          customerName: newUser.fullName,
+          data: {
+            name: newUser.fullName,
+            dashboardUrl: 'https://alialshehriholding.com'
+          }
+        }
+      });
+
+      setShowCreateDialog(false);
+      setNewUser({ email: '', password: '', fullName: '', role: 'user' });
+      fetchUsers();
+      fetchUserRoles();
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      toast({
+        title: "خطأ في إنشاء المستخدم",
+        description: error.message || "حدث خطأ أثناء إنشاء المستخدم",
+        variant: "destructive",
+      });
+    } finally {
+      setCreating(false);
+    }
+  };
 
   // Calculate statistics
   const stats = {
@@ -223,6 +292,103 @@ const AdminUsers = () => {
                 <SelectItem value="user">مستخدم</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="flex gap-2">
+            <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+              <DialogTrigger asChild>
+                <Button className="bg-primary hover:bg-primary/90">
+                  <UserPlus className="w-4 h-4 ml-2" />
+                  إنشاء مستخدم جديد
+                </Button>
+              </DialogTrigger>
+            <DialogContent className="sm:max-w-md" dir="rtl">
+              <DialogHeader>
+                <DialogTitle>إنشاء مستخدم جديد</DialogTitle>
+                <DialogDescription>
+                  أدخل بيانات المستخدم الجديد لإنشاء حسابه
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">الاسم الكامل</Label>
+                  <Input
+                    id="fullName"
+                    value={newUser.fullName}
+                    onChange={(e) => setNewUser({...newUser, fullName: e.target.value})}
+                    placeholder="أدخل الاسم الكامل"
+                    dir="rtl"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">البريد الإلكتروني</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={newUser.email}
+                    onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                    placeholder="example@email.com"
+                    dir="ltr"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">كلمة المرور</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                    placeholder="كلمة مرور قوية"
+                    dir="ltr"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role">نوع المستخدم</Label>
+                  <Select value={newUser.role} onValueChange={(value) => setNewUser({...newUser, role: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="اختر نوع المستخدم" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">مستخدم عادي</SelectItem>
+                      <SelectItem value="client">عميل</SelectItem>
+                      <SelectItem value="admin">مدير</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex gap-3 justify-end pt-4">
+                  <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+                    إلغاء
+                  </Button>
+                  <Button onClick={handleCreateUser} disabled={creating}>
+                    {creating ? 'جارٍ الإنشاء...' : 'إنشاء المستخدم'}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+          
+          <Button 
+            variant="outline"
+            onClick={async () => {
+              try {
+                const { data, error } = await supabase.functions.invoke('test-email-system');
+                if (error) throw error;
+                
+                toast({
+                  title: "اختبار النظام",
+                  description: "تم تشغيل اختبار شامل للنظام - تحقق من السجلات",
+                });
+              } catch (error: any) {
+                toast({
+                  title: "خطأ في الاختبار",
+                  description: error.message,
+                  variant: "destructive",
+                });
+              }
+            }}
+          >
+            <Eye className="w-4 h-4 ml-2" />
+            اختبار النظام
+          </Button>
           </div>
         </div>
       </ResponsiveCard>
