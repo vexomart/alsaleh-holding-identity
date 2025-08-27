@@ -162,6 +162,9 @@ serve(async (req) => {
               status: 'pending',
               payment_method: payment_method,
               payment_reference: reference_id,
+              customer_name: `عميل محفظة - ${reference_id}`,
+              customer_email: user.email || user.id,
+              customer_phone: null,
               metadata: { 
                 payment_method: payment_method,
                 payment_provider: paymentMethodConfig.provider,
