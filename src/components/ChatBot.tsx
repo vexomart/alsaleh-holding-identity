@@ -141,6 +141,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
+  const conversationId = useRef<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -228,11 +229,17 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
         body: {
           message: inputMessage,
           conversationHistory,
+          conversationId: conversationId.current,
           agent: currentAgent
         }
       });
 
       if (error) throw error;
+
+      // Update conversation ID if provided
+      if (data.conversationId) {
+        conversationId.current = data.conversationId;
+      }
 
       const responseText = data.response || 'أعتذر، دعني أتأكد من المعلومات وأعاود الإجابة...';
       const buttonRegex = /\[BUTTON:(.*?):(.*?)\]/g;
