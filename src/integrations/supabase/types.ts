@@ -3317,14 +3317,23 @@ export type Database = {
         Returns: boolean
       }
       process_wallet_transaction: {
-        Args: {
-          p_amount: number
-          p_description?: string
-          p_payment_method?: string
-          p_payment_reference?: string
-          p_transaction_type: string
-          p_user_id: string
-        }
+        Args:
+          | {
+              p_amount: number
+              p_description: string
+              p_metadata?: Json
+              p_reference_id?: string
+              p_transaction_type: string
+              p_user_id: string
+            }
+          | {
+              p_amount: number
+              p_description?: string
+              p_payment_method?: string
+              p_payment_reference?: string
+              p_transaction_type: string
+              p_user_id: string
+            }
         Returns: string
       }
       record_automation_usage: {
