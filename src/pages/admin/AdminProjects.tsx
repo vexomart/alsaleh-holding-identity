@@ -142,17 +142,13 @@ const AdminProjects = () => {
         const clientInfo = clients.find(c => c.user_id === formData.user_id);
         if (clientInfo?.full_name) {
           try {
-            // الحصول على بيانات العميل المفصلة
-            const { data: clientProfile } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('user_id', formData.user_id)
-              .single();
-
-            if (clientProfile) {
+            // الحصول على إيميل العميل من جدول auth.users
+            const { data: authUser } = await supabase.auth.admin.getUserById(formData.user_id);
+            
+            if (authUser?.user?.email) {
               await sendProjectUpdate(
-                clientProfile.user_id + '@example.com', // يجب استبدال هذا بالإيميل الحقيقي
-                clientProfile.full_name || 'عميل كريم',
+                authUser.user.email,
+                clientInfo.full_name || 'عميل كريم',
                 {
                   projectName: insertedData.name,
                   projectNumber: insertedData.project_number,
@@ -221,14 +217,10 @@ const AdminProjects = () => {
         const clientInfo = clients.find(c => c.user_id === formData.user_id);
         if (clientInfo?.full_name) {
           try {
-            // الحصول على بيانات العميل المفصلة
-            const { data: clientProfile } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('user_id', formData.user_id)
-              .single();
-
-            if (clientProfile) {
+            // الحصول على إيميل العميل من جدول auth.users
+            const { data: authUser } = await supabase.auth.admin.getUserById(formData.user_id);
+            
+            if (authUser?.user?.email) {
               // تحديد نوع التحديث
               const statusChanged = oldStatus !== formData.status;
               const progressChanged = oldProgress !== formData.progress_percentage;
@@ -255,8 +247,8 @@ const AdminProjects = () => {
               }
 
               await sendProjectUpdate(
-                clientProfile.user_id + '@example.com', // يجب استبدال هذا بالإيميل الحقيقي
-                clientProfile.full_name || 'عميل كريم',
+                authUser.user.email,
+                clientInfo.full_name || 'عميل كريم',
                 {
                   projectName: updatedData.name,
                   projectNumber: updatedData.project_number,
