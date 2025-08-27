@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   CreditCard, 
   Search, 
@@ -13,7 +14,8 @@ import {
   TrendingUp,
   Clock,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -46,6 +48,8 @@ const AdminPayments = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [methodFilter, setMethodFilter] = useState('all');
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   useEffect(() => {
     fetchPayments();
@@ -301,6 +305,7 @@ const AdminPayments = () => {
                 <SelectItem value="stc">STC Pay</SelectItem>
                 <SelectItem value="mada">مدى</SelectItem>
                 <SelectItem value="visa">فيزا</SelectItem>
+                <SelectItem value="bank_transfer">حوالة بنكية</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -325,7 +330,7 @@ const AdminPayments = () => {
                   <h3 className="font-semibold text-foreground truncate">
                     {payment.transaction_id || payment.reference_id}
                     {payment.transaction_type === 'deposit' && (
-                      <span className="mr-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                      <span className="mr-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full dark:bg-blue-900/20 dark:text-blue-400">
                         شحن محفظة
                       </span>
                     )}
@@ -357,7 +362,15 @@ const AdminPayments = () => {
               </div>
 
               <div className="flex gap-2 pt-2 border-t">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1"
+                  onClick={() => {
+                    setSelectedPayment(payment);
+                    setIsDetailsOpen(true);
+                  }}
+                >
                   <Eye className="w-4 h-4 ml-2" />
                   عرض التفاصيل
                 </Button>
@@ -366,6 +379,124 @@ const AdminPayments = () => {
           ))}
         </ResponsiveGrid>
       )}
+
+      {/* Payment Details Modal */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-2xl" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5" />
+              تفاصيل المعاملة
+            </DialogTitle>
+            <DialogDescription>
+              معلومات مفصلة عن المعاملة المالية
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedPayment && (
+            <div className="space-y-6">
+              {/* Transaction Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">رقم المعاملة</label>
+                  <p className="text-sm font-mono bg-muted px-3 py-2 rounded">
+                    {selectedPayment.transaction_id || selectedPayment.reference_id}
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">المبلغ</label>
+                  <p className="text-lg font-bold text-primary">
+                    {selectedPayment.amount} {selectedPayment.currency || 'SAR'}
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">طريقة الدفع</label>
+                  <p className="text-sm">{getMethodText(selectedPayment.payment_method)}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">الحالة</label>
+                  <Badge className={getStatusColor(selectedPayment.status)}>
+                    {getStatusText(selectedPayment.status)}
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Customer Info */}
+              <div className="border-t pt-4">
+                <h3 className="font-medium mb-3">معلومات العميل</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">اسم العميل</label>
+                    <p className="text-sm">{selectedPayment.customer_name}</p>
+                  </div>
+                  
+                  {selectedPayment.customer_email && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">البريد الإلكتروني</label>
+                      <p className="text-sm">{selectedPayment.customer_email}</p>
+                    </div>
+                  )}
+                  
+                  {selectedPayment.customer_phone && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">رقم الهاتف</label>
+                      <p className="text-sm">{selectedPayment.customer_phone}</p>
+                    </div>
+                  )}
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">وصف الخدمة</label>
+                    <p className="text-sm">{selectedPayment.offer_title || selectedPayment.description}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Transaction Details */}
+              <div className="border-t pt-4">
+                <h3 className="font-medium mb-3">تفاصيل المعاملة</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">تاريخ الإنشاء</label>
+                    <p className="text-sm">{new Date(selectedPayment.created_at).toLocaleString('ar-SA')}</p>
+                  </div>
+                  
+                  {selectedPayment.payment_date && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">تاريخ الدفع</label>
+                      <p className="text-sm">{new Date(selectedPayment.payment_date).toLocaleString('ar-SA')}</p>
+                    </div>
+                  )}
+                  
+                  {selectedPayment.transaction_type && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">نوع المعاملة</label>
+                      <Badge variant="secondary">
+                        {selectedPayment.transaction_type === 'deposit' ? 'شحن محفظة' : selectedPayment.transaction_type}
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="border-t pt-4 flex gap-2 justify-end">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsDetailsOpen(false)}
+                >
+                  إغلاق
+                </Button>
+                <Button variant="default">
+                  تحديث الحالة
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
