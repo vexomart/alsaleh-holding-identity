@@ -17,7 +17,9 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  Users
+  Users,
+  StopCircle,
+  FileText
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -46,6 +48,8 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
   });
   const [step, setStep] = useState<'info' | 'chat'>('info');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isChatEnded, setIsChatEnded] = useState(false);
+  const [isEndingChat, setIsEndingChat] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -161,7 +165,7 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
   };
 
   const sendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || isChatEnded) return;
 
     const userMessage: CustomerMessage = {
       id: Date.now().toString(),
@@ -172,52 +176,140 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    setInputMessage('');
+
+    // Simulate bot response
+    setTimeout(() => {
+      const botResponse: CustomerMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'support',
+        content: generateBotResponse(inputMessage),
+        timestamp: new Date(),
+        type: 'text'
+      };
+      setMessages(prev => [...prev, botResponse]);
+    }, 1500);
+  };
+
+  const generateBotResponse = (userInput: string): string => {
+    const input = userInput.toLowerCase();
     
-    // Send message to management via email/WhatsApp
+    if (input.includes('مرحبا') || input.includes('السلام')) {
+      return 'مرحباً بك! كيف يمكنني مساعدتك اليوم؟';
+    }
+    
+    if (input.includes('خدمات') || input.includes('خدمة')) {
+      return `نحن نقدم خدمات متنوعة:
+• تصميم المواقع الإلكترونية
+• تطوير التطبيقات
+• التسويق الرقمي
+• الاستشارات التقنية
+
+أي خدمة تهتم بها تحديداً؟`;
+    }
+    
+    if (input.includes('سعر') || input.includes('تكلفة') || input.includes('أسعار')) {
+      return `أسعارنا تختلف حسب نوع المشروع:
+• المواقع البسيطة: 5,000 - 15,000 ريال
+• التطبيقات: 20,000 - 50,000 ريال
+• التسويق الرقمي: 3,000 - 10,000 ريال شهرياً
+
+يمكنني تحديد عرض سعر مخصص لمشروعك؟`;
+    }
+    
+    if (input.includes('وقت') || input.includes('مدة') || input.includes('متى')) {
+      return `مدة التنفيذ تعتمد على نوع المشروع:
+• المواقع البسيطة: 2-4 أسابيع
+• التطبيقات: 6-12 أسبوع
+• الحملات التسويقية: تبدأ خلال 48 ساعة
+
+هل لديك مشروع محدد في الذهن؟`;
+    }
+    
+    if (input.includes('تواصل') || input.includes('اتصال') || input.includes('رقم')) {
+      return `يمكنك التواصل معنا:
+📞 الهاتف: 0555812567
+📧 الإيميل: info@company.com
+📍 العنوان: الرياض، السعودية
+🕐 أوقات العمل: الأحد - الخميس 9ص - 6م`;
+    }
+    
+    return `شكراً لك على استفسارك. فريقنا المتخصص سيقوم بالرد عليك بالتفصيل. 
+
+هل تود معرفة المزيد عن خدماتنا أم لديك استفسار آخر؟
+
+يمكنك أيضاً إنهاء المحادثة وسنرسل لك ملخص كامل عبر الإيميل.`;
+  };
+
+  const endChat = async () => {
+    setIsEndingChat(true);
+    
     try {
-      await supabase.functions.invoke('contact-form', {
+      // Generate chat transcript
+      const chatTranscript = messages.map(msg => 
+        `[${msg.timestamp.toLocaleString('ar-SA')}] ${msg.role === 'user' ? customerInfo.name : 'خدمة العملاء'}: ${msg.content}`
+      ).join('\n\n');
+
+      // Send chat transcript via email
+      const { error } = await supabase.functions.invoke('contact-form', {
         body: {
           name: customerInfo.name,
           email: customerInfo.email,
           phone: customerInfo.phone,
-          message: `رسالة من العميل: ${inputMessage}`,
-          subject: `رسالة خدمة عملاء من ${customerInfo.name}`,
-          type: 'customer_service_message'
+          message: `تقرير محادثة خدمة العملاء:
+
+=== معلومات العميل ===
+الاسم: ${customerInfo.name}
+الإيميل: ${customerInfo.email}
+الهاتف: ${customerInfo.phone}
+تاريخ المحادثة: ${new Date().toLocaleString('ar-SA')}
+
+=== نص المحادثة ===
+${chatTranscript}
+
+=== انتهاء التقرير ===`,
+          subject: `تقرير محادثة خدمة العملاء - ${customerInfo.name}`,
+          type: 'chat_transcript'
         }
       });
 
-      // Add confirmation message
-      const confirmMessage: CustomerMessage = {
-        id: (Date.now() + 1).toString(),
+      if (error) throw error;
+
+      // Add final message
+      const finalMessage: CustomerMessage = {
+        id: Date.now().toString(),
         role: 'support',
-        content: `✅ تم إرسال رسالتك للفريق المختص
+        content: `✅ تم إنهاء المحادثة بنجاح
 
-📧 **سيتم الرد عليك خلال:**
-• البريد الإلكتروني: خلال ساعتين
-• الواتساب: خلال 30 دقيقة
+📧 **تم إرسال تقرير كامل للمحادثة إلى:**
+• إيميلك: ${customerInfo.email}
+• إدارة الشركة
 
-🔄 **تتبع طلبك:**
-رقم المرجع: #${Date.now().toString().slice(-6)}
+📋 **رقم المرجع:** #${Date.now().toString().slice(-6)}
 
-📞 **للاستفسارات العاجلة:** 0555812567`,
+شكراً لك على التواصل معنا! 🙏`,
         timestamp: new Date(),
         type: 'system'
       };
 
-      setTimeout(() => {
-        setMessages(prev => [...prev, confirmMessage]);
-      }, 1000);
+      setMessages(prev => [...prev, finalMessage]);
+      setIsChatEnded(true);
 
-    } catch (error) {
-      console.error('Error sending message:', error);
       toast({
-        title: "❌ خطأ في الإرسال",
-        description: "لم يتم إرسال الرسالة. يرجى المحاولة مرة أخرى",
+        title: "✅ تم إنهاء المحادثة",
+        description: "تم إرسال تقرير كامل للمحادثة عبر الإيميل",
+      });
+
+    } catch (error: any) {
+      console.error('Error ending chat:', error);
+      toast({
+        title: "❌ خطأ في إنهاء المحادثة",
+        description: "حدث خطأ أثناء إرسال التقرير. يرجى المحاولة مرة أخرى",
         variant: "destructive",
       });
+    } finally {
+      setIsEndingChat(false);
     }
-
-    setInputMessage('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -310,6 +402,8 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
                   setStep('info');
                   setMessages([]);
                   setCustomerInfo({ name: '', email: '', phone: '' });
+                  setIsChatEnded(false);
+                  setIsEndingChat(false);
                 }}
                 className="h-8 w-8 text-white hover:bg-white/20"
               >
@@ -449,36 +543,64 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
                 </ScrollArea>
 
                 <div className="p-4 border-t bg-gray-50">
-                  <div className="flex gap-2" dir="rtl">
-                    <Button
-                      onClick={sendMessage}
-                      disabled={!inputMessage.trim()}
-                      className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-4"
-                    >
-                      <Send className="h-4 w-4" />
-                    </Button>
-                    <Input
-                      ref={inputRef}
-                      type="text"
-                      placeholder="اكتب رسالتك هنا..."
-                      value={inputMessage}
-                      onChange={(e) => setInputMessage(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      className="flex-1 text-right"
-                      dir="rtl"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      <span>متوسط الرد: 30 دقيقة</span>
+                  {!isChatEnded ? (
+                    <>
+                      <div className="flex gap-2" dir="rtl">
+                        <Button
+                          onClick={sendMessage}
+                          disabled={!inputMessage.trim() || isChatEnded}
+                          className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-4"
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                        <Input
+                          ref={inputRef}
+                          type="text"
+                          placeholder={isChatEnded ? "المحادثة منتهية" : "اكتب رسالتك هنا..."}
+                          value={inputMessage}
+                          onChange={(e) => setInputMessage(e.target.value)}
+                          onKeyPress={handleKeyPress}
+                          className="flex-1 text-right"
+                          dir="rtl"
+                          disabled={isChatEnded}
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          <span>متوسط الرد: فوري</span>
+                        </div>
+                        <Button
+                          onClick={endChat}
+                          disabled={isEndingChat || messages.length <= 1}
+                          className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 h-6"
+                        >
+                          {isEndingChat ? (
+                            <div className="flex items-center gap-1">
+                              <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
+                              إنهاء...
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1">
+                              <StopCircle className="h-3 w-3" />
+                              إنهاء المحادثة
+                            </div>
+                          )}
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center py-4">
+                      <div className="flex items-center justify-center gap-2 text-green-600 font-medium">
+                        <FileText className="h-4 w-4" />
+                        <span>تم إنهاء المحادثة وإرسال التقرير</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">
+                        شكراً لك على استخدام خدمة العملاء
+                      </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Phone className="h-3 w-3" />
-                      <span>0555812567</span>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </>
             )}
