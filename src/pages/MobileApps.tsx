@@ -279,7 +279,11 @@ const MobileApps = () => {
             {developmentProcess.map((step, index) => {
               const IconComponent = step.icon;
               return (
-                <Card key={index} className="group relative overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:scale-[1.02] bg-card/80 backdrop-blur-sm">
+                <Card 
+                  key={index} 
+                  className="group relative overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:scale-[1.02] bg-card/80 backdrop-blur-sm animate-fade-in"
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
                   <CardContent className="p-8 relative z-10">
