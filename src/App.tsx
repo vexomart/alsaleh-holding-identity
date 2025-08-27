@@ -108,6 +108,9 @@ const ProjectTracking = lazy(() => import("./pages/ProjectTracking"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
+const Auth = lazy(() => import("./pages/Auth"));
+const MyProjects = lazy(() => import("./pages/MyProjects"));
+const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));

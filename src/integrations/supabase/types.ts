@@ -1896,6 +1896,7 @@ export type Database = {
           phone: string | null
           updated_at: string | null
           user_id: string
+          user_role: string | null
         }
         Insert: {
           client_id?: string | null
@@ -1906,6 +1907,7 @@ export type Database = {
           phone?: string | null
           updated_at?: string | null
           user_id: string
+          user_role?: string | null
         }
         Update: {
           client_id?: string | null
@@ -1916,6 +1918,7 @@ export type Database = {
           phone?: string | null
           updated_at?: string | null
           user_id?: string
+          user_role?: string | null
         }
         Relationships: []
       }
@@ -2215,6 +2218,7 @@ export type Database = {
           status: Database["public"]["Enums"]["project_status"] | null
           tags: string[] | null
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           assigned_manager?: string | null
@@ -2235,6 +2239,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["project_status"] | null
           tags?: string[] | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           assigned_manager?: string | null
@@ -2255,6 +2260,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["project_status"] | null
           tags?: string[] | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
