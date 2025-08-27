@@ -50,6 +50,7 @@ const AdminPayments = () => {
   const [methodFilter, setMethodFilter] = useState('all');
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     fetchPayments();
@@ -173,6 +174,62 @@ const AdminPayments = () => {
       case 'bank_transfer': return 'حوالة بنكية';
       case 'stripe': return 'بطاقة ائتمانية';
       default: return method || 'غير محدد';
+    }
+  };
+
+  const updatePaymentStatus = async (paymentId: string, newStatus: string) => {
+    if (!selectedPayment) return;
+
+    setIsUpdating(true);
+    try {
+      // Update payment status
+      const { error: updateError } = await supabase
+        .from(selectedPayment.transaction_type === 'deposit' ? 'wallet_transactions' : 'payment_transactions')
+        .update({ status: newStatus })
+        .eq('id', paymentId);
+
+      if (updateError) throw updateError;
+
+      // Send notification email
+      if (selectedPayment.customer_email) {
+        try {
+          await supabase.functions.invoke('customer-notifications', {
+            body: {
+              type: 'payment_status_update',
+              email: selectedPayment.customer_email,
+              customer_name: selectedPayment.customer_name,
+              payment_id: selectedPayment.transaction_id,
+              amount: selectedPayment.amount,
+              currency: selectedPayment.currency,
+              old_status: selectedPayment.status,
+              new_status: newStatus,
+              payment_method: selectedPayment.payment_method
+            }
+          });
+        } catch (emailError) {
+          console.warn('Failed to send notification email:', emailError);
+        }
+      }
+
+      // Refresh payments data
+      await fetchPayments();
+      
+      // Update selected payment
+      setSelectedPayment(prev => prev ? { ...prev, status: newStatus } : null);
+
+      toast({
+        title: "تم تحديث حالة الدفع",
+        description: `تم تغيير حالة الدفع إلى ${getStatusText(newStatus)}`,
+      });
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      toast({
+        title: "خطأ في التحديث",
+        description: "حدث خطأ أثناء تحديث حالة الدفع",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -489,9 +546,18 @@ const AdminPayments = () => {
                 >
                   إغلاق
                 </Button>
-                <Button variant="default">
-                  تحديث الحالة
-                </Button>
+                <Select onValueChange={(value) => updatePaymentStatus(selectedPayment.id, value)} disabled={isUpdating}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="تغيير الحالة" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">في الانتظار</SelectItem>
+                    <SelectItem value="processing">قيد المعالجة</SelectItem>
+                    <SelectItem value="completed">مكتملة</SelectItem>
+                    <SelectItem value="failed">فاشلة</SelectItem>
+                    <SelectItem value="refunded">مسترد</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           )}
