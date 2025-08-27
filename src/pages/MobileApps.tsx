@@ -268,7 +268,7 @@ const MobileApps = () => {
       {/* Development Process */}
       <section className="py-24" dir="rtl">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-3xl lg:text-4xl font-bold mb-4">عملية التطوير</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               نتبع منهجية احترافية لضمان جودة التطبيق وتسليمه في الوقت المحدد
@@ -281,45 +281,52 @@ const MobileApps = () => {
               return (
                 <Card 
                   key={index} 
-                  className="group relative overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:scale-[1.02] bg-card/80 backdrop-blur-sm animate-fade-in"
-                  style={{ animationDelay: `${index * 150}ms` }}
+                  className="group relative overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-700 hover:shadow-2xl hover:shadow-primary/20 hover:scale-[1.05] bg-card/80 backdrop-blur-sm opacity-0 animate-fade-in"
+                  style={{ 
+                    animationDelay: `${index * 200}ms`,
+                    animationFillMode: 'forwards'
+                  }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                   
                   <CardContent className="p-8 relative z-10">
                     <div className="flex items-start gap-6">
                       {/* Step Number Circle */}
                       <div className="flex-shrink-0">
-                        <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-primary/20 transition-all duration-300 transform group-hover:scale-110">
-                          <span className="text-white font-bold text-xl">{step.step}</span>
+                        <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-primary/30 transition-all duration-500 transform group-hover:scale-125 group-hover:rotate-6">
+                          <span className="text-white font-bold text-xl group-hover:scale-110 transition-transform duration-300">{step.step}</span>
                         </div>
                       </div>
                       
                       {/* Content */}
                       <div className="flex-1 text-right">
-                        <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+                        <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-500 transform group-hover:translate-x-2">
                           {step.title}
                         </h3>
-                        <p className="text-muted-foreground leading-relaxed text-base">
+                        <p className="text-muted-foreground leading-relaxed text-base transform group-hover:translate-x-1 transition-transform duration-300">
                           {step.description}
                         </p>
                       </div>
                       
                       {/* Icon */}
                       <div className="flex-shrink-0">
-                        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                          <IconComponent className="w-6 h-6 text-primary" />
+                        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-12">
+                          <IconComponent className="w-6 h-6 text-primary group-hover:scale-125 transition-transform duration-300" />
                         </div>
                       </div>
                     </div>
                   </CardContent>
                   
-                  {/* Connecting Line for Desktop */}
+                  {/* Connecting Line for Desktop with Animation */}
                   {index < developmentProcess.length - 1 && index % 2 === 0 && (
                     <div className="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2">
-                      <div className="w-px h-8 bg-gradient-to-b from-primary/50 to-transparent"></div>
+                      <div className="w-px h-8 bg-gradient-to-b from-primary/50 to-transparent opacity-0 animate-fade-in" style={{ animationDelay: `${(index + 1) * 200}ms`, animationFillMode: 'forwards' }}></div>
                     </div>
                   )}
+                  
+                  {/* Floating Animation Elements */}
+                  <div className="absolute top-4 right-4 w-2 h-2 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-ping"></div>
+                  <div className="absolute bottom-4 left-4 w-1 h-1 bg-secondary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-pulse"></div>
                 </Card>
               );
             })}
