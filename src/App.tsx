@@ -37,6 +37,7 @@ const TechSolutions = lazy(() => import("./pages/services/TechSolutions"));
 const BusinessSolutions = lazy(() => import("./pages/services/BusinessSolutions"));
 const CloudSolutions = lazy(() => import("./pages/services/CloudSolutions"));
 const SecuritySolutions = lazy(() => import("./pages/services/SecuritySolutions"));
+const HostingServices = lazy(() => import("./pages/services/HostingServices"));
 const Training = lazy(() => import("./pages/Training"));
 const Volunteer = lazy(() => import("./pages/Volunteer"));
 const DevelopmentProgram = lazy(() => import("./pages/DevelopmentProgram"));
@@ -49,7 +50,7 @@ const DigitalContracts = lazy(() => import("./pages/DigitalContracts"));
 const ReadyProjects = lazy(() => import("./pages/ReadyProjects"));
 
 // Services Pages
-const HostingServices = lazy(() => import("./pages/services/HostingServices"));
+// HostingServices already declared above
 const SocialMediaManagement = lazy(() => import("./pages/services/SocialMediaManagement"));
 const SEOServices = lazy(() => import("./pages/services/SEOServices"));
 const FacebookAds = lazy(() => import("./pages/services/FacebookAds"));
@@ -240,6 +241,7 @@ const App = () => {
                 <Route path="/services/business-solutions" element={<Suspense fallback={<PageLoader />}><BusinessSolutions /></Suspense>} />
                 <Route path="/services/cloud-solutions" element={<Suspense fallback={<PageLoader />}><CloudSolutions /></Suspense>} />
                 <Route path="/services/security-solutions" element={<Suspense fallback={<PageLoader />}><SecuritySolutions /></Suspense>} />
+                <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/training" element={<Suspense fallback={<PageLoader />}><Training /></Suspense>} />
                 <Route path="/volunteer" element={<Suspense fallback={<PageLoader />}><Volunteer /></Suspense>} />
                 <Route path="/contracts" element={<Suspense fallback={<PageLoader />}><Contracts /></Suspense>} />
