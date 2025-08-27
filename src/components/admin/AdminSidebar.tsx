@@ -78,20 +78,23 @@ export const AdminSidebar = () => {
   const isActive = (path: string) => currentPath === path;
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
-      ? "bg-primary/10 text-primary border-r-2 border-primary font-medium" 
+      ? "bg-primary/10 text-primary border-l-2 border-primary font-medium" 
       : "hover:bg-muted/50 text-muted-foreground hover:text-foreground";
 
   return (
-    <Sidebar className={`${collapsed ? "w-16" : "w-72"} border-r border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60`}>
+    <Sidebar 
+      side="right"
+      className={`${collapsed ? "w-16" : "w-72"} border-l border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60`}
+    >
       <SidebarHeader className="p-6 border-b border-border/50">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
             <Shield className="w-6 h-6 text-white" />
           </div>
           {!collapsed && (
-            <div>
+            <div className="text-right">
               <h2 className="text-xl font-bold text-foreground">لوحة الإدارة</h2>
-              <p className="text-sm text-muted-foreground">ASH Holding</p>
+              <p className="text-sm text-muted-foreground">علي صالح الشهري القابضة</p>
             </div>
           )}
         </div>
@@ -101,7 +104,7 @@ export const AdminSidebar = () => {
         {menuItems.map((group, groupIndex) => (
           <SidebarGroup key={groupIndex} className="mb-6">
             {!collapsed && (
-              <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider px-3 mb-2">
+              <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider px-3 mb-2 text-right">
                 {group.groupLabel}
               </SidebarGroupLabel>
             )}
@@ -116,15 +119,15 @@ export const AdminSidebar = () => {
                         className={({ isActive }) => `
                           flex items-center gap-3 px-3 py-2 rounded-lg text-sm
                           ${getNavCls({ isActive })}
-                          ${collapsed ? 'justify-center' : ''}
+                          ${collapsed ? 'justify-center' : 'justify-start'}
                         `}
                       >
                         <item.icon className="w-5 h-5 flex-shrink-0" />
                         {!collapsed && (
-                          <span className="truncate">{item.title}</span>
+                          <span className="truncate flex-1 text-right">{item.title}</span>
                         )}
                         {!collapsed && item.title === 'الإشعارات' && (
-                          <Badge variant="destructive" className="ml-auto h-5 w-5 p-0 flex items-center justify-center text-xs">
+                          <Badge variant="destructive" className="mr-auto h-5 w-5 p-0 flex items-center justify-center text-xs">
                             3
                           </Badge>
                         )}

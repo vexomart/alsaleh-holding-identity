@@ -61,32 +61,32 @@ export const AdminHeader = () => {
   };
 
   return (
-    <header className="h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/50 flex items-center justify-between px-6 sticky top-0 z-50">
-      {/* Left side - Navigation & Search */}
+    <header className="h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/50 flex items-center justify-between px-6 sticky top-0 z-50" dir="rtl">
+      {/* Right side - Navigation & Search */}
       <div className="flex items-center gap-4">
         <SidebarTrigger className="h-8 w-8" />
         
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             placeholder="البحث..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-80 pl-10 pr-4 h-9 bg-muted/50 border-muted focus:bg-background"
+            className="w-80 pr-10 pl-4 h-9 bg-muted/50 border-muted focus:bg-background"
             dir="rtl"
           />
         </div>
       </div>
 
-      {/* Right side - Actions & User */}
+      {/* Left side - Actions & User */}
       <div className="flex items-center gap-3">
         {/* Quick Stats */}
-        <div className="hidden lg:flex items-center gap-4 mr-4">
-          <div className="text-sm">
+        <div className="hidden lg:flex items-center gap-4 ml-4">
+          <div className="text-sm text-right">
             <span className="text-muted-foreground">المشاريع النشطة: </span>
             <span className="font-semibold text-green-600">12</span>
           </div>
-          <div className="text-sm">
+          <div className="text-sm text-right">
             <span className="text-muted-foreground">العملاء الجدد: </span>
             <span className="font-semibold text-blue-600">5</span>
           </div>
@@ -98,7 +98,7 @@ export const AdminHeader = () => {
           {notifications > 0 && (
             <Badge 
               variant="destructive" 
-              className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs"
+              className="absolute -top-1 -left-1 h-5 w-5 p-0 flex items-center justify-center text-xs"
             >
               {notifications}
             </Badge>
@@ -131,7 +131,7 @@ export const AdminHeader = () => {
                   {user?.email?.charAt(0).toUpperCase() || 'A'}
                 </AvatarFallback>
               </Avatar>
-              <div className="hidden md:flex flex-col items-start">
+              <div className="hidden md:flex flex-col items-end text-right">
                 <span className="text-sm font-medium">المدير العام</span>
                 <span className="text-xs text-muted-foreground truncate max-w-20">
                   {user?.email || 'admin@company.com'}
@@ -146,19 +146,19 @@ export const AdminHeader = () => {
             <DropdownMenuSeparator />
             
             <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
+              <User className="ml-2 h-4 w-4" />
               الملف الشخصي
             </DropdownMenuItem>
             
             <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
+              <Settings className="ml-2 h-4 w-4" />
               الإعدادات
             </DropdownMenuItem>
             
             <DropdownMenuSeparator />
             
             <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="ml-2 h-4 w-4" />
               تسجيل الخروج
             </DropdownMenuItem>
           </DropdownMenuContent>

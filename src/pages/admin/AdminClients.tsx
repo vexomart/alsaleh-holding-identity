@@ -186,10 +186,10 @@ const AdminClients = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" dir="rtl">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
+        <div className="text-right">
           <h1 className="text-3xl font-bold flex items-center gap-3">
             <Users className="h-8 w-8 text-primary" />
             إدارة العملاء

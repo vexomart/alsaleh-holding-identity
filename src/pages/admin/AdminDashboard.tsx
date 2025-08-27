@@ -158,10 +158,10 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" dir="rtl">
       {/* Welcome Section */}
       <div className="flex items-center justify-between">
-        <div>
+        <div className="text-right">
           <h1 className="text-3xl font-bold text-foreground">مرحباً بك في لوحة الإدارة</h1>
           <p className="text-muted-foreground mt-2">نظرة شاملة على أداء الشركة والمشاريع النشطة</p>
         </div>
@@ -176,10 +176,10 @@ const AdminDashboard = () => {
           <Card key={index} className="relative overflow-hidden transition-all duration-200 hover:shadow-lg border-0 bg-gradient-to-br from-background to-background/50">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="text-right">
                   <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
                   <p className="text-2xl font-bold text-foreground mt-2">{stat.value}</p>
-                  <div className="flex items-center gap-1 mt-2">
+                  <div className="flex items-center gap-1 mt-2 justify-end">
                     {stat.changeType === 'positive' ? (
                       <ArrowUpRight className="h-4 w-4 text-green-600" />
                     ) : (
@@ -203,11 +203,11 @@ const AdminDashboard = () => {
         {/* Recent Activities */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-right">
               <Clock className="h-5 w-5" />
               النشاطات الأخيرة
             </CardTitle>
-            <CardDescription>آخر الأحداث والتحديثات في النظام</CardDescription>
+            <CardDescription className="text-right">آخر الأحداث والتحديثات في النظام</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -226,7 +226,7 @@ const AdminDashboard = () => {
                       <Eye className="h-4 w-4 text-blue-600" />
                     )}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 text-right">
                     <p className="text-sm font-medium text-foreground">{activity.title}</p>
                     <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
                   </div>
@@ -239,11 +239,11 @@ const AdminDashboard = () => {
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-right">
               <BarChart3 className="h-5 w-5" />
               إجراءات سريعة
             </CardTitle>
-            <CardDescription>الوصول السريع للمهام الأساسية</CardDescription>
+            <CardDescription className="text-right">الوصول السريع للمهام الأساسية</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -254,7 +254,7 @@ const AdminDashboard = () => {
                   className="w-full h-auto p-4 justify-start text-right"
                   onClick={() => window.location.href = action.action}
                 >
-                  <div>
+                  <div className="text-right">
                     <p className="font-medium text-sm">{action.title}</p>
                     <p className="text-xs text-muted-foreground mt-1">{action.description}</p>
                   </div>
@@ -268,29 +268,29 @@ const AdminDashboard = () => {
       {/* Progress Overview */}
       <Card>
         <CardHeader>
-          <CardTitle>نظرة عامة على التقدم</CardTitle>
-          <CardDescription>ملخص سريع لحالة المشاريع والأهداف الشهرية</CardDescription>
+          <CardTitle className="text-right">نظرة عامة على التقدم</CardTitle>
+          <CardDescription className="text-right">ملخص سريع لحالة المشاريع والأهداف الشهرية</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>إكمال المشاريع</span>
                 <span>75%</span>
+                <span>إكمال المشاريع</span>
               </div>
               <Progress value={75} className="h-2" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>رضا العملاء</span>
                 <span>92%</span>
+                <span>رضا العملاء</span>
               </div>
               <Progress value={92} className="h-2" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>الهدف الشهري</span>
                 <span>68%</span>
+                <span>الهدف الشهري</span>
               </div>
               <Progress value={68} className="h-2" />
             </div>

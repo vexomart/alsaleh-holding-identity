@@ -6,8 +6,8 @@ import { AdminHeader } from './AdminHeader';
 
 export const AdminLayout = () => {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div dir="rtl" className="min-h-screen flex w-full bg-gradient-to-bl from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <SidebarProvider>
         <AdminSidebar />
         <div className="flex-1 flex flex-col">
           <AdminHeader />
@@ -15,8 +15,8 @@ export const AdminLayout = () => {
             <Outlet />
           </main>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </div>
   );
 };
 
