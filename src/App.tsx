@@ -22,6 +22,11 @@ const OurWorks = lazy(() => import("./pages/OurWorks"));
 const About = lazy(() => import("./pages/About"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
+const AdminInvoices = lazy(() => import("./pages/admin/AdminInvoices"));
+const AdminPayments = lazy(() => import("./pages/admin/AdminPayments"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminNotifications = lazy(() => import("./pages/admin/AdminNotifications"));
+const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const Story = lazy(() => import("./pages/Story"));
 const Team = lazy(() => import("./pages/Team"));
@@ -325,12 +330,22 @@ const App = () => {
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="projects" element={<AdminProjects />} />
                   <Route path="clients" element={<AdminClients />} />
+                  <Route path="invoices" element={<AdminInvoices />} />
+                  <Route path="payments" element={<AdminPayments />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="notifications" element={<AdminNotifications />} />
+                  <Route path="settings" element={<AdminSettings />} />
                 </Route>
                 
                 {/* Legacy admin routes - redirect to new structure */}
                 <Route path="/admin-projects" element={<Navigate to="/admin/projects" replace />} />
                 <Route path="/admin-dashboard" element={<Navigate to="/admin/dashboard" replace />} />
                 <Route path="/admin-clients" element={<Navigate to="/admin/clients" replace />} />
+                <Route path="/admin-invoices" element={<Navigate to="/admin/invoices" replace />} />
+                <Route path="/admin-payments" element={<Navigate to="/admin/payments" replace />} />
+                <Route path="/admin-users" element={<Navigate to="/admin/users" replace />} />
+                <Route path="/admin-notifications" element={<Navigate to="/admin/notifications" replace />} />
+                <Route path="/admin-settings" element={<Navigate to="/admin/settings" replace />} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
