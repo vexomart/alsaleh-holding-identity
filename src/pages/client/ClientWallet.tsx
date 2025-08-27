@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Wallet, 
   Plus, 
@@ -21,63 +23,91 @@ import {
   Shield
 } from 'lucide-react';
 
-const mockTransactions = [
-  {
-    id: '1',
-    type: 'deposit',
-    amount: 5000,
-    description: 'إيداع في المحفظة',
-    date: '2024-01-20',
-    status: 'completed',
-    method: 'bank_transfer'
-  },
-  {
-    id: '2',
-    type: 'payment',
-    amount: -1500,
-    description: 'دفع فاتورة مشروع تطوير الموقع',
-    date: '2024-01-18',
-    status: 'completed',
-    method: 'wallet'
-  },
-  {
-    id: '3',
-    type: 'deposit',
-    amount: 3000,
-    description: 'إيداع في المحفظة',
-    date: '2024-01-15',
-    status: 'completed',
-    method: 'credit_card'
-  },
-  {
-    id: '4',
-    type: 'payment',
-    amount: -750,
-    description: 'دفع رسوم تصميم الهوية البصرية',
-    date: '2024-01-12',
-    status: 'completed',
-    method: 'wallet'
-  },
-  {
-    id: '5',
-    type: 'refund',
-    amount: 500,
-    description: 'استرداد جزئي لمشروع ملغي',
-    date: '2024-01-10',
-    status: 'completed',
-    method: 'wallet'
-  }
-];
+interface WalletData {
+  id: string;
+  balance: number;
+  currency: string;
+}
+
+interface Transaction {
+  id: string;
+  transaction_type: string;
+  amount: number;
+  description: string;
+  created_at: string;
+  status: string;
+}
 
 export default function ClientWallet() {
-  const [transactions, setTransactions] = useState(mockTransactions);
+  const [wallet, setWallet] = useState<WalletData | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
   const [depositAmount, setDepositAmount] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
+  const { toast } = useToast();
 
-  const walletBalance = transactions.reduce((sum, t) => sum + t.amount, 0);
-  const totalDeposits = transactions.filter(t => t.type === 'deposit').reduce((sum, t) => sum + t.amount, 0);
-  const totalPayments = Math.abs(transactions.filter(t => t.type === 'payment').reduce((sum, t) => sum + t.amount, 0));
-  const totalRefunds = transactions.filter(t => t.type === 'refund').reduce((sum, t) => sum + t.amount, 0);
+  useEffect(() => {
+    fetchWalletData();
+  }, []);
+
+  const fetchWalletData = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Fetch wallet
+      const { data: walletData, error: walletError } = await supabase
+        .from('customer_wallets')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (walletError && walletError.code !== 'PGRST116') {
+        console.error('Wallet error:', walletError);
+        return;
+      }
+
+      if (!walletData) {
+        // Create wallet if doesn't exist
+        const { data: newWallet, error: createError } = await supabase
+          .from('customer_wallets')
+          .insert({ user_id: user.id, balance: 0 })
+          .select()
+          .single();
+
+        if (createError) {
+          console.error('Create wallet error:', createError);
+          return;
+        }
+        setWallet(newWallet);
+      } else {
+        setWallet(walletData);
+      }
+
+      // Fetch transactions
+      const { data: transactionsData, error: transactionsError } = await supabase
+        .from('wallet_transactions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (transactionsError) {
+        console.error('Transactions error:', transactionsError);
+      } else {
+        setTransactions(transactionsData || []);
+      }
+    } catch (error) {
+      console.error('Error fetching wallet data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const walletBalance = wallet?.balance || 0;
+  const totalDeposits = transactions.filter(t => t.transaction_type === 'deposit').reduce((sum, t) => sum + t.amount, 0);
+  const totalPayments = Math.abs(transactions.filter(t => t.transaction_type === 'payment').reduce((sum, t) => sum + t.amount, 0));
+  const totalRefunds = transactions.filter(t => t.transaction_type === 'refund').reduce((sum, t) => sum + t.amount, 0);
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
@@ -108,7 +138,7 @@ export default function ClientWallet() {
   };
 
   const filteredTransactions = transactions.filter(transaction => {
-    return typeFilter === 'all' || transaction.type === typeFilter;
+    return typeFilter === 'all' || transaction.transaction_type === typeFilter;
   });
 
   return (
@@ -251,15 +281,15 @@ export default function ClientWallet() {
               <div key={transaction.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-muted rounded-full">
-                    {getTransactionIcon(transaction.type)}
+                    {getTransactionIcon(transaction.transaction_type)}
                   </div>
                   <div>
                     <h4 className="font-medium text-foreground">{transaction.description}</h4>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="w-3 h-3" />
-                      <span>{new Date(transaction.date).toLocaleDateString('ar-SA')}</span>
+                      <span>{new Date(transaction.created_at).toLocaleDateString('ar-SA')}</span>
                       <Badge variant="outline" className="text-xs">
-                        {getTransactionTypeText(transaction.type)}
+                        {getTransactionTypeText(transaction.transaction_type)}
                       </Badge>
                     </div>
                   </div>
