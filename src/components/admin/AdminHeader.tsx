@@ -61,103 +61,103 @@ export const AdminHeader = () => {
   };
 
   return (
-    <header className="h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/50 flex items-center justify-between px-6 sticky top-0 z-50" dir="rtl">
+    <header className="h-14 lg:h-16 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border-b border-border/30 flex items-center justify-between px-3 sm:px-4 lg:px-6 sticky top-0 z-50 transition-all duration-200" dir="rtl">
       {/* Right side - Navigation & Search */}
-      <div className="flex items-center gap-4">
-        <SidebarTrigger className="h-8 w-8" />
+      <div className="flex items-center gap-2 lg:gap-4 flex-1 min-w-0">
+        <SidebarTrigger className="h-8 w-8 lg:h-9 lg:w-9 shrink-0" />
         
-        <div className="relative">
+        <div className="relative flex-1 max-w-xs lg:max-w-md">
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             placeholder="البحث..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-80 pr-10 pl-4 h-9 bg-muted/50 border-muted focus:bg-background"
+            className="w-full pr-10 pl-4 h-8 lg:h-9 bg-muted/30 border-muted focus:bg-background text-sm"
             dir="rtl"
           />
         </div>
       </div>
 
       {/* Left side - Actions & User */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 shrink-0">
         {/* Quick Stats */}
-        <div className="hidden lg:flex items-center gap-4 ml-4">
-          <div className="text-sm text-right">
+        <div className="hidden xl:flex items-center gap-3 lg:gap-4 ml-2 lg:ml-4">
+          <div className="text-xs lg:text-sm text-right">
             <span className="text-muted-foreground">المشاريع النشطة: </span>
-            <span className="font-semibold text-green-600">12</span>
+            <span className="font-semibold text-primary">12</span>
           </div>
-          <div className="text-sm text-right">
+          <div className="text-xs lg:text-sm text-right">
             <span className="text-muted-foreground">العملاء الجدد: </span>
-            <span className="font-semibold text-blue-600">5</span>
+            <span className="font-semibold text-primary">5</span>
           </div>
         </div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="sm" className="relative h-9 w-9 p-0">
-          <Bell className="h-4 w-4" />
+        <Button variant="ghost" size="sm" className="relative h-8 w-8 lg:h-9 lg:w-9 p-0 shrink-0">
+          <Bell className="h-3 w-3 lg:h-4 lg:w-4" />
           {notifications > 0 && (
             <Badge 
               variant="destructive" 
-              className="absolute -top-1 -left-1 h-5 w-5 p-0 flex items-center justify-center text-xs"
+              className="absolute -top-1 -left-1 h-4 w-4 lg:h-5 lg:w-5 p-0 flex items-center justify-center text-xs"
             >
               {notifications}
             </Badge>
           )}
         </Button>
 
-        {/* Settings */}
-        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
-          <Settings className="h-4 w-4" />
+        {/* Settings - Hidden on mobile */}
+        <Button variant="ghost" size="sm" className="hidden sm:flex h-8 w-8 lg:h-9 lg:w-9 p-0 shrink-0">
+          <Settings className="h-3 w-3 lg:h-4 lg:w-4" />
         </Button>
 
-        {/* Language */}
-        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
-          <Globe className="h-4 w-4" />
+        {/* Language - Hidden on mobile */}
+        <Button variant="ghost" size="sm" className="hidden md:flex h-8 w-8 lg:h-9 lg:w-9 p-0 shrink-0">
+          <Globe className="h-3 w-3 lg:h-4 lg:w-4" />
         </Button>
 
-        {/* Theme Toggle */}
-        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
-          <Sun className="h-4 w-4 dark:hidden" />
-          <Moon className="h-4 w-4 hidden dark:block" />
+        {/* Theme Toggle - Hidden on mobile */}
+        <Button variant="ghost" size="sm" className="hidden sm:flex h-8 w-8 lg:h-9 lg:w-9 p-0 shrink-0">
+          <Sun className="h-3 w-3 lg:h-4 lg:w-4 dark:hidden" />
+          <Moon className="h-3 w-3 lg:h-4 lg:w-4 hidden dark:block" />
         </Button>
 
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-9 gap-2 px-3">
-              <Avatar className="h-7 w-7">
+            <Button variant="ghost" className="h-8 lg:h-9 gap-1 lg:gap-2 px-2 lg:px-3 shrink-0">
+              <Avatar className="h-6 w-6 lg:h-7 lg:w-7">
                 <AvatarImage src="/placeholder-avatar.png" />
-                <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs lg:text-sm">
                   {user?.email?.charAt(0).toUpperCase() || 'A'}
                 </AvatarFallback>
               </Avatar>
-              <div className="hidden md:flex flex-col items-end text-right">
-                <span className="text-sm font-medium">المدير العام</span>
-                <span className="text-xs text-muted-foreground truncate max-w-20">
+              <div className="hidden lg:flex flex-col items-end text-right min-w-0">
+                <span className="text-sm font-medium truncate">المدير العام</span>
+                <span className="text-xs text-muted-foreground truncate max-w-24">
                   {user?.email || 'admin@company.com'}
                 </span>
               </div>
-              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+              <ChevronDown className="h-3 w-3 text-muted-foreground hidden sm:block" />
             </Button>
           </DropdownMenuTrigger>
           
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>حسابي</DropdownMenuLabel>
+          <DropdownMenuContent align="end" className="w-48 lg:w-56">
+            <DropdownMenuLabel className="text-right">حسابي</DropdownMenuLabel>
             <DropdownMenuSeparator />
             
-            <DropdownMenuItem>
+            <DropdownMenuItem className="text-right">
               <User className="ml-2 h-4 w-4" />
               الملف الشخصي
             </DropdownMenuItem>
             
-            <DropdownMenuItem>
+            <DropdownMenuItem className="text-right">
               <Settings className="ml-2 h-4 w-4" />
               الإعدادات
             </DropdownMenuItem>
             
             <DropdownMenuSeparator />
             
-            <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
+            <DropdownMenuItem onClick={handleSignOut} className="text-destructive text-right">
               <LogOut className="ml-2 h-4 w-4" />
               تسجيل الخروج
             </DropdownMenuItem>
