@@ -431,8 +431,8 @@ const App = () => {
                 <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
                 <Route path="/my-projects" element={<Navigate to="/client/projects" replace />} />
                 <Route path="/client/*" element={<Suspense fallback={<PageLoader />}><ClientLayout /></Suspense>}>
-                  <Route path="dashboard" element={<ClientDashboard />} />
-                  <Route path="projects" element={<ClientProjects />} />
+                  <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><ClientDashboard /></Suspense>} />
+                  <Route path="projects" element={<Suspense fallback={<PageLoader />}><ClientProjects /></Suspense>} />
                   <Route path="service-requests" element={<div className="p-6 text-center text-muted-foreground">صفحة طلبات الخدمة قيد التطوير</div>} />
                   <Route path="invoices" element={<div className="p-6 text-center text-muted-foreground">صفحة الفواتير قيد التطوير</div>} />
                   <Route path="payments" element={<div className="p-6 text-center text-muted-foreground">صفحة المدفوعات قيد التطوير</div>} />
