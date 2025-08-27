@@ -1,85 +1,95 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.53.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface DepositRequest {
-  amount: number;
-  payment_method: string;
-  description?: string;
-}
-
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    // Initialize Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
 
-    // Get user from auth header
+    // Get the authorization header
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Missing authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'No authorization header' }),
+        { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
       );
     }
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser(
+    // Verify the user
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
       authHeader.replace('Bearer ', '')
     );
 
-    if (userError || !user) {
+    if (authError || !user) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Invalid user token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Invalid authorization' }),
+        { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
       );
     }
 
     if (req.method === 'POST') {
+      interface DepositRequest {
+        amount: number;
+        payment_method: string;
+        description?: string;
+      }
+
       const { amount, payment_method, description }: DepositRequest = await req.json();
 
+      // Validate amount
       if (!amount || amount <= 0) {
         return new Response(
-          JSON.stringify({ success: false, error: 'Invalid amount' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: 'Invalid amount' }),
+          { 
+            status: 400, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
         );
       }
 
-      // Generate transaction reference
-      const reference = `DEP_${Date.now()}_${user.id.slice(0, 8)}`;
+      // Generate unique reference
+      const reference_id = `DEP_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-      // Process wallet transaction
-      const { data: transactionId, error } = await supabase.rpc(
-        'process_wallet_transaction',
-        {
-          p_user_id: user.id,
-          p_transaction_type: 'deposit',
-          p_amount: amount,
-          p_description: description || `شحن المحفظة - ${payment_method}`,
-          p_payment_method: payment_method,
-          p_payment_reference: reference
-        }
-      );
+      // Process the deposit by calling the RPC function
+      const { data: result, error: rpcError } = await supabaseClient.rpc('process_wallet_transaction', {
+        p_user_id: user.id,
+        p_transaction_type: 'deposit',
+        p_amount: amount,
+        p_description: description || `Deposit via ${payment_method}`,
+        p_reference_id: reference_id,
+        p_metadata: { payment_method, reference_id }
+      });
 
-      if (error) {
-        console.error('Transaction error:', error);
+      if (rpcError) {
+        console.error('RPC Error:', rpcError);
         return new Response(
-          JSON.stringify({ success: false, error: 'Failed to process deposit' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: 'Failed to process deposit' }),
+          { 
+            status: 500, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
         );
       }
 
       // Get updated wallet balance
-      const { data: wallet } = await supabase
+      const { data: wallet, error: walletError } = await supabaseClient
         .from('customer_wallets')
         .select('balance')
         .eq('user_id', user.id)
@@ -88,23 +98,32 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           success: true, 
-          transaction_id: transactionId,
+          transaction_id: result?.[0]?.transaction_id,
           new_balance: wallet?.balance || 0,
-          reference: reference
+          reference_id 
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
       );
     }
 
     return new Response(
-      JSON.stringify({ success: false, error: 'Method not allowed' }),
-      { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: 'Method not allowed' }),
+      { 
+        status: 405, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     );
+
   } catch (error) {
-    console.error('Wallet deposit error:', error);
+    console.error('Error:', error);
     return new Response(
-      JSON.stringify({ success: false, error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: 'Internal server error' }),
+      { 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     );
   }
 });
