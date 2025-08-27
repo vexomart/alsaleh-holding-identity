@@ -279,52 +279,365 @@ const getStatusText = (status: string) => {
   }
 };
 
+// قوالب الإيميل المالية المتقدمة
+const getWalletDepositTemplate = (customerName: string, data: any) => `
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد شحن المحفظة - شركة علي صالح الشهري القابضة</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; direction: rtl; }
+        .container { max-width: 650px; margin: 0 auto; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; padding: 40px 30px; text-align: center; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat; animation: float 20s infinite linear; }
+        .content { padding: 40px 30px; }
+        .deposit-card { background: linear-gradient(135deg, #ecfdf5, #f0fdf4); border: 2px solid #22c55e; border-radius: 16px; padding: 30px; margin: 25px 0; text-align: center; position: relative; }
+        .amount-display { font-size: 32px; font-weight: bold; color: #16a34a; margin: 15px 0; text-shadow: 0 2px 4px rgba(22,163,74,0.2); }
+        .transaction-details { background: #f8fafc; border-radius: 12px; padding: 25px; margin: 25px 0; border: 1px solid #e2e8f0; }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e5e7eb; }
+        .detail-row:last-child { border-bottom: none; }
+        .status-success { background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px; font-weight: bold; display: inline-block; }
+        .footer { background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 30px; text-align: center; }
+        .btn { display: inline-block; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; margin: 20px 0; box-shadow: 0 4px 15px rgba(59,130,246,0.3); transition: transform 0.2s ease; }
+        .btn:hover { transform: translateY(-2px); }
+        @keyframes float { 0% { transform: translateX(-100px); } 100% { transform: translateX(100px); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 تم شحن محفظتكم بنجاح!</h1>
+            <p>شركة علي صالح الشهري القابضة</p>
+            <p style="opacity: 0.9; margin-top: 10px;">منذ 2016 - تميز وثقة في الخدمات المالية</p>
+        </div>
+        
+        <div class="content">
+            <h2 style="color: #1e293b; margin-bottom: 20px;">عزيزي/عزيزتي ${customerName} 👋</h2>
+            
+            <div class="deposit-card">
+                <h3 style="color: #16a34a; margin-bottom: 15px;">✅ تم شحن محفظتكم بنجاح</h3>
+                <div class="amount-display">
+                    +${data.amount || '0'} ريال سعودي
+                </div>
+                <div class="status-success">تم بنجاح ✓</div>
+            </div>
+            
+            <div class="transaction-details">
+                <h3 style="color: #1e293b; margin-bottom: 20px; text-align: center;">📋 تفاصيل المعاملة</h3>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">رقم المرجع:</span>
+                    <span style="color: #3b82f6; font-family: monospace;">${data.referenceId || 'غير محدد'}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">طريقة الدفع:</span>
+                    <span>${data.paymentMethod || 'حوالة بنكية'}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">تاريخ العملية:</span>
+                    <span>${new Date().toLocaleString('ar-SA', { timeZone: 'Asia/Riyadh' })}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">حالة المعاملة:</span>
+                    <span style="color: #16a34a; font-weight: bold;">مكتملة ✓</span>
+                </div>
+            </div>
+            
+            <div style="background: #eff6ff; border: 1px solid #3b82f6; border-radius: 12px; padding: 25px; margin: 25px 0;">
+                <h4 style="color: #1e40af; margin-bottom: 15px;">💡 معلومات مهمة:</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 8px 0; color: #1e40af;">• يمكنكم الآن استخدام الرصيد في جميع خدماتنا</li>
+                    <li style="margin: 8px 0; color: #1e40af;">• ستصلكم تنبيهات فورية عند كل معاملة</li>
+                    <li style="margin: 8px 0; color: #1e40af;">• يمكنكم مراجعة كافة المعاملات من حسابكم</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="https://alialshehriholding.com/wallet" class="btn">
+                    💼 عرض محفظتي
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3 style="margin-bottom: 15px;">شركة علي صالح الشهري القابضة</h3>
+            <p>📧 info@alialshehriholding.com | 📱 0555812567</p>
+            <p>🌐 alialshehriholding.com</p>
+            <p style="margin-top: 15px; opacity: 0.8; font-size: 14px;">
+                هذا إشعار تلقائي، يرجى عدم الرد على هذا الإيميل
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
+const getWalletDeductionTemplate = (customerName: string, data: any) => `
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إشعار خصم من المحفظة - شركة علي صالح الشهري القابضة</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; direction: rtl; }
+        .container { max-width: 650px; margin: 0 auto; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #dc2626, #ef4444); color: white; padding: 40px 30px; text-align: center; }
+        .content { padding: 40px 30px; }
+        .deduction-card { background: linear-gradient(135deg, #fef2f2, #fef3f3); border: 2px solid #ef4444; border-radius: 16px; padding: 30px; margin: 25px 0; text-align: center; }
+        .amount-display { font-size: 32px; font-weight: bold; color: #dc2626; margin: 15px 0; }
+        .transaction-details { background: #f8fafc; border-radius: 12px; padding: 25px; margin: 25px 0; border: 1px solid #e2e8f0; }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e5e7eb; }
+        .detail-row:last-child { border-bottom: none; }
+        .status-deduction { background: #fee2e2; color: #991b1b; padding: 8px 16px; border-radius: 20px; font-weight: bold; display: inline-block; }
+        .footer { background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 30px; text-align: center; }
+        .btn { display: inline-block; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📉 إشعار خصم من المحفظة</h1>
+            <p>شركة علي صالح الشهري القابضة</p>
+        </div>
+        
+        <div class="content">
+            <h2 style="color: #1e293b; margin-bottom: 20px;">عزيزي/عزيزتي ${customerName} 👋</h2>
+            
+            <div class="deduction-card">
+                <h3 style="color: #dc2626; margin-bottom: 15px;">💳 تم خصم من محفظتكم</h3>
+                <div class="amount-display">
+                    -${data.amount || '0'} ريال سعودي
+                </div>
+                <div class="status-deduction">تم الخصم ✓</div>
+            </div>
+            
+            <div class="transaction-details">
+                <h3 style="color: #1e293b; margin-bottom: 20px; text-align: center;">📋 تفاصيل المعاملة</h3>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">رقم المرجع:</span>
+                    <span style="color: #3b82f6; font-family: monospace;">${data.referenceId || 'غير محدد'}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">السبب:</span>
+                    <span>${data.reason || 'دفع مقابل خدمة'}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">تاريخ العملية:</span>
+                    <span>${new Date().toLocaleString('ar-SA', { timeZone: 'Asia/Riyadh' })}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">الرصيد المتبقي:</span>
+                    <span style="color: #16a34a; font-weight: bold;">${data.remainingBalance || '0'} ريال سعودي</span>
+                </div>
+            </div>
+            
+            <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 12px; padding: 25px; margin: 25px 0;">
+                <h4 style="color: #92400e; margin-bottom: 15px;">ℹ️ تنبيه:</h4>
+                <p style="color: #92400e; line-height: 1.6;">
+                    ${data.remainingBalance < 100 ? 
+                        'رصيدكم أقل من 100 ريال. ننصحكم بإعادة شحن المحفظة لضمان استمرارية الخدمات.' : 
+                        'شكراً لاستخدامكم خدماتنا. يمكنكم شحن المحفظة في أي وقت.'
+                    }
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="https://alialshehriholding.com/wallet" class="btn">
+                    💼 عرض محفظتي
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3 style="margin-bottom: 15px;">شركة علي صالح الشهري القابضة</h3>
+            <p>📧 info@alialshehriholding.com | 📱 0555812567</p>
+            <p>🌐 alialshehriholding.com</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
+const getServicePaymentTemplate = (customerName: string, data: any) => `
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إيصال دفع الخدمة - شركة علي صالح الشهري القابضة</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; direction: rtl; }
+        .container { max-width: 650px; margin: 0 auto; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: white; padding: 40px 30px; text-align: center; }
+        .content { padding: 40px 30px; }
+        .payment-card { background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 2px solid #0ea5e9; border-radius: 16px; padding: 30px; margin: 25px 0; text-align: center; }
+        .amount-display { font-size: 32px; font-weight: bold; color: #0369a1; margin: 15px 0; }
+        .service-details { background: #f8fafc; border-radius: 12px; padding: 25px; margin: 25px 0; border: 1px solid #e2e8f0; }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e5e7eb; }
+        .detail-row:last-child { border-bottom: none; }
+        .status-paid { background: #dcfce7; color: #166534; padding: 8px 16px; border-radius: 20px; font-weight: bold; display: inline-block; }
+        .footer { background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 30px; text-align: center; }
+        .btn { display: inline-block; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; margin: 20px 0; }
+        .receipt-number { background: #1e293b; color: white; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧾 إيصال دفع الخدمة</h1>
+            <p>شركة علي صالح الشهري القابضة</p>
+        </div>
+        
+        <div class="content">
+            <h2 style="color: #1e293b; margin-bottom: 20px;">عزيزي/عزيزتي ${customerName} 👋</h2>
+            
+            <div class="receipt-number">
+                <strong>رقم الإيصال: ${data.receiptNumber || data.referenceId || new Date().getTime()}</strong>
+            </div>
+            
+            <div class="payment-card">
+                <h3 style="color: #0369a1; margin-bottom: 15px;">✅ تم دفع قيمة الخدمة بنجاح</h3>
+                <div class="amount-display">
+                    ${data.amount || '0'} ريال سعودي
+                </div>
+                <div class="status-paid">مدفوع ✓</div>
+            </div>
+            
+            <div class="service-details">
+                <h3 style="color: #1e293b; margin-bottom: 20px; text-align: center;">📝 تفاصيل الخدمة</h3>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">اسم الخدمة:</span>
+                    <span>${data.serviceName || 'خدمة تقنية'}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">رقم المرجع:</span>
+                    <span style="color: #3b82f6; font-family: monospace;">${data.referenceId || 'غير محدد'}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">طريقة الدفع:</span>
+                    <span>${data.paymentMethod || 'المحفظة الإلكترونية'}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">تاريخ الدفع:</span>
+                    <span>${new Date().toLocaleString('ar-SA', { timeZone: 'Asia/Riyadh' })}</span>
+                </div>
+                <div class="detail-row">
+                    <span style="font-weight: 600;">حالة الطلب:</span>
+                    <span style="color: #16a34a; font-weight: bold;">قيد التنفيذ 🚀</span>
+                </div>
+            </div>
+            
+            <div style="background: #ecfdf5; border: 1px solid #16a34a; border-radius: 12px; padding: 25px; margin: 25px 0;">
+                <h4 style="color: #166534; margin-bottom: 15px;">🎯 الخطوات التالية:</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 8px 0; color: #166534;">• سيتم البدء في تنفيذ خدمتكم خلال 24 ساعة</li>
+                    <li style="margin: 8px 0; color: #166534;">• ستصلكم تحديثات دورية حول حالة المشروع</li>
+                    <li style="margin: 8px 0; color: #166534;">• يمكنكم متابعة التقدم من خلال حسابكم</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="https://alialshehriholding.com/my-projects" class="btn">
+                    📊 متابعة المشروع
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3 style="margin-bottom: 15px;">شركة علي صالح الشهري القابضة</h3>
+            <p>📧 info@alialshehriholding.com | 📱 0555812567</p>
+            <p>🌐 alialshehriholding.com</p>
+            <p style="margin-top: 15px; opacity: 0.8; font-size: 14px;">
+                احتفظوا بهذا الإيصال لسجلاتكم المالية
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
 const getPaymentStatusTemplate = (customerName: string, paymentData: any) => `
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحديث حالة الدفع</title>
+    <title>تحديث حالة الدفع - شركة علي صالح الشهري القابضة</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-        .content { padding: 30px; }
-        .status-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin: 10px 0; }
-        .status-completed { background-color: #d4edda; color: #155724; }
-        .status-pending { background-color: #fff3cd; color: #856404; }
-        .status-failed { background-color: #f8d7da; color: #721c24; }
-        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; color: #6c757d; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; direction: rtl; }
+        .container { max-width: 650px; margin: 0 auto; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 40px 30px; text-align: center; }
+        .content { padding: 40px 30px; }
+        .status-card { border-radius: 16px; padding: 30px; margin: 25px 0; text-align: center; }
+        .status-completed { background: linear-gradient(135deg, #ecfdf5, #f0fdf4); border: 2px solid #22c55e; }
+        .status-pending { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 2px solid #f59e0b; }
+        .status-failed { background: linear-gradient(135deg, #fef2f2, #fee2e2); border: 2px solid #ef4444; }
+        .amount-display { font-size: 28px; font-weight: bold; margin: 15px 0; }
+        .status-badge { padding: 10px 20px; border-radius: 25px; font-weight: bold; display: inline-block; margin: 10px 0; }
+        .footer { background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 30px; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🔄 تحديث حالة الدفع</h1>
+            <p>شركة علي صالح الشهري القابضة</p>
         </div>
+        
         <div class="content">
-            <p>مرحباً <strong>${customerName}</strong>,</p>
-            <p>نود إعلامك بتحديث حالة دفعتك:</p>
+            <h2 style="color: #1e293b; margin-bottom: 20px;">عزيزي/عزيزتي ${customerName} 👋</h2>
             
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3>تفاصيل المعاملة:</h3>
-                <p><strong>رقم المعاملة:</strong> ${paymentData.payment_id}</p>
-                <p><strong>المبلغ:</strong> ${paymentData.amount} ${paymentData.currency || 'SAR'}</p>
-                <p><strong>طريقة الدفع:</strong> ${paymentData.payment_method}</p>
-                <p><strong>الحالة السابقة:</strong> <span class="status-badge">${getStatusText(paymentData.old_status || '')}</span></p>
-                <p><strong>الحالة الجديدة:</strong> <span class="status-badge status-${paymentData.new_status}">${getStatusText(paymentData.new_status || '')}</span></p>
+            <div class="status-card status-${paymentData.new_status}">
+                <h3 style="margin-bottom: 15px;">📋 تحديث حالة المعاملة</h3>
+                <div class="amount-display" style="color: ${paymentData.new_status === 'completed' ? '#16a34a' : paymentData.new_status === 'failed' ? '#dc2626' : '#f59e0b'};">
+                    ${paymentData.amount} ${paymentData.currency || 'ريال سعودي'}
+                </div>
+                <div class="status-badge" style="background: ${paymentData.new_status === 'completed' ? '#dcfce7; color: #166534' : paymentData.new_status === 'failed' ? '#fee2e2; color: #991b1b' : '#fef3c7; color: #92400e'};">
+                    ${getStatusText(paymentData.new_status || '')} ${paymentData.new_status === 'completed' ? '✅' : paymentData.new_status === 'failed' ? '❌' : '⏳'}
+                </div>
+            </div>
+            
+            <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 25px 0; border: 1px solid #e2e8f0;">
+                <h3 style="color: #1e293b; margin-bottom: 20px; text-align: center;">📊 تفاصيل المعاملة</h3>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                    <span style="font-weight: 600;">رقم المعاملة:</span>
+                    <span style="color: #3b82f6; font-family: monospace;">${paymentData.payment_id}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                    <span style="font-weight: 600;">طريقة الدفع:</span>
+                    <span>${paymentData.payment_method}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                    <span style="font-weight: 600;">تاريخ المعاملة:</span>
+                    <span>${new Date().toLocaleString('ar-SA', { timeZone: 'Asia/Riyadh' })}</span>
+                </div>
             </div>
 
-            ${paymentData.new_status === 'completed' ? '<p style="color: #28a745; font-weight: bold;">✅ تم الدفع بنجاح! شكراً لك.</p>' : ''}
-            ${paymentData.new_status === 'failed' ? '<p style="color: #dc3545; font-weight: bold;">❌ فشل في الدفع. يرجى المحاولة مرة أخرى أو التواصل معنا.</p>' : ''}
+            ${paymentData.new_status === 'completed' ? `
+            <div style="background: #ecfdf5; border: 1px solid #16a34a; border-radius: 12px; padding: 25px; margin: 25px 0;">
+                <h4 style="color: #166534; margin-bottom: 15px;">✅ تم الدفع بنجاح!</h4>
+                <p style="color: #166534; line-height: 1.6;">شكراً لكم على ثقتكم. تم تأكيد المعاملة وسيتم البدء في تنفيذ الخدمة المطلوبة.</p>
+            </div>
+            ` : ''}
             
-            <p>إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.</p>
-            
-            <p>مع تحياتنا،<br>فريق الدعم الفني</p>
+            ${paymentData.new_status === 'failed' ? `
+            <div style="background: #fef2f2; border: 1px solid #dc2626; border-radius: 12px; padding: 25px; margin: 25px 0;">
+                <h4 style="color: #991b1b; margin-bottom: 15px;">❌ فشل في الدفع</h4>
+                <p style="color: #991b1b; line-height: 1.6;">نعتذر، لم تتم المعاملة بنجاح. يرجى المحاولة مرة أخرى أو التواصل مع الدعم الفني.</p>
+            </div>
+            ` : ''}
         </div>
+        
         <div class="footer">
-            <p>هذا إيميل تلقائي، يرجى عدم الرد عليه مباشرة.</p>
+            <h3 style="margin-bottom: 15px;">شركة علي صالح الشهري القابضة</h3>
+            <p>📧 info@alialshehriholding.com | 📱 0555812567</p>
+            <p>🌐 alialshehriholding.com</p>
         </div>
     </div>
 </body>
@@ -357,7 +670,16 @@ const handler = async (req: Request): Promise<Response> => {
     let html = '';
     let subject = '';
     
-    if (type === 'payment_status_update') {
+    if (type === 'wallet_deposit') {
+      html = getWalletDepositTemplate(customerName, data);
+      subject = `تأكيد شحن المحفظة - ${data.amount} ريال سعودي`;
+    } else if (type === 'wallet_deduction') {
+      html = getWalletDeductionTemplate(customerName, data);
+      subject = `إشعار خصم من المحفظة - ${data.amount} ريال سعودي`;
+    } else if (type === 'service_payment') {
+      html = getServicePaymentTemplate(customerName, data);
+      subject = `إيصال دفع الخدمة - ${data.serviceName}`;
+    } else if (type === 'payment_status_update') {
       html = getPaymentStatusTemplate(customerName, data);
       subject = `تحديث حالة الدفع - ${data.payment_id}`;
     } else if (type === 'custom') {
