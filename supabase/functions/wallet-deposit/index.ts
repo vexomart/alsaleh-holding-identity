@@ -14,11 +14,14 @@ interface DepositRequest {
 }
 
 serve(async (req) => {
+  console.log('Request received:', req.method);
+  
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
+    console.log('Creating Supabase client...');
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -27,6 +30,7 @@ serve(async (req) => {
     // Get the authorization header
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
+      console.log('No authorization header');
       return new Response(
         JSON.stringify({ error: 'No authorization header' }),
         { 
@@ -37,11 +41,13 @@ serve(async (req) => {
     }
 
     // Verify the user
+    console.log('Verifying user...');
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(
       authHeader.replace('Bearer ', '')
     );
 
     if (authError || !user) {
+      console.log('Auth error:', authError);
       return new Response(
         JSON.stringify({ error: 'Invalid authorization' }),
         { 
@@ -51,11 +57,18 @@ serve(async (req) => {
       );
     }
 
+    console.log('User verified:', user.id);
+
     if (req.method === 'POST') {
-      const { amount, payment_method, description, receipt_file }: DepositRequest = await req.json();
+      console.log('Processing POST request...');
+      const requestBody = await req.json();
+      console.log('Request body:', requestBody);
+      
+      const { amount, payment_method, description, receipt_file }: DepositRequest = requestBody;
 
       // Validate amount
       if (!amount || amount <= 0) {
+        console.log('Invalid amount:', amount);
         return new Response(
           JSON.stringify({ error: 'Invalid amount' }),
           { 
@@ -65,6 +78,7 @@ serve(async (req) => {
         );
       }
 
+      console.log('Getting payment method configuration...');
       // Get payment method configuration from database
       const { data: paymentMethodConfig, error: methodError } = await supabaseClient
         .from('payment_methods')
@@ -74,6 +88,7 @@ serve(async (req) => {
         .single();
 
       if (methodError || !paymentMethodConfig) {
+        console.log('Payment method error:', methodError);
         return new Response(
           JSON.stringify({ error: 'Payment method not found or inactive' }),
           { 
@@ -83,151 +98,40 @@ serve(async (req) => {
         );
       }
 
-      // Check amount limits from configuration
-      const config = paymentMethodConfig.configuration;
-      if (config.min_amount && amount < config.min_amount) {
-        return new Response(
-          JSON.stringify({ 
-            error: `Minimum amount is ${config.min_amount} SAR` 
-          }),
-          { 
-            status: 400, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
-      }
-
-      if (config.max_amount && amount > config.max_amount) {
-        return new Response(
-          JSON.stringify({ 
-            error: `Maximum amount is ${config.max_amount} SAR` 
-          }),
-          { 
-            status: 400, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
-      }
+      console.log('Payment method found:', paymentMethodConfig.name_ar);
 
       // Generate unique reference
       const reference_id = `DEP_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      console.log('Generated reference:', reference_id);
 
-      // Process payment based on provider
-      let paymentResult;
-      
-      try {
-        switch (paymentMethodConfig.provider) {
-          case 'stripe':
-            paymentResult = await processStripePayment(amount, paymentMethodConfig, reference_id);
-            break;
-          case 'stc_pay':
-            paymentResult = await processSTCPayment(amount, paymentMethodConfig, reference_id);
-            break;
-          case 'tamara':
-            paymentResult = await processTamaraPayment(amount, paymentMethodConfig, reference_id);
-            break;
-          case 'bank_transfer':
-            paymentResult = await processBankTransfer(amount, paymentMethodConfig, reference_id);
-            break;
-          default:
-            // For demo purposes, simulate successful payment
-            paymentResult = {
-              success: true,
-              payment_url: null,
-              transaction_id: reference_id,
-              status: 'completed'
-            };
-        }
-      } catch (error) {
-        console.error('Payment processing error:', error);
-        return new Response(
-          JSON.stringify({ error: 'Payment processing failed' }),
-          { 
-            status: 500, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
-      }
-
-      if (paymentResult.success) {
-        // For direct payments (like demo/bank transfer), process immediately
-        if (paymentResult.status === 'completed') {
-          try {
-            const { data: result, error: rpcError } = await supabaseClient.rpc('process_wallet_transaction', {
-              p_user_id: user.id,
-              p_transaction_type: 'deposit',
-              p_amount: amount,
-              p_description: description || `Deposit via ${paymentMethodConfig.name_ar}`,
-              p_reference_id: reference_id,
-              p_metadata: { 
+      // For bank transfer, process immediately as pending
+      if (payment_method === 'bank_transfer') {
+        console.log('Processing bank transfer...');
+        
+        try {
+          // Create transaction record
+          const { data: transaction, error: insertError } = await supabaseClient
+            .from('wallet_transactions')
+            .insert({
+              user_id: user.id,
+              transaction_type: 'deposit',
+              amount: amount,
+              description: description || `Deposit via ${paymentMethodConfig.name_ar}`,
+              reference_id: reference_id,
+              status: 'pending',
+              metadata: { 
                 payment_method: payment_method,
-                reference_id: reference_id,
                 payment_provider: paymentMethodConfig.provider,
                 receipt_uploaded: !!receipt_file
               }
-            });
+            })
+            .select()
+            .single();
 
-            if (rpcError) {
-              console.error('RPC Error:', rpcError);
-              // Create transaction manually if RPC fails
-              const { data: transaction, error: insertError } = await supabaseClient
-                .from('wallet_transactions')
-                .insert({
-                  user_id: user.id,
-                  transaction_type: 'deposit',
-                  amount: amount,
-                  description: description || `Deposit via ${paymentMethodConfig.name_ar}`,
-                  reference_id: reference_id,
-                  status: 'completed',
-                  metadata: { 
-                    payment_method: payment_method,
-                    reference_id: reference_id,
-                    payment_provider: paymentMethodConfig.provider,
-                    receipt_uploaded: !!receipt_file
-                  }
-                })
-                .select()
-                .single();
-
-              if (insertError) {
-                console.error('Insert Error:', insertError);
-                return new Response(
-                  JSON.stringify({ error: 'Failed to process deposit' }),
-                  { 
-                    status: 500, 
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-                  }
-                );
-              }
-
-              // Update wallet balance manually - add to existing balance
-              const { data: currentWallet } = await supabaseClient
-                .from('customer_wallets')
-                .select('balance')
-                .eq('user_id', user.id)
-                .single();
-
-              const currentBalance = currentWallet?.balance || 0;
-              const newBalance = currentBalance + amount;
-
-              const { error: updateError } = await supabaseClient
-                .from('customer_wallets')
-                .upsert({
-                  user_id: user.id,
-                  balance: newBalance,
-                  currency: 'SAR'
-                }, {
-                  onConflict: 'user_id'
-                });
-
-              if (updateError) {
-                console.error('Update Error:', updateError);
-              }
-            }
-          } catch (error) {
-            console.error('Transaction processing error:', error);
+          if (insertError) {
+            console.error('Insert Error:', insertError);
             return new Response(
-              JSON.stringify({ error: 'Failed to process deposit' }),
+              JSON.stringify({ error: 'Failed to create transaction' }),
               { 
                 status: 500, 
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -235,45 +139,65 @@ serve(async (req) => {
             );
           }
 
-          // Get updated wallet balance
-          const { data: wallet, error: walletError } = await supabaseClient
-            .from('customer_wallets')
-            .select('balance')
-            .eq('user_id', user.id)
-            .single();
+          console.log('Transaction created:', transaction.id);
 
           return new Response(
             JSON.stringify({ 
               success: true, 
-              transaction_id: reference_id,
-              new_balance: wallet?.balance || 0,
+              transaction_id: transaction.id,
               reference_id,
-              status: 'completed'
+              status: 'pending',
+              message: 'تم إرسال طلب الشحن. سيتم مراجعة الإيصال وإضافة المبلغ خلال 24 ساعة'
             }),
             { 
               headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
             }
           );
-        } else if (paymentResult.payment_url) {
-          // For redirect payments (like Stripe), return the payment URL
+
+        } catch (error) {
+          console.error('Processing error:', error);
           return new Response(
-            JSON.stringify({ 
-              success: true, 
-              payment_url: paymentResult.payment_url,
-              reference_id,
-              status: 'pending'
-            }),
+            JSON.stringify({ error: 'Transaction processing failed' }),
             { 
+              status: 500, 
               headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
             }
           );
         }
       }
 
+      // For other payment methods, return demo URLs for now
+      console.log('Processing other payment method:', payment_method);
+      
+      let payment_url = '';
+      switch (payment_method) {
+        case 'stripe':
+          payment_url = `https://checkout.stripe.com/demo/${reference_id}`;
+          break;
+        case 'stc_pay':
+          payment_url = `https://stcpay.com.sa/demo/${reference_id}`;
+          break;
+        case 'tamara':
+          payment_url = `https://tamara.co/demo/${reference_id}`;
+          break;
+        default:
+          return new Response(
+            JSON.stringify({ error: 'Payment method not supported' }),
+            { 
+              status: 400, 
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+            }
+          );
+      }
+
       return new Response(
-        JSON.stringify({ error: 'Payment processing failed' }),
+        JSON.stringify({ 
+          success: true, 
+          payment_url: payment_url,
+          reference_id,
+          status: 'pending'
+        }),
         { 
-          status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       );
@@ -290,7 +214,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error:', error);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: 'Internal server error: ' + error.message }),
       { 
         status: 500, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -298,47 +222,3 @@ serve(async (req) => {
     );
   }
 });
-
-// Payment processor functions
-async function processStripePayment(amount: number, config: any, reference_id: string) {
-  // For now, return demo response
-  // In production, integrate with Stripe API using config.api_key and config.secret_key
-  return {
-    success: true,
-    payment_url: `https://checkout.stripe.com/demo/${reference_id}`,
-    transaction_id: reference_id,
-    status: 'pending'
-  };
-}
-
-async function processSTCPayment(amount: number, config: any, reference_id: string) {
-  // For now, return demo response
-  // In production, integrate with STC Pay API
-  return {
-    success: true,
-    payment_url: `https://stcpay.com.sa/demo/${reference_id}`,
-    transaction_id: reference_id,
-    status: 'pending'
-  };
-}
-
-async function processTamaraPayment(amount: number, config: any, reference_id: string) {
-  // For now, return demo response
-  // In production, integrate with Tamara API
-  return {
-    success: true,
-    payment_url: `https://tamara.co/demo/${reference_id}`,
-    transaction_id: reference_id,
-    status: 'pending'
-  };
-}
-
-async function processBankTransfer(amount: number, config: any, reference_id: string) {
-  // Bank transfer is typically completed immediately in demo
-  return {
-    success: true,
-    payment_url: null,
-    transaction_id: reference_id,
-    status: 'completed'
-  };
-}
