@@ -35,7 +35,7 @@ const AdminLogin = () => {
           .single();
 
         if (adminData) {
-          navigate('/admin-projects');
+          navigate('/admin/dashboard');
         }
       }
     } catch (error) {
@@ -83,9 +83,9 @@ const AdminLogin = () => {
           description: `تم تسجيل الدخول بنجاح - ${data.user.email}`,
         });
 
-        // إعادة توجيه إلى لوحة الإدارة
+        // إعادة توجيه إلى لوحة الإدارة الجديدة
         setTimeout(() => {
-          navigate('/admin-projects', { replace: true });
+          navigate('/admin/dashboard', { replace: true });
         }, 500);
       }
     } catch (error: any) {

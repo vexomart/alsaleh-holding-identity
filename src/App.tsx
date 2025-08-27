@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useRef } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
 import { SecurityHeaders } from "@/components/SecurityHeaders";
@@ -22,6 +22,7 @@ const OurWorks = lazy(() => import("./pages/OurWorks"));
 const About = lazy(() => import("./pages/About"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const Story = lazy(() => import("./pages/Story"));
 const Team = lazy(() => import("./pages/Team"));
 const Vision = lazy(() => import("./pages/Vision"));
@@ -317,10 +318,19 @@ const App = () => {
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
                 <Route path="/auth" element={<Suspense fallback={<PageLoader />}><Auth /></Suspense>} />
                 <Route path="/my-projects" element={<Suspense fallback={<PageLoader />}><MyProjects /></Suspense>} />
-                <Route path="/admin-projects" element={<Suspense fallback={<PageLoader />}><AdminProjects /></Suspense>} />
                 <Route path="/admin-login" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
-                <Route path="/admin-dashboard" element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>} />
-                <Route path="/admin-clients" element={<Suspense fallback={<PageLoader />}><AdminClients /></Suspense>} />
+                
+                {/* Admin Routes with Layout */}
+                <Route path="/admin/*" element={<Suspense fallback={<PageLoader />}><AdminLayout /></Suspense>}>
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="projects" element={<AdminProjects />} />
+                  <Route path="clients" element={<AdminClients />} />
+                </Route>
+                
+                {/* Legacy admin routes - redirect to new structure */}
+                <Route path="/admin-projects" element={<Navigate to="/admin/projects" replace />} />
+                <Route path="/admin-dashboard" element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="/admin-clients" element={<Navigate to="/admin/clients" replace />} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />

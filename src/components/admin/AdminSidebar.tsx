@@ -35,36 +35,36 @@ const menuItems = [
   {
     groupLabel: 'الرئيسية',
     items: [
-      { title: 'لوحة التحكم', url: '/admin-dashboard', icon: LayoutDashboard },
-      { title: 'المشاريع', url: '/admin-projects', icon: Package },
-      { title: 'الإحصائيات', url: '/admin-analytics', icon: BarChart3 },
+      { title: 'لوحة التحكم', url: '/admin/dashboard', icon: LayoutDashboard },
+      { title: 'المشاريع', url: '/admin/projects', icon: Package },
+      { title: 'الإحصائيات', url: '/admin/analytics', icon: BarChart3 },
     ]
   },
   {
     groupLabel: 'إدارة العملاء',
     items: [
-      { title: 'العملاء', url: '/admin-clients', icon: Users },
-      { title: 'الطلبات', url: '/admin-orders', icon: ShoppingCart },
-      { title: 'الفواتير', url: '/admin-invoices', icon: FileText },
-      { title: 'المدفوعات', url: '/admin-payments', icon: CreditCard },
+      { title: 'العملاء', url: '/admin/clients', icon: Users },
+      { title: 'الطلبات', url: '/admin/orders', icon: ShoppingCart },
+      { title: 'الفواتير', url: '/admin/invoices', icon: FileText },
+      { title: 'المدفوعات', url: '/admin/payments', icon: CreditCard },
     ]
   },
   {
     groupLabel: 'إدارة النظام',
     items: [
-      { title: 'المستخدمين', url: '/admin-users', icon: UserCheck },
-      { title: 'الأدوار', url: '/admin-roles', icon: Shield },
-      { title: 'الشركات التابعة', url: '/admin-subsidiaries', icon: Building },
-      { title: 'الرسائل', url: '/admin-messages', icon: MessageSquare },
+      { title: 'المستخدمين', url: '/admin/users', icon: UserCheck },
+      { title: 'الأدوار', url: '/admin/roles', icon: Shield },
+      { title: 'الشركات التابعة', url: '/admin/subsidiaries', icon: Building },
+      { title: 'الرسائل', url: '/admin/messages', icon: MessageSquare },
     ]
   },
   {
     groupLabel: 'التقارير والإعدادات',
     items: [
-      { title: 'الإشعارات', url: '/admin-notifications', icon: Bell },
-      { title: 'سجل النشاطات', url: '/admin-activity-logs', icon: Activity },
-      { title: 'النسخ الاحتياطي', url: '/admin-backup', icon: Database },
-      { title: 'الإعدادات', url: '/admin-settings', icon: Settings },
+      { title: 'الإشعارات', url: '/admin/notifications', icon: Bell },
+      { title: 'سجل النشاطات', url: '/admin/activity-logs', icon: Activity },
+      { title: 'النسخ الاحتياطي', url: '/admin/backup', icon: Database },
+      { title: 'الإعدادات', url: '/admin/settings', icon: Settings },
     ]
   }
 ];
