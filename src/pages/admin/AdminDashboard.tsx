@@ -16,6 +16,16 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  Building2,
+  FileText,
+  Settings,
+  PieChart,
+  Briefcase,
+  Target,
+  Zap,
+  Shield,
+  Activity,
+  Star
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -231,40 +241,80 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="space-y-8" dir="rtl">
-      {/* Welcome Section */}
-      <div className="flex items-center justify-between">
-        <div className="text-right">
-          <h1 className="text-3xl font-bold text-foreground">مرحباً بك في لوحة الإدارة</h1>
-          <p className="text-muted-foreground mt-2">نظرة شاملة على أداء الشركة والمشاريع النشطة</p>
+    <div className="space-y-8 font-corporate" dir="rtl">
+      {/* Executive Header */}
+      <div className="relative bg-gradient-to-l from-primary/10 via-blue-50/50 to-slate-50/30 dark:from-primary/5 dark:via-slate-800 dark:to-slate-900/50 rounded-2xl p-8 border border-border/50 shadow-sm overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="relative flex items-center justify-between">
+          <div className="text-right space-y-3">
+            <div className="flex items-center gap-3 justify-end">
+              <Badge variant="secondary" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/15 transition-all duration-300">
+                <Building2 className="w-4 h-4 ml-1" />
+                لوحة التحكم التنفيذية
+              </Badge>
+            </div>
+            <h1 className="text-4xl font-bold bg-gradient-to-l from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent leading-tight">
+              إدارة الأعمال المتقدمة
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              نظام إدارة شامل لمراقبة الأداء وتحليل البيانات وإدارة العمليات التجارية بكفاءة عالية
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="bg-primary/10 p-4 rounded-2xl border border-primary/20">
+              <Activity className="w-8 h-8 text-primary animate-pulse" />
+            </div>
+            <Badge variant="outline" className="text-sm px-4 py-2 bg-background/80 backdrop-blur border-border/50 hover:bg-background transition-all duration-300">
+              <Clock className="w-4 h-4 ml-1" />
+              آخر تحديث: الآن
+            </Badge>
+          </div>
         </div>
-        <Badge variant="outline" className="text-sm px-3 py-1">
-          آخر تحديث: الآن
-        </Badge>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Executive KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {statsCards.map((stat, index) => (
-          <Card key={index} className="relative overflow-hidden transition-all duration-200 hover:shadow-lg border-0 bg-gradient-to-br from-background to-background/50">
-            <CardContent className="p-6">
+          <Card key={index} className="group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 border border-border/50 bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-sm hover:scale-[1.02] cursor-pointer">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <CardContent className="relative p-7">
               <div className="flex items-center justify-between">
-                <div className="text-right">
-                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                  <p className="text-2xl font-bold text-foreground mt-2">{stat.value}</p>
-                  <div className="flex items-center gap-1 mt-2 justify-end">
-                    {stat.changeType === 'positive' ? (
-                      <ArrowUpRight className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <ArrowDownRight className="h-4 w-4 text-red-600" />
-                    )}
-                    <span className={`text-sm font-medium ${stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'}`}>
-                      {stat.change}
-                    </span>
+                <div className="text-right space-y-3 flex-1">
+                  <div className="flex items-center justify-end gap-2">
+                    <Badge variant="secondary" className="text-xs px-2 py-1 bg-muted/50 text-muted-foreground border-0">
+                      {stat.title}
+                    </Badge>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-3xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors duration-300">
+                      {stat.value}
+                    </p>
+                    <div className="flex items-center gap-2 justify-end">
+                      <div className={`flex items-center gap-1 px-2 py-1 rounded-lg ${
+                        stat.changeType === 'positive' 
+                          ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' 
+                          : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                      }`}>
+                        {stat.changeType === 'positive' ? (
+                          <ArrowUpRight className="h-3 w-3" />
+                        ) : (
+                          <ArrowDownRight className="h-3 w-3" />
+                        )}
+                        <span className="text-sm font-semibold">
+                          {stat.change}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className={`p-3 rounded-xl bg-${stat.color}-100 dark:bg-${stat.color}-900/20`}>
-                  <stat.icon className={`h-6 w-6 text-${stat.color}-600 dark:text-${stat.color}-400`} />
+                <div className={`relative p-4 rounded-2xl ${
+                  stat.color === 'blue' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' :
+                  stat.color === 'green' ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' :
+                  stat.color === 'purple' ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400' :
+                  'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
+                } group-hover:scale-110 transition-transform duration-500`}>
+                  <stat.icon className="h-7 w-7" />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
               </div>
             </CardContent>
@@ -273,35 +323,59 @@ const AdminDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Recent Activities */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-right">
-              <Clock className="h-5 w-5" />
-              النشاطات الأخيرة
-            </CardTitle>
-            <CardDescription className="text-right">آخر الأحداث والتحديثات في النظام</CardDescription>
+        {/* Enterprise Activity Center */}
+        <Card className="lg:col-span-2 border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div className="text-right space-y-2">
+                <CardTitle className="flex items-center gap-3 text-right text-xl font-semibold">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                    <Activity className="h-5 w-5" />
+                  </div>
+                  مركز النشاطات التنفيذي
+                </CardTitle>
+                <CardDescription className="text-right text-base">
+                  رصد شامل لجميع العمليات والأحداث الحديثة في النظام
+                </CardDescription>
+              </div>
+              <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3 py-1">
+                {recentActivities.length} نشاط
+              </Badge>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start gap-4 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                  <div className={`p-2 rounded-lg ${
-                    activity.status === 'success' ? 'bg-green-100 dark:bg-green-900/20' :
-                    activity.status === 'warning' ? 'bg-yellow-100 dark:bg-yellow-900/20' :
-                    'bg-blue-100 dark:bg-blue-900/20'
-                  }`}>
-                    {activity.status === 'success' ? (
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                    ) : activity.status === 'warning' ? (
-                      <AlertCircle className="h-4 w-4 text-yellow-600" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-blue-600" />
-                    )}
-                  </div>
-                  <div className="flex-1 text-right">
-                    <p className="text-sm font-medium text-foreground">{activity.title}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
+            <div className="space-y-3">
+              {recentActivities.map((activity, index) => (
+                <div key={activity.id} className="group relative p-5 rounded-xl border border-border/30 bg-gradient-to-r from-muted/20 via-background/50 to-muted/20 hover:from-primary/5 hover:via-background/70 hover:to-blue-50/30 dark:hover:from-primary/5 dark:hover:via-slate-800/70 dark:hover:to-slate-700/30 transition-all duration-500 hover:shadow-md hover:scale-[1.01] cursor-pointer">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
+                  <div className="relative flex items-center gap-4">
+                    <div className={`relative p-3 rounded-xl ${
+                      activity.status === 'success' ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400' :
+                      activity.status === 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400' :
+                      'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                    } group-hover:scale-110 transition-transform duration-300`}>
+                      {activity.status === 'success' ? (
+                        <CheckCircle className="h-5 w-5" />
+                      ) : activity.status === 'warning' ? (
+                        <AlertCircle className="h-5 w-5" />
+                      ) : (
+                        <Zap className="h-5 w-5" />
+                      )}
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div className="flex-1 text-right space-y-1">
+                      <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
+                        {activity.title}
+                      </p>
+                      <div className="flex items-center justify-end gap-2">
+                        <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-lg">
+                          {activity.time}
+                        </span>
+                        <Badge variant={activity.status === 'success' ? 'default' : 'secondary'} className="text-xs px-2 py-0.5">
+                          {activity.status === 'success' ? 'مكتمل' : activity.status === 'warning' ? 'تحذير' : 'جديد'}
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -309,27 +383,52 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-right">
-              <BarChart3 className="h-5 w-5" />
-              إجراءات سريعة
-            </CardTitle>
-            <CardDescription className="text-right">الوصول السريع للمهام الأساسية</CardDescription>
+        {/* Executive Command Center */}
+        <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+          <CardHeader className="pb-4">
+            <div className="text-right space-y-2">
+              <CardTitle className="flex items-center gap-3 text-right text-xl font-semibold">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                  <Target className="h-5 w-5" />
+                </div>
+                مركز القيادة التنفيذي
+              </CardTitle>
+              <CardDescription className="text-right text-base">
+                الوصول المباشر للعمليات الحيوية والمهام الاستراتيجية
+              </CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {quickActions.map((action, index) => (
+              {[
+                { title: 'إدارة المشاريع', description: 'إشراف على جميع المشاريع النشطة', action: '/admin/projects', icon: Briefcase, color: 'blue' },
+                { title: 'إدارة العملاء', description: 'قاعدة بيانات العملاء والعلاقات', action: '/admin/clients', icon: Users, color: 'green' },
+                { title: 'التقارير التحليلية', description: 'تحليلات متقدمة وإحصائيات الأداء', action: '/admin/analytics', icon: PieChart, color: 'purple' },
+                { title: 'إعدادات النظام', description: 'تكوين وإدارة النظام المتقدمة', action: '/admin/settings', icon: Settings, color: 'orange' },
+              ].map((action, index) => (
                 <Button
                   key={index}
-                  variant="outline"
-                  className="w-full h-auto p-4 justify-start text-right"
+                  variant="ghost"
+                  className="group w-full h-auto p-4 justify-end text-right hover:bg-primary/5 hover:border-primary/20 border border-transparent transition-all duration-300 rounded-xl"
                   onClick={() => window.location.href = action.action}
                 >
-                  <div className="text-right">
-                    <p className="font-medium text-sm">{action.title}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{action.description}</p>
+                  <div className="flex items-center gap-3 w-full">
+                    <div className={`p-2 rounded-lg ${
+                      action.color === 'blue' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' :
+                      action.color === 'green' ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' :
+                      action.color === 'purple' ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400' :
+                      'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
+                    } group-hover:scale-110 transition-transform duration-300`}>
+                      <action.icon className="h-5 w-5" />
+                    </div>
+                    <div className="text-right flex-1">
+                      <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors duration-300">
+                        {action.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                        {action.description}
+                      </p>
+                    </div>
                   </div>
                 </Button>
               ))}
@@ -338,34 +437,100 @@ const AdminDashboard = () => {
         </Card>
       </div>
 
-      {/* Real Progress Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-right">نظرة عامة على التقدم</CardTitle>
-          <CardDescription className="text-right">إحصائيات حقيقية لحالة المشاريع والأداء</CardDescription>
+      {/* Executive Performance Analytics */}
+      <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+        <CardHeader className="pb-6">
+          <div className="flex items-center justify-between">
+            <div className="text-right space-y-2">
+              <CardTitle className="flex items-center gap-3 text-right text-xl font-semibold">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                  <Shield className="h-5 w-5" />
+                </div>
+                لوحة التحليلات التنفيذية
+              </CardTitle>
+              <CardDescription className="text-right text-base">
+                مؤشرات الأداء الرئيسية والتحليلات الاستراتيجية للأعمال
+              </CardDescription>
+            </div>
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-2">
+              <Star className="w-4 h-4 ml-1" />
+              مؤشرات حية
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>{stats.totalProjects > 0 ? Math.round((stats.activeProjects / stats.totalProjects) * 100) : 0}%</span>
-                <span>المشاريع النشطة</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="group space-y-4 p-5 rounded-xl border border-border/30 bg-gradient-to-br from-blue-50/30 via-background/50 to-blue-50/20 dark:from-blue-900/10 dark:via-slate-800/50 dark:to-blue-900/5 hover:shadow-md transition-all duration-300">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    {stats.totalProjects > 0 ? Math.round((stats.activeProjects / stats.totalProjects) * 100) : 0}%
+                  </span>
+                  <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-foreground">المشاريع النشطة</p>
+                  <p className="text-xs text-muted-foreground">من إجمالي المشاريع</p>
+                </div>
               </div>
-              <Progress value={stats.totalProjects > 0 ? (stats.activeProjects / stats.totalProjects) * 100 : 0} className="h-2" />
+              <div className="relative">
+                <Progress 
+                  value={stats.totalProjects > 0 ? (stats.activeProjects / stats.totalProjects) * 100 : 0} 
+                  className="h-3 bg-blue-100 dark:bg-blue-900/30"
+                />
+                <div className="absolute top-0 left-0 h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500" 
+                     style={{ width: `${stats.totalProjects > 0 ? (stats.activeProjects / stats.totalProjects) * 100 : 0}%` }}></div>
+              </div>
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>{stats.totalProjects > 0 ? Math.round((stats.pendingTasks / stats.totalProjects) * 100) : 0}%</span>
-                <span>المشاريع المكتملة</span>
+            
+            <div className="group space-y-4 p-5 rounded-xl border border-border/30 bg-gradient-to-br from-green-50/30 via-background/50 to-green-50/20 dark:from-green-900/10 dark:via-slate-800/50 dark:to-green-900/5 hover:shadow-md transition-all duration-300">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    {stats.totalProjects > 0 ? Math.round((stats.pendingTasks / stats.totalProjects) * 100) : 0}%
+                  </span>
+                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-foreground">المشاريع المكتملة</p>
+                  <p className="text-xs text-muted-foreground">معدل الإنجاز</p>
+                </div>
               </div>
-              <Progress value={stats.totalProjects > 0 ? (stats.pendingTasks / stats.totalProjects) * 100 : 0} className="h-2" />
+              <div className="relative">
+                <Progress 
+                  value={stats.totalProjects > 0 ? (stats.pendingTasks / stats.totalProjects) * 100 : 0} 
+                  className="h-3 bg-green-100 dark:bg-green-900/30"
+                />
+                <div className="absolute top-0 left-0 h-3 bg-gradient-to-r from-green-500 to-green-600 rounded-full transition-all duration-500" 
+                     style={{ width: `${stats.totalProjects > 0 ? (stats.pendingTasks / stats.totalProjects) * 100 : 0}%` }}></div>
+              </div>
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>{Math.abs(stats.monthlyGrowth)}%</span>
-                <span>النمو الشهري</span>
+            
+            <div className="group space-y-4 p-5 rounded-xl border border-border/30 bg-gradient-to-br from-purple-50/30 via-background/50 to-purple-50/20 dark:from-purple-900/10 dark:via-slate-800/50 dark:to-purple-900/5 hover:shadow-md transition-all duration-300">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {Math.abs(stats.monthlyGrowth)}%
+                  </span>
+                  {stats.monthlyGrowth >= 0 ? (
+                    <ArrowUpRight className="w-5 h-5 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-300" />
+                  ) : (
+                    <ArrowDownRight className="w-5 h-5 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-300" />
+                  )}
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-foreground">النمو الشهري</p>
+                  <p className="text-xs text-muted-foreground">مقارنة بالشهر السابق</p>
+                </div>
               </div>
-              <Progress value={Math.min(100, Math.abs(stats.monthlyGrowth))} className="h-2" />
+              <div className="relative">
+                <Progress 
+                  value={Math.min(100, Math.abs(stats.monthlyGrowth))} 
+                  className="h-3 bg-purple-100 dark:bg-purple-900/30"
+                />
+                <div className="absolute top-0 left-0 h-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full transition-all duration-500" 
+                     style={{ width: `${Math.min(100, Math.abs(stats.monthlyGrowth))}%` }}></div>
+              </div>
             </div>
           </div>
         </CardContent>
