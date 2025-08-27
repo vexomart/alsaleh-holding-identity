@@ -229,7 +229,7 @@ const Websites = () => {
       </section>
 
       {/* Process */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-24 bg-muted/30" dir="rtl">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold mb-4">عملية التطوير</h2>
@@ -238,27 +238,48 @@ const Websites = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {process.map((step, index) => {
               const IconComponent = step.icon;
               return (
-                <div key={index} className="relative">
-                  <Card className="text-center group hover:scale-105 transition-transform duration-300">
-                    <CardContent className="p-6">
-                      <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg">
-                        {step.step}
-                      </div>
-                      <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
-                      <p className="text-muted-foreground text-sm">{step.description}</p>
-                    </CardContent>
-                  </Card>
+                <Card key={index} className="group relative overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:scale-[1.02] bg-card/80 backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
-                  {index < process.length - 1 && (
-                    <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
-                      <ArrowRight className="w-6 h-6 text-primary/50" />
+                  <CardContent className="p-8 relative z-10">
+                    <div className="flex items-start gap-6">
+                      {/* Step Number Circle */}
+                      <div className="flex-shrink-0">
+                        <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-primary/20 transition-all duration-300 transform group-hover:scale-110">
+                          <span className="text-white font-bold text-xl">{step.step}</span>
+                        </div>
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="flex-1 text-right">
+                        <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+                          {step.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed text-base">
+                          {step.description}
+                        </p>
+                      </div>
+                      
+                      {/* Icon */}
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
+                          <IconComponent className="w-6 h-6 text-primary" />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                  
+                  {/* Connecting Line for Desktop */}
+                  {index < process.length - 1 && index % 2 === 0 && (
+                    <div className="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2">
+                      <div className="w-px h-8 bg-gradient-to-b from-primary/50 to-transparent"></div>
                     </div>
                   )}
-                </div>
+                </Card>
               );
             })}
           </div>
