@@ -4,13 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Clock, CheckCircle, AlertCircle, Users, Calendar, DollarSign, LogOut, Home, Edit, Trash2, Plus, Search } from 'lucide-react';
+import { LogOut, Home, Edit, Trash2, Plus, Search } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
@@ -18,23 +17,23 @@ import { Link } from "react-router-dom";
 interface Project {
   id: string;
   name: string;
-  description: string;
-  project_number: string;
-  project_type: string;
-  status: string;
-  progress_percentage: number;
-  budget: number;
-  currency: string;
-  start_date: string;
-  due_date: string;
-  created_at: string;
-  user_id: string;
+  description?: string;
+  project_number?: string;
+  project_type?: string;
+  status?: string;
+  progress_percentage?: number;
+  budget?: number;
+  currency?: string;
+  start_date?: string;
+  due_date?: string;
+  created_at?: string;
+  user_id?: string;
 }
 
 interface UserProfile {
   id: string;
   user_id: string;
-  full_name: string;
+  full_name?: string;
   user_role: string;
 }
 
@@ -54,7 +53,7 @@ const AdminProjects = () => {
     name: '',
     description: '',
     project_type: '',
-    status: 'planning',
+    status: 'planning' as 'planning' | 'completed' | 'cancelled' | 'in_progress' | 'review',
     progress_percentage: 0,
     budget: 0,
     currency: 'SAR',
@@ -162,29 +161,28 @@ const AdminProjects = () => {
 
   const handleCreateProject = async () => {
     try {
+      const insertData = {
+        name: formData.name,
+        description: formData.description,
+        project_type: formData.project_type,
+        status: formData.status,
+        progress_percentage: formData.progress_percentage,
+        budget: formData.budget,
+        currency: formData.currency,
+        start_date: formData.start_date || null,
+        due_date: formData.due_date || null,
+        user_id: formData.user_id
+      };
+
       const { error } = await supabase
         .from('projects')
-        .insert([{
-          ...formData,
-          status: formData.status as "planning" | "pending" | "in_progress" | "completed" | "on_hold" | "cancelled" | "review"
-        }]);
+        .insert([insertData]);
 
       if (error) throw error;
       
       toast.success('تم إنشاء المشروع بنجاح');
       setCreateDialogOpen(false);
-      setFormData({
-        name: '',
-        description: '',
-        project_type: '',
-        status: 'planning',
-        progress_percentage: 0,
-        budget: 0,
-        currency: 'SAR',
-        start_date: '',
-        due_date: '',
-        user_id: ''
-      });
+      resetForm();
       await fetchProjects();
     } catch (error) {
       console.error('Error creating project:', error);
@@ -196,12 +194,22 @@ const AdminProjects = () => {
     if (!selectedProject) return;
 
     try {
+      const updateData = {
+        name: formData.name,
+        description: formData.description,
+        project_type: formData.project_type,
+        status: formData.status,
+        progress_percentage: formData.progress_percentage,
+        budget: formData.budget,
+        currency: formData.currency,
+        start_date: formData.start_date || null,
+        due_date: formData.due_date || null,
+        user_id: formData.user_id
+      };
+
       const { error } = await supabase
         .from('projects')
-        .update({
-          ...formData,
-          status: formData.status as "planning" | "pending" | "in_progress" | "completed" | "on_hold" | "cancelled" | "review"
-        })
+        .update(updateData)
         .eq('id', selectedProject.id);
 
       if (error) throw error;
@@ -237,13 +245,27 @@ const AdminProjects = () => {
     }
   };
 
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      description: '',
+      project_type: '',
+      status: 'planning',
+      progress_percentage: 0,
+      budget: 0,
+      currency: 'SAR',
+      start_date: '',
+      due_date: '',
+      user_id: ''
+    });
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'planning': return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
       case 'in_progress': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
       case 'completed': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      case 'on_hold': return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
+      case 'review': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400';
       case 'cancelled': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
@@ -252,18 +274,17 @@ const AdminProjects = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'planning': return 'تخطيط';
-      case 'pending': return 'في الانتظار';
       case 'in_progress': return 'قيد التنفيذ';
       case 'completed': return 'مكتمل';
-      case 'on_hold': return 'متوقف مؤقتاً';
+      case 'review': return 'مراجعة';
       case 'cancelled': return 'ملغي';
       default: return status;
     }
   };
 
   const filteredProjects = projects.filter(project => {
-    const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         project.project_number.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = project.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         project.project_number?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -271,16 +292,16 @@ const AdminProjects = () => {
   const openEditDialog = (project: Project) => {
     setSelectedProject(project);
     setFormData({
-      name: project.name,
-      description: project.description,
-      project_type: project.project_type,
-      status: project.status,
-      progress_percentage: project.progress_percentage,
-      budget: project.budget,
-      currency: project.currency,
-      start_date: project.start_date,
-      due_date: project.due_date,
-      user_id: project.user_id
+      name: project.name || '',
+      description: project.description || '',
+      project_type: project.project_type || '',
+      status: (project.status as any) || 'planning',
+      progress_percentage: project.progress_percentage || 0,
+      budget: project.budget || 0,
+      currency: project.currency || 'SAR',
+      start_date: project.start_date || '',
+      due_date: project.due_date || '',
+      user_id: project.user_id || ''
     });
     setEditDialogOpen(true);
   };
@@ -349,10 +370,9 @@ const AdminProjects = () => {
                   <SelectContent>
                     <SelectItem value="all">جميع الحالات</SelectItem>
                     <SelectItem value="planning">تخطيط</SelectItem>
-                    <SelectItem value="pending">في الانتظار</SelectItem>
                     <SelectItem value="in_progress">قيد التنفيذ</SelectItem>
                     <SelectItem value="completed">مكتمل</SelectItem>
-                    <SelectItem value="on_hold">متوقف مؤقتاً</SelectItem>
+                    <SelectItem value="review">مراجعة</SelectItem>
                     <SelectItem value="cancelled">ملغي</SelectItem>
                   </SelectContent>
                 </Select>
@@ -416,60 +436,18 @@ const AdminProjects = () => {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="status">الحالة</Label>
-                      <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
+                      <Select value={formData.status} onValueChange={(value: any) => setFormData({...formData, status: value})}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="planning">تخطيط</SelectItem>
-                          <SelectItem value="pending">في الانتظار</SelectItem>
                           <SelectItem value="in_progress">قيد التنفيذ</SelectItem>
                           <SelectItem value="completed">مكتمل</SelectItem>
-                          <SelectItem value="on_hold">متوقف مؤقتاً</SelectItem>
+                          <SelectItem value="review">مراجعة</SelectItem>
                           <SelectItem value="cancelled">ملغي</SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="budget">الميزانية</Label>
-                      <Input
-                        id="budget"
-                        type="number"
-                        value={formData.budget}
-                        onChange={(e) => setFormData({...formData, budget: Number(e.target.value)})}
-                        placeholder="0"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="currency">العملة</Label>
-                      <Select value={formData.currency} onValueChange={(value) => setFormData({...formData, currency: value})}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="SAR">ريال سعودي</SelectItem>
-                          <SelectItem value="USD">دولار أمريكي</SelectItem>
-                          <SelectItem value="EUR">يورو</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="start_date">تاريخ البداية</Label>
-                      <Input
-                        id="start_date"
-                        type="date"
-                        value={formData.start_date}
-                        onChange={(e) => setFormData({...formData, start_date: e.target.value})}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="due_date">تاريخ الاستحقاق</Label>
-                      <Input
-                        id="due_date"
-                        type="date"
-                        value={formData.due_date}
-                        onChange={(e) => setFormData({...formData, due_date: e.target.value})}
-                      />
                     </div>
                   </div>
                   <DialogFooter>
@@ -498,8 +476,8 @@ const AdminProjects = () => {
                       {project.project_number}
                     </CardDescription>
                   </div>
-                  <Badge className={getStatusColor(project.status)} variant="secondary">
-                    {getStatusText(project.status)}
+                  <Badge className={getStatusColor(project.status || '')} variant="secondary">
+                    {getStatusText(project.status || '')}
                   </Badge>
                 </div>
               </CardHeader>
@@ -511,9 +489,9 @@ const AdminProjects = () => {
                 <div className="space-y-3 mb-4">
                   <div className="flex justify-between text-sm">
                     <span>التقدم</span>
-                    <span>{project.progress_percentage}%</span>
+                    <span>{project.progress_percentage || 0}%</span>
                   </div>
-                  <Progress value={project.progress_percentage} className="h-2" />
+                  <Progress value={project.progress_percentage || 0} className="h-2" />
                   
                   <div className="flex justify-between items-center text-sm text-muted-foreground">
                     <span>الميزانية</span>
@@ -584,33 +562,16 @@ const AdminProjects = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-project_type">نوع المشروع</Label>
-                <Input
-                  id="edit-project_type"
-                  value={formData.project_type}
-                  onChange={(e) => setFormData({...formData, project_type: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="edit-description">وصف المشروع</Label>
-                <Input
-                  id="edit-description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="edit-status">الحالة</Label>
-                <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
+                <Select value={formData.status} onValueChange={(value: any) => setFormData({...formData, status: value})}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="planning">تخطيط</SelectItem>
-                    <SelectItem value="pending">في الانتظار</SelectItem>
                     <SelectItem value="in_progress">قيد التنفيذ</SelectItem>
                     <SelectItem value="completed">مكتمل</SelectItem>
-                    <SelectItem value="on_hold">متوقف مؤقتاً</SelectItem>
+                    <SelectItem value="review">مراجعة</SelectItem>
                     <SelectItem value="cancelled">ملغي</SelectItem>
                   </SelectContent>
                 </Select>
@@ -624,46 +585,6 @@ const AdminProjects = () => {
                   max="100"
                   value={formData.progress_percentage}
                   onChange={(e) => setFormData({...formData, progress_percentage: Number(e.target.value)})}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-budget">الميزانية</Label>
-                <Input
-                  id="edit-budget"
-                  type="number"
-                  value={formData.budget}
-                  onChange={(e) => setFormData({...formData, budget: Number(e.target.value)})}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-currency">العملة</Label>
-                <Select value={formData.currency} onValueChange={(value) => setFormData({...formData, currency: value})}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="SAR">ريال سعودي</SelectItem>
-                    <SelectItem value="USD">دولار أمريكي</SelectItem>
-                    <SelectItem value="EUR">يورو</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-start_date">تاريخ البداية</Label>
-                <Input
-                  id="edit-start_date"
-                  type="date"
-                  value={formData.start_date}
-                  onChange={(e) => setFormData({...formData, start_date: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-due_date">تاريخ الاستحقاق</Label>
-                <Input
-                  id="edit-due_date"
-                  type="date"
-                  value={formData.due_date}
-                  onChange={(e) => setFormData({...formData, due_date: e.target.value})}
                 />
               </div>
             </div>

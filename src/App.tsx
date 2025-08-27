@@ -312,6 +312,9 @@ const App = () => {
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
+                <Route path="/auth" element={<Suspense fallback={<PageLoader />}><Auth /></Suspense>} />
+                <Route path="/my-projects" element={<Suspense fallback={<PageLoader />}><MyProjects /></Suspense>} />
+                <Route path="/admin-projects" element={<Suspense fallback={<PageLoader />}><AdminProjects /></Suspense>} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
