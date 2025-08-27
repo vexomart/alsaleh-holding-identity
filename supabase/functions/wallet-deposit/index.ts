@@ -109,11 +109,46 @@ serve(async (req) => {
         console.log('Processing bank transfer...');
         
         try {
-          // Create transaction record
+          // First, ensure user has a wallet
+          console.log('Checking/creating user wallet...');
+          let { data: wallet, error: walletError } = await supabaseClient
+            .from('customer_wallets')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+
+          if (walletError && walletError.code === 'PGRST116') {
+            // Wallet doesn't exist, create it
+            console.log('Creating new wallet for user...');
+            const { data: newWallet, error: createError } = await supabaseClient
+              .from('customer_wallets')
+              .insert({
+                user_id: user.id,
+                balance: 0,
+                currency: 'SAR'
+              })
+              .select()
+              .single();
+
+            if (createError) {
+              console.error('Wallet creation error:', createError);
+              throw createError;
+            }
+            wallet = newWallet;
+          } else if (walletError) {
+            console.error('Wallet fetch error:', walletError);
+            throw walletError;
+          }
+
+          console.log('Wallet found/created:', wallet.id);
+
+          // Create transaction record with wallet_id
+          console.log('Inserting transaction record...');
           const { data: transaction, error: insertError } = await supabaseClient
             .from('wallet_transactions')
             .insert({
               user_id: user.id,
+              wallet_id: wallet.id, // This was missing!
               transaction_type: 'deposit',
               amount: amount,
               description: description || `Deposit via ${paymentMethodConfig.name_ar}`,
@@ -122,7 +157,8 @@ serve(async (req) => {
               metadata: { 
                 payment_method: payment_method,
                 payment_provider: paymentMethodConfig.provider,
-                receipt_uploaded: !!receipt_file
+                receipt_uploaded: !!receipt_file,
+                receipt_file: receipt_file || null
               }
             })
             .select()
