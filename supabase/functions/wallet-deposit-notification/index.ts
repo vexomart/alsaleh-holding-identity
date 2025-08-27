@@ -53,34 +53,32 @@ serve(async (req) => {
       </div>
     `;
 
-    // Send emails
+    // Send emails using customer-notifications function
     const emailPromises = [
       // Admin notification
-      fetch('https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/email-test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseServiceKey}`,
-        },
-        body: JSON.stringify({
-          to: 'admin@tasaheel.com.sa',
-          subject: 'طلب شحن محفظة جديد',
-          html: adminEmailBody,
-        }),
+      supabase.functions.invoke('customer-notifications', {
+        body: {
+          customerEmail: 'admin@tasaheel.com.sa',
+          customerName: 'إدارة النظام',
+          type: 'custom',
+          data: {
+            subject: 'طلب شحن محفظة جديد',
+            content: adminEmailBody
+          }
+        }
       }),
       // Customer confirmation
-      fetch('https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/email-test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseServiceKey}`,
-        },
-        body: JSON.stringify({
-          to: userEmail,
-          subject: 'تأكيد طلب شحن المحفظة',
-          html: customerEmailBody,
-        }),
-      }),
+      supabase.functions.invoke('customer-notifications', {
+        body: {
+          customerEmail: userEmail,
+          customerName: userName,
+          type: 'custom',
+          data: {
+            subject: 'تأكيد طلب شحن المحفظة',
+            content: customerEmailBody
+          }
+        }
+      })
     ];
 
     await Promise.all(emailPromises);
