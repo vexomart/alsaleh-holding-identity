@@ -23,18 +23,21 @@ import { ResponsiveCard } from '@/components/ResponsiveCard';
 
 interface Payment {
   id: string;
-  transaction_id: string;
-  customer_name: string;
-  customer_email: string;
+  transaction_id?: string;
+  reference_id?: string;
+  customer_name?: string;
+  customer_email?: string;
   customer_phone?: string;
   amount: number;
-  currency: string;
+  currency?: string;
   status: string;
   payment_method: string;
   payment_date?: string;
   created_at: string;
   offer_title?: string;
   description?: string;
+  transaction_type?: string;
+  user_id?: string;
 }
 
 const AdminPayments = () => {
@@ -50,13 +53,50 @@ const AdminPayments = () => {
 
   const fetchPayments = async () => {
     try {
-      const { data, error } = await supabase
+      // Fetch from payment_transactions
+      const { data: paymentData, error: paymentError } = await supabase
         .from('payment_transactions')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setPayments(data || []);
+      if (paymentError) throw paymentError;
+
+      // Fetch from wallet_transactions
+      const { data: walletData, error: walletError } = await supabase
+        .from('wallet_transactions')
+        .select(`
+          *,
+          profiles!wallet_transactions_user_id_fkey(full_name)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (walletError) {
+        console.warn('Error fetching wallet transactions:', walletError);
+      }
+
+      // Combine and normalize data
+      const combinedPayments: Payment[] = [
+        ...(paymentData || []).map(payment => ({
+          ...payment,
+          transaction_id: payment.transaction_id,
+          customer_name: payment.customer_name,
+          customer_email: payment.customer_email,
+          currency: payment.currency || 'SAR'
+        })),
+        ...(walletData || []).map(wallet => ({
+          ...wallet,
+          transaction_id: wallet.reference_id,
+          customer_name: (wallet.profiles as any)?.full_name || 'عميل محفظة',
+          customer_email: '',
+          currency: 'SAR',
+          offer_title: wallet.description
+        }))
+      ];
+
+      // Sort by created_at descending
+      combinedPayments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      
+      setPayments(combinedPayments);
     } catch (error) {
       console.error('Error fetching payments:', error);
       toast({
@@ -117,12 +157,15 @@ const AdminPayments = () => {
       case 'tab': return 'تابي';
       case 'tamara': return 'تمارا';
       case 'stc': return 'STC Pay';
+      case 'stc_pay': return 'STC Pay';
       case 'visa': return 'فيزا';
       case 'mastercard': return 'ماستركارد';
       case 'mada': return 'مدى';
       case 'paypal': return 'PayPal';
       case 'apple_pay': return 'Apple Pay';
       case 'google_pay': return 'Google Pay';
+      case 'bank_transfer': return 'حوالة بنكية';
+      case 'stripe': return 'بطاقة ائتمانية';
       default: return method || 'غير محدد';
     }
   };
@@ -130,7 +173,9 @@ const AdminPayments = () => {
   const filteredPayments = payments.filter(payment => {
     const matchesSearch = payment.customer_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          payment.transaction_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         payment.customer_email?.toLowerCase().includes(searchTerm.toLowerCase());
+                         payment.reference_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         payment.customer_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         payment.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || payment.status?.toLowerCase() === statusFilter;
     const matchesMethod = methodFilter === 'all' || payment.payment_method?.toLowerCase() === methodFilter;
     return matchesSearch && matchesStatus && matchesMethod;
@@ -275,7 +320,14 @@ const AdminPayments = () => {
             <ResponsiveCard key={payment.id} className="space-y-4">
               <div className="flex justify-between items-start">
                 <div className="text-right flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground truncate">{payment.transaction_id}</h3>
+                  <h3 className="font-semibold text-foreground truncate">
+                    {payment.transaction_id || payment.reference_id}
+                    {payment.transaction_type === 'deposit' && (
+                      <span className="mr-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                        شحن محفظة
+                      </span>
+                    )}
+                  </h3>
                   <p className="text-sm text-muted-foreground truncate">{payment.customer_name}</p>
                   <p className="text-xs text-muted-foreground truncate">{payment.offer_title || payment.description}</p>
                 </div>
@@ -285,7 +337,7 @@ const AdminPayments = () => {
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">{payment.amount} {payment.currency}</span>
+                  <span className="text-muted-foreground">{payment.amount} {payment.currency || 'SAR'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-muted-foreground" />
