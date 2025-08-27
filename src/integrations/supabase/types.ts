@@ -3085,6 +3085,9 @@ export type Database = {
           balance_after: number
           balance_before: number
           created_at: string
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
           description: string | null
           id: string
           metadata: Json | null
@@ -3093,6 +3096,7 @@ export type Database = {
           reference_id: string | null
           status: string
           transaction_type: string
+          updated_at: string | null
           user_id: string
           wallet_id: string
         }
@@ -3101,6 +3105,9 @@ export type Database = {
           balance_after: number
           balance_before: number
           created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
           description?: string | null
           id?: string
           metadata?: Json | null
@@ -3109,6 +3116,7 @@ export type Database = {
           reference_id?: string | null
           status?: string
           transaction_type: string
+          updated_at?: string | null
           user_id: string
           wallet_id: string
         }
@@ -3117,6 +3125,9 @@ export type Database = {
           balance_after?: number
           balance_before?: number
           created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
           description?: string | null
           id?: string
           metadata?: Json | null
@@ -3125,6 +3136,7 @@ export type Database = {
           reference_id?: string | null
           status?: string
           transaction_type?: string
+          updated_at?: string | null
           user_id?: string
           wallet_id?: string
         }
