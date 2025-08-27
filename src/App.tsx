@@ -104,6 +104,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
 const Consultation = lazy(() => import("./pages/Consultation"));
+const ProjectTracking = lazy(() => import("./pages/ProjectTracking"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
@@ -307,6 +308,7 @@ const App = () => {
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
+                <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />

@@ -1919,6 +1919,106 @@ export type Database = {
         }
         Relationships: []
       }
+      project_notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string | null
+          notification_type: string
+          project_id: string
+          recipient_email: string
+          sent_via_email: boolean | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          notification_type: string
+          project_id: string
+          recipient_email: string
+          sent_via_email?: boolean | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          notification_type?: string
+          project_id?: string
+          recipient_email?: string
+          sent_via_email?: boolean | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_notifications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_phases: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          estimated_duration_days: number | null
+          id: string
+          notes: string | null
+          phase_name: string
+          phase_number: number
+          progress_percentage: number | null
+          project_id: string
+          start_date: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          estimated_duration_days?: number | null
+          id?: string
+          notes?: string | null
+          phase_name: string
+          phase_number: number
+          progress_percentage?: number | null
+          project_id: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          estimated_duration_days?: number | null
+          id?: string
+          notes?: string | null
+          phase_name?: string
+          phase_number?: number
+          progress_percentage?: number | null
+          project_id?: string
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_phases_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_stages: {
         Row: {
           completion_percentage: number | null
@@ -2035,6 +2135,66 @@ export type Database = {
           },
         ]
       }
+      project_timeline: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_visible_to_client: boolean | null
+          new_status: string | null
+          old_status: string | null
+          phase_id: string | null
+          progress_after: number | null
+          progress_before: number | null
+          project_id: string
+          title: string
+          update_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_visible_to_client?: boolean | null
+          new_status?: string | null
+          old_status?: string | null
+          phase_id?: string | null
+          progress_after?: number | null
+          progress_before?: number | null
+          project_id: string
+          title: string
+          update_type?: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_visible_to_client?: boolean | null
+          new_status?: string | null
+          old_status?: string | null
+          phase_id?: string | null
+          progress_after?: number | null
+          progress_before?: number | null
+          project_id?: string
+          title?: string
+          update_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_timeline_phase_id_fkey"
+            columns: ["phase_id"]
+            isOneToOne: false
+            referencedRelation: "project_phases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_timeline_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           assigned_manager: string | null
@@ -2049,6 +2209,7 @@ export type Database = {
           metadata: Json | null
           name: string
           progress_percentage: number | null
+          project_number: string | null
           project_type: string | null
           start_date: string | null
           status: Database["public"]["Enums"]["project_status"] | null
@@ -2068,6 +2229,7 @@ export type Database = {
           metadata?: Json | null
           name: string
           progress_percentage?: number | null
+          project_number?: string | null
           project_type?: string | null
           start_date?: string | null
           status?: Database["public"]["Enums"]["project_status"] | null
@@ -2087,6 +2249,7 @@ export type Database = {
           metadata?: Json | null
           name?: string
           progress_percentage?: number | null
+          project_number?: string | null
           project_type?: string | null
           start_date?: string | null
           status?: Database["public"]["Enums"]["project_status"] | null
@@ -2954,6 +3117,10 @@ export type Database = {
         Returns: string
       }
       generate_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_project_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }

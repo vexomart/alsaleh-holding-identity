@@ -23,7 +23,8 @@ import {
   ShoppingCart,
   Megaphone,
   FileEdit,
-  Settings
+  Settings,
+  Activity
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -159,6 +160,17 @@ const mainServices = [
     link: "/google-ads",
     description: "حملات جوجل للوصول لعملاء أكثر",
     category: "تسويق"
+  },
+  {
+    id: 13,
+    title: "تتبع المشاريع",
+    subtitle: "Project Tracking",
+    icon: Activity,
+    color: "from-emerald-600 to-teal-600",
+    bgColor: "bg-gradient-to-br from-emerald-50 to-teal-50",
+    link: "/project-tracking",
+    description: "تابع تقدم مشاريعك في الوقت الفعلي",
+    category: "تقنية"
   }
 ];
 

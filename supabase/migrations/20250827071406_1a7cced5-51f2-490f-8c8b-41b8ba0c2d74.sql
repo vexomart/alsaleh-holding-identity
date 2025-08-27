@@ -1,0 +1,238 @@
+-- تطوير نظام تتبع المشاريع على الجدول الموجود
+-- العمل مع جدول projects الموجود بالفعل
+
+-- 1. إضافة حقل رقم المشروع إذا لم يكن موجوداً
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS project_number TEXT;
+
+-- 2. إنشاء جدول مراحل المشروع
+CREATE TABLE IF NOT EXISTS public.project_phases (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID NOT NULL REFERENCES public.projects(id) ON DELETE CASCADE,
+  phase_number INTEGER NOT NULL,
+  phase_name TEXT NOT NULL,
+  description TEXT,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed', 'skipped')),
+  estimated_duration_days INTEGER DEFAULT 7,
+  start_date DATE,
+  end_date DATE,
+  progress_percentage INTEGER DEFAULT 0 CHECK (progress_percentage >= 0 AND progress_percentage <= 100),
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  UNIQUE(project_id, phase_number)
+);
+
+-- 3. جدول تحديثات المشروع (Timeline)
+CREATE TABLE IF NOT EXISTS public.project_timeline (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID NOT NULL REFERENCES public.projects(id) ON DELETE CASCADE,
+  phase_id UUID REFERENCES public.project_phases(id) ON DELETE SET NULL,
+  update_type TEXT NOT NULL DEFAULT 'progress' CHECK (update_type IN ('progress', 'milestone', 'issue', 'completion', 'note', 'status_change')),
+  title TEXT NOT NULL,
+  description TEXT,
+  old_status TEXT,
+  new_status TEXT,
+  progress_before INTEGER,
+  progress_after INTEGER,
+  is_visible_to_client BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- 4. جدول إشعارات المشروع
+CREATE TABLE IF NOT EXISTS public.project_notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID NOT NULL REFERENCES public.projects(id) ON DELETE CASCADE,
+  recipient_email TEXT NOT NULL,
+  notification_type TEXT NOT NULL CHECK (notification_type IN ('project_started', 'phase_completed', 'status_change', 'deadline_approaching', 'project_completed', 'issue_reported')),
+  title TEXT NOT NULL,
+  message TEXT,
+  is_read BOOLEAN DEFAULT false,
+  sent_via_email BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- إنشاء فهارس للأداء
+CREATE INDEX IF NOT EXISTS idx_project_phases_project_id ON public.project_phases(project_id);
+CREATE INDEX IF NOT EXISTS idx_project_timeline_project_id ON public.project_timeline(project_id);
+CREATE INDEX IF NOT EXISTS idx_project_notifications_project_id ON public.project_notifications(project_id);
+
+-- وظيفة إنشاء رقم مشروع تلقائي
+CREATE OR REPLACE FUNCTION public.generate_project_number()
+RETURNS TEXT AS $$
+DECLARE
+    year_suffix TEXT;
+    counter INTEGER;
+    project_num TEXT;
+BEGIN
+    year_suffix := TO_CHAR(CURRENT_DATE, 'YY');
+    
+    SELECT COALESCE(MAX(CAST(SUBSTRING(project_number FROM 4 FOR 6) AS INTEGER)), 0) + 1
+    INTO counter
+    FROM public.projects
+    WHERE project_number LIKE 'PR' || year_suffix || '%' AND project_number IS NOT NULL;
+    
+    project_num := 'PR' || year_suffix || LPAD(counter::TEXT, 6, '0');
+    
+    RETURN project_num;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path TO '';
+
+-- مشغل لإنشاء رقم المشروع للمشاريع الجديدة
+CREATE OR REPLACE FUNCTION public.set_project_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.project_number IS NULL OR NEW.project_number = '' THEN
+        NEW.project_number := public.generate_project_number();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path TO '';
+
+DROP TRIGGER IF EXISTS set_project_number_trigger ON public.projects;
+CREATE TRIGGER set_project_number_trigger
+    BEFORE INSERT ON public.projects
+    FOR EACH ROW EXECUTE FUNCTION public.set_project_number();
+
+-- تحديث المشاريع الموجودة بأرقام مشاريع
+UPDATE public.projects 
+SET project_number = public.generate_project_number() 
+WHERE project_number IS NULL OR project_number = '';
+
+-- وظيفة تحديث تقدم المشروع بناءً على المراحل
+CREATE OR REPLACE FUNCTION public.update_project_progress()
+RETURNS TRIGGER AS $$
+DECLARE
+    avg_progress INTEGER;
+BEGIN
+    -- حساب متوسط تقدم جميع المراحل
+    SELECT COALESCE(AVG(progress_percentage), 0)::INTEGER
+    INTO avg_progress
+    FROM public.project_phases
+    WHERE project_id = COALESCE(NEW.project_id, OLD.project_id);
+    
+    -- تحديث تقدم المشروع
+    UPDATE public.projects
+    SET progress_percentage = avg_progress,
+        updated_at = now()
+    WHERE id = COALESCE(NEW.project_id, OLD.project_id);
+    
+    RETURN COALESCE(NEW, OLD);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path TO '';
+
+DROP TRIGGER IF EXISTS update_project_progress_trigger ON public.project_phases;
+CREATE TRIGGER update_project_progress_trigger
+    AFTER INSERT OR UPDATE OR DELETE ON public.project_phases
+    FOR EACH ROW EXECUTE FUNCTION public.update_project_progress();
+
+-- وظيفة إنشاء إشعار تلقائي عند تغيير الحالة
+CREATE OR REPLACE FUNCTION public.create_project_notification()
+RETURNS TRIGGER AS $$
+DECLARE
+    notification_title TEXT;
+    notification_message TEXT;
+    notification_type TEXT;
+    client_email TEXT;
+BEGIN
+    -- تحديد نوع الإشعار والرسالة
+    IF TG_OP = 'UPDATE' AND OLD.status != NEW.status THEN
+        notification_type := 'status_change';
+        notification_title := 'تم تحديث حالة المشروع';
+        notification_message := 'تم تغيير حالة المشروع "' || NEW.name || '" من ' || 
+                               OLD.status::text || ' إلى ' || NEW.status::text;
+        
+        -- الحصول على إيميل العميل (افتراضي للتجربة)
+        client_email := 'client@example.com';
+        
+        -- إنشاء الإشعار
+        INSERT INTO public.project_notifications (
+            project_id, recipient_email, notification_type, title, message
+        ) VALUES (
+            NEW.id, client_email, notification_type, notification_title, notification_message
+        );
+        
+        -- إنشاء تحديث في التايم لاين
+        INSERT INTO public.project_timeline (
+            project_id, update_type, title, description, old_status, new_status
+        ) VALUES (
+            NEW.id, 'status_change', notification_title, notification_message, OLD.status::text, NEW.status::text
+        );
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path TO '';
+
+DROP TRIGGER IF EXISTS project_notification_trigger ON public.projects;
+CREATE TRIGGER project_notification_trigger
+    AFTER UPDATE ON public.projects
+    FOR EACH ROW EXECUTE FUNCTION public.create_project_notification();
+
+-- وظيفة إنشاء مراحل افتراضية للمشاريع الجديدة
+CREATE OR REPLACE FUNCTION public.create_default_phases()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- إدراج المراحل الافتراضية حسب نوع المشروع
+    IF NEW.project_type = 'website' OR NEW.project_type IS NULL THEN
+        INSERT INTO public.project_phases (project_id, phase_number, phase_name, description, estimated_duration_days) VALUES
+        (NEW.id, 1, 'التخطيط والتحليل', 'جمع المتطلبات وتحليل احتياجات العميل', 3),
+        (NEW.id, 2, 'التصميم', 'تصميم واجهة المستخدم والتجربة', 7),
+        (NEW.id, 3, 'البرمجة', 'تطوير الموقع وبرمجة الوظائف', 14),
+        (NEW.id, 4, 'الاختبار', 'اختبار الموقع والتأكد من عمل جميع الوظائف', 3),
+        (NEW.id, 5, 'النشر والتسليم', 'نشر الموقع وتسليمه للعميل', 3);
+    ELSIF NEW.project_type = 'mobile_app' THEN
+        INSERT INTO public.project_phases (project_id, phase_number, phase_name, description, estimated_duration_days) VALUES
+        (NEW.id, 1, 'التخطيط والتحليل', 'جمع المتطلبات وتحليل احتياجات التطبيق', 5),
+        (NEW.id, 2, 'التصميم', 'تصميم واجهة التطبيق وتجربة المستخدم', 10),
+        (NEW.id, 3, 'البرمجة', 'تطوير التطبيق وبرمجة الوظائف', 21),
+        (NEW.id, 4, 'الاختبار', 'اختبار التطبيق على أجهزة مختلفة', 5),
+        (NEW.id, 5, 'النشر والتسليم', 'رفع التطبيق للمتاجر وتسليمه', 4);
+    ELSE
+        -- مراحل عامة لأنواع أخرى من المشاريع
+        INSERT INTO public.project_phases (project_id, phase_number, phase_name, description, estimated_duration_days) VALUES
+        (NEW.id, 1, 'التخطيط', 'جمع المتطلبات والتخطيط', 5),
+        (NEW.id, 2, 'التنفيذ', 'تنفيذ المشروع', 20),
+        (NEW.id, 3, 'المراجعة', 'مراجعة واختبار النتائج', 3),
+        (NEW.id, 4, 'التسليم', 'تسليم المشروع للعميل', 2);
+    END IF;
+    
+    -- إنشاء إشعار بداية المشروع
+    INSERT INTO public.project_timeline (
+        project_id, update_type, title, description
+    ) VALUES (
+        NEW.id, 'milestone', 'تم إنشاء المشروع', 'تم إنشاء المشروع "' || NEW.name || '" وبدء العمل عليه'
+    );
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path TO '';
+
+DROP TRIGGER IF EXISTS create_default_phases_trigger ON public.projects;
+CREATE TRIGGER create_default_phases_trigger
+    AFTER INSERT ON public.projects
+    FOR EACH ROW EXECUTE FUNCTION public.create_default_phases();
+
+-- سياسات الأمان
+ALTER TABLE public.project_phases ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.project_timeline ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.project_notifications ENABLE ROW LEVEL SECURITY;
+
+-- سياسات بسيطة للبداية (يمكن تقييدها لاحقاً)
+CREATE POLICY "الجميع يمكنهم رؤية مراحل المشاريع" ON public.project_phases FOR ALL USING (true);
+CREATE POLICY "الجميع يمكنهم رؤية تحديثات المشاريع" ON public.project_timeline FOR ALL USING (true);
+CREATE POLICY "الجميع يمكنهم رؤية إشعارات المشاريع" ON public.project_notifications FOR ALL USING (true);
+
+-- تفعيل التحديثات في الوقت الفعلي
+ALTER TABLE public.project_phases REPLICA IDENTITY FULL;
+ALTER TABLE public.project_timeline REPLICA IDENTITY FULL;
+ALTER TABLE public.project_notifications REPLICA IDENTITY FULL;
+
+-- إضافة الجداول للنشر في الوقت الفعلي
+ALTER PUBLICATION supabase_realtime ADD TABLE public.project_phases;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.project_timeline;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.project_notifications;
+
+DO $$
+BEGIN
+    RAISE NOTICE 'نظام تتبع المشاريع: تم إضافة نظام التتبع بنجاح للجدول الموجود!';
+END $$;
