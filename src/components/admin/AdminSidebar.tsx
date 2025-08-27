@@ -28,6 +28,7 @@ import {
   UserCheck,
   Package,
   MessageSquare,
+  Image,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -55,6 +56,7 @@ const menuItems = [
     items: [
       { title: 'المستخدمين', url: '/admin/users', icon: UserCheck },
       { title: 'الأدوار', url: '/admin/roles', icon: Shield },
+      { title: 'الشعارات', url: '/admin/logos', icon: Image },
       { title: 'الشركات التابعة', url: '/admin/subsidiaries', icon: Building },
       { title: 'الرسائل', url: '/admin/messages', icon: MessageSquare },
     ]
