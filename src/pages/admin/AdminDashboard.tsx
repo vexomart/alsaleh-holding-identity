@@ -4,6 +4,22 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  AreaChart,
+  Area
+} from 'recharts';
+import {
   BarChart3,
   TrendingUp,
   Users,
@@ -19,13 +35,18 @@ import {
   Building2,
   FileText,
   Settings,
-  PieChart,
+  PieChart as PieChartIcon,
   Briefcase,
   Target,
   Zap,
   Shield,
   Activity,
-  Star
+  Star,
+  DollarSign,
+  Globe,
+  Smartphone,
+  Tablet,
+  Monitor
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -39,6 +60,25 @@ interface DashboardStats {
   pendingTasks: number;
 }
 
+interface ChartData {
+  month: string;
+  revenue: number;
+  projects: number;
+  clients: number;
+}
+
+interface DeviceData {
+  device: string;
+  users: number;
+  percentage: number;
+}
+
+interface ProjectStatusData {
+  status: string;
+  count: number;
+  color: string;
+}
+
 const AdminDashboard = () => {
   const [stats, setStats] = useState<DashboardStats>({
     totalProjects: 0,
@@ -48,6 +88,9 @@ const AdminDashboard = () => {
     monthlyGrowth: 0,
     pendingTasks: 0,
   });
+  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [deviceData, setDeviceData] = useState<DeviceData[]>([]);
+  const [projectStatusData, setProjectStatusData] = useState<ProjectStatusData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,7 +98,7 @@ const AdminDashboard = () => {
   }, []);
 
   const fetchDashboardData = async () => {
-    await Promise.all([fetchStatsData(), fetchRecentActivities()]);
+    await Promise.all([fetchStatsData(), fetchRecentActivities(), fetchChartData()]);
   };
 
   const fetchStatsData = async () => {
@@ -118,6 +161,41 @@ const AdminDashboard = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch chart data for analytics
+  const fetchChartData = async () => {
+    try {
+      // Generate sample monthly data for the past 6 months
+      const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'];
+      const generatedChartData: ChartData[] = months.map((month, index) => ({
+        month,
+        revenue: Math.floor(Math.random() * 50000) + 10000,
+        projects: Math.floor(Math.random() * 20) + 5,
+        clients: Math.floor(Math.random() * 30) + 10,
+      }));
+      setChartData(generatedChartData);
+
+      // Device usage data
+      const devices: DeviceData[] = [
+        { device: 'سطح المكتب', users: 2547, percentage: 45 },
+        { device: 'الهاتف المحمول', users: 1986, percentage: 35 },
+        { device: 'اللوحي', users: 1134, percentage: 20 },
+      ];
+      setDeviceData(devices);
+
+      // Project status data
+      const statusData: ProjectStatusData[] = [
+        { status: 'مكتمل', count: stats.pendingTasks, color: '#10b981' },
+        { status: 'قيد التنفيذ', count: stats.activeProjects, color: '#3b82f6' },
+        { status: 'معلق', count: Math.max(0, stats.totalProjects - stats.activeProjects - stats.pendingTasks), color: '#f59e0b' },
+        { status: 'ملغي', count: Math.floor(Math.random() * 3), color: '#ef4444' },
+      ];
+      setProjectStatusData(statusData);
+
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
     }
   };
 
@@ -224,14 +302,26 @@ const AdminDashboard = () => {
     { title: 'إعدادات النظام', description: 'تخصيص إعدادات النظام', action: '/admin/settings' },
   ];
 
+  // Colors for charts
+  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="space-y-8 p-4 sm:p-6 lg:p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
           {[1, 2, 3, 4].map((i) => (
             <Card key={i} className="animate-pulse">
-              <CardContent className="p-6">
-                <div className="h-20 bg-muted rounded"></div>
+              <CardContent className="p-4 sm:p-6">
+                <div className="h-16 sm:h-20 bg-muted rounded"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          {[1, 2].map((i) => (
+            <Card key={i} className="animate-pulse">
+              <CardContent className="p-4 sm:p-6">
+                <div className="h-32 sm:h-48 bg-muted rounded"></div>
               </CardContent>
             </Card>
           ))}
@@ -241,52 +331,52 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="space-y-8 font-corporate" dir="rtl">
-      {/* Executive Header */}
-      <div className="relative bg-gradient-to-l from-primary/10 via-blue-50/50 to-slate-50/30 dark:from-primary/5 dark:via-slate-800 dark:to-slate-900/50 rounded-2xl p-8 border border-border/50 shadow-sm overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/20 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 font-corporate" dir="rtl">
+      {/* Executive Header - Responsive */}
+      <div className="relative bg-gradient-to-l from-primary/10 via-blue-50/50 to-slate-50/30 dark:from-primary/5 dark:via-slate-800 dark:to-slate-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-border/50 shadow-sm overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="relative flex items-center justify-between">
-          <div className="text-right space-y-3">
-            <div className="flex items-center gap-3 justify-end">
-              <Badge variant="secondary" className="px-4 py-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/15 transition-all duration-300">
-                <Building2 className="w-4 h-4 ml-1" />
+        <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-0">
+          <div className="text-right space-y-2 sm:space-y-3 order-2 lg:order-1">
+            <div className="flex items-center gap-2 sm:gap-3 justify-end flex-wrap">
+              <Badge variant="secondary" className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/15 transition-all duration-300 text-xs sm:text-sm">
+                <Building2 className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
                 لوحة التحكم التنفيذية
               </Badge>
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-l from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent leading-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-l from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent leading-tight">
               إدارة الأعمال المتقدمة
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-full lg:max-w-2xl leading-relaxed">
               نظام إدارة شامل لمراقبة الأداء وتحليل البيانات وإدارة العمليات التجارية بكفاءة عالية
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="bg-primary/10 p-4 rounded-2xl border border-primary/20">
-              <Activity className="w-8 h-8 text-primary animate-pulse" />
+          <div className="flex items-center gap-3 sm:gap-4 justify-end lg:justify-start order-1 lg:order-2">
+            <div className="bg-primary/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-primary/20">
+              <Activity className="w-6 h-6 sm:w-8 sm:h-8 text-primary animate-pulse" />
             </div>
-            <Badge variant="outline" className="text-sm px-4 py-2 bg-background/80 backdrop-blur border-border/50 hover:bg-background transition-all duration-300">
-              <Clock className="w-4 h-4 ml-1" />
+            <Badge variant="outline" className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 bg-background/80 backdrop-blur border-border/50 hover:bg-background transition-all duration-300">
+              <Clock className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
               آخر تحديث: الآن
             </Badge>
           </div>
         </div>
       </div>
 
-      {/* Executive KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      {/* Executive KPI Cards - Responsive Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
         {statsCards.map((stat, index) => (
           <Card key={index} className="group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 border border-border/50 bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-sm hover:scale-[1.02] cursor-pointer">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <CardContent className="relative p-7">
+            <CardContent className="relative p-4 sm:p-6 lg:p-7">
               <div className="flex items-center justify-between">
-                <div className="text-right space-y-3 flex-1">
+                <div className="text-right space-y-2 sm:space-y-3 flex-1">
                   <div className="flex items-center justify-end gap-2">
                     <Badge variant="secondary" className="text-xs px-2 py-1 bg-muted/50 text-muted-foreground border-0">
                       {stat.title}
                     </Badge>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-3xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors duration-300">
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors duration-300 break-words">
                       {stat.value}
                     </p>
                     <div className="flex items-center gap-2 justify-end">
@@ -300,21 +390,21 @@ const AdminDashboard = () => {
                         ) : (
                           <ArrowDownRight className="h-3 w-3" />
                         )}
-                        <span className="text-sm font-semibold">
+                        <span className="text-xs sm:text-sm font-semibold">
                           {stat.change}
                         </span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className={`relative p-4 rounded-2xl ${
+                <div className={`relative p-3 sm:p-4 rounded-xl sm:rounded-2xl ${
                   stat.color === 'blue' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' :
                   stat.color === 'green' ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' :
                   stat.color === 'purple' ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400' :
                   'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
                 } group-hover:scale-110 transition-transform duration-500`}>
-                  <stat.icon className="h-7 w-7" />
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <stat.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
+                  <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
               </div>
             </CardContent>
@@ -322,7 +412,187 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Analytics Charts Section - Responsive */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        
+        {/* Revenue Chart */}
+        <Card className="lg:col-span-2 xl:col-span-2 border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+          <CardHeader className="pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
+              <div className="text-right space-y-2">
+                <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
+                  <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                    <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </div>
+                  تحليل الإيرادات الشهرية
+                </CardTitle>
+                <CardDescription className="text-right text-sm sm:text-base">
+                  نمو الإيرادات والمشاريع خلال الأشهر الماضية
+                </CardDescription>
+              </div>
+              <Badge variant="outline" className="bg-blue-50/50 text-blue-700 border-blue-200 px-3 py-1 text-xs sm:text-sm self-end sm:self-auto">
+                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+                +{stats.monthlyGrowth}%
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64 sm:h-80 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis 
+                    dataKey="month" 
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: '#64748b' }}
+                  />
+                  <YAxis 
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: '#64748b' }}
+                  />
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: 'white',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      direction: 'rtl'
+                    }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="revenue" 
+                    stroke="#3b82f6" 
+                    fillOpacity={1} 
+                    fill="url(#revenueGradient)"
+                    strokeWidth={2}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Project Status Pie Chart */}
+        <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+          <CardHeader className="pb-4">
+            <div className="text-right space-y-2">
+              <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
+                <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
+                  <PieChartIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                </div>
+                حالة المشاريع
+              </CardTitle>
+              <CardDescription className="text-right text-sm sm:text-base">
+                توزيع المشاريع حسب الحالة
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="h-48 sm:h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={projectStatusData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={window.innerWidth < 640 ? 30 : 40}
+                    outerRadius={window.innerWidth < 640 ? 70 : 90}
+                    paddingAngle={5}
+                    dataKey="count"
+                  >
+                    {projectStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: 'white',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      direction: 'rtl'
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-4 space-y-2">
+              {projectStatusData.map((item, index) => (
+                <div key={index} className="flex items-center justify-between text-sm">
+                  <span className="font-medium">{item.count}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">{item.status}</span>
+                    <div 
+                      className="w-3 h-3 rounded-full" 
+                      style={{ backgroundColor: item.color }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Device Analytics */}
+      <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
+            <div className="text-right space-y-2">
+              <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
+                <div className="p-2 rounded-xl bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
+                  <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
+                </div>
+                تحليل استخدام الأجهزة
+              </CardTitle>
+              <CardDescription className="text-right text-sm sm:text-base">
+                إحصائيات الوصول من الأجهزة المختلفة
+              </CardDescription>
+            </div>
+            <Badge variant="outline" className="bg-green-50/50 text-green-700 border-green-200 px-3 py-1 text-xs sm:text-sm self-end sm:self-auto">
+              <Activity className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+              نشاط حي
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            {deviceData.map((device, index) => {
+              const IconComponent = device.device === 'سطح المكتب' ? Monitor : 
+                                   device.device === 'الهاتف المحمول' ? Smartphone : Tablet;
+              return (
+                <div key={index} className="group p-4 sm:p-6 rounded-xl border border-border/30 bg-gradient-to-br from-muted/20 via-background/50 to-muted/20 hover:shadow-md transition-all duration-300 text-center">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+                    </div>
+                    <div className="space-y-1 sm:space-y-2">
+                      <h3 className="font-semibold text-sm sm:text-base text-foreground">{device.device}</h3>
+                      <p className="text-xl sm:text-2xl font-bold text-primary">{device.users.toLocaleString()}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">({device.percentage}% من المستخدمين)</p>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-primary to-primary-glow h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${device.percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {/* Enterprise Activity Center */}
         <Card className="lg:col-span-2 border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
           <CardHeader className="pb-4">
@@ -420,7 +690,7 @@ const AdminDashboard = () => {
                       'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
                     } group-hover:scale-110 transition-transform duration-300`}>
                       <action.icon className="h-5 w-5" />
-                    </div>
+    </div>
                     <div className="text-right flex-1">
                       <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors duration-300">
                         {action.title}
