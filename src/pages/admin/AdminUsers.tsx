@@ -140,10 +140,28 @@ const AdminUsers = () => {
       return;
     }
 
+    if (newUser.password.length < 8) {
+      toast({
+        title: "كلمة المرور ضعيفة",
+        description: "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!newUser.email.includes('@') || !newUser.email.includes('.')) {
+      toast({
+        title: "بريد إلكتروني غير صالح",
+        description: "يرجى إدخال بريد إلكتروني صحيح",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setCreating(true);
     
     try {
-      const { error } = await supabase.functions.invoke('create-admin-user', {
+      const { data, error } = await supabase.functions.invoke('create-admin-user', {
         body: {
           email: newUser.email,
           password: newUser.password,
@@ -152,7 +170,27 @@ const AdminUsers = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Response error:', error);
+        throw error;
+      }
+
+      // التحقق من استجابة البيانات
+      if (data && !data.success) {
+        console.error('Function returned error:', data.error);
+        
+        // معالجة أخطاء محددة
+        let errorMessage = data.error;
+        if (data.error.includes('email address has already been registered')) {
+          errorMessage = 'هذا البريد الإلكتروني مسجل مسبقاً. يرجى استخدام بريد إلكتروني آخر.';
+        } else if (data.error.includes('Password')) {
+          errorMessage = 'كلمة المرور ضعيفة. يجب أن تحتوي على 8 أحرف على الأقل.';
+        } else if (data.error.includes('email')) {
+          errorMessage = 'صيغة البريد الإلكتروني غير صحيحة.';
+        }
+        
+        throw new Error(errorMessage);
+      }
 
       toast({
         title: "تم إنشاء المستخدم بنجاح",
@@ -178,9 +216,19 @@ const AdminUsers = () => {
       fetchUserRoles();
     } catch (error: any) {
       console.error('Error creating user:', error);
+      
+      let errorMessage = "حدث خطأ أثناء إنشاء المستخدم";
+      
+      // معالجة أخطاء الشبكة
+      if (error.message) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast({
         title: "خطأ في إنشاء المستخدم",
-        description: error.message || "حدث خطأ أثناء إنشاء المستخدم",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -325,7 +373,7 @@ const AdminUsers = () => {
                     id="email"
                     type="email"
                     value={newUser.email}
-                    onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                    onChange={(e) => setNewUser({...newUser, email: e.target.value.toLowerCase().trim()})}
                     placeholder="example@email.com"
                     dir="ltr"
                   />
@@ -337,7 +385,7 @@ const AdminUsers = () => {
                     type="password"
                     value={newUser.password}
                     onChange={(e) => setNewUser({...newUser, password: e.target.value})}
-                    placeholder="كلمة مرور قوية"
+                    placeholder="كلمة مرور قوية (8 أحرف على الأقل)"
                     dir="ltr"
                   />
                 </div>
