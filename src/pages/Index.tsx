@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-// Remove direct imports, they are now lazy loaded
-import ServicesShowcase from "@/components/ServicesShowcase";
+// Import the new Enterprise Services Showcase
+import EnterpriseServicesShowcase from "@/components/EnterpriseServicesShowcase";
 
 import Footer from "@/components/Footer";
 import CustomerService from "@/components/CustomerService";
@@ -48,7 +48,7 @@ const Index = () => {
         {/* Content Sections with Professional Spacing */}
         <div className="space-y-0">
           {/* Services Showcase Section */}
-          <ServicesShowcase />
+          <EnterpriseServicesShowcase />
         </div>
       </main>
 

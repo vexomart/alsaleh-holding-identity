@@ -127,6 +127,10 @@ const CarBooking = lazy(() => import("./pages/CarBooking"));
 const EmailTest = lazy(() => import("./pages/EmailTest"));
 const EnhancedDesignCategory = lazy(() => import("./pages/EnhancedDesignCategory"));
 
+// Enterprise pages
+const EnterpriseDevelopment = lazy(() => import("./pages/enterprise/EnterpriseDevelopment"));
+const EnterpriseBranding = lazy(() => import("./pages/enterprise/EnterpriseBranding"));
+
 
 const TechEcosystem = lazy(() => import("./pages/TechEcosystem"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
@@ -350,6 +354,11 @@ const App = () => {
                 <Route path="/mobile-apps" element={<Suspense fallback={<PageLoader />}><MobileApps /></Suspense>} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
+          
+          {/* Enterprise Services Routes */}
+          <Route path="/enterprise/development" element={<Suspense fallback={<PageLoader />}><EnterpriseDevelopment /></Suspense>} />
+          <Route path="/enterprise/branding" element={<Suspense fallback={<PageLoader />}><EnterpriseBranding /></Suspense>} />
+          
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
                 </Routes>
