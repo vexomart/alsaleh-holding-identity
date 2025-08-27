@@ -194,7 +194,7 @@ const App = () => {
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient();
   }
-  console.log('App component rendering...');
+  console.log('App component rendering - BUILD REFRESH FORCED:', new Date().toISOString());
   
   return (
     <QueryClientProvider client={queryClientRef.current!}>
