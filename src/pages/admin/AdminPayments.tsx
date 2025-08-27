@@ -64,10 +64,7 @@ const AdminPayments = () => {
       // Fetch from wallet_transactions
       const { data: walletData, error: walletError } = await supabase
         .from('wallet_transactions')
-        .select(`
-          *,
-          profiles!wallet_transactions_user_id_fkey(full_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (walletError) {
@@ -86,7 +83,7 @@ const AdminPayments = () => {
         ...(walletData || []).map(wallet => ({
           ...wallet,
           transaction_id: wallet.reference_id,
-          customer_name: (wallet.profiles as any)?.full_name || 'عميل محفظة',
+          customer_name: 'عميل محفظة',
           customer_email: '',
           currency: 'SAR',
           offer_title: wallet.description
