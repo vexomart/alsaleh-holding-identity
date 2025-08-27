@@ -47,6 +47,7 @@ const menuItems = [
       { title: 'الطلبات', url: '/admin/orders', icon: ShoppingCart },
       { title: 'الفواتير', url: '/admin/invoices', icon: FileText },
       { title: 'المدفوعات', url: '/admin/payments', icon: CreditCard },
+      { title: 'طرق الدفع', url: '/admin/payment-methods', icon: CreditCard },
     ]
   },
   {

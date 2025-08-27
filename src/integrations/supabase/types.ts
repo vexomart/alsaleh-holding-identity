@@ -1790,6 +1790,57 @@ export type Database = {
           },
         ]
       }
+      payment_methods: {
+        Row: {
+          api_key: string | null
+          configuration: Json | null
+          created_at: string | null
+          created_by: string | null
+          icon_name: string
+          id: string
+          is_active: boolean | null
+          is_live_mode: boolean | null
+          name: string
+          name_ar: string
+          provider: string
+          secret_key: string | null
+          updated_at: string | null
+          webhook_secret: string | null
+        }
+        Insert: {
+          api_key?: string | null
+          configuration?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          icon_name: string
+          id?: string
+          is_active?: boolean | null
+          is_live_mode?: boolean | null
+          name: string
+          name_ar: string
+          provider: string
+          secret_key?: string | null
+          updated_at?: string | null
+          webhook_secret?: string | null
+        }
+        Update: {
+          api_key?: string | null
+          configuration?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          icon_name?: string
+          id?: string
+          is_active?: boolean | null
+          is_live_mode?: boolean | null
+          name?: string
+          name_ar?: string
+          provider?: string
+          secret_key?: string | null
+          updated_at?: string | null
+          webhook_secret?: string | null
+        }
+        Relationships: []
+      }
       payment_transactions: {
         Row: {
           amount: number

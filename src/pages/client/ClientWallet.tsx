@@ -43,9 +43,20 @@ interface Transaction {
   status: string;
 }
 
+interface PaymentMethodDB {
+  id: string;
+  name: string;
+  name_ar: string;
+  provider: string;
+  icon_name: string;
+  is_active: boolean;
+  configuration: any;
+}
+
 export default function ClientWallet() {
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [availablePaymentMethods, setAvailablePaymentMethods] = useState<PaymentMethodDB[]>([]);
   const [loading, setLoading] = useState(true);
   const [depositAmount, setDepositAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -56,17 +67,34 @@ export default function ClientWallet() {
   const [depositing, setDepositing] = useState(false);
   const { toast } = useToast();
 
-  const paymentMethods = [
-    { value: 'visa', label: 'فيزا', icon: CreditCard },
-    { value: 'mastercard', label: 'ماستركارد', icon: CreditCard },
-    { value: 'mada', label: 'مدى', icon: CreditCard },
-    { value: 'stc_pay', label: 'STC Pay', icon: Smartphone },
-    { value: 'bank_transfer', label: 'حوالة بنكية', icon: Building2 },
-  ];
+  const iconMap = {
+    CreditCard,
+    Smartphone,
+    Building2,
+    Calendar,
+    Shield: TrendingUp,
+    Globe: TrendingDown
+  };
 
   useEffect(() => {
     fetchWalletData();
+    fetchPaymentMethods();
   }, []);
+
+  const fetchPaymentMethods = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('payment_methods')
+        .select('*')
+        .eq('is_active', true)
+        .order('name_ar');
+
+      if (error) throw error;
+      setAvailablePaymentMethods(data || []);
+    } catch (error) {
+      console.error('Error fetching payment methods:', error);
+    }
+  };
 
   const fetchWalletData = async () => {
     try {
@@ -350,14 +378,17 @@ export default function ClientWallet() {
                         <SelectValue placeholder="اختر طريقة الدفع" />
                       </SelectTrigger>
                       <SelectContent>
-                        {paymentMethods.map((method) => (
-                          <SelectItem key={method.value} value={method.value}>
-                            <div className="flex items-center gap-2">
-                              <method.icon className="h-4 w-4" />
-                              {method.label}
-                            </div>
-                          </SelectItem>
-                        ))}
+                        {availablePaymentMethods.map((method) => {
+                          const IconComponent = iconMap[method.icon_name as keyof typeof iconMap] || CreditCard;
+                          return (
+                            <SelectItem key={method.id} value={method.provider}>
+                              <div className="flex items-center gap-2">
+                                <IconComponent className="h-4 w-4" />
+                                {method.name_ar}
+                              </div>
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
                   </div>
