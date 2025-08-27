@@ -18,13 +18,17 @@ import {
   Lock
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const HostingServices = () => {
+  const [isYearly, setIsYearly] = useState(false);
+
   const plans = [
     {
       name: "الباقة الأساسية",
-      price: "299",
-      period: "شهريًا",
+      monthlyPrice: "299",
+      yearlyPrice: "2,990",
+      originalYearlyPrice: "3,588",
       color: "from-blue-500 to-cyan-500",
       features: [
         "مساحة تخزين 10 جيجا",
@@ -37,8 +41,9 @@ const HostingServices = () => {
     },
     {
       name: "الباقة المتقدمة",
-      price: "599",
-      period: "شهريًا",
+      monthlyPrice: "599",
+      yearlyPrice: "5,990",
+      originalYearlyPrice: "7,188",
       color: "from-purple-500 to-pink-500",
       popular: true,
       features: [
@@ -53,8 +58,9 @@ const HostingServices = () => {
     },
     {
       name: "الباقة المؤسسية",
-      price: "999",
-      period: "شهريًا", 
+      monthlyPrice: "999",
+      yearlyPrice: "9,990",
+      originalYearlyPrice: "11,988",
       color: "from-green-500 to-emerald-500",
       features: [
         "مساحة تخزين غير محدودة",
@@ -164,6 +170,37 @@ const HostingServices = () => {
             </p>
           </div>
           
+          {/* Pricing Toggle */}
+          <div className="flex justify-center mb-12">
+            <div className="bg-white rounded-full p-1 shadow-lg border border-slate-200">
+              <div className="flex items-center">
+                <button
+                  onClick={() => setIsYearly(false)}
+                  className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                    !isYearly 
+                      ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-md' 
+                      : 'text-slate-600 hover:text-slate-800'
+                  }`}
+                >
+                  شهري
+                </button>
+                <button
+                  onClick={() => setIsYearly(true)}
+                  className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 flex items-center ${
+                    isYearly 
+                      ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-md' 
+                      : 'text-slate-600 hover:text-slate-800'
+                  }`}
+                >
+                  سنوي
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-1 mr-2 animate-pulse">
+                    وفر 17%
+                  </Badge>
+                </button>
+              </div>
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {plans.map((plan, index) => (
               <Card key={index} className={`relative group hover:scale-105 transition-all duration-500 hover:shadow-xl cursor-pointer overflow-hidden ${
@@ -206,11 +243,25 @@ const HostingServices = () => {
                   
                   {/* Price */}
                   <div className="text-center mb-6">
+                    {isYearly && (
+                      <div className="mb-1">
+                        <span className="text-sm text-slate-400 line-through">{plan.originalYearlyPrice} ريال</span>
+                      </div>
+                    )}
                     <div className="flex items-baseline justify-center mb-2">
-                      <span className="text-4xl font-bold text-slate-800 group-hover:scale-105 transition-transform duration-300">{plan.price}</span>
+                      <span className="text-4xl font-bold text-slate-800 group-hover:scale-105 transition-transform duration-300">
+                        {isYearly ? plan.yearlyPrice : plan.monthlyPrice}
+                      </span>
                       <span className="text-slate-500 mr-2 text-base">ريال</span>
                     </div>
-                    <p className="text-slate-600 text-sm">{plan.period}</p>
+                    <p className="text-slate-600 text-sm">
+                      {isYearly ? 'سنويًا' : 'شهريًا'}
+                      {isYearly && (
+                        <span className="block text-green-600 font-medium mt-1">
+                          وفر {Math.round(((parseInt(plan.originalYearlyPrice.replace(',', '')) - parseInt(plan.yearlyPrice.replace(',', ''))) / parseInt(plan.originalYearlyPrice.replace(',', ''))) * 100)}% سنويًا
+                        </span>
+                      )}
+                    </p>
                   </div>
                   
                   {/* Features */}
