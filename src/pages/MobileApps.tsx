@@ -266,122 +266,108 @@ const MobileApps = () => {
       </section>
 
       {/* Development Process */}
-      <section className="py-24 bg-gradient-to-br from-background via-primary/5 to-secondary/5" dir="rtl">
+      <section className="py-24 bg-muted/30" dir="rtl">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-20 animate-fade-in">
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              رحلة تطوير تطبيقك
-            </h2>
-            <p className="text-muted-foreground max-w-3xl mx-auto text-lg">
-              نأخذك في رحلة مميزة من الفكرة إلى التطبيق النهائي عبر أربع مراحل محددة
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4">عملية التطوير</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              نتبع منهجية احترافية واضحة لضمان تسليم مشروعك بأعلى جودة وفي الوقت المحدد
             </p>
           </div>
 
-          <div className="relative max-w-6xl mx-auto">
-            {/* Central Timeline Line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-secondary to-accent transform -translate-x-1/2 hidden lg:block"></div>
-            
-            {/* Floating Decorative Elements */}
-            <div className="absolute top-10 left-10 w-4 h-4 bg-primary/20 rounded-full animate-ping"></div>
-            <div className="absolute top-32 right-16 w-3 h-3 bg-secondary/30 rounded-full animate-pulse"></div>
-            <div className="absolute bottom-20 left-20 w-2 h-2 bg-accent/40 rounded-full animate-bounce"></div>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
             {developmentProcess.map((step, index) => {
               const IconComponent = step.icon;
-              const isEven = index % 2 === 0;
-              
               return (
                 <div 
                   key={index} 
-                  className={`relative mb-16 lg:mb-24 opacity-0 animate-fade-in ${
-                    isEven ? 'lg:text-right' : 'lg:text-left'
-                  }`}
+                  className="relative opacity-0 animate-fade-in"
                   style={{ 
-                    animationDelay: `${index * 300}ms`,
+                    animationDelay: `${index * 200}ms`,
                     animationFillMode: 'forwards'
                   }}
                 >
-                  {/* Timeline Node */}
-                  <div className="absolute left-1/2 top-8 w-6 h-6 bg-gradient-to-br from-primary to-secondary rounded-full transform -translate-x-1/2 z-10 hidden lg:block animate-pulse" style={{ animationDelay: `${index * 300 + 500}ms` }}></div>
-                  
-                  {/* Content Card */}
-                  <div className={`lg:w-1/2 ${isEven ? 'lg:mr-auto lg:pr-16' : 'lg:ml-auto lg:pl-16'}`}>
-                    <Card className="group relative overflow-hidden bg-gradient-to-br from-card/80 via-card to-card/60 backdrop-blur-lg border-2 border-transparent hover:border-primary/30 transition-all duration-700 hover:shadow-2xl hover:shadow-primary/10 transform hover:scale-105 hover:-translate-y-2">
-                      {/* Animated Background */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-                      
-                      {/* Glowing Border Effect */}
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary via-secondary to-accent opacity-0 group-hover:opacity-20 blur-xl transition-all duration-700"></div>
-                      
-                      <CardContent className="p-8 relative z-10">
-                        <div className="flex items-center gap-6 mb-6">
-                          {/* Step Number with Animation */}
-                          <div className="relative">
-                            <div className="w-16 h-16 bg-gradient-to-br from-primary via-secondary to-accent rounded-2xl flex items-center justify-center shadow-xl group-hover:shadow-2xl group-hover:shadow-primary/30 transition-all duration-500 transform group-hover:scale-125 group-hover:rotate-12">
-                              <span className="text-white font-bold text-xl group-hover:scale-110 transition-transform duration-300">{step.step}</span>
-                            </div>
-                            
-                            {/* Pulsing Ring */}
-                            <div className="absolute inset-0 border-4 border-primary/30 rounded-2xl animate-ping group-hover:border-primary/50"></div>
-                          </div>
-                          
-                          {/* Icon Container */}
-                          <div className="relative">
-                            <div className="w-14 h-14 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 rounded-xl flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-primary/20 group-hover:via-secondary/20 group-hover:to-accent/20 transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-12">
-                              <IconComponent className="w-7 h-7 text-primary group-hover:text-secondary group-hover:scale-125 transition-all duration-300" />
-                            </div>
-                            
-                            {/* Orbiting Dots */}
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-primary to-secondary rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-300"></div>
-                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-secondary to-accent rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-500"></div>
-                          </div>
-                        </div>
-                        
-                        {/* Content */}
-                        <div className="space-y-4">
-                          <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors duration-500 transform group-hover:translate-x-2">
-                            {step.title}
-                          </h3>
-                          <p className="text-muted-foreground leading-relaxed text-lg transform group-hover:translate-x-1 transition-transform duration-300">
-                            {step.description}
-                          </p>
-                        </div>
-                        
-                        {/* Progress Indicator */}
-                        <div className="mt-6 flex items-center gap-2">
-                          {[...Array(4)].map((_, i) => (
-                            <div 
-                              key={i}
-                              className={`h-1 rounded-full transition-all duration-500 ${
-                                i <= index 
-                                  ? 'w-8 bg-gradient-to-r from-primary to-secondary' 
-                                  : 'w-4 bg-muted'
-                              }`}
-                            ></div>
-                          ))}
-                          <span className="text-sm text-muted-foreground mr-2">
-                            {index + 1} من {developmentProcess.length}
-                          </span>
-                        </div>
-                      </CardContent>
-                      
-                      {/* Floating Elements */}
-                      <div className="absolute top-4 right-4 w-2 h-2 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-bounce"></div>
-                      <div className="absolute bottom-6 left-6 w-1 h-1 bg-secondary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-ping"></div>
-                    </Card>
-                  </div>
-                  
-                  {/* Connecting Arrow (for larger screens) */}
+                  {/* Step Connection Line */}
                   {index < developmentProcess.length - 1 && (
-                    <div className={`hidden lg:block absolute top-full ${isEven ? 'left-1/2' : 'right-1/2'} transform ${isEven ? '-translate-x-1/2 translate-x-8' : 'translate-x-1/2 -translate-x-8'} translate-y-4`}>
-                      <div className="w-8 h-8 text-primary/50 animate-bounce" style={{ animationDelay: `${index * 300 + 800}ms` }}>
-                        <ArrowRight className={`w-8 h-8 ${!isEven ? 'rotate-180' : ''}`} />
-                      </div>
-                    </div>
+                    <div className="hidden lg:block absolute top-20 -left-4 w-8 h-px bg-gradient-to-r from-primary/50 to-primary/20 z-10"></div>
                   )}
+                  
+                  <Card className="group relative h-full bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/5 hover:scale-[1.02]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg"></div>
+                    
+                    <CardContent className="p-8 relative z-10 text-center">
+                      {/* Step Number */}
+                      <div className="relative mx-auto mb-6 w-16 h-16">
+                        <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-primary/20 transition-all duration-300 transform group-hover:scale-110">
+                          <span className="text-white font-bold text-xl">{step.step}</span>
+                        </div>
+                        <div className="absolute inset-0 border-2 border-primary/20 rounded-full animate-ping opacity-0 group-hover:opacity-100"></div>
+                      </div>
+                      
+                      {/* Icon */}
+                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 transform group-hover:scale-110">
+                        <IconComponent className="w-6 h-6 text-primary group-hover:scale-125 transition-transform duration-300" />
+                      </div>
+                      
+                      {/* Content */}
+                      <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+                        {step.title}
+                      </h3>
+                      <p className="text-muted-foreground leading-relaxed text-sm">
+                        {step.description}
+                      </p>
+                      
+                      {/* Step Progress Bar */}
+                      <div className="mt-6 w-full bg-muted rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-1000 ease-out"
+                          style={{ 
+                            width: `${((index + 1) / developmentProcess.length) * 100}%`,
+                            transitionDelay: `${index * 200 + 500}ms`
+                          }}
+                        ></div>
+                      </div>
+                      
+                      {/* Completion Badge */}
+                      <div className="mt-4 inline-flex items-center gap-2 text-xs text-primary font-medium">
+                        <CheckCircle className="w-4 h-4" />
+                        المرحلة {index + 1}
+                      </div>
+                    </CardContent>
+                    
+                    {/* Decorative Corner Elements */}
+                    <div className="absolute top-2 right-2 w-2 h-2 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-pulse"></div>
+                    <div className="absolute bottom-2 left-2 w-1 h-1 bg-secondary/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-ping"></div>
+                  </Card>
                 </div>
               );
             })}
+          </div>
+
+          {/* Process Summary */}
+          <div className="mt-16 text-center animate-fade-in" style={{ animationDelay: '1000ms', animationFillMode: 'forwards', opacity: '0' }}>
+            <div className="bg-gradient-to-r from-primary/10 via-secondary/5 to-accent/10 rounded-2xl p-8 border border-primary/20 backdrop-blur-sm">
+              <h3 className="text-2xl font-bold mb-4 text-foreground">
+                ضمان الجودة والتسليم في الوقت المحدد
+              </h3>
+              <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                نلتزم بتطبيق أعلى معايير الجودة في كل مرحلة من مراحل التطوير، مع متابعة دورية وتحديثات مستمرة لضمان رضاكم التام
+              </p>
+              <div className="flex justify-center gap-8 mt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">99%</div>
+                  <div className="text-sm text-muted-foreground">معدل الرضا</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">24/7</div>
+                  <div className="text-sm text-muted-foreground">الدعم الفني</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">95%</div>
+                  <div className="text-sm text-muted-foreground">التسليم في الموعد</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
