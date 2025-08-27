@@ -234,7 +234,7 @@ const SEOServices = () => {
             </p>
           </div>
           
-          <div className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto items-stretch justify-center">
+          <div className="flex flex-row gap-3 max-w-5xl mx-auto items-stretch justify-center overflow-x-auto pb-4">
             {packages.map((pkg, index) => (
               <Card key={index} className={`relative group hover:scale-105 transition-all duration-500 hover:shadow-xl cursor-pointer overflow-hidden ${
                 pkg.popular 
