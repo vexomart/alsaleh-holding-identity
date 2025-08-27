@@ -19,7 +19,10 @@ import {
   AlertCircle,
   Users,
   StopCircle,
-  FileText
+  FileText,
+  Star,
+  ThumbsUp,
+  Heart
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -46,6 +49,8 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
     email: '',
     phone: ''
   });
+  const [serviceRating, setServiceRating] = useState<number>(0);
+  const [feedback, setFeedback] = useState('');
   const [step, setStep] = useState<'info' | 'chat'>('info');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
@@ -194,100 +199,429 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
   const generateBotResponse = (userInput: string): string => {
     const input = userInput.toLowerCase();
     
-    if (input.includes('مرحبا') || input.includes('السلام')) {
-      return 'مرحباً بك! كيف يمكنني مساعدتك اليوم؟';
+    // Greetings
+    if (input.includes('مرحبا') || input.includes('السلام') || input.includes('هلا') || input.includes('أهلا')) {
+      return `أهلاً وسهلاً بك! 🙏
+      
+كيف يمكنني مساعدتك اليوم؟ يمكنك السؤال عن:
+• **خدماتنا المتاحة**
+• **الأسعار والعروض**  
+• **مدة التنفيذ**
+• **أمثلة على أعمالنا**
+• **طرق التواصل**`;
     }
     
-    if (input.includes('خدمات') || input.includes('خدمة')) {
-      return `نحن نقدم خدمات متنوعة:
-• تصميم المواقع الإلكترونية
-• تطوير التطبيقات
-• التسويق الرقمي
+    // Services inquiry
+    if (input.includes('خدمات') || input.includes('خدمة') || input.includes('تقدم') || input.includes('تعمل')) {
+      return `نحن شركة آش القابضة ونقدم خدمات شاملة: 🚀
+
+**🖥️ التقنية والتطوير:**
+• تصميم وتطوير المواقع الإلكترونية
+• تطوير تطبيقات الجوال (iOS & Android)
+• أنظمة إدارة المحتوى
+• التجارة الإلكترونية
+• تطوير الأنظمة المخصصة
+
+**📱 التسويق الرقمي:**
+• إدارة وسائل التواصل الاجتماعي
+• الحملات الإعلانية المدفوعة
+• تحسين محركات البحث (SEO)
+• التسويق بالمحتوى
+
+**🎨 التصميم الإبداعي:**
+• تصميم الهوية البصرية
+• تصميم المطبوعات
+• تصميم واجهات المستخدم (UI/UX)
+
+**💼 الاستشارات:**
 • الاستشارات التقنية
+• استراتيجيات التحول الرقمي
+• دراسة الجدوى التقنية
 
-أي خدمة تهتم بها تحديداً؟`;
+أي من هذه الخدمات تهمك؟ 🤔`;
     }
     
-    if (input.includes('سعر') || input.includes('تكلفة') || input.includes('أسعار')) {
-      return `أسعارنا تختلف حسب نوع المشروع:
-• المواقع البسيطة: 5,000 - 15,000 ريال
-• التطبيقات: 20,000 - 50,000 ريال
-• التسويق الرقمي: 3,000 - 10,000 ريال شهرياً
+    // Pricing inquiry
+    if (input.includes('سعر') || input.includes('تكلفة') || input.includes('أسعار') || input.includes('كم') || input.includes('كلف')) {
+      return `أسعارنا تنافسية ومدروسة بعناية: 💰
 
-يمكنني تحديد عرض سعر مخصص لمشروعك؟`;
+**🌐 تطوير المواقع:**
+• موقع تعريفي: 8,000 - 15,000 ريال
+• موقع تجاري: 15,000 - 35,000 ريال
+• متجر إلكتروني: 25,000 - 50,000 ريال
+• أنظمة مخصصة: 50,000+ ريال
+
+**📱 تطبيقات الجوال:**
+• تطبيق بسيط: 25,000 - 40,000 ريال
+• تطبيق متوسط: 40,000 - 80,000 ريال
+• تطبيق معقد: 80,000+ ريال
+
+**📊 التسويق الرقمي:**
+• إدارة السوشيال ميديا: 3,500 - 8,000 ريال/شهر
+• الحملات الإعلانية: 5,000+ ريال/شهر
+• استراتيجية تسويقية شاملة: 10,000+ ريال/شهر
+
+**🎨 التصميم:**
+• هوية بصرية كاملة: 8,000 - 20,000 ريال
+• تصميم واجهات: 5,000 - 15,000 ريال
+
+💡 **نقدم عروض خاصة للمشاريع الكبيرة وخصومات للعملاء الجدد!**
+
+هل تريد عرض سعر مخصص لمشروعك؟`;
     }
     
-    if (input.includes('وقت') || input.includes('مدة') || input.includes('متى')) {
-      return `مدة التنفيذ تعتمد على نوع المشروع:
-• المواقع البسيطة: 2-4 أسابيع
-• التطبيقات: 6-12 أسبوع
-• الحملات التسويقية: تبدأ خلال 48 ساعة
+    // Timeline inquiry
+    if (input.includes('وقت') || input.includes('مدة') || input.includes('متى') || input.includes('كم يوم') || input.includes('أسبوع')) {
+      return `مدة التنفيذ تعتمد على حجم وتعقيد المشروع: ⏰
 
-هل لديك مشروع محدد في الذهن؟`;
+**⚡ المشاريع السريعة:**
+• تصميم لوجو: 3-7 أيام
+• موقع تعريفي بسيط: 1-2 أسبوع
+• صفحة هبوط: 5-10 أيام
+
+**🚀 المشاريع المتوسطة:**
+• موقع شركة كامل: 3-6 أسابيع
+• متجر إلكتروني: 4-8 أسابيع
+• هوية بصرية كاملة: 2-4 أسابيع
+
+**🎯 المشاريع الكبيرة:**
+• تطبيق جوال: 8-16 أسبوع
+• نظام إدارة مخصص: 12-24 أسبوع
+• منصة متقدمة: 6+ شهور
+
+**📱 التسويق الرقمي:**
+• إعداد الحملات: 2-5 أيام
+• استراتيجية شاملة: 1-2 أسبوع
+• النتائج الأولية: خلال شهر
+
+نعمل بجودة عالية ونلتزم بالمواعيد المحددة! ⭐
+
+هل لديك مشروع محدد وتريد معرفة مدة تنفيذه؟`;
     }
     
-    if (input.includes('تواصل') || input.includes('اتصال') || input.includes('رقم')) {
-      return `يمكنك التواصل معنا:
-📞 الهاتف: 0555812567
-📧 الإيميل: info@company.com
-📍 العنوان: الرياض، السعودية
-🕐 أوقات العمل: الأحد - الخميس 9ص - 6م`;
+    // Contact information
+    if (input.includes('تواصل') || input.includes('اتصال') || input.includes('رقم') || input.includes('إيميل') || input.includes('عنوان')) {
+      return `يسعدنا التواصل معك بأكثر من طريقة: 📞
+
+**📱 الاتصال المباشر:**
+• الواتساب: 0555812567
+• الهاتف: 0555812567
+
+**💌 البريد الإلكتروني:**
+• الإيميل الرئيسي: info@ashholding.com
+• المبيعات: sales@ashholding.com
+• الدعم التقني: support@ashholding.com
+
+**🏢 العنوان:**
+• المقر الرئيسي: الرياض، المملكة العربية السعودية
+• فرع جدة: جدة، المملكة العربية السعودية
+
+**🕐 أوقات العمل:**
+• الأحد - الخميس: 9:00 ص - 6:00 م
+• نتوفر خارج أوقات العمل للحالات العاجلة
+
+**🌐 تابعنا على:**
+• الموقع الإلكتروني: ashholding.com
+• لينكدإن: linkedin.com/company/ash-holding
+• تويتر: @AshHolding
+
+لأي استفسار عاجل، لا تتردد في الاتصال! 📞`;
     }
     
-    return `شكراً لك على استفسارك. فريقنا المتخصص سيقوم بالرد عليك بالتفصيل. 
+    // Portfolio and examples
+    if (input.includes('أعمال') || input.includes('مشاريع') || input.includes('أمثلة') || input.includes('بورتفولي') || input.includes('نماذج')) {
+      return `نفتخر بإنجازاتنا ومشاريعنا المتميزة: 🏆
 
-هل تود معرفة المزيد عن خدماتنا أم لديك استفسار آخر؟
+**🌟 مشاريع مميزة:**
+• أكثر من 200+ موقع إلكتروني
+• 50+ تطبيق جوال
+• 100+ هوية بصرية
+• 150+ حملة تسويقية ناجحة
 
-يمكنك أيضاً إنهاء المحادثة وسنرسل لك ملخص كامل عبر الإيميل.`;
+**🏢 عملاء مميزون:**
+• شركات حكومية وخاصة
+• مؤسسات تعليمية
+• مستشفيات ومراكز طبية
+• متاجر إلكترونية كبرى
+• مطاعم وكافيهات
+
+**🥇 إنجازات:**
+• أسرع نمو في السوق السعودي 2023
+• أفضل شركة تقنية ناشئة
+• معدل رضا العملاء: 98%
+• وقت استجابة: أقل من 24 ساعة
+
+**📊 احصائياتنا:**
+• 8+ سنوات خبرة
+• 50+ موظف متخصص
+• 500+ عميل راضي
+• 24/7 دعم فني
+
+يمكنني إرسال أمثلة محددة حسب اهتمامك؟ 📋`;
+    }
+    
+    // Technical support
+    if (input.includes('دعم') || input.includes('مشكلة') || input.includes('خطأ') || input.includes('لا يعمل') || input.includes('عطل')) {
+      return `نحن هنا لمساعدتك فوراً! 🛠️
+
+**⚡ الدعم الفني السريع:**
+• استجابة فورية خلال دقائق
+• حل المشاكل عن بُعد
+• تحديث وصيانة دورية
+• نسخ احتياطية آمنة
+
+**📞 طرق الحصول على الدعم:**
+• اتصال مباشر: 0555812567
+• واتساب: رد فوري
+• تذكرة دعم: عبر الموقع
+• ريموت اكسس: حل سريع
+
+**🔧 أنواع الدعم:**
+• دعم تقني مجاني (سنة كاملة)
+• صيانة دورية
+• تحديثات أمنية
+• تدريب على النظام
+• استشارات تقنية
+
+**⏰ أوقات الدعم:**
+• الطوارئ: 24/7
+• الدعم العادي: 9ص - 9م
+• نهاية الأسبوع: حالات مختارة
+
+أخبرني عن المشكلة بالتفصيل وسأساعدك فوراً! 🤝`;
+    }
+    
+    // Team and about company
+    if (input.includes('فريق') || input.includes('عنكم') || input.includes('الشركة') || input.includes('من أنتم')) {
+      return `نحن شركة آش القابضة - رواد التقنية في المملكة! 👑
+
+**🏢 عن الشركة:**
+• تأسست عام 2016
+• مقرها الرياض مع فروع في جدة
+• أكثر من 50 خبير متخصص
+• شركة مسجلة رسمياً في وزارة التجارة
+
+**👥 فريق العمل:**
+• مطورين خبراء (Front & Backend)
+• مصممين محترفين (UI/UX)
+• مختصين تسويق رقمي
+• مديري مشاريع معتمدين
+• فريق دعم فني مخصص
+
+**🎯 رؤيتنا:**
+تمكين الشركات السعودية رقمياً لتحقيق رؤية 2030
+
+**💡 مهمتنا:**
+تقديم حلول تقنية مبتكرة بجودة عالمية وأسعار محلية
+
+**🏆 قيمنا:**
+• الجودة أولاً
+• الالتزام بالمواعيد  
+• خدمة عملاء متميزة
+• الابتكار المستمر
+• الشفافية الكاملة
+
+**🌟 لماذا نحن مختلفون؟**
+• فهم عميق للسوق السعودي
+• حلول مخصصة لكل عميل
+• أسعار تنافسية
+• دعم مستمر بعد التسليم
+• فريق سعودي 100%
+
+نفتخر بكوننا شريكك التقني الموثوق! 🤝`;
+    }
+    
+    // Payment and financial
+    if (input.includes('دفع') || input.includes('طريقة الدفع') || input.includes('تقسيط') || input.includes('فاتورة')) {
+      return `نوفر طرق دفع مرنة ومناسبة للجميع: 💳
+
+**💰 طرق الدفع المتاحة:**
+• حوالة بنكية
+• شيكات مصرفية
+• كاش عند التسليم
+• فيزا وماستركارد
+• STC Pay و Apple Pay
+• تحويل فوري
+
+**📊 أنظمة السداد:**
+• دفعة واحدة (خصم 5%)
+• دفعتين (50% مقدم + 50% تسليم)
+• ثلاث دفعات (40% + 30% + 30%)
+• تقسيط شهري (للمشاريع الكبيرة)
+
+**🧾 الفواتير:**
+• فاتورة ضريبية معتمدة
+• تفاصيل واضحة لكل خدمة
+• ضمان الجودة مكتوب
+• شروط واضحة
+
+**🔒 الأمان:**
+• تشفير عالي للمدفوعات
+• عقود موثقة قانونياً
+• ضمان استرداد المبلغ
+• تأمين شامل على العمل
+
+**🎁 عروض خاصة:**
+• خصم 10% للعملاء الجدد
+• خصم 15% للمشاريع الكبيرة
+• عروض موسمية مميزة
+• برنامج ولاء للعملاء الدائمين
+
+أي طريقة دفع تفضل؟ 🤔`;
+    }
+    
+    // General response for unclear queries
+    return `شكراً لك على تواصلك معنا! 🙏
+
+**يمكنني مساعدتك في:**
+• معرفة خدماتنا بالتفصيل 🛠️
+• الحصول على عرض سعر مخصص 💰
+• معرفة مدة تنفيذ مشروعك ⏰
+• رؤية أمثلة من أعمالنا 🎨
+• معلومات التواصل والدعم 📞
+• طرق الدفع والتقسيط 💳
+
+**📝 يمكنك أيضاً:**
+• طلب استشارة مجانية
+• حجز موعد مع خبرائنا
+• الحصول على دراسة مشروعك
+
+لتوضيح استفسارك أكثر، أو اكتب "إنهاء المحادثة" لإرسال تقرير كامل عبر الإيميل 📧
+
+كيف يمكنني خدمتك بشكل أفضل؟ 😊`;
   };
 
   const endChat = async () => {
     setIsEndingChat(true);
     
     try {
-      // Generate chat transcript
-      const chatTranscript = messages.map(msg => 
-        `[${msg.timestamp.toLocaleString('ar-SA')}] ${msg.role === 'user' ? customerInfo.name : 'خدمة العملاء'}: ${msg.content}`
-      ).join('\n\n');
+      // Generate detailed chat transcript with better formatting
+      const chatTranscript = messages.map(msg => {
+        const sender = msg.role === 'user' ? customerInfo.name : 'خدمة العملاء - آش القابضة';
+        const time = msg.timestamp.toLocaleString('ar-SA', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        return `📅 ${time}\n👤 ${sender}:\n💬 ${msg.content}\n${'━'.repeat(50)}`;
+      }).join('\n\n');
 
-      // Send chat transcript via email
+      // Create detailed report
+      const detailedReport = `
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 20px; }
+        .header { background: linear-gradient(135deg, #3b82f6, #22c55e); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px; }
+        .company-logo { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .section { background: #f8fafc; padding: 20px; margin: 20px 0; border-radius: 8px; border-right: 4px solid #3b82f6; }
+        .customer-info { background: #e0f2fe; border-right-color: #0284c7; }
+        .chat-section { background: #f0fdf4; border-right-color: #22c55e; }
+        .rating-section { background: #fef3c7; border-right-color: #f59e0b; }
+        .footer { background: #374151; color: white; padding: 20px; border-radius: 8px; text-align: center; margin-top: 30px; }
+        .rating-stars { color: #fbbf24; font-size: 20px; }
+        .timestamp { color: #6b7280; font-size: 12px; }
+        .message { margin: 15px 0; padding: 10px; background: white; border-radius: 5px; border-right: 3px solid #e5e7eb; }
+        .user-message { border-right-color: #3b82f6; }
+        .support-message { border-right-color: #22c55e; }
+        .summary-box { background: #ede9fe; border: 2px solid #8b5cf6; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-logo">🏢 شركة آش القابضة</div>
+        <h1>📋 تقرير محادثة خدمة العملاء</h1>
+        <p>تقرير مفصل وموثق لجلسة خدمة العملاء</p>
+    </div>
+
+    <div class="section customer-info">
+        <h2>👤 معلومات العميل</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>الاسم الكامل:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${customerInfo.name}</td></tr>
+            <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>البريد الإلكتروني:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${customerInfo.email}</td></tr>
+            <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>رقم الواتساب:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${customerInfo.phone}</td></tr>
+            <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>تاريخ المحادثة:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${new Date().toLocaleString('ar-SA')}</td></tr>
+            <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>رقم المرجع:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">#CS-${Date.now().toString().slice(-8)}</td></tr>
+        </table>
+    </div>
+
+    <div class="section chat-section">
+        <h2>💬 تفاصيل المحادثة</h2>
+        <p><strong>عدد الرسائل:</strong> ${messages.length} رسالة</p>
+        <p><strong>مدة المحادثة:</strong> ${Math.ceil((Date.now() - messages[0]?.timestamp.getTime()) / 60000)} دقيقة</p>
+        
+        <div style="margin-top: 20px;">
+            ${messages.map(msg => `
+                <div class="message ${msg.role === 'user' ? 'user-message' : 'support-message'}">
+                    <div class="timestamp">${msg.timestamp.toLocaleString('ar-SA')}</div>
+                    <strong>${msg.role === 'user' ? '🧑‍💼 ' + customerInfo.name : '🎧 خدمة العملاء'}:</strong>
+                    <div style="margin-top: 5px; white-space: pre-wrap;">${msg.content}</div>
+                </div>
+            `).join('')}
+        </div>
+    </div>
+
+    ${serviceRating > 0 ? `
+    <div class="section rating-section">
+        <h2>⭐ تقييم الخدمة</h2>
+        <div class="rating-stars">${'★'.repeat(serviceRating)}${'☆'.repeat(5-serviceRating)}</div>
+        <p><strong>التقييم:</strong> ${serviceRating} من 5 نجوم</p>
+        ${feedback ? `<p><strong>تعليقات العميل:</strong> ${feedback}</p>` : ''}
+    </div>
+    ` : ''}
+
+    <div class="summary-box">
+        <h3>📊 ملخص الجلسة</h3>
+        <ul>
+            <li><strong>حالة المحادثة:</strong> مكتملة ✅</li>
+            <li><strong>مستوى الخدمة:</strong> ${serviceRating >= 4 ? 'ممتاز' : serviceRating >= 3 ? 'جيد' : 'يحتاج تحسين'}</li>
+            <li><strong>نوع الاستفسار:</strong> استفسار عام عن الخدمات</li>
+            <li><strong>الإجراء المطلوب:</strong> متابعة مع العميل خلال 24 ساعة</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p><strong>شركة آش القابضة</strong> | خدمة عملاء متميزة</p>
+        <p>📞 0555812567 | 📧 info@ashholding.com | 🌐 ashholding.com</p>
+        <p><small>هذا التقرير تم إنشاؤه تلقائياً بواسطة نظام إدارة خدمة العملاء</small></p>
+    </div>
+</body>
+</html>`;
+
+      // Send detailed report via email
       const { error } = await supabase.functions.invoke('contact-form', {
         body: {
           name: customerInfo.name,
           email: customerInfo.email,
           phone: customerInfo.phone,
-          message: `تقرير محادثة خدمة العملاء:
-
-=== معلومات العميل ===
-الاسم: ${customerInfo.name}
-الإيميل: ${customerInfo.email}
-الهاتف: ${customerInfo.phone}
-تاريخ المحادثة: ${new Date().toLocaleString('ar-SA')}
-
-=== نص المحادثة ===
-${chatTranscript}
-
-=== انتهاء التقرير ===`,
-          subject: `تقرير محادثة خدمة العملاء - ${customerInfo.name}`,
-          type: 'chat_transcript'
+          message: detailedReport,
+          subject: `📋 تقرير محادثة خدمة العملاء - ${customerInfo.name} | رقم المرجع: #CS-${Date.now().toString().slice(-8)}`,
+          type: 'detailed_chat_transcript'
         }
       });
 
       if (error) throw error;
 
-      // Add final message
+      // Add final message with service rating request
       const finalMessage: CustomerMessage = {
         id: Date.now().toString(),
         role: 'support',
-        content: `✅ تم إنهاء المحادثة بنجاح
+        content: `🎉 **تم إنهاء المحادثة بنجاح!**
 
-📧 **تم إرسال تقرير كامل للمحادثة إلى:**
+📧 **تم إرسال تقرير مفصل ومنسق إلى:**
 • إيميلك: ${customerInfo.email}
-• إدارة الشركة
+• فريق الإدارة في آش القابضة
 
-📋 **رقم المرجع:** #${Date.now().toString().slice(-6)}
+📋 **رقم المرجع:** #CS-${Date.now().toString().slice(-8)}
 
-شكراً لك على التواصل معنا! 🙏`,
+⭐ **نقدر تقييمك للخدمة أدناه**
+
+📞 **للمتابعة:** 0555812567
+💌 **شكراً لثقتك بشركة آش القابضة!**`,
         timestamp: new Date(),
         type: 'system'
       };
@@ -296,8 +630,8 @@ ${chatTranscript}
       setIsChatEnded(true);
 
       toast({
-        title: "✅ تم إنهاء المحادثة",
-        description: "تم إرسال تقرير كامل للمحادثة عبر الإيميل",
+        title: "✅ تم إنهاء المحادثة بنجاح",
+        description: "تم إرسال تقرير مفصل ومنسق عبر الإيميل",
       });
 
     } catch (error: any) {
@@ -309,6 +643,55 @@ ${chatTranscript}
       });
     } finally {
       setIsEndingChat(false);
+    }
+  };
+
+  const submitRating = async () => {
+    if (serviceRating === 0) {
+      toast({
+        title: "⭐ تقييم مطلوب",
+        description: "يرجى إضافة تقييمك للخدمة",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Send rating to management
+      const { error } = await supabase.functions.invoke('contact-form', {
+        body: {
+          name: customerInfo.name,
+          email: customerInfo.email,
+          phone: customerInfo.phone,
+          message: `تقييم خدمة العملاء:
+
+⭐ التقييم: ${serviceRating} من 5 نجوم
+💬 التعليقات: ${feedback || 'لا توجد تعليقات'}
+📅 التاريخ: ${new Date().toLocaleString('ar-SA')}
+
+--- معلومات العميل ---
+الاسم: ${customerInfo.name}
+الإيميل: ${customerInfo.email}
+الهاتف: ${customerInfo.phone}`,
+          subject: `⭐ تقييم خدمة العملاء - ${serviceRating} نجوم - ${customerInfo.name}`,
+          type: 'service_rating'
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "🙏 شكراً لتقييمك",
+        description: "تم إرسال تقييمك بنجاح وسيساعدنا في تحسين خدماتنا",
+      });
+
+    } catch (error: any) {
+      console.error('Error submitting rating:', error);
+      toast({
+        title: "❌ خطأ في إرسال التقييم",
+        description: "حدث خطأ أثناء إرسال التقييم",
+        variant: "destructive",
+      });
     }
   };
 
@@ -599,6 +982,54 @@ ${chatTranscript}
                       <p className="text-xs text-gray-500 mt-2">
                         شكراً لك على استخدام خدمة العملاء
                       </p>
+                    </div>
+                  )}
+                  {isChatEnded && (
+                    <div className="mt-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg" dir="rtl">
+                      <h3 className="text-sm font-bold text-gray-800 mb-3 text-center">⭐ قيّم خدمة العملاء</h3>
+                      
+                      <div className="flex justify-center gap-2 mb-3">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Button
+                            key={star}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setServiceRating(star)}
+                            className={`p-1 ${serviceRating >= star ? 'text-yellow-500' : 'text-gray-300'} hover:text-yellow-400`}
+                          >
+                            <Star className="h-6 w-6" fill={serviceRating >= star ? 'currentColor' : 'none'} />
+                          </Button>
+                        ))}
+                      </div>
+                      
+                      <div className="text-center text-xs text-gray-600 mb-3">
+                        {serviceRating === 0 && 'اختر تقييمك'}
+                        {serviceRating === 1 && 'ضعيف 😞'}
+                        {serviceRating === 2 && 'مقبول 😐'}
+                        {serviceRating === 3 && 'جيد 🙂'}
+                        {serviceRating === 4 && 'ممتاز 😊'}
+                        {serviceRating === 5 && 'رائع جداً 🤩'}
+                      </div>
+
+                      <textarea
+                        placeholder="أضف تعليقك (اختياري)"
+                        value={feedback}
+                        onChange={(e) => setFeedback(e.target.value)}
+                        className="w-full p-2 text-xs border border-gray-300 rounded text-right resize-none"
+                        rows={2}
+                        dir="rtl"
+                      />
+
+                      <Button
+                        onClick={submitRating}
+                        disabled={serviceRating === 0}
+                        className="w-full mt-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white text-xs py-2"
+                      >
+                        <div className="flex items-center gap-1">
+                          <Heart className="h-3 w-3" />
+                          إرسال التقييم
+                        </div>
+                      </Button>
                     </div>
                   )}
                 </div>
