@@ -29,6 +29,7 @@ import {
   Package,
   MessageSquare,
   Image,
+  Receipt,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -42,13 +43,14 @@ const menuItems = [
     ]
   },
   {
-    groupLabel: 'إدارة العملاء',
+    groupLabel: 'الشؤون المالية',
     items: [
       { title: 'العملاء', url: '/admin/clients', icon: Users },
       { title: 'الطلبات', url: '/admin/orders', icon: ShoppingCart },
       { title: 'الفواتير', url: '/admin/invoices', icon: FileText },
       { title: 'المدفوعات', url: '/admin/payments', icon: CreditCard },
       { title: 'طرق الدفع', url: '/admin/payment-methods', icon: CreditCard },
+      { title: 'القوالب المالية', url: '/admin/financial-templates', icon: Receipt },
     ]
   },
   {
