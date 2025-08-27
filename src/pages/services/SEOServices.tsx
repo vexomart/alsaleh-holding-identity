@@ -234,78 +234,78 @@ const SEOServices = () => {
             </p>
           </div>
           
-          <div className="flex flex-col xl:flex-row gap-6 max-w-7xl mx-auto items-center justify-center">
+          <div className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto items-stretch justify-center">
             {packages.map((pkg, index) => (
-              <Card key={index} className={`relative group hover:scale-105 transition-all duration-500 hover:shadow-2xl cursor-pointer overflow-hidden ${
+              <Card key={index} className={`relative group hover:scale-105 transition-all duration-500 hover:shadow-xl cursor-pointer overflow-hidden ${
                 pkg.popular 
-                  ? 'ring-2 ring-emerald-400 shadow-xl scale-105 bg-gradient-to-br from-white via-emerald-50 to-white transform hover:scale-110' 
-                  : 'hover:shadow-lg bg-white hover:bg-gradient-to-br hover:from-white hover:to-slate-50'
-              } animate-fade-in w-full xl:w-80 min-h-[600px] flex flex-col`}
-              style={{ animationDelay: `${index * 0.2}s` }}>
+                  ? 'ring-2 ring-emerald-400 shadow-lg scale-105 bg-gradient-to-br from-white via-emerald-50 to-white transform hover:scale-110' 
+                  : 'hover:shadow-md bg-white hover:bg-gradient-to-br hover:from-white hover:to-slate-50'
+              } animate-fade-in flex-1 lg:w-72 max-w-sm mx-auto lg:mx-0`}
+              style={{ animationDelay: `${index * 0.15}s` }}>
                 
                 {/* Animated Background Gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${pkg.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
                 
                 {/* Top Indicator */}
-                <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${pkg.color} transition-all duration-300 group-hover:h-3`}></div>
+                <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${pkg.color} transition-all duration-300 group-hover:h-2`}></div>
                 
                 {pkg.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-                    <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-2 shadow-lg animate-bounce">
-                      <Award className="w-4 h-4 mr-2" />
-                      الباقة الأشهر
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-20">
+                    <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-4 py-1 shadow-md animate-pulse text-xs">
+                      <Award className="w-3 h-3 mr-1" />
+                      الأشهر
                     </Badge>
                   </div>
                 )}
                 
-                <CardContent className="p-8 flex flex-col h-full relative z-10">
+                <CardContent className="p-6 flex flex-col h-full relative z-10">
                   {/* Header */}
-                  <div className="text-center mb-6">
-                    <div className={`w-20 h-20 rounded-full bg-gradient-to-r ${pkg.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg`}>
-                      <Target className="w-10 h-10 text-white" />
+                  <div className="text-center mb-5">
+                    <div className={`w-14 h-14 rounded-full bg-gradient-to-r ${pkg.color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-md`}>
+                      <Target className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2 text-slate-800 group-hover:text-slate-900 transition-colors">{pkg.name}</h3>
+                    <h3 className="text-xl font-bold mb-1 text-slate-800 group-hover:text-slate-900 transition-colors">{pkg.name}</h3>
                   </div>
                   
                   {/* Price */}
-                  <div className="text-center mb-8">
-                    <div className="flex items-baseline justify-center mb-2">
-                      <span className="text-5xl font-bold text-slate-800 group-hover:scale-110 transition-transform duration-300">{pkg.price}</span>
-                      <span className="text-slate-500 mr-2 text-lg">ريال</span>
+                  <div className="text-center mb-6">
+                    <div className="flex items-baseline justify-center mb-1">
+                      <span className="text-3xl font-bold text-slate-800 group-hover:scale-105 transition-transform duration-300">{pkg.price}</span>
+                      <span className="text-slate-500 mr-1 text-sm">ريال</span>
                     </div>
-                    <p className="text-slate-600 font-medium">شهريًا</p>
+                    <p className="text-slate-600 text-sm">شهريًا</p>
                   </div>
                   
                   {/* Features */}
-                  <div className="space-y-4 mb-8 flex-grow">
+                  <div className="space-y-2.5 mb-6 flex-grow">
                     {pkg.features.map((feature, featureIndex) => (
                       <div key={featureIndex} 
-                           className="flex items-start group-hover:translate-x-2 transition-all duration-300 opacity-0 animate-fade-in"
+                           className="flex items-start group-hover:translate-x-1 transition-all duration-300 opacity-0 animate-fade-in"
                            style={{ 
-                             animationDelay: `${(index * 0.2) + (featureIndex * 0.1)}s`,
+                             animationDelay: `${(index * 0.15) + (featureIndex * 0.08)}s`,
                              animationFillMode: 'forwards'
                            }}>
-                        <div className="bg-emerald-100 rounded-full p-1.5 ml-3 mt-0.5 group-hover:bg-emerald-200 transition-colors duration-200">
-                          <CheckCircle className="w-4 h-4 text-emerald-600" />
+                        <div className="bg-emerald-100 rounded-full p-1 ml-2 mt-0.5 group-hover:bg-emerald-200 transition-colors duration-200 flex-shrink-0">
+                          <CheckCircle className="w-3 h-3 text-emerald-600" />
                         </div>
-                        <span className="text-slate-700 leading-relaxed text-sm">{feature}</span>
+                        <span className="text-slate-700 leading-relaxed text-xs">{feature}</span>
                       </div>
                     ))}
                   </div>
                   
                   {/* Button */}
                   <div className="mt-auto">
-                    <Button className={`w-full h-14 text-lg font-semibold bg-gradient-to-r ${pkg.color} hover:shadow-xl hover:scale-105 transition-all duration-300 text-white border-0 group-hover:shadow-2xl relative overflow-hidden`}>
+                    <Button className={`w-full h-10 text-sm font-semibold bg-gradient-to-r ${pkg.color} hover:shadow-lg hover:scale-105 transition-all duration-300 text-white border-0 group-hover:shadow-xl relative overflow-hidden`}>
                       <span className="relative z-10 flex items-center justify-center">
                         ابدأ الآن
-                        <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-200" />
+                        <ArrowRight className="w-4 h-4 mr-1 group-hover:translate-x-1 transition-transform duration-200" />
                       </span>
                       <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                     </Button>
                     
                     {pkg.popular && (
-                      <p className="text-center text-sm text-emerald-600 mt-3 font-medium animate-pulse">
-                        💎 الأكثر طلباً من عملائنا
+                      <p className="text-center text-xs text-emerald-600 mt-2 font-medium animate-pulse">
+                        💎 الأكثر طلباً
                       </p>
                     )}
                   </div>
