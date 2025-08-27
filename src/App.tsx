@@ -43,6 +43,14 @@ const AnnualReports = lazy(() => import("./pages/AnnualReports"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const DigitalContracts = lazy(() => import("./pages/DigitalContracts"));
 const ReadyProjects = lazy(() => import("./pages/ReadyProjects"));
+
+// Services Pages
+const HostingServices = lazy(() => import("./pages/services/HostingServices"));
+const SocialMediaManagement = lazy(() => import("./pages/services/SocialMediaManagement"));
+const SEOServices = lazy(() => import("./pages/services/SEOServices"));
+const FacebookAds = lazy(() => import("./pages/services/FacebookAds"));
+const ProductPhotography = lazy(() => import("./pages/services/ProductPhotography"));
+const ContentWriting = lazy(() => import("./pages/services/ContentWriting"));
 const RemoteWork = lazy(() => import("./pages/RemoteWork"));
 const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
 const AIIntelligence = lazy(() => import("./pages/AIIntelligence"));
@@ -95,7 +103,7 @@ const Consultation = lazy(() => import("./pages/Consultation"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
-const HostingServices = lazy(() => import("./pages/HostingServices"));
+
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
 const CarRentalWebsite = lazy(() => import("./pages/CarRentalWebsite"));
@@ -290,7 +298,12 @@ const App = () => {
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
-                <Route path="/hosting-services" element={<HostingServices />} />
+                <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
+                <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
+                <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
+                <Route path="/facebook-ads" element={<Suspense fallback={<PageLoader />}><FacebookAds /></Suspense>} />
+                <Route path="/product-photography" element={<Suspense fallback={<PageLoader />}><ProductPhotography /></Suspense>} />
+                <Route path="/content-writing" element={<Suspense fallback={<PageLoader />}><ContentWriting /></Suspense>} />
                 <Route path="/company-updates" element={<CompanyUpdates />} />
                 <Route path="/software-products" element={<Suspense fallback={<PageLoader />}><SoftwareProducts /></Suspense>} />
                 <Route path="/construction-website" element={<ConstructionWebsite />} />
