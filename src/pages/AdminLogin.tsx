@@ -134,7 +134,7 @@ const AdminLogin = () => {
                 </label>
                 <Input
                   type="email"
-                  placeholder="admin@alialshehriholding.com"
+                  placeholder="أدخل البريد الإلكتروني"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
