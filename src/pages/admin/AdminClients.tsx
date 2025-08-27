@@ -248,6 +248,23 @@ const AdminClients = () => {
         title: "تم إنشاء العميل بنجاح",
         description: `تم إضافة ${newClient.legal_name} إلى قاعدة العملاء`,
       });
+
+      // إرسال إيميل ترحيبي للعميل
+      try {
+        await supabase.functions.invoke('client-welcome-email', {
+          body: {
+            clientName: newClient.legal_name,
+            clientEmail: newClient.billing_email,
+            clientId: data.id, 
+            sector: newClient.sector
+          }
+        });
+        
+        console.log('✅ تم إرسال إيميل ترحيبي للعميل');
+      } catch (emailError: any) {
+        console.error('❌ خطأ في إرسال إيميل الترحيب:', emailError);
+        // لا نوقف العملية حتى لو فشل الإيميل
+      }
     } catch (error: any) {
       console.error('Error creating client:', error);
       
