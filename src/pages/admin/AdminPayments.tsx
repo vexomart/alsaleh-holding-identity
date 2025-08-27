@@ -445,125 +445,206 @@ const AdminPayments = () => {
 
       {/* Payment Details Modal */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent className="max-w-2xl" dir="rtl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5" />
-              تفاصيل المعاملة
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto" dir="rtl">
+          <DialogHeader className="sticky top-0 bg-background z-10 pb-4 border-b">
+            <DialogTitle className="flex items-center gap-3 text-xl">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <CreditCard className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">تفاصيل المعاملة</h2>
+                <p className="text-sm text-muted-foreground font-normal">
+                  رقم المعاملة: {selectedPayment?.transaction_id || selectedPayment?.reference_id}
+                </p>
+              </div>
             </DialogTitle>
-            <DialogDescription>
-              معلومات مفصلة عن المعاملة المالية
-            </DialogDescription>
           </DialogHeader>
           
           {selectedPayment && (
-            <div className="space-y-6">
-              {/* Transaction Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">رقم المعاملة</label>
-                  <p className="text-sm font-mono bg-muted px-3 py-2 rounded">
-                    {selectedPayment.transaction_id || selectedPayment.reference_id}
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">المبلغ</label>
-                  <p className="text-lg font-bold text-primary">
-                    {selectedPayment.amount} {selectedPayment.currency || 'SAR'}
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">طريقة الدفع</label>
-                  <p className="text-sm">{getMethodText(selectedPayment.payment_method)}</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">الحالة</label>
-                  <Badge className={getStatusColor(selectedPayment.status)}>
-                    {getStatusText(selectedPayment.status)}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Customer Info */}
-              <div className="border-t pt-4">
-                <h3 className="font-medium mb-3">معلومات العميل</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">اسم العميل</label>
-                    <p className="text-sm">{selectedPayment.customer_name}</p>
-                  </div>
-                  
-                  {selectedPayment.customer_email && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">البريد الإلكتروني</label>
-                      <p className="text-sm">{selectedPayment.customer_email}</p>
-                    </div>
-                  )}
-                  
-                  {selectedPayment.customer_phone && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">رقم الهاتف</label>
-                      <p className="text-sm">{selectedPayment.customer_phone}</p>
-                    </div>
-                  )}
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">وصف الخدمة</label>
-                    <p className="text-sm">{selectedPayment.offer_title || selectedPayment.description}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Transaction Details */}
-              <div className="border-t pt-4">
-                <h3 className="font-medium mb-3">تفاصيل المعاملة</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">تاريخ الإنشاء</label>
-                    <p className="text-sm">{new Date(selectedPayment.created_at).toLocaleString('ar-SA')}</p>
-                  </div>
-                  
-                  {selectedPayment.payment_date && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">تاريخ الدفع</label>
-                      <p className="text-sm">{new Date(selectedPayment.payment_date).toLocaleString('ar-SA')}</p>
-                    </div>
-                  )}
-                  
-                  {selectedPayment.transaction_type && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">نوع المعاملة</label>
-                      <Badge variant="secondary">
-                        {selectedPayment.transaction_type === 'deposit' ? 'شحن محفظة' : selectedPayment.transaction_type}
+            <div className="space-y-8 pt-6">
+              {/* Status Banner */}
+              <div className="bg-gradient-to-r from-muted/50 to-muted/30 p-6 rounded-lg border">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground mb-1">حالة المعاملة</p>
+                      <Badge className={`${getStatusColor(selectedPayment.status)} text-sm px-4 py-2`}>
+                        {getStatusText(selectedPayment.status)}
                       </Badge>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground mb-1">المبلغ</p>
+                      <p className="text-2xl font-bold text-primary">
+                        {selectedPayment.amount?.toLocaleString()} {selectedPayment.currency || 'SAR'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-1">طريقة الدفع</p>
+                    <div className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md">
+                      <CreditCard className="h-4 w-4" />
+                      <span className="font-medium">{getMethodText(selectedPayment.payment_method)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Info Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Customer Information */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 pb-3 border-b">
+                    <div className="p-2 bg-blue-100 rounded-lg dark:bg-blue-900/20">
+                      <Eye className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold">معلومات العميل</h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="bg-card border rounded-lg p-4">
+                      <label className="text-sm font-medium text-muted-foreground block mb-2">اسم العميل</label>
+                      <p className="text-lg font-medium text-foreground">{selectedPayment.customer_name}</p>
+                    </div>
+                    
+                    {selectedPayment.customer_email && (
+                      <div className="bg-card border rounded-lg p-4">
+                        <label className="text-sm font-medium text-muted-foreground block mb-2">البريد الإلكتروني</label>
+                        <p className="text-sm font-mono bg-muted px-3 py-2 rounded border break-all">
+                          {selectedPayment.customer_email}
+                        </p>
+                      </div>
+                    )}
+                    
+                    {selectedPayment.customer_phone && (
+                      <div className="bg-card border rounded-lg p-4">
+                        <label className="text-sm font-medium text-muted-foreground block mb-2">رقم الهاتف</label>
+                        <p className="text-sm font-mono bg-muted px-3 py-2 rounded border">
+                          {selectedPayment.customer_phone}
+                        </p>
+                      </div>
+                    )}
+                    
+                    <div className="bg-card border rounded-lg p-4">
+                      <label className="text-sm font-medium text-muted-foreground block mb-2">وصف الخدمة</label>
+                      <p className="text-sm text-foreground leading-relaxed">
+                        {selectedPayment.offer_title || selectedPayment.description || 'غير محدد'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Transaction Details */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 pb-3 border-b">
+                    <div className="p-2 bg-emerald-100 rounded-lg dark:bg-emerald-900/20">
+                      <Calendar className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold">تفاصيل المعاملة</h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="bg-card border rounded-lg p-4">
+                      <label className="text-sm font-medium text-muted-foreground block mb-2">رقم المعاملة</label>
+                      <p className="text-sm font-mono bg-muted px-3 py-2 rounded border break-all">
+                        {selectedPayment.transaction_id || selectedPayment.reference_id}
+                      </p>
+                    </div>
+                    
+                    <div className="bg-card border rounded-lg p-4">
+                      <label className="text-sm font-medium text-muted-foreground block mb-2">تاريخ الإنشاء</label>
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <p className="text-sm">{new Date(selectedPayment.created_at).toLocaleString('ar-SA')}</p>
+                      </div>
+                    </div>
+                    
+                    {selectedPayment.payment_date && (
+                      <div className="bg-card border rounded-lg p-4">
+                        <label className="text-sm font-medium text-muted-foreground block mb-2">تاريخ الدفع</label>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-emerald-500" />
+                          <p className="text-sm">{new Date(selectedPayment.payment_date).toLocaleString('ar-SA')}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {selectedPayment.transaction_type && (
+                      <div className="bg-card border rounded-lg p-4">
+                        <label className="text-sm font-medium text-muted-foreground block mb-2">نوع المعاملة</label>
+                        <Badge variant="secondary" className="text-sm">
+                          {selectedPayment.transaction_type === 'deposit' ? 'شحن محفظة' : selectedPayment.transaction_type}
+                        </Badge>
+                      </div>
+                    )}
+
+                    {selectedPayment.user_id && (
+                      <div className="bg-card border rounded-lg p-4">
+                        <label className="text-sm font-medium text-muted-foreground block mb-2">معرف المستخدم</label>
+                        <p className="text-xs font-mono bg-muted px-2 py-1 rounded border break-all">
+                          {selectedPayment.user_id}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Update Section */}
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 p-6 rounded-lg border border-amber-200 dark:border-amber-800">
+                <div className="flex items-center gap-2 mb-4">
+                  <AlertCircle className="h-5 w-5 text-amber-600" />
+                  <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-400">إدارة حالة المعاملة</h3>
+                </div>
+                <p className="text-sm text-amber-700 dark:text-amber-300 mb-4">
+                  يمكنك تغيير حالة المعاملة من هنا. سيتم إرسال إشعار للعميل عند تغيير الحالة.
+                </p>
+                <div className="flex items-center gap-3">
+                  <Select onValueChange={(value) => updatePaymentStatus(selectedPayment.id, value)} disabled={isUpdating}>
+                    <SelectTrigger className="w-48 bg-background">
+                      <SelectValue placeholder="تغيير الحالة" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">في الانتظار</SelectItem>
+                      <SelectItem value="processing">قيد المعالجة</SelectItem>
+                      <SelectItem value="completed">مكتملة</SelectItem>
+                      <SelectItem value="failed">فاشلة</SelectItem>
+                      <SelectItem value="refunded">مسترد</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {isUpdating && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                      جارٍ التحديث...
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="border-t pt-4 flex gap-2 justify-end">
+              <div className="flex gap-3 justify-end pt-6 border-t bg-muted/30 -mx-6 px-6 pb-6 mt-8">
                 <Button 
                   variant="outline" 
                   onClick={() => setIsDetailsOpen(false)}
+                  className="min-w-24"
                 >
+                  <X className="w-4 h-4 ml-2" />
                   إغلاق
                 </Button>
-                <Select onValueChange={(value) => updatePaymentStatus(selectedPayment.id, value)} disabled={isUpdating}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="تغيير الحالة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pending">في الانتظار</SelectItem>
-                    <SelectItem value="processing">قيد المعالجة</SelectItem>
-                    <SelectItem value="completed">مكتملة</SelectItem>
-                    <SelectItem value="failed">فاشلة</SelectItem>
-                    <SelectItem value="refunded">مسترد</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Button 
+                  variant="default"
+                  onClick={() => {
+                    // Copy transaction ID to clipboard
+                    navigator.clipboard.writeText(selectedPayment.transaction_id || selectedPayment.reference_id || '');
+                    toast({
+                      title: "تم النسخ",
+                      description: "تم نسخ رقم المعاملة إلى الحافظة",
+                    });
+                  }}
+                  className="min-w-24"
+                >
+                  <CreditCard className="w-4 h-4 ml-2" />
+                  نسخ رقم المعاملة
+                </Button>
               </div>
             </div>
           )}
