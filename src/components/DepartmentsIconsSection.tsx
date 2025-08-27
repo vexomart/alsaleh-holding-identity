@@ -162,74 +162,6 @@ const mainServices = [
   }
 ];
 
-const companyDepartments = [
-  {
-    id: 101,
-    title: "شركة آش للبرمجة",
-    subtitle: "ASH Programming",
-    icon: Code2,
-    color: "from-slate-600 to-gray-600",
-    bgColor: "bg-gradient-to-br from-slate-50 to-gray-50",
-    link: "/development",
-    description: "حلول برمجية متطورة",
-    category: "شركات"
-  },
-  {
-    id: 102,
-    title: "متجر كشخة للعبايات",
-    subtitle: "Kashkha Abaya Store", 
-    icon: Shirt,
-    color: "from-pink-600 to-rose-600",
-    bgColor: "bg-gradient-to-br from-pink-50 to-rose-50",
-    link: "/kashkha-abaya-store",
-    description: "عبايات عصرية أنيقة",
-    category: "شركات"
-  },
-  {
-    id: 103,
-    title: "شركة آش للمقاولات",
-    subtitle: "ASH Construction",
-    icon: Hammer,
-    color: "from-yellow-600 to-amber-600",
-    bgColor: "bg-gradient-to-br from-yellow-50 to-amber-50",
-    link: "/construction-website",
-    description: "مقاولات وإنشاءات",
-    category: "شركات"
-  },
-  {
-    id: 104,
-    title: "شركة آش لتأجير السيارات",
-    subtitle: "ASH Car Rental",
-    icon: Car,
-    color: "from-green-600 to-emerald-600",
-    bgColor: "bg-gradient-to-br from-green-50 to-emerald-50",
-    link: "/car-rental-landing",
-    description: "خدمات تأجير السيارات",
-    category: "شركات"
-  },
-  {
-    id: 105,
-    title: "متجر البطاقات الإلكترونية",
-    subtitle: "Electronic Cards Store",
-    icon: CreditCard,
-    color: "from-indigo-600 to-blue-600",
-    bgColor: "bg-gradient-to-br from-indigo-50 to-blue-50",
-    link: "/electronic-cards-store",
-    description: "بطاقات رقمية متنوعة",
-    category: "شركات"
-  },
-  {
-    id: 106,
-    title: "الخدمات المؤسسية",
-    subtitle: "Enterprise Services",
-    icon: Briefcase,
-    color: "from-purple-600 to-violet-600",
-    bgColor: "bg-gradient-to-br from-purple-50 to-violet-50",
-    link: "/business-services",
-    description: "حلول الأعمال المؤسسية",
-    category: "شركات"
-  }
-];
 
 const DepartmentsIconsSection = () => {
   const categories = [
@@ -366,35 +298,11 @@ const DepartmentsIconsSection = () => {
 
         {/* Services Section */}
         <div className="mb-16">
-          <div className="text-center mb-12">
-            <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground">
-              الخدمات الرقمية والتقنية
-            </h3>
-            <p className="text-muted-foreground">
-              حلول متطورة لنمو أعمالك الرقمية
-            </p>
-          </div>
-          
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
             {mainServices.map((service, index) => renderServiceCard(service, index))}
           </div>
         </div>
 
-        {/* Company Departments Section */}
-        <div>
-          <div className="text-center mb-12">
-            <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground">
-              شركاتنا التابعة
-            </h3>
-            <p className="text-muted-foreground">
-              مجموعة من الشركات المتخصصة تحت مظلة آش القابضة
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {companyDepartments.map((department, index) => renderServiceCard(department, index + mainServices.length))}
-          </div>
-        </div>
 
         {/* Call to Action */}
         <div className="text-center mt-16">
