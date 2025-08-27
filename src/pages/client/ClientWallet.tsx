@@ -415,13 +415,13 @@ export default function ClientWallet() {
                   شحن المحفظة
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md" dir="rtl">
-                <DialogHeader>
-                  <DialogTitle className="text-center text-2xl">شحن المحفظة</DialogTitle>
+              <DialogContent className="sm:max-w-sm max-h-[90vh] overflow-y-auto" dir="rtl">
+                <DialogHeader className="pb-2">
+                  <DialogTitle className="text-center text-lg">شحن المحفظة</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-6 pt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="amount" className="text-sm font-medium">المبلغ (ريال سعودي)</Label>
+                <div className="space-y-4 pt-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="amount" className="text-sm">المبلغ (ريال سعودي)</Label>
                     <Input
                       id="amount"
                       type="number"
@@ -429,8 +429,8 @@ export default function ClientWallet() {
                       step="0.01"
                       value={depositAmount}
                       onChange={(e) => setDepositAmount(e.target.value)}
-                      placeholder="أدخل المبلغ المراد شحنه"
-                      className="text-lg h-12"
+                      placeholder="أدخل المبلغ"
+                      className="h-10"
                     />
                   </div>
                   
@@ -441,15 +441,15 @@ export default function ClientWallet() {
                         variant="outline"
                         size="sm"
                         onClick={() => setDepositAmount(amount.toString())}
-                        className="h-10"
+                        className="h-8 text-sm"
                       >
                         {amount}
                       </Button>
                     ))}
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">طريقة الدفع</Label>
+                  <div className="space-y-1">
+                    <Label className="text-sm">طريقة الدفع</Label>
                     <Select value={paymentMethod} onValueChange={(value) => {
                       setPaymentMethod(value);
                       setShowBankDetails(value === 'bank_transfer');
@@ -457,7 +457,7 @@ export default function ClientWallet() {
                         setReceiptFile(null);
                       }
                     }}>
-                      <SelectTrigger className="h-12">
+                      <SelectTrigger className="h-10">
                         <SelectValue placeholder="اختر طريقة الدفع" />
                       </SelectTrigger>
                       <SelectContent>
@@ -478,59 +478,62 @@ export default function ClientWallet() {
 
                   {/* Bank Details */}
                   {showBankDetails && (
-                    <Card className="border-2 border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <Info className="h-5 w-5 text-blue-600" />
+                    <Card className="border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+                      <CardHeader className="pb-2 pt-3">
+                        <CardTitle className="text-base flex items-center gap-2">
+                          <Info className="h-4 w-4 text-blue-600" />
                           تفاصيل التحويل البنكي
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="space-y-2">
-                          <p className="text-sm font-medium text-blue-700 dark:text-blue-300">اسم الشركة:</p>
-                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border">
-                            <span className="text-sm">{bankDetails.companyName}</span>
+                      <CardContent className="space-y-2 pt-2">
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">اسم الشركة:</p>
+                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border text-xs">
+                            <span className="truncate">{bankDetails.companyName}</span>
                             <Button 
                               variant="ghost" 
                               size="sm"
+                              className="h-6 w-6 p-0"
                               onClick={() => copyToClipboard(bankDetails.companyName, "اسم الشركة")}
                             >
-                              <Copy className="h-4 w-4" />
+                              <Copy className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
                         
-                        <div className="space-y-2">
-                          <p className="text-sm font-medium text-blue-700 dark:text-blue-300">رقم الحساب:</p>
-                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border">
-                            <span className="text-sm font-mono">{bankDetails.accountNumber}</span>
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">رقم الحساب:</p>
+                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border text-xs">
+                            <span className="font-mono">{bankDetails.accountNumber}</span>
                             <Button 
                               variant="ghost" 
                               size="sm"
+                              className="h-6 w-6 p-0"
                               onClick={() => copyToClipboard(bankDetails.accountNumber, "رقم الحساب")}
                             >
-                              <Copy className="h-4 w-4" />
+                              <Copy className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
                         
-                        <div className="space-y-2">
-                          <p className="text-sm font-medium text-blue-700 dark:text-blue-300">الآيبان:</p>
-                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border">
-                            <span className="text-sm font-mono">{bankDetails.iban}</span>
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">الآيبان:</p>
+                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border text-xs">
+                            <span className="font-mono">{bankDetails.iban}</span>
                             <Button 
                               variant="ghost" 
                               size="sm"
+                              className="h-6 w-6 p-0"
                               onClick={() => copyToClipboard(bankDetails.iban, "الآيبان")}
                             >
-                              <Copy className="h-4 w-4" />
+                              <Copy className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
 
-                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded border border-yellow-200 dark:border-yellow-800">
-                          <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
-                            ⚠️ مهم: يرجى رفع إيصال التحويل البنكي أدناه
+                        <div className="p-2 bg-yellow-50 dark:bg-yellow-900/30 rounded border border-yellow-200 dark:border-yellow-800">
+                          <p className="text-xs text-yellow-800 dark:text-yellow-200 font-medium">
+                            ⚠️ مهم: رفع إيصال التحويل مطلوب
                           </p>
                         </div>
                       </CardContent>
@@ -539,9 +542,9 @@ export default function ClientWallet() {
 
                   {/* File Upload for Bank Transfer */}
                   {showBankDetails && (
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">رفع إيصال التحويل البنكي</Label>
-                      <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
+                    <div className="space-y-1">
+                      <Label className="text-sm">رفع إيصال التحويل</Label>
+                      <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-3 text-center">
                         <input
                           type="file"
                           accept="image/*,.pdf"
@@ -550,14 +553,14 @@ export default function ClientWallet() {
                           id="receipt-upload"
                         />
                         <label htmlFor="receipt-upload" className="cursor-pointer">
-                          <div className="space-y-2">
-                            <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                            <p className="text-sm text-muted-foreground">
-                              اضغط لرفع الإيصال (JPG, PNG, PDF)
+                          <div className="space-y-1">
+                            <Upload className="h-6 w-6 mx-auto text-muted-foreground" />
+                            <p className="text-xs text-muted-foreground">
+                              اضغط لرفع الإيصال
                             </p>
                             {receiptFile && (
-                              <p className="text-sm text-green-600 font-medium">
-                                تم اختيار: {receiptFile.name}
+                              <p className="text-xs text-green-600 font-medium truncate">
+                                {receiptFile.name}
                               </p>
                             )}
                           </div>
@@ -569,10 +572,10 @@ export default function ClientWallet() {
                   <Button 
                     onClick={handleDeposit} 
                     disabled={depositing || !depositAmount || !paymentMethod || (paymentMethod === 'bank_transfer' && !receiptFile)}
-                    className="w-full h-12 text-lg"
-                    size="lg"
+                    className="w-full h-10"
+                    size="default"
                   >
-                    <Zap className="h-5 w-5 ml-2" />
+                    <Zap className="h-4 w-4 ml-2" />
                     {depositing ? 'جاري الشحن...' : 'تأكيد الشحن'}
                   </Button>
                 </div>
