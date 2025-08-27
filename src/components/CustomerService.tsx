@@ -493,10 +493,12 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
     }
     
     // Contact form request
-    if (input.includes('فورم') || input.includes('تواصل مباشر') || input.includes('اتصال مباشر') || input.includes('تعبئة')) {
-      return `سأقوم بعرض فورم التواصل المباشر لك الآن! 📝
+    if (input.includes('فورم') || input.includes('طلب تواصل') || input.includes('اتصال مباشر') || input.includes('تعبئة')) {
+      return `سأقوم بعرض طلب التواصل لك الآن! 📝
 
-يمكنك تعبئة البيانات وسيتم التواصل معك مباشرة من فريق المبيعات خلال 30 دقيقة خلال أوقات العمل.
+⏰ **سيتم التواصل معك خلال 24 ساعة من فريق المبيعات المختص**
+
+يمكنك تعبئة البيانات وسنقوم بالرد عليك في أسرع وقت ممكن.
 
 **📋 البيانات المطلوبة:**
 • الاسم الكامل
@@ -709,7 +711,7 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
 
       toast({
         title: "✅ تم الإرسال بنجاح",
-        description: "سيتم التواصل معك خلال 30 دقيقة",
+        description: "⏰ سيتم التواصل معك خلال 24 ساعة",
       });
 
       setShowContactForm(false);
@@ -1108,13 +1110,13 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
                         </div>
                         <div className="flex gap-2">
                           {!showContactForm && (
-                            <Button
-                              onClick={() => setShowContactForm(true)}
-                              className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 h-6"
-                            >
-                              <Phone className="h-3 w-3 mr-1" />
-                              فورم التواصل
-                            </Button>
+                          <Button
+                            onClick={() => setShowContactForm(true)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 h-6"
+                          >
+                            <Phone className="h-3 w-3 mr-1" />
+                            طلب تواصل
+                          </Button>
                           )}
                           <Button
                             onClick={endChat}
