@@ -231,18 +231,18 @@ const HeroSection = () => {
             <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 group-hover:translate-y-1 transition-transform duration-300" />
           </Button>
           
-          <Button 
-            variant="outline" 
-            size="lg"
-            className="border-3 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground hover:text-primary w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold transition-all duration-500 hover:scale-110 glass-effect rounded-2xl group"
-            onClick={() => {
-              const visionSection = document.getElementById('vision');
-              visionSection?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            <span className="hidden sm:block">اكتشف رؤيتنا التفصيلية</span>
-            <span className="sm:hidden">رؤيتنا</span>
-          </Button>
+          <Link to="/consultation">
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="border-3 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground hover:text-primary w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold transition-all duration-500 hover:scale-110 glass-effect rounded-2xl group"
+            >
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 group-hover:rotate-12 transition-transform duration-300" />
+              <span className="hidden sm:block">استشارة مجانية</span>
+              <span className="sm:hidden">استشارة</span>
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform duration-300" />
+            </Button>
+          </Link>
 
           {/* Video Play Button - Responsive */}
           <Button 
