@@ -10,6 +10,7 @@ interface DepositRequest {
   amount: number;
   payment_method: string;
   description?: string;
+  receipt_file?: string;
 }
 
 serve(async (req) => {
@@ -51,7 +52,7 @@ serve(async (req) => {
     }
 
     if (req.method === 'POST') {
-      const { amount, payment_method, description }: DepositRequest = await req.json();
+      const { amount, payment_method, description, receipt_file }: DepositRequest = await req.json();
 
       // Validate amount
       if (!amount || amount <= 0) {
@@ -151,21 +152,80 @@ serve(async (req) => {
       if (paymentResult.success) {
         // For direct payments (like demo/bank transfer), process immediately
         if (paymentResult.status === 'completed') {
-          const { data: result, error: rpcError } = await supabaseClient.rpc('process_wallet_transaction', {
-            p_user_id: user.id,
-            p_transaction_type: 'deposit',
-            p_amount: amount,
-            p_description: description || `Deposit via ${paymentMethodConfig.name_ar}`,
-            p_reference_id: reference_id,
-            p_metadata: { 
-              payment_method: payment_method,
-              reference_id: reference_id,
-              payment_provider: paymentMethodConfig.provider
-            }
-          });
+          try {
+            const { data: result, error: rpcError } = await supabaseClient.rpc('process_wallet_transaction', {
+              p_user_id: user.id,
+              p_transaction_type: 'deposit',
+              p_amount: amount,
+              p_description: description || `Deposit via ${paymentMethodConfig.name_ar}`,
+              p_reference_id: reference_id,
+              p_metadata: { 
+                payment_method: payment_method,
+                reference_id: reference_id,
+                payment_provider: paymentMethodConfig.provider,
+                receipt_uploaded: !!receipt_file
+              }
+            });
 
-          if (rpcError) {
-            console.error('RPC Error:', rpcError);
+            if (rpcError) {
+              console.error('RPC Error:', rpcError);
+              // Create transaction manually if RPC fails
+              const { data: transaction, error: insertError } = await supabaseClient
+                .from('wallet_transactions')
+                .insert({
+                  user_id: user.id,
+                  transaction_type: 'deposit',
+                  amount: amount,
+                  description: description || `Deposit via ${paymentMethodConfig.name_ar}`,
+                  reference_id: reference_id,
+                  status: 'completed',
+                  metadata: { 
+                    payment_method: payment_method,
+                    reference_id: reference_id,
+                    payment_provider: paymentMethodConfig.provider,
+                    receipt_uploaded: !!receipt_file
+                  }
+                })
+                .select()
+                .single();
+
+              if (insertError) {
+                console.error('Insert Error:', insertError);
+                return new Response(
+                  JSON.stringify({ error: 'Failed to process deposit' }),
+                  { 
+                    status: 500, 
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+                  }
+                );
+              }
+
+              // Update wallet balance manually - add to existing balance
+              const { data: currentWallet } = await supabaseClient
+                .from('customer_wallets')
+                .select('balance')
+                .eq('user_id', user.id)
+                .single();
+
+              const currentBalance = currentWallet?.balance || 0;
+              const newBalance = currentBalance + amount;
+
+              const { error: updateError } = await supabaseClient
+                .from('customer_wallets')
+                .upsert({
+                  user_id: user.id,
+                  balance: newBalance,
+                  currency: 'SAR'
+                }, {
+                  onConflict: 'user_id'
+                });
+
+              if (updateError) {
+                console.error('Update Error:', updateError);
+              }
+            }
+          } catch (error) {
+            console.error('Transaction processing error:', error);
             return new Response(
               JSON.stringify({ error: 'Failed to process deposit' }),
               { 
@@ -185,7 +245,7 @@ serve(async (req) => {
           return new Response(
             JSON.stringify({ 
               success: true, 
-              transaction_id: result?.[0]?.transaction_id,
+              transaction_id: reference_id,
               new_balance: wallet?.balance || 0,
               reference_id,
               status: 'completed'
