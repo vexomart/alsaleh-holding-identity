@@ -186,13 +186,31 @@ serve(async (req) => {
 
           console.log('Transaction created:', transaction.id);
 
+          // Send notification emails
+          try {
+            console.log('Sending notification emails...');
+            await supabaseClient.functions.invoke('wallet-deposit-notification', {
+              body: {
+                transactionId: transaction.id,
+                userEmail: user.email || '',
+                userName: user.user_metadata?.full_name || 'عميل',
+                amount: amount,
+                referenceId: reference_id
+              }
+            });
+            console.log('Notification emails sent');
+          } catch (emailError) {
+            console.error('Error sending notification emails:', emailError);
+            // Don't fail the transaction if email fails
+          }
+
           return new Response(
             JSON.stringify({ 
               success: true, 
               transaction_id: transaction.id,
               reference_id,
               status: 'pending',
-              message: 'تم إرسال طلب الشحن. سيتم مراجعة الإيصال وإضافة المبلغ خلال 24 ساعة'
+              message: 'تم إرسال طلب الشحن وإرسال الإشعارات. سيتم مراجعة الإيصال وإضافة المبلغ خلال 24 ساعة'
             }),
             { 
               headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

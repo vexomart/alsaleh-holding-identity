@@ -61,10 +61,13 @@ const AdminPayments = () => {
 
       if (paymentError) throw paymentError;
 
-      // Fetch from wallet_transactions
+      // Fetch from wallet_transactions with user info
       const { data: walletData, error: walletError } = await supabase
         .from('wallet_transactions')
-        .select('*')
+        .select(`
+          *,
+          customer_wallets!wallet_id(user_id)
+        `)
         .order('created_at', { ascending: false });
 
       if (walletError) {
@@ -83,10 +86,12 @@ const AdminPayments = () => {
         ...(walletData || []).map(wallet => ({
           ...wallet,
           transaction_id: wallet.reference_id,
-          customer_name: 'عميل محفظة',
-          customer_email: '',
+          customer_name: `عميل محفظة - ${wallet.reference_id}`,
+          customer_email: wallet.customer_wallets?.user_id || '',
+          customer_phone: '',
           currency: 'SAR',
-          offer_title: wallet.description
+          offer_title: wallet.description || 'شحن محفظة',
+          transaction_type: 'deposit'
         }))
       ];
 
