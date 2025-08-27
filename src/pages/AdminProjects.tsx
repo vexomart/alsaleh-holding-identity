@@ -73,9 +73,16 @@ const AdminProjects = () => {
       }
       
       setUser(session.user);
-      const profile = await fetchUserProfile(session.user.id);
       
-      if (profile?.user_role !== 'admin') {
+      // التحقق من الصلاحيات الإدارية من جدول user_roles
+      const { data: adminRole, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .eq('role', 'admin')
+        .single();
+
+      if (roleError || !adminRole) {
         toast.error('ليس لديك صلاحية للوصول لهذه الصفحة');
         navigate('/my-projects');
         return;
