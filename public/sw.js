@@ -37,13 +37,26 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Skip caching for Supabase auth requests and API calls
+  if (event.request.url.includes('supabase.co') || 
+      event.request.url.includes('/auth/') ||
+      event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
+        return fetch(event.request).catch(() => {
+          // Return a basic response if fetch fails for cached requests
+          if (event.request.destination === 'document') {
+            return caches.match('/');
+          }
+          return new Response('Service Unavailable', { status: 503 });
+        });
       })
   );
 });
