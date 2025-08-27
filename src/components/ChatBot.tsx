@@ -141,6 +141,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
+  const [showRating, setShowRating] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [ratingComment, setRatingComment] = useState('');
   const conversationId = useRef<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -426,6 +429,52 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
     }
   };
 
+  const handleEndChat = () => {
+    setShowRating(true);
+  };
+
+  const submitRating = async () => {
+    try {
+      // Send rating to admin
+      await supabase.functions.invoke('contact-form', {
+        body: {
+          name: 'عميل البوت الذكي',
+          email: 'bot-rating@system.local',
+          phone: '0000000000',
+          message: `تقييم جديد للبوت الذكي:
+          
+⭐ **التقييم:** ${rating}/5 نجوم
+💬 **التعليق:** ${ratingComment || 'لا يوجد تعليق'}
+🆔 **معرف المحادثة:** ${conversationId.current || 'غير محدد'}
+⏰ **التاريخ:** ${new Date().toLocaleString('ar-SA')}`,
+          subject: `تقييم البوت الذكي - ${rating} نجوم`,
+          type: 'bot_rating'
+        }
+      });
+
+      toast({
+        title: "✅ شكراً لك!",
+        description: "تم إرسال تقييمك بنجاح",
+      });
+
+      // Reset and close
+      setRating(0);
+      setRatingComment('');
+      setShowRating(false);
+      setIsOpen(false);
+      setMessages([]);
+      conversationId.current = null;
+
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+      toast({
+        title: "⚠️ خطأ",
+        description: "حدث خطأ في إرسال التقييم",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getButtonVariantClass = (variant: string = 'primary') => {
     switch (variant) {
       case 'primary': return 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl';
@@ -537,8 +586,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => handleEndChat()}
                   className="h-10 w-10 text-white hover:bg-white/20 backdrop-blur-sm rounded-xl"
+                  title="إنهاء المحادثة"
                 >
                   <X className="h-5 w-5" />
                 </Button>
@@ -788,6 +838,74 @@ const ChatBot: React.FC<ChatBotProps> = ({ className }) => {
               </div>
             </div>
           </CardContent>
+        )}
+
+        {/* Rating Modal */}
+        {showRating && (
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 rounded-3xl">
+            <div className="bg-white rounded-3xl p-8 m-4 max-w-md w-full shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Star className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">قيّم تجربتك معنا</h3>
+                <p className="text-gray-600">رأيك يهمنا لتطوير خدماتنا</p>
+              </div>
+
+              {/* Star Rating */}
+              <div className="flex justify-center gap-2 mb-6">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Button
+                    key={star}
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setRating(star)}
+                    className={`w-12 h-12 rounded-full ${
+                      star <= rating 
+                        ? 'text-yellow-400 bg-yellow-50 hover:bg-yellow-100' 
+                        : 'text-gray-300 hover:text-yellow-400 hover:bg-yellow-50'
+                    }`}
+                  >
+                    <Star className={`w-8 h-8 ${star <= rating ? 'fill-current' : ''}`} />
+                  </Button>
+                ))}
+              </div>
+
+              {/* Comment */}
+              <div className="mb-6">
+                <textarea
+                  value={ratingComment}
+                  onChange={(e) => setRatingComment(e.target.value)}
+                  placeholder="شاركنا رأيك (اختياري)"
+                  className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:border-purple-400 transition-all duration-300 resize-none h-24 text-right"
+                  dir="rtl"
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3">
+                <Button
+                  onClick={submitRating}
+                  disabled={rating === 0}
+                  className="flex-1 h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-2xl font-semibold disabled:opacity-50"
+                >
+                  إرسال التقييم
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowRating(false);
+                    setIsOpen(false);
+                    setMessages([]);
+                    conversationId.current = null;
+                  }}
+                  variant="outline"
+                  className="h-12 px-6 rounded-2xl border-2 border-gray-200 hover:bg-gray-50"
+                >
+                  تخطي
+                </Button>
+              </div>
+            </div>
+          </div>
         )}
       </Card>
     </div>

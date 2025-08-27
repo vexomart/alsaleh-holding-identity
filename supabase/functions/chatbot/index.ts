@@ -313,7 +313,7 @@ ${JSON.stringify(conversationState.customerRequest, null, 2)}
       // Update conversation step
       conversationState.conversationStep = 'completed';
       
-      return aiResponse + `\n\n✅ **تم استلام طلبك بنجاح!**\n\nسيتم التواصل معك خلال 24 ساعة من فريق المبيعات المختص.\n\n📞 للاستفسارات العاجلة: 0502463346\n📧 البريد الإلكتروني: info@alialshehriholding.com`;
+      return aiResponse + `\n\n✅ **تم بدء المحادثة وإرسال طلبك للإدارة!**\n\nسيتم التواصل معك خلال 24 ساعة من فريق المبيعات المختص.\n\n📞 للاستفسارات العاجلة: 0502463346\n📧 البريد الإلكتروني: info@alialshehriholding.com`;
     }
 
     return aiResponse;
