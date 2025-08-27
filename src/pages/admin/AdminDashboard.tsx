@@ -46,10 +46,15 @@ import {
   Globe,
   Smartphone,
   Tablet,
-  Monitor
+  Monitor,
+  Award,
+  Sparkles,
+  Bell,
+  MessageSquare
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 
 interface DashboardStats {
   totalProjects: number;
@@ -92,31 +97,27 @@ const AdminDashboard = () => {
   const [deviceData, setDeviceData] = useState<DeviceData[]>([]);
   const [projectStatusData, setProjectStatusData] = useState<ProjectStatusData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [animationKey, setAnimationKey] = useState(0);
+  const [recentActivities, setRecentActivities] = useState<any[]>([]);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
   const fetchDashboardData = async () => {
-    await Promise.all([fetchStatsData(), fetchRecentActivities()]);
-    // Fetch chart data after stats are available
-    await fetchChartData();
+    await Promise.all([fetchStatsData(), fetchRecentActivities(), fetchChartData()]);
+    setLoading(false);
   };
 
   const fetchStatsData = async () => {
     try {
-      // Fetch projects data
       const { data: projects, error: projectsError } = await supabase
         .from('projects')
         .select('*');
 
-      // Fetch clients data
       const { data: clients, error: clientsError } = await supabase
         .from('clients')
         .select('*');
 
-      // Fetch payment transactions
       const { data: payments, error: paymentsError } = await supabase
         .from('payment_transactions')
         .select('amount, status, created_at')
@@ -126,12 +127,10 @@ const AdminDashboard = () => {
       if (clientsError) throw clientsError;
       if (paymentsError) throw paymentsError;
 
-      // Calculate stats from real data
       const totalRevenue = payments?.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
       const activeProjects = projects?.filter(p => p.status === 'in_progress').length || 0;
       const completedProjects = projects?.filter(p => p.status === 'completed').length || 0;
       
-      // Calculate real growth rate based on actual data
       const currentMonth = new Date().getMonth();
       const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
       const currentYear = new Date().getFullYear();
@@ -165,34 +164,27 @@ const AdminDashboard = () => {
         description: error.message,
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
-  // Fetch real chart data from database
   const fetchChartData = async () => {
     try {
-      // Get real monthly revenue data from payment_transactions
       const { data: payments } = await supabase
         .from('payment_transactions')
         .select('amount, created_at, status')
         .eq('status', 'COMPLETED')
         .order('created_at', { ascending: false });
 
-      // Get real projects data
       const { data: projectsData } = await supabase
         .from('projects')
         .select('created_at, status')
         .order('created_at', { ascending: false });
 
-      // Get real clients data
       const { data: clientsData } = await supabase
         .from('clients')
         .select('created_at')
         .order('created_at', { ascending: false });
 
-      // Process real monthly data for the past 6 months
       const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'];
       const now = new Date();
       const chartData: ChartData[] = [];
@@ -226,7 +218,6 @@ const AdminDashboard = () => {
       
       setChartData(chartData);
 
-      // Real project status data based on actual project statuses
       const statusCounts = projectsData?.reduce((acc, project) => {
         const status = project.status || 'draft';
         acc[status] = (acc[status] || 0) + 1;
@@ -241,73 +232,19 @@ const AdminDashboard = () => {
       ];
       setProjectStatusData(statusData);
 
-      // Remove fake device data - use real data if available or hide the section
-      setDeviceData([]);
-
     } catch (error) {
       console.error('Error fetching real chart data:', error);
-      toast({
-        title: "خطأ في تحميل البيانات",
-        description: "تعذر تحميل البيانات الحقيقية",
-        variant: "destructive",
-      });
     }
   };
 
-  const getChangePercentage = (value: number, baseValue: number) => {
-    if (baseValue === 0) return '+0%';
-    const change = ((value - baseValue) / baseValue * 100);
-    return change >= 0 ? `+${Math.round(change)}%` : `${Math.round(change)}%`;
-  };
-
-  const statsCards = [
-    {
-      title: 'إجمالي المشاريع',
-      value: stats.totalProjects,
-      change: getChangePercentage(stats.totalProjects, Math.max(1, stats.totalProjects - 2)),
-      changeType: stats.totalProjects >= Math.max(1, stats.totalProjects - 2) ? 'positive' : 'negative',
-      icon: Package,
-      color: 'blue',
-    },
-    {
-      title: 'المشاريع النشطة',
-      value: stats.activeProjects,
-      change: getChangePercentage(stats.activeProjects, Math.max(1, stats.activeProjects - 1)),
-      changeType: stats.activeProjects >= Math.max(1, stats.activeProjects - 1) ? 'positive' : 'negative',
-      icon: TrendingUp,
-      color: 'green',
-    },
-    {
-      title: 'العملاء',
-      value: stats.totalClients,
-      change: getChangePercentage(stats.totalClients, Math.max(1, stats.totalClients - 1)),
-      changeType: stats.totalClients >= Math.max(1, stats.totalClients - 1) ? 'positive' : 'negative',
-      icon: Users,
-      color: 'purple',
-    },
-    {
-      title: 'الإيرادات',
-      value: `${stats.totalRevenue.toLocaleString()} ر.س`,
-      change: `${stats.monthlyGrowth >= 0 ? '+' : ''}${stats.monthlyGrowth}%`,
-      changeType: stats.monthlyGrowth >= 0 ? 'positive' : 'negative',
-      icon: CreditCard,
-      color: 'orange',
-    },
-  ];
-
-  // Fetch real activities from database
-  const [recentActivities, setRecentActivities] = useState<any[]>([]);
-
   const fetchRecentActivities = async () => {
     try {
-      // Get recent project activities
       const { data: projectActivity } = await supabase
         .from('projects')
         .select('name, created_at, status')
         .order('created_at', { ascending: false })
         .limit(3);
 
-      // Get recent payment activities  
       const { data: paymentActivity } = await supabase
         .from('payment_transactions')
         .select('amount, created_at, status, offer_title')
@@ -317,7 +254,6 @@ const AdminDashboard = () => {
 
       const activities = [];
 
-      // Add project activities
       projectActivity?.forEach((project, index) => {
         activities.push({
           id: `project-${index}`,
@@ -328,7 +264,6 @@ const AdminDashboard = () => {
         });
       });
 
-      // Add payment activities
       paymentActivity?.forEach((payment, index) => {
         activities.push({
           id: `payment-${index}`,
@@ -346,90 +281,137 @@ const AdminDashboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchRecentActivities();
-  }, []);
+  const getChangePercentage = (value: number, baseValue: number) => {
+    if (baseValue === 0) return '+0%';
+    const change = ((value - baseValue) / baseValue * 100);
+    return change >= 0 ? `+${Math.round(change)}%` : `${Math.round(change)}%`;
+  };
 
-  const quickActions = [
-    { title: 'إضافة مشروع جديد', description: 'إنشاء مشروع جديد للعملاء', action: '/admin/projects' },
-    { title: 'إدارة العملاء', description: 'عرض وإدارة قائمة العملاء', action: '/admin/clients' },
-    { title: 'تقارير الأداء', description: 'عرض تقارير مفصلة عن الأداء', action: '/admin/analytics' },
-    { title: 'إعدادات النظام', description: 'تخصيص إعدادات النظام', action: '/admin/settings' },
+  const statsCards = [
+    {
+      title: 'إجمالي المشاريع',
+      value: stats.totalProjects,
+      change: getChangePercentage(stats.totalProjects, Math.max(1, stats.totalProjects - 2)),
+      changeType: stats.totalProjects >= Math.max(1, stats.totalProjects - 2) ? 'positive' : 'negative',
+      icon: Package,
+      color: 'from-blue-500 to-blue-600',
+      bgColor: 'bg-blue-50 dark:bg-blue-950/30',
+    },
+    {
+      title: 'المشاريع النشطة',
+      value: stats.activeProjects,
+      change: getChangePercentage(stats.activeProjects, Math.max(1, stats.activeProjects - 1)),
+      changeType: stats.activeProjects >= Math.max(1, stats.activeProjects - 1) ? 'positive' : 'negative',
+      icon: TrendingUp,
+      color: 'from-green-500 to-green-600',
+      bgColor: 'bg-green-50 dark:bg-green-950/30',
+    },
+    {
+      title: 'العملاء',
+      value: stats.totalClients,
+      change: getChangePercentage(stats.totalClients, Math.max(1, stats.totalClients - 1)),
+      changeType: stats.totalClients >= Math.max(1, stats.totalClients - 1) ? 'positive' : 'negative',
+      icon: Users,
+      color: 'from-purple-500 to-purple-600',
+      bgColor: 'bg-purple-50 dark:bg-purple-950/30',
+    },
+    {
+      title: 'الإيرادات',
+      value: `${stats.totalRevenue.toLocaleString()} ر.س`,
+      change: `${stats.monthlyGrowth >= 0 ? '+' : ''}${stats.monthlyGrowth}%`,
+      changeType: stats.monthlyGrowth >= 0 ? 'positive' : 'negative',
+      icon: CreditCard,
+      color: 'from-orange-500 to-orange-600',
+      bgColor: 'bg-orange-50 dark:bg-orange-950/30',
+    },
   ];
 
-  // Colors for charts
+  const quickActions = [
+    { title: 'إضافة مشروع جديد', description: 'إنشاء مشروع جديد للعملاء', icon: Package, action: '/admin/projects' },
+    { title: 'إدارة العملاء', description: 'عرض وإدارة قائمة العملاء', icon: Users, action: '/admin/clients' },
+    { title: 'تقارير الأداء', description: 'عرض تقارير مفصلة عن الأداء', icon: BarChart3, action: '/admin/analytics' },
+    { title: 'إعدادات النظام', description: 'تخصيص إعدادات النظام', icon: Settings, action: '/admin/settings' },
+  ];
+
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
   if (loading) {
     return (
-      <div className="space-y-8 p-4 sm:p-6 lg:p-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-4 sm:p-6">
-                <div className="h-16 sm:h-20 bg-muted rounded"></div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          {[1, 2].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-4 sm:p-6">
-                <div className="h-32 sm:h-48 bg-muted rounded"></div>
-              </CardContent>
-            </Card>
-          ))}
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 p-4 lg:p-8">
+        <div className="container mx-auto space-y-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="animate-pulse">
+                <CardContent className="p-6 lg:p-8">
+                  <div className="h-20 lg:h-24 bg-muted rounded-xl"></div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {[1, 2].map((i) => (
+              <Card key={i} className="animate-pulse">
+                <CardContent className="p-6 lg:p-8">
+                  <div className="h-48 lg:h-64 bg-muted rounded-xl"></div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-primary/5 dark:from-background dark:via-card/50 dark:to-primary/5 font-corporate" dir="rtl">
-      <div className="container-fluid py-8 space-y-8">
-        {/* Executive Header - Ultra Modern */}
-        <div key={animationKey} className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-card via-card/95 to-card/90 border border-border/60 shadow-xl backdrop-blur-sm animate-fade-in">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5 opacity-50"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full blur-3xl transform rotate-12 -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-secondary/10 to-primary/10 rounded-full blur-3xl transform -rotate-12 translate-y-1/2 -translate-x-1/2"></div>
-          <div className="relative z-10 p-8 lg:p-12">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-              <div className="flex-1 text-center lg:text-right space-y-6">
-                <div className="flex items-center justify-center lg:justify-end gap-4 flex-wrap">
-                  <Badge className="px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 animate-scale-in delay-100">
-                    <Building2 className="w-5 h-5 ml-2" />
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/5 to-primary/5 dark:from-background dark:via-card/30 dark:to-primary/5 font-corporate" dir="rtl">
+      <div className="container mx-auto p-4 lg:p-8 space-y-6 lg:space-y-8">
+        {/* Executive Header */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-card via-card/98 to-card/95 border border-border/60 shadow-2xl backdrop-blur-sm animate-fade-in">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/8 via-accent/8 to-secondary/8 rounded-full blur-3xl transform rotate-45 -translate-y-1/3 translate-x-1/3"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-secondary/8 via-primary/8 to-accent/8 rounded-full blur-3xl transform -rotate-45 translate-y-1/3 -translate-x-1/3"></div>
+            <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]"></div>
+          </div>
+          
+          <div className="relative z-10 p-6 lg:p-12">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
+              <div className="flex-1 text-center lg:text-right space-y-4 lg:space-y-6">
+                <div className="flex items-center justify-center lg:justify-end gap-3 lg:gap-4 flex-wrap">
+                  <Badge className="px-4 lg:px-6 py-2 lg:py-3 bg-gradient-to-r from-primary via-accent to-secondary text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-500 animate-scale-in delay-100 text-sm lg:text-base">
+                    <Building2 className="w-4 lg:w-5 h-4 lg:h-5 ml-2" />
                     Executive Command Center
                   </Badge>
-                  <Badge variant="outline" className="px-4 py-2 bg-background/80 backdrop-blur border-primary/20 hover:border-primary/40 transition-all duration-300 animate-scale-in delay-200">
-                    <Shield className="w-4 h-4 ml-2" />
-                    Admin Level Access
+                  <Badge variant="outline" className="px-3 lg:px-4 py-1.5 lg:py-2 bg-background/80 backdrop-blur border-primary/20 hover:border-primary/40 transition-all duration-300 animate-scale-in delay-200">
+                    <Shield className="w-3 lg:w-4 h-3 lg:h-4 ml-2" />
+                    Admin Access
                   </Badge>
                 </div>
-                <div className="space-y-4">
-                  <h1 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent leading-tight animate-fade-in delay-300">
+                
+                <div className="space-y-3 lg:space-y-4">
+                  <h1 className="text-3xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent leading-tight animate-fade-in delay-300">
                     مركز القيادة التنفيذية
                   </h1>
-                  <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto lg:mx-0 leading-relaxed animate-fade-in delay-400">
+                  <p className="text-base lg:text-lg xl:text-xl text-muted-foreground max-w-3xl mx-auto lg:mx-0 leading-relaxed animate-fade-in delay-400">
                     نظام إدارة متطور بتقنيات الذكاء الاصطناعي لمراقبة الأداء والتحكم في العمليات التجارية على مستوى عالمي
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-6 animate-fade-in delay-500">
+              
+              <div className="flex items-center gap-4 lg:gap-6 animate-fade-in delay-500">
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-3xl blur opacity-75 animate-pulse"></div>
-                  <div className="relative bg-gradient-to-br from-primary via-accent to-secondary p-6 rounded-3xl shadow-2xl">
-                    <Activity className="w-12 h-12 text-white animate-bounce" />
+                  <div className="relative bg-gradient-to-br from-primary via-accent to-secondary p-4 lg:p-6 rounded-3xl shadow-2xl">
+                    <Activity className="w-8 lg:w-12 h-8 lg:h-12 text-white animate-bounce" />
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
-                    <span className="text-sm font-medium text-muted-foreground">النظام يعمل بكفاءة</span>
+                <div className="space-y-2 lg:space-y-3 text-center lg:text-right">
+                  <div className="flex items-center gap-2 lg:gap-3 justify-center lg:justify-start">
+                    <div className="w-2 lg:w-3 h-2 lg:h-3 bg-success rounded-full animate-pulse"></div>
+                    <span className="text-xs lg:text-sm font-medium text-muted-foreground">النظام يعمل بكفاءة</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-muted-foreground">آخر تحديث: الآن</span>
+                  <div className="flex items-center gap-2 lg:gap-3 justify-center lg:justify-start">
+                    <Clock className="w-3 lg:w-4 h-3 lg:h-4 text-primary" />
+                    <span className="text-xs lg:text-sm font-medium text-muted-foreground">آخر تحديث: الآن</span>
                   </div>
                 </div>
               </div>
@@ -437,404 +419,245 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-      {/* Executive KPI Cards - Responsive Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-        {statsCards.map((stat, index) => (
-          <Card key={index} className="group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 border border-border/50 bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-sm hover:scale-[1.02] cursor-pointer">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <CardContent className="relative p-4 sm:p-6 lg:p-7">
-              <div className="flex items-center justify-between">
-                <div className="text-right space-y-2 sm:space-y-3 flex-1">
-                  <div className="flex items-center justify-end gap-2">
-                    <Badge variant="secondary" className="text-xs px-2 py-1 bg-muted/50 text-muted-foreground border-0">
-                      {stat.title}
-                    </Badge>
+        {/* Executive KPI Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
+          {statsCards.map((stat, index) => (
+            <Card key={index} className={`group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 border border-border/50 ${stat.bgColor} backdrop-blur-sm hover:scale-105 cursor-pointer animate-fade-in`} style={{ animationDelay: `${index * 150}ms` }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute top-0 right-0 w-24 lg:w-32 h-24 lg:h-32 opacity-20">
+                <div className={`w-full h-full bg-gradient-to-br ${stat.color} rounded-full blur-3xl transform rotate-45 group-hover:scale-150 transition-transform duration-700`}></div>
+              </div>
+              
+              <CardContent className="relative p-4 lg:p-6 xl:p-8">
+                <div className="flex items-center justify-between mb-4 lg:mb-6">
+                  <div className={`p-3 lg:p-4 rounded-2xl bg-gradient-to-br ${stat.color} shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                    <stat.icon className="w-6 lg:w-8 h-6 lg:h-8 text-white" />
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors duration-300 break-words">
+                  <div className="text-right">
+                    <p className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
                       {stat.value}
                     </p>
-                    <div className="flex items-center gap-2 justify-end">
-                      <div className={`flex items-center gap-1 px-2 py-1 rounded-lg ${
-                        stat.changeType === 'positive' 
-                          ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' 
-                          : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
-                      }`}>
-                        {stat.changeType === 'positive' ? (
-                          <ArrowUpRight className="h-3 w-3" />
-                        ) : (
-                          <ArrowDownRight className="h-3 w-3" />
-                        )}
-                        <span className="text-xs sm:text-sm font-semibold">
-                          {stat.change}
-                        </span>
-                      </div>
-                    </div>
+                    <p className="text-xs lg:text-sm font-medium text-muted-foreground">{stat.title}</p>
                   </div>
                 </div>
-                <div className={`relative p-3 sm:p-4 rounded-xl sm:rounded-2xl ${
-                  stat.color === 'blue' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' :
-                  stat.color === 'green' ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' :
-                  stat.color === 'purple' ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400' :
-                  'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
-                } group-hover:scale-110 transition-transform duration-500`}>
-                  <stat.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
-                  <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Analytics Charts Section - Responsive (Only show if real data exists) */}
-      {(chartData.length > 0 || projectStatusData.length > 0) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          
-          {/* Revenue Chart - Only show if revenue data exists */}
-          {chartData.some(item => item.revenue > 0) && (
-            <Card className="lg:col-span-2 xl:col-span-2 border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-              <CardHeader className="pb-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
-                  <div className="text-right space-y-2">
-                    <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
-                      <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
-                        <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </div>
-                      تحليل الإيرادات الشهرية
-                    </CardTitle>
-                    <CardDescription className="text-right text-sm sm:text-base">
-                      الإيرادات الحقيقية من المعاملات المكتملة
-                    </CardDescription>
+                
+                <div className="flex items-center justify-between">
+                  <div className={`flex items-center gap-1 lg:gap-2 px-2 lg:px-3 py-1 rounded-lg ${
+                    stat.changeType === 'positive' 
+                      ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' 
+                      : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                  }`}>
+                    {stat.changeType === 'positive' ? (
+                      <ArrowUpRight className="h-3 lg:h-4 w-3 lg:w-4" />
+                    ) : (
+                      <ArrowDownRight className="h-3 lg:h-4 w-3 lg:w-4" />
+                    )}
+                    <span className="text-xs lg:text-sm font-semibold">
+                      {stat.change}
+                    </span>
                   </div>
-                  <Badge variant="outline" className="bg-blue-50/50 text-blue-700 border-blue-200 px-3 py-1 text-xs sm:text-sm self-end sm:self-auto">
-                    <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
-                    بيانات حقيقية
-                  </Badge>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 sm:h-80 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                      <XAxis 
-                        dataKey="month" 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fontSize: 12, fill: '#64748b' }}
-                      />
-                      <YAxis 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fontSize: 12, fill: '#64748b' }}
-                      />
-                      <Tooltip 
-                        contentStyle={{
-                          backgroundColor: 'white',
-                          border: '1px solid #e2e8f0',
-                          borderRadius: '8px',
-                          direction: 'rtl'
-                        }}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="revenue" 
-                        stroke="#3b82f6" 
-                        fillOpacity={1} 
-                        fill="url(#revenueGradient)"
-                        strokeWidth={2}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                
+                <div className="mt-3 lg:mt-4 h-1 lg:h-2 bg-muted/50 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full bg-gradient-to-r ${stat.color} rounded-full transition-all duration-1000 group-hover:animate-pulse`}
+                    style={{ width: `${Math.min(Math.random() * 100 + 30, 100)}%` }}
+                  ></div>
                 </div>
               </CardContent>
             </Card>
-          )}
-
-          {/* Project Status Pie Chart - Only show if project data exists */}
-          {projectStatusData.some(item => item.count > 0) && (
-            <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-              <CardHeader className="pb-4">
-                <div className="text-right space-y-2">
-                  <CardTitle className="flex items-center gap-3 text-right text-lg sm:text-xl font-semibold">
-                    <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
-                      <PieChartIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </div>
-                    حالة المشاريع الحقيقية
-                  </CardTitle>
-                  <CardDescription className="text-right text-sm sm:text-base">
-                    توزيع المشاريع حسب الحالة الفعلية
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-48 sm:h-64 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={projectStatusData.filter(item => item.count > 0)}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={window.innerWidth < 640 ? 30 : 40}
-                        outerRadius={window.innerWidth < 640 ? 70 : 90}
-                        paddingAngle={5}
-                        dataKey="count"
-                      >
-                        {projectStatusData.filter(item => item.count > 0).map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        contentStyle={{
-                          backgroundColor: 'white',
-                          border: '1px solid #e2e8f0',
-                          borderRadius: '8px',
-                          direction: 'rtl'
-                        }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="mt-4 space-y-2">
-                  {projectStatusData.filter(item => item.count > 0).map((item, index) => (
-                    <div key={index} className="flex items-center justify-between text-sm">
-                      <span className="font-medium">{item.count}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">{item.status}</span>
-                        <div 
-                          className="w-3 h-3 rounded-full" 
-                          style={{ backgroundColor: item.color }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          ))}
         </div>
-      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-        {/* Enterprise Activity Center */}
-        <Card className="lg:col-span-2 border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div className="text-right space-y-2">
-                <CardTitle className="flex items-center gap-3 text-right text-xl font-semibold">
-                  <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                    <Activity className="h-5 w-5" />
-                  </div>
-                  مركز النشاطات التنفيذي
-                </CardTitle>
-                <CardDescription className="text-right text-base">
-                  رصد شامل لجميع العمليات والأحداث الحديثة في النظام
-                </CardDescription>
-              </div>
-              <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3 py-1">
-                {recentActivities.length} نشاط
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {recentActivities.map((activity, index) => (
-                <div key={activity.id} className="group relative p-5 rounded-xl border border-border/30 bg-gradient-to-r from-muted/20 via-background/50 to-muted/20 hover:from-primary/5 hover:via-background/70 hover:to-blue-50/30 dark:hover:from-primary/5 dark:hover:via-slate-800/70 dark:hover:to-slate-700/30 transition-all duration-500 hover:shadow-md hover:scale-[1.01] cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
-                  <div className="relative flex items-center gap-4">
-                    <div className={`relative p-3 rounded-xl ${
-                      activity.status === 'success' ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400' :
-                      activity.status === 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400' :
-                      'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-                    } group-hover:scale-110 transition-transform duration-300`}>
-                      {activity.status === 'success' ? (
-                        <CheckCircle className="h-5 w-5" />
-                      ) : activity.status === 'warning' ? (
-                        <AlertCircle className="h-5 w-5" />
-                      ) : (
-                        <Zap className="h-5 w-5" />
-                      )}
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        {/* Analytics Charts and Activities */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
+          {/* Analytics Charts */}
+          <div className="xl:col-span-2 space-y-6 lg:space-y-8">
+            {/* Revenue Chart */}
+            {chartData.length > 0 && (
+              <Card className="border-0 shadow-xl bg-gradient-to-br from-card to-card/95 backdrop-blur-sm animate-fade-in delay-200">
+                <CardHeader className="pb-4 lg:pb-6">
+                  <CardTitle className="flex items-center gap-3 text-lg lg:text-xl">
+                    <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-primary to-accent">
+                      <BarChart3 className="w-5 lg:w-6 h-5 lg:h-6 text-white" />
                     </div>
-                    <div className="flex-1 text-right space-y-1">
-                      <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-                        {activity.title}
-                      </p>
-                      <div className="flex items-center justify-end gap-2">
-                        <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-lg">
-                          {activity.time}
-                        </span>
-                        <Badge variant={activity.status === 'success' ? 'default' : 'secondary'} className="text-xs px-2 py-0.5">
-                          {activity.status === 'success' ? 'مكتمل' : activity.status === 'warning' ? 'تحذير' : 'جديد'}
-                        </Badge>
+                    تحليلات الإيرادات والأداء
+                  </CardTitle>
+                  <CardDescription className="text-sm lg:text-base">
+                    نظرة شاملة على الأداء المالي والتشغيلي للأشهر الستة الماضية
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64 lg:h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                        <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--card))', 
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: '12px',
+                            fontSize: '14px'
+                          }} 
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="revenue" 
+                          stroke="hsl(var(--primary))" 
+                          fill="url(#revenueGradient)" 
+                          strokeWidth={3}
+                        />
+                        <defs>
+                          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Project Status Chart */}
+            {projectStatusData.length > 0 && (
+              <Card className="border-0 shadow-xl bg-gradient-to-br from-card to-card/95 backdrop-blur-sm animate-fade-in delay-300">
+                <CardHeader className="pb-4 lg:pb-6">
+                  <CardTitle className="flex items-center gap-3 text-lg lg:text-xl">
+                    <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-accent to-secondary">
+                      <PieChartIcon className="w-5 lg:w-6 h-5 lg:h-6 text-white" />
+                    </div>
+                    توزيع حالات المشاريع
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-64 lg:h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={projectStatusData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={40}
+                          outerRadius={80}
+                          paddingAngle={5}
+                          dataKey="count"
+                        >
+                          {projectStatusData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--card))', 
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: '12px'
+                          }} 
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 lg:gap-4 mt-4 lg:mt-6">
+                    {projectStatusData.map((item, index) => (
+                      <div key={item.status} className="flex items-center gap-2 lg:gap-3">
+                        <div 
+                          className="w-3 lg:w-4 h-3 lg:h-4 rounded-full" 
+                          style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                        ></div>
+                        <span className="text-xs lg:text-sm text-muted-foreground">{item.status}: {item.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Recent Activities & Quick Actions */}
+          <div className="space-y-6 lg:space-y-8">
+            {/* Recent Activities */}
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card to-card/95 backdrop-blur-sm animate-fade-in delay-400">
+              <CardHeader className="pb-4 lg:pb-6">
+                <CardTitle className="flex items-center gap-3 text-lg lg:text-xl">
+                  <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-secondary to-primary">
+                    <Activity className="w-5 lg:w-6 h-5 lg:h-6 text-white" />
+                  </div>
+                  النشاطات الأخيرة
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 lg:space-y-4">
+                {recentActivities.map((activity, index) => (
+                  <div 
+                    key={activity.id} 
+                    className="group p-3 lg:p-4 rounded-xl border border-border/50 bg-muted/30 hover:bg-muted/50 transition-all duration-300 hover:scale-[1.02] cursor-pointer animate-fade-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0">
+                        <div className={`p-2 lg:p-3 rounded-xl transition-transform group-hover:scale-110 ${
+                          activity.type === 'project' ? 'bg-blue-100 dark:bg-blue-900/30' : 'bg-green-100 dark:bg-green-900/30'
+                        }`}>
+                          {activity.type === 'project' ? 
+                            <Package className="w-4 lg:w-5 h-4 lg:h-5 text-blue-600" /> :
+                            <CreditCard className="w-4 lg:w-5 h-4 lg:h-5 text-green-600" />
+                          }
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm lg:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                          {activity.title}
+                        </h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Calendar className="w-3 lg:w-4 h-3 lg:h-4 text-muted-foreground" />
+                          <span className="text-xs lg:text-sm text-muted-foreground">{activity.time}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </CardContent>
+            </Card>
 
-        {/* Executive Command Center */}
-        <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-          <CardHeader className="pb-4">
-            <div className="text-right space-y-2">
-              <CardTitle className="flex items-center gap-3 text-right text-xl font-semibold">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                  <Target className="h-5 w-5" />
-                </div>
-                مركز القيادة التنفيذي
-              </CardTitle>
-              <CardDescription className="text-right text-base">
-                الوصول المباشر للعمليات الحيوية والمهام الاستراتيجية
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                { title: 'إدارة المشاريع', description: 'إشراف على جميع المشاريع النشطة', action: '/admin/projects', icon: Briefcase, color: 'blue' },
-                { title: 'إدارة العملاء', description: 'قاعدة بيانات العملاء والعلاقات', action: '/admin/clients', icon: Users, color: 'green' },
-                { title: 'التقارير التحليلية', description: 'تحليلات متقدمة وإحصائيات الأداء', action: '/admin/analytics', icon: PieChart, color: 'purple' },
-                { title: 'إعدادات النظام', description: 'تكوين وإدارة النظام المتقدمة', action: '/admin/settings', icon: Settings, color: 'orange' },
-              ].map((action, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  className="group w-full h-auto p-4 justify-end text-right hover:bg-primary/5 hover:border-primary/20 border border-transparent transition-all duration-300 rounded-xl"
-                  onClick={() => window.location.href = action.action}
-                >
-                  <div className="flex items-center gap-3 w-full">
-                    <div className={`p-2 rounded-lg ${
-                      action.color === 'blue' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' :
-                      action.color === 'green' ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' :
-                      action.color === 'purple' ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400' :
-                      'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
-                    } group-hover:scale-110 transition-transform duration-300`}>
-                      <action.icon className="h-5 w-5" />
-    </div>
-                    <div className="text-right flex-1">
-                      <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors duration-300">
-                        {action.title}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                        {action.description}
-                      </p>
-                    </div>
+            {/* Quick Actions */}
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card to-card/95 backdrop-blur-sm animate-fade-in delay-500">
+              <CardHeader className="pb-4 lg:pb-6">
+                <CardTitle className="flex items-center gap-3 text-lg lg:text-xl">
+                  <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-accent to-primary">
+                    <Zap className="w-5 lg:w-6 h-5 lg:h-6 text-white" />
                   </div>
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Executive Performance Analytics */}
-      <Card className="border border-border/50 bg-gradient-to-br from-background via-background/98 to-background/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-        <CardHeader className="pb-6">
-          <div className="flex items-center justify-between">
-            <div className="text-right space-y-2">
-              <CardTitle className="flex items-center gap-3 text-right text-xl font-semibold">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                  <Shield className="h-5 w-5" />
-                </div>
-                لوحة التحليلات التنفيذية
-              </CardTitle>
-              <CardDescription className="text-right text-base">
-                مؤشرات الأداء الرئيسية والتحليلات الاستراتيجية للأعمال
-              </CardDescription>
-            </div>
-            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-4 py-2">
-              <Star className="w-4 h-4 ml-1" />
-              مؤشرات حية
-            </Badge>
+                  إجراءات سريعة
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 lg:space-y-4">
+                {quickActions.map((action, index) => (
+                  <Link 
+                    key={index} 
+                    to={action.action}
+                    className="group block p-3 lg:p-4 rounded-xl border border-border/50 bg-muted/30 hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 hover:scale-[1.02] animate-fade-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-muted to-muted/50 group-hover:from-primary group-hover:to-primary/80 transition-all duration-300">
+                        <action.icon className="w-4 lg:w-5 h-4 lg:h-5 text-foreground group-hover:text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-sm lg:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                          {action.title}
+                        </h4>
+                        <p className="text-xs lg:text-sm text-muted-foreground mt-1">
+                          {action.description}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </CardContent>
+            </Card>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group space-y-4 p-5 rounded-xl border border-border/30 bg-gradient-to-br from-blue-50/30 via-background/50 to-blue-50/20 dark:from-blue-900/10 dark:via-slate-800/50 dark:to-blue-900/5 hover:shadow-md transition-all duration-300">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    {stats.totalProjects > 0 ? Math.round((stats.activeProjects / stats.totalProjects) * 100) : 0}%
-                  </span>
-                  <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-foreground">المشاريع النشطة</p>
-                  <p className="text-xs text-muted-foreground">من إجمالي المشاريع</p>
-                </div>
-              </div>
-              <div className="relative">
-                <Progress 
-                  value={stats.totalProjects > 0 ? (stats.activeProjects / stats.totalProjects) * 100 : 0} 
-                  className="h-3 bg-blue-100 dark:bg-blue-900/30"
-                />
-                <div className="absolute top-0 left-0 h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500" 
-                     style={{ width: `${stats.totalProjects > 0 ? (stats.activeProjects / stats.totalProjects) * 100 : 0}%` }}></div>
-              </div>
-            </div>
-            
-            <div className="group space-y-4 p-5 rounded-xl border border-border/30 bg-gradient-to-br from-green-50/30 via-background/50 to-green-50/20 dark:from-green-900/10 dark:via-slate-800/50 dark:to-green-900/5 hover:shadow-md transition-all duration-300">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    {stats.totalProjects > 0 ? Math.round((stats.pendingTasks / stats.totalProjects) * 100) : 0}%
-                  </span>
-                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-foreground">المشاريع المكتملة</p>
-                  <p className="text-xs text-muted-foreground">معدل الإنجاز</p>
-                </div>
-              </div>
-              <div className="relative">
-                <Progress 
-                  value={stats.totalProjects > 0 ? (stats.pendingTasks / stats.totalProjects) * 100 : 0} 
-                  className="h-3 bg-green-100 dark:bg-green-900/30"
-                />
-                <div className="absolute top-0 left-0 h-3 bg-gradient-to-r from-green-500 to-green-600 rounded-full transition-all duration-500" 
-                     style={{ width: `${stats.totalProjects > 0 ? (stats.pendingTasks / stats.totalProjects) * 100 : 0}%` }}></div>
-              </div>
-            </div>
-            
-            <div className="group space-y-4 p-5 rounded-xl border border-border/30 bg-gradient-to-br from-purple-50/30 via-background/50 to-purple-50/20 dark:from-purple-900/10 dark:via-slate-800/50 dark:to-purple-900/5 hover:shadow-md transition-all duration-300">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                    {Math.abs(stats.monthlyGrowth)}%
-                  </span>
-                  {stats.monthlyGrowth >= 0 ? (
-                    <ArrowUpRight className="w-5 h-5 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-300" />
-                  ) : (
-                    <ArrowDownRight className="w-5 h-5 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-300" />
-                  )}
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-foreground">النمو الشهري</p>
-                  <p className="text-xs text-muted-foreground">مقارنة بالشهر السابق</p>
-                </div>
-              </div>
-              <div className="relative">
-                <Progress 
-                  value={Math.min(100, Math.abs(stats.monthlyGrowth))} 
-                  className="h-3 bg-purple-100 dark:bg-purple-900/30"
-                />
-                <div className="absolute top-0 left-0 h-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full transition-all duration-500" 
-                     style={{ width: `${Math.min(100, Math.abs(stats.monthlyGrowth))}%` }}></div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
       </div>
     </div>
   );
