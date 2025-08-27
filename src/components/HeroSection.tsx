@@ -21,8 +21,7 @@ import {
   Rocket,
   Building2,
   MessageCircle,
-  ArrowRight,
-  ArrowLeft
+  ArrowRight
 } from "lucide-react";
 import { AnimatedCounter } from "./AnimatedCounter";
 import { Link } from "react-router-dom";
@@ -222,21 +221,27 @@ const HeroSection = () => {
           <Button 
             size="lg" 
             className="bg-secondary hover:bg-secondary-dark text-secondary-foreground w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold shadow-glow hover:shadow-xl transition-all duration-500 hover:scale-110 group rounded-2xl"
-            onClick={() => window.open('/book-consultation', '_blank')}
+            onClick={() => {
+              const companiesSection = document.getElementById('companies');
+              companiesSection?.scrollIntoView({ behavior: 'smooth' });
+            }}
           >
-            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 group-hover:rotate-12 transition-transform duration-300" />
-            <span className="group-hover:animate-pulse">استشارة مجانية</span>
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform duration-300" />
+            <Globe className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 group-hover:rotate-12 transition-transform duration-300" />
+            <span className="group-hover:animate-pulse">استكشف شركاتنا</span>
+            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 group-hover:translate-y-1 transition-transform duration-300" />
           </Button>
           
           <Button 
             variant="outline" 
             size="lg"
             className="border-3 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground hover:text-primary w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold transition-all duration-500 hover:scale-110 glass-effect rounded-2xl group"
-            onClick={() => window.open('/book-consultation', '_blank')}
+            onClick={() => {
+              const visionSection = document.getElementById('vision');
+              visionSection?.scrollIntoView({ behavior: 'smooth' });
+            }}
           >
-            <span className="hidden sm:block">استشارة مجانية</span>
-            <span className="sm:hidden">استشارة</span>
+            <span className="hidden sm:block">اكتشف رؤيتنا التفصيلية</span>
+            <span className="sm:hidden">رؤيتنا</span>
           </Button>
 
           {/* Video Play Button - Responsive */}
