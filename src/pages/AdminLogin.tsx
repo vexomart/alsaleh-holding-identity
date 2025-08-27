@@ -83,7 +83,8 @@ const AdminLogin = () => {
           description: `تم تسجيل الدخول بنجاح - ${data.user.email}`,
         });
 
-        navigate('/admin-projects');
+        // إعادة توجيه إلى لوحة الإدارة مع فرض إعادة التحديث
+        window.location.href = '/admin-projects';
       }
     } catch (error: any) {
       console.error('خطأ في تسجيل الدخول:', error);
