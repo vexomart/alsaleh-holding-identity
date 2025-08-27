@@ -250,12 +250,19 @@ const SEOServices = () => {
                 <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${pkg.color} transition-all duration-300 group-hover:h-2`}></div>
                 
                 {pkg.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-20">
-                    <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-4 py-1 shadow-md animate-pulse text-xs">
-                      <Award className="w-3 h-3 mr-1" />
-                      الأكثر شعبية
-                    </Badge>
-                  </div>
+                  <>
+                    <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-20">
+                      <Badge className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white px-6 py-2 shadow-lg animate-bounce text-sm font-bold rounded-full">
+                        <Award className="w-4 h-4 mr-2" />
+                        الأكثر شعبية
+                      </Badge>
+                    </div>
+                    <div className="absolute -top-2 -right-2 z-10">
+                      <div className="bg-gradient-to-r from-orange-400 to-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold animate-pulse shadow-lg">
+                        🔥
+                      </div>
+                    </div>
+                  </>
                 )}
                 
                 <CardContent className="p-6 flex flex-col h-full relative z-10 min-h-[460px]">
