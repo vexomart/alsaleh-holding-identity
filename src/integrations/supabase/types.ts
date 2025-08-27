@@ -3090,6 +3090,7 @@ export type Database = {
           metadata: Json | null
           payment_method: string | null
           payment_reference: string | null
+          reference_id: string | null
           status: string
           transaction_type: string
           user_id: string
@@ -3105,6 +3106,7 @@ export type Database = {
           metadata?: Json | null
           payment_method?: string | null
           payment_reference?: string | null
+          reference_id?: string | null
           status?: string
           transaction_type: string
           user_id: string
@@ -3120,6 +3122,7 @@ export type Database = {
           metadata?: Json | null
           payment_method?: string | null
           payment_reference?: string | null
+          reference_id?: string | null
           status?: string
           transaction_type?: string
           user_id?: string
