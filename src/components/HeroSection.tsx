@@ -220,7 +220,7 @@ const HeroSection = () => {
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-12 sm:mb-16 animate-fade-in px-4 sm:px-0" style={{ animationDelay: '1.2s' }}>
           <Button 
             size="lg" 
-            className="bg-secondary hover:bg-secondary-dark text-secondary-foreground w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold shadow-glow hover:shadow-xl transition-all duration-500 hover:scale-110 group rounded-2xl"
+            className="bg-gradient-to-r from-orange-500 via-pink-600 to-purple-700 hover:from-orange-600 hover:via-pink-700 hover:to-purple-800 text-white font-bold w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl shadow-2xl border-2 border-white/20 backdrop-blur-sm transition-all duration-500 hover:scale-110 group rounded-full"
             onClick={() => {
               const companiesSection = document.getElementById('companies');
               companiesSection?.scrollIntoView({ behavior: 'smooth' });
@@ -229,6 +229,9 @@ const HeroSection = () => {
             <Globe className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 group-hover:rotate-12 transition-transform duration-300" />
             <span className="group-hover:animate-pulse">استكشف شركاتنا</span>
             <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3 group-hover:translate-y-1 transition-transform duration-300" />
+            
+            {/* Pulse effect */}
+            <div className="absolute inset-0 bg-white rounded-full opacity-20 scale-0 group-hover:scale-100 group-hover:opacity-0 transition-all duration-500" />
           </Button>
           
           <Link to="/consultation">
