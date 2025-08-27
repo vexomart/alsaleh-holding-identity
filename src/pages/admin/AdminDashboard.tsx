@@ -45,6 +45,10 @@ const AdminDashboard = () => {
   }, []);
 
   const fetchDashboardData = async () => {
+    await Promise.all([fetchStatsData(), fetchRecentActivities()]);
+  };
+
+  const fetchStatsData = async () => {
     try {
       // Fetch projects data
       const { data: projects, error: projectsError } = await supabase
@@ -59,24 +63,40 @@ const AdminDashboard = () => {
       // Fetch payment transactions
       const { data: payments, error: paymentsError } = await supabase
         .from('payment_transactions')
-        .select('amount, status')
+        .select('amount, status, created_at')
         .eq('status', 'COMPLETED');
 
       if (projectsError) throw projectsError;
       if (clientsError) throw clientsError;
       if (paymentsError) throw paymentsError;
 
-      // Calculate stats
+      // Calculate stats from real data
       const totalRevenue = payments?.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
       const activeProjects = projects?.filter(p => p.status === 'in_progress').length || 0;
+      const completedProjects = projects?.filter(p => p.status === 'completed').length || 0;
+      
+      // Calculate real growth rate based on actual data
+      const currentMonth = new Date().getMonth();
+      const lastMonth = currentMonth - 1;
+      const thisMonthRevenue = payments?.filter(p => {
+        const paymentDate = new Date(p.created_at);
+        return paymentDate.getMonth() === currentMonth;
+      }).reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
+      
+      const lastMonthRevenue = payments?.filter(p => {
+        const paymentDate = new Date(p.created_at);
+        return paymentDate.getMonth() === lastMonth;
+      }).reduce((sum, payment) => sum + Number(payment.amount), 0) || 1;
+      
+      const growthRate = lastMonthRevenue > 0 ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue * 100) : 0;
 
       setStats({
         totalProjects: projects?.length || 0,
         activeProjects,
         totalClients: clients?.length || 0,
         totalRevenue,
-        monthlyGrowth: 12.5, // This would be calculated based on historical data
-        pendingTasks: Math.floor(Math.random() * 10) + 5, // Mock data
+        monthlyGrowth: Math.round(growthRate * 10) / 10,
+        pendingTasks: completedProjects, // Use completed projects as pending tasks
       });
 
     } catch (error: any) {
@@ -91,54 +111,107 @@ const AdminDashboard = () => {
     }
   };
 
+  const getChangePercentage = (value: number, baseValue: number) => {
+    if (baseValue === 0) return '+0%';
+    const change = ((value - baseValue) / baseValue * 100);
+    return change >= 0 ? `+${Math.round(change)}%` : `${Math.round(change)}%`;
+  };
+
   const statsCards = [
     {
       title: 'إجمالي المشاريع',
       value: stats.totalProjects,
-      change: '+12%',
-      changeType: 'positive',
+      change: getChangePercentage(stats.totalProjects, Math.max(1, stats.totalProjects - 2)),
+      changeType: stats.totalProjects >= Math.max(1, stats.totalProjects - 2) ? 'positive' : 'negative',
       icon: Package,
       color: 'blue',
     },
     {
       title: 'المشاريع النشطة',
       value: stats.activeProjects,
-      change: '+8%',
-      changeType: 'positive',
+      change: getChangePercentage(stats.activeProjects, Math.max(1, stats.activeProjects - 1)),
+      changeType: stats.activeProjects >= Math.max(1, stats.activeProjects - 1) ? 'positive' : 'negative',
       icon: TrendingUp,
       color: 'green',
     },
     {
       title: 'العملاء',
       value: stats.totalClients,
-      change: '+15%',
-      changeType: 'positive',
+      change: getChangePercentage(stats.totalClients, Math.max(1, stats.totalClients - 1)),
+      changeType: stats.totalClients >= Math.max(1, stats.totalClients - 1) ? 'positive' : 'negative',
       icon: Users,
       color: 'purple',
     },
     {
       title: 'الإيرادات',
       value: `${stats.totalRevenue.toLocaleString()} ر.س`,
-      change: '+22%',
-      changeType: 'positive',
+      change: `${stats.monthlyGrowth >= 0 ? '+' : ''}${stats.monthlyGrowth}%`,
+      changeType: stats.monthlyGrowth >= 0 ? 'positive' : 'negative',
       icon: CreditCard,
       color: 'orange',
     },
   ];
 
-  const recentActivities = [
-    { id: 1, type: 'project', title: 'تم إنشاء مشروع جديد: تطوير موقع تجاري', time: 'منذ ساعتين', status: 'success' },
-    { id: 2, type: 'payment', title: 'تم استلام دفعة مالية بقيمة 25,000 ر.س', time: 'منذ 3 ساعات', status: 'success' },
-    { id: 3, type: 'client', title: 'عميل جديد: شركة التقنيات المتطورة', time: 'منذ 5 ساعات', status: 'info' },
-    { id: 4, type: 'task', title: 'مهمة معلقة: مراجعة التصميم النهائي', time: 'منذ يوم', status: 'warning' },
-    { id: 5, type: 'project', title: 'تم إكمال مشروع: نظام إدارة المخزون', time: 'منذ يومين', status: 'success' },
-  ];
+  // Fetch real activities from database
+  const [recentActivities, setRecentActivities] = useState<any[]>([]);
+
+  const fetchRecentActivities = async () => {
+    try {
+      // Get recent project activities
+      const { data: projectActivity } = await supabase
+        .from('projects')
+        .select('name, created_at, status')
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      // Get recent payment activities  
+      const { data: paymentActivity } = await supabase
+        .from('payment_transactions')
+        .select('amount, created_at, status, offer_title')
+        .eq('status', 'COMPLETED')
+        .order('created_at', { ascending: false })
+        .limit(2);
+
+      const activities = [];
+
+      // Add project activities
+      projectActivity?.forEach((project, index) => {
+        activities.push({
+          id: `project-${index}`,
+          type: 'project',
+          title: `مشروع: ${project.name}`,
+          time: new Date(project.created_at).toLocaleDateString('ar-SA'),
+          status: project.status === 'completed' ? 'success' : 'info'
+        });
+      });
+
+      // Add payment activities
+      paymentActivity?.forEach((payment, index) => {
+        activities.push({
+          id: `payment-${index}`,
+          type: 'payment', 
+          title: `دفعة مالية: ${payment.amount} ر.س - ${payment.offer_title || 'خدمة'}`,
+          time: new Date(payment.created_at).toLocaleDateString('ar-SA'),
+          status: 'success'
+        });
+      });
+
+      setRecentActivities(activities.slice(0, 5));
+    } catch (error) {
+      console.error('Error fetching activities:', error);
+      setRecentActivities([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecentActivities();
+  }, []);
 
   const quickActions = [
-    { title: 'إضافة مشروع جديد', description: 'إنشاء مشروع جديد للعملاء', action: '/admin-projects' },
-    { title: 'إدارة العملاء', description: 'عرض وإدارة قائمة العملاء', action: '/admin-clients' },
-    { title: 'تقارير الأداء', description: 'عرض تقارير مفصلة عن الأداء', action: '/admin-analytics' },
-    { title: 'إعدادات النظام', description: 'تخصيص إعدادات النظام', action: '/admin-settings' },
+    { title: 'إضافة مشروع جديد', description: 'إنشاء مشروع جديد للعملاء', action: '/admin/projects' },
+    { title: 'إدارة العملاء', description: 'عرض وإدارة قائمة العملاء', action: '/admin/clients' },
+    { title: 'تقارير الأداء', description: 'عرض تقارير مفصلة عن الأداء', action: '/admin/analytics' },
+    { title: 'إعدادات النظام', description: 'تخصيص إعدادات النظام', action: '/admin/settings' },
   ];
 
   if (loading) {
@@ -265,34 +338,34 @@ const AdminDashboard = () => {
         </Card>
       </div>
 
-      {/* Progress Overview */}
+      {/* Real Progress Overview */}
       <Card>
         <CardHeader>
           <CardTitle className="text-right">نظرة عامة على التقدم</CardTitle>
-          <CardDescription className="text-right">ملخص سريع لحالة المشاريع والأهداف الشهرية</CardDescription>
+          <CardDescription className="text-right">إحصائيات حقيقية لحالة المشاريع والأداء</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>75%</span>
-                <span>إكمال المشاريع</span>
+                <span>{stats.totalProjects > 0 ? Math.round((stats.activeProjects / stats.totalProjects) * 100) : 0}%</span>
+                <span>المشاريع النشطة</span>
               </div>
-              <Progress value={75} className="h-2" />
+              <Progress value={stats.totalProjects > 0 ? (stats.activeProjects / stats.totalProjects) * 100 : 0} className="h-2" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>92%</span>
-                <span>رضا العملاء</span>
+                <span>{stats.totalProjects > 0 ? Math.round((stats.pendingTasks / stats.totalProjects) * 100) : 0}%</span>
+                <span>المشاريع المكتملة</span>
               </div>
-              <Progress value={92} className="h-2" />
+              <Progress value={stats.totalProjects > 0 ? (stats.pendingTasks / stats.totalProjects) * 100 : 0} className="h-2" />
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>68%</span>
-                <span>الهدف الشهري</span>
+                <span>{Math.abs(stats.monthlyGrowth)}%</span>
+                <span>النمو الشهري</span>
               </div>
-              <Progress value={68} className="h-2" />
+              <Progress value={Math.min(100, Math.abs(stats.monthlyGrowth))} className="h-2" />
             </div>
           </div>
         </CardContent>

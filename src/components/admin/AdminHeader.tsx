@@ -30,7 +30,9 @@ import { toast } from '@/hooks/use-toast';
 export const AdminHeader = () => {
   const [user, setUser] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [notifications, setNotifications] = useState(3);
+  const [notifications, setNotifications] = useState(0);
+  const [activeProjects, setActiveProjects] = useState(0);
+  const [newClients, setNewClients] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,7 +42,41 @@ export const AdminHeader = () => {
         setUser(session.user);
       }
     };
+    
+    const fetchRealStats = async () => {
+      try {
+        // Get real active projects count
+        const { data: projects } = await supabase
+          .from('projects')
+          .select('status')
+          .eq('status', 'in_progress');
+        
+        // Get real new clients count (this month)
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+        
+        const { data: clients } = await supabase
+          .from('clients')
+          .select('created_at')
+          .gte('created_at', startOfMonth.toISOString());
+        
+        // Get real notifications count
+        const { data: notificationsData } = await supabase
+          .from('project_notifications')
+          .select('is_read')
+          .eq('is_read', false);
+        
+        setActiveProjects(projects?.length || 0);
+        setNewClients(clients?.length || 0);
+        setNotifications(notificationsData?.length || 0);
+      } catch (error) {
+        console.error('Error fetching real stats:', error);
+      }
+    };
+    
     getUser();
+    fetchRealStats();
   }, []);
 
   const handleSignOut = async () => {
@@ -84,11 +120,11 @@ export const AdminHeader = () => {
         <div className="hidden xl:flex items-center gap-3 lg:gap-4 ml-2 lg:ml-4">
           <div className="text-xs lg:text-sm text-right">
             <span className="text-muted-foreground">المشاريع النشطة: </span>
-            <span className="font-semibold text-primary">12</span>
+            <span className="font-semibold text-primary">{activeProjects}</span>
           </div>
           <div className="text-xs lg:text-sm text-right">
             <span className="text-muted-foreground">العملاء الجدد: </span>
-            <span className="font-semibold text-primary">5</span>
+            <span className="font-semibold text-primary">{newClients}</span>
           </div>
         </div>
 
