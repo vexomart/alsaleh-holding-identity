@@ -25,7 +25,10 @@ import {
   Search,
   Zap,
   Smartphone,
-  Building2
+  Building2,
+  Upload,
+  Info,
+  Copy
 } from 'lucide-react';
 
 interface WalletData {
@@ -41,6 +44,7 @@ interface Transaction {
   description: string;
   created_at: string;
   status: string;
+  reference_id?: string;
 }
 
 interface PaymentMethodDB {
@@ -65,6 +69,8 @@ export default function ClientWallet() {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [depositing, setDepositing] = useState(false);
+  const [showBankDetails, setShowBankDetails] = useState(false);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   const iconMap = {
@@ -74,6 +80,14 @@ export default function ClientWallet() {
     Calendar,
     Shield: TrendingUp,
     Globe: TrendingDown
+  };
+
+  // Bank account details
+  const bankDetails = {
+    companyName: "شركة علي صالح الشهري القابضة",
+    accountNumber: "161000010006086071040",
+    iban: "SA1980000161608016071040",
+    bankName: "البنك الأهلي السعودي"
   };
 
   useEffect(() => {
@@ -150,11 +164,56 @@ export default function ClientWallet() {
     }
   };
 
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "تم النسخ",
+      description: `تم نسخ ${label} بنجاح`
+    });
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        toast({
+          title: "خطأ في حجم الملف",
+          description: "حجم الملف يجب أن يكون أقل من 5 ميجابايت",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "نوع ملف غير مدعوم",
+          description: "يرجى اختيار ملف من نوع JPG, PNG أو PDF",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      setReceiptFile(file);
+    }
+  };
+
   const handleDeposit = async () => {
     if (!depositAmount || !paymentMethod) {
       toast({
         title: "خطأ",
         description: "يرجى إدخال المبلغ واختيار طريقة الدفع",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate bank transfer receipt
+    if (paymentMethod === 'bank_transfer' && !receiptFile) {
+      toast({
+        title: "مطلوب إيصال البنك",
+        description: "يرجى رفع إيصال التحويل البنكي",
         variant: "destructive"
       });
       return;
@@ -179,7 +238,8 @@ export default function ClientWallet() {
         body: {
           amount,
           payment_method: paymentMethod,
-          description: `شحن المحفظة بمبلغ ${amount} ريال سعودي`
+          description: `شحن المحفظة بمبلغ ${amount} ريال سعودي`,
+          receipt_file: receiptFile ? await fileToBase64(receiptFile) : null
         },
         headers: {
           Authorization: `Bearer ${session.access_token}`
@@ -192,15 +252,23 @@ export default function ClientWallet() {
 
       const { data } = response;
       if (data.success) {
-        toast({
-          title: "تم الشحن بنجاح",
-          description: `تم شحن محفظتك بمبلغ ${amount} ريال سعودي`
-        });
-        
-        setDepositAmount('');
-        setPaymentMethod('');
-        setIsDepositOpen(false);
-        await fetchWalletData();
+        if (data.payment_url) {
+          // Redirect to payment gateway
+          window.location.href = data.payment_url;
+        } else {
+          // Payment was processed immediately (bank transfer)
+          toast({
+            title: "تم إرسال طلب الشحن",
+            description: "سيتم مراجعة إيصال التحويل وإضافة المبلغ خلال 24 ساعة",
+            variant: "default"
+          });
+          
+          setDepositAmount('');
+          setPaymentMethod('');
+          setReceiptFile(null);
+          setIsDepositOpen(false);
+          await fetchWalletData();
+        }
       } else {
         throw new Error(data.error);
       }
@@ -214,6 +282,15 @@ export default function ClientWallet() {
     } finally {
       setDepositing(false);
     }
+  };
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
   };
 
   const walletBalance = wallet?.balance || 0;
@@ -373,7 +450,13 @@ export default function ClientWallet() {
                   
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">طريقة الدفع</Label>
-                    <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <Select value={paymentMethod} onValueChange={(value) => {
+                      setPaymentMethod(value);
+                      setShowBankDetails(value === 'bank_transfer');
+                      if (value !== 'bank_transfer') {
+                        setReceiptFile(null);
+                      }
+                    }}>
                       <SelectTrigger className="h-12">
                         <SelectValue placeholder="اختر طريقة الدفع" />
                       </SelectTrigger>
@@ -392,10 +475,100 @@ export default function ClientWallet() {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {/* Bank Details */}
+                  {showBankDetails && (
+                    <Card className="border-2 border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <Info className="h-5 w-5 text-blue-600" />
+                          تفاصيل التحويل البنكي
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium text-blue-700 dark:text-blue-300">اسم الشركة:</p>
+                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border">
+                            <span className="text-sm">{bankDetails.companyName}</span>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => copyToClipboard(bankDetails.companyName, "اسم الشركة")}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium text-blue-700 dark:text-blue-300">رقم الحساب:</p>
+                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border">
+                            <span className="text-sm font-mono">{bankDetails.accountNumber}</span>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => copyToClipboard(bankDetails.accountNumber, "رقم الحساب")}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium text-blue-700 dark:text-blue-300">الآيبان:</p>
+                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border">
+                            <span className="text-sm font-mono">{bankDetails.iban}</span>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => copyToClipboard(bankDetails.iban, "الآيبان")}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+
+                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded border border-yellow-200 dark:border-yellow-800">
+                          <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
+                            ⚠️ مهم: يرجى رفع إيصال التحويل البنكي أدناه
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* File Upload for Bank Transfer */}
+                  {showBankDetails && (
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">رفع إيصال التحويل البنكي</Label>
+                      <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
+                        <input
+                          type="file"
+                          accept="image/*,.pdf"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                          id="receipt-upload"
+                        />
+                        <label htmlFor="receipt-upload" className="cursor-pointer">
+                          <div className="space-y-2">
+                            <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
+                            <p className="text-sm text-muted-foreground">
+                              اضغط لرفع الإيصال (JPG, PNG, PDF)
+                            </p>
+                            {receiptFile && (
+                              <p className="text-sm text-green-600 font-medium">
+                                تم اختيار: {receiptFile.name}
+                              </p>
+                            )}
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  )}
                   
                   <Button 
                     onClick={handleDeposit} 
-                    disabled={depositing || !depositAmount || !paymentMethod}
+                    disabled={depositing || !depositAmount || !paymentMethod || (paymentMethod === 'bank_transfer' && !receiptFile)}
                     className="w-full h-12 text-lg"
                     size="lg"
                   >
@@ -557,6 +730,12 @@ export default function ClientWallet() {
                             <Badge className={status.className}>
                               {status.label}
                             </Badge>
+
+                            {transaction.reference_id && (
+                              <span className="text-xs text-muted-foreground">
+                                #{transaction.reference_id}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
