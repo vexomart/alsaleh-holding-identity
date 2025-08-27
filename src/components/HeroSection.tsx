@@ -235,13 +235,10 @@ const HeroSection = () => {
             variant="outline" 
             size="lg"
             className="border-3 border-primary-foreground/80 text-primary-foreground hover:bg-primary-foreground hover:text-primary w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold transition-all duration-500 hover:scale-110 glass-effect rounded-2xl group"
-            onClick={() => {
-              const visionSection = document.getElementById('vision');
-              visionSection?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => window.open('/book-consultation', '_blank')}
           >
-            <span className="hidden sm:block">اكتشف رؤيتنا التفصيلية</span>
-            <span className="sm:hidden">رؤيتنا</span>
+            <span className="hidden sm:block">استشارة مجانية</span>
+            <span className="sm:hidden">استشارة</span>
           </Button>
 
           {/* Video Play Button - Responsive */}
