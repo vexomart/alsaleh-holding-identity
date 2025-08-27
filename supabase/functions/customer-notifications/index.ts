@@ -360,6 +360,10 @@ const handler = async (req: Request): Promise<Response> => {
     if (type === 'payment_status_update') {
       html = getPaymentStatusTemplate(customerName, data);
       subject = `تحديث حالة الدفع - ${data.payment_id}`;
+    } else if (type === 'custom') {
+      // Handle custom notifications
+      html = data.content || data.html || '';
+      subject = data.subject || 'إشعار من شركة علي صالح الشهري القابضة';
     } else {
       // Handle existing notification types
       switch (type) {
