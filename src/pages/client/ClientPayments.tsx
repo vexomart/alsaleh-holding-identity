@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
+import { useRealtimePayments } from '@/hooks/useRealtimePayments';
 import { 
   CreditCard, 
   Search, 
@@ -20,82 +23,177 @@ import {
   Banknote
 } from 'lucide-react';
 
-const mockPayments = [
-  {
-    id: '1',
-    invoice_id: 'INV-2024-001',
-    amount: 15000,
-    status: 'completed',
-    payment_method: 'bank_transfer',
-    payment_date: '2024-01-20',
-    project_name: 'تطوير موقع إلكتروني',
-    transaction_id: 'TXN-123456789'
-  },
-  {
-    id: '2',
-    invoice_id: 'INV-2024-002',
-    amount: 7500,
-    status: 'pending',
-    payment_method: 'credit_card',
-    payment_date: '2024-01-18',
-    project_name: 'تصميم هوية بصرية',
-    transaction_id: 'TXN-987654321'
-  },
-  {
-    id: '3',
-    invoice_id: 'INV-2024-003',
-    amount: 25000,
-    status: 'failed',
-    payment_method: 'wallet',
-    payment_date: '2024-01-15',
-    project_name: 'تطبيق جوال للتسوق',
-    transaction_id: 'TXN-456789123'
-  },
-  {
-    id: '4',
-    invoice_id: 'INV-2024-004',
-    amount: 12000,
-    status: 'processing',
-    payment_method: 'stc_pay',
-    payment_date: '2024-01-12',
-    project_name: 'نظام إدارة المحتوى',
-    transaction_id: 'TXN-789123456'
-  }
-];
+interface Payment {
+  id: string;
+  transaction_id?: string;
+  reference_id?: string;
+  customer_name?: string;
+  customer_email?: string;
+  customer_phone?: string;
+  amount: number;
+  currency?: string;
+  status: string;
+  payment_method: string;
+  payment_date?: string;
+  created_at: string;
+  offer_title?: string;
+  description?: string;
+  transaction_type?: string;
+  user_id?: string;
+}
 
 export default function ClientPayments() {
-  const [payments, setPayments] = useState(mockPayments);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [methodFilter, setMethodFilter] = useState('all');
 
-  const getStatusText = (status: string) => {
-    const statusMap: { [key: string]: string } = {
-      'completed': 'مكتمل',
-      'pending': 'في الانتظار',
-      'processing': 'قيد المعالجة',
-      'failed': 'فشل',
-      'refunded': 'مسترد'
+  const fetchUserPayments = async () => {
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "يجب تسجيل الدخول",
+          description: "يرجى تسجيل الدخول لعرض مدفوعاتك",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Fetch user's payment transactions
+      const { data: paymentData, error: paymentError } = await supabase
+        .from('payment_transactions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (paymentError) {
+        console.error('Error fetching payments:', paymentError);
+      }
+
+      // Fetch user's wallet transactions
+      const { data: walletData, error: walletError } = await supabase
+        .from('wallet_transactions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (walletError) {
+        console.error('Error fetching wallet transactions:', walletError);
+      }
+
+      // Combine and normalize data
+      const combinedPayments: Payment[] = [
+        ...(paymentData || []).map(payment => ({
+          ...payment,
+          transaction_id: payment.transaction_id,
+          customer_name: payment.customer_name,
+          customer_email: payment.customer_email,
+          currency: payment.currency || 'SAR'
+        })),
+        ...(walletData || []).map(wallet => ({
+          ...wallet,
+          transaction_id: wallet.reference_id,
+          customer_name: wallet.customer_name || 'معاملة محفظة',
+          customer_email: wallet.customer_email || user.email || '',
+          customer_phone: wallet.customer_phone || '',
+          currency: 'SAR',
+          offer_title: wallet.description || 'شحن محفظة',
+          transaction_type: 'deposit'
+        }))
+      ];
+
+      // Sort by created_at descending
+      combinedPayments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      
+      setPayments(combinedPayments);
+    } catch (error) {
+      console.error('Error fetching user payments:', error);
+      toast({
+        title: "خطأ في جلب المدفوعات",
+        description: "حدث خطأ أثناء جلب بيانات المدفوعات",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Get current user and setup realtime updates
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setCurrentUser(user);
     };
-    return statusMap[status] || status;
+    getCurrentUser();
+  }, []);
+  
+  useRealtimePayments({
+    onUpdate: fetchUserPayments,
+    userId: currentUser?.id,
+    showNotifications: true
+  });
+
+  useEffect(() => {
+    fetchUserPayments();
+  }, []);
+
+  const getStatusText = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'completed': 
+      case 'success': 
+      case 'paid': 
+        return 'مكتمل';
+      case 'pending': 
+        return 'في الانتظار';
+      case 'processing': 
+        return 'قيد المعالجة';
+      case 'failed': 
+        return 'فشل';
+      case 'rejected': 
+        return 'مرفوض';
+      case 'cancelled': 
+        return 'ملغي';
+      case 'refunded': 
+        return 'مسترد';
+      default: 
+        return status || 'غير محدد';
+    }
   };
 
   const getStatusColor = (status: string) => {
-    const colorMap: { [key: string]: string } = {
-      'completed': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-      'pending': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-      'processing': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      'failed': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-      'refunded': 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-    };
-    return colorMap[status] || 'bg-gray-100 text-gray-800';
+    switch (status?.toLowerCase()) {
+      case 'completed': 
+      case 'success': 
+      case 'paid': 
+        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400';
+      case 'pending': 
+      case 'processing': 
+        return 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400';
+      case 'failed': 
+      case 'rejected': 
+      case 'cancelled': 
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      case 'refunded': 
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+      default: 
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+    }
   };
 
   const getStatusIcon = (status: string) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case 'completed':
+      case 'success':
+      case 'paid':
         return <CheckCircle className="w-4 h-4" />;
       case 'failed':
+      case 'rejected':
+      case 'cancelled':
         return <XCircle className="w-4 h-4" />;
       case 'processing':
         return <RefreshCw className="w-4 h-4" />;
@@ -105,32 +203,52 @@ export default function ClientPayments() {
   };
 
   const getPaymentMethodText = (method: string) => {
-    const methodMap: { [key: string]: string } = {
-      'bank_transfer': 'تحويل بنكي',
-      'credit_card': 'بطاقة ائتمان',
-      'wallet': 'محفظة رقمية',
-      'stc_pay': 'STC Pay',
-      'cash': 'نقداً'
-    };
-    return methodMap[method] || method;
+    switch (method?.toLowerCase()) {
+      case 'tab': return 'تابي';
+      case 'tamara': return 'تمارا';
+      case 'stc': return 'STC Pay';
+      case 'stc_pay': return 'STC Pay';
+      case 'visa': return 'فيزا';
+      case 'mastercard': return 'ماستركارد';
+      case 'mada': return 'مدى';
+      case 'paypal': return 'PayPal';
+      case 'apple_pay': return 'Apple Pay';
+      case 'google_pay': return 'Google Pay';
+      case 'bank_transfer': return 'حوالة بنكية';
+      case 'stripe': return 'بطاقة ائتمانية';
+      default: return method || 'غير محدد';
+    }
   };
 
   const filteredPayments = payments.filter(payment => {
-    const matchesSearch = payment.invoice_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         payment.project_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         payment.transaction_id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || payment.status === statusFilter;
-    const matchesMethod = methodFilter === 'all' || payment.payment_method === methodFilter;
+    const matchesSearch = payment.customer_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         payment.transaction_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         payment.reference_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         payment.offer_title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         payment.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || payment.status?.toLowerCase() === statusFilter;
+    const matchesMethod = methodFilter === 'all' || payment.payment_method?.toLowerCase() === methodFilter;
     
     return matchesSearch && matchesStatus && matchesMethod;
   });
 
   const stats = {
-    total: payments.reduce((sum, p) => sum + p.amount, 0),
-    completed: payments.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0),
-    pending: payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0),
-    failed: payments.filter(p => p.status === 'failed').length
+    total: payments.reduce((sum, p) => sum + Number(p.amount), 0),
+    completed: payments.filter(p => ['completed', 'success', 'paid'].includes(p.status?.toLowerCase())).reduce((sum, p) => sum + Number(p.amount), 0),
+    pending: payments.filter(p => ['pending', 'processing'].includes(p.status?.toLowerCase())).reduce((sum, p) => sum + Number(p.amount), 0),
+    failed: payments.filter(p => ['failed', 'rejected', 'cancelled'].includes(p.status?.toLowerCase())).length
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">جارٍ تحميل مدفوعاتك...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -236,13 +354,18 @@ export default function ClientPayments() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg text-foreground mb-1">
-                      {payment.invoice_id}
+                      {payment.transaction_id || payment.reference_id}
+                      {payment.transaction_type === 'deposit' && (
+                        <span className="mr-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full dark:bg-blue-900/20 dark:text-blue-400">
+                          شحن محفظة
+                        </span>
+                      )}
                     </h3>
                     <p className="text-sm text-muted-foreground mb-2">
-                      {payment.project_name}
+                      {payment.offer_title || payment.description}
                     </p>
                     <div className="text-2xl font-bold text-primary">
-                      {payment.amount.toLocaleString()} ريال
+                      {Number(payment.amount).toLocaleString()} {payment.currency || 'SAR'}
                     </div>
                   </div>
                 </div>
@@ -261,11 +384,16 @@ export default function ClientPayments() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>تاريخ الدفع:</span>
-                    <span>{new Date(payment.payment_date).toLocaleDateString('ar-SA')}</span>
+                    <span>
+                      {payment.payment_date 
+                        ? new Date(payment.payment_date).toLocaleDateString('ar-SA')
+                        : new Date(payment.created_at).toLocaleDateString('ar-SA')
+                      }
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>رقم المعاملة:</span>
-                    <span className="font-mono text-xs">{payment.transaction_id}</span>
+                    <span className="font-mono text-xs">{payment.transaction_id || payment.reference_id}</span>
                   </div>
                 </div>
 

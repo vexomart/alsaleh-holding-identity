@@ -22,6 +22,7 @@ import { toast } from '@/hooks/use-toast';
 import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { useRealtimePayments } from '@/hooks/useRealtimePayments';
 
 interface Payment {
   id: string;
@@ -51,10 +52,6 @@ const AdminPayments = () => {
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-
-  useEffect(() => {
-    fetchPayments();
-  }, []);
 
   const fetchPayments = async () => {
     try {
@@ -112,6 +109,17 @@ const AdminPayments = () => {
       setLoading(false);
     }
   };
+
+  // Use the realtime payments hook
+  useRealtimePayments({
+    onUpdate: fetchPayments,
+    showNotifications: true
+  });
+
+  useEffect(() => {
+    fetchPayments();
+  }, []);
+
 
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
