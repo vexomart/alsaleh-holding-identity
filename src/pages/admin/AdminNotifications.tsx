@@ -96,37 +96,36 @@ const AdminNotifications = () => {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'project_update': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
-      case 'payment_received': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400';
+      case 'project_started': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
       case 'project_completed': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      case 'urgent': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      case 'reminder': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400';
+      case 'phase_completed': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400';
+      case 'status_change': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400';
+      case 'deadline_approaching': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400';
+      case 'issue_reported': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
 
   const getTypeText = (type: string) => {
     switch (type) {
-      case 'project_update': return 'تحديث مشروع';
-      case 'payment_received': return 'استلام دفعة';
+      case 'project_started': return 'بدء مشروع';
       case 'project_completed': return 'اكتمال مشروع';
-      case 'urgent': return 'عاجل';
-      case 'reminder': return 'تذكير';
-      case 'system': return 'نظام';
-      case 'user_action': return 'إجراء مستخدم';
+      case 'phase_completed': return 'اكتمال مرحلة';
+      case 'status_change': return 'تغيير حالة';
+      case 'deadline_approaching': return 'موعد قريب';
+      case 'issue_reported': return 'تقرير مشكلة';
       default: return type;
     }
   };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'project_update': return <Eye className="h-4 w-4" />;
-      case 'payment_received': return <CheckCircle className="h-4 w-4" />;
+      case 'project_started': return <Eye className="h-4 w-4" />;
       case 'project_completed': return <CheckCircle className="h-4 w-4" />;
-      case 'urgent': return <AlertCircle className="h-4 w-4" />;
-      case 'reminder': return <Clock className="h-4 w-4" />;
-      case 'system': return <Bell className="h-4 w-4" />;
-      case 'user_action': return <Users className="h-4 w-4" />;
+      case 'phase_completed': return <CheckCircle className="h-4 w-4" />;
+      case 'status_change': return <Clock className="h-4 w-4" />;
+      case 'deadline_approaching': return <AlertCircle className="h-4 w-4" />;
+      case 'issue_reported': return <AlertCircle className="h-4 w-4" />;
       default: return <Bell className="h-4 w-4" />;
     }
   };
@@ -147,7 +146,7 @@ const AdminNotifications = () => {
     total: notifications.length,
     unread: notifications.filter(n => !n.is_read).length,
     emailSent: notifications.filter(n => n.sent_via_email).length,
-    urgent: notifications.filter(n => n.notification_type === 'urgent').length
+    urgent: notifications.filter(n => ['deadline_approaching', 'issue_reported'].includes(n.notification_type)).length
   };
 
   if (loading) {
@@ -240,11 +239,12 @@ const AdminNotifications = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">جميع الأنواع</SelectItem>
-                <SelectItem value="project_update">تحديث مشروع</SelectItem>
-                <SelectItem value="payment_received">استلام دفعة</SelectItem>
+                <SelectItem value="project_started">بدء مشروع</SelectItem>
                 <SelectItem value="project_completed">اكتمال مشروع</SelectItem>
-                <SelectItem value="urgent">عاجل</SelectItem>
-                <SelectItem value="reminder">تذكير</SelectItem>
+                <SelectItem value="phase_completed">اكتمال مرحلة</SelectItem>
+                <SelectItem value="status_change">تغيير حالة</SelectItem>
+                <SelectItem value="deadline_approaching">موعد قريب</SelectItem>
+                <SelectItem value="issue_reported">تقرير مشكلة</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
