@@ -13,6 +13,7 @@ import { ImageOptimizer } from "@/components/ImageOptimizer";
 import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { TemplateVariableBlocker } from "@/components/TemplateVariableBlocker";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
@@ -348,8 +349,14 @@ const App = () => {
                 
                 <Route path="/admin-login" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
                 
-                {/* Admin Routes with Layout */}
-                <Route path="/admin/*" element={<Suspense fallback={<PageLoader />}><AdminLayout /></Suspense>}>
+                {/* Admin Routes with Protection and Layout */}
+                <Route path="/admin/*" element={
+                  <AdminProtectedRoute>
+                    <Suspense fallback={<PageLoader />}>
+                      <AdminLayout />
+                    </Suspense>
+                  </AdminProtectedRoute>
+                }>
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="projects" element={<AdminProjects />} />
                   <Route path="clients" element={<AdminClients />} />
@@ -367,15 +374,15 @@ const App = () => {
                   <Route path="affiliate" element={<AdminAffiliate />} />
                 </Route>
                 
-                {/* Legacy admin routes - redirect to new structure */}
-                <Route path="/admin-projects" element={<Navigate to="/admin/projects" replace />} />
-                <Route path="/admin-dashboard" element={<Navigate to="/admin/dashboard" replace />} />
-                <Route path="/admin-clients" element={<Navigate to="/admin/clients" replace />} />
-                <Route path="/admin-invoices" element={<Navigate to="/admin/invoices" replace />} />
-                <Route path="/admin-payments" element={<Navigate to="/admin/payments" replace />} />
-                <Route path="/admin-users" element={<Navigate to="/admin/users" replace />} />
-                <Route path="/admin-notifications" element={<Navigate to="/admin/notifications" replace />} />
-                <Route path="/admin-settings" element={<Navigate to="/admin/settings" replace />} />
+                {/* Legacy admin routes - redirect to admin login first */}
+                <Route path="/admin-projects" element={<AdminProtectedRoute><Navigate to="/admin/projects" replace /></AdminProtectedRoute>} />
+                <Route path="/admin-dashboard" element={<AdminProtectedRoute><Navigate to="/admin/dashboard" replace /></AdminProtectedRoute>} />
+                <Route path="/admin-clients" element={<AdminProtectedRoute><Navigate to="/admin/clients" replace /></AdminProtectedRoute>} />
+                <Route path="/admin-invoices" element={<AdminProtectedRoute><Navigate to="/admin/invoices" replace /></AdminProtectedRoute>} />
+                <Route path="/admin-payments" element={<AdminProtectedRoute><Navigate to="/admin/payments" replace /></AdminProtectedRoute>} />
+                <Route path="/admin-users" element={<AdminProtectedRoute><Navigate to="/admin/users" replace /></AdminProtectedRoute>} />
+                <Route path="/admin-notifications" element={<AdminProtectedRoute><Navigate to="/admin/notifications" replace /></AdminProtectedRoute>} />
+                <Route path="/admin-settings" element={<AdminProtectedRoute><Navigate to="/admin/settings" replace /></AdminProtectedRoute>} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
