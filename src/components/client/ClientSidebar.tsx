@@ -86,67 +86,67 @@ export const ClientSidebar = () => {
   return (
     <Sidebar 
       side="right"
-      className={`${collapsed ? "w-16" : "w-80"} font-tajawal transition-all duration-500 ease-in-out transform`}
+      className={`${collapsed ? "w-12" : "w-64"} font-tajawal transition-all duration-500 ease-in-out transform`}
     >
       {/* خلفية متدرجة للسايدبار */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 opacity-95"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10"></div>
       
-      <SidebarHeader className="relative z-10 p-6 border-b border-white/10">
-        <div className={`flex items-center gap-4 transition-all duration-300 ${collapsed ? 'justify-center' : ''}`}>
+      <SidebarHeader className="relative z-10 p-4 border-b border-white/10">
+        <div className={`flex items-center gap-3 transition-all duration-300 ${collapsed ? 'justify-center' : ''}`}>
           <div className="relative">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary via-accent to-secondary rounded-xl flex items-center justify-center shadow-2xl animate-glow">
-              <User className="w-7 h-7 text-white" />
+            <div className="w-8 h-8 bg-gradient-to-br from-primary via-accent to-secondary rounded-lg flex items-center justify-center shadow-lg animate-glow">
+              <User className="w-4 h-4 text-white" />
             </div>
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-xl blur opacity-30 animate-pulse"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-lg blur opacity-20 animate-pulse"></div>
           </div>
           {!collapsed && (
             <div className="text-right min-w-0 animate-fade-in">
-              <h2 className="text-xl font-bold text-white truncate gradient-text-primary">لوحة التحكم</h2>
-              <p className="text-sm text-white/70 truncate animate-slide-in-right">إدارة مشاريعك وخدماتك</p>
+              <h2 className="text-lg font-semibold text-white truncate gradient-text-primary">لوحة التحكم</h2>
+              <p className="text-xs text-white/70 truncate animate-slide-in-right">إدارة مشاريعك وخدماتك</p>
             </div>
           )}
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="relative z-10 p-4 overflow-y-auto custom-scrollbar">
+      <SidebarContent className="relative z-10 p-3 overflow-y-auto custom-scrollbar">
         {menuItems.map((group, groupIndex) => (
-          <SidebarGroup key={groupIndex} className={`mb-6 animate-fade-in delay-${groupIndex * 100}`}>
+          <SidebarGroup key={groupIndex} className={`mb-4 animate-fade-in delay-${groupIndex * 100}`}>
             {!collapsed && (
-              <SidebarGroupLabel className="text-xs font-bold text-white/60 uppercase tracking-wider px-3 mb-3 text-right border-r-2 border-primary/50">
+              <SidebarGroupLabel className="text-xs font-semibold text-white/60 uppercase tracking-wider px-2 mb-2 text-right border-r-2 border-primary/50">
                 {group.groupLabelAr}
               </SidebarGroupLabel>
             )}
             
             <SidebarGroupContent>
-              <SidebarMenu className="space-y-2">
+              <SidebarMenu className="space-y-1">
                 {group.items.map((item, itemIndex) => (
                   <SidebarMenuItem key={itemIndex} className="group">
                     <SidebarMenuButton asChild className="h-auto">
                       <NavLink 
                         to={item.url} 
                         className={({ isActive }) => `
-                          flex items-center gap-4 px-4 py-3 rounded-xl text-base font-medium
+                          flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                           ${isActive 
-                            ? 'bg-gradient-to-r from-primary/20 to-accent/20 text-white border border-primary/30 shadow-lg shadow-primary/20' 
+                            ? 'bg-gradient-to-r from-primary/20 to-accent/20 text-white border border-primary/30 shadow-md shadow-primary/10' 
                             : 'text-white/80 hover:text-white hover:bg-white/10 hover:scale-105'
                           }
                           ${collapsed ? 'justify-center' : 'justify-start'}
-                          transition-all duration-300 group-hover:shadow-lg backdrop-blur-sm
+                          transition-all duration-300 group-hover:shadow-md backdrop-blur-sm
                         `}
                         title={collapsed ? item.title : undefined}
                       >
                         <div className="relative">
-                          <item.icon className={`w-6 h-6 flex-shrink-0 transition-all duration-300 ${isActive(item.url) ? 'text-primary' : 'group-hover:text-accent'}`} />
+                          <item.icon className={`w-4 h-4 flex-shrink-0 transition-all duration-300 ${isActive(item.url) ? 'text-primary' : 'group-hover:text-accent'}`} />
                           {isActive(item.url) && (
-                            <div className="absolute -inset-2 bg-primary/20 rounded-full blur animate-pulse"></div>
+                            <div className="absolute -inset-1 bg-primary/20 rounded-full blur animate-pulse"></div>
                           )}
                         </div>
                         {!collapsed && (
                           <>
                             <span className="truncate flex-1 text-right transition-all duration-300">{item.title}</span>
                             {item.title === 'الرسائل' && (
-                              <Badge variant="destructive" className="h-6 w-6 p-0 flex items-center justify-center text-xs animate-bounce-gentle">
+                              <Badge variant="destructive" className="h-4 w-4 p-0 flex items-center justify-center text-xs animate-bounce-gentle">
                                 2
                               </Badge>
                             )}
@@ -163,7 +163,7 @@ export const ClientSidebar = () => {
       </SidebarContent>
       
       {/* تأثير ضوئي في الأسفل */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-primary/10 to-transparent pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-primary/10 to-transparent pointer-events-none"></div>
     </Sidebar>
   );
 };
