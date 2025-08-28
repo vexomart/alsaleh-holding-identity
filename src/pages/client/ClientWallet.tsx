@@ -254,25 +254,14 @@ export default function ClientWallet() {
       
       if (data?.success) {
         if (data.payment_url) {
-          // For electronic payment - show success message and payment URL option
-          toast({
-            title: "تم إنشاء رابط الدفع",
-            description: data.message || "يرجى إكمال الدفع من خلال الرابط المرسل",
-            variant: "default"
-          });
-          
-          // Open payment URL in new window for better UX
-          window.open(data.payment_url, '_blank');
-          
+          // Clear form first
           setDepositAmount('');
           setPaymentMethod('');
           setReceiptFile(null);
           setIsDepositOpen(false);
           
-          // Optionally refresh wallet data after some delay
-          setTimeout(() => {
-            fetchWalletData();
-          }, 2000);
+          // Redirect directly to payment gateway
+          window.location.href = data.payment_url;
         } else {
           // Payment was processed immediately (bank transfer)
           toast({
