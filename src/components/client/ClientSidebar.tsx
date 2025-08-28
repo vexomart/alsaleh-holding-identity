@@ -28,34 +28,45 @@ import { Badge } from '@/components/ui/badge';
 
 const menuItems = [
   {
-    groupLabel: 'الرئيسية',
+    groupLabel: 'Main',
+    groupLabelAr: 'الرئيسية',
     items: [
-      { title: 'لوحة التحكم', url: '/client/dashboard', icon: LayoutDashboard },
-      { title: 'مشاريعي', url: '/client/projects', icon: Package },
-      { title: 'طلبات الخدمة', url: '/client/service-requests', icon: Clock },
+      { title: 'لوحة التحكم', titleEn: 'Dashboard', url: '/client/dashboard', icon: LayoutDashboard },
+      { title: 'مشاريعي', titleEn: 'My Projects', url: '/client/projects', icon: Package },
+      { title: 'طلباتي', titleEn: 'My Orders', url: '/client/orders', icon: Clock },
     ]
   },
   {
-    groupLabel: 'المالية',
+    groupLabel: 'Finance',
+    groupLabelAr: 'المالية',
     items: [
-      { title: 'الفواتير', url: '/client/invoices', icon: FileText },
-      { title: 'المدفوعات', url: '/client/payments', icon: CreditCard },
-      { title: 'المحفظة', url: '/client/wallet', icon: Wallet },
-      { title: 'الإيصالات', url: '/client/receipts', icon: Receipt },
+      { title: 'فواتيري', titleEn: 'My Invoices', url: '/client/invoices', icon: FileText },
+      { title: 'مدفوعاتي', titleEn: 'My Payments', url: '/client/payments', icon: CreditCard },
+      { title: 'محفظتي', titleEn: 'My Wallet', url: '/client/wallet', icon: Wallet },
     ]
   },
   {
-    groupLabel: 'التواصل والدعم',
+    groupLabel: 'Affiliate Marketing',
+    groupLabelAr: 'التسويق بالعمولة',
     items: [
-      { title: 'الرسائل', url: '/client/messages', icon: MessageSquare },
-      { title: 'تذاكر الدعم', url: '/client/support-tickets', icon: MessageSquare },
+      { title: 'التسويق بالعمولة', titleEn: 'Affiliate Marketing', url: '/client/affiliate', icon: Receipt },
     ]
   },
   {
-    groupLabel: 'الحساب',
+    groupLabel: 'Communication',
+    groupLabelAr: 'التواصل والدعم',
     items: [
-      { title: 'الملف الشخصي', url: '/client/profile', icon: User },
-      { title: 'الإعدادات', url: '/client/settings', icon: Settings },
+      { title: 'الرسائل', titleEn: 'Messages', url: '/client/messages', icon: MessageSquare },
+      { title: 'التنبيهات', titleEn: 'Notifications', url: '/client/notifications', icon: MessageSquare },
+      { title: 'تذاكر الدعم', titleEn: 'Support Tickets', url: '/client/support-tickets', icon: MessageSquare },
+    ]
+  },
+  {
+    groupLabel: 'Account',
+    groupLabelAr: 'الحساب',
+    items: [
+      { title: 'الملف الشخصي', titleEn: 'Profile', url: '/client/profile', icon: User },
+      { title: 'الإعدادات', titleEn: 'Settings', url: '/client/settings', icon: Settings },
     ]
   }
 ];

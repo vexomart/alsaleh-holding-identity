@@ -35,41 +35,48 @@ import { Badge } from '@/components/ui/badge';
 
 const menuItems = [
   {
-    groupLabel: 'الرئيسية',
+    groupLabel: 'Dashboard',
+    groupLabelAr: 'لوحة التحكم',
     items: [
-      { title: 'لوحة التحكم', url: '/admin/dashboard', icon: LayoutDashboard },
-      { title: 'المشاريع', url: '/admin/projects', icon: Package },
-      { title: 'الإحصائيات', url: '/admin/analytics', icon: BarChart3 },
+      { title: 'لوحة التحكم', titleEn: 'Dashboard', url: '/admin/dashboard', icon: LayoutDashboard },
+      { title: 'الإحصائيات', titleEn: 'Analytics', url: '/admin/analytics', icon: BarChart3 },
     ]
   },
   {
-    groupLabel: 'الشؤون المالية',
+    groupLabel: 'Projects',
+    groupLabelAr: 'المشاريع',
     items: [
-      { title: 'العملاء', url: '/admin/clients', icon: Users },
-      { title: 'الطلبات', url: '/admin/orders', icon: ShoppingCart },
-      { title: 'الفواتير', url: '/admin/invoices', icon: FileText },
-      { title: 'المدفوعات', url: '/admin/payments', icon: CreditCard },
-      { title: 'طرق الدفع', url: '/admin/payment-methods', icon: CreditCard },
-      { title: 'القوالب المالية', url: '/admin/financial-templates', icon: Receipt },
+      { title: 'المشاريع', titleEn: 'Projects', url: '/admin/projects', icon: Package },
+      { title: 'الطلبات', titleEn: 'Orders', url: '/admin/orders', icon: ShoppingCart },
     ]
   },
   {
-    groupLabel: 'إدارة النظام',
+    groupLabel: 'Financial',
+    groupLabelAr: 'الشؤون المالية',
     items: [
-      { title: 'المستخدمين', url: '/admin/users', icon: UserCheck },
-      { title: 'الأدوار', url: '/admin/roles', icon: Shield },
-      { title: 'الشعارات', url: '/admin/logos', icon: Image },
-      { title: 'الشركات التابعة', url: '/admin/subsidiaries', icon: Building },
-      { title: 'الرسائل', url: '/admin/messages', icon: MessageSquare },
+      { title: 'العملاء', titleEn: 'Clients', url: '/admin/clients', icon: Users },
+      { title: 'الفواتير', titleEn: 'Invoices', url: '/admin/invoices', icon: FileText },
+      { title: 'المدفوعات', titleEn: 'Payments', url: '/admin/payments', icon: CreditCard },
+      { title: 'طرق الدفع', titleEn: 'Payment Methods', url: '/admin/payment-methods', icon: CreditCard },
     ]
   },
   {
-    groupLabel: 'التقارير والإعدادات',
+    groupLabel: 'Wallet & Marketing',
+    groupLabelAr: 'المحفظة والتسويق',
     items: [
-      { title: 'الإشعارات', url: '/admin/notifications', icon: Bell },
-      { title: 'سجل النشاطات', url: '/admin/activity-logs', icon: Activity },
-      { title: 'النسخ الاحتياطي', url: '/admin/backup', icon: Database },
-      { title: 'الإعدادات', url: '/admin/settings', icon: Settings },
+      { title: 'المحفظة الرقمية', titleEn: 'Digital Wallet', url: '/admin/wallet', icon: Receipt },
+      { title: 'التسويق بالعمولة', titleEn: 'Affiliate Marketing', url: '/admin/affiliate', icon: UserCheck },
+    ]
+  },
+  {
+    groupLabel: 'System Management',
+    groupLabelAr: 'إدارة النظام',
+    items: [
+      { title: 'المستخدمين', titleEn: 'Users', url: '/admin/users', icon: UserCheck },
+      { title: 'الصلاحيات', titleEn: 'Permissions', url: '/admin/permissions', icon: Shield },
+      { title: 'الإشعارات', titleEn: 'Notifications', url: '/admin/notifications', icon: Bell },
+      { title: 'سجل النشاطات', titleEn: 'Activity Logs', url: '/admin/activity-logs', icon: Activity },
+      { title: 'الإعدادات', titleEn: 'Settings', url: '/admin/settings', icon: Settings },
     ]
   }
 ];
