@@ -47,39 +47,37 @@ export const ClientHeader = () => {
   };
 
   return (
-    <header className="h-16 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 font-tajawal">
-      <div className="flex h-full items-center justify-between px-4 lg:px-6">
-        {/* Right side - Logo/Brand */}
+    <header className="h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      <div className="flex h-full items-center justify-between px-4">
+        {/* Right side - Brand */}
         <div className="flex items-center gap-3">
-          <SidebarTrigger className="h-9 w-9 text-muted-foreground hover:text-foreground" />
+          <SidebarTrigger className="h-8 w-8 text-muted-foreground hover:text-foreground" />
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
-              <User className="w-4 h-4 text-white" />
+            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center">
+              <User className="w-3.5 h-3.5 text-primary-foreground" />
             </div>
-            <div className="hidden sm:block">
-              <h2 className="text-sm font-semibold text-foreground">لوحة التحكم</h2>
-            </div>
+            <h2 className="text-sm font-semibold text-foreground hidden sm:block">لوحة التحكم</h2>
           </div>
         </div>
 
         {/* Center - Search */}
-        <div className="flex-1 max-w-md mx-4">
+        <div className="flex-1 max-w-md mx-4 hidden md:block">
           <div className="relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute right-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="البحث في المشاريع والخدمات..."
-              className="pr-10 h-9 bg-muted/50 border-muted text-sm"
+              placeholder="البحث في المشاريع..."
+              className="pr-9 h-8 bg-muted/30 border-muted text-sm"
             />
           </div>
         </div>
 
         {/* Left side - Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           {/* Theme Toggle */}
           <Button
             variant="ghost"
             size="icon"
-            className="h-9 w-9"
+            className="h-8 w-8"
             onClick={toggleTheme}
           >
             <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -89,20 +87,20 @@ export const ClientHeader = () => {
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-9 w-9 relative">
+              <Button variant="ghost" size="icon" className="h-8 w-8 relative">
                 <Bell className="w-4 h-4" />
                 {notifications > 0 && (
                   <Badge 
                     variant="destructive" 
-                    className="absolute -top-1 -left-1 h-5 w-5 p-0 flex items-center justify-center text-xs animate-pulse"
+                    className="absolute -top-1 -left-1 h-4 w-4 p-0 flex items-center justify-center text-xs"
                   >
                     {notifications}
                   </Badge>
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80 font-tajawal">
-              <DropdownMenuLabel className="text-right">الإشعارات</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="w-72 bg-card border z-50">
+              <DropdownMenuLabel className="text-right text-sm font-medium">الإشعارات</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-right p-3">
                 <div className="flex flex-col gap-1 w-full">
@@ -122,17 +120,17 @@ export const ClientHeader = () => {
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                <Avatar className="h-9 w-9">
+              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                <Avatar className="h-8 w-8">
                   <AvatarImage src={user?.user_metadata?.avatar_url} alt="الصورة الشخصية" />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white text-sm">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                     {user?.user_metadata?.full_name ? user.user_metadata.full_name.charAt(0) : user?.email?.charAt(0)?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 font-tajawal" align="end" forceMount>
-              <DropdownMenuLabel className="font-normal p-3">
+            <DropdownMenuContent className="w-48 bg-card border z-50" align="end" forceMount>
+              <DropdownMenuLabel className="font-normal p-2">
                 <div className="flex flex-col space-y-1 text-right">
                   <p className="text-sm font-medium leading-none">
                     {user?.user_metadata?.full_name || 'عميل كريم'}
