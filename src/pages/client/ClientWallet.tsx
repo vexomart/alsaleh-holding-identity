@@ -234,6 +234,13 @@ export default function ClientWallet() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
+      console.log('Sending deposit request:', {
+        amount,
+        payment_method: paymentMethod === 'electronic_payment' ? 'tap_now' : paymentMethod,
+        description: `شحن المحفظة بمبلغ ${amount} ريال سعودي`,
+        receipt_file: receiptFile ? receiptFile.name : null
+      });
+
       const response = await supabase.functions.invoke('wallet-deposit', {
         body: {
           amount,
@@ -246,22 +253,39 @@ export default function ClientWallet() {
         }
       });
 
+      console.log('Response received:', response);
+
       if (response.error) {
+        console.error('Response error:', response.error);
         throw response.error;
       }
 
       const { data } = response;
+      console.log('Response data:', data);
       
       if (data?.success) {
         if (data.payment_url) {
+          console.log('Payment URL found:', data.payment_url);
+          console.log('Attempting to redirect...');
+          
           // Clear form first
           setDepositAmount('');
           setPaymentMethod('');
           setReceiptFile(null);
           setIsDepositOpen(false);
           
-          // Redirect directly to payment gateway
-          window.location.href = data.payment_url;
+          // Show loading message
+          toast({
+            title: "جاري التحويل إلى بوابة الدفع...",
+            description: "سيتم تحويلك لإكمال عملية الدفع",
+            variant: "default"
+          });
+          
+          // Add small delay then redirect
+          setTimeout(() => {
+            console.log('Redirecting to:', data.payment_url);
+            window.location.href = data.payment_url;
+          }, 1000);
         } else {
           // Payment was processed immediately (bank transfer)
           toast({
