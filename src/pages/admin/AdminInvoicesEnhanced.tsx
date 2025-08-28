@@ -391,6 +391,35 @@ const AdminInvoicesEnhanced = () => {
     }
   };
 
+  const handleDeleteInvoice = async (invoiceId: string) => {
+    if (!confirm('هل أنت متأكد من حذف هذه الفاتورة؟ لا يمكن التراجع عن هذا الإجراء.')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('invoices')
+        .delete()
+        .eq('id', invoiceId);
+
+      if (error) throw error;
+
+      setInvoices(prev => prev.filter(invoice => invoice.id !== invoiceId));
+      
+      toast({
+        title: "تم حذف الفاتورة",
+        description: "تم حذف الفاتورة بنجاح",
+      });
+    } catch (error: any) {
+      console.error('Error deleting invoice:', error);
+      toast({
+        title: "خطأ في حذف الفاتورة",
+        description: error.message || "حدث خطأ أثناء حذف الفاتورة",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'paid': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400';
@@ -802,6 +831,14 @@ const AdminInvoicesEnhanced = () => {
                 >
                   <MessageCircle className="w-4 h-4 ml-2" />
                   واتساب
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  size="sm" 
+                  onClick={() => handleDeleteInvoice(invoice.id)}
+                >
+                  <Trash2 className="w-4 h-4 ml-2" />
+                  حذف
                 </Button>
               </div>
             </ResponsiveCard>
