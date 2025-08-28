@@ -15,7 +15,21 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [referralCode, setReferralCode] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // تحقق من وجود كود إحالة في الرابط
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    
+    if (refCode) {
+      setReferralCode(refCode);
+      // حفظ كود الإحالة في localStorage لاستخدامه لاحقاً
+      localStorage.setItem('affiliate_referral_code', refCode);
+      toast.success('تم اكتشاف كود الإحالة! ستحصل على مزايا خاصة عند التسجيل');
+    }
+  }, []);
 
   // تحقق من تسجيل الدخول
   useEffect(() => {
@@ -28,8 +42,30 @@ const Auth = () => {
     checkAuth();
 
     // استمع لتغييرات المصادقة
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session && event === 'SIGNED_IN') {
+        // إذا كان هناك كود إحالة، معالجة الإحالة
+        const storedReferralCode = localStorage.getItem('affiliate_referral_code');
+        if (storedReferralCode) {
+          try {
+            const { error: affiliateError } = await supabase.functions.invoke('affiliate-referral', {
+              body: {
+                affiliateCode: storedReferralCode,
+                newUserId: session.user.id
+              }
+            });
+
+            if (affiliateError) {
+              console.error('Error processing affiliate referral:', affiliateError);
+            } else {
+              console.log('Affiliate referral processed successfully for new user');
+              toast.success('تم تسجيلك بنجاح عبر رابط الإحالة!');
+            }
+          } catch (err) {
+            console.error('Affiliate processing failed:', err);
+          }
+        }
+        
         navigate('/my-projects');
       }
     });
@@ -122,6 +158,16 @@ const Auth = () => {
             <CardDescription>
               سجل دخولك لمتابعة مشاريعك أو أنشئ حساب جديد
             </CardDescription>
+            {referralCode && (
+              <div className="mt-4 p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
+                <p className="text-sm text-green-700 dark:text-green-300">
+                  🎉 تم اكتشاف كود إحالة! ستحصل على مزايا خاصة عند التسجيل
+                </p>
+                <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                  كود الإحالة: {referralCode}
+                </p>
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="signin" className="w-full">

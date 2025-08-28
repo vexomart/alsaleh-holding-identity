@@ -136,6 +136,42 @@ export default function NewServiceRequest() {
       }
 
       console.log('تم إرسال وحفظ الطلب بنجاح:', data);
+
+      // إذا كان المستخدم مُحال من مسوق، إرسال معلومات العمولة
+      const referralCode = localStorage.getItem('affiliate_referral_code');
+      if (referralCode && data.serviceRequestId) {
+        try {
+          // تقدير قيمة الطلب بناءً على الميزانية
+          let estimatedValue = 0;
+          switch (formData.budget) {
+            case '5k-10k': estimatedValue = 7500; break;
+            case '10k-25k': estimatedValue = 17500; break;
+            case '25k-50k': estimatedValue = 37500; break;
+            case '50k-100k': estimatedValue = 75000; break;
+            case '100k+': estimatedValue = 150000; break;
+            default: estimatedValue = 10000;
+          }
+
+          const { error: affiliateError } = await supabase.functions.invoke('affiliate-referral', {
+            body: {
+              affiliateCode: referralCode,
+              newUserId: user.id,
+              orderValue: estimatedValue,
+              serviceRequestId: data.serviceRequestId
+            }
+          });
+
+          if (affiliateError) {
+            console.error('Error processing affiliate referral:', affiliateError);
+          } else {
+            console.log('Affiliate referral processed successfully');
+            // إزالة الكود من localStorage بعد الاستخدام
+            localStorage.removeItem('affiliate_referral_code');
+          }
+        } catch (affiliateErr) {
+          console.error('Affiliate processing failed:', affiliateErr);
+        }
+      }
       
       toast({
         title: "تم إرسال الطلب بنجاح",

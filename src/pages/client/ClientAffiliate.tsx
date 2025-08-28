@@ -72,49 +72,124 @@ const ClientAffiliate = () => {
 
   const fetchAffiliateData = async () => {
     try {
-      // Mock data for demonstration
-      const mockData: AffiliateData = {
-        affiliate_code: 'AFF2024001',
-        total_referrals: 12,
-        successful_referrals: 8,
-        total_earnings: 5200,
-        pending_earnings: 1500,
-        paid_earnings: 3700,
-        commission_rate: 10,
-        referral_link: 'https://tasaheel.sa/ref/AFF2024001',
-        current_level: 'ذهبي',
-        next_level_target: 10000
+      setLoading(true);
+      
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !user) {
+        toast({
+          title: "خطأ في المصادقة",
+          description: "يجب تسجيل الدخول أولاً",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // جلب بيانات برنامج التسويق بالعمولة
+      const { data: affiliateProgram, error: affiliateError } = await supabase
+        .from('affiliate_program')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (affiliateError) {
+        console.error('Error fetching affiliate program:', affiliateError);
+      }
+
+      // إنشاء برنامج تسويق إذا لم يكن موجوداً
+      let currentAffiliateProgram = affiliateProgram;
+      if (!affiliateProgram) {
+        // إنشاء كود التسويق
+        const affiliateCode = 'AFF' + Date.now().toString().slice(-6);
+        
+        const { data: newProgram, error: createError } = await supabase
+          .from('affiliate_program')
+          .insert({
+            user_id: user.id,
+            affiliate_code: affiliateCode,
+            commission_rate: 10.00,
+            level_name: 'برونزي',
+            level_threshold: 5
+          })
+          .select()
+          .single();
+
+        if (createError) {
+          console.error('Error creating affiliate program:', createError);
+          throw createError;
+        }
+        currentAffiliateProgram = newProgram;
+      }
+
+      // جلب الإحالات
+      const { data: referrals, error: referralsError } = await supabase
+        .from('affiliate_referrals')
+        .select('*')
+        .eq('affiliate_user_id', user.id);
+
+      if (referralsError) {
+        console.error('Error fetching referrals:', referralsError);
+      }
+
+      // جلب العمولات بطريقة مبسطة
+      const { data: commissions, error: commissionsError } = await supabase
+        .from('affiliate_commissions')
+        .select('*')
+        .eq('affiliate_user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (commissionsError) {
+        console.error('Error fetching commissions:', commissionsError);
+      }
+
+      // حساب الإحصائيات
+      const totalReferrals = referrals?.length || 0;
+      const successfulReferrals = commissions?.length || 0;
+      const totalEarnings = commissions?.reduce((sum, commission) => sum + Number(commission.commission_amount), 0) || 0;
+      const pendingEarnings = commissions?.filter(c => c.status === 'pending').reduce((sum, commission) => sum + Number(commission.commission_amount), 0) || 0;
+      const paidEarnings = commissions?.filter(c => c.status === 'paid').reduce((sum, commission) => sum + Number(commission.commission_amount), 0) || 0;
+
+      // تحديد المستوى التالي
+      const levelThresholds = {
+        'برونزي': { next: 'فضي', target: 5000 },
+        'فضي': { next: 'ذهبي', target: 15000 },
+        'ذهبي': { next: 'بلاتيني', target: 50000 },
+        'بلاتيني': { next: 'ماسي', target: 100000 },
+        'ماسي': { next: 'ماسي', target: 100000 }
       };
 
-      const mockTransactions: ReferralTransaction[] = [
-        {
-          id: '1',
-          referred_user: 'أحمد محمد العلي',
-          service_type: 'تطوير موقع إلكتروني',
-          commission_amount: 1500,
-          status: 'paid',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          referred_user: 'فاطمة سعد الزهراني',
-          service_type: 'تصميم هوية بصرية',
-          commission_amount: 800,
-          status: 'pending',
-          created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: '3',
-          referred_user: 'خالد أحمد المطيري',
-          service_type: 'تطوير تطبيق جوال',
-          commission_amount: 2500,
-          status: 'paid',
-          created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
-        }
-      ];
+      const currentLevel = currentAffiliateProgram?.level_name || 'برونزي';
+      const nextLevelTarget = levelThresholds[currentLevel as keyof typeof levelThresholds]?.target || 5000;
 
-      setAffiliateData(mockData);
-      setTransactions(mockTransactions);
+      // إنشاء رابط الإحالة الصحيح
+      const referralLink = `${window.location.origin}/auth?ref=${currentAffiliateProgram?.affiliate_code}`;
+
+      const fetchedData: AffiliateData = {
+        affiliate_code: currentAffiliateProgram?.affiliate_code || '',
+        total_referrals: totalReferrals,
+        successful_referrals: successfulReferrals,
+        total_earnings: totalEarnings,
+        pending_earnings: pendingEarnings,
+        paid_earnings: paidEarnings,
+        commission_rate: currentAffiliateProgram?.commission_rate || 10,
+        referral_link: referralLink,
+        current_level: currentLevel,
+        next_level_target: nextLevelTarget
+      };
+
+      // تحويل بيانات العمولات لعرضها - استخدام بيانات مؤقتة حتى يتم ربط الجداول
+      const transformedTransactions: ReferralTransaction[] = (commissions || []).slice(0, 5).map((commission, index) => ({
+        id: commission.id,
+        referred_user: `عميل ${index + 1}`,
+        service_type: 'خدمة رقمية',
+        commission_amount: Number(commission.commission_amount || 0),
+        status: commission.status || 'pending',
+        created_at: commission.created_at
+      }));
+
+      setAffiliateData(fetchedData);
+      setTransactions(transformedTransactions);
       setLoading(false);
     } catch (error: any) {
       console.error('Error fetching affiliate data:', error);
@@ -164,13 +239,24 @@ const ClientAffiliate = () => {
 
   const getLevelColor = (level: string) => {
     const colors = {
-      'برونزي': 'text-orange-600',
-      'فضي': 'text-gray-600',
-      'ذهبي': 'text-yellow-600',
-      'بلاتيني': 'text-purple-600',
-      'ماسي': 'text-blue-600'
+      'برونزي': 'text-orange-600 bg-orange-50',
+      'فضي': 'text-gray-600 bg-gray-50',
+      'ذهبي': 'text-yellow-600 bg-yellow-50',
+      'بلاتيني': 'text-purple-600 bg-purple-50',
+      'ماسي': 'text-blue-600 bg-blue-50'
     };
-    return colors[level as keyof typeof colors] || 'text-gray-600';
+    return colors[level as keyof typeof colors] || 'text-gray-600 bg-gray-50';
+  };
+
+  const getLevelBenefits = (level: string) => {
+    const benefits = {
+      'برونزي': ['عمولة 10%', 'دعم أساسي', 'تقارير شهرية'],
+      'فضي': ['عمولة 12%', 'دعم متقدم', 'تقارير أسبوعية', 'مواد تسويقية'],
+      'ذهبي': ['عمولة 15%', 'دعم مخصص', 'تقارير يومية', 'مواد تسويقية متقدمة'],
+      'بلاتيني': ['عمولة 18%', 'مدير حساب مخصص', 'تقارير فورية', 'عروض حصرية'],
+      'ماسي': ['عمولة 20%', 'دعم كامل', 'أولوية في كل شيء', 'شراكة استراتيجية']
+    };
+    return benefits[level as keyof typeof benefits] || benefits['برونزي'];
   };
 
   const successRate = affiliateData.total_referrals > 0 
@@ -249,15 +335,35 @@ const ClientAffiliate = () => {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <Button variant="outline" className="justify-start">
+            <Button 
+              variant="outline" 
+              className="justify-start"
+              onClick={() => window.open(`mailto:?subject=انضم إلى منصة تسهيل&body=انضم إلى منصة تسهيل واحصل على خدمات رقمية متميزة: ${affiliateData.referral_link}`, '_blank')}
+            >
               <Mail className="w-4 h-4 ml-2" />
               مشاركة عبر البريد الإلكتروني
             </Button>
-            <Button variant="outline" className="justify-start">
+            <Button 
+              variant="outline" 
+              className="justify-start"
+              onClick={() => window.open(`https://wa.me/?text=انضم إلى منصة تسهيل واحصل على خدمات رقمية متميزة ${affiliateData.referral_link}`, '_blank')}
+            >
               <MessageSquare className="w-4 h-4 ml-2" />
               مشاركة عبر واتساب
             </Button>
-            <Button variant="outline" className="justify-start">
+            <Button 
+              variant="outline" 
+              className="justify-start"
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: 'انضم إلى منصة تسهيل',
+                    text: 'احصل على خدمات رقمية متميزة',
+                    url: affiliateData.referral_link,
+                  });
+                }
+              }}
+            >
               <Globe className="w-4 h-4 ml-2" />
               مشاركة على وسائل التواصل
             </Button>
@@ -332,36 +438,62 @@ const ClientAffiliate = () => {
         </Card>
       </div>
 
-      {/* Level Progress */}
-      <Card className="border border-border/50 shadow-sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
-            التقدم نحو المستوى التالي
-          </CardTitle>
-          <CardDescription>
-            أكمل {affiliateData.next_level_target.toLocaleString()} ريال لتصل إلى المستوى التالي
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">التقدم الحالي</span>
-              <span className="text-sm font-bold">{progressToNextLevel}%</span>
+      {/* Level Progress & Benefits */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* التقدم نحو المستوى التالي */}
+        <Card className="border border-border/50 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5" />
+              التقدم نحو المستوى التالي
+            </CardTitle>
+            <CardDescription>
+              أكمل {affiliateData.next_level_target.toLocaleString()} ريال لتصل إلى المستوى التالي
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">التقدم الحالي</span>
+                <span className="text-sm font-bold">{progressToNextLevel}%</span>
+              </div>
+              <div className="w-full bg-muted rounded-full h-3">
+                <div 
+                  className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(parseFloat(progressToNextLevel), 100)}%` }}
+                ></div>
+              </div>
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>{affiliateData.total_earnings.toLocaleString()} ريال</span>
+                <span>{affiliateData.next_level_target.toLocaleString()} ريال</span>
+              </div>
             </div>
-            <div className="w-full bg-muted rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(parseFloat(progressToNextLevel), 100)}%` }}
-              ></div>
+          </CardContent>
+        </Card>
+
+        {/* مزايا المستوى الحالي */}
+        <Card className="border border-border/50 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Star className="w-5 h-5" />
+              مزايا مستوى {affiliateData.current_level}
+            </CardTitle>
+            <CardDescription>
+              استمتع بالمزايا الحصرية لمستواك الحالي
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {getLevelBenefits(affiliateData.current_level).map((benefit, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <span className="text-sm">{benefit}</span>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>{affiliateData.total_earnings.toLocaleString()} ريال</span>
-              <span>{affiliateData.next_level_target.toLocaleString()} ريال</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -396,54 +528,107 @@ const ClientAffiliate = () => {
         </Card>
       </div>
 
-      {/* Recent Transactions */}
-      <Card className="border border-border/50 shadow-sm">
-        <CardHeader>
-          <CardTitle>آخر المعاملات</CardTitle>
-          <CardDescription>
-            سجل بآخر عمولاتك من الإحالات الناجحة
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {transactions.map((transaction) => (
-              <div key={transaction.id} className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-green-100 rounded-full">
-                    <DollarSign className="w-5 h-5 text-green-600" />
+      {/* Recent Transactions & Referrals */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* آخر المعاملات */}
+        <Card className="border border-border/50 shadow-sm">
+          <CardHeader>
+            <CardTitle>آخر المعاملات</CardTitle>
+            <CardDescription>
+              سجل بآخر عمولاتك من الإحالات الناجحة
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {transactions.map((transaction) => (
+                <div key={transaction.id} className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="p-2 bg-green-100 rounded-full">
+                      <DollarSign className="w-5 h-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium">{transaction.referred_user}</p>
+                      <p className="text-sm text-muted-foreground">{transaction.service_type}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(transaction.created_at).toLocaleDateString('ar-SA')}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium">{transaction.referred_user}</p>
-                    <p className="text-sm text-muted-foreground">{transaction.service_type}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(transaction.created_at).toLocaleDateString('ar-SA')}
+                  <div className="text-left">
+                    <p className="text-lg font-bold text-green-600">
+                      +{transaction.commission_amount.toLocaleString()} ريال
+                    </p>
+                    <Badge className={`text-xs ${getStatusColor(transaction.status)}`}>
+                      {getStatusIcon(transaction.status)}
+                      <span className="mr-1">{getStatusText(transaction.status)}</span>
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {transactions.length === 0 && (
+              <div className="text-center py-12">
+                <DollarSign className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">لا توجد معاملات حتى الآن</h3>
+                <p className="text-muted-foreground">
+                  ابدأ بمشاركة رابط الإحالة لتحصل على أول عمولة
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* الإحالات الجديدة */}
+        <Card className="border border-border/50 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="w-5 h-5" />
+              الإحالات الحديثة
+            </CardTitle>
+            <CardDescription>
+              العملاء الجدد الذين انضموا عبر رابطك
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {affiliateData.total_referrals > 0 ? (
+                // عرض الإحالات الحديثة (يمكن تطويرها لاحقاً لجلب البيانات الفعلية)
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-green-100 dark:bg-green-900 rounded-full">
+                        <Users className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-green-800 dark:text-green-200">عميل جديد انضم!</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">منذ ساعتين</p>
+                      </div>
+                    </div>
+                    <Badge className="bg-green-100 text-green-800 border-green-200">
+                      جديد
+                    </Badge>
+                  </div>
+                  
+                  <div className="text-center p-6 text-muted-foreground">
+                    <p className="text-sm">
+                      إجمالي {affiliateData.total_referrals} إحالة مسجلة
                     </p>
                   </div>
                 </div>
-                <div className="text-left">
-                  <p className="text-lg font-bold text-green-600">
-                    +{transaction.commission_amount.toLocaleString()} ريال
+              ) : (
+                <div className="text-center py-12">
+                  <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">لا توجد إحالات بعد</h3>
+                  <p className="text-muted-foreground">
+                    شارك رابط الإحالة الخاص بك لتبدأ في كسب العمولات
                   </p>
-                  <Badge className={`text-xs ${getStatusColor(transaction.status)}`}>
-                    {getStatusIcon(transaction.status)}
-                    <span className="mr-1">{getStatusText(transaction.status)}</span>
-                  </Badge>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {transactions.length === 0 && (
-            <div className="text-center py-12">
-              <DollarSign className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">لا توجد معاملات حتى الآن</h3>
-              <p className="text-muted-foreground">
-                ابدأ بمشاركة رابط الإحالة لتحصل على أول عمولة
-              </p>
+              )}
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
