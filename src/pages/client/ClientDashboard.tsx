@@ -183,7 +183,7 @@ export default function ClientDashboard() {
       value: stats.totalProjects,
       icon: Package,
       description: `${stats.activeProjects} قيد التنفيذ`,
-      trend: '+12%',
+      trend: stats.totalProjects > 0 ? '+' + Math.round((stats.activeProjects / stats.totalProjects) * 100) + '%' : '0%',
       trendIcon: TrendingUp,
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-50 dark:bg-blue-950/30',
@@ -194,7 +194,7 @@ export default function ClientDashboard() {
       value: stats.completedProjects,
       icon: CheckCircle,
       description: 'من إجمالي المشاريع',
-      trend: '+8%',
+      trend: stats.totalProjects > 0 ? '+' + Math.round((stats.completedProjects / stats.totalProjects) * 100) + '%' : '0%',
       trendIcon: Target,
       color: 'from-green-500 to-green-600',
       bgColor: 'bg-green-50 dark:bg-green-950/30',
@@ -204,9 +204,9 @@ export default function ClientDashboard() {
       title: 'الفواتير المعلقة',
       value: stats.pendingInvoices,
       icon: FileText,
-      description: 'تحتاج للمراجعة',
-      trend: '-5%',
-      trendIcon: AlertCircle,
+      description: stats.pendingInvoices > 0 ? 'تحتاج للمراجعة' : 'لا توجد فواتير معلقة',
+      trend: stats.pendingInvoices > 0 ? 'معلق' : 'محدث',
+      trendIcon: stats.pendingInvoices > 0 ? AlertCircle : CheckCircle,
       color: 'from-orange-500 to-orange-600',
       bgColor: 'bg-orange-50 dark:bg-orange-950/30',
       borderColor: 'border-orange-200 dark:border-orange-800'
@@ -215,34 +215,12 @@ export default function ClientDashboard() {
       title: 'إجمالي الاستثمار',
       value: `${stats.totalSpent.toLocaleString()} ريال`,
       icon: DollarSign,
-      description: 'هذا الشهر',
-      trend: '+15%',
-      trendIcon: BarChart3,
+      description: 'إجمالي المدفوعات',
+      trend: stats.totalSpent > 0 ? 'نشط' : 'لا توجد مدفوعات',
+      trendIcon: stats.totalSpent > 0 ? BarChart3 : DollarSign,
       color: 'from-purple-500 to-purple-600',
       bgColor: 'bg-purple-50 dark:bg-purple-950/30',
       borderColor: 'border-purple-200 dark:border-purple-800'
-    },
-    {
-      title: 'المحفظة الإلكترونية',
-      value: '2,500 ريال',
-      icon: Wallet,
-      description: 'الرصيد المتاح',
-      trend: '+3%',
-      trendIcon: Activity,
-      color: 'from-indigo-500 to-indigo-600',
-      bgColor: 'bg-indigo-50 dark:bg-indigo-950/30',
-      borderColor: 'border-indigo-200 dark:border-indigo-800'
-    },
-    {
-      title: 'نقاط المكافآت',
-      value: '1,850 نقطة',
-      icon: Gift,
-      description: 'قابلة للاستبدال',
-      trend: '+22%',
-      trendIcon: Star,
-      color: 'from-pink-500 to-pink-600',
-      bgColor: 'bg-pink-50 dark:bg-pink-950/30',
-      borderColor: 'border-pink-200 dark:border-pink-800'
     }
   ];
 
@@ -332,8 +310,10 @@ export default function ClientDashboard() {
                     <div className="text-xs lg:text-sm text-muted-foreground font-medium">إجمالي الاستثمار</div>
                   </div>
                   <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 p-3 lg:p-4 rounded-2xl border border-secondary/20 backdrop-blur-sm">
-                    <div className="text-xl lg:text-2xl xl:text-3xl font-bold text-secondary mb-1">98%</div>
-                    <div className="text-xs lg:text-sm text-muted-foreground font-medium">تقييم الأداء</div>
+                    <div className="text-xl lg:text-2xl xl:text-3xl font-bold text-secondary mb-1">
+                      {stats.totalProjects > 0 ? Math.round((stats.completedProjects / stats.totalProjects) * 100) : 0}%
+                    </div>
+                    <div className="text-xs lg:text-sm text-muted-foreground font-medium">معدل الإنجاز</div>
                   </div>
                 </div>
               </div>
@@ -393,8 +373,16 @@ export default function ClientDashboard() {
                 
                 <div className="flex items-center justify-between mb-3 lg:mb-4">
                   <div className="flex items-center gap-1 lg:gap-2">
-                    <card.trendIcon className="w-3 lg:w-4 h-3 lg:h-4 text-success" />
-                    <span className="text-xs lg:text-sm font-bold text-success">{card.trend}</span>
+                    <card.trendIcon className={`w-3 lg:w-4 h-3 lg:h-4 ${
+                      card.trend.includes('+') ? 'text-success' : 
+                      card.trend.includes('-') ? 'text-destructive' : 
+                      'text-muted-foreground'
+                    }`} />
+                    <span className={`text-xs lg:text-sm font-bold ${
+                      card.trend.includes('+') ? 'text-success' : 
+                      card.trend.includes('-') ? 'text-destructive' : 
+                      'text-muted-foreground'
+                    }`}>{card.trend}</span>
                   </div>
                   <span className="text-xs lg:text-sm text-muted-foreground">{card.description}</span>
                 </div>
@@ -402,7 +390,15 @@ export default function ClientDashboard() {
                 <div className="h-1 lg:h-2 bg-muted/50 rounded-full overflow-hidden">
                   <div 
                     className={`h-full bg-gradient-to-r ${card.color} rounded-full transition-all duration-1000 group-hover:animate-pulse`}
-                    style={{ width: `${Math.min(Math.random() * 100 + 30, 100)}%` }}
+                    style={{ 
+                      width: `${
+                        card.title === 'إجمالي المشاريع' ? Math.min((stats.totalProjects / 10) * 100, 100) :
+                        card.title === 'المشاريع المكتملة' ? Math.min((stats.completedProjects / stats.totalProjects) * 100 || 0, 100) :
+                        card.title === 'الفواتير المعلقة' ? Math.min((stats.pendingInvoices / 5) * 100, 100) :
+                        card.title === 'إجمالي الاستثمار' ? Math.min((stats.totalSpent / 100000) * 100, 100) :
+                        0
+                      }%`
+                    }}
                   ></div>
                 </div>
               </CardContent>
