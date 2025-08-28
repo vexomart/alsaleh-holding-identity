@@ -5,8 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { ProjectTimeline } from '@/components/client/ProjectTimeline';
 import { 
   Package, 
   Search, 
@@ -19,7 +22,10 @@ import {
   AlertCircle,
   Eye,
   MessageSquare,
-  FileText
+  FileText,
+  BarChart3,
+  Activity,
+  Target
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
@@ -45,6 +51,8 @@ export default function ClientProjects() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -288,7 +296,15 @@ export default function ClientProjects() {
                 )}
 
                 <div className="flex gap-2 pt-4 border-t">
-                  <Button size="sm" variant="outline" className="flex-1">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => {
+                      setSelectedProject(project);
+                      setIsDetailDialogOpen(true);
+                    }}
+                  >
                     <Eye className="w-4 h-4 mr-2" />
                     عرض التفاصيل
                   </Button>
@@ -324,6 +340,133 @@ export default function ClientProjects() {
           </CardContent>
         </Card>
       )}
+
+      {/* Project Details Dialog */}
+      <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              تفاصيل المشروع: {selectedProject?.project_number}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedProject && (
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
+                <TabsTrigger value="timeline">التقدم</TabsTrigger>
+                <TabsTrigger value="communication">التواصل</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="overview" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Target className="w-5 h-5" />
+                        معلومات المشروع
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">الوصف</label>
+                        <p className="text-sm">{selectedProject.description}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">نوع الخدمة</label>
+                        <p className="text-sm">{selectedProject.service_type || 'غير محدد'}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">الحالة</label>
+                        <Badge className={getStatusColor(selectedProject.status)}>
+                          {getStatusText(selectedProject.status)}
+                        </Badge>
+                      </div>
+                      {selectedProject.priority && (
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">الأولوية</label>
+                          <Badge variant="outline" className={getPriorityColor(selectedProject.priority)}>
+                            {getPriorityText(selectedProject.priority)}
+                          </Badge>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <BarChart3 className="w-5 h-5" />
+                        تفاصيل التنفيذ
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">تاريخ البدء</label>
+                        <p className="text-sm">{new Date(selectedProject.start_date).toLocaleDateString('ar-SA')}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">تاريخ التسليم المتوقع</label>
+                        <p className="text-sm">{new Date(selectedProject.due_date).toLocaleDateString('ar-SA')}</p>
+                      </div>
+                      {selectedProject.budget && (
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">الميزانية</label>
+                          <p className="text-sm">{selectedProject.budget.toLocaleString()} ريال</p>
+                        </div>
+                      )}
+                      {selectedProject.assigned_manager && (
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">مدير المشروع</label>
+                          <p className="text-sm">{selectedProject.assigned_manager}</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {selectedProject.progress_percentage !== undefined && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Activity className="w-5 h-5" />
+                        نسبة الإنجاز
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>التقدم الحالي</span>
+                          <span className="font-medium">{selectedProject.progress_percentage}%</span>
+                        </div>
+                        <Progress value={selectedProject.progress_percentage} className="h-3" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="timeline">
+                <ProjectTimeline projectId={selectedProject.id} />
+              </TabsContent>
+              
+              <TabsContent value="communication">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>رسائل المشروع</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center py-8 text-muted-foreground">
+                      <MessageSquare className="w-12 h-12 mx-auto mb-4" />
+                      <p>لا توجد رسائل حتى الآن</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

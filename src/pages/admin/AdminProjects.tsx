@@ -5,14 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Plus, Search, Calendar, Clock, TrendingUp, BarChart3, Filter, SortAsc } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Plus, Search, Calendar, Clock, TrendingUp, BarChart3, Filter, SortAsc, Edit2, Trash2, Eye, User } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
 import { useCustomerNotifications } from '@/hooks/useCustomerNotifications';
 import { ProjectForm } from '@/components/admin/ProjectForm';
-import { ProjectCard } from '@/components/admin/ProjectCard';
 
 interface Project {
   id: string;
@@ -443,28 +444,106 @@ const AdminProjects = () => {
       ) : (
         <ResponsiveGrid cols="1-2-3" gap="lg" className="animate-fade-in">
           {sortedAndFilteredProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              clients={clients}
-              onEdit={openEditDialog}
-              onDelete={openDeleteDialog}
-              getStatusColor={getStatusColor}
-              getStatusText={getStatusText}
-            />
+            <ResponsiveCard key={project.id} className="hover-scale">
+              <div className="p-6 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="font-semibold text-lg text-foreground">
+                        {project.name}
+                      </h3>
+                      <Badge variant="outline" className="text-xs">
+                        {project.project_number}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {project.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Badge className={getStatusColor(project.status || '')}>
+                    {getStatusText(project.status || '')}
+                  </Badge>
+                  {project.project_type && (
+                    <Badge variant="outline">
+                      {project.project_type}
+                    </Badge>
+                  )}
+                </div>
+
+                {project.progress_percentage !== undefined && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>التقدم</span>
+                      <span>{project.progress_percentage}%</span>
+                    </div>
+                    <Progress value={project.progress_percentage} className="h-2" />
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+                  {project.start_date && (
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      <span>{new Date(project.start_date).toLocaleDateString('ar-SA')}</span>
+                    </div>
+                  )}
+                  {project.budget && (
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      <span>{project.budget.toLocaleString()} {project.currency || 'ريال'}</span>
+                    </div>
+                  )}
+                </div>
+
+                {project.user_id && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <User className="w-4 h-4" />
+                    <span>العميل: {clients.find(c => c.user_id === project.user_id)?.full_name || 'غير محدد'}</span>
+                  </div>
+                )}
+
+                <div className="flex gap-2 pt-4 border-t">
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => openEditDialog(project)}>
+                    <Edit2 className="w-4 h-4 mr-2" />
+                    تعديل
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => {}}>
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => openDeleteDialog(project)}>
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </ResponsiveCard>
           ))}
         </ResponsiveGrid>
       )}
 
       {/* Project Form Dialog */}
-      <ProjectForm
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        onSubmit={formMode === 'create' ? handleCreateProject : handleUpdateProject}
-        initialData={selectedProject}
-        clients={clients}
-        mode={formMode}
-      />
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {formMode === 'create' ? 'إنشاء مشروع جديد' : 'تعديل المشروع'}
+            </DialogTitle>
+          </DialogHeader>
+          <ProjectForm
+            mode={formMode}
+            initialData={selectedProject}
+            clients={clients}
+            isOpen={isFormOpen}
+            onClose={() => {
+              setIsFormOpen(false);
+              setSelectedProject(null);
+            }}
+            onSubmit={formMode === 'create' ? handleCreateProject : handleUpdateProject}
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
