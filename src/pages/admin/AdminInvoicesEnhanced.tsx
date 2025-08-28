@@ -169,7 +169,8 @@ const AdminInvoicesEnhanced = () => {
           client_id: newInvoice.client_id || null,
           status: 'pending',
           payment_status: 'pending',
-          user_id: (await supabase.auth.getUser()).data.user?.id
+          user_id: (await supabase.auth.getUser()).data.user?.id,
+          invoice_number: '' // سيتم توليدها تلقائياً
         })
         .select()
         .single();
