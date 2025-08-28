@@ -163,7 +163,7 @@ const ClientAffiliate = () => {
       const nextLevelTarget = levelThresholds[currentLevel as keyof typeof levelThresholds]?.target || 5000;
 
       // إنشاء رابط الإحالة الصحيح
-      const referralLink = `${window.location.origin}/auth?ref=${currentAffiliateProgram?.affiliate_code}`;
+      const referralLink = `https://alialshehriholding.com/auth?ref=${currentAffiliateProgram?.affiliate_code}`;
 
       const fetchedData: AffiliateData = {
         affiliate_code: currentAffiliateProgram?.affiliate_code || '',
