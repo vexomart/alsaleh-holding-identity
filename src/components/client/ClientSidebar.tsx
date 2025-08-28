@@ -23,6 +23,8 @@ import {
   Clock,
   Receipt,
   Wallet,
+  Bell,
+  Newspaper,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -57,7 +59,8 @@ const menuItems = [
     groupLabelAr: 'التواصل والدعم',
     items: [
       { title: 'الرسائل', titleEn: 'Messages', url: '/client/messages', icon: MessageSquare },
-      { title: 'التنبيهات', titleEn: 'Notifications', url: '/client/notifications', icon: MessageSquare },
+      { title: 'الإشعارات', titleEn: 'Notifications', url: '/client/notifications', icon: Bell },
+      { title: 'التحديثات', titleEn: 'Updates', url: '/client/updates', icon: Newspaper },
       { title: 'تذاكر الدعم', titleEn: 'Support Tickets', url: '/client/support-tickets', icon: MessageSquare },
     ]
   },

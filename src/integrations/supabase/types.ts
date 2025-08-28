@@ -3156,6 +3156,83 @@ export type Database = {
         }
         Relationships: []
       }
+      update_reads: {
+        Row: {
+          id: string
+          read_at: string
+          update_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          read_at?: string
+          update_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          read_at?: string
+          update_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "update_reads_update_id_fkey"
+            columns: ["update_id"]
+            isOneToOne: false
+            referencedRelation: "updates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      updates: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          email_sent: boolean
+          id: string
+          is_published: boolean
+          priority: string
+          publish_date: string | null
+          target_audience: string
+          target_client_id: string | null
+          title: string
+          update_type: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          email_sent?: boolean
+          id?: string
+          is_published?: boolean
+          priority?: string
+          publish_date?: string | null
+          target_audience?: string
+          target_client_id?: string | null
+          title: string
+          update_type?: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          email_sent?: boolean
+          id?: string
+          is_published?: boolean
+          priority?: string
+          publish_date?: string | null
+          target_audience?: string
+          target_client_id?: string | null
+          title?: string
+          update_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_activity_logs: {
         Row: {
           activity_type: string

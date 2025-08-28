@@ -138,11 +138,13 @@ const MyProjects = lazy(() => import("./pages/MyProjects"));
 const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
+const AdminUpdates = lazy(() => import("./pages/admin/AdminUpdates"));
 const AdminWallet = lazy(() => import("./pages/admin/AdminWallet"));
 const AdminAffiliate = lazy(() => import("./pages/admin/AdminAffiliate"));
 const ClientOrders = lazy(() => import("./pages/client/ClientOrders"));
 const ClientAffiliate = lazy(() => import("./pages/client/ClientAffiliate"));
 const ClientNotifications = lazy(() => import("./pages/client/ClientNotifications"));
+const ClientUpdates = lazy(() => import("./pages/client/ClientUpdates"));
 
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
@@ -362,6 +364,7 @@ const App = () => {
                   <Route path="notifications" element={<AdminNotifications />} />
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="orders" element={<AdminOrders />} />
+                  <Route path="updates" element={<AdminUpdates />} />
                   <Route path="wallet" element={<AdminWallet />} />
                   <Route path="affiliate" element={<AdminAffiliate />} />
                 </Route>
@@ -471,6 +474,7 @@ const App = () => {
                   <Route path="orders" element={<Suspense fallback={<PageLoader />}><ClientOrders /></Suspense>} />
                   <Route path="affiliate" element={<Suspense fallback={<PageLoader />}><ClientAffiliate /></Suspense>} />
                   <Route path="notifications" element={<Suspense fallback={<PageLoader />}><ClientNotifications /></Suspense>} />
+                  <Route path="updates" element={<Suspense fallback={<PageLoader />}><ClientUpdates /></Suspense>} />
                 </Route>
           
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
