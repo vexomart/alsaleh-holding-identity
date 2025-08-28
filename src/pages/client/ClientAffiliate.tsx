@@ -269,12 +269,17 @@ const ClientAffiliate = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6 space-y-8">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-muted rounded w-64"></div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-32 bg-muted rounded-xl"></div>
+          <div className="h-6 bg-muted rounded w-48 mx-auto"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 bg-muted rounded-lg"></div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {[1, 2].map((i) => (
+              <div key={i} className="h-32 bg-muted rounded-lg"></div>
             ))}
           </div>
         </div>
@@ -283,77 +288,82 @@ const ClientAffiliate = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8" dir="rtl">
+    <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6" dir="rtl" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
       {/* Header */}
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-3">
         <div className="flex items-center justify-center gap-3">
-          <div className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-full">
-            <Users className="w-8 h-8 text-white" />
+          <div className="p-2.5 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg">
+            <Users className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">التسويق بالعمولة</h1>
-            <p className="text-muted-foreground">اربح من خلال إحالة العملاء الجدد</p>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">التسويق بالعمولة</h1>
+            <p className="text-sm text-muted-foreground">اربح من خلال إحالة العملاء الجدد</p>
           </div>
         </div>
         
-        <div className="flex items-center justify-center gap-3">
-          <Badge className={`px-4 py-2 text-lg ${getLevelColor(affiliateData.current_level)} bg-muted`}>
-            <Award className="w-5 h-5 ml-2" />
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <Badge className={`px-3 py-1.5 text-sm ${getLevelColor(affiliateData.current_level)} bg-muted border shadow-sm`}>
+            <Award className="w-4 h-4 ml-1.5" />
             مستوى {affiliateData.current_level}
           </Badge>
-          <Badge variant="outline" className="px-4 py-2">
+          <Badge variant="outline" className="px-3 py-1.5 text-xs">
             كود المسوق: {affiliateData.affiliate_code}
           </Badge>
         </div>
       </div>
 
       {/* Referral Link Card */}
-      <Card className="border border-border/50 shadow-sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Link className="w-5 h-5" />
+      <Card className="border border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg font-medium">
+            <Link className="w-4 h-4" />
             رابط الإحالة الخاص بك
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm">
             شارك هذا الرابط مع الأصدقاء واحصل على عمولة من كل عميل جديد
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex gap-2">
+        <CardContent className="space-y-4">
+          <div className="flex gap-2 flex-col sm:flex-row">
             <Input 
               value={affiliateData.referral_link} 
               readOnly 
-              className="flex-1 font-mono text-sm"
+              className="flex-1 font-mono text-xs sm:text-sm bg-muted/50 border-muted"
             />
-            <Button onClick={copyReferralLink} variant="outline">
-              <Copy className="w-4 h-4 ml-2" />
-              نسخ
-            </Button>
-            <Button variant="outline">
-              <Share className="w-4 h-4 ml-2" />
-              مشاركة
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={copyReferralLink} variant="outline" size="sm" className="text-xs">
+                <Copy className="w-3 h-3 ml-1" />
+                نسخ
+              </Button>
+              <Button variant="outline" size="sm" className="text-xs">
+                <Share className="w-3 h-3 ml-1" />
+                مشاركة
+              </Button>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <Button 
               variant="outline" 
-              className="justify-start"
+              size="sm"
+              className="justify-start text-xs h-9"
               onClick={() => window.open(`mailto:?subject=انضم إلى شركة علي صالح الشهري القابضة&body=انضم إلى شركة علي صالح الشهري القابضة واحصل على خدمات رقمية متميزة: ${affiliateData.referral_link}`, '_blank')}
             >
-              <Mail className="w-4 h-4 ml-2" />
-              مشاركة عبر البريد الإلكتروني
+              <Mail className="w-3 h-3 ml-1.5" />
+              البريد الإلكتروني
             </Button>
             <Button 
               variant="outline" 
-              className="justify-start"
+              size="sm"
+              className="justify-start text-xs h-9"
               onClick={() => window.open(`https://wa.me/?text=انضم إلى شركة علي صالح الشهري القابضة واحصل على خدمات رقمية متميزة ${affiliateData.referral_link}`, '_blank')}
             >
-              <MessageSquare className="w-4 h-4 ml-2" />
-              مشاركة عبر واتساب
+              <MessageSquare className="w-3 h-3 ml-1.5" />
+              واتساب
             </Button>
             <Button 
               variant="outline" 
-              className="justify-start"
+              size="sm"
+              className="justify-start text-xs h-9 sm:col-span-2 lg:col-span-1"
               onClick={() => {
                 if (navigator.share) {
                   navigator.share({
@@ -364,74 +374,74 @@ const ClientAffiliate = () => {
                 }
               }}
             >
-              <Globe className="w-4 h-4 ml-2" />
-              مشاركة على وسائل التواصل
+              <Globe className="w-3 h-3 ml-1.5" />
+              وسائل التواصل
             </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="border border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">إجمالي الإحالات</p>
-                <p className="text-2xl font-bold">{affiliateData.total_referrals}</p>
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-muted-foreground">إجمالي الإحالات</p>
+                <p className="text-xl font-semibold">{affiliateData.total_referrals}</p>
                 <p className="text-xs text-green-600 font-medium">{affiliateData.successful_referrals} ناجحة</p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="p-2.5 bg-blue-50 rounded-lg">
+                <Users className="w-5 h-5 text-blue-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
+        <Card className="border border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">معدل النجاح</p>
-                <p className="text-2xl font-bold text-green-600">{successRate}%</p>
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-muted-foreground">معدل النجاح</p>
+                <p className="text-xl font-semibold text-green-600">{successRate}%</p>
                 <p className="text-xs text-muted-foreground">من الإحالات</p>
               </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <Target className="w-6 h-6 text-green-600" />
+              <div className="p-2.5 bg-green-50 rounded-lg">
+                <Target className="w-5 h-5 text-green-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
+        <Card className="border border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">إجمالي الأرباح</p>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-muted-foreground">إجمالي الأرباح</p>
+                <p className="text-xl font-semibold text-green-600">
                   {affiliateData.total_earnings.toLocaleString()} ريال
                 </p>
                 <p className="text-xs text-muted-foreground">نسبة العمولة {affiliateData.commission_rate}%</p>
               </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <DollarSign className="w-6 h-6 text-green-600" />
+              <div className="p-2.5 bg-green-50 rounded-lg">
+                <DollarSign className="w-5 h-5 text-green-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
+        <Card className="border border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">أرباح معلقة</p>
-                <p className="text-2xl font-bold text-orange-600">
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-muted-foreground">أرباح معلقة</p>
+                <p className="text-xl font-semibold text-orange-600">
                   {affiliateData.pending_earnings.toLocaleString()} ريال
                 </p>
                 <p className="text-xs text-muted-foreground">في انتظار الصرف</p>
               </div>
-              <div className="p-3 bg-orange-100 rounded-full">
-                <Clock className="w-6 h-6 text-orange-600" />
+              <div className="p-2.5 bg-orange-50 rounded-lg">
+                <Clock className="w-5 h-5 text-orange-600" />
               </div>
             </div>
           </CardContent>
@@ -439,7 +449,7 @@ const ClientAffiliate = () => {
       </div>
 
       {/* Level Progress & Benefits */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* التقدم نحو المستوى التالي */}
         <Card className="border border-border/50 shadow-sm">
           <CardHeader>
