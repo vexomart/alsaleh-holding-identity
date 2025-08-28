@@ -77,7 +77,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailResponse = await resend.emails.send({
-      from: "محفظة آل صالح الرقمية <noreply@alsaleh-holding.com>",
+      from: "محفظة الشهري الرقمية <noreply@alsaleh-holding.com>",
       to: [customer_email],
       bcc: ["admin@alsaleh-holding.com"],
       subject: subject,
@@ -192,7 +192,7 @@ function getDepositTemplate(customerName: string, data: any): string {
             </div>
 
             <div class="footer">
-                <p><strong>شركة آل صالح القابضة</strong></p>
+                <p><strong>شركة علي صالح محمد الشهري</strong></p>
                 <p>المحفظة الرقمية الآمنة | دعم العملاء: support@alsaleh-holding.com</p>
                 <p>هذا الإيميل تلقائي، يرجى عدم الرد عليه</p>
             </div>
@@ -289,7 +289,7 @@ function getWithdrawalTemplate(customerName: string, data: any): string {
             </div>
 
             <div class="footer">
-                <p><strong>شركة آل صالح القابضة</strong></p>
+                <p><strong>شركة علي صالح محمد الشهري</strong></p>
                 <p>المحفظة الرقمية الآمنة | دعم العملاء: support@alsaleh-holding.com</p>
                 <p>هذا الإيميل تلقائي، يرجى عدم الرد عليه</p>
             </div>
@@ -354,7 +354,7 @@ function getVerificationTemplate(customerName: string, data: any): string {
             </div>
 
             <div class="footer">
-                <p><strong>شركة آل صالح القابضة</strong></p>
+                <p><strong>شركة علي صالح محمد الشهري</strong></p>
                 <p>المحفظة الرقمية الآمنة | دعم العملاء: support@alsaleh-holding.com</p>
                 <p>خط الطوارئ الأمني: 966123456789</p>
             </div>
@@ -408,7 +408,7 @@ function getLowBalanceTemplate(customerName: string, data: any): string {
             </div>
 
             <div class="footer">
-                <p><strong>شركة آل صالح القابضة</strong></p>
+                <p><strong>شركة علي صالح محمد الشهري</strong></p>
                 <p>المحفظة الرقمية الآمنة | دعم العملاء: support@alsaleh-holding.com</p>
             </div>
         </div>
@@ -483,7 +483,7 @@ function getSecurityAlertTemplate(customerName: string, data: any): string {
             </div>
 
             <div class="footer">
-                <p><strong>شركة آل صالح القابضة - فريق الأمان</strong></p>
+                <p><strong>شركة علي صالح محمد الشهري - فريق الأمان</strong></p>
                 <p>خط الطوارئ الأمني: 966123456789</p>
                 <p>البريد الإلكتروني: security@alsaleh-holding.com</p>
             </div>

@@ -65,9 +65,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال الإيميل
     const emailResponse = await resend.emails.send({
-      from: "شركة الصالح القابضة <invoices@alialshehriholding.com>",
+      from: "شركة علي صالح الشهري القابضة <invoices@alialshehriholding.com>",
       to: [invoice.customer_email],
-      subject: `فاتورة رقم ${invoice.invoice_number} - شركة الصالح القابضة`,
+      subject: `فاتورة رقم ${invoice.invoice_number} - شركة علي صالح الشهري القابضة`,
       html: emailTemplate,
     });
 
@@ -242,7 +242,7 @@ function createInvoiceEmailTemplate(invoice: any): string {
       <div class="container">
         <div class="header">
           <h1>🧾 فاتورة جديدة</h1>
-          <p>شركة علي صالح الشهري القابضة</p>
+          <p>شركة علي صالح محمد الشهري</p>
         </div>
         
         <div class="content">
@@ -314,7 +314,7 @@ function createInvoiceEmailTemplate(invoice: any): string {
         </div>
         
         <div class="footer">
-          <p><strong>شركة علي صالح الشهري القابضة</strong></p>
+          <p><strong>شركة علي صالح محمد الشهري</strong></p>
           <p>المملكة العربية السعودية | الرياض</p>
           <p>© 2024 جميع الحقوق محفوظة</p>
         </div>

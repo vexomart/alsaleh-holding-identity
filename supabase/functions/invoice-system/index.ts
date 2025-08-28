@@ -118,7 +118,7 @@ const handler = async (req: Request): Promise<Response> => {
       console.log('Email subject:', emailSubject);
       
       const emailResult = await resend.emails.send({
-        from: "نظام الفواتير <info@alialshehriholding.com>",
+        from: "نظام الفواتير - شركة علي صالح محمد الشهري <info@alialshehriholding.com>",
         to: [invoice.customer_email],
         bcc: ["info@alialshehriholding.com"],
         reply_to: "info@alialshehriholding.com",
@@ -284,7 +284,7 @@ function generatePaidInvoiceEmail(invoice: any): string {
             </div>
             
             <div class="footer">
-                <p>شركة علي صالح الشهري القابضة</p>
+                <p>شركة علي صالح محمد الشهري</p>
                 <p>للاستفسارات: info@alialshehriholding.com | 0555812567</p>
             </div>
         </div>
@@ -411,7 +411,7 @@ function generateUnpaidInvoiceEmail(invoice: any): string {
             </div>
             
             <div class="footer">
-                <p>شركة علي صالح الشهري القابضة</p>
+                <p>شركة علي صالح محمد الشهري</p>
                 <p>للاستفسارات: info@alialshehriholding.com | 0555812567</p>
             </div>
         </div>
@@ -543,7 +543,7 @@ function generatePendingInvoiceEmail(invoice: any): string {
             </div>
             
             <div class="footer">
-                <p>شركة علي صالح الشهري القابضة</p>
+                <p>شركة علي صالح محمد الشهري</p>
                 <p>للاستفسارات: info@alialshehriholding.com | 0555812567</p>
             </div>
         </div>
