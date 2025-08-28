@@ -193,70 +193,110 @@ export default function NewServiceRequest() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Service Type Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              نوع الخدمة المطلوبة
-            </CardTitle>
-            <CardDescription>اختر نوع الخدمة التي تحتاجها</CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {serviceTypes.map(service => (
-              <div
-                key={service.id}
-                className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                  formData.serviceType === service.id
-                    ? 'border-primary bg-primary/5'
-                    : 'border-muted hover:border-primary/50'
-                }`}
-                onClick={() => handleInputChange('serviceType', service.id)}
-              >
-                <h4 className="font-medium text-foreground mb-1">{service.label}</h4>
-                <p className="text-sm text-muted-foreground">{service.description}</p>
+        <Card className="bg-gradient-to-br from-background to-muted/20 border-l-4 border-l-primary">
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <FileText className="w-5 h-5 text-primary" />
               </div>
-            ))}
+              <div>
+                <CardTitle className="text-lg">نوع الخدمة المطلوبة</CardTitle>
+                <CardDescription>اختر نوع الخدمة التي تحتاجها من الخيارات المتاحة</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {serviceTypes.map(service => (
+                <div
+                  key={service.id}
+                  className={`group relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                    formData.serviceType === service.id
+                      ? 'border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-md'
+                      : 'border-muted hover:border-primary/50 hover:bg-muted/30'
+                  }`}
+                  onClick={() => handleInputChange('serviceType', service.id)}
+                >
+                  {formData.serviceType === service.id && (
+                    <div className="absolute top-2 right-2">
+                      <CheckCircle className="w-5 h-5 text-primary" />
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                      {service.label}
+                    </h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
         {/* Project Details */}
-        <Card>
-          <CardHeader>
-            <CardTitle>تفاصيل المشروع</CardTitle>
-            <CardDescription>وصف مفصل للخدمة المطلوبة</CardDescription>
+        <Card className="bg-gradient-to-br from-background to-muted/20 border-l-4 border-l-secondary">
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-secondary/10 rounded-lg">
+                <FileText className="w-5 h-5 text-secondary" />
+              </div>
+              <div>
+                <CardTitle className="text-lg">تفاصيل المشروع</CardTitle>
+                <CardDescription>وصف شامل ومفصل للخدمة المطلوبة وأهدافها</CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">عنوان المشروع *</Label>
+          <CardContent className="space-y-6">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-secondary" />
+                <Label htmlFor="title" className="font-medium">عنوان المشروع *</Label>
+              </div>
               <Input
                 id="title"
-                placeholder="أدخل عنواناً واضحاً للمشروع"
+                placeholder="أدخل عنواناً واضحاً ومميزاً للمشروع"
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 required
+                className="h-12 border-2 hover:border-secondary/50 focus:border-secondary transition-colors"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">وصف المشروع *</Label>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-secondary" />
+                <Label htmlFor="description" className="font-medium">وصف المشروع التفصيلي *</Label>
+              </div>
               <Textarea
                 id="description"
-                placeholder="اشرح تفاصيل المشروع والأهداف المرجوة منه"
+                placeholder="اشرح بالتفصيل أهداف المشروع، الجمهور المستهدف، والنتائج المرجوة منه..."
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
-                rows={4}
+                rows={5}
                 required
+                className="border-2 hover:border-secondary/50 focus:border-secondary transition-colors resize-none"
               />
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Info className="w-3 h-3" />
+                كلما كان الوصف أكثر تفصيلاً، كان العرض أكثر دقة
+              </p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="requirements">المتطلبات التقنية</Label>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-secondary" />
+                <Label htmlFor="requirements" className="font-medium">المتطلبات التقنية والميزات الخاصة</Label>
+              </div>
               <Textarea
                 id="requirements"
-                placeholder="اذكر أي متطلبات تقنية خاصة أو ميزات محددة تريدها"
+                placeholder="حدد المتطلبات التقنية، التقنيات المفضلة، التكاملات المطلوبة، أو أي ميزات خاصة تريدها في المشروع..."
                 value={formData.requirements}
                 onChange={(e) => handleInputChange('requirements', e.target.value)}
-                rows={3}
+                rows={4}
+                className="border-2 hover:border-secondary/50 focus:border-secondary transition-colors resize-none"
               />
             </div>
           </CardContent>
@@ -442,58 +482,147 @@ export default function NewServiceRequest() {
         </Card>
 
         {/* Additional Services */}
-        <Card>
-          <CardHeader>
-            <CardTitle>خدمات إضافية</CardTitle>
-            <CardDescription>اختر الخدمات الإضافية التي تحتاجها</CardDescription>
+        <Card className="bg-gradient-to-br from-background to-muted/20 border-l-4 border-l-accent">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-accent/10 rounded-lg">
+                  <Zap className="w-5 h-5 text-accent" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">خدمات إضافية</CardTitle>
+                  <CardDescription>اختر الخدمات التكميلية لتعزيز مشروعك</CardDescription>
+                </div>
+              </div>
+              <Badge variant="outline" className="bg-accent/5 text-accent border-accent/20">
+                <Star className="w-3 h-3 ml-1" />
+                اختيارية
+              </Badge>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {additionalServiceOptions.map(service => (
-                <div key={service} className="flex items-center space-x-2 space-x-reverse">
-                  <Checkbox
-                    id={service}
-                    checked={formData.additionalServices.includes(service)}
-                    onCheckedChange={(checked) => 
-                      handleAdditionalServiceChange(service, checked as boolean)
-                    }
-                  />
-                  <Label htmlFor={service} className="text-sm cursor-pointer">
-                    {service}
-                  </Label>
+                <div 
+                  key={service} 
+                  className={`group p-4 border rounded-lg transition-all duration-200 hover:shadow-md ${
+                    formData.additionalServices.includes(service)
+                      ? 'bg-accent/5 border-accent/30 shadow-sm'
+                      : 'border-muted hover:border-accent/50 hover:bg-accent/5'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 space-x-reverse">
+                    <Checkbox
+                      id={service}
+                      checked={formData.additionalServices.includes(service)}
+                      onCheckedChange={(checked) => 
+                        handleAdditionalServiceChange(service, checked as boolean)
+                      }
+                      className="data-[state=checked]:bg-accent data-[state=checked]:border-accent"
+                    />
+                    <div className="flex-1">
+                      <Label 
+                        htmlFor={service} 
+                        className="text-sm font-medium cursor-pointer group-hover:text-accent transition-colors"
+                      >
+                        {service}
+                      </Label>
+                    </div>
+                    {formData.additionalServices.includes(service) && (
+                      <CheckCircle className="w-4 h-4 text-accent" />
+                    )}
+                  </div>
                 </div>
               ))}
+            </div>
+            
+            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="flex items-start gap-3">
+                <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5" />
+                <div className="text-sm text-blue-700 dark:text-blue-300">
+                  <p className="font-medium mb-1">معلومات هامة</p>
+                  <p>الخدمات الإضافية اختيارية وسيتم تحديد تكلفتها في العرض النهائي حسب احتياجات مشروعك.</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* File Upload */}
-        <Card>
-          <CardHeader>
-            <CardTitle>مرفقات</CardTitle>
-            <CardDescription>رفع ملفات مرجعية أو مواصفات إضافية</CardDescription>
+        <Card className="bg-gradient-to-br from-background to-muted/20 border-l-4 border-l-destructive">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-destructive/10 rounded-lg">
+                  <Upload className="w-5 h-5 text-destructive" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">المرفقات والملفات المرجعية</CardTitle>
+                  <CardDescription>رفع ملفات مساعدة لفهم المشروع بشكل أفضل</CardDescription>
+                </div>
+              </div>
+              <Badge variant="outline" className="bg-destructive/5 text-destructive border-destructive/20">
+                <Info className="w-3 h-3 ml-1" />
+                اختياري
+              </Badge>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
-              <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground mb-2">
-                اسحب الملفات هنا أو انقر للتحديد
-              </p>
-              <p className="text-xs text-muted-foreground">
-                PDF, DOC, DOCX, Images (حتى 10 ميجابايت لكل ملف)
-              </p>
-              <Input
+            <div className="relative">
+              <input
                 type="file"
                 multiple
                 accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                className="hidden"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                 onChange={(e) => {
                   if (e.target.files) {
                     handleInputChange('attachments', Array.from(e.target.files));
                   }
                 }}
               />
+              <div className="border-2 border-dashed border-muted rounded-xl p-8 text-center hover:border-destructive/50 hover:bg-destructive/5 transition-all duration-300 group">
+                <div className="space-y-4">
+                  <div className="p-3 bg-destructive/10 rounded-full w-fit mx-auto group-hover:scale-110 transition-transform">
+                    <Upload className="w-6 h-6 text-destructive" />
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-medium text-foreground group-hover:text-destructive transition-colors">
+                      اسحب الملفات هنا أو انقر للتحديد
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      يمكنك رفع ملفات التصاميم المرجعية، المواصفات، أو أي مستندات مساعدة
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    <Badge variant="secondary" className="text-xs">PDF</Badge>
+                    <Badge variant="secondary" className="text-xs">DOC</Badge>
+                    <Badge variant="secondary" className="text-xs">DOCX</Badge>
+                    <Badge variant="secondary" className="text-xs">صور</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />
+                    حد أقصى 10 ميجابايت لكل ملف
+                  </p>
+                </div>
+              </div>
             </div>
+            
+            {formData.attachments.length > 0 && (
+              <div className="mt-4 space-y-2">
+                <p className="text-sm font-medium text-foreground">الملفات المرفقة:</p>
+                <div className="space-y-2">
+                  {formData.attachments.map((file, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                      <FileText className="w-4 h-4 text-destructive" />
+                      <span className="text-sm text-foreground flex-1">{file.name}</span>
+                      <Badge variant="outline" className="text-xs">
+                        {(file.size / 1024 / 1024).toFixed(2)} ميجا
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
