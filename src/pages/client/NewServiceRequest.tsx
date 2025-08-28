@@ -24,6 +24,8 @@ import {
   Info
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface ServiceRequestFormData {
   serviceType: string;
@@ -39,6 +41,7 @@ interface ServiceRequestFormData {
 
 export default function NewServiceRequest() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [formData, setFormData] = useState<ServiceRequestFormData>({
     serviceType: '',
     title: '',
@@ -93,19 +96,56 @@ export default function NewServiceRequest() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+    
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // جمع معلومات العميل من نظام المصادقة
+      const customerInfo = {
+        name: 'اسم العميل', // يجب جلبه من نظام المصادقة
+        email: 'customer@example.com', // يجب جلبه من نظام المصادقة
+        phone: '+966123456789', // يجب جلبه من ملف العميل
+        company: 'شركة العميل' // اختياري
+      };
+
+      const requestData = {
+        serviceType: formData.serviceType,
+        title: formData.title,
+        description: formData.description,
+        budget: formData.budget,
+        priority: formData.priority,
+        deadline: formData.deadline,
+        additionalServices: formData.additionalServices,
+        customerInfo,
+        attachments: formData.attachments?.map(file => file.name) || []
+      };
+
+      const { data, error } = await supabase.functions.invoke('service-request-notification', {
+        body: requestData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      console.log('تم إرسال الطلب بنجاح:', data);
+      
+      toast({
+        title: "تم إرسال الطلب بنجاح",
+        description: "سيتم التواصل معك خلال 24 ساعة لمناقشة التفاصيل",
+      });
       
       setIsSubmitted(true);
       
-      // Redirect after showing success message
+      // إعادة توجيه بعد 3 ثوانٍ
       setTimeout(() => {
         navigate('/client/service-requests');
       }, 3000);
     } catch (error) {
-      console.error('Error submitting service request:', error);
+      console.error('خطأ في إرسال الطلب:', error);
+      toast({
+        title: "خطأ في إرسال الطلب",
+        description: "حدث خطأ أثناء إرسال طلب الخدمة. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
