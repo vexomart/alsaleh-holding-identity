@@ -299,7 +299,20 @@ const AdminWalletEnhanced = () => {
 
       // Find user details
       const user = availableUsers.find(u => u.id === addFundsForm.userId);
-      if (!user) return;
+      if (!user) {
+        toast({
+          title: "خطأ",
+          description: "لم يتم العثور على المستخدم المحدد",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log('Adding funds to wallet:', {
+        userId: addFundsForm.userId,
+        amount,
+        description: addFundsForm.description
+      });
 
       // Call wallet RPC function
       const { data, error } = await supabase.rpc('process_wallet_transaction', {
@@ -307,7 +320,7 @@ const AdminWalletEnhanced = () => {
         p_transaction_type: 'deposit',
         p_amount: amount,
         p_description: addFundsForm.description,
-        p_reference_id: `ADMIN-${Date.now()}`,
+        p_reference_id: `ADMIN_${Date.now()}`,
         p_metadata: {
           added_by: 'admin',
           requires_approval: addFundsForm.requireApproval,
@@ -315,29 +328,47 @@ const AdminWalletEnhanced = () => {
         }
       });
 
-      if (error) throw error;
+      console.log('RPC response:', { data, error });
+
+      if (error) {
+        console.error('Wallet transaction error:', error);
+        throw new Error(error.message || 'خطأ في معالجة المعاملة');
+      }
+
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        throw new Error('لم يتم إرجاع بيانات صحيحة من قاعدة البيانات');
+      }
+
+      const transaction = data[0];
+      const newBalance = transaction?.new_balance || 0;
+      const transactionId = transaction?.transaction_id || 'N/A';
 
       // Send notification email if enabled
       if (addFundsForm.notifyEmail) {
-        await supabase.functions.invoke('customer-notifications', {
-          body: {
-            type: 'wallet_deposit',
-            customer_email: user.email,
-            customer_name: user.user_metadata?.full_name || user.email,
-            data: {
-              amount: amount,
-              description: addFundsForm.description,
-              new_balance: (data as any)?.[0]?.new_balance || 0,
-              transaction_id: (data as any)?.[0]?.transaction_id || 'N/A',
-              requires_approval: addFundsForm.requireApproval
+        try {
+          await supabase.functions.invoke('customer-notifications', {
+            body: {
+              type: 'wallet_deposit',
+              customer_email: user.email,
+              customer_name: user.user_metadata?.full_name || user.email,
+              data: {
+                amount: amount,
+                description: addFundsForm.description,
+                new_balance: newBalance,
+                transaction_id: transactionId,
+                requires_approval: addFundsForm.requireApproval
+              }
             }
-          }
-        });
+          });
+        } catch (emailError) {
+          console.warn('Failed to send notification email:', emailError);
+          // Don't fail the whole operation if email fails
+        }
       }
 
       toast({
         title: "تم إضافة الرصيد بنجاح",
-        description: `تم إضافة ${amount} ريال إلى محفظة ${user.user_metadata?.full_name || user.email}`,
+        description: `تم إضافة ${amount} ريال إلى محفظة ${user.user_metadata?.full_name || user.email}. الرصيد الجديد: ${newBalance} ريال`,
       });
 
       setIsAddFundsOpen(false);
@@ -348,12 +379,30 @@ const AdminWalletEnhanced = () => {
         notifyEmail: true,
         requireApproval: false
       });
-      fetchWalletData();
+      
+      // Refresh the data
+      await fetchWalletData();
     } catch (error: any) {
       console.error('Error adding funds:', error);
+      
+      let errorMessage = 'حدث خطأ أثناء إضافة الرصيد';
+      
+      // Handle specific error types
+      if (error.message) {
+        if (error.message.includes('Load failed')) {
+          errorMessage = 'فشل في الاتصال بقاعدة البيانات. يرجى المحاولة مرة أخرى';
+        } else if (error.message.includes('JWT')) {
+          errorMessage = 'انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى';
+        } else if (error.message.includes('permission')) {
+          errorMessage = 'ليس لديك صلاحية لتنفيذ هذه العملية';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: "خطأ في إضافة الرصيد",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     }
