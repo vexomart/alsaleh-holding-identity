@@ -98,24 +98,33 @@ export default function NewServiceRequest() {
     setIsSubmitting(true);
     
     try {
-      // جمع معلومات العميل من نظام المصادقة
+      // الحصول على معلومات المستخدم من Supabase
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !user) {
+        throw new Error('يجب تسجيل الدخول أولاً');
+      }
+
+      // جمع معلومات العميل
       const customerInfo = {
-        name: 'اسم العميل', // يجب جلبه من نظام المصادقة
-        email: 'customer@example.com', // يجب جلبه من نظام المصادقة
-        phone: '+966123456789', // يجب جلبه من ملف العميل
-        company: 'شركة العميل' // اختياري
+        name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'مستخدم',
+        email: user.email || '',
+        phone: user.user_metadata?.phone || '+966123456789',
+        company: user.user_metadata?.company || ''
       };
 
       const requestData = {
         serviceType: formData.serviceType,
         title: formData.title,
         description: formData.description,
+        requirements: formData.requirements,
         budget: formData.budget,
         priority: formData.priority,
         deadline: formData.deadline,
         additionalServices: formData.additionalServices,
         customerInfo,
-        attachments: formData.attachments?.map(file => file.name) || []
+        attachments: formData.attachments?.map(file => file.name) || [],
+        userId: user.id
       };
 
       const { data, error } = await supabase.functions.invoke('service-request-notification', {
@@ -126,11 +135,11 @@ export default function NewServiceRequest() {
         throw error;
       }
 
-      console.log('تم إرسال الطلب بنجاح:', data);
+      console.log('تم إرسال وحفظ الطلب بنجاح:', data);
       
       toast({
         title: "تم إرسال الطلب بنجاح",
-        description: "سيتم التواصل معك خلال 24 ساعة لمناقشة التفاصيل",
+        description: `رقم الطلب: ${data.requestNumber} - سيتم التواصل معك خلال 24 ساعة`,
       });
       
       setIsSubmitted(true);
@@ -143,7 +152,7 @@ export default function NewServiceRequest() {
       console.error('خطأ في إرسال الطلب:', error);
       toast({
         title: "خطأ في إرسال الطلب",
-        description: "حدث خطأ أثناء إرسال طلب الخدمة. يرجى المحاولة مرة أخرى.",
+        description: error.message || "حدث خطأ أثناء إرسال طلب الخدمة. يرجى المحاولة مرة أخرى.",
         variant: "destructive",
       });
     } finally {

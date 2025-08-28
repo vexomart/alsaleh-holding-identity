@@ -1,7 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.53.0';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+const supabase = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,6 +18,7 @@ interface ServiceRequestData {
   serviceType: string;
   title: string;
   description: string;
+  requirements?: string;
   budget: string;
   priority: string;
   deadline: string;
@@ -23,18 +30,17 @@ interface ServiceRequestData {
     company?: string;
   };
   attachments?: string[];
+  userId?: string;
 }
 
 const getServiceTypeInArabic = (serviceType: string): string => {
   const serviceTypes = {
-    'web_design': 'تصميم المواقع الإلكترونية',
-    'mobile_app': 'تطبيقات الجوال',
-    'branding': 'الهوية التجارية',
-    'digital_marketing': 'التسويق الرقمي',
-    'ecommerce': 'التجارة الإلكترونية',
-    'custom_software': 'البرمجيات المخصصة',
-    'consultation': 'الاستشارات التقنية',
-    'maintenance': 'الصيانة والدعم'
+    'web-development': 'تطوير المواقع الإلكترونية',
+    'mobile-app': 'تطبيقات الجوال',
+    'design': 'التصميم والهوية البصرية',
+    'business': 'الخدمات التجارية',
+    'marketing': 'التسويق الرقمي',
+    'other': 'خدمات أخرى'
   };
   return serviceTypes[serviceType as keyof typeof serviceTypes] || serviceType;
 };
@@ -51,26 +57,26 @@ const getPriorityInArabic = (priority: string): string => {
 
 const getBudgetInArabic = (budget: string): string => {
   const budgets = {
-    'under_5k': 'أقل من 5,000 ريال',
-    '5k_15k': '5,000 - 15,000 ريال',
-    '15k_50k': '15,000 - 50,000 ريال',
-    '50k_100k': '50,000 - 100,000 ريال',
-    'over_100k': 'أكثر من 100,000 ريال',
-    'consultation': 'استشارة مجانية'
+    '5k-10k': '5,000 - 10,000 ريال',
+    '10k-25k': '10,000 - 25,000 ريال',
+    '25k-50k': '25,000 - 50,000 ريال',
+    '50k-100k': '50,000 - 100,000 ريال',
+    '100k+': 'أكثر من 100,000 ريال',
+    'custom': 'ميزانية مخصصة'
   };
   return budgets[budget as keyof typeof budgets] || budget;
 };
 
 const getAdditionalServicesInArabic = (services: string[]): string[] => {
   const serviceMap = {
-    'seo': 'تحسين محركات البحث (SEO)',
-    'hosting': 'استضافة وحجز نطاق',
-    'maintenance': 'صيانة ودعم فني',
-    'training': 'تدريب الفريق',
-    'content_creation': 'إنشاء المحتوى',
-    'social_media': 'إدارة وسائل التواصل',
-    'analytics': 'تحليلات وتقارير',
-    'security': 'الأمان والحماية'
+    'استضافة الموقع': 'استضافة الموقع',
+    'نطاق مخصص': 'نطاق مخصص',
+    'شهادة SSL': 'شهادة SSL',
+    'تحسين محركات البحث': 'تحسين محركات البحث',
+    'تدريب الفريق': 'تدريب الفريق',
+    'صيانة دورية': 'صيانة دورية',
+    'نسخ احتياطية': 'نسخ احتياطية',
+    'دعم فني مستمر': 'دعم فني مستمر'
   };
   return services.map(service => serviceMap[service as keyof typeof serviceMap] || service);
 };
@@ -82,6 +88,37 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const requestData: ServiceRequestData = await req.json();
+    
+    // حفظ طلب الخدمة في قاعدة البيانات
+    const { data: serviceRequest, error: dbError } = await supabase
+      .from('service_requests')
+      .insert([
+        {
+          user_id: requestData.userId,
+          service_type: requestData.serviceType,
+          title: requestData.title,
+          description: requestData.description,
+          requirements: requestData.requirements,
+          budget: requestData.budget,
+          priority: requestData.priority,
+          deadline: requestData.deadline,
+          additional_services: requestData.additionalServices,
+          customer_name: requestData.customerInfo.name,
+          customer_email: requestData.customerInfo.email,
+          customer_phone: requestData.customerInfo.phone,
+          customer_company: requestData.customerInfo.company,
+          attachments: requestData.attachments || [],
+          status: 'pending'
+        }
+      ])
+      .select()
+      .single();
+
+    if (dbError) {
+      console.error('Database error:', dbError);
+      throw new Error('Failed to save service request to database');
+    }
+
     const currentTime = new Date().toLocaleString('ar-SA', { 
       timeZone: 'Asia/Riyadh',
       year: 'numeric',
@@ -275,13 +312,16 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     console.log("Service request emails sent successfully");
+    console.log("Service request saved to database:", serviceRequest);
     console.log("Company email:", companyEmailResponse);
     console.log("Customer email:", customerEmailResponse);
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "تم إرسال الطلب بنجاح",
+        message: "تم إرسال الطلب وحفظه بنجاح",
+        serviceRequestId: serviceRequest.id,
+        requestNumber: serviceRequest.request_number,
         companyEmailId: companyEmailResponse.data?.id,
         customerEmailId: customerEmailResponse.data?.id,
       }),
