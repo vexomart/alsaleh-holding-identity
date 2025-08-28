@@ -157,15 +157,13 @@ const ClientOrders = () => {
       // Create a support ticket
       const { error } = await supabase
         .from('tickets')
-        .insert([
-          {
-            user_id: user.user.id,
-            title: `استفسار حول الطلب ${order.order_number}`,
-            description: `استفسار حول طلب الخدمة: ${order.service_type}`,
-            category: 'order_inquiry',
-            priority: 'medium'
-          }
-        ]);
+        .insert({
+          user_id: user.user.id,
+          title: `استفسار حول الطلب ${order.contract_number}`,
+          description: `استفسار حول طلب الخدمة: ${order.service_type}`,
+          category: 'order_inquiry',
+          priority: 'medium'
+        });
 
       if (error) throw error;
 

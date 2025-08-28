@@ -111,7 +111,7 @@ const AdminAffiliate = () => {
       const userStats = new Map();
       transactions?.forEach(transaction => {
         const userId = transaction.user_id;
-        const profile = transaction.profiles;
+        // No profiles data available from payment_transactions table
         
         if (!userStats.has(userId)) {
           userStats.set(userId, {

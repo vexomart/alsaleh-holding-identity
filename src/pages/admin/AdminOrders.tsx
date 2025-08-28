@@ -162,21 +162,19 @@ const AdminOrders = () => {
       // Create contract as order
       const { data, error } = await supabase
         .from('contracts')
-        .insert([
-          {
-            user_id: user.user.id,
-            client_type: 'company',
-            client_name: newOrder.client_name,
-            client_email: newOrder.client_email,
-            client_phone: '966500000000', // Default phone
-            service_type: newOrder.service_type,
-            service_description: newOrder.description,
-            service_price: parseFloat(newOrder.total_amount) || 0,
-            currency: 'SAR',
-            status: 'pending',
-            end_date: newOrder.due_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-          }
-        ])
+        .insert({
+          user_id: user.user.id,
+          client_type: 'company',
+          client_name: newOrder.client_name,
+          client_email: newOrder.client_email,
+          client_phone: '966500000000', // Default phone
+          service_type: newOrder.service_type,
+          service_description: newOrder.description,
+          service_price: parseFloat(newOrder.total_amount) || 0,
+          currency: 'SAR',
+          status: 'pending',
+          end_date: newOrder.due_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        })
         .select();
 
       if (error) throw error;
