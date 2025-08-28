@@ -23,7 +23,8 @@ import {
   Trash2,
   Users,
   Filter,
-  RefreshCw
+  RefreshCw,
+  MessageCircle
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -286,6 +287,49 @@ const AdminInvoicesEnhanced = () => {
       });
     } finally {
       setSendingEmail(null);
+    }
+  };
+
+  const sendInvoiceWhatsApp = async (invoiceId: string) => {
+    try {
+      const invoice = invoices.find(i => i.id === invoiceId);
+      if (!invoice || !invoice.customer_phone) {
+        toast({
+          title: "خطأ",
+          description: "رقم الهاتف غير متوفر لهذا العميل",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const message = `السلام عليكم ${invoice.customer_name}،
+
+فاتورة جديدة من شركة تسهيل الرقمية
+🧾 رقم الفاتورة: ${invoice.invoice_number}
+💰 المبلغ: ${invoice.amount} ${invoice.currency}
+📋 الخدمة: ${invoice.offer_title}
+
+يمكنكم دفع الفاتورة من خلال الرابط المرفق.
+
+شكراً لكم`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const phoneNumber = invoice.customer_phone.replace(/[^\d]/g, '').replace(/^0/, '966');
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      
+      window.open(whatsappUrl, '_blank');
+      
+      toast({
+        title: "تم فتح الواتساب",
+        description: "سيتم فتح الواتساب مع رسالة الفاتورة",
+      });
+    } catch (error: any) {
+      console.error('Error sending WhatsApp:', error);
+      toast({
+        title: "خطأ في إرسال الواتساب",
+        description: "حدث خطأ أثناء إرسال رسالة الواتساب",
+        variant: "destructive",
+      });
     }
   };
 
@@ -666,6 +710,9 @@ const AdminInvoicesEnhanced = () => {
                   )}
                   PDF
                 </Button>
+              </div>
+              
+              <div className="flex gap-2">
                 <Button 
                   variant="outline" 
                   size="sm" 
@@ -678,7 +725,17 @@ const AdminInvoicesEnhanced = () => {
                   ) : (
                     <Mail className="w-4 h-4 ml-2" />
                   )}
-                  إرسال
+                  إيميل
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                  onClick={() => sendInvoiceWhatsApp(invoice.id)}
+                  disabled={!invoice.customer_phone}
+                >
+                  <MessageCircle className="w-4 h-4 ml-2" />
+                  واتساب
                 </Button>
               </div>
             </ResponsiveCard>
@@ -742,6 +799,15 @@ const AdminInvoicesEnhanced = () => {
                 <Button variant="outline" onClick={() => sendInvoiceEmail(selectedInvoice.id)}>
                   <Mail className="w-4 h-4 ml-2" />
                   إرسال بالإيميل
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => sendInvoiceWhatsApp(selectedInvoice.id)}
+                  disabled={!selectedInvoice.customer_phone}
+                  className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                >
+                  <MessageCircle className="w-4 h-4 ml-2" />
+                  إرسال واتساب
                 </Button>
                 <Button onClick={() => setShowDetailsDialog(false)}>
                   إغلاق
