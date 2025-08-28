@@ -187,13 +187,14 @@ const AdminPayments = () => {
 
     setIsUpdating(true);
     try {
-      const tableName = selectedPayment.transaction_type === 'deposit' ? 'wallet_transactions' : 'payment_transactions';
+      const isWalletTransaction = selectedPayment.transaction_type === 'deposit';
+      const tableName = isWalletTransaction ? 'wallet_transactions' : 'payment_transactions';
       
       // Validate status based on table type
       const validWalletStatuses = ['pending', 'completed', 'failed', 'cancelled'];
       const validPaymentStatuses = ['pending', 'processing', 'completed', 'failed', 'refunded'];
       
-      if (tableName === 'wallet_transactions' && !validWalletStatuses.includes(newStatus)) {
+      if (isWalletTransaction && !validWalletStatuses.includes(newStatus)) {
         toast({
           title: "حالة غير صالحة",
           description: "الحالات المسموحة لمعاملات المحفظة: في الانتظار، مكتملة، فاشلة، ملغية",
@@ -202,7 +203,7 @@ const AdminPayments = () => {
         return;
       }
       
-      if (tableName === 'payment_transactions' && !validPaymentStatuses.includes(newStatus)) {
+      if (!isWalletTransaction && !validPaymentStatuses.includes(newStatus)) {
         toast({
           title: "حالة غير صالحة", 
           description: "الحالات المسموحة للمدفوعات: في الانتظار، قيد المعالجة، مكتملة، فاشلة، مسترد",
@@ -211,13 +212,21 @@ const AdminPayments = () => {
         return;
       }
       
-      // Update payment status - use selectedPayment.id instead of undefined paymentId
+      // Prepare update data based on table structure
+      const updateData = isWalletTransaction 
+        ? { 
+            status: newStatus,
+            updated_at: new Date().toISOString()
+          }
+        : { 
+            status: newStatus,
+            updated_at: new Date().toISOString()
+          };
+      
+      // Update payment status
       const { error: updateError } = await supabase
         .from(tableName)
-        .update({ 
-          status: newStatus,
-          updated_at: new Date().toISOString()
-        })
+        .update(updateData)
         .eq('id', selectedPayment.id);
 
       if (updateError) {
