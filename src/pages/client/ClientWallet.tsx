@@ -306,9 +306,9 @@ export default function ClientWallet() {
   };
 
   const walletBalance = wallet?.balance || 0;
-  const totalDeposits = transactions.filter(t => t.transaction_type === 'deposit').reduce((sum, t) => sum + t.amount, 0);
-  const totalPayments = Math.abs(transactions.filter(t => t.transaction_type === 'payment').reduce((sum, t) => sum + t.amount, 0));
-  const totalRefunds = transactions.filter(t => t.transaction_type === 'refund').reduce((sum, t) => sum + t.amount, 0);
+  const totalDeposits = transactions.filter(t => t.transaction_type === 'deposit' && t.status === 'completed').reduce((sum, t) => sum + t.amount, 0);
+  const totalPayments = Math.abs(transactions.filter(t => t.transaction_type === 'payment' && t.status === 'completed').reduce((sum, t) => sum + t.amount, 0));
+  const totalRefunds = transactions.filter(t => t.transaction_type === 'refund' && t.status === 'completed').reduce((sum, t) => sum + t.amount, 0);
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
