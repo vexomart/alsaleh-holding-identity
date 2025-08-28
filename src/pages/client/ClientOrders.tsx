@@ -49,50 +49,43 @@ const ClientOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      // Mock data since we don't have orders table yet
-      const mockOrders: Order[] = [
-        {
-          id: '1',
-          order_number: 'ORD24001',
-          service_type: 'تطوير موقع إلكتروني',
-          status: 'in_progress',
-          priority: 'high',
-          total_amount: 15000,
-          progress: 65,
-          created_at: new Date().toISOString(),
-          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          description: 'تطوير موقع إلكتروني متجاوب مع لوحة إدارة ونظام إدارة المحتوى',
-          project_manager: 'أحمد محمد'
-        },
-        {
-          id: '2',
-          order_number: 'ORD24002',
-          service_type: 'تصميم هوية بصرية',
-          status: 'completed',
-          priority: 'medium',
-          total_amount: 8000,
-          progress: 100,
-          created_at: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
-          due_date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-          description: 'تصميم شعار وهوية بصرية متكاملة مع دليل الاستخدام',
-          project_manager: 'سارة أحمد'
-        },
-        {
-          id: '3',
-          order_number: 'ORD24003',
-          service_type: 'تطوير تطبيق جوال',
-          status: 'pending',
-          priority: 'low',
-          total_amount: 25000,
-          progress: 0,
-          created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-          due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          description: 'تطوير تطبيق جوال لنظامي iOS و Android',
-          project_manager: 'محمد الأحمد'
-        }
-      ];
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) {
+        toast({
+          title: "خطأ في المصادقة",
+          description: "يرجى تسجيل الدخول أولاً",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Fetch user's contracts as orders
+      const { data: contracts, error } = await supabase
+        .from('contracts')
+        .select('*')
+        .eq('user_id', user.user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Transform contracts to orders format
+      const ordersData: Order[] = contracts?.map(contract => ({
+        id: contract.id,
+        order_number: contract.contract_number,
+        service_type: contract.service_type,
+        status: contract.status === 'active' ? 'in_progress' : 
+               contract.status === 'completed' ? 'completed' : 'pending',
+        priority: 'medium', // Default priority
+        total_amount: contract.service_price || 0,
+        progress: contract.status === 'completed' ? 100 : 
+                 contract.status === 'active' ? 65 : 0,
+        created_at: contract.created_at,
+        due_date: contract.end_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        description: contract.service_description || 'لا يوجد وصف',
+        project_manager: 'فريق التطوير'
+      })) || [];
       
-      setOrders(mockOrders);
+      setOrders(ordersData);
       setLoading(false);
     } catch (error: any) {
       console.error('Error fetching orders:', error);
@@ -151,6 +144,43 @@ const ClientOrders = () => {
       cancelled: <XCircle className="w-4 h-4" />
     };
     return icons[status as keyof typeof icons] || icons.pending;
+  };
+
+  const requestSupport = async (orderId: string) => {
+    try {
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) return;
+
+      // Create a support ticket
+      const { error } = await supabase
+        .from('tickets')
+        .insert([
+          {
+            user_id: user.user.id,
+            title: `استفسار حول الطلب ${order.order_number}`,
+            description: `استفسار حول طلب الخدمة: ${order.service_type}`,
+            category: 'order_inquiry',
+            priority: 'medium'
+          }
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "تم إرسال طلب الدعم",
+        description: "سيتم التواصل معك قريباً",
+      });
+    } catch (error: any) {
+      console.error('Error creating support ticket:', error);
+      toast({
+        title: "خطأ في إرسال طلب الدعم",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {
@@ -269,13 +299,20 @@ const ClientOrders = () => {
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button size="sm" variant="outline" className="flex-1">
-                  <Eye className="w-4 h-4 ml-2" />
-                  عرض التفاصيل
-                </Button>
-                <Button size="sm" variant="outline" className="flex-1">
+                <Link to={`/client/projects/${order.id}`} className="flex-1">
+                  <Button size="sm" variant="outline" className="w-full">
+                    <Eye className="w-4 h-4 ml-2" />
+                    عرض التفاصيل
+                  </Button>
+                </Link>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => requestSupport(order.id)}
+                >
                   <MessageSquare className="w-4 h-4 ml-2" />
-                  رسالة
+                  دعم فني
                 </Button>
                 {order.status === 'completed' && (
                   <Button size="sm" className="flex-1">

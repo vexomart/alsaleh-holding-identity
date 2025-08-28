@@ -71,67 +71,87 @@ const AdminWallet = () => {
   const [selectedUserId, setSelectedUserId] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
+  const [availableUsers, setAvailableUsers] = useState<Array<{id: string, name: string, email: string}>>([]);
 
   useEffect(() => {
     fetchWalletData();
+    fetchAvailableUsers();
   }, []);
 
   useEffect(() => {
     filterTransactions();
   }, [transactions, searchTerm, typeFilter, statusFilter]);
 
+  const fetchAvailableUsers = async () => {
+    try {
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, email')
+        .limit(20);
+
+      if (error) throw error;
+
+      const users = profiles?.map(profile => ({
+        id: profile.id,
+        name: profile.full_name || 'غير محدد',
+        email: profile.email || 'غير محدد'
+      })) || [];
+
+      setAvailableUsers(users);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
   const fetchWalletData = async () => {
     try {
-      // Mock data for demonstration
-      const mockTransactions: WalletTransaction[] = [
-        {
-          id: '1',
-          user_id: 'user1',
-          user_name: 'أحمد محمد العلي',
-          user_email: 'ahmed@example.com',
-          transaction_type: 'deposit',
-          amount: 5000,
-          description: 'إيداع من البنك الأهلي',
-          status: 'completed',
-          created_at: new Date().toISOString(),
-          reference_id: 'DEP001'
-        },
-        {
-          id: '2',
-          user_id: 'user2',
-          user_name: 'فاطمة أحمد الزهراني',
-          user_email: 'fatima@example.com',
-          transaction_type: 'payment',
-          amount: 2500,
-          description: 'دفع فاتورة تطوير موقع',
-          status: 'completed',
-          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          reference_id: 'PAY001'
-        },
-        {
-          id: '3',
-          user_id: 'user3',
-          user_name: 'خالد سعد المطيري',
-          user_email: 'khalid@example.com',
-          transaction_type: 'withdrawal',
-          amount: 1500,
-          description: 'سحب إلى البنك السعودي للاستثمار',
-          status: 'pending',
-          created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-          reference_id: 'WIT001'
-        }
-      ];
+      setLoading(true);
 
-      const mockSummary: WalletSummary = {
-        total_balance: 125000,
-        total_deposits: 50000,
-        total_withdrawals: 25000,
-        pending_transactions: 3,
-        active_users: 45
+      // Fetch wallet transactions
+      const { data: walletTransactions, error: transactionsError } = await supabase
+        .from('wallet_transactions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (transactionsError) throw transactionsError;
+
+      // Transform data
+      const transactionsData: WalletTransaction[] = walletTransactions?.map(transaction => ({
+        id: transaction.id,
+        user_id: transaction.user_id,
+        user_name: 'عميل ' + transaction.user_id.slice(-6),
+        user_email: 'user@example.com',
+        transaction_type: transaction.transaction_type as any,
+        amount: transaction.amount,
+        description: transaction.description,
+        status: transaction.status as any,
+        created_at: transaction.created_at,
+        reference_id: transaction.reference_id
+      })) || [];
+
+      // Fetch wallet summary
+      const { data: wallets, error: walletsError } = await supabase
+        .from('customer_wallets')
+        .select('balance');
+
+      if (walletsError) throw walletsError;
+
+      const totalBalance = wallets?.reduce((sum, wallet) => sum + (wallet.balance || 0), 0) || 0;
+      
+      const summaryData: WalletSummary = {
+        total_balance: totalBalance,
+        total_deposits: transactionsData
+          .filter(t => t.transaction_type === 'deposit' && t.status === 'completed')
+          .reduce((sum, t) => sum + Math.abs(t.amount), 0),
+        total_withdrawals: transactionsData
+          .filter(t => t.transaction_type === 'withdrawal' && t.status === 'completed')
+          .reduce((sum, t) => sum + Math.abs(t.amount), 0),
+        pending_transactions: transactionsData.filter(t => t.status === 'pending').length,
+        active_users: wallets?.length || 0
       };
 
-      setTransactions(mockTransactions);
-      setSummary(mockSummary);
+      setTransactions(transactionsData);
+      setSummary(summaryData);
       setLoading(false);
     } catch (error: any) {
       console.error('Error fetching wallet data:', error);
@@ -235,7 +255,37 @@ const AdminWallet = () => {
     }
 
     try {
-      // Here you would call your wallet deposit function
+      // Call the wallet transaction function
+      const { data, error } = await supabase.rpc('process_wallet_transaction', {
+        p_user_id: selectedUserId,
+        p_transaction_type: 'deposit',
+        p_amount: parseFloat(amount),
+        p_description: description || 'إيداع من الإدارة',
+        p_reference_id: `ADMIN_${Date.now()}`
+      });
+
+      if (error) throw error;
+
+      // Send notification email
+      const user = availableUsers.find(u => u.id === selectedUserId);
+      if (user) {
+        try {
+          await supabase.functions.invoke('customer-notifications', {
+            body: {
+              customerEmail: user.email,
+              customerName: user.name,
+              type: 'wallet_deposit',
+              data: {
+                amount: amount,
+                description: description || 'إيداع من الإدارة'
+              }
+            }
+          });
+        } catch (emailError) {
+          console.error('Error sending email:', emailError);
+        }
+      }
+
       toast({
         title: "تم إضافة الرصيد بنجاح",
         description: `تم إضافة ${amount} ريال إلى المحفظة`,
@@ -306,9 +356,11 @@ const AdminWallet = () => {
                     <SelectValue placeholder="اختر العميل" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="user1">أحمد محمد العلي</SelectItem>
-                    <SelectItem value="user2">فاطمة أحمد الزهراني</SelectItem>
-                    <SelectItem value="user3">خالد سعد المطيري</SelectItem>
+                    {availableUsers.map(user => (
+                      <SelectItem key={user.id} value={user.id}>
+                        {user.name} - {user.email}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -478,20 +530,24 @@ const AdminWallet = () => {
         <CardHeader>
           <CardTitle>سجل المعاملات</CardTitle>
           <CardDescription>
-            جميع معاملات المحفظة الرقمية للعملاء
+            جميع المعاملات المالية في النظام
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {filteredTransactions.map((transaction) => (
-              <div key={transaction.id} className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:bg-muted/50 transition-colors">
+              <div
+                key={transaction.id}
+                className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors"
+              >
                 <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-full ${getTransactionTypeColor(transaction.transaction_type)}`}>
+                  <div className={`p-2 rounded-full ${getTransactionTypeColor(transaction.transaction_type).replace('text-', 'bg-').replace('800', '100')}`}>
                     {getTransactionIcon(transaction.transaction_type)}
                   </div>
+                  
                   <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{transaction.user_name}</p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium">{transaction.user_name}</span>
                       <Badge className={`text-xs ${getTransactionTypeColor(transaction.transaction_type)}`}>
                         {getTransactionTypeText(transaction.transaction_type)}
                       </Badge>
@@ -502,21 +558,24 @@ const AdminWallet = () => {
                     </div>
                     <p className="text-sm text-muted-foreground">{transaction.description}</p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(transaction.created_at).toLocaleDateString('ar-SA')} - 
-                      {transaction.reference_id && ` رقم المرجع: ${transaction.reference_id}`}
+                      {transaction.user_email} • {new Date(transaction.created_at).toLocaleDateString('ar-SA')}
                     </p>
                   </div>
                 </div>
+                
                 <div className="text-left">
                   <p className={`text-lg font-bold ${
-                    transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund' 
-                      ? 'text-green-600' 
-                      : 'text-red-600'
+                    transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund'
+                      ? 'text-green-600' : 'text-red-600'
                   }`}>
                     {transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund' ? '+' : '-'}
-                    {transaction.amount.toLocaleString()} ريال
+                    {Math.abs(transaction.amount).toLocaleString()} ريال
                   </p>
-                  <p className="text-sm text-muted-foreground">{transaction.user_email}</p>
+                  {transaction.reference_id && (
+                    <p className="text-xs text-muted-foreground font-mono">
+                      {transaction.reference_id}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

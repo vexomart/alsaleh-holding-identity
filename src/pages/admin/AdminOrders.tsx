@@ -56,6 +56,17 @@ const AdminOrders = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
+  // New order form state
+  const [newOrder, setNewOrder] = useState({
+    client_name: '',
+    client_email: '',
+    service_type: '',
+    priority: 'medium',
+    total_amount: '',
+    due_date: '',
+    description: ''
+  });
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -66,37 +77,33 @@ const AdminOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      // Since we don't have an orders table yet, we'll simulate data
-      const mockOrders: Order[] = [
-        {
-          id: '1',
-          order_number: 'ORD24001',
-          client_name: 'شركة التقنية المتقدمة',
-          client_email: 'info@techadvanced.sa',
-          service_type: 'تطوير موقع إلكتروني',
-          status: 'pending',
-          priority: 'high',
-          total_amount: 15000,
-          created_at: new Date().toISOString(),
-          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          description: 'تطوير موقع إلكتروني متجاوب مع لوحة إدارة'
-        },
-        {
-          id: '2',
-          order_number: 'ORD24002',
-          client_name: 'مؤسسة الإبداع التجاري',
-          client_email: 'contact@creativity.sa',
-          service_type: 'تصميم هوية بصرية',
-          status: 'in_progress',
-          priority: 'medium',
-          total_amount: 8000,
-          created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-          due_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-          description: 'تصميم شعار وهوية بصرية متكاملة'
-        }
-      ];
+      setLoading(true);
       
-      setOrders(mockOrders);
+      // Fetch from contracts table since it's the closest to orders
+      const { data: contracts, error } = await supabase
+        .from('contracts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Transform contracts data to orders format
+      const ordersData: Order[] = contracts?.map(contract => ({
+        id: contract.id,
+        order_number: contract.contract_number,
+        client_name: contract.client_name,
+        client_email: contract.client_email,
+        service_type: contract.service_type,
+        status: contract.status === 'active' ? 'in_progress' : 
+               contract.status === 'completed' ? 'completed' : 'pending',
+        priority: 'medium', // Default priority
+        total_amount: contract.service_price || 0,
+        created_at: contract.created_at,
+        due_date: contract.end_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        description: contract.service_description || 'لا يوجد وصف'
+      })) || [];
+      
+      setOrders(ordersData);
       setLoading(false);
     } catch (error: any) {
       console.error('Error fetching orders:', error);
@@ -129,6 +136,143 @@ const AdminOrders = () => {
     }
 
     setFilteredOrders(filtered);
+  };
+
+  const createOrder = async () => {
+    try {
+      if (!newOrder.client_name || !newOrder.client_email || !newOrder.service_type) {
+        toast({
+          title: "خطأ في البيانات",
+          description: "يرجى تعبئة جميع الحقول المطلوبة",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) {
+        toast({
+          title: "خطأ في المصادقة",
+          description: "يرجى تسجيل الدخول أولاً",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Create contract as order
+      const { data, error } = await supabase
+        .from('contracts')
+        .insert([
+          {
+            user_id: user.user.id,
+            client_type: 'company',
+            client_name: newOrder.client_name,
+            client_email: newOrder.client_email,
+            client_phone: '966500000000', // Default phone
+            service_type: newOrder.service_type,
+            service_description: newOrder.description,
+            service_price: parseFloat(newOrder.total_amount) || 0,
+            currency: 'SAR',
+            status: 'pending',
+            end_date: newOrder.due_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+          }
+        ])
+        .select();
+
+      if (error) throw error;
+
+      // Send email notification
+      try {
+        await supabase.functions.invoke('customer-notifications', {
+          body: {
+            customerEmail: newOrder.client_email,
+            customerName: newOrder.client_name,
+            type: 'order_created',
+            data: {
+              orderNumber: data?.[0]?.contract_number,
+              serviceType: newOrder.service_type,
+              amount: newOrder.total_amount
+            }
+          }
+        });
+      } catch (emailError) {
+        console.error('Error sending email:', emailError);
+      }
+
+      toast({
+        title: "تم إنشاء الطلب بنجاح",
+        description: "تم إرسال إشعار للعميل عبر البريد الإلكتروني",
+      });
+
+      setIsCreateDialogOpen(false);
+      setNewOrder({
+        client_name: '',
+        client_email: '',
+        service_type: '',
+        priority: 'medium',
+        total_amount: '',
+        due_date: '',
+        description: ''
+      });
+      fetchOrders();
+    } catch (error: any) {
+      console.error('Error creating order:', error);
+      toast({
+        title: "خطأ في إنشاء الطلب",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    try {
+      const contractStatus = newStatus === 'in_progress' ? 'active' : 
+                           newStatus === 'completed' ? 'completed' : 'pending';
+
+      const { error } = await supabase
+        .from('contracts')
+        .update({ status: contractStatus })
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      // Get order details for email
+      const order = orders.find(o => o.id === orderId);
+      if (order) {
+        // Send status update email
+        try {
+          await supabase.functions.invoke('customer-notifications', {
+            body: {
+              customerEmail: order.client_email,
+              customerName: order.client_name,
+              type: 'order_status_update',
+              data: {
+                orderNumber: order.order_number,
+                newStatus: getStatusText(newStatus),
+                serviceType: order.service_type
+              }
+            }
+          });
+        } catch (emailError) {
+          console.error('Error sending status update email:', emailError);
+        }
+      }
+
+      toast({
+        title: "تم تحديث حالة الطلب",
+        description: "تم إرسال إشعار للعميل عبر البريد الإلكتروني",
+      });
+
+      fetchOrders();
+    } catch (error: any) {
+      console.error('Error updating order status:', error);
+      toast({
+        title: "خطأ في تحديث الحالة",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -208,13 +352,93 @@ const AdminOrders = () => {
           </p>
         </div>
         
-        <Button 
-          onClick={() => setIsCreateDialogOpen(true)}
-          className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-        >
-          <Plus className="w-4 h-4 ml-2" />
-          طلب جديد
-        </Button>
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+              <Plus className="w-4 h-4 ml-2" />
+              طلب جديد
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl" dir="rtl">
+            <DialogHeader>
+              <DialogTitle>إنشاء طلب جديد</DialogTitle>
+              <DialogDescription>
+                إضافة طلب خدمة جديد للعميل
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="client_name">اسم العميل *</Label>
+                  <Input
+                    id="client_name"
+                    value={newOrder.client_name}
+                    onChange={(e) => setNewOrder(prev => ({ ...prev, client_name: e.target.value }))}
+                    placeholder="اسم العميل"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="client_email">البريد الإلكتروني *</Label>
+                  <Input
+                    id="client_email"
+                    type="email"
+                    value={newOrder.client_email}
+                    onChange={(e) => setNewOrder(prev => ({ ...prev, client_email: e.target.value }))}
+                    placeholder="email@example.com"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <Label htmlFor="service_type">نوع الخدمة *</Label>
+                <Input
+                  id="service_type"
+                  value={newOrder.service_type}
+                  onChange={(e) => setNewOrder(prev => ({ ...prev, service_type: e.target.value }))}
+                  placeholder="تطوير موقع إلكتروني"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="total_amount">المبلغ الإجمالي</Label>
+                  <Input
+                    id="total_amount"
+                    type="number"
+                    value={newOrder.total_amount}
+                    onChange={(e) => setNewOrder(prev => ({ ...prev, total_amount: e.target.value }))}
+                    placeholder="15000"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="due_date">تاريخ الاستحقاق</Label>
+                  <Input
+                    id="due_date"
+                    type="date"
+                    value={newOrder.due_date}
+                    onChange={(e) => setNewOrder(prev => ({ ...prev, due_date: e.target.value }))}
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <Label htmlFor="description">وصف الطلب</Label>
+                <Textarea
+                  id="description"
+                  value={newOrder.description}
+                  onChange={(e) => setNewOrder(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder="تفاصيل إضافية عن الطلب..."
+                  rows={3}
+                />
+              </div>
+              
+              <Button onClick={createOrder} className="w-full">
+                إنشاء الطلب
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Stats Cards */}
@@ -352,10 +576,18 @@ const AdminOrders = () => {
                   <Eye className="w-4 h-4 ml-2" />
                   عرض
                 </Button>
-                <Button size="sm" className="flex-1">
-                  <Edit className="w-4 h-4 ml-2" />
-                  تعديل
-                </Button>
+                
+                <Select onValueChange={(value) => updateOrderStatus(order.id, value)}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="تحديث الحالة" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">في الانتظار</SelectItem>
+                    <SelectItem value="in_progress">قيد التنفيذ</SelectItem>
+                    <SelectItem value="completed">مكتمل</SelectItem>
+                    <SelectItem value="cancelled">ملغي</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
