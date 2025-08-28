@@ -142,6 +142,7 @@ const AdminWallet = lazy(() => import("./pages/admin/AdminWallet"));
 const AdminAffiliate = lazy(() => import("./pages/admin/AdminAffiliate"));
 const ClientOrders = lazy(() => import("./pages/client/ClientOrders"));
 const ClientAffiliate = lazy(() => import("./pages/client/ClientAffiliate"));
+const ClientNotifications = lazy(() => import("./pages/client/ClientNotifications"));
 
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
@@ -469,6 +470,7 @@ const App = () => {
                   <Route path="settings" element={<Suspense fallback={<PageLoader />}><ClientSettings /></Suspense>} />
                   <Route path="orders" element={<Suspense fallback={<PageLoader />}><ClientOrders /></Suspense>} />
                   <Route path="affiliate" element={<Suspense fallback={<PageLoader />}><ClientAffiliate /></Suspense>} />
+                  <Route path="notifications" element={<Suspense fallback={<PageLoader />}><ClientNotifications /></Suspense>} />
                 </Route>
           
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

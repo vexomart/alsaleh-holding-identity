@@ -14,15 +14,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Bell, User, Settings, LogOut, Moon, Sun, Search, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
+import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 
 export const ClientHeader = () => {
   const [user, setUser] = useState<any>(null);
-  const [notifications, setNotifications] = useState(3);
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
+  const { notifications, unreadCount } = useRealtimeNotifications({ showToasts: false });
 
   useEffect(() => {
     const getUser = async () => {
@@ -89,30 +90,55 @@ export const ClientHeader = () => {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8 relative">
                 <Bell className="w-4 h-4" />
-                {notifications > 0 && (
+                {unreadCount > 0 && (
                   <Badge 
                     variant="destructive" 
-                    className="absolute -top-1 -left-1 h-4 w-4 p-0 flex items-center justify-center text-xs"
+                    className="absolute -top-1 -left-1 h-4 w-4 p-0 flex items-center justify-center text-xs animate-pulse"
                   >
-                    {notifications}
+                    {unreadCount}
                   </Badge>
                 )}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-72 bg-card border z-50">
-              <DropdownMenuLabel className="text-right text-sm font-medium">الإشعارات</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-right text-sm font-medium flex items-center justify-between">
+                الإشعارات
+                {unreadCount > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {unreadCount} جديد
+                  </Badge>
+                )}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-right p-3">
-                <div className="flex flex-col gap-1 w-full">
-                  <p className="text-sm font-medium">تم قبول مشروعك</p>
-                  <p className="text-xs text-muted-foreground">مشروع تطوير الموقع تم قبوله</p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-right p-3">
-                <div className="flex flex-col gap-1 w-full">
-                  <p className="text-sm font-medium">فاتورة جديدة</p>
-                  <p className="text-xs text-muted-foreground">فاتورة بقيمة 5,000 ريال</p>
-                </div>
+              {notifications.slice(0, 3).length === 0 ? (
+                <DropdownMenuItem className="text-right p-3 text-muted-foreground">
+                  لا توجد إشعارات جديدة
+                </DropdownMenuItem>
+              ) : (
+                notifications.slice(0, 3).map((notification, index) => (
+                  <DropdownMenuItem key={notification.id} className="text-right p-3">
+                    <div className="flex flex-col gap-1 w-full">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium line-clamp-1">{notification.title}</p>
+                        {!notification.is_read && (
+                          <div className="w-2 h-2 bg-primary rounded-full"></div>
+                        )}
+                      </div>
+                      {notification.message && (
+                        <p className="text-xs text-muted-foreground line-clamp-2">{notification.message}</p>
+                      )}
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(notification.created_at).toLocaleDateString('ar-SA')}
+                      </p>
+                    </div>
+                  </DropdownMenuItem>
+                ))
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="text-center p-2">
+                <Link to="/client/notifications" className="text-primary text-sm font-medium">
+                  عرض جميع الإشعارات
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -37,6 +37,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
+import { NotificationsSection } from '@/components/client/NotificationsSection';
 
 interface DashboardStats {
   totalProjects: number;
@@ -447,63 +448,8 @@ export default function ClientDashboard() {
         </CardContent>
       </Card>
 
-      {/* 4. الإشعارات والتنبيهات */}
-      <Card className="shadow-lg border-border/50">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Bell className="w-5 h-5 text-orange-500" />
-            الإشعارات والتنبيهات
-          </CardTitle>
-          <CardDescription>تنبيهات مهمة تحتاج لانتباهك</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {/* إشعار اعتماد المشروع */}
-            <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <CheckCircle className="w-5 h-5 text-blue-600" />
-              </div>
-              <div className="flex-1 text-right">
-                <div className="font-semibold text-blue-900 mb-1">تم اعتماد مشروعك الجديد</div>
-                <div className="text-sm text-blue-700">مشروع تطوير الموقع تم قبوله وسيبدأ العمل قريباً</div>
-                <div className="text-xs text-blue-600 mt-2">منذ ساعتين</div>
-              </div>
-            </div>
-
-            {/* إشعار الفاتورة */}
-            <div className="flex items-start gap-4 p-4 bg-green-50 rounded-lg border border-green-200">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <DollarSign className="w-5 h-5 text-green-600" />
-              </div>
-              <div className="flex-1 text-right">
-                <div className="font-semibold text-green-900 mb-1">تم إيداع 1,500 ريال في محفظتك</div>
-                <div className="text-sm text-green-700">تمت إضافة الرصيد بنجاح إلى حسابك</div>
-                <div className="text-xs text-green-600 mt-2">اليوم</div>
-              </div>
-            </div>
-
-            {/* تنبيه مراجعة مطلوبة */}
-            <div className="flex items-start gap-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <AlertCircle className="w-5 h-5 text-orange-600" />
-              </div>
-              <div className="flex-1 text-right">
-                <div className="font-semibold text-orange-900 mb-1">فاتورة جديدة تحتاج للمراجعة</div>
-                <div className="text-sm text-orange-700">فاتورة بقيمة 5,000 ريال متاحة للدفع</div>
-                <div className="text-xs text-orange-600 mt-2">منذ يوم واحد</div>
-              </div>
-            </div>
-          </div>
-
-          {/* زر عرض جميع الإشعارات */}
-          <div className="mt-6 text-center">
-            <Button variant="outline" className="w-full sm:w-auto">
-              <Bell className="w-4 h-4 ml-2" />
-              عرض جميع الإشعارات
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* 4. الإشعارات والتنبيهات - لحظية وحقيقية */}
+      <NotificationsSection />
     </div>
   );
 }
