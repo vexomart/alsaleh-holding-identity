@@ -22,12 +22,7 @@ const rootElement = document.getElementById("root");
 console.log('Root element found:', rootElement);
 console.log('Root element HTML:', rootElement?.outerHTML);
 
-// Register service worker for production caching control
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  navigator.serviceWorker.register('/sw.js')
-    .then(() => console.log('SW registered'))
-    .catch(() => console.log('SW registration failed'));
-}
+// Service worker disabled to prevent caching delays
 
 if (rootElement) {
   console.log('Creating React app...');

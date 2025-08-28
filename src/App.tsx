@@ -249,8 +249,6 @@ const App = () => {
                 
                 <SecurityHeaders />
                 <TemplateVariableBlocker />
-                <PerformanceOptimizer />
-                <ImageOptimizer />
                 <AnalyticsProvider />
                 <ScrollToTop />
                 <Toaster />

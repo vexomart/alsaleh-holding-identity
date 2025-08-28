@@ -12,10 +12,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        // Add timestamp to chunk names for cache busting
-        chunkFileNames: 'assets/[name]-[hash]-' + Date.now() + '.js',
-        entryFileNames: 'assets/[name]-[hash]-' + Date.now() + '.js',
-        assetFileNames: 'assets/[name]-[hash]-' + Date.now() + '.[ext]'
+        manualChunks: undefined
       }
     }
   },
