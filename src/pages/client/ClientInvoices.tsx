@@ -18,9 +18,11 @@ import {
   CreditCard,
   Clock,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Trash2
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/components/ui/use-toast';
 
 interface Invoice {
   id: string;
@@ -43,6 +45,7 @@ export default function ClientInvoices() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -101,6 +104,48 @@ export default function ClientInvoices() {
       'refunded': 'مستردة'
     };
     return statusMap[status] || status;
+  };
+
+  const handleDeleteInvoice = async (invoiceId: string) => {
+    if (!confirm('هل أنت متأكد من حذف هذه الفاتورة؟')) {
+      return;
+    }
+
+    setDeletingId(invoiceId);
+    try {
+      const { error } = await supabase
+        .from('invoices')
+        .delete()
+        .eq('id', invoiceId);
+
+      if (error) {
+        console.error('Delete error:', error);
+        toast({
+          title: "خطأ في حذف الفاتورة",
+          description: "حدث خطأ أثناء حذف الفاتورة. يرجى المحاولة مرة أخرى.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // إزالة الفاتورة من القائمة المحلية
+      setInvoices(prev => prev.filter(invoice => invoice.id !== invoiceId));
+      
+      toast({
+        title: "تم حذف الفاتورة",
+        description: "تم حذف الفاتورة بنجاح",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      toast({
+        title: "خطأ غير متوقع",
+        description: "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+        variant: "destructive"
+      });
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const filteredInvoices = invoices.filter(invoice => {
@@ -273,17 +318,31 @@ export default function ClientInvoices() {
                       <Eye className="w-4 h-4 ml-2" />
                       عرض التفاصيل
                     </Button>
-                    <div className={`${isMobile ? 'grid grid-cols-2 gap-2' : 'flex gap-2'}`}>
-                      <Button size={isMobile ? "sm" : "default"} variant="outline" className={isMobile ? "text-xs" : ""}>
+                    <div className={`${isMobile ? 'grid grid-cols-3 gap-1' : 'flex gap-2'}`}>
+                      <Button size={isMobile ? "sm" : "default"} variant="outline" className={isMobile ? "text-xs px-2" : ""}>
                         <Download className="w-4 h-4" />
                         {!isMobile && <span className="mr-2">تحميل</span>}
                       </Button>
                       {invoice.payment_status === 'pending' && (
-                        <Button size={isMobile ? "sm" : "default"} variant="default" className={isMobile ? "text-xs" : ""}>
+                        <Button size={isMobile ? "sm" : "default"} variant="default" className={isMobile ? "text-xs px-2" : ""}>
                           <CreditCard className="w-4 h-4" />
                           {!isMobile && <span className="mr-2">دفع</span>}
                         </Button>
                       )}
+                      <Button 
+                        size={isMobile ? "sm" : "default"} 
+                        variant="destructive" 
+                        className={isMobile ? "text-xs px-2" : ""}
+                        onClick={() => handleDeleteInvoice(invoice.id)}
+                        disabled={deletingId === invoice.id}
+                      >
+                        {deletingId === invoice.id ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                        {!isMobile && <span className="mr-2">حذف</span>}
+                      </Button>
                     </div>
                   </div>
                 </div>
