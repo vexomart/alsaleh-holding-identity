@@ -72,6 +72,21 @@ const paymentProviders = [
     ]
   },
   {
+    id: 'tap_now',
+    name: 'Tap Now',
+    name_ar: 'تاب الان',
+    icon: 'CreditCard',
+    description: 'ادفع بسهولة باستخدام تاب الان - دعم للبطاقات والمحافظ الرقمية',
+    color: 'from-purple-500 to-violet-500',
+    features: ['Visa', 'Mastercard', 'Mada', 'Apple Pay', 'Google Pay', 'STC Pay'],
+    fields: [
+      { key: 'merchant_id', label: 'كود التاجر', type: 'text', required: true, placeholder: 'MERCHANT_ID' },
+      { key: 'public_key', label: 'المفتاح العام', type: 'text', required: true, placeholder: 'pk_test_...' },
+      { key: 'secret_key', label: 'المفتاح السري', type: 'password', required: true, placeholder: 'sk_test_...' },
+      { key: 'webhook_secret', label: 'مفتاح Webhook', type: 'password', required: false, placeholder: 'whsec_...' }
+    ]
+  },
+  {
     id: 'tamara',
     name: 'Tamara',
     name_ar: 'تمارا',
@@ -119,7 +134,7 @@ export default function AdminPaymentMethods() {
       const { data, error } = await supabase
         .from('payment_methods')
         .select('*')
-        .in('provider', ['tabby', 'tamara', 'bank_transfer'])
+        .in('provider', ['tabby', 'tamara', 'bank_transfer', 'tap_now'])
         .order('created_at', { ascending: false });
 
       if (error) throw error;
