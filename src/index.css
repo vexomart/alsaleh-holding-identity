@@ -14,21 +14,37 @@
   }
 }
 
+/* Performance Optimizations */
+.reduce-animations * {
+  animation-duration: 0.1s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0.1s !important;
+}
+
+/* Critical CSS Loading Optimization */
+.critical-resource {
+  font-display: swap;
+}
+
 /* Enhanced Mobile and Touch Optimizations */
 @media (max-width: 768px) {
   .mobile-scroll {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+    will-change: scroll-position;
   }
   
   .mobile-tap {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    cursor: pointer;
   }
   
   .mobile-text {
     -webkit-text-size-adjust: none;
     text-size-adjust: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   /* Enhanced mobile carousel */
@@ -36,6 +52,15 @@
     touch-action: pan-x;
     -webkit-user-select: none;
     user-select: none;
+    transform: translateZ(0);
+  }
+  
+  /* Mobile performance optimizations */
+  .mobile-optimized {
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 }
 

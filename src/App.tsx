@@ -231,9 +231,27 @@ const PageLoader = () => (
 const App = () => {
   const queryClientRef = useRef<QueryClient | null>(null);
   if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient();
+    queryClientRef.current = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 5 * 60 * 1000, // 5 دقائق
+          gcTime: 10 * 60 * 1000, // 10 دقائق (بدلاً من cacheTime)
+          retry: (failureCount: number, error: any) => {
+            if (failureCount < 2 && error?.status !== 404) {
+              return true;
+            }
+            return false;
+          },
+          retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 5000),
+          refetchOnWindowFocus: false,
+          refetchOnMount: false,
+        },
+        mutations: {
+          retry: 1,
+        },
+      },
+    });
   }
-  console.log('App component rendering - BUILD REFRESH FORCED:', new Date().toISOString());
   
   return (
     <QueryClientProvider client={queryClientRef.current!}>
