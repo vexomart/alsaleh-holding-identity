@@ -18,8 +18,6 @@ import { ImageOptimizer } from "@/components/ImageOptimizer";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden relative mobile-scroll">
-      <PerformanceOptimizer />
-      <ImageOptimizer />
       <Navigation />
       
       {/* Optimized Animated Background Elements - Reduced for performance */}
