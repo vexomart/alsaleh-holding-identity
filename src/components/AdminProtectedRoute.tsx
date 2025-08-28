@@ -13,34 +13,66 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkAdminAccess();
+    let timeoutId: NodeJS.Timeout;
     
-    // استمع لتغييرات المصادقة
+    const checkWithTimeout = async () => {
+      // إضافة timeout لتجنب التأخير المفرط
+      timeoutId = setTimeout(() => {
+        if (loading) {
+          setError('انتهت مهلة التحقق من الصلاحيات');
+          setLoading(false);
+        }
+      }, 10000); // 10 ثوانٍ
+
+      await checkAdminAccess();
+      clearTimeout(timeoutId);
+    };
+
+    checkWithTimeout();
+    
+    // استمع لتغييرات المصادقة - لكن تجنب الفحص المتكرر
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (checkingAuth) return; // تجنب الفحص المتزامن
+
       if (event === 'SIGNED_OUT' || !session) {
         console.log('User signed out or no session, redirecting to admin login');
+        setLoading(false);
         navigate('/admin-login', { replace: true });
-      } else if (event === 'SIGNED_IN' && session) {
+      } else if (event === 'SIGNED_IN' && session && !isAdmin) {
         console.log('User signed in, checking admin access');
+        setCheckingAuth(true);
         await checkAdminAccess();
+        setCheckingAuth(false);
       }
     });
 
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    return () => {
+      clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
+  }, [navigate, isAdmin, checkingAuth]);
 
   const checkAdminAccess = async () => {
     try {
-      setLoading(true);
+      if (!loading) setLoading(true);
       setError(null);
 
       console.log('Checking admin access...');
 
-      // التحقق من الجلسة النشطة
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      // التحقق من الجلسة النشطة مع timeout
+      const sessionPromise = supabase.auth.getSession();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Session check timeout')), 5000)
+      );
+
+      const { data: { session }, error: sessionError } = await Promise.race([
+        sessionPromise,
+        timeoutPromise
+      ]) as any;
       
       if (sessionError) {
         console.error('Session error:', sessionError);
@@ -57,13 +89,22 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
 
       console.log('Session found, checking admin role for user:', session.user.id);
 
-      // التحقق من صلاحيات الإدارة
-      const { data: adminData, error: adminError } = await supabase
+      // التحقق من صلاحيات الإدارة مع timeout
+      const rolePromise = supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', session.user.id)
         .eq('role', 'admin')
         .maybeSingle();
+
+      const roleTimeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Role check timeout')), 5000)
+      );
+
+      const { data: adminData, error: adminError } = await Promise.race([
+        rolePromise,
+        roleTimeoutPromise
+      ]) as any;
 
       if (adminError) {
         console.error('Admin role check error:', adminError);
@@ -76,7 +117,7 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
         setError('ليس لديك صلاحيات إدارية');
         setTimeout(() => {
           navigate('/', { replace: true });
-        }, 2000);
+        }, 1500); // تقليل الوقت
         return;
       }
 
@@ -84,7 +125,11 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
       setIsAdmin(true);
     } catch (error: any) {
       console.error('Error checking admin access:', error);
-      setError('حدث خطأ في التحقق من الصلاحيات');
+      if (error.message.includes('timeout')) {
+        setError('انتهت مهلة التحقق - يرجى المحاولة مرة أخرى');
+      } else {
+        setError('حدث خطأ في التحقق من الصلاحيات');
+      }
     } finally {
       setLoading(false);
     }
@@ -101,13 +146,25 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 max-w-md">
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
             <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
           </div>
           <div className="space-y-2">
             <h2 className="text-xl font-semibold text-slate-800">التحقق من الصلاحيات</h2>
             <p className="text-slate-600">جاري التحقق من صلاحيات الوصول الإداري...</p>
+            <p className="text-sm text-slate-500">هذا قد يستغرق بضع ثوانٍ</p>
+          </div>
+          
+          {/* إضافة زر للمحاولة مرة أخرى في حالة التأخير */}
+          <div className="mt-6">
+            <Button 
+              onClick={() => window.location.reload()} 
+              variant="outline"
+              className="text-sm"
+            >
+              إعادة المحاولة
+            </Button>
           </div>
         </div>
       </div>
