@@ -392,7 +392,9 @@ const AdminInvoicesEnhanced = () => {
   };
 
   const handleDeleteInvoice = async (invoiceId: string) => {
-    if (!confirm('هل أنت متأكد من حذف هذه الفاتورة؟ لا يمكن التراجع عن هذا الإجراء.')) {
+    const invoice = invoices.find(i => i.id === invoiceId);
+    
+    if (!confirm(`هل أنت متأكد من حذف الفاتورة رقم ${invoice?.invoice_number || invoiceId}؟\n\nلا يمكن التراجع عن هذا الإجراء.`)) {
       return;
     }
 
@@ -402,19 +404,32 @@ const AdminInvoicesEnhanced = () => {
         .delete()
         .eq('id', invoiceId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error during invoice deletion:', error);
+        throw error;
+      }
 
+      // إزالة الفاتورة من القائمة المحلية
       setInvoices(prev => prev.filter(invoice => invoice.id !== invoiceId));
       
       toast({
-        title: "تم حذف الفاتورة",
-        description: "تم حذف الفاتورة بنجاح",
+        title: "تم حذف الفاتورة بنجاح",
+        description: `تم حذف الفاتورة رقم ${invoice?.invoice_number || invoiceId}`,
       });
     } catch (error: any) {
       console.error('Error deleting invoice:', error);
+      let errorMessage = "حدث خطأ أثناء حذف الفاتورة";
+      
+      // تخصيص رسائل الخطأ بناءً على نوع الخطأ
+      if (error.code === '23503') {
+        errorMessage = "لا يمكن حذف هذه الفاتورة لأنها مرتبطة ببيانات أخرى";
+      } else if (error.message?.includes('permission')) {
+        errorMessage = "ليس لديك صلاحية لحذف هذه الفاتورة";
+      }
+      
       toast({
         title: "خطأ في حذف الفاتورة",
-        description: error.message || "حدث خطأ أثناء حذف الفاتورة",
+        description: errorMessage,
         variant: "destructive",
       });
     }
