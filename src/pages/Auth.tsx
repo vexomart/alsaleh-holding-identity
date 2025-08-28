@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, Shield } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
@@ -16,6 +16,9 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [step, setStep] = useState<'credentials' | 'verification'>('credentials');
+  const [emailForVerification, setEmailForVerification] = useState('');
   const navigate = useNavigate();
 
   // تحقق من وجود كود إحالة في الرابط
@@ -80,23 +83,79 @@ const Auth = () => {
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    const useVerification = formData.get('useVerification') === 'on';
+
+    if (useVerification) {
+      // إرسال رمز التحقق
+      try {
+        const { error } = await supabase.functions.invoke('send-verification-code', {
+          body: { email, type: 'user' }
+        });
+
+        if (error) {
+          setError('فشل في إرسال رمز التحقق. تحقق من صحة الإيميل.');
+          setIsLoading(false);
+          return;
+        }
+
+        setEmailForVerification(email);
+        setStep('verification');
+        toast.success('تم إرسال رمز التحقق إلى بريدك الإلكتروني');
+      } catch (err) {
+        setError('حدث خطأ أثناء إرسال رمز التحقق');
+      }
+    } else {
+      // تسجيل دخول تقليدي
+      const password = formData.get('password') as string;
+      try {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          setError(error.message === 'Invalid login credentials' 
+            ? 'بيانات تسجيل الدخول غير صحيحة' 
+            : error.message);
+        } else {
+          toast.success('تم تسجيل الدخول بنجاح');
+        }
+      } catch (err) {
+        setError('حدث خطأ أثناء تسجيل الدخول');
+      }
+    }
+    
+    setIsLoading(false);
+  };
+
+  const handleVerificationSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const { data, error } = await supabase.functions.invoke('verify-login-code', {
+        body: { 
+          email: emailForVerification, 
+          code: verificationCode, 
+          type: 'user' 
+        }
       });
 
       if (error) {
-        setError(error.message === 'Invalid login credentials' 
-          ? 'بيانات تسجيل الدخول غير صحيحة' 
-          : error.message);
-      } else {
-        toast.success('تم تسجيل الدخول بنجاح');
+        setError('رمز التحقق غير صحيح أو منتهي الصلاحية.');
+        setIsLoading(false);
+        return;
       }
-    } catch (err) {
-      setError('حدث خطأ أثناء تسجيل الدخول');
+
+      if (data.success) {
+        toast.success('تم التحقق بنجاح! يتم الآن تسجيل دخولك...');
+        // استخدام الرابط الآمن للدخول
+        window.location.href = data.auth_url;
+      }
+    } catch (error: any) {
+      console.error('خطأ في التحقق:', error);
+      setError('حدث خطأ أثناء التحقق من الرمز.');
     } finally {
       setIsLoading(false);
     }
@@ -183,54 +242,138 @@ const Auth = () => {
               )}
 
               <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-email">البريد الإلكتروني</Label>
-                    <Input
-                      id="signin-email"
-                      name="email"
-                      type="email"
-                      placeholder="example@email.com"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-password">كلمة المرور</Label>
-                    <div className="relative">
+                {step === 'credentials' ? (
+                  <form onSubmit={handleSignIn} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-email">البريد الإلكتروني</Label>
                       <Input
-                        id="signin-password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="كلمة المرور"
+                        id="signin-email"
+                        name="email"
+                        type="email"
+                        placeholder="example@email.com"
                         required
                         disabled={isLoading}
                       />
+                    </div>
+
+                    {/* خيار استخدام التحقق بالإيميل */}
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="useVerification"
+                          name="useVerification"
+                          className="rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                        <Label htmlFor="useVerification" className="text-sm">
+                          استخدام التحقق بالإيميل (أكثر أماناً) 🔐
+                        </Label>
+                      </div>
+                      
+                      <div id="password-field" className="space-y-2">
+                        <Label htmlFor="signin-password">كلمة المرور</Label>
+                        <div className="relative">
+                          <Input
+                            id="signin-password"
+                            name="password"
+                            type={showPassword ? "text" : "password"}
+                            placeholder="كلمة المرور (اختياري مع التحقق بالإيميل)"
+                            disabled={isLoading}
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                          جارِ المعالجة...
+                        </>
+                      ) : (
+                        <>
+                          <LogIn className="w-4 h-4 mr-2" />
+                          تسجيل الدخول
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleVerificationSubmit} className="space-y-4">
+                    <div className="text-center space-y-2">
+                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                        <Shield className="w-8 h-8 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-semibold">أدخل رمز التحقق</h3>
+                      <p className="text-sm text-muted-foreground">
+                        تم إرسال رمز مكون من 6 أرقام إلى {emailForVerification}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="verification-code">رمز التحقق</Label>
+                      <Input
+                        id="verification-code"
+                        type="text"
+                        placeholder="000000"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        maxLength={6}
+                        className="text-center text-2xl font-mono tracking-widest"
+                        required
+                        disabled={isLoading}
+                      />
+                    </div>
+
+                    <Button type="submit" className="w-full" disabled={isLoading || verificationCode.length !== 6}>
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                          جارِ التحقق...
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="w-4 h-4 mr-2" />
+                          تأكيد الرمز
+                        </>
+                      )}
+                    </Button>
+
+                    <div className="flex justify-between">
                       <Button
                         type="button"
                         variant="ghost"
-                        size="sm"
-                        className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
+                        onClick={() => setStep('credentials')}
+                        className="text-sm"
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        العودة
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          const form = new FormData();
+                          form.set('email', emailForVerification);
+                          form.set('useVerification', 'on');
+                          handleSignIn({preventDefault: () => {}, currentTarget: {elements: Object.fromEntries(form)}} as any);
+                        }}
+                        className="text-sm"
+                        disabled={isLoading}
+                      >
+                        إعادة الإرسال
                       </Button>
                     </div>
-                  </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                        جارِ تسجيل الدخول...
-                      </>
-                    ) : (
-                      <>
-                        <LogIn className="w-4 h-4 mr-2" />
-                        تسجيل الدخول
-                      </>
-                    )}
-                  </Button>
-                </form>
+                  </form>
+                )}
               </TabsContent>
 
               <TabsContent value="signup">

@@ -28,9 +28,12 @@ import { toast } from '@/hooks/use-toast';
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [step, setStep] = useState<'email' | 'verification' | 'password'>('email');
+  const [showVerificationMethod, setShowVerificationMethod] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,7 +60,75 @@ const AdminLogin = () => {
     }
   };
 
-  const handleAdminLogin = async (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      // طلب رمز التحقق
+      const { data, error } = await supabase.functions.invoke('send-verification-code', {
+        body: { email, type: 'admin' }
+      });
+
+      if (error) {
+        setError('فشل في إرسال رمز التحقق. تحقق من صحة الإيميل.');
+        setLoading(false);
+        return;
+      }
+
+      toast({
+        title: "تم إرسال رمز التحقق",
+        description: "تحقق من بريدك الإلكتروني وأدخل الرمز",
+      });
+
+      setStep('verification');
+    } catch (error: any) {
+      console.error('خطأ في إرسال رمز التحقق:', error);
+      setError('حدث خطأ أثناء إرسال رمز التحقق.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerificationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-login-code', {
+        body: { 
+          email, 
+          code: verificationCode, 
+          type: 'admin' 
+        }
+      });
+
+      if (error) {
+        setError('رمز التحقق غير صحيح أو منتهي الصلاحية.');
+        setLoading(false);
+        return;
+      }
+
+      if (data.success) {
+        toast({
+          title: "تم التحقق بنجاح",
+          description: "يتم الآن تسجيل دخولك...",
+        });
+
+        // استخدام الرابط الآمن للدخول
+        window.location.href = data.auth_url;
+      }
+    } catch (error: any) {
+      console.error('خطأ في التحقق:', error);
+      setError('حدث خطأ أثناء التحقق من الرمز.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -216,71 +287,236 @@ const AdminLogin = () => {
                 </Alert>
               )}
 
-              <form onSubmit={handleAdminLogin} className="space-y-6">
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                    <Monitor className="w-4 h-4" />
-                    البريد الإلكتروني الإداري
-                  </label>
-                  <Input
-                    type="email"
-                    placeholder="admin@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="h-12 text-right bg-slate-50/50 border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl transition-all duration-300"
-                    dir="rtl"
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                    <Shield className="w-4 h-4" />
-                    كلمة المرور الآمنة
-                  </label>
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="h-12 text-right pr-12 bg-slate-50/50 border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl transition-all duration-300"
-                      dir="rtl"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors"
+              {/* خيار اختيار طريقة الدخول */}
+              {!showVerificationMethod && (
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <h3 className="text-lg font-semibold text-slate-700 mb-4">اختر طريقة الدخول</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-4">
+                    <Button
+                      onClick={() => {setShowVerificationMethod(true); setStep('email');}}
+                      className="h-16 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold rounded-xl transition-all duration-300 group"
                     >
-                      {showPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </button>
+                      <div className="flex items-center gap-3">
+                        <Shield className="w-6 h-6" />
+                        <div className="text-right">
+                          <div>دخول بالتحقق الإيميل (موصى)</div>
+                          <div className="text-xs text-green-100">أكثر أماناً مع رمز التحقق</div>
+                        </div>
+                      </div>
+                    </Button>
+                    
+                    <Button
+                      onClick={() => {setShowVerificationMethod(true); setStep('password');}}
+                      variant="outline"
+                      className="h-16 border-2 border-slate-300 hover:border-slate-400 text-slate-700 font-semibold rounded-xl transition-all duration-300"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Lock className="w-6 h-6" />
+                        <div className="text-right">
+                          <div>دخول تقليدي بكلمة المرور</div>
+                          <div className="text-xs text-slate-500">إيميل + كلمة مرور</div>
+                        </div>
+                      </div>
+                    </Button>
                   </div>
                 </div>
+              )}
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full h-14 bg-gradient-to-r from-slate-800 via-slate-900 to-black hover:from-slate-700 hover:via-slate-800 hover:to-slate-900 text-white font-bold text-lg shadow-2xl shadow-slate-500/30 rounded-xl transition-all duration-300 group relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  {loading ? (
-                    <div className="flex items-center gap-3 relative z-10">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      جاري المصادقة...
+              {/* نموذج الإيميل للتحقق */}
+              {showVerificationMethod && step === 'email' && (
+                <form onSubmit={handleEmailSubmit} className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                      <Monitor className="w-4 h-4" />
+                      البريد الإلكتروني الإداري
+                    </label>
+                    <Input
+                      type="email"
+                      placeholder="admin@company.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="h-12 text-right bg-slate-50/50 border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl transition-all duration-300"
+                      dir="rtl"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full h-14 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold text-lg shadow-2xl shadow-green-500/30 rounded-xl transition-all duration-300 group relative overflow-hidden"
+                  >
+                    {loading ? (
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        جاري الإرسال...
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        إرسال رمز التحقق
+                        <Shield className="w-5 h-5" />
+                      </div>
+                    )}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setShowVerificationMethod(false)}
+                    className="w-full text-slate-600 hover:text-slate-800"
+                  >
+                    العودة لاختيار طريقة الدخول
+                  </Button>
+                </form>
+              )}
+
+              {/* نموذج التحقق */}
+              {step === 'verification' && (
+                <form onSubmit={handleVerificationSubmit} className="space-y-6">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Shield className="w-8 h-8 text-green-600" />
                     </div>
-                  ) : (
-                    <div className="flex items-center gap-3 relative z-10">
-                      دخول النظام الإداري
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <h3 className="text-lg font-semibold text-slate-700">أدخل رمز التحقق</h3>
+                    <p className="text-sm text-slate-500">تم إرسال رمز مكون من 6 أرقام إلى {email}</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold text-slate-700 text-center block">
+                      رمز التحقق (6 أرقام)
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="000000"
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      required
+                      maxLength={6}
+                      className="h-16 text-center text-2xl font-mono bg-slate-50/50 border-slate-300 focus:border-green-500 focus:ring-green-500/20 rounded-xl transition-all duration-300 tracking-widest"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={loading || verificationCode.length !== 6}
+                    className="w-full h-14 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold text-lg shadow-2xl shadow-green-500/30 rounded-xl transition-all duration-300"
+                  >
+                    {loading ? (
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        جاري التحقق...
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        تأكيد الرمز
+                        <ArrowRight className="w-5 h-5" />
+                      </div>
+                    )}
+                  </Button>
+
+                  <div className="grid grid-cols-1 gap-2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => handleEmailSubmit(new Event('submit') as any)}
+                      className="text-blue-600 hover:text-blue-800"
+                      disabled={loading}
+                    >
+                      إعادة إرسال الرمز
+                    </Button>
+                    
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setStep('email')}
+                      className="text-slate-600 hover:text-slate-800"
+                    >
+                      تغيير الإيميل
+                    </Button>
+                  </div>
+                </form>
+              )}
+
+              {/* نموذج كلمة المرور التقليدي */}
+              {showVerificationMethod && step === 'password' && (
+                <form onSubmit={handlePasswordLogin} className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                      <Monitor className="w-4 h-4" />
+                      البريد الإلكتروني الإداري
+                    </label>
+                    <Input
+                      type="email"
+                      placeholder="admin@company.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="h-12 text-right bg-slate-50/50 border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl transition-all duration-300"
+                      dir="rtl"
+                    />
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                      <Shield className="w-4 h-4" />
+                      كلمة المرور الآمنة
+                    </label>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="h-12 text-right pr-12 bg-slate-50/50 border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl transition-all duration-300"
+                        dir="rtl"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </button>
                     </div>
-                  )}
-                </Button>
-              </form>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full h-14 bg-gradient-to-r from-slate-800 via-slate-900 to-black hover:from-slate-700 hover:via-slate-800 hover:to-slate-900 text-white font-bold text-lg shadow-2xl shadow-slate-500/30 rounded-xl transition-all duration-300 group relative overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    {loading ? (
+                      <div className="flex items-center gap-3 relative z-10">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        جاري المصادقة...
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3 relative z-10">
+                        دخول النظام الإداري
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    )}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setShowVerificationMethod(false)}
+                    className="w-full text-slate-600 hover:text-slate-800"
+                  >
+                    العودة لاختيار طريقة الدخول
+                  </Button>
+                </form>
+              )}
 
               {/* مؤشرات الأمان */}
               <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 border border-green-200/50">
