@@ -76,17 +76,30 @@ export default function ClientDashboard() {
   const fetchDashboardData = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
 
-      const { data: projects } = await supabase
+      // Fetch projects with error handling
+      const { data: projects, error: projectsError } = await supabase
         .from('projects')
         .select('*')
         .eq('user_id', user.id);
 
-      const { data: invoices } = await supabase
+      if (projectsError) {
+        console.error('Error fetching projects:', projectsError);
+      }
+
+      // Fetch invoices with error handling
+      const { data: invoices, error: invoicesError } = await supabase
         .from('invoices')
         .select('*')
         .eq('user_id', user.id);
+
+      if (invoicesError) {
+        console.error('Error fetching invoices:', invoicesError);
+      }
 
       const totalProjects = projects?.length || 0;
       const activeProjects = projects?.filter(p => p.status === 'in_progress').length || 0;

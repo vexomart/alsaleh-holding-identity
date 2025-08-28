@@ -176,32 +176,50 @@ export const useRealtimeNotifications = ({
   }, [fetchNotifications]);
 
   useEffect(() => {
+    // Only set up realtime in secure contexts to avoid WebSocket errors
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+      console.log('⚠️ Skipping realtime notifications (insecure context)');
+      return;
+    }
+
     console.log('🚀 Setting up realtime notifications subscription...');
     
-    const channel = supabase
-      .channel('project-notifications-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'project_notifications'
-        },
-        handleRealtimeUpdate
-      )
-      .subscribe((status) => {
-        console.log('📡 Realtime notifications subscription status:', status);
-        
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Successfully subscribed to realtime notifications');
-        } else if (status === 'CHANNEL_ERROR') {
-          console.error('❌ Error subscribing to realtime notifications');
-        }
-      });
+    let channel: any;
+    
+    try {
+      channel = supabase
+        .channel('project-notifications-updates')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'project_notifications'
+          },
+          handleRealtimeUpdate
+        )
+        .subscribe((status) => {
+          console.log('📡 Realtime notifications subscription status:', status);
+          
+          if (status === 'SUBSCRIBED') {
+            console.log('✅ Successfully subscribed to realtime notifications');
+          } else if (status === 'CHANNEL_ERROR') {
+            console.error('❌ Error subscribing to realtime notifications');
+          }
+        });
+    } catch (error) {
+      console.error('Error setting up realtime subscription:', error);
+    }
 
     return () => {
-      console.log('🧹 Cleaning up realtime notifications subscription');
-      supabase.removeChannel(channel);
+      if (channel) {
+        try {
+          console.log('🧹 Cleaning up realtime notifications subscription');
+          supabase.removeChannel(channel);
+        } catch (error) {
+          console.error('Error cleaning up realtime subscription:', error);
+        }
+      }
     };
   }, [handleRealtimeUpdate]);
 
