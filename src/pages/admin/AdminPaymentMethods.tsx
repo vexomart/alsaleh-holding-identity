@@ -57,21 +57,6 @@ const iconMap = {
 
 const paymentProviders = [
   {
-    id: 'tabby',
-    name: 'Tabby',
-    name_ar: 'تاب',
-    icon: 'CreditCard',
-    description: 'بوابة دفع آمنة للفيزا ومدى وApple Pay',
-    color: 'from-primary to-primary-variant',
-    features: ['Visa', 'Mastercard', 'Mada', 'Apple Pay'],
-    fields: [
-      { key: 'merchant_id', label: 'كود التاجر', type: 'text', required: true, placeholder: 'MERCHANT_ID' },
-      { key: 'public_key', label: 'المفتاح العام', type: 'text', required: true, placeholder: 'pk_test_...' },
-      { key: 'secret_key', label: 'المفتاح السري', type: 'password', required: true, placeholder: 'sk_test_...' },
-      { key: 'webhook_secret', label: 'مفتاح Webhook', type: 'password', required: false, placeholder: 'whsec_...' }
-    ]
-  },
-  {
     id: 'tap_now',
     name: 'Tap Now',
     name_ar: 'تاب الان',
@@ -134,7 +119,7 @@ export default function AdminPaymentMethods() {
       const { data, error } = await supabase
         .from('payment_methods')
         .select('*')
-        .in('provider', ['tabby', 'tamara', 'bank_transfer', 'tap_now'])
+        .in('provider', ['tamara', 'bank_transfer', 'tap_now'])
         .order('created_at', { ascending: false });
 
       if (error) throw error;
