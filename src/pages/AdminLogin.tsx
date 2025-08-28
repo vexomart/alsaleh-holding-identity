@@ -69,7 +69,7 @@ const AdminLogin = () => {
       console.log('Sending verification code for:', email);
       
       // طلب رمز التحقق
-      const { data, error } = await supabase.functions.invoke('send-verification-code', {
+      const { data, error } = await supabase.functions.invoke('simple-verification', {
         body: { email, type: 'admin' }
       });
 
@@ -91,9 +91,16 @@ const AdminLogin = () => {
       }
 
       toast({
-        title: "تم إرسال رمز التحقق",
-        description: "تحقق من بريدك الإلكتروني وأدخل الرمز المكون من 6 أرقام",
+        title: "تم إنشاء رمز التحقق",
+        description: data.development_code ? 
+          `رمز التحقق المؤقت: ${data.development_code}` : 
+          "تحقق من بريدك الإلكتروني وأدخل الرمز المكون من 6 أرقام",
       });
+
+      // إذا كان هناك رمز تطوير، نعرضه في alert أيضاً
+      if (data.development_code) {
+        alert(`رمز التحقق للتطوير: ${data.development_code}`);
+      }
 
       setStep('verification');
     } catch (error: any) {

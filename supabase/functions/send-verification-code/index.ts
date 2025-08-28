@@ -2,7 +2,8 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 import { supabase } from "../_shared/supabase.ts";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const resendApiKey = Deno.env.get("RESEND_API_KEY");
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -56,12 +57,14 @@ const handler = async (req: Request): Promise<Response> => {
       console.log('Admin check result:', { adminData, adminError });
 
       // إذا لم نجد أي admin في النظام، نرفض الطلب
-      if (adminError || !adminData || adminData.length === 0) {
-        console.error('No admin users found or admin error:', adminError);
-        return new Response(
-          JSON.stringify({ error: "Admin access not configured" }),
-          { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
+      if (adminError) {
+        console.error('Error checking admin users:', adminError);
+        // لا نرفض الطلب هنا، بل نستمر للتحقق من المستخدم مباشرة
+      }
+
+      if (!adminData || adminData.length === 0) {
+        console.warn('No admin users found in user_roles table');
+        // نستمر في التحقق رغم ذلك
       }
 
       // تحقق إضافي: البحث عن الإيميل في قاعدة البيانات
@@ -76,12 +79,16 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       // التحقق من أن هذا المستخدم له صلاحيات admin
-      const { data: userRoleData } = await supabase
+      const { data: userRoleData, error: roleError } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userData.user.id)
         .eq('role', 'admin')
-        .single();
+        .maybeSingle();
+
+      if (roleError) {
+        console.error('Error checking user role:', roleError);
+      }
 
       if (!userRoleData) {
         console.error('User does not have admin role:', email);
@@ -130,6 +137,15 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     console.log('Verification code saved successfully, sending email...');
+
+    // التحقق من وجود RESEND_API_KEY
+    if (!resendApiKey || !resend) {
+      console.error('RESEND_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ error: "Email service not configured" }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
     // إرسال الرمز عبر الإيميل
     const subject = type === 'admin' 
