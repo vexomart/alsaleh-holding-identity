@@ -58,10 +58,10 @@ const iconMap = {
 const paymentProviders = [
   {
     id: 'tap_now',
-    name: 'Tap Now',
-    name_ar: 'تاب الان',
+    name: 'Electronic Payment',
+    name_ar: 'الدفع الالكتروني',
     icon: 'CreditCard',
-    description: 'ادفع بسهولة باستخدام تاب الان - دعم للبطاقات والمحافظ الرقمية',
+    description: 'ادفع بسهولة عبر البطاقات الائتمانية والمحافظ الرقمية الآمنة',
     color: 'from-purple-500 to-violet-500',
     features: ['Visa', 'Mastercard', 'Mada', 'Apple Pay', 'Google Pay', 'STC Pay'],
     fields: [
