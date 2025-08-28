@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,28 +18,133 @@ import {
   Briefcase,
   Globe,
   Palette,
-  Code
+  Code,
+  DollarSign,
+  MessageSquare,
+  RefreshCw
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+
+interface ServiceRequest {
+  id: string;
+  request_number: string;
+  service_type: string;
+  title: string;
+  description: string;
+  requirements?: string;
+  budget: string;
+  priority: string;
+  deadline: string | null;
+  status: string;
+  created_at: string;
+  additional_services: string[] | null;
+  customer_name: string;
+  customer_email: string;
+  customer_phone?: string;
+  customer_company?: string;
+  user_id: string;
+  attachments?: any;
+  notes?: string;
+  estimated_cost?: number;
+  estimated_duration_days?: number;
+  assigned_to?: string;
+  updated_at: string;
+}
 
 const serviceTypes = [
-  { id: 'web-development', label: 'تطوير المواقع', icon: Code, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' },
+  { id: 'web-development', label: 'تطوير المواقع الإلكترونية', icon: Code, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' },
   { id: 'mobile-app', label: 'تطبيقات الجوال', icon: Globe, color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' },
-  { id: 'design', label: 'التصميم', icon: Palette, color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' },
-  { id: 'business', label: 'الخدمات التجارية', icon: Briefcase, color: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' }
+  { id: 'design', label: 'التصميم والهوية البصرية', icon: Palette, color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' },
+  { id: 'business', label: 'الخدمات التجارية', icon: Briefcase, color: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' },
+  { id: 'marketing', label: 'التسويق الرقمي', icon: MessageSquare, color: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200' },
+  { id: 'other', label: 'خدمات أخرى', icon: Briefcase, color: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200' }
 ];
 
 export default function ServiceRequests() {
   const navigate = useNavigate();
-  const [requests, setRequests] = useState([]);
+  const { toast } = useToast();
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [serviceFilter, setServiceFilter] = useState('all');
 
+  useEffect(() => {
+    fetchServiceRequests();
+  }, []);
+
+  const fetchServiceRequests = async () => {
+    try {
+      setLoading(true);
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !user) {
+        toast({
+          title: "خطأ في المصادقة",
+          description: "يجب تسجيل الدخول أولاً",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('service_requests')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      // Transform data to match our interface - cast to any first to avoid TypeScript issues
+      const transformedData = (data || []).map((item: any) => ({
+        id: item.id,
+        request_number: item.request_number || `REQ-${item.id.slice(0, 8)}`,
+        service_type: item.service_type,
+        title: item.title,
+        description: item.description,
+        requirements: item.requirements,
+        budget: item.budget || '',
+        priority: item.priority,
+        deadline: item.deadline,
+        status: item.status,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        additional_services: item.additional_services || [],
+        customer_name: item.customer_name || '',
+        customer_email: item.customer_email || '',
+        customer_phone: item.customer_phone,
+        customer_company: item.customer_company,
+        user_id: item.user_id,
+        attachments: item.attachments,
+        notes: item.notes,
+        estimated_cost: item.estimated_cost,
+        estimated_duration_days: item.estimated_duration_days,
+        assigned_to: item.assigned_to
+      } as ServiceRequest));
+
+      setRequests(transformedData);
+    } catch (error) {
+      console.error('Error fetching service requests:', error);
+      toast({
+        title: "خطأ في جلب البيانات",
+        description: "حدث خطأ أثناء جلب طلبات الخدمة",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getStatusText = (status: string) => {
     const statusMap: { [key: string]: string } = {
-      'pending': 'في الانتظار',
-      'in_progress': 'قيد المراجعة',
+      'pending': 'قيد المراجعة',
+      'in_review': 'قيد الدراسة',
+      'approved': 'تمت الموافقة',
+      'in_progress': 'قيد التنفيذ',
       'completed': 'مكتمل',
       'cancelled': 'ملغي'
     };
@@ -49,8 +154,10 @@ export default function ServiceRequests() {
   const getStatusColor = (status: string) => {
     const colorMap: { [key: string]: string } = {
       'pending': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-      'in_progress': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      'completed': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      'in_review': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      'approved': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      'in_progress': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+      'completed': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
       'cancelled': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
     };
     return colorMap[status] || 'bg-gray-100 text-gray-800';
@@ -58,20 +165,44 @@ export default function ServiceRequests() {
 
   const getPriorityColor = (priority: string) => {
     const colorMap: { [key: string]: string } = {
-      'high': 'text-red-600',
+      'urgent': 'text-red-600',
+      'high': 'text-orange-600',
       'medium': 'text-yellow-600',
       'low': 'text-green-600'
     };
     return colorMap[priority] || 'text-gray-600';
   };
 
+  const getPriorityText = (priority: string) => {
+    const priorityMap: { [key: string]: string } = {
+      'urgent': 'عاجلة',
+      'high': 'عالية',
+      'medium': 'متوسطة',
+      'low': 'منخفضة'
+    };
+    return priorityMap[priority] || priority;
+  };
+
+  const getBudgetText = (budget: string) => {
+    const budgetMap: { [key: string]: string } = {
+      '5k-10k': '5,000 - 10,000 ريال',
+      '10k-25k': '10,000 - 25,000 ريال',
+      '25k-50k': '25,000 - 50,000 ريال',
+      '50k-100k': '50,000 - 100,000 ريال',
+      '100k+': 'أكثر من 100,000 ريال',
+      'custom': 'ميزانية مخصصة'
+    };
+    return budgetMap[budget] || budget;
+  };
+
   const getServiceType = (serviceId: string) => {
     return serviceTypes.find(s => s.id === serviceId) || serviceTypes[0];
   };
 
-  const filteredRequests = requests.filter(request => {
+  const filteredRequests = requests.filter((request: ServiceRequest) => {
     const matchesSearch = request.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         request.description.toLowerCase().includes(searchTerm.toLowerCase());
+                         request.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         request.request_number.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || request.status === statusFilter;
     const matchesService = serviceFilter === 'all' || request.service_type === serviceFilter;
     
@@ -81,9 +212,29 @@ export default function ServiceRequests() {
   const stats = {
     total: requests.length,
     pending: requests.filter(r => r.status === 'pending').length,
-    inProgress: requests.filter(r => r.status === 'in_progress').length,
+    inProgress: requests.filter(r => ['in_review', 'approved', 'in_progress'].includes(r.status)).length,
     completed: requests.filter(r => r.status === 'completed').length
   };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="h-8 bg-muted rounded w-48 mb-2"></div>
+            <div className="h-5 bg-muted rounded w-64"></div>
+          </div>
+          <div className="h-10 bg-muted rounded w-32"></div>
+        </div>
+        <ResponsiveGrid cols="1-2-4" gap="md">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="h-24 bg-muted rounded animate-pulse"></div>
+          ))}
+        </ResponsiveGrid>
+        <div className="h-64 bg-muted rounded animate-pulse"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -93,13 +244,24 @@ export default function ServiceRequests() {
           <h1 className="text-2xl font-bold text-foreground">طلبات الخدمة</h1>
           <p className="text-muted-foreground">إدارة ومتابعة جميع طلبات الخدمة</p>
         </div>
-        <Button 
-          className="w-full sm:w-auto"
-          onClick={() => navigate('/client/new-service-request')}
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          طلب خدمة جديدة
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline"
+            size="sm"
+            onClick={fetchServiceRequests}
+            disabled={loading}
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            تحديث
+          </Button>
+          <Button 
+            className="w-full sm:w-auto"
+            onClick={() => navigate('/client/new-service-request')}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            طلب خدمة جديدة
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -128,9 +290,9 @@ export default function ServiceRequests() {
           <div className="flex items-center justify-between">
             <div className="text-right">
               <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{stats.inProgress}</div>
-              <div className="text-sm text-orange-700 dark:text-orange-300">قيد المراجعة</div>
+              <div className="text-sm text-orange-700 dark:text-orange-300">قيد العمل</div>
             </div>
-            <AlertCircle className="w-8 h-8 text-orange-500" />
+            <Clock className="w-8 h-8 text-orange-500" />
           </div>
         </ResponsiveCard>
 
@@ -164,8 +326,10 @@ export default function ServiceRequests() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">جميع الحالات</SelectItem>
-                <SelectItem value="pending">في الانتظار</SelectItem>
-                <SelectItem value="in_progress">قيد المراجعة</SelectItem>
+                <SelectItem value="pending">قيد المراجعة</SelectItem>
+                <SelectItem value="in_review">قيد الدراسة</SelectItem>
+                <SelectItem value="approved">تمت الموافقة</SelectItem>
+                <SelectItem value="in_progress">قيد التنفيذ</SelectItem>
                 <SelectItem value="completed">مكتمل</SelectItem>
                 <SelectItem value="cancelled">ملغي</SelectItem>
               </SelectContent>
@@ -199,6 +363,14 @@ export default function ServiceRequests() {
                 <div className="p-6 space-y-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="outline" className="text-xs">
+                          {request.request_number}
+                        </Badge>
+                        <Badge className={getStatusColor(request.status)}>
+                          {getStatusText(request.status)}
+                        </Badge>
+                      </div>
                       <h3 className="font-semibold text-lg text-foreground mb-2 line-clamp-2">
                         {request.title}
                       </h3>
@@ -208,40 +380,53 @@ export default function ServiceRequests() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Badge className={getStatusColor(request.status)}>
-                      {getStatusText(request.status)}
-                    </Badge>
+                  <div className="flex items-center gap-2 flex-wrap">
                     <Badge className={serviceType.color}>
                       <ServiceIcon className="w-3 h-3 mr-1" />
                       {serviceType.label}
                     </Badge>
+                    <Badge variant="outline" className={getPriorityColor(request.priority)}>
+                      أولوية {getPriorityText(request.priority)}
+                    </Badge>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+                  <div className="space-y-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(request.created_at).toLocaleDateString('ar-SA')}</span>
+                      <span>تاريخ الإرسال: {new Date(request.created_at).toLocaleDateString('ar-SA')}</span>
                     </div>
+                    
+                    {request.deadline && (
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span>الموعد النهائي: {new Date(request.deadline).toLocaleDateString('ar-SA')}</span>
+                      </div>
+                    )}
+                    
                     <div className="flex items-center gap-2">
-                      <span className={`font-medium ${getPriorityColor(request.priority)}`}>
-                        أولوية {request.priority === 'high' ? 'عالية' : request.priority === 'medium' ? 'متوسطة' : 'منخفضة'}
-                      </span>
+                      <DollarSign className="w-4 h-4" />
+                      <span>الميزانية: {getBudgetText(request.budget)}</span>
                     </div>
+                    
+                    {request.additional_services && request.additional_services.length > 0 && (
+                      <div className="text-xs">
+                        خدمات إضافية: {request.additional_services.length} عنصر
+                      </div>
+                    )}
                   </div>
-
-                  {request.budget_range && (
-                    <div className="text-sm text-muted-foreground">
-                      <span className="font-medium">الميزانية المتوقعة: </span>
-                      {request.budget_range} ريال
-                    </div>
-                  )}
 
                   <div className="flex gap-2 pt-4 border-t">
                     <Button size="sm" variant="outline" className="flex-1">
                       <Eye className="w-4 h-4 mr-2" />
                       عرض التفاصيل
                     </Button>
+                    
+                    {['approved', 'in_progress'].includes(request.status) && (
+                      <Button size="sm" variant="outline">
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        تواصل
+                      </Button>
+                    )}
                   </div>
                 </div>
               </ResponsiveCard>
