@@ -304,7 +304,7 @@ const AdminInvoicesEnhanced = () => {
 
       const message = `السلام عليكم ${invoice.customer_name}،
 
-فاتورة جديدة من شركة تسهيل الرقمية
+فاتورة جديدة من شركة علي صالح الشهري القابضة
 🧾 رقم الفاتورة: ${invoice.invoice_number}
 💰 المبلغ: ${invoice.amount} ${invoice.currency}
 📋 الخدمة: ${invoice.offer_title}
