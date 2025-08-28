@@ -3098,7 +3098,7 @@ export type Database = {
           transaction_type: string
           updated_at: string | null
           user_id: string
-          wallet_id: string
+          wallet_id: string | null
         }
         Insert: {
           amount: number
@@ -3118,7 +3118,7 @@ export type Database = {
           transaction_type: string
           updated_at?: string | null
           user_id: string
-          wallet_id: string
+          wallet_id?: string | null
         }
         Update: {
           amount?: number
@@ -3138,7 +3138,7 @@ export type Database = {
           transaction_type?: string
           updated_at?: string | null
           user_id?: string
-          wallet_id?: string
+          wallet_id?: string | null
         }
         Relationships: [
           {
@@ -3253,6 +3253,10 @@ export type Database = {
           p_window_minutes?: number
         }
         Returns: boolean
+      }
+      ensure_user_wallet: {
+        Args: { p_user_id: string }
+        Returns: string
       }
       generate_business_contract_number: {
         Args: Record<PropertyKey, never>
