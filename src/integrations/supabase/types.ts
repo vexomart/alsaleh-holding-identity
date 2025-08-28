@@ -3556,6 +3556,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_new_invoice_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_unique_invoice_number: {
         Args: Record<PropertyKey, never>
         Returns: string
