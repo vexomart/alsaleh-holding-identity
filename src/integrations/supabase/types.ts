@@ -3540,6 +3540,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      generate_random_invoice_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_ticket_number: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -3549,6 +3553,10 @@ export type Database = {
         Returns: Database["public"]["Enums"]["admin_role"]
       }
       get_current_admin_user: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_unique_invoice_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
