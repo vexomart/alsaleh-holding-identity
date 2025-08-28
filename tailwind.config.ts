@@ -29,12 +29,14 @@ export default {
     },
     extend: {
       fontFamily: {
-        'arabic': ['Cairo', 'Roboto', 'Segoe UI', 'Tahoma', 'sans-serif'],
+        'arabic': ['Tajawal', 'Almarai', 'Cairo', 'Roboto', 'sans-serif'],
+        'tajawal': ['Tajawal', 'sans-serif'],
+        'almarai': ['Almarai', 'sans-serif'],
         'cairo': ['Cairo', 'sans-serif'],
         'roboto': ['Roboto', 'sans-serif'],
         'inter': ['Inter', 'sans-serif'],
-        'corporate': ['Roboto', 'Inter', 'Cairo', 'sans-serif'],
-        sans: ['Roboto', 'Inter', 'Cairo', 'ui-sans-serif', 'system-ui'],
+        'corporate': ['Tajawal', 'Almarai', 'Cairo', 'Roboto', 'sans-serif'],
+        sans: ['Tajawal', 'Almarai', 'Cairo', 'Roboto', 'ui-sans-serif', 'system-ui'],
       },
       colors: {
         border: "hsl(var(--border))",
