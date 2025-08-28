@@ -23,7 +23,7 @@ const OurWorks = lazy(() => import("./pages/OurWorks"));
 const About = lazy(() => import("./pages/About"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
-const AdminInvoices = lazy(() => import("./pages/admin/AdminInvoices"));
+const AdminInvoicesEnhanced = lazy(() => import("./pages/admin/AdminInvoicesEnhanced"));
 const AdminPayments = lazy(() => import("./pages/admin/AdminPayments"));
 const AdminPaymentMethods = lazy(() => import("./pages/admin/AdminPaymentMethods"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
@@ -360,7 +360,7 @@ const App = () => {
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="projects" element={<AdminProjects />} />
                   <Route path="clients" element={<AdminClients />} />
-                  <Route path="invoices" element={<AdminInvoices />} />
+                  <Route path="invoices" element={<AdminInvoicesEnhanced />} />
                   <Route path="payments" element={<AdminPayments />} />
                   <Route path="payment-methods" element={<AdminPaymentMethods />} />
                   <Route path="users" element={<AdminUsers />} />
