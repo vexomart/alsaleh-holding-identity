@@ -1925,49 +1925,46 @@ export type Database = {
         Row: {
           api_key: string | null
           configuration: Json | null
-          created_at: string | null
-          created_by: string | null
+          created_at: string
           icon_name: string
           id: string
-          is_active: boolean | null
-          is_live_mode: boolean | null
+          is_active: boolean
+          is_live_mode: boolean
           name: string
           name_ar: string
           provider: string
           secret_key: string | null
-          updated_at: string | null
+          updated_at: string
           webhook_secret: string | null
         }
         Insert: {
           api_key?: string | null
           configuration?: Json | null
-          created_at?: string | null
-          created_by?: string | null
-          icon_name: string
+          created_at?: string
+          icon_name?: string
           id?: string
-          is_active?: boolean | null
-          is_live_mode?: boolean | null
+          is_active?: boolean
+          is_live_mode?: boolean
           name: string
           name_ar: string
           provider: string
           secret_key?: string | null
-          updated_at?: string | null
+          updated_at?: string
           webhook_secret?: string | null
         }
         Update: {
           api_key?: string | null
           configuration?: Json | null
-          created_at?: string | null
-          created_by?: string | null
+          created_at?: string
           icon_name?: string
           id?: string
-          is_active?: boolean | null
-          is_live_mode?: boolean | null
+          is_active?: boolean
+          is_live_mode?: boolean
           name?: string
           name_ar?: string
           provider?: string
           secret_key?: string | null
-          updated_at?: string | null
+          updated_at?: string
           webhook_secret?: string | null
         }
         Relationships: []
