@@ -160,6 +160,137 @@ export type Database = {
         }
         Relationships: []
       }
+      affiliate_commissions: {
+        Row: {
+          affiliate_user_id: string
+          commission_amount: number
+          commission_rate: number
+          created_at: string
+          id: string
+          order_amount: number
+          paid_at: string | null
+          referred_user_id: string
+          service_request_id: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          affiliate_user_id: string
+          commission_amount: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          order_amount: number
+          paid_at?: string | null
+          referred_user_id: string
+          service_request_id?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          affiliate_user_id?: string
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          order_amount?: number
+          paid_at?: string | null
+          referred_user_id?: string
+          service_request_id?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_commissions_service_request_id_fkey"
+            columns: ["service_request_id"]
+            isOneToOne: false
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_program: {
+        Row: {
+          affiliate_code: string
+          commission_rate: number | null
+          created_at: string
+          id: string
+          level_name: string | null
+          level_threshold: number | null
+          status: string | null
+          total_earnings: number | null
+          total_orders: number | null
+          total_referrals: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          affiliate_code: string
+          commission_rate?: number | null
+          created_at?: string
+          id?: string
+          level_name?: string | null
+          level_threshold?: number | null
+          status?: string | null
+          total_earnings?: number | null
+          total_orders?: number | null
+          total_referrals?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          affiliate_code?: string
+          commission_rate?: number | null
+          created_at?: string
+          id?: string
+          level_name?: string | null
+          level_threshold?: number | null
+          status?: string | null
+          total_earnings?: number | null
+          total_orders?: number | null
+          total_referrals?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      affiliate_referrals: {
+        Row: {
+          affiliate_code: string
+          affiliate_user_id: string
+          commission_earned: number | null
+          created_at: string
+          id: string
+          order_value: number | null
+          referred_user_id: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          affiliate_code: string
+          affiliate_user_id: string
+          commission_earned?: number | null
+          created_at?: string
+          id?: string
+          order_value?: number | null
+          referred_user_id: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          affiliate_code?: string
+          affiliate_user_id?: string
+          commission_earned?: number | null
+          created_at?: string
+          id?: string
+          order_value?: number | null
+          referred_user_id?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       automation_usage: {
         Row: {
           automation_type: string
@@ -3164,6 +3295,10 @@ export type Database = {
         }
         Returns: Json
       }
+      calculate_affiliate_level: {
+        Args: { user_id: string }
+        Returns: string
+      }
       check_automation_limit: {
         Args: { p_automation_type: string; p_user_id: string }
         Returns: boolean
@@ -3256,6 +3391,10 @@ export type Database = {
       }
       ensure_user_wallet: {
         Args: { p_user_id: string }
+        Returns: string
+      }
+      generate_affiliate_code: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
       generate_business_contract_number: {
