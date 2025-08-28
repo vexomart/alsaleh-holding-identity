@@ -299,13 +299,87 @@ export default function AdminPaymentMethods() {
           })}
         </div>
 
-        {/* Footer Section */}
-        <div className="mt-20 text-center">
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 rounded-full shadow-lg backdrop-blur-sm border border-white/20">
-            <Shield className="h-5 w-5 text-primary" />
-            <span className="font-medium text-muted-foreground">مدعوم بأعلى معايير الأمان والحماية</span>
-            <Sparkles className="h-5 w-5 text-primary animate-pulse" />
-          </div>
+        {/* Live Payment Monitoring */}
+        <div className="mt-20">
+          <Card className="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 border-emerald-200/50 shadow-xl">
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+                نظام المراقبة المباشرة للدفعات
+              </CardTitle>
+              <CardDescription className="text-emerald-700/70 dark:text-emerald-300/70">
+                متابعة لحظية لجميع المعاملات المالية والإشعارات الفورية
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white/60 p-6 rounded-2xl border border-emerald-200/50 backdrop-blur-sm">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl">
+                      <Wifi className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-emerald-700">معالجة فورية</h3>
+                      <p className="text-sm text-emerald-600/70">استجابة خلال ثوانٍ</p>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 text-sm text-emerald-700">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      تحديثات الحالة الفورية
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      إشعارات لحظية للعملاء
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white/60 p-6 rounded-2xl border border-emerald-200/50 backdrop-blur-sm">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl">
+                      <Shield className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-emerald-700">أمان متطور</h3>
+                      <p className="text-sm text-emerald-600/70">حماية شاملة للبيانات</p>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 text-sm text-emerald-700">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      تشفير متقدم SSL/TLS
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      مطابقة معايير PCI DSS
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white/60 p-6 rounded-2xl border border-emerald-200/50 backdrop-blur-sm">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl">
+                      <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-emerald-700">تجربة متميزة</h3>
+                      <p className="text-sm text-emerald-600/70">سهولة في الاستخدام</p>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 text-sm text-emerald-700">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      واجهة سهلة وبديهية
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      دعم جميع الأجهزة
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

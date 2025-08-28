@@ -204,6 +204,13 @@ export default function ClientDashboard() {
       icon: Zap,
       color: 'from-orange-500 to-orange-600',
       action: '/client/new-service'
+    },
+    {
+      title: 'بوابة الدفع',
+      description: 'ادفع فواتيرك بسهولة وأمان',
+      icon: CreditCard,
+      color: 'from-emerald-500 to-emerald-600',
+      action: '/client/payment-interface'
     }
   ];
 
