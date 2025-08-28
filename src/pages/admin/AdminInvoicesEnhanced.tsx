@@ -106,21 +106,34 @@ const AdminInvoicesEnhanced = () => {
   }, []);
 
   const fetchInvoices = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase
         .from('invoices')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
+      
       setInvoices(data || []);
-    } catch (error) {
+      
+      toast({
+        title: "تم تحديث الفواتير",
+        description: `تم جلب ${data?.length || 0} فاتورة بنجاح`,
+      });
+    } catch (error: any) {
       console.error('Error fetching invoices:', error);
       toast({
         title: "خطأ في جلب الفواتير",
-        description: "حدث خطأ أثناء جلب بيانات الفواتير",
+        description: error.message || "حدث خطأ أثناء جلب بيانات الفواتير",
         variant: "destructive",
       });
+      
+      // في حالة الخطأ، اعرض قائمة فارغة بدلاً من ترك الحالة السابقة
+      setInvoices([]);
     } finally {
       setLoading(false);
     }
@@ -134,10 +147,15 @@ const AdminInvoicesEnhanced = () => {
         .eq('status', 'active')
         .order('legal_name');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching clients:', error);
+        throw error;
+      }
       setClients(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching clients:', error);
+      // لا نعرض toast للعملاء لأنه ليس حرجاً
+      setClients([]);
     }
   };
 
@@ -151,34 +169,69 @@ const AdminInvoicesEnhanced = () => {
       return;
     }
 
+    // التحقق من صحة البريد الإلكتروني
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newInvoice.customer_email)) {
+      toast({
+        title: "خطأ في البريد الإلكتروني",
+        description: "يرجى إدخال بريد إلكتروني صحيح",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // التحقق من المبلغ
+    if (newInvoice.amount <= 0) {
+      toast({
+        title: "خطأ في المبلغ",
+        description: "يجب أن يكون المبلغ أكبر من صفر",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setCreating(true);
     try {
       const dueDate = newInvoice.due_date ? new Date(newInvoice.due_date).toISOString() : null;
       
+      const { data: currentUser } = await supabase.auth.getUser();
+      if (!currentUser.user) {
+        throw new Error('المستخدم غير مسجل دخول');
+      }
+
+      const invoiceData = {
+        customer_name: newInvoice.customer_name.trim(),
+        customer_email: newInvoice.customer_email.toLowerCase().trim(),
+        customer_phone: newInvoice.customer_phone?.trim() || null,
+        amount: Number(newInvoice.amount),
+        currency: newInvoice.currency,
+        offer_title: newInvoice.offer_title.trim(),
+        notes: newInvoice.notes?.trim() || null,
+        due_date: dueDate,
+        payment_method: newInvoice.payment_method?.trim() || null,
+        client_id: newInvoice.client_id || null,
+        status: 'pending',
+        payment_status: 'pending',
+        user_id: currentUser.user.id,
+        invoice_number: null, // سيتم توليدها تلقائياً
+      };
+
       const { data, error } = await supabase
         .from('invoices')
-        .insert({
-          customer_name: newInvoice.customer_name,
-          customer_email: newInvoice.customer_email.toLowerCase().trim(),
-          customer_phone: newInvoice.customer_phone || null,
-          amount: newInvoice.amount,
-          currency: newInvoice.currency,
-          offer_title: newInvoice.offer_title,
-          notes: newInvoice.notes || null,
-          due_date: dueDate,
-          payment_method: newInvoice.payment_method || null,
-          client_id: newInvoice.client_id || null,
-          status: 'pending',
-          payment_status: 'pending',
-          user_id: (await supabase.auth.getUser()).data.user?.id,
-          invoice_number: '' // سيتم توليدها تلقائياً
-        })
+        .insert(invoiceData)
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error during invoice creation:', error);
+        if (error.code === '23505') {
+          throw new Error('رقم الفاتورة مكرر، يرجى المحاولة مرة أخرى');
+        }
+        throw error;
+      }
 
-      setInvoices([data, ...invoices]);
+      // إضافة الفاتورة الجديدة في المقدمة
+      setInvoices(prev => [data, ...prev]);
       setShowCreateDialog(false);
       resetNewInvoice();
 
@@ -187,11 +240,16 @@ const AdminInvoicesEnhanced = () => {
         description: `تم إنشاء الفاتورة رقم ${data.invoice_number}`,
       });
 
-      // إرسال إيميل الفاتورة
+      // إرسال إيميل الفاتورة في الخلفية
       try {
         await sendInvoiceEmail(data.id);
       } catch (emailError) {
         console.warn('فشل في إرسال إيميل الفاتورة:', emailError);
+        toast({
+          title: "تنبيه",
+          description: "تم إنشاء الفاتورة لكن فشل إرسال الإيميل",
+          variant: "default",
+        });
       }
 
     } catch (error: any) {
@@ -396,9 +454,17 @@ const AdminInvoicesEnhanced = () => {
         </div>
         
         <div className="flex gap-2">
-          <Button variant="outline" onClick={fetchInvoices} size="sm">
-            <RefreshCw className="w-4 h-4 ml-2" />
-            تحديث
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              setLoading(true);
+              fetchInvoices();
+            }} 
+            size="sm"
+            disabled={loading}
+          >
+            <RefreshCw className={`w-4 h-4 ml-2 ${loading ? 'animate-spin' : ''}`} />
+            {loading ? 'جارٍ التحديث...' : 'تحديث'}
           </Button>
           
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
