@@ -338,7 +338,7 @@ const ClientAffiliate = () => {
             <Button 
               variant="outline" 
               className="justify-start"
-              onClick={() => window.open(`mailto:?subject=انضم إلى منصة تسهيل&body=انضم إلى منصة تسهيل واحصل على خدمات رقمية متميزة: ${affiliateData.referral_link}`, '_blank')}
+              onClick={() => window.open(`mailto:?subject=انضم إلى شركة علي صالح الشهري القابضة&body=انضم إلى شركة علي صالح الشهري القابضة واحصل على خدمات رقمية متميزة: ${affiliateData.referral_link}`, '_blank')}
             >
               <Mail className="w-4 h-4 ml-2" />
               مشاركة عبر البريد الإلكتروني
@@ -346,7 +346,7 @@ const ClientAffiliate = () => {
             <Button 
               variant="outline" 
               className="justify-start"
-              onClick={() => window.open(`https://wa.me/?text=انضم إلى منصة تسهيل واحصل على خدمات رقمية متميزة ${affiliateData.referral_link}`, '_blank')}
+              onClick={() => window.open(`https://wa.me/?text=انضم إلى شركة علي صالح الشهري القابضة واحصل على خدمات رقمية متميزة ${affiliateData.referral_link}`, '_blank')}
             >
               <MessageSquare className="w-4 h-4 ml-2" />
               مشاركة عبر واتساب
@@ -357,7 +357,7 @@ const ClientAffiliate = () => {
               onClick={() => {
                 if (navigator.share) {
                   navigator.share({
-                    title: 'انضم إلى منصة تسهيل',
+                    title: 'انضم إلى شركة علي صالح الشهري القابضة',
                     text: 'احصل على خدمات رقمية متميزة',
                     url: affiliateData.referral_link,
                   });
