@@ -257,13 +257,23 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    // إرسال الفاتورة للعميل
+    // إرسال الفاتورة للعميل مع إعدادات محسنة
     const customerEmailResponse = await resend.emails.send({
       from: "شركة علي صالح الشهري القابضة <info@alialshehriholding.com>",
       to: [customerEmail],
       bcc: ["info@alialshehriholding.com"], // نسخة للإدارة
-      subject: `فاتورة ضريبية رقم ${invoiceNumber} - شركة علي صالح الشهري القابضة`,
+      subject: `✅ فاتورة ضريبية رقم ${invoiceNumber} - مدفوعة`,
       html: invoiceHtml,
+      headers: {
+        'X-Priority': '1',
+        'X-MSMail-Priority': 'High',
+        'Importance': 'high'
+      },
+      tags: [
+        { name: 'category', value: 'invoice' },
+        { name: 'status', value: 'paid' },
+        { name: 'customer', value: customerName }
+      ]
     });
 
     // إرسال نسخة للإدارة
