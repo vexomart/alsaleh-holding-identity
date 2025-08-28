@@ -5,28 +5,31 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { 
   CreditCard, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Key, 
-  Shield, 
+  Settings,
+  CheckCircle,
+  AlertCircle,
+  Clock,
+  Save,
   Eye,
   EyeOff,
   Smartphone,
   Building2,
   Calendar,
-  Settings,
-  CheckCircle,
-  AlertCircle,
-  Clock,
-  Save
+  Wifi,
+  WifiOff,
+  Zap,
+  Shield,
+  Copy,
+  RefreshCw,
+  Key,
+  Check,
+  X
 } from 'lucide-react';
 
 interface PaymentMethod {
@@ -58,64 +61,45 @@ const paymentProviders = [
     name: 'Tabby',
     name_ar: 'تاب',
     icon: 'CreditCard',
-    description: 'ادفع على أقساط مع تاب',
-    color: 'from-purple-500 to-pink-500',
+    description: 'بوابة دفع آمنة للفيزا ومدى وApple Pay',
+    color: 'from-primary to-primary-variant',
+    features: ['Visa', 'Mastercard', 'Mada', 'Apple Pay'],
     fields: [
-      { key: 'merchant_code', label: 'كود التاجر', type: 'text', required: true },
-      { key: 'public_key', label: 'المفتاح العام', type: 'text', required: true },
-      { key: 'secret_key', label: 'المفتاح السري', type: 'password', required: true },
-      { key: 'webhook_secret', label: 'مفتاح Webhook', type: 'password', required: false }
-    ],
-    defaultConfig: {
-      currencies: ['SAR'],
-      min_amount: 100,
-      max_amount: 10000,
-      installments: [3, 6, 12]
-    }
+      { key: 'merchant_id', label: 'كود التاجر', type: 'text', required: true, placeholder: 'MERCHANT_ID' },
+      { key: 'public_key', label: 'المفتاح العام', type: 'text', required: true, placeholder: 'pk_test_...' },
+      { key: 'secret_key', label: 'المفتاح السري', type: 'password', required: true, placeholder: 'sk_test_...' },
+      { key: 'webhook_secret', label: 'مفتاح Webhook', type: 'password', required: false, placeholder: 'whsec_...' }
+    ]
   },
   {
     id: 'tamara',
     name: 'Tamara',
     name_ar: 'تمارا',
     icon: 'Calendar',
-    description: 'قسم مشترياتك مع تمارا',
+    description: 'قسم مشترياتك واشتري الآن وادفع لاحقاً',
     color: 'from-green-500 to-emerald-500',
+    features: ['تقسيط 3 أشهر', 'تقسيط 4 أشهر', 'ادفع الشهر القادم'],
     fields: [
-      { key: 'api_url', label: 'API URL', type: 'text', required: true },
-      { key: 'api_token', label: 'API Token', type: 'password', required: true },
-      { key: 'notification_token', label: 'Notification Token', type: 'password', required: true },
-      { key: 'merchant_url', label: 'رابط التاجر', type: 'text', required: false }
-    ],
-    defaultConfig: {
-      api_url: 'https://api-sandbox.tamara.co',
-      currency: 'SAR',
-      max_amount: 50000,
-      min_amount: 100,
-      country_code: 'SA',
-      sandbox_mode: true
-    }
+      { key: 'api_url', label: 'API URL', type: 'text', required: true, placeholder: 'https://api.tamara.co' },
+      { key: 'api_token', label: 'API Token', type: 'password', required: true, placeholder: 'Bearer token...' },
+      { key: 'notification_token', label: 'Notification Token', type: 'password', required: true, placeholder: 'notification_token...' },
+      { key: 'merchant_url', label: 'رابط التاجر', type: 'text', required: false, placeholder: 'https://example.com' }
+    ]
   },
   {
     id: 'bank_transfer',
     name: 'Bank Transfer',
     name_ar: 'حوالة بنكية',
     icon: 'Building2',
-    description: 'تحويل بنكي مباشر',
+    description: 'تحويل بنكي مباشر لحساب الشركة',
     color: 'from-blue-500 to-cyan-500',
+    features: ['تحويل مباشر', 'IBAN متاح', 'مؤكد خلال 24 ساعة'],
     fields: [
-      { key: 'bank_name', label: 'اسم البنك', type: 'text', required: true },
-      { key: 'account_number', label: 'رقم الحساب', type: 'text', required: true },
-      { key: 'iban', label: 'IBAN', type: 'text', required: true },
-      { key: 'company_name', label: 'اسم الشركة', type: 'text', required: true }
-    ],
-    defaultConfig: {
-      iban: 'SA1980000161608016071040',
-      bank_name: 'البنك الأهلي السعودي',
-      company_name: 'شركة علي صالح الشهري القابضة',
-      account_number: '161000010006086071040',
-      processing_time: '24 ساعة',
-      requires_receipt: true
-    }
+      { key: 'bank_name', label: 'اسم البنك', type: 'text', required: true, placeholder: 'البنك الأهلي السعودي' },
+      { key: 'account_number', label: 'رقم الحساب', type: 'text', required: true, placeholder: '161000010006086071040' },
+      { key: 'iban', label: 'IBAN', type: 'text', required: true, placeholder: 'SA1980000161608016071040' },
+      { key: 'account_holder', label: 'اسم صاحب الحساب', type: 'text', required: true, placeholder: 'شركة علي صالح الشهري القابضة' }
+    ]
   }
 ];
 
@@ -160,12 +144,20 @@ export default function AdminPaymentMethods() {
 
       const existingMethod = paymentMethods.find(m => m.provider === providerId);
       
+      // Build configuration object from form fields
+      const configuration: any = {};
+      provider.fields.forEach(field => {
+        if (formData[field.key]) {
+          configuration[field.key] = formData[field.key];
+        }
+      });
+
       const methodData = {
         name: provider.name,
         name_ar: provider.name_ar,
         provider: provider.id,
         icon_name: provider.icon,
-        configuration: provider.defaultConfig,
+        configuration: configuration,
         is_active: formData.is_active,
         is_live_mode: formData.is_live_mode,
         api_key: formData.api_key || null,
@@ -189,7 +181,7 @@ export default function AdminPaymentMethods() {
       }
 
       toast({
-        title: "تم الحفظ",
+        title: "تم الحفظ بنجاح",
         description: `تم حفظ إعدادات ${provider.name_ar} بنجاح`,
       });
 
@@ -197,8 +189,8 @@ export default function AdminPaymentMethods() {
     } catch (error) {
       console.error('Error saving payment method:', error);
       toast({
-        title: "خطأ",
-        description: "فشل في حفظ الإعدادات",
+        title: "خطأ في الحفظ",
+        description: "فشل في حفظ الإعدادات، يرجى المحاولة مرة أخرى",
         variant: "destructive"
       });
     } finally {
@@ -215,12 +207,19 @@ export default function AdminPaymentMethods() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-muted rounded w-1/3"></div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="min-h-screen p-6 bg-gradient-to-br from-background via-background/95 to-primary/5">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="text-center">
+            <div className="animate-pulse space-y-4">
+              <div className="h-12 bg-muted rounded-lg w-1/2 mx-auto"></div>
+              <div className="h-6 bg-muted rounded w-1/3 mx-auto"></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-96 bg-muted rounded-lg"></div>
+              <div key={i} className="animate-pulse">
+                <div className="h-96 bg-muted rounded-2xl"></div>
+              </div>
             ))}
           </div>
         </div>
@@ -229,45 +228,47 @@ export default function AdminPaymentMethods() {
   }
 
   return (
-    <div className="space-y-8" dir="rtl" style={{ fontFamily: 'Noto Kufi Arabic, Amiri, Tajawal, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <div className="flex items-center justify-center gap-3">
-          <div className="p-3 bg-gradient-to-br from-primary to-primary-variant rounded-2xl shadow-lg">
-            <CreditCard className="h-8 w-8 text-primary-foreground" />
+    <div className="min-h-screen p-6 bg-gradient-to-br from-background via-background/95 to-primary/5" dir="rtl">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-6">
+          <div className="inline-flex items-center justify-center p-4 bg-gradient-to-br from-primary to-primary-variant rounded-3xl shadow-xl">
+            <CreditCard className="h-12 w-12 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-primary-variant bg-clip-text text-transparent">
+              إدارة طرق الدفع
+            </h1>
+            <p className="text-xl text-muted-foreground mt-3 max-w-2xl mx-auto">
+              قم بإدارة وتكوين بوابات الدفع المختلفة لتوفير تجربة دفع آمنة ومرنة للعملاء
+            </p>
           </div>
         </div>
-        <div>
-          <h1 className="text-4xl font-bold text-foreground">إدارة طرق الدفع</h1>
-          <p className="text-lg text-muted-foreground mt-2">
-            قم بإدارة وتكوين طرق الدفع المختلفة للعملاء
-          </p>
-        </div>
-      </div>
 
-      {/* Payment Methods Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {paymentProviders.map((provider) => {
-          const existingMethod = paymentMethods.find(m => m.provider === provider.id);
-          const IconComponent = iconMap[provider.icon as keyof typeof iconMap];
-          const isConfigured = !!(existingMethod && existingMethod.api_key);
-          const isActive = existingMethod?.is_active || false;
-          
-          return (
-            <PaymentMethodCard
-              key={provider.id}
-              provider={provider}
-              existingMethod={existingMethod}
-              IconComponent={IconComponent}
-              isConfigured={isConfigured}
-              isActive={isActive}
-              saving={saving === provider.id}
-              showSecrets={showSecrets}
-              onToggleSecrets={toggleSecretVisibility}
-              onUpdate={updatePaymentMethod}
-            />
-          );
-        })}
+        {/* Payment Methods Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {paymentProviders.map((provider) => {
+            const existingMethod = paymentMethods.find(m => m.provider === provider.id);
+            const IconComponent = iconMap[provider.icon as keyof typeof iconMap];
+            const isConfigured = !!(existingMethod && (existingMethod.api_key || existingMethod.configuration));
+            const isActive = existingMethod?.is_active || false;
+            
+            return (
+              <PaymentMethodCard
+                key={provider.id}
+                provider={provider}
+                existingMethod={existingMethod}
+                IconComponent={IconComponent}
+                isConfigured={isConfigured}
+                isActive={isActive}
+                saving={saving === provider.id}
+                showSecrets={showSecrets}
+                onToggleSecrets={toggleSecretVisibility}
+                onUpdate={updatePaymentMethod}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -297,16 +298,21 @@ function PaymentMethodCard({
   onUpdate
 }: PaymentMethodCardProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    is_active: isActive,
-    is_live_mode: existingMethod?.is_live_mode || false,
-    api_key: existingMethod?.api_key || '',
-    secret_key: existingMethod?.secret_key || '',
-    webhook_secret: existingMethod?.webhook_secret || '',
-    ...provider.fields.reduce((acc: any, field: any) => {
-      acc[field.key] = existingMethod?.configuration?.[field.key] || provider.defaultConfig[field.key] || '';
-      return acc;
-    }, {})
+  const [formData, setFormData] = useState(() => {
+    const initialData: any = {
+      is_active: isActive,
+      is_live_mode: existingMethod?.is_live_mode || false,
+      api_key: existingMethod?.api_key || '',
+      secret_key: existingMethod?.secret_key || '',
+      webhook_secret: existingMethod?.webhook_secret || '',
+    };
+
+    // Initialize field values from configuration
+    provider.fields.forEach((field: any) => {
+      initialData[field.key] = existingMethod?.configuration?.[field.key] || '';
+    });
+
+    return initialData;
   });
 
   const handleSave = () => {
@@ -314,77 +320,137 @@ function PaymentMethodCard({
     setIsOpen(false);
   };
 
-  const getStatusIcon = () => {
-    if (!isConfigured) return <Clock className="h-4 w-4 text-yellow-500" />;
-    if (isActive) return <CheckCircle className="h-4 w-4 text-green-500" />;
-    return <AlertCircle className="h-4 w-4 text-gray-500" />;
+  const getStatusInfo = () => {
+    if (!isConfigured) {
+      return {
+        icon: <Clock className="h-5 w-5" />,
+        text: 'غير مُكوّن',
+        color: 'text-yellow-600',
+        bgColor: 'bg-yellow-50 border-yellow-200',
+        badge: 'secondary'
+      };
+    }
+    if (isActive) {
+      return {
+        icon: <CheckCircle className="h-5 w-5" />,
+        text: 'مفعل ويعمل',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50 border-green-200',
+        badge: 'default'
+      };
+    }
+    return {
+      icon: <AlertCircle className="h-5 w-5" />,
+      text: 'معطل',
+      color: 'text-gray-600',
+      bgColor: 'bg-gray-50 border-gray-200',
+      badge: 'secondary'
+    };
   };
 
-  const getStatusText = () => {
-    if (!isConfigured) return 'غير مُكوّن';
-    if (isActive) return 'مفعل';
-    return 'معطل';
-  };
-
-  const getStatusColor = () => {
-    if (!isConfigured) return 'border-yellow-200 bg-yellow-50';
-    if (isActive) return 'border-green-200 bg-green-50';
-    return 'border-gray-200 bg-gray-50';
-  };
+  const statusInfo = getStatusInfo();
 
   return (
-    <Card className={`relative transition-all duration-300 hover:shadow-lg ${getStatusColor()}`}>
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className={`p-3 bg-gradient-to-br ${provider.color} rounded-xl shadow-md`}>
-              <IconComponent className="h-6 w-6 text-white" />
+    <Card className={`relative group transition-all duration-500 hover:shadow-2xl hover:scale-105 ${statusInfo.bgColor} border-2 overflow-hidden`}>
+      {/* Background Gradient Effect */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${provider.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+      
+      <CardHeader className="relative pb-4">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-4">
+            <div className={`p-4 bg-gradient-to-br ${provider.color} rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+              <IconComponent className="h-8 w-8 text-white" />
             </div>
-            <div>
-              <CardTitle className="text-xl font-semibold">{provider.name_ar}</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">
+            <div className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors">
+                {provider.name_ar}
+              </CardTitle>
+              <CardDescription className="text-sm text-muted-foreground leading-relaxed">
                 {provider.description}
               </CardDescription>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            {getStatusIcon()}
-            <Badge variant={isActive && isConfigured ? "default" : "secondary"} className="text-xs">
-              {getStatusText()}
-            </Badge>
+            <div className={statusInfo.color}>
+              {statusInfo.icon}
+            </div>
           </div>
+        </div>
+
+        {/* Features */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {provider.features.map((feature: string, index: number) => (
+            <Badge 
+              key={index} 
+              variant="outline" 
+              className="text-xs px-2 py-1 bg-background/50 hover:bg-primary/10 transition-colors"
+            >
+              {feature}
+            </Badge>
+          ))}
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-4">
-        {/* Configuration Status */}
-        <div className="p-3 rounded-lg bg-muted/50 space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="font-medium">حالة التكوين:</span>
-            <span className={isConfigured ? 'text-green-600' : 'text-yellow-600'}>
-              {isConfigured ? 'مُكوّن' : 'يحتاج تكوين'}
-            </span>
+      <CardContent className="relative space-y-6">
+        {/* Status Card */}
+        <div className="p-4 rounded-xl bg-background/70 backdrop-blur-sm border space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="font-semibold text-foreground">حالة الطريقة</span>
+            <Badge variant={statusInfo.badge as any} className="gap-1">
+              {statusInfo.icon}
+              {statusInfo.text}
+            </Badge>
           </div>
           
           {isConfigured && (
             <>
-              <div className="flex items-center justify-between text-sm">
-                <span>الوضع:</span>
-                <span className={existingMethod?.is_live_mode ? 'text-red-600' : 'text-blue-600'}>
-                  {existingMethod?.is_live_mode ? 'مباشر' : 'تجريبي'}
-                </span>
+              <Separator className="my-2" />
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">البيئة:</span>
+                  <div className="flex items-center gap-1">
+                    {existingMethod?.is_live_mode ? (
+                      <>
+                        <Wifi className="h-3 w-3 text-red-500" />
+                        <span className="text-red-600 font-medium">مباشر</span>
+                      </>
+                    ) : (
+                      <>
+                        <WifiOff className="h-3 w-3 text-blue-500" />
+                        <span className="text-blue-600 font-medium">تجريبي</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">الحالة:</span>
+                  <div className="flex items-center gap-1">
+                    {isActive ? (
+                      <>
+                        <Zap className="h-3 w-3 text-green-500" />
+                        <span className="text-green-600 font-medium">نشط</span>
+                      </>
+                    ) : (
+                      <>
+                        <X className="h-3 w-3 text-gray-500" />
+                        <span className="text-gray-600 font-medium">متوقف</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
               
               {existingMethod?.api_key && (
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">API Key:</span>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => onToggleSecrets(existingMethod.id)}
-                      className="h-6 w-6 p-0"
+                      className="h-7 w-7 p-0 hover:bg-primary/10"
                     >
                       {showSecrets[existingMethod.id] ? 
                         <EyeOff className="h-3 w-3" /> : 
@@ -392,10 +458,10 @@ function PaymentMethodCard({
                       }
                     </Button>
                   </div>
-                  <div className="text-xs font-mono bg-muted p-2 rounded text-center">
+                  <div className="text-xs font-mono bg-muted/70 p-3 rounded-lg text-center border">
                     {showSecrets[existingMethod.id] 
                       ? existingMethod.api_key 
-                      : '••••••••••••••••'
+                      : '••••••••••••••••••••••••••••'
                     }
                   </div>
                 </div>
@@ -405,107 +471,143 @@ function PaymentMethodCard({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button 
                 variant={isConfigured ? "outline" : "default"} 
-                className="flex-1 gap-2"
+                size="lg"
+                className="flex-1 gap-2 h-12 font-semibold group-hover:shadow-lg transition-all"
                 disabled={saving}
               >
-                <Settings className="h-4 w-4" />
-                {isConfigured ? 'إعدادات' : 'تكوين'}
+                <Settings className="h-5 w-5" />
+                {isConfigured ? 'تعديل الإعدادات' : 'إعداد الآن'}
               </Button>
             </DialogTrigger>
             
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-3">
-                  <div className={`p-2 bg-gradient-to-br ${provider.color} rounded-lg`}>
-                    <IconComponent className="h-5 w-5 text-white" />
+            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" dir="rtl">
+              <DialogHeader className="border-b pb-4">
+                <DialogTitle className="flex items-center gap-3 text-2xl">
+                  <div className={`p-3 bg-gradient-to-br ${provider.color} rounded-xl shadow-lg`}>
+                    <IconComponent className="h-6 w-6 text-white" />
                   </div>
-                  إعدادات {provider.name_ar}
+                  <div>
+                    <div>إعدادات {provider.name_ar}</div>
+                    <div className="text-sm font-normal text-muted-foreground mt-1">
+                      {provider.description}
+                    </div>
+                  </div>
                 </DialogTitle>
               </DialogHeader>
               
-              <div className="space-y-6">
-                {/* Status Switches */}
-                <div className="grid grid-cols-2 gap-4 p-4 bg-muted/30 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="is_active" className="text-sm font-medium">تفعيل الطريقة</Label>
-                    <Switch
-                      id="is_active"
-                      checked={formData.is_active}
-                      onCheckedChange={(checked) => setFormData({...formData, is_active: checked})}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="is_live_mode" className="text-sm font-medium">الوضع المباشر</Label>
-                    <Switch
-                      id="is_live_mode"
-                      checked={formData.is_live_mode}
-                      onCheckedChange={(checked) => setFormData({...formData, is_live_mode: checked})}
-                    />
-                  </div>
-                </div>
-
-                {/* API Fields */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold flex items-center gap-2">
-                    <Key className="h-5 w-5 text-primary" />
-                    بيانات الاتصال
-                  </h3>
-                  
-                  {provider.fields.map((field: any) => (
-                    <div key={field.key} className="space-y-2">
-                      <Label htmlFor={field.key} className="text-sm font-medium">
-                        {field.label}
-                        {field.required && <span className="text-red-500 mr-1">*</span>}
-                      </Label>
-                      <Input
-                        id={field.key}
-                        type={field.type}
-                        value={formData[field.key as keyof typeof formData]}
-                        onChange={(e) => setFormData({...formData, [field.key]: e.target.value})}
-                        placeholder={`أدخل ${field.label}`}
-                        required={field.required}
-                        className="font-mono text-sm"
+              <div className="space-y-8 pt-6">
+                {/* Status Controls */}
+                <div className="grid grid-cols-2 gap-6 p-6 bg-muted/30 rounded-xl">
+                  <div className="space-y-3">
+                    <Label htmlFor="is_active" className="text-base font-semibold flex items-center gap-2">
+                      <Check className="h-4 w-4" />
+                      تفعيل طريقة الدفع
+                    </Label>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">تفعيل/إلغاء تفعيل للعملاء</span>
+                      <Switch
+                        id="is_active"
+                        checked={formData.is_active}
+                        onCheckedChange={(checked) => setFormData({...formData, is_active: checked})}
+                        className="scale-125"
                       />
                     </div>
-                  ))}
-                </div>
-
-                {/* Default Configuration */}
-                <div className="space-y-3">
-                  <h3 className="text-lg font-semibold">التكوين الافتراضي</h3>
-                  <div className="p-4 bg-muted/30 rounded-lg">
-                    <pre className="text-xs text-muted-foreground font-mono">
-                      {JSON.stringify(provider.defaultConfig, null, 2)}
-                    </pre>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Label htmlFor="is_live_mode" className="text-base font-semibold flex items-center gap-2">
+                      <Wifi className="h-4 w-4" />
+                      الوضع المباشر
+                    </Label>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">تشغيل البيئة المباشرة</span>
+                      <Switch
+                        id="is_live_mode"
+                        checked={formData.is_live_mode}
+                        onCheckedChange={(checked) => setFormData({...formData, is_live_mode: checked})}
+                        className="scale-125"
+                      />
+                    </div>
                   </div>
                 </div>
 
+                {/* API Configuration */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 pb-2 border-b">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Key className="h-5 w-5 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold">بيانات الاتصال والتكوين</h3>
+                  </div>
+                  
+                  <div className="grid gap-6">
+                    {provider.fields.map((field: any) => (
+                      <div key={field.key} className="space-y-3">
+                        <Label htmlFor={field.key} className="text-base font-semibold">
+                          {field.label}
+                          {field.required && <span className="text-red-500 mr-2">*</span>}
+                        </Label>
+                        <Input
+                          id={field.key}
+                          type={field.type}
+                          value={formData[field.key] || ''}
+                          onChange={(e) => setFormData({...formData, [field.key]: e.target.value})}
+                          placeholder={field.placeholder}
+                          required={field.required}
+                          className="h-12 font-mono text-base"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Configuration Preview */}
+                {existingMethod?.configuration && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                      <Shield className="h-5 w-5 text-primary" />
+                      التكوين الحالي
+                    </h3>
+                    <div className="p-4 bg-muted/50 rounded-xl border">
+                      <pre className="text-sm text-muted-foreground font-mono whitespace-pre-wrap">
+                        {JSON.stringify(existingMethod.configuration, null, 2)}
+                      </pre>
+                    </div>
+                  </div>
+                )}
+
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-4 border-t">
+                <div className="flex gap-4 pt-6 border-t">
                   <Button 
                     onClick={handleSave} 
-                    className="flex-1 gap-2"
+                    size="lg"
+                    className="flex-1 gap-2 h-12 font-semibold"
                     disabled={saving}
                   >
                     {saving ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <RefreshCw className="h-5 w-5 animate-spin" />
                         جاري الحفظ...
                       </>
                     ) : (
                       <>
-                        <Save className="h-4 w-4" />
-                        حفظ الإعدادات
+                        <Save className="h-5 w-5" />
+                        حفظ التغييرات
                       </>
                     )}
                   </Button>
-                  <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="lg"
+                    onClick={() => setIsOpen(false)}
+                    className="px-8"
+                  >
                     إلغاء
                   </Button>
                 </div>
@@ -515,15 +617,15 @@ function PaymentMethodCard({
           
           {isConfigured && (
             <Button
-              variant={isActive ? "secondary" : "default"}
-              size="sm"
+              variant={isActive ? "destructive" : "default"}
+              size="lg"
               onClick={() => {
                 const newFormData = { ...formData, is_active: !isActive };
                 setFormData(newFormData);
                 onUpdate(provider.id, newFormData);
               }}
               disabled={saving}
-              className="px-3"
+              className="px-6 h-12 font-semibold"
             >
               {isActive ? 'تعطيل' : 'تفعيل'}
             </Button>
