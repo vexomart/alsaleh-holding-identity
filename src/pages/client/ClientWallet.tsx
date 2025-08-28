@@ -93,35 +93,6 @@ export default function ClientWallet() {
   useEffect(() => {
     fetchWalletData();
     fetchPaymentMethods();
-    
-    // Check if returning from payment gateway
-    const urlParams = new URLSearchParams(window.location.search);
-    const paymentStatus = urlParams.get('payment_status');
-    const transactionId = urlParams.get('transaction_id');
-    
-    if (paymentStatus && transactionId) {
-      handlePaymentReturn(paymentStatus, transactionId);
-      // Clean URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-    
-    // Check localStorage for pending transactions
-    const pendingTransactionId = localStorage.getItem('pending_transaction_id');
-    if (pendingTransactionId) {
-      // Auto-refresh data every 5 seconds for pending transactions
-      const interval = setInterval(() => {
-        checkTransactionStatus(pendingTransactionId);
-      }, 5000);
-      
-      // Clean up after 5 minutes
-      setTimeout(() => {
-        clearInterval(interval);
-        localStorage.removeItem('pending_transaction_id');
-        localStorage.removeItem('wallet_return_url');
-      }, 300000);
-      
-      return () => clearInterval(interval);
-    }
   }, []);
 
   const fetchPaymentMethods = async () => {
@@ -355,29 +326,16 @@ export default function ClientWallet() {
       
       if (data?.success) {
         if (data.payment_url) {
-          console.log('Payment URL found:', data.payment_url);
+          console.log('Payment URL received:', data.payment_url);
           
-          // Clear form immediately
+          // Clear form first
           setDepositAmount('');
           setPaymentMethod('');
           setReceiptFile(null);
           setIsDepositOpen(false);
           
-          // Show immediate feedback
-          toast({
-            title: "جاري التحويل إلى بوابة الدفع...",
-            description: "سيتم تحويلك خلال ثواني",
-            variant: "default",
-            duration: 2000
-          });
-          
-          // Store return URL for later use
-          localStorage.setItem('wallet_return_url', window.location.href);
-          localStorage.setItem('pending_transaction_id', data.transaction_id);
-          
-          // Immediate redirect without delay
-          console.log('Redirecting to payment gateway...');
-          window.location.replace(data.payment_url);
+          // Immediate redirect without any delay or confirmation
+          window.location.href = data.payment_url;
         } else {
           // Payment was processed immediately (bank transfer)
           toast({
