@@ -276,8 +276,11 @@ serve(async (req) => {
               throw new Error('Failed to create transaction');
             }
 
-            // For demo purposes, return a simulated payment URL
-            payment_url = `https://sandbox.payments.tap.company/demo/${reference_id}`;
+            // For demo purposes, create a proper payment URL with callback
+            const returnUrl = `${req.headers.get('origin') || 'https://your-domain.com'}/client/wallet?payment_status=success&transaction_id=${transaction.id}`;
+            const cancelUrl = `${req.headers.get('origin') || 'https://your-domain.com'}/client/wallet?payment_status=failed&transaction_id=${transaction.id}`;
+            
+            payment_url = `https://sandbox.payments.tap.company/demo/${reference_id}?return_url=${encodeURIComponent(returnUrl)}&cancel_url=${encodeURIComponent(cancelUrl)}`;
             
             return new Response(
               JSON.stringify({ 
@@ -286,7 +289,9 @@ serve(async (req) => {
                 transaction_id: transaction.id,
                 reference_id,
                 status: 'pending',
-                message: 'تم إنشاء رابط الدفع بنجاح. يرجى إكمال الدفع للمتابعة.'
+                message: 'تم إنشاء رابط الدفع بنجاح. سيتم تحويلك لإكمال الدفع.',
+                return_url: returnUrl,
+                cancel_url: cancelUrl
               }),
               { 
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

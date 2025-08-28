@@ -93,6 +93,35 @@ export default function ClientWallet() {
   useEffect(() => {
     fetchWalletData();
     fetchPaymentMethods();
+    
+    // Check if returning from payment gateway
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment_status');
+    const transactionId = urlParams.get('transaction_id');
+    
+    if (paymentStatus && transactionId) {
+      handlePaymentReturn(paymentStatus, transactionId);
+      // Clean URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
+    // Check localStorage for pending transactions
+    const pendingTransactionId = localStorage.getItem('pending_transaction_id');
+    if (pendingTransactionId) {
+      // Auto-refresh data every 5 seconds for pending transactions
+      const interval = setInterval(() => {
+        checkTransactionStatus(pendingTransactionId);
+      }, 5000);
+      
+      // Clean up after 5 minutes
+      setTimeout(() => {
+        clearInterval(interval);
+        localStorage.removeItem('pending_transaction_id');
+        localStorage.removeItem('wallet_return_url');
+      }, 300000);
+      
+      return () => clearInterval(interval);
+    }
   }, []);
 
   const fetchPaymentMethods = async () => {
@@ -161,6 +190,67 @@ export default function ClientWallet() {
       console.error('Error fetching wallet data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePaymentReturn = async (paymentStatus: string, transactionId: string) => {
+    console.log('Payment return detected:', { paymentStatus, transactionId });
+    
+    if (paymentStatus === 'success') {
+      toast({
+        title: "تم الدفع بنجاح!",
+        description: "تم إضافة المبلغ إلى محفظتك",
+        variant: "default"
+      });
+    } else if (paymentStatus === 'failed') {
+      toast({
+        title: "فشل في الدفع",
+        description: "لم يتم إتمام عملية الدفع، يرجى المحاولة مرة أخرى",
+        variant: "destructive"
+      });
+    }
+    
+    // Clean up localStorage
+    localStorage.removeItem('pending_transaction_id');
+    localStorage.removeItem('wallet_return_url');
+    
+    // Refresh wallet data
+    await fetchWalletData();
+  };
+
+  const checkTransactionStatus = async (transactionId: string) => {
+    try {
+      console.log('Checking transaction status for:', transactionId);
+      
+      const { data: transaction, error } = await supabase
+        .from('wallet_transactions')
+        .select('*')
+        .eq('id', transactionId)
+        .single();
+
+      if (error) {
+        console.error('Error checking transaction status:', error);
+        return;
+      }
+
+      console.log('Transaction status:', transaction?.status);
+      
+      if (transaction && transaction.status === 'completed') {
+        toast({
+          title: "تم تأكيد الدفع!",
+          description: "تم إضافة المبلغ إلى محفظتك بنجاح",
+          variant: "default"
+        });
+        
+        // Clean up localStorage
+        localStorage.removeItem('pending_transaction_id');
+        localStorage.removeItem('wallet_return_url');
+        
+        // Refresh wallet data
+        await fetchWalletData();
+      }
+    } catch (error) {
+      console.error('Error in checkTransactionStatus:', error);
     }
   };
 
@@ -266,26 +356,28 @@ export default function ClientWallet() {
       if (data?.success) {
         if (data.payment_url) {
           console.log('Payment URL found:', data.payment_url);
-          console.log('Attempting to redirect...');
           
-          // Clear form first
+          // Clear form immediately
           setDepositAmount('');
           setPaymentMethod('');
           setReceiptFile(null);
           setIsDepositOpen(false);
           
-          // Show loading message
+          // Show immediate feedback
           toast({
             title: "جاري التحويل إلى بوابة الدفع...",
-            description: "سيتم تحويلك لإكمال عملية الدفع",
-            variant: "default"
+            description: "سيتم تحويلك خلال ثواني",
+            variant: "default",
+            duration: 2000
           });
           
-          // Add small delay then redirect
-          setTimeout(() => {
-            console.log('Redirecting to:', data.payment_url);
-            window.location.href = data.payment_url;
-          }, 1000);
+          // Store return URL for later use
+          localStorage.setItem('wallet_return_url', window.location.href);
+          localStorage.setItem('pending_transaction_id', data.transaction_id);
+          
+          // Immediate redirect without delay
+          console.log('Redirecting to payment gateway...');
+          window.location.replace(data.payment_url);
         } else {
           // Payment was processed immediately (bank transfer)
           toast({
