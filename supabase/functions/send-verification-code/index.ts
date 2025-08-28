@@ -34,36 +34,71 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { email, type }: VerificationRequest = await req.json();
 
+    console.log(`Verification request: email=${email}, type=${type}`);
+
     if (!email || !email.includes('@')) {
+      console.error('Invalid email address:', email);
       return new Response(
         JSON.stringify({ error: "Invalid email address" }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
-    // التحقق من وجود المستخدم أولاً
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-    
-    if (userError || !userData.user) {
-      return new Response(
-        JSON.stringify({ error: "User not found" }),
-        { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
-    }
-
-    // إذا كان نوع الطلب admin، تحقق من الصلاحيات
+    // للمديرين، نتحقق من الصلاحيات بطريقة مختلفة
     if (type === 'admin') {
-      const { data: roleData } = await supabase
+      // البحث في جدول admin_users أو user_roles مباشرة
+      const { data: adminData, error: adminError } = await supabase
+        .from('user_roles')
+        .select('user_id, role')
+        .eq('role', 'admin')
+        .limit(1);
+
+      console.log('Admin check result:', { adminData, adminError });
+
+      // إذا لم نجد أي admin في النظام، نرفض الطلب
+      if (adminError || !adminData || adminData.length === 0) {
+        console.error('No admin users found or admin error:', adminError);
+        return new Response(
+          JSON.stringify({ error: "Admin access not configured" }),
+          { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+
+      // تحقق إضافي: البحث عن الإيميل في قاعدة البيانات
+      const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
+      
+      if (userError || !userData.user) {
+        console.error('Admin user not found in auth:', { email, userError });
+        return new Response(
+          JSON.stringify({ error: "Admin email not found in system" }),
+          { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+
+      // التحقق من أن هذا المستخدم له صلاحيات admin
+      const { data: userRoleData } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userData.user.id)
         .eq('role', 'admin')
         .single();
 
-      if (!roleData) {
+      if (!userRoleData) {
+        console.error('User does not have admin role:', email);
         return new Response(
-          JSON.stringify({ error: "Admin access denied" }),
+          JSON.stringify({ error: "User does not have admin privileges" }),
           { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+    } else {
+      // للمستخدمين العاديين، التحقق العادي
+      const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
+      
+      if (userError || !userData.user) {
+        console.error('User not found:', { email, userError });
+        return new Response(
+          JSON.stringify({ error: "User not found" }),
+          { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
     }
@@ -73,6 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 دقائق
 
     // حفظ رمز التحقق في قاعدة البيانات
+    console.log('Saving verification code to database...');
     const { error: saveError } = await supabase
       .from('verification_codes')
       .upsert({
@@ -92,6 +128,8 @@ const handler = async (req: Request): Promise<Response> => {
         { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
+
+    console.log('Verification code saved successfully, sending email...');
 
     // إرسال الرمز عبر الإيميل
     const subject = type === 'admin' 
@@ -191,6 +229,7 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
+    console.log('Attempting to send email via Resend...');
     const emailResponse = await resend.emails.send({
       from: "Ali AlShehri Security <security@alialshehriholding.com>",
       to: [email],
@@ -211,8 +250,9 @@ const handler = async (req: Request): Promise<Response> => {
 
   } catch (error: any) {
     console.error("Error sending verification code:", error);
+    console.error("Error details:", error.message, error.stack);
     return new Response(
-      JSON.stringify({ error: "Failed to send verification code" }),
+      JSON.stringify({ error: `Failed to send verification code: ${error.message}` }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }

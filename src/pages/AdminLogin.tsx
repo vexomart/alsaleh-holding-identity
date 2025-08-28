@@ -66,26 +66,39 @@ const AdminLogin = () => {
     setError('');
 
     try {
+      console.log('Sending verification code for:', email);
+      
       // طلب رمز التحقق
       const { data, error } = await supabase.functions.invoke('send-verification-code', {
         body: { email, type: 'admin' }
       });
 
+      console.log('Response from send-verification-code:', { data, error });
+
       if (error) {
-        setError('فشل في إرسال رمز التحقق. تحقق من صحة الإيميل.');
+        console.error('Error from function:', error);
+        const errorMessage = error.message || 'فشل في إرسال رمز التحقق';
+        setError(`خطأ: ${errorMessage}`);
+        setLoading(false);
+        return;
+      }
+
+      if (data && !data.success) {
+        console.error('Function returned error:', data);
+        setError(data.error || 'فشل في إرسال رمز التحقق');
         setLoading(false);
         return;
       }
 
       toast({
         title: "تم إرسال رمز التحقق",
-        description: "تحقق من بريدك الإلكتروني وأدخل الرمز",
+        description: "تحقق من بريدك الإلكتروني وأدخل الرمز المكون من 6 أرقام",
       });
 
       setStep('verification');
     } catch (error: any) {
       console.error('خطأ في إرسال رمز التحقق:', error);
-      setError('حدث خطأ أثناء إرسال رمز التحقق.');
+      setError(`حدث خطأ: ${error.message || 'غير معروف'}`);
     } finally {
       setLoading(false);
     }
