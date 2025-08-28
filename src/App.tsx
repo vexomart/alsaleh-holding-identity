@@ -137,6 +137,11 @@ const Auth = lazy(() => import("./pages/Auth"));
 const MyProjects = lazy(() => import("./pages/MyProjects"));
 const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
+const AdminWallet = lazy(() => import("./pages/admin/AdminWallet"));
+const AdminAffiliate = lazy(() => import("./pages/admin/AdminAffiliate"));
+const ClientOrders = lazy(() => import("./pages/client/ClientOrders"));
+const ClientAffiliate = lazy(() => import("./pages/client/ClientAffiliate"));
 
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
@@ -355,6 +360,9 @@ const App = () => {
                   <Route path="financial-templates" element={<AdminFinancialTemplates />} />
                   <Route path="notifications" element={<AdminNotifications />} />
                   <Route path="settings" element={<AdminSettings />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="wallet" element={<AdminWallet />} />
+                  <Route path="affiliate" element={<AdminAffiliate />} />
                 </Route>
                 
                 {/* Legacy admin routes - redirect to new structure */}
@@ -459,6 +467,8 @@ const App = () => {
                   <Route path="support-tickets" element={<Suspense fallback={<PageLoader />}><ClientSupportTickets /></Suspense>} />
                   <Route path="profile" element={<Suspense fallback={<PageLoader />}><ClientProfile /></Suspense>} />
                   <Route path="settings" element={<Suspense fallback={<PageLoader />}><ClientSettings /></Suspense>} />
+                  <Route path="orders" element={<Suspense fallback={<PageLoader />}><ClientOrders /></Suspense>} />
+                  <Route path="affiliate" element={<Suspense fallback={<PageLoader />}><ClientAffiliate /></Suspense>} />
                 </Route>
           
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
