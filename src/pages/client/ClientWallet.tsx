@@ -237,7 +237,7 @@ export default function ClientWallet() {
       const response = await supabase.functions.invoke('wallet-deposit', {
         body: {
           amount,
-          payment_method: paymentMethod,
+          payment_method: paymentMethod === 'electronic_payment' ? 'tap_now' : paymentMethod,
           description: `شحن المحفظة بمبلغ ${amount} ريال سعودي`,
           receipt_file: receiptFile ? receiptFile.name : null
         },
@@ -251,10 +251,28 @@ export default function ClientWallet() {
       }
 
       const { data } = response;
-      if (data.success) {
+      
+      if (data?.success) {
         if (data.payment_url) {
-          // Redirect to payment gateway
-          window.location.href = data.payment_url;
+          // For electronic payment - show success message and payment URL option
+          toast({
+            title: "تم إنشاء رابط الدفع",
+            description: data.message || "يرجى إكمال الدفع من خلال الرابط المرسل",
+            variant: "default"
+          });
+          
+          // Open payment URL in new window for better UX
+          window.open(data.payment_url, '_blank');
+          
+          setDepositAmount('');
+          setPaymentMethod('');
+          setReceiptFile(null);
+          setIsDepositOpen(false);
+          
+          // Optionally refresh wallet data after some delay
+          setTimeout(() => {
+            fetchWalletData();
+          }, 2000);
         } else {
           // Payment was processed immediately (bank transfer)
           toast({
@@ -270,7 +288,7 @@ export default function ClientWallet() {
           await fetchWalletData();
         }
       } else {
-        throw new Error(data.error);
+        throw new Error(data?.error || 'Unknown error occurred');
       }
     } catch (error) {
       console.error('Deposit error:', error);
