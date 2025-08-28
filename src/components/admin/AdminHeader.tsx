@@ -97,7 +97,11 @@ export const AdminHeader = () => {
   };
 
   return (
-    <header className="h-14 lg:h-16 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border-b border-border/30 flex items-center justify-between px-3 sm:px-4 lg:px-6 sticky top-0 z-50 transition-all duration-200" dir="rtl">
+    <header 
+      className="h-14 lg:h-16 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 border-b border-border/30 flex items-center justify-between px-3 sm:px-4 lg:px-6 sticky top-0 z-50 transition-all duration-200" 
+      dir="rtl"
+      style={{ fontFamily: 'Noto Kufi Arabic, Amiri, Tajawal, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+    >
       {/* Right side - Navigation & Search */}
       <div className="flex items-center gap-2 lg:gap-4 flex-1 min-w-0">
         <SidebarTrigger className="h-8 w-8 lg:h-9 lg:w-9 shrink-0" />

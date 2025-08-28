@@ -260,13 +260,33 @@
   }
 }
 
+/* Professional Arabic Font System */
+.font-formal {
+  font-family: 'Noto Kufi Arabic', 'Amiri', 'Tajawal', 'Cairo', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.font-formal-bold {
+  font-family: 'Noto Kufi Arabic', 'Amiri', 'Tajawal', 'Cairo', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.font-elegant {
+  font-family: 'Amiri', 'Noto Kufi Arabic', 'Tajawal', serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-formal;
     direction: rtl;
+    font-family: 'Noto Kufi Arabic', 'Amiri', 'Tajawal', 'Cairo', system-ui, sans-serif;
   }
 }
 
