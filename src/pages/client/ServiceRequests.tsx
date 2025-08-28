@@ -29,42 +29,9 @@ const serviceTypes = [
   { id: 'business', label: 'الخدمات التجارية', icon: Briefcase, color: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' }
 ];
 
-const mockRequests = [
-  {
-    id: '1',
-    title: 'تطوير موقع إلكتروني للشركة',
-    service_type: 'web-development',
-    status: 'pending',
-    priority: 'high',
-    created_at: '2024-01-15',
-    description: 'نحتاج إلى تطوير موقع إلكتروني حديث للشركة مع إدارة المحتوى',
-    budget_range: '10000-20000'
-  },
-  {
-    id: '2',
-    title: 'تصميم هوية بصرية',
-    service_type: 'design',
-    status: 'in_progress',
-    priority: 'medium',
-    created_at: '2024-01-10',
-    description: 'تصميم شعار وهوية بصرية كاملة للعلامة التجارية',
-    budget_range: '5000-10000'
-  },
-  {
-    id: '3',
-    title: 'تطبيق جوال للتسوق',
-    service_type: 'mobile-app',
-    status: 'completed',
-    priority: 'high',
-    created_at: '2024-01-05',
-    description: 'تطوير تطبيق جوال للتسوق الإلكتروني',
-    budget_range: '20000-30000'
-  }
-];
-
 export default function ServiceRequests() {
   const navigate = useNavigate();
-  const [requests, setRequests] = useState(mockRequests);
+  const [requests, setRequests] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [serviceFilter, setServiceFilter] = useState('all');
