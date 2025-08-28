@@ -29,7 +29,11 @@ import {
   RefreshCw,
   Key,
   Check,
-  X
+  X,
+  Sparkles,
+  Monitor,
+  Tablet,
+  Globe
 } from 'lucide-react';
 
 interface PaymentMethod {
@@ -59,10 +63,11 @@ const paymentProviders = [
   {
     id: 'tap_now',
     name: 'Electronic Payment',
-    name_ar: 'الدفع الالكتروني',
+    name_ar: 'الدفع الإلكتروني',
     icon: 'CreditCard',
     description: 'ادفع بسهولة عبر البطاقات الائتمانية والمحافظ الرقمية الآمنة',
-    color: 'from-purple-500 to-violet-500',
+    color: 'from-violet-600 via-purple-600 to-indigo-600',
+    hoverColor: 'from-violet-700 via-purple-700 to-indigo-700',
     features: ['Visa', 'Mastercard', 'Mada', 'Apple Pay', 'Google Pay', 'STC Pay'],
     fields: [
       { key: 'merchant_id', label: 'كود التاجر', type: 'text', required: true, placeholder: 'MERCHANT_ID' },
@@ -77,7 +82,8 @@ const paymentProviders = [
     name_ar: 'تمارا',
     icon: 'Calendar',
     description: 'قسم مشترياتك واشتري الآن وادفع لاحقاً',
-    color: 'from-green-500 to-emerald-500',
+    color: 'from-emerald-500 via-teal-500 to-cyan-500',
+    hoverColor: 'from-emerald-600 via-teal-600 to-cyan-600',
     features: ['تقسيط 3 أشهر', 'تقسيط 4 أشهر', 'ادفع الشهر القادم'],
     fields: [
       { key: 'api_url', label: 'API URL', type: 'text', required: true, placeholder: 'https://api.tamara.co' },
@@ -92,7 +98,8 @@ const paymentProviders = [
     name_ar: 'حوالة بنكية',
     icon: 'Building2',
     description: 'تحويل بنكي مباشر لحساب الشركة',
-    color: 'from-blue-500 to-cyan-500',
+    color: 'from-blue-600 via-indigo-600 to-purple-600',
+    hoverColor: 'from-blue-700 via-indigo-700 to-purple-700',
     features: ['تحويل مباشر', 'IBAN متاح', 'مؤكد خلال 24 ساعة'],
     fields: [
       { key: 'bank_name', label: 'اسم البنك', type: 'text', required: true, placeholder: 'البنك الأهلي السعودي' },
@@ -181,7 +188,7 @@ export default function AdminPaymentMethods() {
       }
 
       toast({
-        title: "تم الحفظ بنجاح",
+        title: "تم الحفظ بنجاح ✨",
         description: `تم حفظ إعدادات ${provider.name_ar} بنجاح`,
       });
 
@@ -207,18 +214,19 @@ export default function AdminPaymentMethods() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-6 bg-gradient-to-br from-background via-background/95 to-primary/5">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="text-center">
-            <div className="animate-pulse space-y-4">
-              <div className="h-12 bg-muted rounded-lg w-1/2 mx-auto"></div>
-              <div className="h-6 bg-muted rounded w-1/3 mx-auto"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" dir="rtl">
+        <div className="container mx-auto py-12 px-4 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="animate-pulse space-y-6">
+              <div className="mx-auto w-24 h-24 bg-gradient-to-br from-primary/20 to-primary-variant/20 rounded-full animate-bounce"></div>
+              <div className="h-16 bg-gradient-to-r from-muted/50 to-muted rounded-2xl w-2/3 mx-auto"></div>
+              <div className="h-8 bg-muted/50 rounded-xl w-1/2 mx-auto"></div>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {[1, 2, 3].map(i => (
               <div key={i} className="animate-pulse">
-                <div className="h-96 bg-muted rounded-2xl"></div>
+                <div className="h-[32rem] bg-gradient-to-br from-white/50 to-muted/20 rounded-3xl shadow-lg"></div>
               </div>
             ))}
           </div>
@@ -228,26 +236,46 @@ export default function AdminPaymentMethods() {
   }
 
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-br from-background via-background/95 to-primary/5" dir="rtl">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-6">
-          <div className="inline-flex items-center justify-center p-4 bg-gradient-to-br from-primary to-primary-variant rounded-3xl shadow-xl">
-            <CreditCard className="h-12 w-12 text-primary-foreground" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 font-tajawal" dir="rtl">
+      <div className="container mx-auto py-12 px-4 lg:px-8">
+        {/* Hero Header */}
+        <div className="text-center mb-20 space-y-8">
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary-variant/20 blur-3xl rounded-full"></div>
+            <div className="relative p-6 bg-gradient-to-br from-white via-white/95 to-primary/5 rounded-full shadow-2xl border border-white/20">
+              <CreditCard className="h-16 w-16 text-primary drop-shadow-lg" />
+            </div>
           </div>
-          <div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-primary-variant bg-clip-text text-transparent">
+          
+          <div className="space-y-6">
+            <h1 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-slate-800 via-primary to-primary-variant bg-clip-text text-transparent leading-tight">
               إدارة طرق الدفع
             </h1>
-            <p className="text-xl text-muted-foreground mt-3 max-w-2xl mx-auto">
-              قم بإدارة وتكوين بوابات الدفع المختلفة لتوفير تجربة دفع آمنة ومرنة للعملاء
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-medium">
+              قم بإدارة وتكوين بوابات الدفع المختلفة لتوفير تجربة دفع آمنة ومرنة للعملاء عبر جميع الأجهزة
             </p>
+            
+            {/* Device Icons */}
+            <div className="flex justify-center items-center gap-6 mt-8">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/60 rounded-full shadow-md">
+                <Monitor className="h-5 w-5 text-primary" />
+                <span className="text-sm font-medium text-muted-foreground">سطح المكتب</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/60 rounded-full shadow-md">
+                <Tablet className="h-5 w-5 text-primary" />
+                <span className="text-sm font-medium text-muted-foreground">الأجهزة اللوحية</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/60 rounded-full shadow-md">
+                <Smartphone className="h-5 w-5 text-primary" />
+                <span className="text-sm font-medium text-muted-foreground">الهواتف الذكية</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Payment Methods Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {paymentProviders.map((provider) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {paymentProviders.map((provider, index) => {
             const existingMethod = paymentMethods.find(m => m.provider === provider.id);
             const IconComponent = iconMap[provider.icon as keyof typeof iconMap];
             const isConfigured = !!(existingMethod && (existingMethod.api_key || existingMethod.configuration));
@@ -265,9 +293,19 @@ export default function AdminPaymentMethods() {
                 showSecrets={showSecrets}
                 onToggleSecrets={toggleSecretVisibility}
                 onUpdate={updatePaymentMethod}
+                index={index}
               />
             );
           })}
+        </div>
+
+        {/* Footer Section */}
+        <div className="mt-20 text-center">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 rounded-full shadow-lg backdrop-blur-sm border border-white/20">
+            <Shield className="h-5 w-5 text-primary" />
+            <span className="font-medium text-muted-foreground">مدعوم بأعلى معايير الأمان والحماية</span>
+            <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+          </div>
         </div>
       </div>
     </div>
@@ -284,6 +322,7 @@ interface PaymentMethodCardProps {
   showSecrets: Record<string, boolean>;
   onToggleSecrets: (id: string) => void;
   onUpdate: (providerId: string, formData: any) => void;
+  index: number;
 }
 
 function PaymentMethodCard({
@@ -295,7 +334,8 @@ function PaymentMethodCard({
   saving,
   showSecrets,
   onToggleSecrets,
-  onUpdate
+  onUpdate,
+  index
 }: PaymentMethodCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState(() => {
@@ -325,66 +365,88 @@ function PaymentMethodCard({
       return {
         icon: <Clock className="h-5 w-5" />,
         text: 'غير مُكوّن',
-        color: 'text-yellow-600',
-        bgColor: 'bg-yellow-50 border-yellow-200',
-        badge: 'secondary'
+        color: 'text-amber-600',
+        bgColor: 'bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200/50',
+        badge: 'secondary',
+        glowColor: 'shadow-amber-500/20'
       };
     }
     if (isActive) {
       return {
         icon: <CheckCircle className="h-5 w-5" />,
         text: 'مفعل ويعمل',
-        color: 'text-green-600',
-        bgColor: 'bg-green-50 border-green-200',
-        badge: 'default'
+        color: 'text-emerald-600',
+        bgColor: 'bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200/50',
+        badge: 'default',
+        glowColor: 'shadow-emerald-500/20'
       };
     }
     return {
       icon: <AlertCircle className="h-5 w-5" />,
       text: 'معطل',
-      color: 'text-gray-600',
-      bgColor: 'bg-gray-50 border-gray-200',
-      badge: 'secondary'
+      color: 'text-slate-600',
+      bgColor: 'bg-gradient-to-br from-slate-50 to-gray-50 border-slate-200/50',
+      badge: 'secondary',
+      glowColor: 'shadow-slate-500/20'
     };
   };
 
   const statusInfo = getStatusInfo();
 
   return (
-    <Card className={`relative group transition-all duration-500 hover:shadow-2xl hover:scale-105 ${statusInfo.bgColor} border-2 overflow-hidden`}>
-      {/* Background Gradient Effect */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${provider.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+    <Card className={`
+      relative group transition-all duration-700 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2
+      ${statusInfo.bgColor} border-2 overflow-hidden backdrop-blur-sm
+      animate-fade-in hover:${statusInfo.glowColor}
+    `} style={{ animationDelay: `${index * 150}ms` }}>
       
-      <CardHeader className="relative pb-4">
+      {/* Animated Background Pattern */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+        <div className={`absolute inset-0 bg-gradient-to-br ${provider.color} opacity-5`} />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl transform translate-x-16 -translate-y-16" />
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full blur-2xl transform -translate-x-12 translate-y-12" />
+      </div>
+      
+      <CardHeader className="relative pb-6 space-y-6">
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
-            <div className={`p-4 bg-gradient-to-br ${provider.color} rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-              <IconComponent className="h-8 w-8 text-white" />
+          <div className="flex items-start gap-5">
+            <div className={`
+              relative p-4 bg-gradient-to-br ${provider.color} rounded-2xl shadow-xl 
+              group-hover:scale-110 group-hover:rotate-3 transition-all duration-500
+              before:absolute before:inset-0 before:bg-white/20 before:rounded-2xl before:opacity-0 
+              group-hover:before:opacity-100 before:transition-opacity before:duration-300
+            `}>
+              <IconComponent className="h-10 w-10 text-white relative z-10 drop-shadow-lg" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl" />
             </div>
-            <div className="space-y-1">
-              <CardTitle className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors">
+            
+            <div className="space-y-2 flex-1">
+              <CardTitle className="text-2xl font-black text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">
                 {provider.name_ar}
               </CardTitle>
-              <CardDescription className="text-sm text-muted-foreground leading-relaxed">
+              <CardDescription className="text-muted-foreground leading-relaxed font-medium text-base">
                 {provider.description}
               </CardDescription>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <div className={statusInfo.color}>
-              {statusInfo.icon}
-            </div>
+          <div className={`${statusInfo.color} group-hover:scale-110 transition-transform duration-300`}>
+            {statusInfo.icon}
           </div>
         </div>
 
-        {/* Features */}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {provider.features.map((feature: string, index: number) => (
+        {/* Enhanced Features */}
+        <div className="flex flex-wrap gap-2">
+          {provider.features.map((feature: string, featureIndex: number) => (
             <Badge 
-              key={index} 
+              key={featureIndex} 
               variant="outline" 
-              className="text-xs px-2 py-1 bg-background/50 hover:bg-primary/10 transition-colors"
+              className={`
+                text-xs px-3 py-1.5 bg-white/60 hover:bg-white/80 border-white/40
+                transition-all duration-300 hover:scale-105 font-medium backdrop-blur-sm
+                hover:shadow-md
+              `}
+              style={{ animationDelay: `${(index * 150) + (featureIndex * 50)}ms` }}
             >
               {feature}
             </Badge>
@@ -393,11 +455,11 @@ function PaymentMethodCard({
       </CardHeader>
       
       <CardContent className="relative space-y-6">
-        {/* Status Card */}
-        <div className="p-4 rounded-xl bg-background/70 backdrop-blur-sm border space-y-3">
+        {/* Enhanced Status Card */}
+        <div className="p-5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/40 space-y-4 shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="font-semibold text-foreground">حالة الطريقة</span>
-            <Badge variant={statusInfo.badge as any} className="gap-1">
+            <span className="font-bold text-foreground text-lg">حالة الطريقة</span>
+            <Badge variant={statusInfo.badge as any} className="gap-2 px-3 py-1.5 font-medium">
               {statusInfo.icon}
               {statusInfo.text}
             </Badge>
@@ -405,37 +467,37 @@ function PaymentMethodCard({
           
           {isConfigured && (
             <>
-              <Separator className="my-2" />
+              <Separator className="my-3 bg-gradient-to-r from-transparent via-border to-transparent" />
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">البيئة:</span>
-                  <div className="flex items-center gap-1">
+                <div className="flex items-center justify-between p-3 bg-white/50 rounded-xl">
+                  <span className="text-muted-foreground font-medium">البيئة:</span>
+                  <div className="flex items-center gap-2">
                     {existingMethod?.is_live_mode ? (
                       <>
-                        <Wifi className="h-3 w-3 text-red-500" />
-                        <span className="text-red-600 font-medium">مباشر</span>
+                        <Wifi className="h-4 w-4 text-red-500" />
+                        <span className="text-red-600 font-bold">مباشر</span>
                       </>
                     ) : (
                       <>
-                        <WifiOff className="h-3 w-3 text-blue-500" />
-                        <span className="text-blue-600 font-medium">تجريبي</span>
+                        <WifiOff className="h-4 w-4 text-blue-500" />
+                        <span className="text-blue-600 font-bold">تجريبي</span>
                       </>
                     )}
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">الحالة:</span>
-                  <div className="flex items-center gap-1">
+                <div className="flex items-center justify-between p-3 bg-white/50 rounded-xl">
+                  <span className="text-muted-foreground font-medium">الحالة:</span>
+                  <div className="flex items-center gap-2">
                     {isActive ? (
                       <>
-                        <Zap className="h-3 w-3 text-green-500" />
-                        <span className="text-green-600 font-medium">نشط</span>
+                        <Zap className="h-4 w-4 text-emerald-500" />
+                        <span className="text-emerald-600 font-bold">نشط</span>
                       </>
                     ) : (
                       <>
-                        <X className="h-3 w-3 text-gray-500" />
-                        <span className="text-gray-600 font-medium">متوقف</span>
+                        <X className="h-4 w-4 text-slate-500" />
+                        <span className="text-slate-600 font-bold">متوقف</span>
                       </>
                     )}
                   </div>
@@ -443,25 +505,28 @@ function PaymentMethodCard({
               </div>
               
               {existingMethod?.api_key && (
-                <div className="space-y-2">
+                <div className="space-y-3 p-4 bg-white/50 rounded-xl border border-white/30">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">API Key:</span>
+                    <span className="text-sm text-muted-foreground font-medium flex items-center gap-2">
+                      <Key className="h-4 w-4" />
+                      API Key:
+                    </span>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => onToggleSecrets(existingMethod.id)}
-                      className="h-7 w-7 p-0 hover:bg-primary/10"
+                      className="h-8 w-8 p-0 hover:bg-primary/10 rounded-full"
                     >
                       {showSecrets[existingMethod.id] ? 
-                        <EyeOff className="h-3 w-3" /> : 
-                        <Eye className="h-3 w-3" />
+                        <EyeOff className="h-4 w-4" /> : 
+                        <Eye className="h-4 w-4" />
                       }
                     </Button>
                   </div>
-                  <div className="text-xs font-mono bg-muted/70 p-3 rounded-lg text-center border">
+                  <div className="text-xs font-mono bg-slate-100 p-4 rounded-lg text-center border border-slate-200/50 break-all">
                     {showSecrets[existingMethod.id] 
                       ? existingMethod.api_key 
-                      : '••••••••••••••••••••••••••••'
+                      : '••••••••••••••••••••••••••••••••••••••••'
                     }
                   </div>
                 </div>
@@ -470,143 +535,133 @@ function PaymentMethodCard({
           )}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3">
+        {/* Enhanced Action Buttons */}
+        <div className="flex gap-4">
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button 
                 variant={isConfigured ? "outline" : "default"} 
                 size="lg"
-                className="flex-1 gap-2 h-12 font-semibold group-hover:shadow-lg transition-all"
+                className={`
+                  flex-1 gap-3 h-14 font-bold text-base rounded-xl
+                  transition-all duration-300 hover:shadow-xl hover:scale-105
+                  ${isConfigured 
+                    ? 'bg-white/80 hover:bg-white border-white/40 hover:border-primary/30' 
+                    : `bg-gradient-to-r ${provider.color} hover:${provider.hoverColor} text-white shadow-lg`
+                  }
+                `}
                 disabled={saving}
               >
-                <Settings className="h-5 w-5" />
+                {saving ? (
+                  <RefreshCw className="h-5 w-5 animate-spin" />
+                ) : (
+                  <Settings className="h-5 w-5" />
+                )}
                 {isConfigured ? 'تعديل الإعدادات' : 'إعداد الآن'}
               </Button>
             </DialogTrigger>
             
-            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" dir="rtl">
-              <DialogHeader className="border-b pb-4">
-                <DialogTitle className="flex items-center gap-3 text-2xl">
-                  <div className={`p-3 bg-gradient-to-br ${provider.color} rounded-xl shadow-lg`}>
-                    <IconComponent className="h-6 w-6 text-white" />
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto font-tajawal" dir="rtl">
+              <DialogHeader className="space-y-4 pb-6">
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 bg-gradient-to-br ${provider.color} rounded-xl`}>
+                    <IconComponent className="h-8 w-8 text-white" />
                   </div>
                   <div>
-                    <div>إعدادات {provider.name_ar}</div>
-                    <div className="text-sm font-normal text-muted-foreground mt-1">
-                      {provider.description}
-                    </div>
+                    <DialogTitle className="text-2xl font-bold text-right">
+                      إعدادات {provider.name_ar}
+                    </DialogTitle>
+                    <p className="text-muted-foreground text-right mt-1">
+                      قم بتكوين بيانات الاتصال والمفاتيح الأمنية
+                    </p>
                   </div>
-                </DialogTitle>
+                </div>
               </DialogHeader>
               
-              <div className="space-y-8 pt-6">
-                {/* Status Controls */}
-                <div className="grid grid-cols-2 gap-6 p-6 bg-muted/30 rounded-xl">
-                  <div className="space-y-3">
-                    <Label htmlFor="is_active" className="text-base font-semibold flex items-center gap-2">
-                      <Check className="h-4 w-4" />
-                      تفعيل طريقة الدفع
-                    </Label>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">تفعيل/إلغاء تفعيل للعملاء</span>
-                      <Switch
-                        id="is_active"
-                        checked={formData.is_active}
-                        onCheckedChange={(checked) => setFormData({...formData, is_active: checked})}
-                        className="scale-125"
-                      />
-                    </div>
-                  </div>
+              <div className="space-y-6">
+                {/* Main Settings */}
+                <div className="space-y-4 p-6 bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl border">
+                  <h3 className="font-bold text-lg flex items-center gap-2">
+                    <Globe className="h-5 w-5 text-primary" />
+                    الإعدادات الأساسية
+                  </h3>
                   
-                  <div className="space-y-3">
-                    <Label htmlFor="is_live_mode" className="text-base font-semibold flex items-center gap-2">
-                      <Wifi className="h-4 w-4" />
-                      الوضع المباشر
-                    </Label>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">تشغيل البيئة المباشرة</span>
-                      <Switch
-                        id="is_live_mode"
-                        checked={formData.is_live_mode}
-                        onCheckedChange={(checked) => setFormData({...formData, is_live_mode: checked})}
-                        className="scale-125"
-                      />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="font-medium flex items-center gap-2">
+                        <Switch
+                          checked={formData.is_active}
+                          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+                        />
+                        تفعيل الطريقة
+                      </Label>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label className="font-medium flex items-center gap-2">
+                        <Switch
+                          checked={formData.is_live_mode}
+                          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_live_mode: checked }))}
+                        />
+                        البيئة المباشرة
+                      </Label>
                     </div>
                   </div>
                 </div>
 
-                {/* API Configuration */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 pb-2 border-b">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Key className="h-5 w-5 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-bold">بيانات الاتصال والتكوين</h3>
-                  </div>
+                {/* Configuration Fields */}
+                <div className="space-y-4">
+                  <h3 className="font-bold text-lg flex items-center gap-2">
+                    <Key className="h-5 w-5 text-primary" />
+                    بيانات الاتصال
+                  </h3>
                   
-                  <div className="grid gap-6">
-                    {provider.fields.map((field: any) => (
-                      <div key={field.key} className="space-y-3">
-                        <Label htmlFor={field.key} className="text-base font-semibold">
+                  <div className="grid gap-4">
+                    {provider.fields.map((field: any, fieldIndex: number) => (
+                      <div key={field.key} className="space-y-2">
+                        <Label className="font-medium text-right">
                           {field.label}
-                          {field.required && <span className="text-red-500 mr-2">*</span>}
+                          {field.required && <span className="text-red-500 mr-1">*</span>}
                         </Label>
                         <Input
-                          id={field.key}
                           type={field.type}
-                          value={formData[field.key] || ''}
-                          onChange={(e) => setFormData({...formData, [field.key]: e.target.value})}
                           placeholder={field.placeholder}
-                          required={field.required}
-                          className="h-12 font-mono text-base"
+                          value={formData[field.key] || ''}
+                          onChange={(e) => setFormData(prev => ({ 
+                            ...prev, 
+                            [field.key]: e.target.value 
+                          }))}
+                          className="h-12 text-right bg-white/80 border-white/40 focus:border-primary/50 rounded-xl"
+                          dir="ltr"
                         />
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Configuration Preview */}
-                {existingMethod?.configuration && (
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <Shield className="h-5 w-5 text-primary" />
-                      التكوين الحالي
-                    </h3>
-                    <div className="p-4 bg-muted/50 rounded-xl border">
-                      <pre className="text-sm text-muted-foreground font-mono whitespace-pre-wrap">
-                        {JSON.stringify(existingMethod.configuration, null, 2)}
-                      </pre>
-                    </div>
-                  </div>
-                )}
-
                 {/* Action Buttons */}
-                <div className="flex gap-4 pt-6 border-t">
+                <div className="flex gap-3 pt-6 border-t">
                   <Button 
                     onClick={handleSave} 
-                    size="lg"
-                    className="flex-1 gap-2 h-12 font-semibold"
                     disabled={saving}
+                    className={`
+                      flex-1 h-12 gap-2 font-bold rounded-xl
+                      bg-gradient-to-r ${provider.color} hover:${provider.hoverColor} 
+                      text-white shadow-lg hover:shadow-xl transition-all duration-300
+                    `}
                   >
                     {saving ? (
-                      <>
-                        <RefreshCw className="h-5 w-5 animate-spin" />
-                        جاري الحفظ...
-                      </>
+                      <RefreshCw className="h-5 w-5 animate-spin" />
                     ) : (
-                      <>
-                        <Save className="h-5 w-5" />
-                        حفظ التغييرات
-                      </>
+                      <Save className="h-5 w-5" />
                     )}
+                    {saving ? 'جاري الحفظ...' : 'حفظ الإعدادات'}
                   </Button>
+                  
                   <Button 
-                    type="button" 
                     variant="outline" 
-                    size="lg"
                     onClick={() => setIsOpen(false)}
-                    className="px-8"
+                    className="px-8 h-12 font-bold rounded-xl bg-white/80 hover:bg-white border-white/40"
                   >
                     إلغاء
                   </Button>
@@ -614,22 +669,6 @@ function PaymentMethodCard({
               </div>
             </DialogContent>
           </Dialog>
-          
-          {isConfigured && (
-            <Button
-              variant={isActive ? "destructive" : "default"}
-              size="lg"
-              onClick={() => {
-                const newFormData = { ...formData, is_active: !isActive };
-                setFormData(newFormData);
-                onUpdate(provider.id, newFormData);
-              }}
-              disabled={saving}
-              className="px-6 h-12 font-semibold"
-            >
-              {isActive ? 'تعطيل' : 'تفعيل'}
-            </Button>
-          )}
         </div>
       </CardContent>
     </Card>
