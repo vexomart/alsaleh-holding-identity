@@ -229,11 +229,11 @@ const Auth = () => {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?redirect_to=/my-projects`,
           data: {
             full_name: fullName,
           }
@@ -250,7 +250,23 @@ const Auth = () => {
           setError('خطأ في التسجيل: ' + error.message);
         }
       } else {
-        toast('تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني');
+        if (data.user && !data.session) {
+          // المستخدم بحاجة لتأكيد إيميله
+          toast.success('تم إنشاء الحساب بنجاح! تم إرسال رابط تأكيد إلى بريدك الإلكتروني. يرجى النقر على الرابط لتفعيل حسابك.', {
+            duration: 6000,
+            style: {
+              background: '#10b981',
+              color: 'white',
+              borderRadius: '16px',
+              padding: '16px',
+              fontSize: '14px',
+            }
+          });
+          setError('');
+        } else if (data.session) {
+          // تم تسجيل الدخول مباشرة (إذا كان التأكيد معطل)
+          toast.success('تم إنشاء الحساب وتسجيل الدخول بنجاح!');
+        }
       }
     } catch (err) {
       setError('حدث خطأ أثناء إنشاء الحساب');
