@@ -88,11 +88,15 @@ const Auth = () => {
     if (useVerification) {
       // إرسال رمز التحقق
       try {
-        const { error } = await supabase.functions.invoke('send-verification-code', {
+        console.log('🔄 إرسال رمز التحقق للإيميل:', email);
+        const { data, error } = await supabase.functions.invoke('send-verification-code', {
           body: { email, type: 'user' }
         });
 
+        console.log('📧 استجابة دالة إرسال رمز التحقق:', { data, error });
+
         if (error) {
+          console.error('❌ خطأ في إرسال رمز التحقق:', error);
           setError('فشل في إرسال رمز التحقق. تحقق من صحة الإيميل.');
           setIsLoading(false);
           return;
@@ -102,7 +106,8 @@ const Auth = () => {
         setStep('verification');
         toast.success('تم إرسال رمز التحقق إلى بريدك الإلكتروني');
       } catch (err) {
-        setError('حدث خطأ أثناء إرسال رمز التحقق');
+        console.error('💥 خطأ غير متوقع في إرسال رمز التحقق:', err);
+        setError('حدث خطأ أثناء إرسال رمز التحقق: ' + (err as Error).message);
       }
     } else {
       // تسجيل دخول تقليدي
