@@ -93,17 +93,45 @@ const AdminClients = () => {
   });
 
   useEffect(() => {
-    fetchClients();
+    const checkAuthAndFetch = async () => {
+      console.log('🔐 جاري التحقق من صلاحيات الأدمين...');
+      
+      // التحقق من المستخدم الحالي
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log('👤 المستخدم الحالي:', user?.id, user?.email);
+      
+      // التحقق من دور المستخدم
+      const { data: userRole, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user?.id)
+        .single();
+      
+      console.log('🎭 دور المستخدم:', { userRole, roleError });
+      
+      fetchClients();
+    };
+    
+    checkAuthAndFetch();
   }, []);
 
   const fetchClients = async () => {
     try {
+      console.log('🔍 جاري جلب بيانات العملاء...');
+      
       const { data, error } = await supabase
         .from('clients')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('📊 نتيجة استعلام العملاء:', { data, error, count: data?.length });
+
+      if (error) {
+        console.error('❌ خطأ في استعلام العملاء:', error);
+        throw error;
+      }
+      
+      console.log('✅ تم جلب البيانات بنجاح:', data?.length || 0, 'عميل');
       setClients(data || []);
     } catch (error: any) {
       console.error('Error fetching clients:', error);
