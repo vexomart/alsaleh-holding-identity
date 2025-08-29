@@ -6,13 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowRight, Shield, Mail, Lock, Building2, Key } from 'lucide-react';
+import { 
+  Eye, EyeOff, LogIn, UserPlus, ArrowRight, Shield, Mail, Lock, 
+  Building2, Key, Sparkles, Zap, Globe, Users, Code, Palette,
+  BarChart3, Settings, CheckCircle, Star, Rocket
+} from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
-import programmingServices from "@/assets/programming-services.png";
-import designMarketing from "@/assets/design-marketing.png";
-import businessManagement from "@/assets/business-management.png";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -334,102 +335,136 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden" dir="rtl">
-      {/* خلفية شبكة ديناميكية */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.1)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] opacity-20"></div>
-      
-      {/* عناصر زخرفية متحركة */}
-      <div className="absolute top-20 right-20 w-32 h-32 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
-      <div className="absolute bottom-20 left-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      <div className="absolute top-1/3 left-1/4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      
-      {/* أيقونات الخدمات المتحركة */}
-      <div className="absolute top-10 right-10 w-20 h-20 opacity-20 animate-float">
-        <img src={programmingServices} alt="خدمات البرمجة" className="w-full h-full object-contain filter brightness-150" />
-      </div>
-      <div className="absolute bottom-32 right-1/4 w-16 h-16 opacity-20 animate-float-delayed">
-        <img src={designMarketing} alt="التصميم والتسويق" className="w-full h-full object-contain filter brightness-150" />
-      </div>
-      <div className="absolute top-1/2 left-10 w-18 h-18 opacity-20 animate-bounce-gentle">
-        <img src={businessManagement} alt="إدارة الأعمال" className="w-full h-full object-contain filter brightness-150" />
-      </div>
-      
-      {/* عناصر إضافية متحركة */}
-      <div className="absolute bottom-10 left-1/3 w-12 h-12 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full animate-glow"></div>
-      <div className="absolute top-1/4 right-1/3 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full animate-float" style={{ animationDelay: '3s' }}></div>
-      
-      <div className="w-full max-w-lg mx-auto relative z-10">
-        {/* رابط العودة */}
-        <Link 
-          to="/"
-          className="inline-flex items-center gap-2 text-slate-300 hover:text-white mb-6 transition-all duration-300 font-medium"
-        >
-          <ArrowRight className="w-4 h-4" />
-          العودة للرئيسية
-        </Link>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 relative overflow-hidden" dir="rtl">
+      {/* Header with Back Button */}
+      <header className="absolute top-0 left-0 right-0 z-50 p-4 sm:p-6">
+        <div className="flex justify-between items-center max-w-7xl mx-auto">
+          <Link 
+            to="/"
+            className="flex items-center gap-2 px-4 py-2 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/20 dark:hover:bg-slate-700/20 transition-all duration-300 font-medium"
+          >
+            <ArrowRight className="w-4 h-4" />
+            <span className="hidden sm:inline">العودة للرئيسية</span>
+          </Link>
+          
+          {/* Theme Toggle Placeholder */}
+          <div className="w-10 h-10 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 rounded-xl"></div>
+        </div>
+      </header>
 
-        <Card className="bg-slate-800/90 backdrop-blur-xl border border-slate-700/50 shadow-2xl shadow-black/50 rounded-3xl overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-slate-700 via-slate-800 to-slate-700 pb-8 pt-10 text-center relative border-b border-slate-700/50">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
-            
-            {/* لوجو الشركة */}
-            <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/30 mb-6 relative">
-              <Building2 className="w-12 h-12 text-white" />
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center animate-pulse">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
-              </div>
-            </div>
-            
-            <CardTitle className="text-3xl font-bold text-white mb-3">
-              <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                منصة الشركات المتقدمة
-              </span>
-            </CardTitle>
-            <CardDescription className="text-slate-300 text-lg">
-              نظام إدارة متكامل للشركات والمؤسسات
-            </CardDescription>
-            {referralCode && (
-              <div className="mt-6 p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 rounded-2xl backdrop-blur-sm">
-                <p className="text-sm text-green-300 font-medium">
-                  🎉 تم اكتشاف كود إحالة! ستحصل على مزايا خاصة عند التسجيل
-                </p>
-                <p className="text-xs text-green-400 mt-1 font-mono">
-                  كود الإحالة: {referralCode}
-                </p>
-              </div>
-            )}
-          </CardHeader>
-          <CardContent className="p-8">
-            <Tabs defaultValue="signin" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-slate-700/80 rounded-2xl p-1 mb-8">
-                <TabsTrigger 
-                  value="signin" 
-                  className="rounded-xl text-sm font-medium data-[state=active]:bg-slate-600 data-[state=active]:shadow-lg data-[state=active]:text-blue-400 text-slate-300 transition-all duration-300"
-                >
-                  تسجيل الدخول
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="signup" 
-                  className="rounded-xl text-sm font-medium data-[state=active]:bg-slate-600 data-[state=active]:shadow-lg data-[state=active]:text-blue-400 text-slate-300 transition-all duration-300"
-                >
-                  حساب جديد
-                </TabsTrigger>
-              </TabsList>
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.05)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] dark:bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.02)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')]"></div>
+        
+        {/* Floating Elements */}
+        <div className="absolute top-20 right-20 w-32 h-32 bg-blue-500/5 dark:bg-blue-400/5 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-20 left-20 w-40 h-40 bg-indigo-500/5 dark:bg-indigo-400/5 rounded-full blur-3xl animate-float-delayed"></div>
+        <div className="absolute top-1/3 left-1/4 w-24 h-24 bg-purple-500/5 dark:bg-purple-400/5 rounded-full blur-3xl animate-bounce-gentle"></div>
+        
+        {/* Service Icons */}
+        <div className="absolute top-32 right-16 text-blue-500/10 dark:text-blue-400/10 animate-float">
+          <Code className="w-16 h-16" />
+        </div>
+        <div className="absolute bottom-32 right-1/4 text-purple-500/10 dark:text-purple-400/10 animate-float-delayed">
+          <Palette className="w-12 h-12" />
+        </div>
+        <div className="absolute top-1/2 left-16 text-green-500/10 dark:text-green-400/10 animate-bounce-gentle">
+          <BarChart3 className="w-14 h-14" />
+        </div>
+        <div className="absolute bottom-16 left-1/3 text-orange-500/10 dark:text-orange-400/10 animate-float">
+          <Settings className="w-10 h-10" />
+        </div>
+      </div>
 
-              {error && (
-                <Alert className="mt-4 mb-6 border-red-400/30 bg-red-500/20 backdrop-blur-sm rounded-2xl">
-                  <AlertDescription className="text-red-300 text-right font-medium">
-                    {error}
-                  </AlertDescription>
-                </Alert>
+      {/* Main Content */}
+      <div className="flex items-center justify-center min-h-screen p-4 pt-20">
+        <div className="w-full max-w-lg mx-auto relative z-10">
+          <Card className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 dark:border-slate-700/20 shadow-2xl shadow-black/5 dark:shadow-black/20 rounded-3xl overflow-hidden animate-scale-in">
+            <CardHeader className="text-center relative pb-8 pt-10 bg-gradient-to-br from-white/50 to-slate-50/50 dark:from-slate-800/50 dark:to-slate-900/50">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+              
+              {/* Company Logo */}
+              <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/25 mb-6 relative animate-bounce-gentle">
+                <Building2 className="w-10 h-10 text-white" />
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center animate-pulse">
+                  <CheckCircle className="w-2 h-2 text-white" />
+                </div>
+              </div>
+              
+              <CardTitle className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-white mb-3">
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  منصة الشركات المتقدمة
+                </span>
+              </CardTitle>
+              <CardDescription className="text-slate-600 dark:text-slate-300 text-base sm:text-lg px-4">
+                نظام إدارة متكامل للشركات والمؤسسات الحديثة
+              </CardDescription>
+              
+              {/* Features Preview */}
+              <div className="flex justify-center gap-4 mt-6">
+                <div className="flex items-center gap-1 px-3 py-1 bg-blue-100/80 dark:bg-blue-900/20 rounded-full text-xs text-blue-700 dark:text-blue-300">
+                  <Rocket className="w-3 h-3" />
+                  <span>سريع</span>
+                </div>
+                <div className="flex items-center gap-1 px-3 py-1 bg-green-100/80 dark:bg-green-900/20 rounded-full text-xs text-green-700 dark:text-green-300">
+                  <Shield className="w-3 h-3" />
+                  <span>آمن</span>
+                </div>
+                <div className="flex items-center gap-1 px-3 py-1 bg-purple-100/80 dark:bg-purple-900/20 rounded-full text-xs text-purple-700 dark:text-purple-300">
+                  <Star className="w-3 h-3" />
+                  <span>متطور</span>
+                </div>
+              </div>
+              
+              {referralCode && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-green-100/80 to-emerald-100/80 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200/50 dark:border-green-700/20 rounded-2xl backdrop-blur-sm">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-green-600 dark:text-green-400" />
+                    <p className="text-sm text-green-700 dark:text-green-300 font-medium">
+                      تم اكتشاف كود إحالة! ستحصل على مزايا خاصة
+                    </p>
+                  </div>
+                  <p className="text-xs text-green-600 dark:text-green-400 font-mono text-center">
+                    كود الإحالة: {referralCode}
+                  </p>
+                </div>
               )}
+            </CardHeader>
+            <CardContent className="p-6 sm:p-8">
+              <Tabs defaultValue="signin" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 bg-slate-100/80 dark:bg-slate-800/50 rounded-2xl p-1 mb-8">
+                  <TabsTrigger 
+                    value="signin" 
+                    className="rounded-xl text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-blue-600 dark:data-[state=active]:bg-slate-700 dark:data-[state=active]:text-blue-400 text-slate-600 dark:text-slate-400 transition-all duration-300"
+                  >
+                    <LogIn className="w-4 h-4 ml-2" />
+                    تسجيل الدخول
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="signup" 
+                    className="rounded-xl text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-blue-600 dark:data-[state=active]:bg-slate-700 dark:data-[state=active]:text-blue-400 text-slate-600 dark:text-slate-400 transition-all duration-300"
+                  >
+                    <UserPlus className="w-4 h-4 ml-2" />
+                    حساب جديد
+                  </TabsTrigger>
+                </TabsList>
+
+                {error && (
+                  <Alert className="mt-4 mb-6 border-red-200/50 bg-red-50/80 dark:bg-red-950/20 dark:border-red-800/50 backdrop-blur-sm rounded-2xl">
+                    <AlertDescription className="text-red-700 dark:text-red-300 text-right font-medium flex items-center gap-2">
+                      <Zap className="w-4 h-4" />
+                      {error}
+                    </AlertDescription>
+                  </Alert>
+                )}
 
               <TabsContent value="signin" className="space-y-6">
                 {step === 'credentials' ? (
                   <form onSubmit={handleSignIn} className="space-y-6">
                     <div className="space-y-3">
-                      <Label htmlFor="signin-email" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
+                      <Label htmlFor="signin-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-blue-500" />
                         البريد الإلكتروني
                       </Label>
                       <Input
@@ -439,14 +474,13 @@ const Auth = () => {
                         placeholder="example@company.com"
                         required
                         disabled={isLoading}
-                        className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
+                        className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                         dir="rtl"
                       />
                     </div>
-
                     <div className="space-y-3">
-                      <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                        <Lock className="w-4 h-4" />
+                      <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <Lock className="w-4 h-4 text-indigo-500" />
                         كلمة المرور
                       </Label>
                       <div className="relative">
@@ -457,14 +491,14 @@ const Auth = () => {
                           placeholder="كلمة المرور"
                           required
                           disabled={isLoading}
-                          className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300 pr-12 text-white placeholder:text-slate-400"
+                          className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-indigo-400 focus:ring-indigo-400/20 rounded-xl transition-all duration-300 pr-12 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                           dir="rtl"
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-600/50 rounded-lg text-slate-400"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 rounded-lg text-slate-500 dark:text-slate-400"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -474,7 +508,7 @@ const Auth = () => {
 
                     <Button 
                       type="submit" 
-                      className="w-full h-12 bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-blue-500/30 rounded-xl transition-all duration-300" 
+                      className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600 text-white font-semibold shadow-lg shadow-blue-500/25 dark:shadow-blue-500/20 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105" 
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -496,7 +530,7 @@ const Auth = () => {
                         type="button"
                         variant="ghost"
                         onClick={() => setStep('forgot-password')}
-                        className="text-blue-400 hover:text-blue-300 text-sm"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm hover:bg-blue-50 dark:hover:bg-blue-950/20 rounded-xl px-4 py-2"
                       >
                         <Key className="w-4 h-4 ml-2" />
                         نسيت كلمة المرور؟
@@ -506,20 +540,20 @@ const Auth = () => {
                 ) : step === 'verification' ? (
                   <form onSubmit={handleVerificationSubmit} className="space-y-6">
                     <div className="text-center space-y-4">
-                      <div className="w-20 h-20 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-green-400/30">
-                        <Shield className="w-10 h-10 text-green-400" />
+                      <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-green-200 dark:border-green-700">
+                        <Shield className="w-10 h-10 text-green-600 dark:text-green-400" />
                       </div>
-                      <h3 className="text-xl font-bold text-white">
+                      <h3 className="text-xl font-bold text-slate-800 dark:text-white">
                         {showVerificationAfterSignup ? 'فعل حسابك الآن' : 'أدخل رمز التحقق'}
                       </h3>
-                      <p className="text-sm text-slate-300 bg-slate-700/50 p-3 rounded-xl border border-slate-600">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-100/80 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
                         تم إرسال رمز مكون من 6 أرقام إلى<br/>
-                        <span className="font-mono font-semibold text-blue-400">{emailForVerification}</span>
+                        <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">{emailForVerification}</span>
                       </p>
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="verification-code" className="text-sm font-semibold text-slate-300 text-center block">
+                      <Label htmlFor="verification-code" className="text-sm font-semibold text-slate-700 dark:text-slate-300 text-center block">
                         رمز التحقق (6 أرقام)
                       </Label>
                       <Input
@@ -529,7 +563,7 @@ const Auth = () => {
                         value={verificationCode}
                         onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         maxLength={6}
-                        className="h-16 text-center text-2xl font-mono tracking-widest bg-slate-700/50 border-slate-600 focus:border-green-400 focus:ring-green-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
+                        className="h-16 text-center text-2xl font-mono tracking-widest bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-green-400 focus:ring-green-400/20 rounded-xl transition-all duration-300 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                         required
                         disabled={isLoading}
                       />
@@ -537,7 +571,7 @@ const Auth = () => {
 
                     <Button 
                       type="submit" 
-                      className="w-full h-12 bg-gradient-to-l from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30 rounded-xl transition-all duration-300 disabled:opacity-50" 
+                      className="w-full h-12 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 dark:from-green-500 dark:to-emerald-500 dark:hover:from-green-600 dark:hover:to-emerald-600 text-white font-semibold shadow-lg shadow-green-500/25 rounded-xl transition-all duration-300 disabled:opacity-50 hover:shadow-xl hover:scale-105" 
                       disabled={isLoading || verificationCode.length !== 6}
                     >
                       {isLoading ? (
@@ -558,7 +592,7 @@ const Auth = () => {
                         type="button"
                         variant="ghost"
                         onClick={() => setStep('credentials')}
-                        className="text-slate-400 hover:text-slate-200 rounded-xl"
+                        className="text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
                       >
                         العودة للخلف
                       </Button>
@@ -568,10 +602,9 @@ const Auth = () => {
                         onClick={() => {
                           const form = new FormData();
                           form.set('email', emailForVerification);
-                          form.set('useVerification', 'on');
                           handleSignIn({preventDefault: () => {}, currentTarget: {elements: Object.fromEntries(form)}} as any);
                         }}
-                        className="text-blue-400 hover:text-blue-200 rounded-xl"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-blue-950/20 rounded-xl"
                         disabled={isLoading}
                       >
                         إعادة الإرسال
@@ -582,18 +615,18 @@ const Auth = () => {
                   // صفحة نسيت كلمة المرور
                   <form onSubmit={handleForgotPassword} className="space-y-6">
                     <div className="text-center space-y-4">
-                      <div className="w-20 h-20 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-orange-400/30">
-                        <Key className="w-10 h-10 text-orange-400" />
+                      <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900/50 dark:to-red-900/50 rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-orange-200 dark:border-orange-700">
+                        <Key className="w-10 h-10 text-orange-600 dark:text-orange-400" />
                       </div>
-                      <h3 className="text-xl font-bold text-white">إعادة تعيين كلمة المرور</h3>
-                      <p className="text-sm text-slate-300 bg-slate-700/50 p-3 rounded-xl border border-slate-600">
+                      <h3 className="text-xl font-bold text-slate-800 dark:text-white">إعادة تعيين كلمة المرور</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-100/80 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
                         أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور
                       </p>
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="forgot-email" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
+                      <Label htmlFor="forgot-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-orange-500" />
                         البريد الإلكتروني
                       </Label>
                       <Input
@@ -603,14 +636,14 @@ const Auth = () => {
                         placeholder="example@company.com"
                         required
                         disabled={isLoading}
-                        className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-orange-400 focus:ring-orange-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
+                        className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-orange-400 focus:ring-orange-400/20 rounded-xl transition-all duration-300 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                         dir="rtl"
                       />
                     </div>
 
                     <Button 
                       type="submit" 
-                      className="w-full h-12 bg-gradient-to-l from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold shadow-lg shadow-orange-500/30 rounded-xl transition-all duration-300" 
+                      className="w-full h-12 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 dark:from-orange-500 dark:to-red-500 dark:hover:from-orange-600 dark:hover:to-red-600 text-white font-semibold shadow-lg shadow-orange-500/25 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105" 
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -631,7 +664,7 @@ const Auth = () => {
                         type="button"
                         variant="ghost"
                         onClick={() => setStep('credentials')}
-                        className="text-slate-400 hover:text-slate-200 rounded-xl"
+                        className="text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
                       >
                         العودة لتسجيل الدخول
                       </Button>
@@ -643,8 +676,8 @@ const Auth = () => {
               <TabsContent value="signup" className="space-y-6">
                 <form onSubmit={handleSignUp} className="space-y-6">
                   <div className="space-y-3">
-                    <Label htmlFor="signup-name" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                      <UserPlus className="w-4 h-4" />
+                    <Label htmlFor="signup-name" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <UserPlus className="w-4 h-4 text-purple-500" />
                       الاسم الكامل
                     </Label>
                     <Input
@@ -654,13 +687,13 @@ const Auth = () => {
                       placeholder="الاسم الكامل"
                       required
                       disabled={isLoading}
-                      className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
+                      className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                       dir="rtl"
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="signup-email" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                      <Mail className="w-4 h-4" />
+                    <Label htmlFor="signup-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-purple-500" />
                       البريد الإلكتروني
                     </Label>
                     <Input
@@ -670,14 +703,14 @@ const Auth = () => {
                       placeholder="example@company.com"
                       required
                       disabled={isLoading}
-                      className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
+                      className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                       dir="rtl"
                     />
                   </div>
                   
                   <div className="space-y-3">
-                    <Label htmlFor="signup-password" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                      <Lock className="w-4 h-4" />
+                    <Label htmlFor="signup-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-purple-500" />
                       كلمة المرور
                     </Label>
                     <div className="relative">
@@ -689,37 +722,37 @@ const Auth = () => {
                         required
                         minLength={8}
                         disabled={isLoading}
-                        className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 pr-12 text-white placeholder:text-slate-400"
+                        className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 pr-12 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                         dir="rtl"
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-600/50 rounded-lg text-slate-400"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 rounded-lg text-slate-500 dark:text-slate-400"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
                     
-                    <div className="p-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl border border-purple-400/30">
-                      <p className="text-xs font-semibold text-purple-300 mb-2">متطلبات كلمة المرور:</p>
-                      <ul className="text-xs text-purple-400 space-y-1">
+                    <div className="p-4 bg-gradient-to-r from-purple-100/80 to-pink-100/80 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl border border-purple-200/50 dark:border-purple-700/20">
+                      <p className="text-xs font-semibold text-purple-700 dark:text-purple-300 mb-2">متطلبات كلمة المرور:</p>
+                      <ul className="text-xs text-purple-600 dark:text-purple-400 space-y-1">
                         <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
                           8 أحرف على الأقل
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
                           حرف كبير وحرف صغير
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
                           رقم واحد على الأقل
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
                           تجنب الكلمات الشائعة
                         </li>
                       </ul>
@@ -728,7 +761,7 @@ const Auth = () => {
                   
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-gradient-to-l from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/30 rounded-xl transition-all duration-300" 
+                    className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 dark:from-purple-500 dark:to-pink-500 dark:hover:from-purple-600 dark:hover:to-pink-600 text-white font-semibold shadow-lg shadow-purple-500/25 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105" 
                     disabled={isLoading}
                   >
                     {isLoading ? (
