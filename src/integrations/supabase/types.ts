@@ -1615,6 +1615,120 @@ export type Database = {
         }
         Relationships: []
       }
+      email_jobs: {
+        Row: {
+          created_at: string
+          id: string
+          job_type: string
+          payload: Json
+          processed_at: string | null
+          retries: number
+          scheduled_at: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          job_type?: string
+          payload: Json
+          processed_at?: string | null
+          retries?: number
+          scheduled_at?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          job_type?: string
+          payload?: Json
+          processed_at?: string | null
+          retries?: number
+          scheduled_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      email_outbox: {
+        Row: {
+          created_at: string
+          id: string
+          idempotency_key: string
+          last_error: string | null
+          provider: string
+          provider_msg_id: string | null
+          retries: number
+          status: string
+          subject: string
+          template_key: string
+          to_email: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          idempotency_key: string
+          last_error?: string | null
+          provider?: string
+          provider_msg_id?: string | null
+          retries?: number
+          status?: string
+          subject: string
+          template_key: string
+          to_email: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          idempotency_key?: string
+          last_error?: string | null
+          provider?: string
+          provider_msg_id?: string | null
+          retries?: number
+          status?: string
+          subject?: string
+          template_key?: string
+          to_email?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          created_at: string
+          html_template: string
+          id: string
+          is_active: boolean
+          subject_template: string
+          template_key: string
+          updated_at: string
+          variables: Json
+        }
+        Insert: {
+          created_at?: string
+          html_template: string
+          id?: string
+          is_active?: boolean
+          subject_template: string
+          template_key: string
+          updated_at?: string
+          variables?: Json
+        }
+        Update: {
+          created_at?: string
+          html_template?: string
+          id?: string
+          is_active?: boolean
+          subject_template?: string
+          template_key?: string
+          updated_at?: string
+          variables?: Json
+        }
+        Relationships: []
+      }
       invoice_counters: {
         Row: {
           counter: number
