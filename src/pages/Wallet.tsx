@@ -9,6 +9,7 @@ import { Wallet, Plus, Copy, Eye, User, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { NumberFormatter } from '@/components/NumberFormatter';
+import PaymentMethods from '@/components/PaymentMethods';
 import SEO from '@/components/SEO';
 
 interface WalletData {
@@ -385,8 +386,10 @@ const WalletPage = () => {
             </Card>
           </div>
 
-          {/* Info Card */}
+          {/* Payment Methods */}
           <div className="space-y-6">
+            <PaymentMethods />
+            
             <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-slate-800">
@@ -396,23 +399,23 @@ const WalletPage = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
-                  <h3 className="font-semibold text-blue-800 mb-2">بوابة Tap Company</h3>
+                  <h3 className="font-semibold text-blue-800 mb-2">الدفع الآمن</h3>
                   <p className="text-sm text-blue-700">
-                    نستخدم بوابة Tap Company الآمنة لضمان أمان معاملاتك المالية. جميع البيانات محمية بأعلى معايير الأمان.
+                    جميع طرق الدفع آمنة ومحمية بأعلى معايير الأمان العالمية
                   </p>
                 </div>
                 
                 <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-100">
-                  <h3 className="font-semibold text-emerald-800 mb-2">الحد الأدنى للإيداع</h3>
+                  <h3 className="font-semibold text-emerald-800 mb-2">المعالجة السريعة</h3>
                   <p className="text-sm text-emerald-700">
-                    الحد الأدنى للإيداع هو 10 ريال سعودي
+                    يتم مراجعة جميع الطلبات والرد عليها خلال 24 ساعة
                   </p>
                 </div>
                 
                 <div className="p-4 bg-amber-50 rounded-lg border border-amber-100">
-                  <h3 className="font-semibold text-amber-800 mb-2">مدة المعالجة</h3>
+                  <h3 className="font-semibold text-amber-800 mb-2">الدعم الفني</h3>
                   <p className="text-sm text-amber-700">
-                    سيتم إضافة المبلغ إلى محفظتك فور تأكيد الدفع
+                    فريق الدعم متاح على مدار الساعة لمساعدتك
                   </p>
                 </div>
               </CardContent>
