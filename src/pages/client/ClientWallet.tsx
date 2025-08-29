@@ -109,6 +109,8 @@ export default function ClientWallet() {
   const [depositing, setDepositing] = useState(false);
   const [showBankDetails, setShowBankDetails] = useState(false);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [lastUpdateTime, setLastUpdateTime] = useState<number>(0);
+  const [enableNotifications, setEnableNotifications] = useState(true);
   const { toast } = useToast();
 
   const iconMap = {
@@ -120,14 +122,20 @@ export default function ClientWallet() {
     Globe: TrendingDown
   };
 
-  // Real-time updates
+  // Real-time updates with debouncing to prevent spam
   const { getStatusText } = useRealtimePayments({
     onUpdate: () => {
-      toast({
-        title: "🔄 تحديث فوري",
-        description: "تم تحديث رصيد محفظتك، يرجى مراجعة المعاملات الجديدة",
-        duration: 4000,
-      });
+      const currentTime = Date.now();
+      // Only show notification if more than 5 seconds passed since last update
+      if (enableNotifications && currentTime - lastUpdateTime > 5000) {
+        toast({
+          title: "تحديث الرصيد",
+          description: "تم تحديث رصيد محفظتك",
+          duration: 3000,
+        });
+        setLastUpdateTime(currentTime);
+      }
+      // Always fetch data but control notifications
       fetchWalletData();
     }
   });
@@ -135,7 +143,18 @@ export default function ClientWallet() {
   useEffect(() => {
     fetchWalletData();
     fetchPaymentMethods();
+    
+    // Load notification preferences from localStorage
+    const storedNotificationPref = localStorage.getItem('walletNotifications');
+    if (storedNotificationPref !== null) {
+      setEnableNotifications(JSON.parse(storedNotificationPref));
+    }
   }, []);
+
+  // Save notification preference when changed
+  useEffect(() => {
+    localStorage.setItem('walletNotifications', JSON.stringify(enableNotifications));
+  }, [enableNotifications]);
 
   const fetchPaymentMethods = async () => {
     try {
@@ -517,8 +536,8 @@ export default function ClientWallet() {
                       محمي ومؤمن
                     </span>
                     <span className="flex items-center gap-1">
-                      <Star className="h-4 w-4" />
-                      خدمة متميزة
+                      <div className={`h-2 w-2 rounded-full ${enableNotifications ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                      {enableNotifications ? 'التحديثات مُفعّلة' : 'التحديثات معطّلة'}
                     </span>
                   </div>
                 </div>
@@ -528,10 +547,25 @@ export default function ClientWallet() {
                   <CheckCircle className="h-4 w-4 text-emerald-600" />
                   <span className="text-sm font-medium text-emerald-700">حساب مُفعّل</span>
                 </div>
-                <Button variant="outline" size="sm" className="bg-white/50 hover:bg-white/80">
-                  <Settings className="h-4 w-4 ml-2" />
-                  الإعدادات
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEnableNotifications(!enableNotifications)}
+                    className={`bg-white/50 hover:bg-white/80 ${
+                      enableNotifications 
+                        ? 'text-blue-700 border-blue-200' 
+                        : 'text-slate-500 border-slate-200'
+                    }`}
+                  >
+                    <Bell className="h-4 w-4 ml-2" />
+                    {enableNotifications ? 'إيقاف التنبيهات' : 'تفعيل التنبيهات'}
+                  </Button>
+                  <Button variant="outline" size="sm" className="bg-white/50 hover:bg-white/80">
+                    <Settings className="h-4 w-4 ml-2" />
+                    الإعدادات
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -952,7 +986,7 @@ export default function ClientWallet() {
               </CardContent>
             </Card>
 
-            {/* Quick Actions */}
+            {/* Enhanced Quick Actions with Notification Settings */}
             <Card className="bg-white/90 backdrop-blur-md border-white/20 shadow-xl animate-fade-in">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-3 text-slate-800">
@@ -964,12 +998,21 @@ export default function ClientWallet() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button 
+                  onClick={() => {
+                    fetchWalletData();
+                    toast({
+                      title: "تم التحديث",
+                      description: "تم تحديث بيانات المحفظة بنجاح",
+                      duration: 2000,
+                    });
+                  }}
                   variant="outline" 
                   className="w-full justify-start bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 hover:from-blue-100 hover:to-indigo-100 text-blue-700 font-semibold"
                 >
                   <RefreshCw className="h-4 w-4 ml-2" />
                   تحديث الرصيد
                 </Button>
+                
                 <Button 
                   variant="outline" 
                   className="w-full justify-start bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-200 hover:from-emerald-100 hover:to-green-100 text-emerald-700 font-semibold"
@@ -977,13 +1020,37 @@ export default function ClientWallet() {
                   <Download className="h-4 w-4 ml-2" />
                   تحميل كشف الحساب
                 </Button>
+                
                 <Button 
+                  onClick={() => setEnableNotifications(!enableNotifications)}
                   variant="outline" 
-                  className="w-full justify-start bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 hover:from-purple-100 hover:to-pink-100 text-purple-700 font-semibold"
+                  className={`w-full justify-start font-semibold ${
+                    enableNotifications 
+                      ? 'bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 hover:from-purple-100 hover:to-pink-100 text-purple-700'
+                      : 'bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200 hover:from-gray-100 hover:to-slate-100 text-gray-700'
+                  }`}
                 >
                   <Bell className="h-4 w-4 ml-2" />
-                  إعدادات التنبيهات
+                  {enableNotifications ? 'إيقاف التنبيهات الفورية' : 'تفعيل التنبيهات الفورية'}
                 </Button>
+                
+                <div className="mt-4 p-3 bg-slate-50 rounded-xl">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">حالة التحديثات:</span>
+                    <div className="flex items-center gap-2">
+                      <div className={`h-2 w-2 rounded-full ${enableNotifications ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                      <span className="text-sm font-bold text-slate-600">
+                        {enableNotifications ? 'مُفعّلة' : 'معطّلة'}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-2">
+                    {enableNotifications 
+                      ? 'ستتلقى تنبيهات عند تحديث رصيدك (كل 5 ثوانٍ كحد أقصى)'
+                      : 'لن تتلقى تنبيهات التحديثات الفورية'
+                    }
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
