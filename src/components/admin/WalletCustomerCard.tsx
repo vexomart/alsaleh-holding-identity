@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { User, Wallet, Mail, CreditCard, Plus, Minus } from "lucide-react";
+import { WalletTransactionsView } from "./WalletTransactionsView";
 
 interface WalletCustomerData {
   user_id: string;
@@ -29,6 +31,8 @@ export const WalletCustomerCard = ({
   onWithdraw, 
   onViewTransactions 
 }: WalletCustomerCardProps) => {
+  const [showTransactions, setShowTransactions] = useState(false);
+
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -156,13 +160,21 @@ export const WalletCustomerCard = ({
           <Button
             size="sm"
             variant="secondary"
-            onClick={() => onViewTransactions(customer.user_id, customer.full_name)}
+            onClick={() => setShowTransactions(true)}
             className="w-full bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 dark:from-slate-700 dark:to-slate-600 dark:hover:from-slate-600 dark:hover:to-slate-500 shadow-sm hover:shadow-md transition-all duration-200"
           >
             عرض المعاملات والسجل
           </Button>
         </div>
       </CardContent>
+
+      {/* مكون عرض المعاملات */}
+      <WalletTransactionsView
+        isOpen={showTransactions}
+        onClose={() => setShowTransactions(false)}
+        userId={customer.user_id}
+        customerName={customer.full_name}
+      />
     </Card>
   );
 };
