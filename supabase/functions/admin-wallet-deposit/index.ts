@@ -39,21 +39,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Validate that user exists in auth.users table
-    const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(user_id);
-    
-    if (authError || !authUser.user) {
-      console.error('User not found in auth.users:', authError);
-      return new Response(
-        JSON.stringify({ 
-          error: 'المستخدم غير موجود في النظام',
-          details: 'User not found in authentication system'
-        }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Get user information for email
+    // Get user information from profiles first
     const { data: userProfile, error: userError } = await supabase
       .from('profiles')
       .select('full_name, email, user_id')
@@ -62,34 +48,42 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (userError) {
       console.error('Error fetching user profile:', userError);
+      return new Response(
+        JSON.stringify({ 
+          error: 'خطأ في جلب بيانات المستخدم',
+          details: userError.message
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    // If no profile exists, create one with basic info from auth
-    let finalUserProfile = userProfile;
-    if (!userProfile && authUser.user) {
-      console.log('Creating profile for user:', user_id);
-      const { data: newProfile, error: createProfileError } = await supabase
-        .from('profiles')
-        .insert({
-          user_id: user_id,
-          email: authUser.user.email,
-          full_name: authUser.user.user_metadata?.full_name || authUser.user.email
-        })
-        .select('full_name, email, user_id')
-        .single();
+    if (!userProfile) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'المستخدم غير موجود في النظام',
+          details: 'User profile not found'
+        }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
-      if (createProfileError) {
-        console.error('Error creating user profile:', createProfileError);
-        // Continue without profile, just use auth data
-        finalUserProfile = {
-          full_name: authUser.user.user_metadata?.full_name || authUser.user.email,
-          email: authUser.user.email,
-          user_id: user_id
-        };
-      } else {
-        finalUserProfile = newProfile;
+    // Try to get user from auth.users, if not found, we'll continue with profile data
+    let authUser = null;
+    try {
+      const { data, error: authError } = await supabase.auth.admin.getUserById(user_id);
+      if (!authError && data.user) {
+        authUser = data.user;
       }
+    } catch (authError) {
+      console.log('User not found in auth.users, continuing with profile data:', authError);
     }
+
+    // Use profile email or a default email if none exists
+    const finalUserProfile = {
+      full_name: userProfile.full_name || 'مستخدم',
+      email: userProfile.email || authUser?.email || 'no-email@example.com',
+      user_id: user_id
+    };
 
     // Process wallet transaction using the database function
     const { data: walletResult, error: walletError } = await supabase.rpc('process_wallet_transaction', {
