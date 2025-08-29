@@ -88,17 +88,18 @@ const AdminWallet = () => {
     try {
       const { data: profiles, error } = await supabase
         .from('profiles')
-        .select('id, full_name, email')
+        .select('user_id, full_name, email')
         .limit(20);
 
       if (error) throw error;
 
       const users = profiles?.map(profile => ({
-        id: profile.id,
-        name: profile.full_name || 'غير محدد',
-        email: profile.email || 'غير محدد'
+        id: profile.user_id, // استخدام user_id بدلاً من id
+        name: profile.full_name || 'مستخدم بدون اسم',
+        email: profile.email || 'بدون إيميل'
       })) || [];
 
+      console.log('Available users:', users);
       setAvailableUsers(users);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -109,7 +110,7 @@ const AdminWallet = () => {
     try {
       setLoading(true);
 
-      // Fetch wallet transactions
+      // Fetch wallet transactions - الطريقة البسيطة بدون join
       const { data: walletTransactions, error: transactionsError } = await supabase
         .from('wallet_transactions')
         .select('*')
@@ -117,19 +118,39 @@ const AdminWallet = () => {
 
       if (transactionsError) throw transactionsError;
 
+      // Get user names separately from profiles
+      const userIds = [...new Set(walletTransactions?.map(t => t.user_id) || [])];
+      
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('user_id, full_name, email')
+        .in('user_id', userIds);
+
+      // Create a map for quick lookup
+      const profileMap = new Map();
+      profiles?.forEach(profile => {
+        profileMap.set(profile.user_id, {
+          full_name: profile.full_name,
+          email: profile.email
+        });
+      });
+
       // Transform data
-      const transactionsData: WalletTransaction[] = walletTransactions?.map(transaction => ({
-        id: transaction.id,
-        user_id: transaction.user_id,
-        user_name: 'عميل ' + transaction.user_id.slice(-6),
-        user_email: 'user@example.com',
-        transaction_type: transaction.transaction_type as any,
-        amount: transaction.amount,
-        description: transaction.description,
-        status: transaction.status as any,
-        created_at: transaction.created_at,
-        reference_id: transaction.reference_id
-      })) || [];
+      const transactionsData: WalletTransaction[] = walletTransactions?.map(transaction => {
+        const userProfile = profileMap.get(transaction.user_id);
+        return {
+          id: transaction.id,
+          user_id: transaction.user_id,
+          user_name: userProfile?.full_name || `مستخدم ${transaction.user_id.slice(-6)}`,
+          user_email: userProfile?.email || 'بدون إيميل',
+          transaction_type: transaction.transaction_type as any,
+          amount: transaction.amount,
+          description: transaction.description,
+          status: transaction.status as any,
+          created_at: transaction.created_at,
+          reference_id: transaction.reference_id
+        };
+      }) || [];
 
       // Fetch wallet summary
       const { data: wallets, error: walletsError } = await supabase
@@ -257,7 +278,9 @@ const AdminWallet = () => {
     }
 
     try {
-      // Call the new admin wallet deposit function
+      console.log('Adding funds for user:', selectedUserId, 'amount:', amount);
+      
+      // Call the admin wallet deposit function
       const { data, error } = await supabase.functions.invoke('admin-wallet-deposit', {
         body: {
           user_id: selectedUserId,
@@ -267,11 +290,15 @@ const AdminWallet = () => {
         }
       });
 
+      console.log('Function response:', data, 'Error:', error);
+
       if (error) {
-        throw new Error(error.message || 'فشل في إضافة الرصيد');
+        console.error('Function invocation error:', error);
+        throw new Error(`خطأ في استدعاء الدالة: ${error.message}`);
       }
 
       if (data?.error) {
+        console.error('Function returned error:', data.error);
         throw new Error(data.error);
       }
 
