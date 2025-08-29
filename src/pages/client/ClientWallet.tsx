@@ -304,13 +304,10 @@ export default function ClientWallet() {
   const generateUniqueAccountNumber = (userId: string, clientId?: string) => {
     if (clientId) return clientId;
     
-    // إنشاء رقم حساب فريد ومعتمد للتحقق المالي
-    const userHash = userId.slice(-12).toUpperCase();
-    const year = new Date().getFullYear().toString().slice(-2);
-    const month = new Date().getMonth().toString().padStart(2, '0');
-    
-    // تشكيل الرقم: ASH (Ali Saleh Holding) + السنة + الشهر + معرف المستخدم
-    return `ASH${year}${month}${userHash}`;
+    // إنشاء رقم حساب فريد من 9 أرقام للتحقق المالي
+    const userHash = userId.replace(/-/g, '').slice(-8);
+    const randomDigit = Math.floor(Math.random() * 10);
+    return `${randomDigit}${userHash}`.slice(0, 9);
   };
 
   const copyAccountNumber = () => {
@@ -468,9 +465,9 @@ export default function ClientWallet() {
                     <div className="space-y-2 flex-1">
                       <div className="flex items-center gap-2">
                         <Label className="text-slate-600 font-medium">الرقم المالي المعتمد</Label>
-                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs">
-                          للتحقق المالي
-                        </Badge>
+                         <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">
+                           للتحقق المالي
+                         </Badge>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="bg-slate-50 rounded-lg p-3 flex-1">
@@ -501,13 +498,19 @@ export default function ClientWallet() {
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <Label className="text-slate-600 font-medium">شركة علي صالح محمد الشهري</Label>
-                      <p className="text-sm text-slate-500">المملكة العربية السعودية</p>
-                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs mt-1">
-                        معتمد ضريبياً
-                      </Badge>
-                    </div>
+                     <div className="text-right">
+                       <Label className="text-slate-600 font-medium">شركة علي صالح محمد الشهري</Label>
+                       <p className="text-sm text-slate-500">المملكة العربية السعودية</p>
+                       <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-2">
+                         <div className="flex items-start gap-2">
+                           <Info className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                           <div className="text-xs text-amber-800 leading-relaxed">
+                             <p className="font-semibold">تنبيه مهم:</p>
+                             <p>هذا الحساب مخصص للتحقق من جميع عملياتك المالية داخل الشركة وفقاً للأنظمة المالية المعمول بها.</p>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
                   </div>
                 </div>
               </CardContent>
