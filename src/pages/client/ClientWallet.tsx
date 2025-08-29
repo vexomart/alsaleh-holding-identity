@@ -121,14 +121,21 @@ export default function ClientWallet() {
   const fetchWalletData = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        console.log('No authenticated user found');
+        return;
+      }
+
+      console.log('Current user:', { id: user.id, email: user.email });
 
       // Fetch user profile with maybeSingle to avoid errors
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user.id)
+        .eq('user_id', user.id)
         .maybeSingle();
+
+      console.log('Profile fetch result:', { profileData, profileError });
 
       if (profileError) {
         console.error('Profile error:', profileError);
@@ -137,6 +144,7 @@ export default function ClientWallet() {
       // إذا لم يوجد ملف شخصي، قم بإنشاء واحد
       let userProfileData = profileData;
       if (!profileData) {
+        console.log('Creating new profile for user');
         const { data: newProfile, error: createProfileError } = await supabase
           .from('profiles')
           .insert({
@@ -147,6 +155,8 @@ export default function ClientWallet() {
           .select()
           .single();
 
+        console.log('Profile creation result:', { newProfile, createProfileError });
+
         if (createProfileError) {
           console.error('Error creating profile:', createProfileError);
         } else {
@@ -154,12 +164,15 @@ export default function ClientWallet() {
         }
       }
 
-      setUserProfile({
+      const finalProfileData = {
         id: user.id,
         full_name: userProfileData?.full_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'مستخدم جديد',
         client_id: userProfileData?.client_id,
         email: user.email
-      });
+      };
+
+      console.log('Final profile data:', finalProfileData);
+      setUserProfile(finalProfileData);
 
       // Fetch wallet
       const { data: walletData, error: walletError } = await supabase
