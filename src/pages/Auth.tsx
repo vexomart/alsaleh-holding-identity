@@ -251,17 +251,34 @@ const Auth = () => {
         }
       } else {
         if (data.user && !data.session) {
-          // المستخدم بحاجة لتأكيد إيميله
-          toast.success('تم إنشاء الحساب بنجاح! تم إرسال رابط تأكيد إلى بريدك الإلكتروني. يرجى النقر على الرابط لتفعيل حسابك.', {
-            duration: 6000,
-            style: {
-              background: '#10b981',
-              color: 'white',
-              borderRadius: '16px',
-              padding: '16px',
-              fontSize: '14px',
+          // إرسال إيميل تحقق مخصص عبر edge function
+          try {
+            const { data: emailData, error: emailError } = await supabase.functions.invoke('send-verification-code', {
+              body: {
+                email: email,
+                type: 'user'
+              }
+            });
+
+            if (emailError) {
+              console.error('Email sending error:', emailError);
+              toast.success('تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني لتأكيد الحساب.');
+            } else {
+              toast.success('تم إنشاء الحساب بنجاح! تم إرسال رمز التحقق إلى بريدك الإلكتروني.', {
+                duration: 6000,
+                style: {
+                  background: '#10b981',
+                  color: 'white',
+                  borderRadius: '16px',
+                  padding: '16px',
+                  fontSize: '14px',
+                }
+              });
             }
-          });
+          } catch (emailErr) {
+            console.error('Failed to send verification email:', emailErr);
+            toast.success('تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني لتأكيد الحساب.');
+          }
           setError('');
         } else if (data.session) {
           // تم تسجيل الدخول مباشرة (إذا كان التأكيد معطل)
