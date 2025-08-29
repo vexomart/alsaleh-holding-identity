@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { RealtimeWalletUpdates } from '@/components/RealtimeWalletUpdates';
 
 interface WalletTransaction {
   id: string;
@@ -716,8 +717,12 @@ const AdminWallet = () => {
           </CardContent>
         </Card>
 
-        {/* استمرار باقي المحتوى */}
-      </div>
+      {/* Realtime Updates Component */}
+      <RealtimeWalletUpdates onTransactionUpdate={(transaction) => {
+        // Refresh data when new transaction comes in
+        fetchWalletData();
+      }} />
+    </div>
   );
 };
 

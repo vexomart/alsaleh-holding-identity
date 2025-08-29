@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
+import { RealtimeWalletUpdates } from '@/components/RealtimeWalletUpdates';
 import { 
   Wallet, 
   Plus, 
@@ -1688,11 +1689,20 @@ const ClientWallet = () => {
                 )}
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+        )}
+      </DialogContent>
+    </Dialog>
+
+    {/* Realtime Updates Component */}
+    <RealtimeWalletUpdates 
+      userId={walletData?.user_id} 
+      onTransactionUpdate={async (transaction) => {
+        // Refresh wallet data and transactions
+        await Promise.all([refetchWallet(), refetchTransactions()]);
+      }} 
+    />
+  </div>
+);
 };
 
 export default ClientWallet;
