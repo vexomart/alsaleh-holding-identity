@@ -3,11 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Wallet, Plus, History, CreditCard, Building2, Smartphone, Copy, Eye, ArrowUpCircle, ArrowDownCircle, TrendingUp, User, Shield, ChevronRight } from 'lucide-react';
+import { Wallet, Plus, Copy, Eye, User, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { NumberFormatter } from '@/components/NumberFormatter';
@@ -27,38 +25,19 @@ interface UserProfile {
   email?: string;
 }
 
-interface Transaction {
-  id: string;
-  transaction_type: string;
-  amount: number;
-  balance_before: number;
-  balance_after: number;
-  description: string;
-  payment_method: string;
-  payment_reference: string;
-  status: string;
-  created_at: string;
-}
+// Removed Transaction interface - no longer needed
 
 const WalletPage = () => {
   const [wallet, setWallet] = useState<WalletData | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [depositAmount, setDepositAmount] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [depositing, setDepositing] = useState(false);
   const [accountNumberVisible, setAccountNumberVisible] = useState(false);
   const { toast } = useToast();
 
-  const paymentMethods = [
-    { value: 'visa', label: 'فيزا', icon: CreditCard },
-    { value: 'mastercard', label: 'ماستركارد', icon: CreditCard },
-    { value: 'mada', label: 'مدى', icon: CreditCard },
-    { value: 'stc_pay', label: 'STC Pay', icon: Smartphone },
-    { value: 'bank_transfer', label: 'حوالة بنكية', icon: Building2 },
-  ];
+// Removed payment methods array - using Tap Company gateway
 
   useEffect(() => {
     fetchWalletData();
@@ -112,19 +91,7 @@ const WalletPage = () => {
         setWallet(walletData);
       }
 
-      // Fetch transactions
-      const { data: transactionsData, error: transactionsError } = await supabase
-        .from('wallet_transactions')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (transactionsError) {
-        console.error('Transactions error:', transactionsError);
-      } else {
-        setTransactions(transactionsData || []);
-      }
+      // Removed transactions fetching - no longer needed
     } catch (error) {
       console.error('Error fetching wallet data:', error);
     } finally {
@@ -133,20 +100,20 @@ const WalletPage = () => {
   };
 
   const handleDeposit = async () => {
-    if (!depositAmount || !paymentMethod) {
+    if (!depositAmount) {
       toast({
         title: "خطأ",
-        description: "يرجى إدخال المبلغ واختيار طريقة الدفع",
+        description: "يرجى إدخال المبلغ",
         variant: "destructive"
       });
       return;
     }
 
     const amount = parseFloat(depositAmount);
-    if (amount <= 0) {
+    if (amount <= 0 || amount < 10) {
       toast({
         title: "خطأ",
-        description: "يرجى إدخال مبلغ صالح",
+        description: "الحد الأدنى للإيداع 10 ريال سعودي",
         variant: "destructive"
       });
       return;
@@ -157,11 +124,18 @@ const WalletPage = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
-      const response = await supabase.functions.invoke('wallet-deposit', {
+      const response = await supabase.functions.invoke('tap-payment', {
         body: {
           amount,
-          payment_method: paymentMethod,
-          description: `شحن المحفظة بمبلغ ${amount} ريال سعودي`
+          currency: 'SAR',
+          customer_name: userProfile?.full_name || 'عميل',
+          customer_email: userProfile?.email || '',
+          description: `شحن المحفظة الرقمية بمبلغ ${amount} ريال سعودي`,
+          product_details: {
+            name: 'شحن المحفظة الرقمية',
+            description: `إيداع ${amount} ريال سعودي في المحفظة`,
+            category: 'wallet_deposit'
+          }
         },
         headers: {
           Authorization: `Bearer ${session.access_token}`
@@ -173,50 +147,24 @@ const WalletPage = () => {
       }
 
       const { data } = response;
-      if (data.success) {
-        toast({
-          title: "تم الشحن بنجاح",
-          description: `تم شحن محفظتك بمبلغ ${amount} ريال سعودي`
-        });
-        
-        setDepositAmount('');
-        setPaymentMethod('');
-        setIsDepositOpen(false);
-        await fetchWalletData();
+      if (data.success && data.payment_url) {
+        // Redirect to Tap payment page
+        window.location.href = data.payment_url;
       } else {
-        throw new Error(data.error);
+        throw new Error(data.error || 'فشل في إنشاء رابط الدفع');
       }
     } catch (error) {
       console.error('Deposit error:', error);
       toast({
         title: "خطأ في الشحن",
-        description: "حدث خطأ أثناء شحن المحفظة، يرجى المحاولة مرة أخرى",
+        description: "حدث خطأ أثناء إنشاء رابط الدفع، يرجى المحاولة مرة أخرى",
         variant: "destructive"
       });
-    } finally {
       setDepositing(false);
     }
   };
 
-  const getTransactionTypeLabel = (type: string) => {
-    const types = {
-      deposit: 'إيداع',
-      withdrawal: 'سحب',
-      payment: 'دفع',
-      refund: 'استرداد'
-    };
-    return types[type as keyof typeof types] || type;
-  };
-
-  const getTransactionColor = (type: string) => {
-    const colors = {
-      deposit: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-      withdrawal: 'bg-rose-50 text-rose-700 border-rose-200',
-      payment: 'bg-blue-50 text-blue-700 border-blue-200',
-      refund: 'bg-amber-50 text-amber-700 border-amber-200'
-    };
-    return colors[type as keyof typeof colors] || 'bg-gray-50 text-gray-700 border-gray-200';
-  };
+// Removed transaction helper functions - no longer needed
 
   const generateAccountNumber = (userId: string, clientId?: string) => {
     if (clientId) return clientId;
@@ -232,19 +180,7 @@ const WalletPage = () => {
     });
   };
 
-  const calculateStats = () => {
-    const totalDeposits = transactions
-      .filter(t => t.transaction_type === 'deposit' || t.transaction_type === 'refund')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
-    const totalWithdrawals = transactions
-      .filter(t => t.transaction_type === 'withdrawal' || t.transaction_type === 'payment')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
-    const pendingTransactions = transactions.filter(t => t.status === 'pending').length;
-    
-    return { totalDeposits, totalWithdrawals, pendingTransactions };
-  };
+// Removed stats calculation - no longer needed
 
   if (loading) {
     return (
@@ -265,7 +201,6 @@ const WalletPage = () => {
     );
   }
 
-  const stats = calculateStats();
   const accountNumber = generateAccountNumber(userProfile?.id || '', userProfile?.client_id);
 
   return (
@@ -393,45 +328,28 @@ const WalletPage = () => {
                       <DialogTitle className="text-center text-slate-800">شحن المحفظة</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="amount" className="text-slate-700 font-medium">المبلغ (ريال سعودي)</Label>
-                        <Input
-                          id="amount"
-                          type="number"
-                          min="1"
-                          step="0.01"
-                          value={depositAmount}
-                          onChange={(e) => setDepositAmount(e.target.value)}
-                          placeholder="أدخل المبلغ المراد شحنه"
-                          className="text-lg font-semibold"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-slate-700 font-medium">طريقة الدفع</Label>
-                        <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر طريقة الدفع" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {paymentMethods.map((method) => (
-                              <SelectItem key={method.value} value={method.value}>
-                                <div className="flex items-center gap-2">
-                                  <method.icon className="h-4 w-4" />
-                                  {method.label}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <Button 
-                        onClick={handleDeposit} 
-                        disabled={depositing || !depositAmount || !paymentMethod}
-                        className="w-full bg-blue-600 hover:bg-blue-700"
-                        size="lg"
-                      >
-                        {depositing ? 'جاري الشحن...' : 'تأكيد الشحن'}
-                      </Button>
+                        <div className="space-y-2">
+                          <Label htmlFor="amount" className="text-slate-700 font-medium">المبلغ (ريال سعودي)</Label>
+                          <Input
+                            id="amount"
+                            type="number"
+                            min="10"
+                            step="0.01"
+                            value={depositAmount}
+                            onChange={(e) => setDepositAmount(e.target.value)}
+                            placeholder="الحد الأدنى 10 ريال سعودي"
+                            className="text-lg font-semibold"
+                          />
+                          <p className="text-sm text-slate-500">سيتم الدفع بأمان عبر بوابة Tap Company</p>
+                        </div>
+                        <Button 
+                          onClick={handleDeposit} 
+                          disabled={depositing || !depositAmount}
+                          className="w-full bg-blue-600 hover:bg-blue-700"
+                          size="lg"
+                        >
+                          {depositing ? 'جاري التحويل...' : 'الدفع عبر Tap Company'}
+                        </Button>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -439,169 +357,40 @@ const WalletPage = () => {
             </Card>
           </div>
 
-          {/* Statistics Sidebar */}
+          {/* Info Card */}
           <div className="space-y-6">
-            {/* Quick Stats */}
             <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-slate-800">
-                  <TrendingUp className="h-5 w-5" />
-                  إحصائيات سريعة
+                  <Shield className="h-5 w-5" />
+                  معلومات الدفع
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg border border-emerald-100">
-                  <div className="flex items-center gap-2">
-                    <ArrowUpCircle className="h-4 w-4 text-emerald-600" />
-                    <span className="text-sm font-medium text-emerald-800">إجمالي الإيداعات</span>
-                  </div>
-                  <span className="font-bold text-emerald-700">
-                    <NumberFormatter number={stats.totalDeposits} suffix=" ريال" />
-                  </span>
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                  <h3 className="font-semibold text-blue-800 mb-2">بوابة Tap Company</h3>
+                  <p className="text-sm text-blue-700">
+                    نستخدم بوابة Tap Company الآمنة لضمان أمان معاملاتك المالية. جميع البيانات محمية بأعلى معايير الأمان.
+                  </p>
                 </div>
-
-                <div className="flex items-center justify-between p-3 bg-rose-50 rounded-lg border border-rose-100">
-                  <div className="flex items-center gap-2">
-                    <ArrowDownCircle className="h-4 w-4 text-rose-600" />
-                    <span className="text-sm font-medium text-rose-800">إجمالي المدفوعات</span>
-                  </div>
-                  <span className="font-bold text-rose-700">
-                    <NumberFormatter number={stats.totalWithdrawals} suffix=" ريال" />
-                  </span>
+                
+                <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-100">
+                  <h3 className="font-semibold text-emerald-800 mb-2">الحد الأدنى للإيداع</h3>
+                  <p className="text-sm text-emerald-700">
+                    الحد الأدنى للإيداع هو 10 ريال سعودي
+                  </p>
                 </div>
-
-                <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-100">
-                  <div className="flex items-center gap-2">
-                    <History className="h-4 w-4 text-amber-600" />
-                    <span className="text-sm font-medium text-amber-800">معاملات معلقة</span>
-                  </div>
-                  <span className="font-bold text-amber-700">
-                    <NumberFormatter number={stats.pendingTransactions} />
-                  </span>
+                
+                <div className="p-4 bg-amber-50 rounded-lg border border-amber-100">
+                  <h3 className="font-semibold text-amber-800 mb-2">مدة المعالجة</h3>
+                  <p className="text-sm text-amber-700">
+                    سيتم إضافة المبلغ إلى محفظتك فور تأكيد الدفع
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Payment Methods */}
-            <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-slate-800">
-                  <CreditCard className="h-5 w-5" />
-                  طرق الدفع المتاحة
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {paymentMethods.map((method) => (
-                  <div key={method.value} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <method.icon className="h-4 w-4 text-slate-600" />
-                      <span className="text-sm font-medium text-slate-700">{method.label}</span>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-slate-400" />
-                  </div>
-                ))}
               </CardContent>
             </Card>
           </div>
         </div>
-
-        {/* Transaction History */}
-        <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-slate-800">
-              <History className="h-5 w-5" />
-              سجل المعاملات
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {transactions.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="p-4 bg-slate-50 rounded-full w-fit mx-auto mb-4">
-                  <Wallet className="h-8 w-8 text-slate-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-slate-700 mb-2">لا توجد معاملات</h3>
-                <p className="text-slate-500 mb-4">ابدأ بشحن محفظتك لتظهر المعاملات هنا</p>
-                <Dialog open={isDepositOpen} onOpenChange={setIsDepositOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100">
-                      <Plus className="h-4 w-4 ml-2" />
-                      شحن المحفظة الآن
-                    </Button>
-                  </DialogTrigger>
-                </Dialog>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-slate-600">آخر {transactions.length} معاملة</span>
-                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
-                    عرض الكل
-                    <ChevronRight className="h-4 w-4 mr-1" />
-                  </Button>
-                </div>
-                
-                {transactions.map((transaction, index) => (
-                  <div key={transaction.id} className="group">
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-all duration-200 border border-slate-100">
-                      <div className="flex items-center gap-4">
-                        <div className={`p-2 rounded-lg ${
-                          transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund'
-                            ? 'bg-emerald-100 text-emerald-600'
-                            : 'bg-rose-100 text-rose-600'
-                        }`}>
-                          {transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund' ? (
-                            <ArrowUpCircle className="h-4 w-4" />
-                          ) : (
-                            <ArrowDownCircle className="h-4 w-4" />
-                          )}
-                        </div>
-                        
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline" className={`${getTransactionColor(transaction.transaction_type)} font-medium`}>
-                              {getTransactionTypeLabel(transaction.transaction_type)}
-                            </Badge>
-                            <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
-                              {transaction.payment_method}
-                            </span>
-                          </div>
-                          <p className="text-sm text-slate-700 font-medium">{transaction.description}</p>
-                          <p className="text-xs text-slate-500">
-                            {new Date(transaction.created_at).toLocaleDateString('ar-SA', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="text-left space-y-1">
-                        <div className={`text-lg font-bold ${
-                          transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund'
-                            ? 'text-emerald-600'
-                            : 'text-rose-600'
-                        }`}>
-                          {transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund' ? '+' : '-'}
-                          <NumberFormatter number={transaction.amount} suffix=" ريال" />
-                        </div>
-                        <div className="text-xs text-slate-500">
-                          الرصيد: <NumberFormatter number={transaction.balance_after} suffix=" ريال" />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {index < transactions.length - 1 && (
-                      <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-2" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
