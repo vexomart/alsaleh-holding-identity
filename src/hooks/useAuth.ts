@@ -235,25 +235,38 @@ export const useAuth = () => {
     let sessionCheckInterval: NodeJS.Timeout;
 
     const setupAuthListener = async () => {
-      // الحصول على الجلسة الحالية
-      const { data: { session: initialSession } } = await supabase.auth.getSession();
-      
-      if (initialSession) {
-        const isValid = await validateSession(initialSession);
-        if (isValid) {
-          const role = await fetchUserRole(initialSession.user.id);
-          setAuthState({
-            user: initialSession.user,
-            session: initialSession,
-            userRole: role,
-            isLoading: false,
-            isAuthenticated: true,
-            error: null,
-          });
-        } else {
-          await secureLogout();
+      try {
+        // الحصول على الجلسة الحالية مع معالجة الأخطاء
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
+        // إذا كان هناك خطأ في refresh token، امسح الجلسة المحلية
+        if (error && error.message.includes('refresh_token_not_found')) {
+          localStorage.clear();
+          sessionStorage.clear();
+          setAuthState(prev => ({ ...prev, isLoading: false }));
+          return;
         }
-      } else {
+        
+        if (initialSession) {
+          const isValid = await validateSession(initialSession);
+          if (isValid) {
+            const role = await fetchUserRole(initialSession.user.id);
+            setAuthState({
+              user: initialSession.user,
+              session: initialSession,
+              userRole: role,
+              isLoading: false,
+              isAuthenticated: true,
+              error: null,
+            });
+          } else {
+            await secureLogout();
+          }
+        } else {
+          setAuthState(prev => ({ ...prev, isLoading: false }));
+        }
+      } catch (error) {
+        console.error('Auth setup error:', error);
         setAuthState(prev => ({ ...prev, isLoading: false }));
       }
 
