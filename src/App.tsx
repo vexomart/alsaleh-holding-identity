@@ -192,6 +192,11 @@ const ElectronicGamesStore = lazy(() => import("./pages/ElectronicGamesStore"));
 const ElectronicCardsWebsite = lazy(() => import("./pages/ElectronicCardsWebsite"));
 const CardsStoreAbout = lazy(() => import("./pages/cards-store/About"));
 const CardsStoreContact = lazy(() => import("./pages/cards-store/Contact"));
+
+// ASH HOLDING Pages
+const AshHolding = lazy(() => import("./pages/AshHolding"));
+const AshAdmin = lazy(() => import("./pages/ash/AshAdmin"));
+const AshClient = lazy(() => import("./pages/ash/AshClient"));
 const CardsStoreFAQ = lazy(() => import("./pages/cards-store/FAQ"));
 const CardsStorePrivacy = lazy(() => import("./pages/cards-store/Privacy"));
 const CardsStoreTerms = lazy(() => import("./pages/cards-store/Terms"));
@@ -499,11 +504,16 @@ const App = () => {
                   <Route path="affiliate" element={<Suspense fallback={<PageLoader />}><ClientAffiliate /></Suspense>} />
                   <Route path="notifications" element={<Suspense fallback={<PageLoader />}><ClientNotifications /></Suspense>} />
                   <Route path="updates" element={<Suspense fallback={<PageLoader />}><ClientUpdates /></Suspense>} />
-                </Route>
-          
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-                </Routes>
+              </Route>
+
+              {/* ASH HOLDING Routes */}
+              <Route path="/ash" element={<Suspense fallback={<PageLoader />}><AshHolding /></Suspense>} />
+              <Route path="/ash/admin" element={<Suspense fallback={<PageLoader />}><AshAdmin /></Suspense>} />
+              <Route path="/ash/client" element={<Suspense fallback={<PageLoader />}><AshClient /></Suspense>} />
+
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+              </Routes>
               </div>
             </div>
           </BrowserRouter>
