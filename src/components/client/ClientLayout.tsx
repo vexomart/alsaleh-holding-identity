@@ -4,12 +4,10 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { ClientSidebar } from './ClientSidebar';
 import { ClientHeader } from './ClientHeader';
 import { ResponsiveContainer } from '@/components/ResponsiveContainer';
-import { PrayerTimesBar } from '@/components/PrayerTimesBar';
 
 export const ClientLayout = () => {
   return (
     <div dir="rtl" className="min-h-screen w-full bg-background" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-      <PrayerTimesBar />
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <ClientSidebar />
