@@ -218,7 +218,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email using Resend
     const emailResponse = await resend.emails.send({
-      from: `${senderName} <wallet@alsaleh-holding.com>`,
+      from: "المحفظة الرقمية <onboarding@resend.dev>",
       to: [finalCustomerEmail],
       subject: emailSubject,
       html: emailHtml,
@@ -230,7 +230,13 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
 
-    console.log(`✅ Email sent successfully to ${finalCustomerEmail}:`, emailResponse.data);
+    console.log(`✅ Email sent successfully to ${finalCustomerEmail}:`, emailResponse);
+
+    // تحقق من وجود خطأ في الإرسال
+    if (emailResponse.error) {
+      console.error('❌ Resend API error:', emailResponse.error);
+      throw new Error(`Failed to send email: ${emailResponse.error.message || 'Unknown error'}`);
+    }
 
     // Log the email sending for audit purposes
     const logData = {
