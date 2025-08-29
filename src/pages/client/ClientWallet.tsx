@@ -8,8 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { NumberFormatter } from '@/components/NumberFormatter';
-import { useRealtimePayments } from '@/hooks/useRealtimePayments';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Wallet, 
   Plus, 
@@ -70,7 +70,9 @@ import {
   Users,
   Verified,
   Wallet2,
-  X
+  X,
+  ArrowUpRight,
+  ArrowDownLeft
 } from 'lucide-react';
 
 interface WalletData {
@@ -78,353 +80,160 @@ interface WalletData {
   balance: number;
   currency: string;
   user_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
-interface UserProfile {
+interface TransactionData {
   id: string;
-  user_id?: string;
-  full_name?: string;
-  client_id?: string;
-  email?: string;
-  phone?: string;
-  company?: string;
-  created_at?: string;
-  updated_at?: string;
-  user_role?: string;
-}
-
-interface Transaction {
-  id: string;
+  user_id: string;
   transaction_type: string;
   amount: number;
+  balance_before: number;
+  balance_after: number;
   description: string;
-  created_at: string;
   status: string;
+  created_at: string;
   reference_id?: string;
-  balance_before?: number;
-  balance_after?: number;
+  metadata?: any;
 }
 
-interface PaymentMethodDB {
-  id: string;
-  name: string;
-  name_ar: string;
-  provider: string;
-  icon_name: string;
-  is_active: boolean;
-  configuration: any;
-}
-
-export default function ClientWallet() {
-  const [wallet, setWallet] = useState<WalletData | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [availablePaymentMethods, setAvailablePaymentMethods] = useState<PaymentMethodDB[]>([]);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [depositAmount, setDepositAmount] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+const ClientWallet = () => {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
-  const [accountNumberVisible, setAccountNumberVisible] = useState(false);
-  const [isDepositOpen, setIsDepositOpen] = useState(false);
-  const [depositing, setDepositing] = useState(false);
-  const [showBankDetails, setShowBankDetails] = useState(false);
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
-  const [realtimeEnabled, setRealtimeEnabled] = useState(false);
-  const [animationStep, setAnimationStep] = useState(0);
+  const [isUpdatesEnabled, setIsUpdatesEnabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [animationIndex, setAnimationIndex] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  const [selectedTransaction, setSelectedTransaction] = useState<TransactionData | null>(null);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Animation sequence effect
-  useEffect(() => {
-    const sequence = async () => {
-      for (let i = 0; i <= 3; i++) {
-        await new Promise(resolve => setTimeout(resolve, 300));
-        setAnimationStep(i);
-      }
-    };
-    if (!loading) sequence();
-  }, [loading]);
-
-  const iconMap = {
-    CreditCard,
-    Smartphone,
-    Building2,
-    Calendar,
-    Shield: TrendingUp,
-    Globe: TrendingDown
-  };
-
-  // Disable real-time updates completely to avoid spam
-  const handleManualRefresh = async () => {
-    setLoading(true);
-    await fetchWalletData();
-    toast({
-      title: "تم التحديث",
-      description: "تم تحديث بيانات المحفظة",
-      duration: 2000,
-    });
-    setLoading(false);
-  };
-
-  // Only use realtime if explicitly enabled by user
-  const { getStatusText } = useRealtimePayments({
-    onUpdate: realtimeEnabled ? () => {
-      // Silent update without notifications when realtime is enabled
-      fetchWalletData();
-    } : undefined,
-    showNotifications: false, // Always disable automatic notifications
-  });
-
-  const toggleRealtimeUpdates = () => {
-    const newValue = !realtimeEnabled;
-    setRealtimeEnabled(newValue);
-    localStorage.setItem('realtimeUpdates', JSON.stringify(newValue));
-    
-    if (newValue) {
-      toast({
-        title: "تم تفعيل التحديثات الفورية",
-        description: "سيتم تحديث المحفظة تلقائياً",
-        duration: 3000,
-      });
-    } else {
-      toast({
-        title: "تم إيقاف التحديثات الفورية", 
-        description: "استخدم زر التحديث اليدوي للتحديث",
-        duration: 3000,
-      });
-    }
-  };
-
-  useEffect(() => {
-    fetchWalletData();
-    fetchPaymentMethods();
-    
-    // Load realtime preference from localStorage
-    const storedRealtimePref = localStorage.getItem('realtimeUpdates');
-    if (storedRealtimePref !== null) {
-      setRealtimeEnabled(JSON.parse(storedRealtimePref));
-    }
-  }, []);
-
-  // Save realtime preference when changed
-  useEffect(() => {
-    localStorage.setItem('realtimeUpdates', JSON.stringify(realtimeEnabled));
-  }, [realtimeEnabled]);
-
-  const fetchPaymentMethods = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('payment_methods')
-        .select('*')
-        .eq('is_active', true)
-        .order('name_ar');
-
-      if (error) throw error;
-      setAvailablePaymentMethods(data || []);
-    } catch (error) {
-      console.error('Error fetching payment methods:', error);
-    }
-  };
-
-  const fetchWalletData = async () => {
-    try {
+  // جلب بيانات المحفظة الحقيقية
+  const { data: walletData, isLoading: walletLoading, refetch: refetchWallet } = useQuery({
+    queryKey: ['customer-wallet'],
+    queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        console.log('No authenticated user found');
-        return;
-      }
+      if (!user) throw new Error('غير مصرح للمستخدم');
 
-      // Fetch user profile with maybeSingle to avoid errors
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
+      const { data: wallet, error } = await supabase
+        .from('customer_wallets')
         .select('*')
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (profileError) {
-        console.error('Profile error:', profileError);
+      if (error) {
+        console.error('خطأ في جلب بيانات المحفظة:', error);
+        throw error;
       }
 
-      // إذا لم يوجد ملف شخصي، قم بإنشاء واحد
-      let userProfileData = profileData;
-      if (!profileData) {
-        console.log('Creating new profile for user:', user.id, user.email);
-        const { data: newProfile, error: createProfileError } = await supabase
-          .from('profiles')
+      // إنشاء محفظة جديدة إذا لم توجد
+      if (!wallet) {
+        const { data: newWallet, error: createError } = await supabase
+          .from('customer_wallets')
           .insert({
             user_id: user.id,
-            full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'مستخدم جديد',
-            email: user.email
+            balance: 0,
+            currency: 'SAR'
           })
           .select()
           .single();
 
-        if (createProfileError) {
-          console.error('Error creating profile:', createProfileError);
-          // في حالة فشل إنشاء الملف الشخصي، استخدم بيانات افتراضية
-          userProfileData = {
-            id: user.id,
-            user_id: user.id,
-            full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'مستخدم جديد',
-            email: user.email,
-            client_id: '',
-            phone: '',
-            company: '',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            user_role: 'user'
-          };
-        } else {
-          userProfileData = newProfile;
-        }
-      }
-
-      setUserProfile({
-        id: user.id,
-        full_name: userProfileData?.full_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'مستخدم جديد',
-        client_id: userProfileData?.client_id,
-        email: user.email
-      });
-
-      // Fetch wallet
-      const { data: walletData, error: walletError } = await supabase
-        .from('customer_wallets')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (walletError && walletError.code !== 'PGRST116') {
-        console.error('Wallet error:', walletError);
-        return;
-      }
-
-      if (!walletData) {
-        // Create wallet if doesn't exist
-        const { data: newWallet, error: createError } = await supabase
-          .from('customer_wallets')
-          .insert({ user_id: user.id, balance: 0 })
-          .select()
-          .single();
-
         if (createError) {
-          console.error('Error creating wallet:', createError);
-          return;
+          console.error('خطأ في إنشاء المحفظة:', createError);
+          throw createError;
         }
-        setWallet(newWallet);
-      } else {
-        setWallet(walletData);
+
+        return newWallet;
       }
 
-      // Fetch transactions
-      const { data: transactionsData, error: transactionsError } = await supabase
+      return wallet;
+    }
+  });
+
+  // جلب تاريخ المعاملات الحقيقية
+  const { data: transactions, refetch: refetchTransactions } = useQuery({
+    queryKey: ['wallet-transactions'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('غير مصرح للمستخدم');
+
+      const { data, error } = await supabase
         .from('wallet_transactions')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(50);
 
-      if (transactionsError) {
-        console.error('Transactions error:', transactionsError);
-      } else {
-        setTransactions(transactionsData || []);
-      }
-
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching wallet data:', error);
-      setLoading(false);
-    }
-  };
-
-  const handleDeposit = async () => {
-    if (!depositAmount || !paymentMethod) {
-      toast({
-        title: "خطأ",
-        description: "يرجى ملء جميع الحقول المطلوبة",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setDepositing(true);
-    
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
-
-      const { data, error } = await supabase.functions.invoke('wallet-deposit', {
-        body: {
-          user_id: user.id,
-          amount: parseFloat(depositAmount),
-          payment_method: paymentMethod,
-          description: `إيداع بمبلغ ${depositAmount} ر.س عبر ${paymentMethod}`,
-        }
-      });
-
       if (error) {
+        console.error('خطأ في جلب المعاملات:', error);
         throw error;
       }
 
+      return data || [];
+    }
+  });
+
+  // حساب الإحصائيات من المعاملات الحقيقية
+  const calculateStats = () => {
+    if (!transactions || transactions.length === 0) {
+      return {
+        totalDeposits: 0,
+        totalWithdrawals: 0,
+        pendingAmount: 0,
+        pendingCount: 0,
+        thisMonthTransactions: 0
+      };
+    }
+
+    const deposits = transactions.filter(t => ['deposit', 'refund'].includes(t.transaction_type));
+    const withdrawals = transactions.filter(t => ['withdrawal', 'payment'].includes(t.transaction_type));
+    const pending = transactions.filter(t => t.status === 'pending');
+    
+    const thisMonth = new Date();
+    thisMonth.setDate(1);
+    const thisMonthTrans = transactions.filter(t => new Date(t.created_at) >= thisMonth);
+
+    const totalDeposits = deposits.reduce((sum, t) => sum + Number(t.amount), 0);
+    const totalWithdrawals = withdrawals.reduce((sum, t) => sum + Number(t.amount), 0);
+    const pendingAmount = pending.reduce((sum, t) => sum + Number(t.amount), 0);
+
+    return {
+      totalDeposits,
+      totalWithdrawals,
+      pendingAmount,
+      pendingCount: pending.length,
+      thisMonthTransactions: thisMonthTrans.length
+    };
+  };
+
+  const stats = calculateStats();
+  const walletBalance = walletData?.balance || 0;
+  const availableForWithdrawal = Math.max(0, walletBalance - (stats?.pendingAmount || 0));
+  const accountNumber = walletData?.id?.slice(-10) || "0000000000";
+
+  // تحديث الرصيد يدوياً
+  const handleManualRefresh = async () => {
+    setIsLoading(true);
+    try {
+      await Promise.all([refetchWallet(), refetchTransactions()]);
       toast({
-        title: "تم الإيداع بنجاح",
-        description: `تم إيداع ${depositAmount} ر.س في محفظتك`,
+        title: "تم تحديث البيانات",
+        description: "تم تحديث رصيد المحفظة بنجاح",
       });
-
-      setDepositAmount('');
-      setPaymentMethod('');
-      setIsDepositOpen(false);
-      await fetchWalletData();
-
     } catch (error) {
-      console.error('Deposit error:', error);
       toast({
-        title: "خطأ في الإيداع",
-        description: "حدث خطأ أثناء معالجة طلب الإيداع",
-        variant: "destructive",
+        title: "خطأ في التحديث",
+        description: "حدث خطأ أثناء تحديث البيانات",
+        variant: "destructive"
       });
     } finally {
-      setDepositing(false);
+      setIsLoading(false);
     }
   };
 
-  const getTransactionTypeLabel = (type: string) => {
-    switch (type) {
-      case 'deposit': return 'إيداع';
-      case 'withdrawal': return 'سحب';
-      case 'payment': return 'دفع';
-      case 'refund': return 'استرداد';
-      case 'transfer': return 'تحويل';
-      default: return type;
-    }
-  };
-
-  const getTransactionColor = (type: string) => {
-    switch (type) {
-      case 'deposit': return 'bg-emerald-100';
-      case 'withdrawal': return 'bg-rose-100';
-      case 'payment': return 'bg-blue-100';
-      case 'refund': return 'bg-green-100';
-      case 'transfer': return 'bg-purple-100';
-      default: return 'bg-gray-100';
-    }
-  };
-
-  const generateUniqueAccountNumber = (userId: string, clientId?: string) => {
-    const baseId = clientId || userId;
-    const hash = baseId.split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
-      return a & a;
-    }, 0);
-    const positiveHash = Math.abs(hash);
-    const accountNumber = (1000000000 + (positiveHash % 900000000)).toString();
-    return accountNumber;
-  };
-
+  // نسخ رقم الحساب
   const copyAccountNumber = () => {
-    const accountNumber = generateUniqueAccountNumber(userProfile?.id || '', userProfile?.client_id);
     navigator.clipboard.writeText(accountNumber);
     toast({
       title: "تم النسخ",
@@ -432,566 +241,583 @@ export default function ClientWallet() {
     });
   };
 
-  const calculateStats = () => {
-    const deposits = transactions.filter(t => t.transaction_type === 'deposit');
-    const withdrawals = transactions.filter(t => t.transaction_type === 'withdrawal');
-    const pending = transactions.filter(t => t.status === 'pending');
+  // تصفية المعاملات
+  const filteredTransactions = transactions?.filter(transaction => {
+    const matchesSearch = transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         transaction.reference_id?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterType === 'all' || transaction.transaction_type === filterType;
+    return matchesSearch && matchesFilter;
+  }) || [];
 
-    return {
-      totalDeposits: deposits.reduce((sum, t) => sum + t.amount, 0),
-      totalWithdrawals: withdrawals.reduce((sum, t) => sum + t.amount, 0),
-      pendingTransactions: pending.length,
-    };
+  // الحصول على أيقونة نوع المعاملة
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case 'deposit':
+        return <ArrowUpRight className="w-4 h-4 text-emerald-600" />;
+      case 'withdrawal':
+        return <ArrowDownLeft className="w-4 h-4 text-red-600" />;
+      case 'payment':
+        return <CreditCard className="w-4 h-4 text-blue-600" />;
+      case 'refund':
+        return <RefreshCw className="w-4 h-4 text-emerald-600" />;
+      default:
+        return <DollarSign className="w-4 h-4 text-gray-600" />;
+    }
   };
 
-  const filteredTransactions = transactions.filter(transaction => {
-    const matchesType = typeFilter === 'all' || transaction.transaction_type === typeFilter;
-    const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         transaction.transaction_type.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesSearch;
-  });
-
-  const stats = calculateStats();
-  const accountNumber = generateUniqueAccountNumber(userProfile?.id || '', userProfile?.client_id);
-  const walletBalance = wallet?.balance || 0;
-
-  // Bank account details
-  const bankDetails = {
-    companyName: "شركة علي صالح محمد الشهري القابضة",
-    accountNumber: "161000010006086071040",
-    iban: "SA1980000161608016071040",
-    bankName: "البنك الأهلي السعودي"
+  // الحصول على لون حالة المعاملة
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+      case 'pending':
+        return 'bg-amber-100 text-amber-700 border-amber-200';
+      case 'failed':
+        return 'bg-red-100 text-red-700 border-red-200';
+      default:
+        return 'bg-gray-100 text-gray-700 border-gray-200';
+    }
   };
 
-  if (loading) {
+  // تأثيرات الحركة المتسلسلة
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimationIndex(prev => (prev + 1) % 6);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  // الإحصائيات السريعة
+  const quickStats = [
+    {
+      title: "إجمالي الإيداعات",
+      amount: stats.totalDeposits,
+      change: "+12.5%",
+      isPositive: true,
+      icon: ArrowUpRight,
+      color: "emerald"
+    },
+    {
+      title: "إجمالي المسحوبات",
+      amount: stats.totalWithdrawals,
+      change: `-${((stats.totalWithdrawals / (stats.totalDeposits || 1)) * 100).toFixed(1)}%`,
+      isPositive: false,
+      icon: ArrowDownLeft,
+      color: "red"
+    },
+    {
+      title: "معاملات في الانتظار",
+      amount: stats.pendingAmount,
+      change: `${stats.pendingCount} معاملات`,
+      isPositive: true,
+      icon: Clock,
+      color: "amber"
+    },
+    {
+      title: "معاملات هذا الشهر",
+      amount: stats.thisMonthTransactions,
+      change: "+معاملة جديدة",
+      isPositive: true,
+      icon: BarChart3,
+      color: "blue"
+    }
+  ];
+
+  if (walletLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="relative">
-          <div className="w-32 h-32 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Wallet className="w-8 h-8 text-blue-600 animate-pulse" />
-          </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Crown className="w-12 h-12 mx-auto mb-4 text-primary animate-pulse" />
+          <p className="text-lg font-medium">جاري تحميل المحفظة الرقمية...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4 lg:p-8">
-      {/* Header Section */}
-      <div className={`max-w-7xl mx-auto transition-all duration-1000 transform ${animationStep >= 0 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <Wallet2 className="w-8 h-8 text-white" />
-                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full flex items-center justify-center">
-                    <Crown className="w-3 h-3 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* رأس الصفحة مع التحديث اليدوي */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8"
+        >
+          <div className="flex items-center gap-3">
+            <motion.div
+              animate={{ rotate: animationIndex === 0 ? 360 : 0 }}
+              transition={{ duration: 0.5 }}
+              className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg"
+            >
+              <Crown className="w-8 h-8 text-white" />
+            </motion.div>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                المحفظة الرقمية المتطورة
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                شركة علي صالح محمد الشهري القابضة
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                onClick={handleManualRefresh}
+                disabled={isLoading}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                تحديث يدوي
+              </Button>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                onClick={() => setIsUpdatesEnabled(!isUpdatesEnabled)}
+                variant={isUpdatesEnabled ? "default" : "outline"}
+                size="sm"
+                className="gap-2"
+              >
+                <Bell className="w-4 h-4" />
+                {isUpdatesEnabled ? "إيقاف التحديثات" : "تفعيل التحديثات"}
+              </Button>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* بطاقة الرصيد الرئيسية */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 border-0 shadow-2xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12" />
+            
+            <CardContent className="relative p-8">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    animate={{ rotate: animationIndex === 1 ? 360 : 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="p-3 bg-white/20 backdrop-blur-sm rounded-lg"
+                  >
+                    <Wallet className="w-6 h-6 text-white" />
+                  </motion.div>
+                  <div>
+                    <p className="text-white/80 text-sm">الرصيد المتاح</p>
+                    <p className="text-white/60 text-xs">للسحب الفوري</p>
+                  </div>
+                </div>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsBalanceVisible(!isBalanceVisible)}
+                  className="text-white hover:bg-white/20 p-2"
+                >
+                  {isBalanceVisible ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                </Button>
+              </div>
+              
+              <div className="mb-8">
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-5xl font-bold text-white">
+                    {isBalanceVisible ? (
+                      `${walletBalance.toLocaleString('ar-SA')} ر.س`
+                    ) : (
+                      '••••••'
+                    )}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-emerald-300">
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-sm">متاح للسحب الفوري</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="flex items-center gap-2 text-white/80 text-sm mb-1">
+                    <ArrowUpCircle className="w-4 h-4" />
+                    <span>متاح للسحب</span>
+                  </div>
+                  <p className="text-white text-lg font-semibold">
+                    {isBalanceVisible ? `${availableForWithdrawal.toLocaleString('ar-SA')} ر.س` : '•••••'}
+                  </p>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="flex items-center gap-2 text-white/80 text-sm mb-1">
+                    <Clock className="w-4 h-4" />
+                    <span>في الانتظار</span>
+                  </div>
+                  <p className="text-white text-lg font-semibold">
+                    {isBalanceVisible ? `${stats.pendingAmount.toLocaleString('ar-SA')} ر.س` : '•••••'}
+                  </p>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="flex items-center gap-2 text-white/80 text-sm mb-1">
+                    <User className="w-4 h-4" />
+                    <span>رقم الحساب</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-white text-lg font-semibold">{accountNumber}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={copyAccountNumber}
+                      className="text-white hover:bg-white/20 p-1"
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
                   </div>
                 </div>
               </div>
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                  المحفظة الرقمية المتميزة
-                </h1>
-                <p className="text-gray-600 mt-1">إدارة أموالك بأمان وسهولة تامة</p>
+
+              <div className="flex flex-wrap gap-3">
+                <Button variant="secondary" size="sm" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
+                  <Plus className="w-4 h-4 mr-2" />
+                  إيداع
+                </Button>
+                <Button variant="secondary" size="sm" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
+                  <ArrowDownCircle className="w-4 h-4 mr-2" />
+                  سحب
+                </Button>
+                <Button variant="secondary" size="sm" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
+                  <Send className="w-4 h-4 mr-2" />
+                  تحويل
+                </Button>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={handleManualRefresh}
-                variant="outline"
-                size="sm"
-                className="bg-white/80 hover:bg-white border-gray-200 shadow-sm"
-              >
-                <RefreshCw className="w-4 h-4 ml-2" />
-                تحديث
-              </Button>
-              
-              <Button
-                onClick={toggleRealtimeUpdates}
-                variant={realtimeEnabled ? "default" : "outline"}
-                size="sm"
-                className={realtimeEnabled 
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" 
-                  : "bg-white/80 hover:bg-white border-gray-200 shadow-sm"
-                }
-              >
-                <Zap className="w-4 h-4 ml-2" />
-                {realtimeEnabled ? 'مُفعّل' : 'تفعيل التحديثات'}
-              </Button>
-            </div>
-          </div>
-        </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-          
-          {/* Main Content - Left Side */}
-          <div className="xl:col-span-8 space-y-8">
-            
-            {/* Balance Card */}
-            <div className={`transition-all duration-1000 delay-200 transform ${animationStep >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <Card className="relative overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600">
-                <div className="absolute inset-0 bg-black/20"></div>
-                <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-20 -translate-x-20"></div>
-                
-                <CardContent className="relative p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                        <Wallet className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-white/90 text-lg font-medium">الرصيد المتاح</h2>
-                        <p className="text-white/70 text-sm">للاستخدام الفوري</p>
-                      </div>
-                    </div>
-                    
-                    <Button
-                      onClick={() => setIsBalanceVisible(!isBalanceVisible)}
-                      variant="ghost"
-                      size="sm"
-                      className="text-white/80 hover:text-white hover:bg-white/10"
-                    >
-                      {isBalanceVisible ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
-                    </Button>
-                  </div>
-                  
-                  <div className="mb-8">
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-5xl font-bold text-white">
-                        {isBalanceVisible ? (
-                          `${walletBalance.toLocaleString('ar-SA')} ر.س`
-                        ) : (
-                          '••••••'
-                        )}
-                      </span>
-                      {isBalanceVisible && (
-                        <span className="text-white/70 text-xl font-medium">ر.س</span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 text-emerald-300">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-sm">متاح للسحب الفوري</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-4">
-                    <Dialog open={isDepositOpen} onOpenChange={setIsDepositOpen}>
-                      <DialogTrigger asChild>
-                        <Button className="flex-1 bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm">
-                          <Plus className="w-5 h-5 ml-2" />
-                          شحن المحفظة
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-md">
-                        <DialogHeader>
-                          <DialogTitle className="text-right">شحن المحفظة</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-6">
-                          <div className="space-y-2">
-                            <Label>المبلغ (ر.س)</Label>
-                            <Input
-                              type="number"
-                              value={depositAmount}
-                              onChange={(e) => setDepositAmount(e.target.value)}
-                              placeholder="أدخل المبلغ"
-                              className="text-right"
-                            />
-                          </div>
-                          
-                          <div className="space-y-2">
-                            <Label>طريقة الدفع</Label>
-                            <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                              <SelectTrigger>
-                                <SelectValue placeholder="اختر طريقة الدفع" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {availablePaymentMethods.map((method) => (
-                                  <SelectItem key={method.id} value={method.provider}>
-                                    {method.name_ar}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          
-                          <Button 
-                            onClick={handleDeposit} 
-                            disabled={depositing}
-                            className="w-full bg-gradient-to-r from-blue-600 to-purple-600"
-                          >
-                            {depositing ? (
-                              <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                جاري المعالجة...
-                              </div>
-                            ) : (
-                              <>
-                                <Zap className="w-4 h-4 ml-2" />
-                                تأكيد الشحن
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                    
-                    <Button 
-                      variant="outline" 
-                      className="bg-white/10 hover:bg-white/20 text-white border-white/30"
-                      onClick={() => setShowBankDetails(!showBankDetails)}
-                    >
-                      <Building2 className="w-5 h-5 ml-2" />
-                      التحويل البنكي
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Quick Stats */}
-            <div className={`transition-all duration-1000 delay-400 transform ${animationStep >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="border-0 shadow-lg bg-gradient-to-br from-emerald-50 to-green-50 hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-emerald-600 font-medium text-sm">إجمالي الإيداعات</p>
-                        <p className="text-2xl font-bold text-emerald-700">
-                          {stats.totalDeposits.toLocaleString('ar-SA')} ر.س
-                        </p>
-                      </div>
-                      <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                        <ArrowUpCircle className="w-6 h-6 text-emerald-600" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-lg bg-gradient-to-br from-rose-50 to-red-50 hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-rose-600 font-medium text-sm">إجمالي المسحوبات</p>
-                        <p className="text-2xl font-bold text-rose-700">
-                          {stats.totalWithdrawals.toLocaleString('ar-SA')} ر.س
-                        </p>
-                      </div>
-                      <div className="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
-                        <ArrowDownCircle className="w-6 h-6 text-rose-600" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-lg bg-gradient-to-br from-amber-50 to-orange-50 hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-amber-600 font-medium text-sm">معاملات في الانتظار</p>
-                        <p className="text-2xl font-bold text-amber-700">{stats.pendingTransactions}</p>
-                      </div>
-                      <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                        <Clock className="w-6 h-6 text-amber-600" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* Transaction History */}
-            <div className={`transition-all duration-1000 delay-600 transform ${animationStep >= 3 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                        <History className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-xl">سجل المعاملات المالية</CardTitle>
-                        <CardDescription>جميع العمليات المالية مع التفاصيل</CardDescription>
-                      </div>
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Download className="w-4 h-4 ml-2" />
-                        تصدير
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Filter className="w-4 h-4 ml-2" />
-                        فلترة
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex gap-4">
-                      <div className="flex-1">
-                        <div className="relative">
-                          <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
-                          <Input
-                            placeholder="البحث في المعاملات..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pr-10"
-                          />
-                        </div>
-                      </div>
-                      
-                      <Select value={typeFilter} onValueChange={setTypeFilter}>
-                        <SelectTrigger className="w-48">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">جميع المعاملات</SelectItem>
-                          <SelectItem value="deposit">إيداعات</SelectItem>
-                          <SelectItem value="withdrawal">سحوبات</SelectItem>
-                          <SelectItem value="payment">مدفوعات</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      {filteredTransactions.map((transaction, index) => (
-                        <div 
-                          key={transaction.id} 
-                          className="group p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer"
-                          style={{
-                            animationDelay: `${index * 100}ms`,
-                            animation: 'fadeInUp 0.6s ease-out forwards'
-                          }}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${getTransactionColor(transaction.transaction_type)} transition-all duration-300 group-hover:scale-110`}>
-                                {transaction.transaction_type === 'deposit' ? (
-                                  <ArrowUpCircle className="w-6 h-6 text-emerald-600" />
-                                ) : transaction.transaction_type === 'withdrawal' ? (
-                                  <ArrowDownCircle className="w-6 h-6 text-rose-600" />
-                                ) : (
-                                  <CreditCard className="w-6 h-6 text-blue-600" />
-                                )}
-                              </div>
-                              
-                              <div>
-                                <h4 className="font-semibold text-gray-800">
-                                  {getTransactionTypeLabel(transaction.transaction_type)}
-                                </h4>
-                                <p className="text-sm text-gray-500">{transaction.description}</p>
-                                <p className="text-xs text-gray-400">
-                                  {new Date(transaction.created_at).toLocaleDateString('ar-SA')}
-                                </p>
-                              </div>
-                            </div>
-                            
-                            <div className="text-left">
-                              <p className={`text-lg font-bold ${
-                                transaction.transaction_type === 'deposit' ? 'text-emerald-600' : 'text-rose-600'
-                              }`}>
-                                {transaction.transaction_type === 'deposit' ? '+' : '-'}
-                                {transaction.amount.toLocaleString('ar-SA')} ر.س
-                              </p>
-                              <Badge 
-                                variant={transaction.status === 'completed' ? 'default' : 'secondary'}
-                                className="text-xs"
-                              >
-                                {getStatusText(transaction.status)}
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {filteredTransactions.length === 0 && (
-                      <div className="text-center py-12">
-                        <div className="w-24 h-24 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                          <History className="w-12 h-12 text-gray-400" />
-                        </div>
-                        <p className="text-gray-500 text-lg">لا توجد معاملات مالية</p>
-                        <p className="text-gray-400 text-sm">ستظهر هنا جميع معاملاتك المالية</p>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Sidebar - Right Side */}
-          <div className="xl:col-span-4 space-y-6">
-            
-            {/* Account Info */}
-            <div className={`transition-all duration-1000 delay-300 transform ${animationStep >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <Card className="border-0 shadow-xl bg-gradient-to-br from-white to-gray-50">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                      <User className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">معلومات الحساب</CardTitle>
-                      <CardDescription>البيانات الشخصية والحساب</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                      <span className="text-blue-600 font-medium">اسم العميل</span>
-                      <span className="font-semibold">{userProfile?.full_name || 'غير محدد'}</span>
-                    </div>
-                    
-                    <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
-                      <span className="text-purple-600 font-medium">البريد الإلكتروني</span>
-                      <span className="font-semibold text-sm">{userProfile?.email}</span>
-                    </div>
-                    
-                    <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                      <span className="text-green-600 font-medium">رقم الحساب المصرفي</span>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-sm">
-                          {accountNumberVisible ? accountNumber : '••••••••••'}
-                        </span>
-                        <Button 
-                          onClick={() => setAccountNumberVisible(!accountNumberVisible)}
-                          variant="ghost" 
-                          size="sm"
-                          className="h-6 w-6 p-0"
-                        >
-                          {accountNumberVisible ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                        </Button>
-                        <Button 
-                          onClick={copyAccountNumber}
-                          variant="ghost" 
-                          size="sm"
-                          className="h-6 w-6 p-0"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-4 border-t border-gray-100">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-gray-600 font-medium">حالة التحديثات الفورية</span>
-                      <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${realtimeEnabled ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
-                        <span className="text-sm font-medium">
-                          {realtimeEnabled ? 'مُفعّل' : 'معطّل'}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <Button 
-                      onClick={toggleRealtimeUpdates}
-                      variant="outline" 
-                      className="w-full justify-start"
-                    >
-                      <Bell className="w-4 h-4 ml-2" />
-                      {realtimeEnabled ? 'إيقاف التحديثات الفورية' : 'تفعيل التحديثات الفورية'}
-                    </Button>
-                    
-                    <Button 
-                      onClick={handleManualRefresh}
-                      variant="outline" 
-                      size="sm"
-                      className="w-full mt-2 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
-                    >
-                      <RefreshCw className="w-4 h-4 ml-2" />
-                      تحديث يدوي
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Payment Methods */}
-            <div className={`transition-all duration-1000 delay-500 transform ${animationStep >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <Card className="border-0 shadow-xl bg-gradient-to-br from-white to-gray-50">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
-                      <CreditCard className="w-5 h-5 text-white" />
-                    </div>
-                    <CardTitle className="text-lg">طرق الدفع المتاحة</CardTitle>
-                  </div>
-                </CardHeader>
-                
-                <CardContent>
-                  <div className="space-y-3">
-                    {availablePaymentMethods.map((method) => {
-                      const Icon = iconMap[method.icon_name as keyof typeof iconMap] || CreditCard;
-                      return (
-                        <div 
-                          key={method.id} 
-                          className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-300"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                              <Icon className="w-4 h-4 text-blue-600" />
-                            </div>
-                            <span className="font-medium">{method.name_ar}</span>
-                          </div>
-                          <Badge variant="secondary" className="text-xs">
-                            متاح
-                          </Badge>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Company Info */}
-            <div className={`transition-all duration-1000 delay-700 transform ${animationStep >= 3 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-              <Card className="border-0 shadow-xl bg-gradient-to-br from-amber-50 to-orange-50">
+        {/* الإحصائيات السريعة */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {quickStats.map((stat, index) => (
+            <motion.div
+              key={stat.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 + index * 0.1 }}
+            >
+              <Card className="hover:shadow-lg transition-all duration-300 group hover:scale-105">
                 <CardContent className="p-6">
-                  <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Building2 className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="font-bold text-amber-800">{bankDetails.companyName}</h3>
-                      <p className="text-amber-700 text-sm">{bankDetails.bankName}</p>
-                      <div className="space-y-1 text-xs text-amber-600">
-                        <p><span className="font-semibold">رقم الحساب:</span> {bankDetails.accountNumber}</p>
-                        <p><span className="font-semibold">IBAN:</span> {bankDetails.iban}</p>
-                      </div>
-                    </div>
+                  <div className="flex items-center justify-between mb-4">
+                    <motion.div
+                      animate={{ rotate: animationIndex === index + 2 ? 360 : 0 }}
+                      transition={{ duration: 0.5 }}
+                      className={`p-3 rounded-lg bg-${stat.color}-100 group-hover:bg-${stat.color}-200 transition-colors`}
+                    >
+                      <stat.icon className={`w-5 h-5 text-${stat.color}-600`} />
+                    </motion.div>
+                    <Badge variant={stat.isPositive ? "default" : "secondary"} className="text-xs">
+                      {stat.change}
+                    </Badge>
                   </div>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    {stat.title}
+                  </h3>
+                  <p className="text-2xl font-bold">
+                    {typeof stat.amount === 'number' 
+                      ? stat.amount.toLocaleString('ar-SA') + (stat.title.includes('معاملات') ? '' : ' ر.س')
+                      : stat.amount
+                    }
+                  </p>
                 </CardContent>
               </Card>
-            </div>
-          </div>
+            </motion.div>
+          ))}
         </div>
+
+        {/* سجل المعاملات المالية */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <Card className="shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    animate={{ rotate: animationIndex === 5 ? 360 : 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="p-2 bg-primary/10 rounded-lg"
+                  >
+                    <History className="w-5 h-5 text-primary" />
+                  </motion.div>
+                  <div>
+                    <CardTitle className="text-xl">سجل المعاملات المالية</CardTitle>
+                    <CardDescription>جميع العمليات المالية مع التفاصيل</CardDescription>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <Search className="w-4 h-4 text-muted-foreground" />
+                    <Input
+                      placeholder="البحث في المعاملات..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-64"
+                    />
+                  </div>
+                  <Select value={filterType} onValueChange={setFilterType}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">جميع المعاملات</SelectItem>
+                      <SelectItem value="deposit">إيداع</SelectItem>
+                      <SelectItem value="withdrawal">سحب</SelectItem>
+                      <SelectItem value="payment">دفع</SelectItem>
+                      <SelectItem value="refund">استرداد</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4 mr-2" />
+                    تصدير
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              {filteredTransactions.length === 0 ? (
+                <div className="text-center py-12">
+                  <Wallet className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-lg font-medium mb-2">لا توجد معاملات</p>
+                  <p className="text-muted-foreground">ابدأ باستخدام محفظتك الرقمية</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {filteredTransactions.map((transaction, index) => (
+                    <motion.div
+                      key={transaction.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
+                      onClick={() => setSelectedTransaction(transaction)}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0">
+                          {getTransactionIcon(transaction.transaction_type)}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium truncate">
+                            {transaction.description || 'معاملة مالية'}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {new Date(transaction.created_at).toLocaleDateString('ar-SA')} - {new Date(transaction.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                          {transaction.reference_id && (
+                            <p className="text-xs text-muted-foreground">
+                              مرجع: {transaction.reference_id}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className={`font-semibold ${
+                            ['deposit', 'refund'].includes(transaction.transaction_type) 
+                              ? 'text-emerald-600' 
+                              : 'text-red-600'
+                          }`}>
+                            {['deposit', 'refund'].includes(transaction.transaction_type) ? '+' : '-'}
+                            {Number(transaction.amount).toLocaleString('ar-SA')} ر.س
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            الرصيد: {Number(transaction.balance_after).toLocaleString('ar-SA')} ر.س
+                          </p>
+                        </div>
+                        <Badge className={getStatusColor(transaction.status)}>
+                          {transaction.status === 'completed' ? 'مكتمل' :
+                           transaction.status === 'pending' ? 'في الانتظار' :
+                           transaction.status === 'failed' ? 'فاشل' : transaction.status}
+                        </Badge>
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* طرق الدفع المتاحة */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <CreditCard className="w-5 h-5" />
+                طرق الدفع المتاحة
+              </CardTitle>
+              <CardDescription>الطرق المدعومة للإيداع والسحب</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { name: "البنك الأهلي", icon: Building2, status: "متاح" },
+                  { name: "الراجحي", icon: Building2, status: "متاح" },
+                  { name: "STC Pay", icon: Smartphone, status: "متاح" },
+                  { name: "Visa/MasterCard", icon: CreditCard, status: "قريباً" }
+                ].map((method, index) => (
+                  <motion.div
+                    key={method.name}
+                    whileHover={{ scale: 1.02 }}
+                    className="p-4 border rounded-lg text-center hover:bg-muted/50 transition-colors"
+                  >
+                    <method.icon className="w-8 h-8 mx-auto mb-2 text-primary" />
+                    <p className="font-medium text-sm">{method.name}</p>
+                    <Badge variant={method.status === "متاح" ? "default" : "secondary"} className="text-xs mt-1">
+                      {method.status}
+                    </Badge>
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* معلومات الشركة المحدثة */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+        >
+          <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Info className="w-5 h-5" />
+                معلومات الشركة
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-2">شركة علي صالح محمد الشهري القابضة</h4>
+                  <p className="text-sm text-muted-foreground">
+                    شركة رائدة في مجال التقنية والحلول الرقمية المتطورة
+                  </p>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">السجل التجاري:</span>
+                    <span>1010000000</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">الرقم الضريبي:</span>
+                    <span>300000000000003</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">العملة:</span>
+                    <span>ريال سعودي (SAR)</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+      {/* نافذة تفاصيل المعاملة */}
+      <Dialog open={!!selectedTransaction} onOpenChange={() => setSelectedTransaction(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>تفاصيل المعاملة</DialogTitle>
+          </DialogHeader>
+          {selectedTransaction && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+                {getTransactionIcon(selectedTransaction.transaction_type)}
+                <div>
+                  <p className="font-medium">
+                    {selectedTransaction.transaction_type === 'deposit' ? 'إيداع' :
+                     selectedTransaction.transaction_type === 'withdrawal' ? 'سحب' :
+                     selectedTransaction.transaction_type === 'payment' ? 'دفع' :
+                     selectedTransaction.transaction_type === 'refund' ? 'استرداد' : 
+                     selectedTransaction.transaction_type}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedTransaction.description}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">المبلغ:</span>
+                  <span className={`font-semibold ${
+                    ['deposit', 'refund'].includes(selectedTransaction.transaction_type) 
+                      ? 'text-emerald-600' 
+                      : 'text-red-600'
+                  }`}>
+                    {['deposit', 'refund'].includes(selectedTransaction.transaction_type) ? '+' : '-'}
+                    {Number(selectedTransaction.amount).toLocaleString('ar-SA')} ر.س
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">الرصيد قبل:</span>
+                  <span>{Number(selectedTransaction.balance_before).toLocaleString('ar-SA')} ر.س</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">الرصيد بعد:</span>
+                  <span>{Number(selectedTransaction.balance_after).toLocaleString('ar-SA')} ر.س</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">التاريخ:</span>
+                  <span>{new Date(selectedTransaction.created_at).toLocaleString('ar-SA')}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">الحالة:</span>
+                  <Badge className={getStatusColor(selectedTransaction.status)}>
+                    {selectedTransaction.status === 'completed' ? 'مكتمل' :
+                     selectedTransaction.status === 'pending' ? 'في الانتظار' :
+                     selectedTransaction.status === 'failed' ? 'فاشل' : selectedTransaction.status}
+                  </Badge>
+                </div>
+
+                {selectedTransaction.reference_id && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">المرجع:</span>
+                    <span className="font-mono text-sm">{selectedTransaction.reference_id}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
-}
+};
+
+export default ClientWallet;
