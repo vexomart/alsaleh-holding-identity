@@ -27,7 +27,8 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
-  Building2
+  Building2,
+  Smartphone
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -592,7 +593,42 @@ const AdminWallet = () => {
           )}
         </CardContent>
       </Card>
-    </div>
+        {/* إضافة قسم طرق الدفع للأدمن */}
+        <Card className="border border-border/50 mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <CreditCard className="w-5 h-5" />
+              طرق الدفع المتاحة للعملاء
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="p-4 border rounded-lg text-center bg-blue-50">
+                <Building2 className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                <p className="font-medium text-sm">البنك الراجحي</p>
+                <Badge className="mt-1 bg-blue-100 text-blue-800">متاح</Badge>
+              </div>
+              <div className="p-4 border rounded-lg text-center bg-purple-50">
+                <Smartphone className="w-8 h-8 mx-auto mb-2 text-purple-600" />
+                <p className="font-medium text-sm">STC Pay</p>
+                <Badge className="mt-1 bg-purple-100 text-purple-800">متاح</Badge>
+              </div>
+              <div className="p-4 border rounded-lg text-center bg-green-50">
+                <CreditCard className="w-8 h-8 mx-auto mb-2 text-green-600" />
+                <p className="font-medium text-sm">تمارا</p>
+                <Badge className="mt-1 bg-green-100 text-green-800">متاح</Badge>
+              </div>
+              <div className="p-4 border rounded-lg text-center bg-indigo-50">
+                <CreditCard className="w-8 h-8 mx-auto mb-2 text-indigo-600" />
+                <p className="font-medium text-sm">Visa/MasterCard</p>
+                <Badge className="mt-1 bg-indigo-100 text-indigo-800">متاح</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* استمرار باقي المحتوى */}
+      </div>
   );
 };
 

@@ -102,6 +102,39 @@ const ClientWallet = () => {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [isUpdatesEnabled, setIsUpdatesEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Form states for payment methods
+  const [rajhiForm, setRajhiForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    amount: '',
+    receipt: null as File | null
+  });
+
+  const [tamaraForm, setTamaraForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    whatsapp: '',
+    amount: ''
+  });
+
+  const [stcForm, setStcForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    amount: '',
+    transactionId: ''
+  });
+
+  const [visaForm, setVisaForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    amount: ''
+  });
   const [animationIndex, setAnimationIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
@@ -664,7 +697,7 @@ const ClientWallet = () => {
           </Card>
         </motion.div>
 
-        {/* طرق الدفع المتاحة */}
+        {/* طرق الدفع المتاحة - محدثة */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -679,25 +712,330 @@ const ClientWallet = () => {
               <CardDescription>الطرق المدعومة للإيداع والسحب</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[
-                  { name: "البنك الأهلي", icon: Building2, status: "متاح" },
-                  { name: "الراجحي", icon: Building2, status: "متاح" },
-                  { name: "STC Pay", icon: Smartphone, status: "متاح" },
-                  { name: "Visa/MasterCard", icon: CreditCard, status: "قريباً" }
-                ].map((method, index) => (
-                  <motion.div
-                    key={method.name}
-                    whileHover={{ scale: 1.02 }}
-                    className="p-4 border rounded-lg text-center hover:bg-muted/50 transition-colors"
-                  >
-                    <method.icon className="w-8 h-8 mx-auto mb-2 text-primary" />
-                    <p className="font-medium text-sm">{method.name}</p>
-                    <Badge variant={method.status === "متاح" ? "default" : "secondary"} className="text-xs mt-1">
-                      {method.status}
-                    </Badge>
-                  </motion.div>
-                ))}
+              <div className="grid grid-cols-1 gap-4">
+                {/* البنك الراجحي */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-blue-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center text-white">
+                            <Building2 className="h-8 w-8" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-slate-800 mb-1">البنك الراجحي</h3>
+                            <p className="text-sm text-slate-600">تحويل بنكي مع إرفاق الإيصال</p>
+                            <Badge className="mt-2 bg-blue-100 text-blue-800">متاح</Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md" dir="rtl">
+                    <DialogHeader>
+                      <DialogTitle className="text-center flex items-center justify-center gap-2">
+                        <Building2 className="h-5 w-5" />
+                        طلب تحويل - البنك الراجحي
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="rajhi-name">الاسم الكامل</Label>
+                        <Input
+                          id="rajhi-name"
+                          value={rajhiForm.name}
+                          onChange={(e) => setRajhiForm({...rajhiForm, name: e.target.value})}
+                          placeholder="أدخل اسمك الكامل"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="rajhi-email">البريد الإلكتروني</Label>
+                        <Input
+                          id="rajhi-email"
+                          type="email"
+                          value={rajhiForm.email}
+                          onChange={(e) => setRajhiForm({...rajhiForm, email: e.target.value})}
+                          placeholder="example@email.com"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="rajhi-phone">رقم الجوال</Label>
+                        <Input
+                          id="rajhi-phone"
+                          value={rajhiForm.phone}
+                          onChange={(e) => setRajhiForm({...rajhiForm, phone: e.target.value})}
+                          placeholder="05xxxxxxxx"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="rajhi-amount">المبلغ (ريال سعودي)</Label>
+                        <Input
+                          id="rajhi-amount"
+                          type="number"
+                          value={rajhiForm.amount}
+                          onChange={(e) => setRajhiForm({...rajhiForm, amount: e.target.value})}
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="rajhi-receipt">إيصال التحويل</Label>
+                        <Input
+                          id="rajhi-receipt"
+                          type="file"
+                          accept="image/*,.pdf"
+                          onChange={(e) => setRajhiForm({...rajhiForm, receipt: e.target.files?.[0] || null})}
+                        />
+                        <p className="text-xs text-slate-500 mt-1">يرجى إرفاق إيصال التحويل البنكي</p>
+                      </div>
+                      <Button 
+                        disabled={isSubmitting}
+                        className="w-full"
+                      >
+                        {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* STC Pay */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-purple-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center text-white">
+                            <Smartphone className="h-8 w-8" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-slate-800 mb-1">STC Pay</h3>
+                            <p className="text-sm text-slate-600">الدفع عبر محفظة STC</p>
+                            <Badge className="mt-2 bg-purple-100 text-purple-800">متاح</Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md" dir="rtl">
+                    <DialogHeader>
+                      <DialogTitle className="text-center flex items-center justify-center gap-2">
+                        <Smartphone className="h-5 w-5" />
+                        طلب دفع - STC Pay
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="stc-name">الاسم الكامل</Label>
+                        <Input
+                          id="stc-name"
+                          value={stcForm.name}
+                          onChange={(e) => setStcForm({...stcForm, name: e.target.value})}
+                          placeholder="أدخل اسمك الكامل"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="stc-email">البريد الإلكتروني</Label>
+                        <Input
+                          id="stc-email"
+                          type="email"
+                          value={stcForm.email}
+                          onChange={(e) => setStcForm({...stcForm, email: e.target.value})}
+                          placeholder="example@email.com"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="stc-phone">رقم الجوال</Label>
+                        <Input
+                          id="stc-phone"
+                          value={stcForm.phone}
+                          onChange={(e) => setStcForm({...stcForm, phone: e.target.value})}
+                          placeholder="05xxxxxxxx"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="stc-amount">المبلغ (ريال سعودي)</Label>
+                        <Input
+                          id="stc-amount"
+                          type="number"
+                          value={stcForm.amount}
+                          onChange={(e) => setStcForm({...stcForm, amount: e.target.value})}
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="stc-transaction">رقم المعاملة</Label>
+                        <Input
+                          id="stc-transaction"
+                          value={stcForm.transactionId}
+                          onChange={(e) => setStcForm({...stcForm, transactionId: e.target.value})}
+                          placeholder="رقم المعاملة من STC Pay"
+                        />
+                      </div>
+                      <Button 
+                        disabled={isSubmitting}
+                        className="w-full bg-purple-600 hover:bg-purple-700"
+                      >
+                        {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* تمارا */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-green-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-700 rounded-lg flex items-center justify-center text-white">
+                            <CreditCard className="h-8 w-8" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-slate-800 mb-1">تمارا</h3>
+                            <p className="text-sm text-slate-600">الدفع الآجل والتقسيط</p>
+                            <Badge className="mt-2 bg-green-100 text-green-800">متاح</Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md" dir="rtl">
+                    <DialogHeader>
+                      <DialogTitle className="text-center flex items-center justify-center gap-2">
+                        <CreditCard className="h-5 w-5" />
+                        طلب دفع - تمارا
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="tamara-name">الاسم الكامل</Label>
+                        <Input
+                          id="tamara-name"
+                          value={tamaraForm.name}
+                          onChange={(e) => setTamaraForm({...tamaraForm, name: e.target.value})}
+                          placeholder="أدخل اسمك الكامل"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="tamara-email">البريد الإلكتروني</Label>
+                        <Input
+                          id="tamara-email"
+                          type="email"
+                          value={tamaraForm.email}
+                          onChange={(e) => setTamaraForm({...tamaraForm, email: e.target.value})}
+                          placeholder="example@email.com"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="tamara-phone">رقم الجوال</Label>
+                        <Input
+                          id="tamara-phone"
+                          value={tamaraForm.phone}
+                          onChange={(e) => setTamaraForm({...tamaraForm, phone: e.target.value})}
+                          placeholder="05xxxxxxxx"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="tamara-whatsapp">رقم الواتساب</Label>
+                        <Input
+                          id="tamara-whatsapp"
+                          value={tamaraForm.whatsapp}
+                          onChange={(e) => setTamaraForm({...tamaraForm, whatsapp: e.target.value})}
+                          placeholder="05xxxxxxxx"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="tamara-amount">المبلغ (ريال سعودي)</Label>
+                        <Input
+                          id="tamara-amount"
+                          type="number"
+                          value={tamaraForm.amount}
+                          onChange={(e) => setTamaraForm({...tamaraForm, amount: e.target.value})}
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <Button 
+                        disabled={isSubmitting}
+                        className="w-full bg-green-600 hover:bg-green-700"
+                      >
+                        {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                {/* Visa/MasterCard */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-indigo-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-lg flex items-center justify-center text-white">
+                            <CreditCard className="h-8 w-8" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-slate-800 mb-1">Visa/MasterCard</h3>
+                            <p className="text-sm text-slate-600">بطاقة ائتمانية أو مدينة</p>
+                            <Badge className="mt-2 bg-indigo-100 text-indigo-800">متاح</Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md" dir="rtl">
+                    <DialogHeader>
+                      <DialogTitle className="text-center flex items-center justify-center gap-2">
+                        <CreditCard className="h-5 w-5" />
+                        طلب دفع - بطاقة ائتمانية
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="visa-name">الاسم الكامل</Label>
+                        <Input
+                          id="visa-name"
+                          value={visaForm.name}
+                          onChange={(e) => setVisaForm({...visaForm, name: e.target.value})}
+                          placeholder="أدخل اسمك الكامل"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="visa-email">البريد الإلكتروني</Label>
+                        <Input
+                          id="visa-email"
+                          type="email"
+                          value={visaForm.email}
+                          onChange={(e) => setVisaForm({...visaForm, email: e.target.value})}
+                          placeholder="example@email.com"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="visa-phone">رقم الجوال</Label>
+                        <Input
+                          id="visa-phone"
+                          value={visaForm.phone}
+                          onChange={(e) => setVisaForm({...visaForm, phone: e.target.value})}
+                          placeholder="05xxxxxxxx"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="visa-amount">المبلغ (ريال سعودي)</Label>
+                        <Input
+                          id="visa-amount"
+                          type="number"
+                          value={visaForm.amount}
+                          onChange={(e) => setVisaForm({...visaForm, amount: e.target.value})}
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <Button 
+                        disabled={isSubmitting}
+                        className="w-full bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        {isSubmitting ? 'جاري الإرسال...' : 'إرسال الطلب'}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardContent>
           </Card>
