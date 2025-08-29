@@ -39,7 +39,9 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Get user information from profiles first
+    console.log('Processing wallet deposit for user:', user_id, 'amount:', amount);
+
+    // Get user information from profiles first (don't require auth.users)
     const { data: userProfile, error: userError } = await supabase
       .from('profiles')
       .select('full_name, email, user_id')
@@ -58,6 +60,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (!userProfile) {
+      console.error('User profile not found for user_id:', user_id);
       return new Response(
         JSON.stringify({ 
           error: 'المستخدم غير موجود في النظام',
@@ -67,25 +70,23 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Try to get user from auth.users, if not found, we'll continue with profile data
-    let authUser = null;
-    try {
-      const { data, error: authError } = await supabase.auth.admin.getUserById(user_id);
-      if (!authError && data.user) {
-        authUser = data.user;
-      }
-    } catch (authError) {
-      console.log('User not found in auth.users, continuing with profile data:', authError);
-    }
+    console.log('User profile found:', userProfile);
 
-    // Use profile email or a default email if none exists
+    // Prepare user profile for email
     const finalUserProfile = {
       full_name: userProfile.full_name || 'مستخدم',
-      email: userProfile.email || authUser?.email || 'no-email@example.com',
+      email: userProfile.email || 'no-email@example.com',
       user_id: user_id
     };
 
     // Process wallet transaction using the database function
+    console.log('Calling process_wallet_transaction with:', {
+      p_user_id: user_id,
+      p_transaction_type: 'deposit',
+      p_amount: amount,
+      p_description: description
+    });
+
     const { data: walletResult, error: walletError } = await supabase.rpc('process_wallet_transaction', {
       p_user_id: user_id,
       p_transaction_type: 'deposit',
@@ -102,15 +103,18 @@ const handler = async (req: Request): Promise<Response> => {
     if (walletError) {
       console.error('Wallet transaction error:', walletError);
       return new Response(
-        JSON.stringify({ error: 'Failed to process wallet transaction', details: walletError.message }),
+        JSON.stringify({ 
+          error: 'فشل في معالجة المعاملة المالية', 
+          details: walletError.message || 'Unknown error'
+        }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     console.log('Wallet transaction processed successfully:', walletResult);
 
-    // Send email notification if user profile exists and email is available
-    if (finalUserProfile && finalUserProfile.email && resend) {
+    // Send email notification if user has email and resend is available
+    if (finalUserProfile.email && finalUserProfile.email !== 'no-email@example.com' && resend) {
       try {
         const emailResult = await resend.emails.send({
           from: 'شركة علي صالح محمد الشهري القابضة <no-reply@alsaleh-holding.com>',
