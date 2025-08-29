@@ -347,17 +347,18 @@ const AdminWalletEnhanced = () => {
       // Send notification email if enabled
       if (addFundsForm.notifyEmail) {
         try {
-          await supabase.functions.invoke('customer-notifications', {
+          await supabase.functions.invoke('wallet-email-notifications', {
             body: {
-              type: 'wallet_deposit',
+              type: 'deposit',
               customer_email: user.email,
               customer_name: user.user_metadata?.full_name || user.email,
               data: {
                 amount: amount,
-                description: addFundsForm.description,
                 new_balance: newBalance,
+                old_balance: (newBalance - amount),
                 transaction_id: transactionId,
-                requires_approval: addFundsForm.requireApproval
+                reference_id: `ADMIN_${Date.now()}`,
+                description: addFundsForm.description
               }
             }
           });
@@ -452,17 +453,18 @@ const AdminWalletEnhanced = () => {
 
       // Send notification email if enabled
       if (deductFundsForm.notifyEmail) {
-        await supabase.functions.invoke('customer-notifications', {
+        await supabase.functions.invoke('wallet-email-notifications', {
           body: {
-            type: 'wallet_withdrawal',
+            type: 'withdrawal',
             customer_email: user.email,
             customer_name: user.user_metadata?.full_name || user.email,
             data: {
               amount: amount,
-              reason: deductFundsForm.reason,
               new_balance: (data as any)?.[0]?.new_balance || 0,
+              old_balance: ((data as any)?.[0]?.new_balance || 0) + amount,
               transaction_id: (data as any)?.[0]?.transaction_id || 'N/A',
-              requires_approval: deductFundsForm.requireApproval
+              reference_id: `ADMIN-DEDUCT-${Date.now()}`,
+              description: deductFundsForm.reason
             }
           }
         });
