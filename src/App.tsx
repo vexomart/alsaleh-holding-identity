@@ -140,7 +140,7 @@ const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminUpdates = lazy(() => import("./pages/admin/AdminUpdates"));
-const AdminWallet = lazy(() => import("./pages/admin/AdminWallet"));
+const AdminWallets = lazy(() => import("./pages/admin/AdminWallets"));
 const AdminAffiliate = lazy(() => import("./pages/admin/AdminAffiliate"));
 const ClientOrders = lazy(() => import("./pages/client/ClientOrders"));
 const ClientAffiliate = lazy(() => import("./pages/client/ClientAffiliate"));
@@ -388,7 +388,7 @@ const App = () => {
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="orders" element={<AdminOrders />} />
                   <Route path="updates" element={<AdminUpdates />} />
-                  <Route path="wallet" element={<AdminWallet />} />
+                  <Route path="wallet" element={<AdminWallets />} />
                   <Route path="affiliate" element={<AdminAffiliate />} />
                 </Route>
                 
