@@ -16,6 +16,7 @@ interface WalletCustomerData {
   full_name: string;
   email: string | null;
   account_number: string;
+  phone: string | null;
   balance: number;
   currency: string;
   wallet_id: string;
@@ -37,7 +38,7 @@ export const CustomerWalletsList = () => {
   const [transactionType, setTransactionType] = useState<'deposit' | 'withdraw'>('deposit');
   const [showTransactionForm, setShowTransactionForm] = useState(false);
 
-  // جلب بيانات المحافظ مع معلومات العملاء
+  // جلب بيانات المحافظ مع معلومات العملاء الحقيقية
   const { data: walletsData, isLoading: walletsLoading, refetch: refetchWallets } = useQuery({
     queryKey: ['customer-wallets'],
     queryFn: async () => {
@@ -57,16 +58,16 @@ export const CustomerWalletsList = () => {
         throw walletsError;
       }
 
-      if (!wallets) return [];
+      if (!wallets || wallets.length === 0) return [];
 
-      // جلب معلومات المستخدمين منفصلة
+      // جلب معلومات المستخدمين الحقيقية
       const userIds = wallets.map(w => w.user_id);
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('user_id, full_name, email, account_number')
+        .select('user_id, full_name, email, account_number, phone')
         .in('user_id', userIds);
 
-      // دمج البيانات
+      // دمج البيانات الحقيقية
       return wallets.map(wallet => {
         const profile = profiles?.find(p => p.user_id === wallet.user_id);
         return {
@@ -74,14 +75,49 @@ export const CustomerWalletsList = () => {
           full_name: profile?.full_name || 'مستخدم غير محدد',
           email: profile?.email || null,
           account_number: profile?.account_number || 'غير محدد',
+          phone: profile?.phone || null,
           balance: parseFloat(String(wallet.balance || 0)),
           currency: wallet.currency,
           wallet_id: wallet.id,
           created_at: wallet.created_at
         };
       }) as WalletCustomerData[];
-    }
+    },
+    refetchInterval: 5000, // تحديث كل 5 ثواني
   });
+
+  // إضافة Realtime subscription للتحديث الفوري
+  useEffect(() => {
+    const channel = supabase
+      .channel('wallet-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'customer_wallets'
+        },
+        () => {
+          refetchWallets();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'wallet_transactions'
+        },
+        () => {
+          refetchWallets();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [refetchWallets]);
 
   // حساب الإحصائيات
   const walletStats: WalletStats = {
@@ -98,6 +134,7 @@ export const CustomerWalletsList = () => {
     const matchesSearch = 
       wallet.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       wallet.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      wallet.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       wallet.account_number.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesBalance = 
