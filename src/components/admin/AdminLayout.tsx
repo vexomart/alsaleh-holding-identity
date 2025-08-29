@@ -4,10 +4,12 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
 import { ResponsiveContainer } from '@/components/ResponsiveContainer';
+import { PrayerTimesBar } from '@/components/PrayerTimesBar';
 
 export const AdminLayout = () => {
   return (
     <div dir="rtl" className="min-h-screen w-full bg-gradient-to-bl from-background via-muted/30 to-muted/50">
+      <PrayerTimesBar />
       <SidebarProvider>
         <div className="flex min-h-screen w-full">
           <AdminSidebar />
