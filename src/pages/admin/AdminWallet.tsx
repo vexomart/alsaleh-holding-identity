@@ -256,51 +256,42 @@ const AdminWallet = () => {
     }
 
     try {
-      // Call the wallet transaction function
-      const { data, error } = await supabase.rpc('process_wallet_transaction', {
-        p_user_id: selectedUserId,
-        p_transaction_type: 'deposit',
-        p_amount: parseFloat(amount),
-        p_description: description || 'إيداع من الإدارة',
-        p_reference_id: `ADMIN_${Date.now()}`
+      // Call the new admin wallet deposit function
+      const { data, error } = await supabase.functions.invoke('admin-wallet-deposit', {
+        body: {
+          user_id: selectedUserId,
+          amount: parseFloat(amount),
+          description: description || 'إيداع من الإدارة',
+          admin_notes: `إضافة رصيد من لوحة الإدارة - ${new Date().toLocaleString('ar-SA')}`
+        }
       });
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(error.message || 'فشل في إضافة الرصيد');
+      }
 
-      // Send notification email
-      const user = availableUsers.find(u => u.id === selectedUserId);
-      if (user) {
-        try {
-          await supabase.functions.invoke('customer-notifications', {
-            body: {
-              customerEmail: user.email,
-              customerName: user.name,
-              type: 'wallet_deposit',
-              data: {
-                amount: amount,
-                description: description || 'إيداع من الإدارة'
-              }
-            }
-          });
-        } catch (emailError) {
-          console.error('Error sending email:', emailError);
-        }
+      if (data?.error) {
+        throw new Error(data.error);
       }
 
       toast({
         title: "تم إضافة الرصيد بنجاح",
-        description: `تم إضافة ${amount} ريال إلى المحفظة`,
+        description: `تم إضافة ${amount} ريال إلى المحفظة وإرسال إشعار بالبريد الإلكتروني`,
       });
       
       setIsAddFundsDialogOpen(false);
       setSelectedUserId('');
       setAmount('');
       setDescription('');
-      fetchWalletData();
+      
+      // Refresh data immediately
+      await fetchWalletData();
+      
     } catch (error: any) {
+      console.error('Error adding funds:', error);
       toast({
         title: "خطأ في إضافة الرصيد",
-        description: error.message,
+        description: error.message || "حدث خطأ غير متوقع",
         variant: "destructive",
       });
     }

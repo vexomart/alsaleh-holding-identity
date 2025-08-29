@@ -296,22 +296,29 @@ const ClientWallet = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.functions.invoke('bank-transfer-request', {
+      const { data, error } = await supabase.functions.invoke('bank-transfer-request', {
         body: {
+          bank: 'البنك الراجحي',
           name: rajhiForm.name,
           email: rajhiForm.email,
           phone: rajhiForm.phone,
-          amount: parseFloat(rajhiForm.amount),
-          bank: 'الراجحي',
-          receipt: rajhiForm.receipt
+          amount: rajhiForm.amount,
+          receiptAttached: !!rajhiForm.receipt
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error:', error);
+        throw new Error(error.message || 'فشل في إرسال الطلب');
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
 
       toast({
-        title: "تم إرسال الطلب",
-        description: "تم إرسال طلب التحويل بنجاح وسيتم مراجعته",
+        title: "تم إرسال الطلب بنجاح",
+        description: "تم إرسال طلب التحويل وسيتم مراجعته من قبل الفريق المختص",
       });
 
       // إعادة تعيين النموذج
@@ -322,10 +329,15 @@ const ClientWallet = () => {
         amount: '',
         receipt: null
       });
-    } catch (error) {
+
+      // تحديث البيانات
+      await Promise.all([refetchWallet(), refetchTransactions()]);
+      
+    } catch (error: any) {
+      console.error('Bank transfer request error:', error);
       toast({
         title: "خطأ في الإرسال",
-        description: "حدث خطأ أثناء إرسال الطلب",
+        description: error.message || "حدث خطأ أثناء إرسال الطلب",
         variant: "destructive",
       });
     } finally {
