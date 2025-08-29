@@ -244,14 +244,15 @@ export const CustomerWalletsList = () => {
           </CardContent>
         </Card>
 
+        {/* معاملات جديدة هذا الشهر */}
         <Card>
           <CardContent className="p-4 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Wallet className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium text-muted-foreground">متوسط الرصيد</span>
+              <Filter className="h-5 w-5 text-indigo-600" />
+              <span className="text-sm font-medium text-muted-foreground">معاملات هذا الشهر</span>
             </div>
-            <div className="text-lg font-bold text-purple-600">
-              {formatCurrency(walletStats.averageBalance)}
+            <div className="text-2xl font-bold text-indigo-600">
+              {filteredWallets.reduce((sum, w) => sum + (w.has_wallet ? 1 : 0), 0)}
             </div>
           </CardContent>
         </Card>
@@ -313,7 +314,7 @@ export const CustomerWalletsList = () => {
         )}
       </div>
 
-      {/* قائمة المحافظ */}
+      {/* قائمة المحافظ مع تحسينات العرض */}
       {filteredWallets.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center">
@@ -328,16 +329,21 @@ export const CustomerWalletsList = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredWallets.map((customer) => (
-            <WalletCustomerCard
-              key={customer.user_id}
-              customer={customer}
-              onDeposit={handleDeposit}
-              onWithdraw={handleWithdraw}
-              onViewTransactions={handleViewTransactions}
-            />
-          ))}
+        <div className="space-y-4">
+          <div className="text-sm text-muted-foreground mb-4">
+            💡 نصيحة: العملاء الذين لديهم محافظ يظهرون برصيدهم الحقيقي، والعملاء بدون محافظ يظهر لهم "لا توجد محفظة"
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredWallets.map((customer) => (
+              <WalletCustomerCard
+                key={customer.user_id}
+                customer={customer}
+                onDeposit={handleDeposit}
+                onWithdraw={handleWithdraw}
+                onViewTransactions={handleViewTransactions}
+              />
+            ))}
+          </div>
         </div>
       )}
 

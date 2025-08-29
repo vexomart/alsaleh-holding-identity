@@ -129,23 +129,33 @@ export const WalletCustomerCard = ({
           <h4 className="font-semibold text-slate-700 dark:text-slate-200 mb-3">معلومات التواصل</h4>
           
           <div className="flex items-center gap-3 text-sm">
-            <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded">
-              <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div className="flex-1">
-              <div className="font-medium text-slate-600 dark:text-slate-300">
-                {customer.email ? (
-                  <a href={`mailto:${customer.email}`} className="text-blue-600 hover:underline">
-                    {customer.email}
-                  </a>
-                ) : (
-                  <span className="text-amber-600 font-medium">⚠️ لا يوجد إيميل مسجل</span>
-                )}
+              <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded">
+                <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
               </div>
-              <div className="text-xs text-muted-foreground">
-                {customer.email ? 'إيميل نشط' : 'مطلوب تسجيل إيميل للإشعارات'}
+              <div className="flex-1">
+                <div className="font-medium text-slate-600 dark:text-slate-300">
+                  {customer.email ? (
+                    <a 
+                      href={`mailto:${customer.email}`} 
+                      className="text-blue-600 hover:underline flex items-center gap-1"
+                    >
+                      {customer.email}
+                      <span className="text-xs bg-green-100 text-green-700 px-1 rounded">✓ مفعل</span>
+                    </a>
+                  ) : (
+                    <span className="text-amber-600 font-medium flex items-center gap-1">
+                      ⚠️ لا يوجد إيميل مسجل
+                      <span className="text-xs bg-amber-100 text-amber-700 px-1 rounded">مطلوب</span>
+                    </span>
+                  )}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {customer.email 
+                    ? 'سيتم إرسال إشعارات المعاملات تلقائياً' 
+                    : 'مطلوب تسجيل إيميل لتلقي إشعارات المعاملات'
+                  }
+                </div>
               </div>
-            </div>
           </div>
 
           {customer.phone && (
