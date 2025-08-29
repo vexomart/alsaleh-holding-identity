@@ -218,7 +218,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email using Resend
     const emailResponse = await resend.emails.send({
-      from: "المحفظة الرقمية <onboarding@resend.dev>",
+      from: "المحفظة الرقمية - علي الشهري القابضة <info@fekrahtech.com>",
       to: [finalCustomerEmail],
       subject: emailSubject,
       html: emailHtml,
