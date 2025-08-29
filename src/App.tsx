@@ -375,6 +375,7 @@ const App = () => {
                     </Suspense>
                   </AdminProtectedRoute>
                 }>
+                  <Route index element={<Navigate to="/admin/dashboard" replace />} />
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="projects" element={<AdminProjects />} />
                   <Route path="clients" element={<AdminClients />} />
