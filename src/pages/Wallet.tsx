@@ -23,6 +23,7 @@ interface UserProfile {
   full_name?: string;
   client_id?: string;
   email?: string;
+  phone?: string;
 }
 
 // Removed Transaction interface - no longer needed
@@ -119,17 +120,37 @@ const WalletPage = () => {
       return;
     }
 
+    if (!userProfile?.email) {
+      toast({
+        title: "خطأ",
+        description: "يرجى التأكد من بيانات المستخدم",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setDepositing(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+        toast({
+          title: "خطأ",
+          description: "يرجى تسجيل الدخول أولاً",
+          variant: "destructive"
+        });
+        setDepositing(false);
+        return;
+      }
+
+      console.log('Starting deposit process...', { amount, email: userProfile.email });
 
       const response = await supabase.functions.invoke('tap-payment', {
         body: {
           amount,
           currency: 'SAR',
           customer_name: userProfile?.full_name || 'عميل',
-          customer_email: userProfile?.email || '',
+          customer_email: userProfile.email,
+          customer_phone: userProfile?.phone || '',
           description: `شحن المحفظة الرقمية بمبلغ ${amount} ريال سعودي`,
           product_details: {
             name: 'شحن المحفظة الرقمية',
@@ -142,22 +163,29 @@ const WalletPage = () => {
         }
       });
 
+      console.log('Tap payment response:', response);
+
       if (response.error) {
-        throw response.error;
+        console.error('Supabase function error:', response.error);
+        throw new Error(response.error.message || 'خطأ في الاتصال بخدمة الدفع');
       }
 
       const { data } = response;
-      if (data.success && data.payment_url) {
-        // Redirect to Tap payment page
+      console.log('Payment data:', data);
+
+      if (data?.success && data?.payment_url) {
+        // Close dialog and redirect to Tap payment page
+        setIsDepositOpen(false);
+        setDepositAmount('');
         window.location.href = data.payment_url;
       } else {
-        throw new Error(data.error || 'فشل في إنشاء رابط الدفع');
+        throw new Error(data?.error || 'فشل في إنشاء رابط الدفع');
       }
     } catch (error) {
       console.error('Deposit error:', error);
       toast({
         title: "خطأ في الشحن",
-        description: "حدث خطأ أثناء إنشاء رابط الدفع، يرجى المحاولة مرة أخرى",
+        description: error.message || "حدث خطأ أثناء إنشاء رابط الدفع، يرجى المحاولة مرة أخرى",
         variant: "destructive"
       });
       setDepositing(false);

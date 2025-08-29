@@ -109,7 +109,7 @@ Deno.serve(async (req) => {
         id: "src_card"
       },
       post: {
-        url: `${supabaseUrl}/functions/v1/verify-payment-status`
+        url: `${supabaseUrl}/functions/v1/wallet-tap-deposit`
       },
       redirect: {
         url: `${new URL(req.url).origin}/payment-success`
