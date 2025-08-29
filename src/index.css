@@ -285,21 +285,33 @@
   }
 }
 
-/* Professional Arabic Font System */
+/* Professional Corporate Font System */
+.font-corporate {
+  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.font-corporate-bold {
+  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
 .font-formal {
-  font-family: 'Noto Kufi Arabic', 'Amiri', 'Tajawal', 'Cairo', system-ui, sans-serif;
+  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: 0.02em;
 }
 
 .font-formal-bold {
-  font-family: 'Noto Kufi Arabic', 'Amiri', 'Tajawal', 'Cairo', system-ui, sans-serif;
+  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', system-ui, sans-serif;
   font-weight: 600;
   letter-spacing: 0.01em;
 }
 
 .font-elegant {
-  font-family: 'Amiri', 'Noto Kufi Arabic', 'Tajawal', serif;
+  font-family: 'SF Pro Display', 'Inter', 'Segoe UI', serif;
   font-weight: 400;
   line-height: 1.6;
 }
@@ -309,9 +321,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-formal;
+    @apply bg-background text-foreground font-corporate;
     direction: rtl;
-    font-family: 'Noto Kufi Arabic', 'Amiri', 'Tajawal', 'Cairo', system-ui, sans-serif;
+    font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', system-ui, sans-serif;
   }
 }
 
