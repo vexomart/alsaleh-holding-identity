@@ -301,17 +301,25 @@ export default function ClientWallet() {
     }
   };
 
-  const generateAccountNumber = (userId: string, clientId?: string) => {
+  const generateUniqueAccountNumber = (userId: string, clientId?: string) => {
     if (clientId) return clientId;
-    return `ACC${userId.slice(-8).toUpperCase()}`;
+    
+    // إنشاء رقم حساب فريد ومعتمد للتحقق المالي
+    const userHash = userId.slice(-12).toUpperCase();
+    const year = new Date().getFullYear().toString().slice(-2);
+    const month = new Date().getMonth().toString().padStart(2, '0');
+    
+    // تشكيل الرقم: ASH (Ali Saleh Holding) + السنة + الشهر + معرف المستخدم
+    return `ASH${year}${month}${userHash}`;
   };
 
   const copyAccountNumber = () => {
-    const accountNumber = generateAccountNumber(userProfile?.id || '', userProfile?.client_id);
+    const accountNumber = generateUniqueAccountNumber(userProfile?.id || '', userProfile?.client_id);
     navigator.clipboard.writeText(accountNumber);
     toast({
-      title: "تم النسخ",
-      description: "تم نسخ رقم الحساب إلى الحافظة"
+      title: "تم النسخ بنجاح",
+      description: "تم نسخ رقم الحساب المعتمد للتحقق المالي",
+      duration: 3000
     });
   };
 
@@ -375,7 +383,7 @@ export default function ClientWallet() {
   });
 
   const stats = calculateStats();
-  const accountNumber = generateAccountNumber(userProfile?.id || '', userProfile?.client_id);
+  const accountNumber = generateUniqueAccountNumber(userProfile?.id || '', userProfile?.client_id);
   const walletBalance = wallet?.balance || 0;
 
   // Bank account details
@@ -457,33 +465,48 @@ export default function ClientWallet() {
                 
                 <div className="border-t pt-4">
                   <div className="flex items-center justify-between">
-                    <div className="space-y-2">
-                      <Label className="text-slate-600 font-medium">رقم الحساب</Label>
+                    <div className="space-y-2 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-lg font-mono font-bold text-slate-800 tracking-wider">
-                          {accountNumberVisible ? accountNumber : '●●●●●●●●'}
-                        </p>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setAccountNumberVisible(!accountNumberVisible)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={copyAccountNumber}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Copy className="h-4 w-4" />
-                        </Button>
+                        <Label className="text-slate-600 font-medium">الرقم المالي المعتمد</Label>
+                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs">
+                          للتحقق المالي
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-slate-50 rounded-lg p-3 flex-1">
+                          <p className="text-xl font-mono font-bold text-slate-800 tracking-wider">
+                            {accountNumberVisible ? accountNumber : '●●●●●●●●●●●●●●●●'}
+                          </p>
+                          <p className="text-xs text-slate-500 mt-1">
+                            رقم التحقق المالي الرسمي
+                          </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setAccountNumberVisible(!accountNumberVisible)}
+                            className="h-9 w-9 p-0 bg-slate-100 hover:bg-slate-200"
+                          >
+                            {accountNumberVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={copyAccountNumber}
+                            className="h-9 w-9 p-0 bg-slate-100 hover:bg-slate-200"
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                     <div className="text-right">
                       <Label className="text-slate-600 font-medium">شركة علي صالح محمد الشهري</Label>
                       <p className="text-sm text-slate-500">المملكة العربية السعودية</p>
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs mt-1">
+                        معتمد ضريبياً
+                      </Badge>
                     </div>
                   </div>
                 </div>
@@ -809,41 +832,58 @@ export default function ClientWallet() {
                 {filteredTransactions.map((transaction, index) => {
                   const status = getTransactionStatus(transaction.status);
                   return (
-                    <div key={transaction.id} className="group">
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-all duration-200 border border-slate-100">
+                    <div key={transaction.id} className="group cursor-pointer">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50/50 hover:bg-slate-100 hover:shadow-sm transition-all duration-300 border border-slate-100 hover:border-slate-200">
                         <div className="flex items-center gap-4">
-                          <div className={`p-2 rounded-lg ${
+                          <div className={`p-3 rounded-xl shadow-sm ${
                             transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund'
-                              ? 'bg-emerald-100 text-emerald-600'
-                              : 'bg-rose-100 text-rose-600'
+                              ? 'bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-700'
+                              : 'bg-gradient-to-br from-rose-100 to-rose-50 text-rose-700'
                           }`}>
                             {getTransactionIcon(transaction.transaction_type)}
                           </div>
                           
-                          <div className="space-y-1">
+                          <div className="space-y-2">
                             <div className="flex items-center gap-2">
-                              <Badge variant="outline" className={`${status.className} font-medium`}>
+                              <Badge variant="outline" className={`${status.className} font-medium text-xs`}>
                                 {getTransactionTypeText(transaction.transaction_type)}
                               </Badge>
-                              <Badge variant="outline" className={status.className}>
+                              <Badge variant="outline" className={`${status.className} text-xs`}>
                                 {status.label}
                               </Badge>
+                              {transaction.reference_id && (
+                                <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 text-xs font-mono">
+                                  #{transaction.reference_id.slice(-6)}
+                                </Badge>
+                              )}
                             </div>
-                            <p className="text-sm text-slate-700 font-medium">{transaction.description}</p>
-                            <p className="text-xs text-slate-500">
-                              {new Date(transaction.created_at).toLocaleDateString('ar-SA', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </p>
+                            <p className="text-sm text-slate-800 font-semibold">{transaction.description}</p>
+                            <div className="flex items-center gap-3 text-xs text-slate-500">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                {new Date(transaction.created_at).toLocaleDateString('ar-SA', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </span>
+                              {transaction.balance_before && transaction.balance_after && (
+                                <span className="text-slate-400">•</span>
+                              )}
+                              {transaction.balance_before && transaction.balance_after && (
+                                <span className="flex items-center gap-1">
+                                  <TrendingUp className="h-3 w-3" />
+                                  {transaction.balance_before} → {transaction.balance_after} ريال
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                         
-                        <div className="text-left space-y-1">
-                          <div className={`text-lg font-bold ${
+                        <div className="text-left space-y-2">
+                          <div className={`text-xl font-bold ${
                             transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund'
                               ? 'text-emerald-600'
                               : 'text-rose-600'
@@ -852,15 +892,27 @@ export default function ClientWallet() {
                             <NumberFormatter number={transaction.amount} suffix=" ريال" />
                           </div>
                           {transaction.balance_after && (
-                            <div className="text-xs text-slate-500">
-                              الرصيد: <NumberFormatter number={transaction.balance_after} suffix=" ريال" />
+                            <div className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                              الرصيد النهائي: <NumberFormatter number={transaction.balance_after} suffix=" ريال" />
                             </div>
                           )}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="opacity-0 group-hover:opacity-100 transition-opacity h-6 text-xs px-2"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              copyToClipboard(transaction.id, "معرف المعاملة");
+                            }}
+                          >
+                            <Copy className="h-3 w-3 mr-1" />
+                            نسخ
+                          </Button>
                         </div>
                       </div>
                       
                       {index < filteredTransactions.length - 1 && (
-                        <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-2" />
+                        <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-3" />
                       )}
                     </div>
                   );
