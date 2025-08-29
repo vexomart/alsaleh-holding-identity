@@ -171,6 +171,19 @@ const Auth = () => {
     const password = formData.get('password') as string;
     const fullName = formData.get('fullName') as string;
 
+    // التحقق من قوة كلمة المرور قبل الإرسال
+    if (password.length < 8) {
+      setError('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      setError('كلمة المرور يجب أن تحتوي على حرف كبير وحرف صغير ورقم على الأقل');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -186,8 +199,11 @@ const Auth = () => {
       if (error) {
         if (error.message.includes('already registered')) {
           setError('هذا البريد الإلكتروني مسجل مسبقاً');
+        } else if (error.message.includes('Password is known to be weak') || 
+                   error.message.includes('weak and easy to guess')) {
+          setError('كلمة المرور ضعيفة جداً أو شائعة. استخدم كلمة مرور أقوى تحتوي على أحرف وأرقام ورموز');
         } else {
-          setError(error.message);
+          setError('خطأ في التسجيل: ' + error.message);
         }
       } else {
         toast.success('تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني');
@@ -407,7 +423,7 @@ const Auth = () => {
                         id="signup-password"
                         name="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="كلمة المرور (8 أحرف على الأقل)"
+                        placeholder="كلمة المرور القوية"
                         required
                         minLength={8}
                         disabled={isLoading}
@@ -421,6 +437,15 @@ const Auth = () => {
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
+                    </div>
+                    <div className="text-xs text-muted-foreground space-y-1">
+                      <p>متطلبات كلمة المرور:</p>
+                      <ul className="list-disc list-inside space-y-0.5">
+                        <li>8 أحرف على الأقل</li>
+                        <li>حرف كبير وحرف صغير</li>
+                        <li>رقم واحد على الأقل</li>
+                        <li>تجنب الكلمات الشائعة</li>
+                      </ul>
                     </div>
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
