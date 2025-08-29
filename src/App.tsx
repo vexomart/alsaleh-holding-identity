@@ -138,6 +138,7 @@ const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
 const Auth = lazy(() => import("./pages/Auth"));
 const MyProjects = lazy(() => import("./pages/MyProjects"));
 const AdminProjects = lazy(() => import("./pages/AdminProjects"));
+const EnhancedProjectManagement = lazy(() => import("./pages/admin/EnhancedProjectManagement"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminUpdates = lazy(() => import("./pages/admin/AdminUpdates"));
@@ -388,6 +389,7 @@ const App = () => {
                   <Route index element={<Navigate to="/admin/dashboard" replace />} />
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="projects" element={<AdminProjects />} />
+                  <Route path="project-management" element={<EnhancedProjectManagement />} />
                   <Route path="clients" element={<AdminClients />} />
                   <Route path="invoices" element={<AdminInvoicesEnhanced />} />
                   <Route path="payments" element={<AdminPayments />} />

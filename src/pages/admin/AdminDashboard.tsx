@@ -327,6 +327,7 @@ const AdminDashboard = () => {
   ];
 
   const quickActions = [
+    { title: 'نظام إدارة المشاريع المتطور', description: 'إدارة متقدمة للمشاريع مع تتبع الأداء', icon: Briefcase, action: '/admin/project-management' },
     { title: 'إضافة مشروع جديد', description: 'إنشاء مشروع جديد للعملاء', icon: Package, action: '/admin/projects' },
     { title: 'إدارة العملاء', description: 'عرض وإدارة قائمة العملاء', icon: Users, action: '/admin/clients' },
     { title: 'تقارير الأداء', description: 'عرض تقارير مفصلة عن الأداء', icon: BarChart3, action: '/admin/analytics' },
