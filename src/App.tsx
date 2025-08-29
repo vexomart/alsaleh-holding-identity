@@ -142,6 +142,7 @@ const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminUpdates = lazy(() => import("./pages/admin/AdminUpdates"));
 const AdminWallets = lazy(() => import("./pages/admin/AdminWallets"));
 const AdminAffiliate = lazy(() => import("./pages/admin/AdminAffiliate"));
+const AdminEmailPipeline = lazy(() => import("./pages/admin/AdminEmailPipeline"));
 const ClientOrders = lazy(() => import("./pages/client/ClientOrders"));
 const ClientAffiliate = lazy(() => import("./pages/client/ClientAffiliate"));
 const ClientNotifications = lazy(() => import("./pages/client/ClientNotifications"));
@@ -396,6 +397,7 @@ const App = () => {
                   <Route path="updates" element={<AdminUpdates />} />
                   <Route path="wallet" element={<AdminWallets />} />
                   <Route path="affiliate" element={<AdminAffiliate />} />
+                  <Route path="email-pipeline" element={<AdminEmailPipeline />} />
                 </Route>
                 
                 {/* Legacy admin routes - redirect to admin login first */}
