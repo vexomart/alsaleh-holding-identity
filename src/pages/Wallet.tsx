@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { NumberFormatter } from '@/components/NumberFormatter';
 import PaymentMethods from '@/components/PaymentMethods';
+import { Building2, CreditCard, Smartphone } from 'lucide-react';
 import SEO from '@/components/SEO';
 
 interface WalletData {
@@ -386,9 +387,169 @@ const WalletPage = () => {
             </Card>
           </div>
 
-          {/* Payment Methods */}
+          {/* طرق الدفع المتاحة */}
           <div className="space-y-6">
-            <PaymentMethods />
+            <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-xl text-slate-800">طرق الدفع المتاحة</CardTitle>
+                <p className="text-slate-600">الطرق المدعومة للإيداع والسحب</p>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 gap-4">
+                  {/* البنك الراجحي */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-blue-200">
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center text-white">
+                              <Building2 className="h-8 w-8" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="font-bold text-slate-800 mb-1">البنك الراجحي</h3>
+                              <p className="text-sm text-slate-600">تحويل بنكي مع إرفاق الإيصال</p>
+                              <Badge className="mt-2 bg-blue-100 text-blue-800">متاح</Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md" dir="rtl">
+                      <DialogHeader>
+                        <DialogTitle className="text-center flex items-center justify-center gap-2">
+                          <Building2 className="h-5 w-5" />
+                          طلب تحويل - البنك الراجحي
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                          <p className="text-sm text-blue-700">
+                            يرجى إرفاق إيصال التحويل البنكي وسيتم التواصل معك خلال 24 ساعة
+                          </p>
+                        </div>
+                        <Button className="w-full">
+                          إرسال طلب تحويل
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* STC Pay */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-purple-200">
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center text-white">
+                              <Smartphone className="h-8 w-8" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="font-bold text-slate-800 mb-1">STC Pay</h3>
+                              <p className="text-sm text-slate-600">الدفع عبر محفظة STC</p>
+                              <Badge className="mt-2 bg-purple-100 text-purple-800">متاح</Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md" dir="rtl">
+                      <DialogHeader>
+                        <DialogTitle className="text-center flex items-center justify-center gap-2">
+                          <Smartphone className="h-5 w-5" />
+                          طلب دفع - STC Pay
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-purple-50 rounded-lg border border-purple-100">
+                          <p className="text-sm text-purple-700">
+                            أدخل رقم المعاملة من STC Pay وسيتم التحقق منها
+                          </p>
+                        </div>
+                        <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                          إرسال طلب دفع
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* تمارا */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-green-200">
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-700 rounded-lg flex items-center justify-center text-white">
+                              <CreditCard className="h-8 w-8" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="font-bold text-slate-800 mb-1">تمارا</h3>
+                              <p className="text-sm text-slate-600">الدفع الآجل والتقسيط</p>
+                              <Badge className="mt-2 bg-green-100 text-green-800">متاح</Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md" dir="rtl">
+                      <DialogHeader>
+                        <DialogTitle className="text-center flex items-center justify-center gap-2">
+                          <CreditCard className="h-5 w-5" />
+                          طلب دفع - تمارا
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+                          <p className="text-sm text-green-700">
+                            أدخل بياناتك وسيتم تفعيل خدمة تمارا لك
+                          </p>
+                        </div>
+                        <Button className="w-full bg-green-600 hover:bg-green-700">
+                          إرسال طلب تمارا
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* Visa/MasterCard */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-indigo-200">
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-lg flex items-center justify-center text-white">
+                              <CreditCard className="h-8 w-8" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="font-bold text-slate-800 mb-1">Visa/MasterCard</h3>
+                              <p className="text-sm text-slate-600">بطاقة ائتمانية أو مدينة</p>
+                              <Badge className="mt-2 bg-indigo-100 text-indigo-800">متاح</Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md" dir="rtl">
+                      <DialogHeader>
+                        <DialogTitle className="text-center flex items-center justify-center gap-2">
+                          <CreditCard className="h-5 w-5" />
+                          طلب دفع - بطاقة ائتمانية
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-100">
+                          <p className="text-sm text-indigo-700">
+                            سيتم إرسال رابط دفع آمن إليك
+                          </p>
+                        </div>
+                        <Button className="w-full bg-indigo-600 hover:bg-indigo-700">
+                          إرسال طلب دفع
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardContent>
+            </Card>
             
             <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
               <CardHeader className="pb-4">
