@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Label } from '@/components/ui/label';
 import { 
   Eye, 
   EyeOff, 
@@ -12,10 +13,11 @@ import {
   Lock,
   Monitor,
   AlertTriangle,
-  Mail
+  Mail,
+  ArrowLeft
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -103,10 +105,7 @@ const AdminLogin = () => {
         return;
       }
 
-      toast({
-        title: "تم إرسال رمز التحقق",
-        description: "تحقق من بريدك الإلكتروني وأدخل الرمز المكون من 6 أرقام",
-      });
+      toast("تم إرسال رمز التحقق - تحقق من بريدك الإلكتروني وأدخل الرمز المكون من 6 أرقام");
 
       setStep('verification');
     } catch (error: any) {
@@ -140,10 +139,7 @@ const AdminLogin = () => {
       }
 
       if (data?.success) {
-        toast({
-          title: "تم التحقق بنجاح",
-          description: "مرحباً بك في لوحة الإدارة",
-        });
+        toast("تم التحقق بنجاح - مرحباً بك في لوحة الإدارة");
 
         navigate('/admin/dashboard', { replace: true });
       } else {
@@ -158,32 +154,46 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* خلفية ديناميكية */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.05)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] opacity-20"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950/30 to-indigo-950/20 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* خلفية شبكة ديناميكية */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.15)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] opacity-30"></div>
       
-      {/* كونتينر رئيسي */}
-      <div className="w-full max-w-md mx-auto relative z-10">
+      {/* عناصر زخرفية متحركة */}
+      <div className="absolute top-10 left-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      
+      <div className="w-full max-w-lg mx-auto relative z-10">
+        {/* رابط العودة */}
+        <button 
+          onClick={() => navigate('/')}
+          className="inline-flex items-center gap-2 text-slate-300 hover:text-white mb-8 transition-all duration-300 font-medium group"
+        >
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          العودة للموقع الرئيسي
+        </button>
         
         {/* كارد تسجيل الدخول */}
-        <Card className="bg-white/95 backdrop-blur-xl border-0 shadow-2xl shadow-black/50 rounded-3xl overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-slate-50 to-blue-50 pb-8 pt-8 text-center relative">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+        <Card className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border-slate-200/20 shadow-2xl shadow-slate-900/30 rounded-3xl overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-slate-100 via-blue-50 to-indigo-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 pb-10 pt-12 text-center relative">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500"></div>
             
-            {/* أيقونة مركزية */}
-            <div className="mx-auto w-20 h-20 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl flex items-center justify-center shadow-2xl shadow-slate-500/30 mb-4 relative">
-              {step === 'login' ? <Lock className="w-10 h-10 text-white" /> : <Mail className="w-10 h-10 text-white" />}
-              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
+            {/* شعار الإدارة */}
+            <div className="mx-auto w-28 h-28 bg-gradient-to-br from-slate-800 to-slate-950 dark:from-slate-700 dark:to-slate-900 rounded-3xl flex items-center justify-center shadow-2xl shadow-slate-500/40 mb-6 relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-white to-slate-100 rounded-2xl flex items-center justify-center">
+                {step === 'login' ? <Building2 className="w-8 h-8 text-slate-800" /> : <Shield className="w-8 h-8 text-slate-800" />}
+              </div>
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center animate-pulse">
+                <Lock className="w-4 h-4 text-white" />
               </div>
             </div>
             
-            <h2 className="text-3xl font-bold text-slate-800 mb-2">
-              {step === 'login' ? 'تسجيل دخول الإدارة' : 'رمز التحقق'}
-            </h2>
-            <p className="text-slate-600">
-              {step === 'login' ? 'الوصول المحدود للمديرين المعتمدين فقط' : 'أدخل الرمز المرسل لبريدك الإلكتروني'}
-            </p>
+            <CardTitle className="text-4xl font-bold text-slate-900 dark:text-white mb-3 bg-gradient-to-r from-slate-800 to-slate-900 bg-clip-text text-transparent">
+              {step === 'login' ? 'لوحة الإدارة' : 'التحقق الأمني'}
+            </CardTitle>
+            <CardDescription className="text-slate-600 dark:text-slate-300 text-lg font-medium">
+              {step === 'login' ? 'وصول محدود للمديرين المعتمدين فقط' : 'أدخل رمز التحقق المرسل لبريدك الإلكتروني'}
+            </CardDescription>
           </CardHeader>
           
           <CardContent className="p-8 space-y-6">
@@ -321,16 +331,6 @@ const AdminLogin = () => {
           </CardContent>
         </Card>
 
-        {/* رابط العودة */}
-        <div className="text-center mt-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/')}
-            className="text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300"
-          >
-            العودة للموقع الرئيسي
-          </Button>
-        </div>
       </div>
     </div>
   );
