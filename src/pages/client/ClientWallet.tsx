@@ -109,8 +109,7 @@ export default function ClientWallet() {
   const [depositing, setDepositing] = useState(false);
   const [showBankDetails, setShowBankDetails] = useState(false);
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
-  const [lastUpdateTime, setLastUpdateTime] = useState<number>(0);
-  const [enableNotifications, setEnableNotifications] = useState(true);
+  const [realtimeEnabled, setRealtimeEnabled] = useState(false);
   const { toast } = useToast();
 
   const iconMap = {
@@ -122,83 +121,62 @@ export default function ClientWallet() {
     Globe: TrendingDown
   };
 
-  // Real-time updates with better notification control
+  // Disable real-time updates completely to avoid spam
+  const handleManualRefresh = async () => {
+    setLoading(true);
+    await fetchWalletData();
+    toast({
+      title: "تم التحديث",
+      description: "تم تحديث بيانات المحفظة",
+      duration: 2000,
+    });
+    setLoading(false);
+  };
+
+  // Only use realtime if explicitly enabled by user
   const { getStatusText } = useRealtimePayments({
-    onUpdate: () => {
-      const currentTime = Date.now();
-      // Only show notification if more than 30 seconds passed since last update AND notifications are enabled
-      if (enableNotifications && currentTime - lastUpdateTime > 30000) {
-        // Custom animated notification
-        showCustomNotification();
-        setLastUpdateTime(currentTime);
-      }
-      // Always fetch data but control notifications
+    onUpdate: realtimeEnabled ? () => {
+      // Silent update without notifications when realtime is enabled
       fetchWalletData();
-    }
+    } : undefined,
+    showNotifications: false, // Always disable automatic notifications
   });
 
-  // Custom notification with beautiful animation
-  const showCustomNotification = () => {
-    const notificationElement = document.createElement('div');
-    notificationElement.className = `
-      fixed top-4 right-4 z-50 
-      bg-gradient-to-r from-green-500 to-emerald-600 
-      text-white px-6 py-4 rounded-lg shadow-lg 
-      transform translate-x-full opacity-0
-      transition-all duration-500 ease-out
-      flex items-center gap-3
-      border border-green-400/30
-      backdrop-blur-sm
-    `;
+  const toggleRealtimeUpdates = () => {
+    const newValue = !realtimeEnabled;
+    setRealtimeEnabled(newValue);
+    localStorage.setItem('realtimeUpdates', JSON.stringify(newValue));
     
-    notificationElement.innerHTML = `
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center animate-pulse">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-          </svg>
-        </div>
-        <div>
-          <div class="font-semibold text-sm">تم تحديث الرصيد</div>
-          <div class="text-xs opacity-90">تم تحديث رصيد محفظتك بنجاح</div>
-        </div>
-        <div class="w-1 h-8 bg-white/30 rounded-full animate-pulse ml-2"></div>
-      </div>
-    `;
-    
-    document.body.appendChild(notificationElement);
-    
-    // Animate in
-    setTimeout(() => {
-      notificationElement.style.transform = 'translateX(0)';
-      notificationElement.style.opacity = '1';
-    }, 100);
-    
-    // Animate out and remove
-    setTimeout(() => {
-      notificationElement.style.transform = 'translateX(full)';
-      notificationElement.style.opacity = '0';
-      setTimeout(() => {
-        document.body.removeChild(notificationElement);
-      }, 500);
-    }, 4000);
+    if (newValue) {
+      toast({
+        title: "تم تفعيل التحديثات الفورية",
+        description: "سيتم تحديث المحفظة تلقائياً",
+        duration: 3000,
+      });
+    } else {
+      toast({
+        title: "تم إيقاف التحديثات الفورية", 
+        description: "استخدم زر التحديث اليدوي للتحديث",
+        duration: 3000,
+      });
+    }
   };
 
   useEffect(() => {
     fetchWalletData();
     fetchPaymentMethods();
     
-    // Load notification preferences from localStorage
-    const storedNotificationPref = localStorage.getItem('walletNotifications');
-    if (storedNotificationPref !== null) {
-      setEnableNotifications(JSON.parse(storedNotificationPref));
+    // Load realtime preference from localStorage
+    const storedRealtimePref = localStorage.getItem('realtimeUpdates');
+    if (storedRealtimePref !== null) {
+      setRealtimeEnabled(JSON.parse(storedRealtimePref));
     }
   }, []);
 
-  // Save notification preference when changed
+  // Save realtime preference when changed
   useEffect(() => {
-    localStorage.setItem('walletNotifications', JSON.stringify(enableNotifications));
-  }, [enableNotifications]);
+    localStorage.setItem('realtimeUpdates', JSON.stringify(realtimeEnabled));
+  }, [realtimeEnabled]);
 
   const fetchPaymentMethods = async () => {
     try {
@@ -579,10 +557,10 @@ export default function ClientWallet() {
                       <Shield className="h-4 w-4" />
                       محمي ومؤمن
                     </span>
-                    <span className="flex items-center gap-1">
-                      <div className={`h-2 w-2 rounded-full ${enableNotifications ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
-                      {enableNotifications ? 'التحديثات مُفعّلة' : 'التحديثات معطّلة'}
-                    </span>
+                     <span className="flex items-center gap-1">
+                       <div className={`h-2 w-2 rounded-full ${realtimeEnabled ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                       {realtimeEnabled ? 'التحديثات مُفعّلة' : 'التحديثات معطّلة'}
+                     </span>
                   </div>
                 </div>
               </div>
@@ -592,19 +570,19 @@ export default function ClientWallet() {
                   <span className="text-sm font-medium text-emerald-700">حساب مُفعّل</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setEnableNotifications(!enableNotifications)}
-                    className={`bg-white/50 hover:bg-white/80 ${
-                      enableNotifications 
-                        ? 'text-blue-700 border-blue-200' 
-                        : 'text-slate-500 border-slate-200'
-                    }`}
-                  >
-                    <Bell className="h-4 w-4 ml-2" />
-                    {enableNotifications ? 'إيقاف التنبيهات' : 'تفعيل التنبيهات'}
-                  </Button>
+                   <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={toggleRealtimeUpdates}
+                     className={`bg-white/50 hover:bg-white/80 ${
+                       realtimeEnabled 
+                         ? 'text-blue-700 border-blue-200' 
+                         : 'text-slate-500 border-slate-200'
+                     }`}
+                   >
+                     <Bell className="h-4 w-4 ml-2" />
+                     {realtimeEnabled ? 'إيقاف التحديثات' : 'تفعيل التحديثات'}
+                   </Button>
                   <Button variant="outline" size="sm" className="bg-white/50 hover:bg-white/80">
                     <Settings className="h-4 w-4 ml-2" />
                     الإعدادات
@@ -1066,34 +1044,43 @@ export default function ClientWallet() {
                 </Button>
                 
                 <Button 
-                  onClick={() => setEnableNotifications(!enableNotifications)}
+                  onClick={toggleRealtimeUpdates}
                   variant="outline" 
                   className={`w-full justify-start font-semibold ${
-                    enableNotifications 
+                    realtimeEnabled 
                       ? 'bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 hover:from-purple-100 hover:to-pink-100 text-purple-700'
                       : 'bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200 hover:from-gray-100 hover:to-slate-100 text-gray-700'
                   }`}
                 >
                   <Bell className="h-4 w-4 ml-2" />
-                  {enableNotifications ? 'إيقاف التنبيهات الفورية' : 'تفعيل التنبيهات الفورية'}
+                  {realtimeEnabled ? 'إيقاف التحديثات الفورية' : 'تفعيل التحديثات الفورية'}
                 </Button>
                 
                 <div className="mt-4 p-3 bg-slate-50 rounded-xl">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-slate-700">حالة التحديثات:</span>
                     <div className="flex items-center gap-2">
-                      <div className={`h-2 w-2 rounded-full ${enableNotifications ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                      <div className={`h-2 w-2 rounded-full ${realtimeEnabled ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
                       <span className="text-sm font-bold text-slate-600">
-                        {enableNotifications ? 'مُفعّلة' : 'معطّلة'}
+                        {realtimeEnabled ? 'مُفعّلة' : 'معطّلة'}
                       </span>
                     </div>
                   </div>
                   <p className="text-xs text-slate-500 mt-2">
-                    {enableNotifications 
-                      ? 'ستتلقى تنبيهات عند تحديث رصيدك (كل 5 ثوانٍ كحد أقصى)'
-                      : 'لن تتلقى تنبيهات التحديثات الفورية'
+                    {realtimeEnabled 
+                      ? 'التحديثات الفورية مُفعّلة - ستتم المزامنة تلقائياً'
+                      : 'استخدم زر التحديث اليدوي للحصول على آخر البيانات'
                     }
                   </p>
+                  <Button 
+                    onClick={handleManualRefresh}
+                    variant="outline" 
+                    size="sm"
+                    className="w-full mt-2 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+                  >
+                    <RefreshCw className="h-4 w-4 ml-2" />
+                    تحديث يدوي
+                  </Button>
                 </div>
               </CardContent>
             </Card>
