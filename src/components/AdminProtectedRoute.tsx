@@ -17,22 +17,7 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
   const navigate = useNavigate();
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
-    const checkWithTimeout = async () => {
-      // إضافة timeout لتجنب التأخير المفرط
-      timeoutId = setTimeout(() => {
-        if (loading) {
-          setError('انتهت مهلة التحقق من الصلاحيات');
-          setLoading(false);
-        }
-      }, 10000); // 10 ثوانٍ
-
-      await checkAdminAccess();
-      clearTimeout(timeoutId);
-    };
-
-    checkWithTimeout();
+    checkAdminAccess();
     
     // استمع لتغييرات المصادقة - لكن تجنب الفحص المتكرر
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -51,7 +36,6 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
     });
 
     return () => {
-      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, [navigate, isAdmin, checkingAuth]);
@@ -63,16 +47,8 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
 
       console.log('Checking admin access...');
 
-      // التحقق من الجلسة النشطة مع timeout
-      const sessionPromise = supabase.auth.getSession();
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Session check timeout')), 5000)
-      );
-
-      const { data: { session }, error: sessionError } = await Promise.race([
-        sessionPromise,
-        timeoutPromise
-      ]) as any;
+      // التحقق من الجلسة النشطة
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError) {
         console.error('Session error:', sessionError);
@@ -89,22 +65,13 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
 
       console.log('Session found, checking admin role for user:', session.user.id);
 
-      // التحقق من صلاحيات الإدارة مع timeout
-      const rolePromise = supabase
+      // التحقق من صلاحيات الإدارة مع تحسينات الأداء
+      const { data: adminData, error: adminError } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', session.user.id)
         .eq('role', 'admin')
         .maybeSingle();
-
-      const roleTimeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Role check timeout')), 5000)
-      );
-
-      const { data: adminData, error: adminError } = await Promise.race([
-        rolePromise,
-        roleTimeoutPromise
-      ]) as any;
 
       if (adminError) {
         console.error('Admin role check error:', adminError);
