@@ -28,6 +28,7 @@ import {
   Wallet,
   Bell,
   Newspaper,
+  Briefcase,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -37,6 +38,7 @@ const menuItems = [
     groupLabelAr: 'الرئيسية',
     items: [
       { title: 'لوحة التحكم', titleEn: 'Dashboard', url: '/admin/dashboard', icon: LayoutDashboard },
+      { title: 'إدارة المشاريع المتطورة', titleEn: 'Enhanced Projects', url: '/admin/project-management', icon: Briefcase },
       { title: 'إدارة المشاريع', titleEn: 'Projects', url: '/admin/projects', icon: Package },
       { title: 'إدارة العملاء', titleEn: 'Clients', url: '/admin/clients', icon: Users },
       { title: 'إدارة الطلبات', titleEn: 'Orders', url: '/admin/orders', icon: FileText },
