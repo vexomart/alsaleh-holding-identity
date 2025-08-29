@@ -40,9 +40,9 @@ export const CustomerWalletsList = () => {
   const [transactionType, setTransactionType] = useState<'deposit' | 'withdraw'>('deposit');
   const [showTransactionForm, setShowTransactionForm] = useState(false);
 
-  // جلب بيانات المحافظ مع معلومات العملاء الحقيقية
+  // جلب بيانات المحافظ مع معلومات العملاء الحقيقية - مع فرض إعادة التحميل
   const { data: walletsData, isLoading: walletsLoading, refetch: refetchWallets } = useQuery({
-    queryKey: ['customer-wallets'],
+    queryKey: ['customer-wallets', Date.now()], // إضافة timestamp لفرض إعادة التحميل
     queryFn: async () => {
       console.log('🔍 جاري جلب بيانات العملاء والمحافظ...');
       
