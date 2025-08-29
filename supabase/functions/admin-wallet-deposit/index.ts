@@ -44,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Get user information from profiles first (don't require auth.users)
     const { data: userProfile, error: userError } = await supabase
       .from('profiles')
-      .select('full_name, email, user_id')
+      .select('full_name, email, user_id, account_number, phone')
       .eq('user_id', user_id)
       .maybeSingle();
 
@@ -76,7 +76,9 @@ const handler = async (req: Request): Promise<Response> => {
     const finalUserProfile = {
       full_name: userProfile.full_name || 'مستخدم',
       email: userProfile.email || 'no-email@example.com',
-      user_id: user_id
+      user_id: user_id,
+      account_number: userProfile.account_number || 'غير محدد',
+      phone: userProfile.phone || null
     };
 
     // Get or create wallet for user
@@ -135,7 +137,7 @@ const handler = async (req: Request): Promise<Response> => {
         reference_id: `ADMIN_${Date.now()}`,
         customer_name: finalUserProfile.full_name || 'مستخدم',
         customer_email: finalUserProfile.email || 'no-email@example.com',
-        customer_phone: null,
+        customer_phone: finalUserProfile.phone || null,
         metadata: {
           admin_deposit: true,
           admin_notes: admin_notes || '',

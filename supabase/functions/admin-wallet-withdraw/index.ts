@@ -45,7 +45,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Get user information from profiles
     const { data: userProfile, error: userError } = await supabase
       .from('profiles')
-      .select('full_name, email, user_id, account_number')
+      .select('full_name, email, user_id, account_number, phone')
       .eq('user_id', user_id)
       .maybeSingle();
 
@@ -141,7 +141,7 @@ const handler = async (req: Request): Promise<Response> => {
         reference_id: `ADMIN_WD_${Date.now()}`,
         customer_name: userProfile.full_name || 'مستخدم',
         customer_email: userProfile.email || 'no-email@example.com',
-        customer_phone: null,
+        customer_phone: userProfile.phone || null,
         metadata: {
           admin_withdrawal: true,
           admin_notes: admin_notes || '',
