@@ -119,7 +119,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Create transaction record
+    // Create transaction record - using service role to bypass RLS
     const { data: transactionData, error: transactionError } = await supabase
       .from('wallet_transactions')
       .insert({
@@ -129,16 +129,18 @@ const handler = async (req: Request): Promise<Response> => {
         amount: amount,
         balance_before: currentBalance,
         balance_after: newBalance,
-        description: description,
+        description: description || 'إيداع من الإدارة',
         status: 'completed',
         payment_method: 'admin_deposit',
         reference_id: `ADMIN_${Date.now()}`,
-        customer_name: finalUserProfile.full_name,
-        customer_email: finalUserProfile.email,
+        customer_name: finalUserProfile.full_name || 'مستخدم',
+        customer_email: finalUserProfile.email || 'no-email@example.com',
+        customer_phone: null,
         metadata: {
           admin_deposit: true,
           admin_notes: admin_notes || '',
-          processed_at: new Date().toISOString()
+          processed_at: new Date().toISOString(),
+          processed_by: 'admin'
         }
       })
       .select()
