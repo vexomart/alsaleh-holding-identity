@@ -565,7 +565,7 @@ export default function ClientWallet() {
                     <div className="flex items-baseline gap-2 mb-2">
                       <span className="text-5xl font-bold text-white">
                         {isBalanceVisible ? (
-                          {walletBalance.toLocaleString('ar-SA')} ر.س
+                          `${walletBalance.toLocaleString('ar-SA')} ر.س`
                         ) : (
                           '••••••'
                         )}
