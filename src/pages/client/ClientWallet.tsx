@@ -122,23 +122,67 @@ export default function ClientWallet() {
     Globe: TrendingDown
   };
 
-  // Real-time updates with debouncing to prevent spam
+  // Real-time updates with better notification control
   const { getStatusText } = useRealtimePayments({
     onUpdate: () => {
       const currentTime = Date.now();
-      // Only show notification if more than 5 seconds passed since last update
-      if (enableNotifications && currentTime - lastUpdateTime > 5000) {
-        toast({
-          title: "تحديث الرصيد",
-          description: "تم تحديث رصيد محفظتك",
-          duration: 3000,
-        });
+      // Only show notification if more than 30 seconds passed since last update AND notifications are enabled
+      if (enableNotifications && currentTime - lastUpdateTime > 30000) {
+        // Custom animated notification
+        showCustomNotification();
         setLastUpdateTime(currentTime);
       }
       // Always fetch data but control notifications
       fetchWalletData();
     }
   });
+
+  // Custom notification with beautiful animation
+  const showCustomNotification = () => {
+    const notificationElement = document.createElement('div');
+    notificationElement.className = `
+      fixed top-4 right-4 z-50 
+      bg-gradient-to-r from-green-500 to-emerald-600 
+      text-white px-6 py-4 rounded-lg shadow-lg 
+      transform translate-x-full opacity-0
+      transition-all duration-500 ease-out
+      flex items-center gap-3
+      border border-green-400/30
+      backdrop-blur-sm
+    `;
+    
+    notificationElement.innerHTML = `
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center animate-pulse">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="font-semibold text-sm">تم تحديث الرصيد</div>
+          <div class="text-xs opacity-90">تم تحديث رصيد محفظتك بنجاح</div>
+        </div>
+        <div class="w-1 h-8 bg-white/30 rounded-full animate-pulse ml-2"></div>
+      </div>
+    `;
+    
+    document.body.appendChild(notificationElement);
+    
+    // Animate in
+    setTimeout(() => {
+      notificationElement.style.transform = 'translateX(0)';
+      notificationElement.style.opacity = '1';
+    }, 100);
+    
+    // Animate out and remove
+    setTimeout(() => {
+      notificationElement.style.transform = 'translateX(full)';
+      notificationElement.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(notificationElement);
+      }, 500);
+    }, 4000);
+  };
 
   useEffect(() => {
     fetchWalletData();
