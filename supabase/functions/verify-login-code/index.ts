@@ -94,7 +94,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { data: profileData, error: profileError } = await supabase
       .from('profiles')
       .select('user_id, full_name, email')
-      .or(`email.eq.${email},user_id.in.(select id from auth.users where email = '${email}')`)
+      .eq('email', email)
       .maybeSingle();
 
     if (profileError) {
