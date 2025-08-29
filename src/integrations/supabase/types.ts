@@ -3492,6 +3492,48 @@ export type Database = {
         }
         Relationships: []
       }
+      unauthorized_access_logs: {
+        Row: {
+          additional_metadata: Json | null
+          attempted_path: string
+          blocked_reason: string | null
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          referer: string | null
+          session_id: string | null
+          user_agent: string | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          additional_metadata?: Json | null
+          attempted_path: string
+          blocked_reason?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          referer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          additional_metadata?: Json | null
+          attempted_path?: string
+          blocked_reason?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          referer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Relationships: []
+      }
       update_reads: {
         Row: {
           id: string
@@ -3923,10 +3965,15 @@ export type Database = {
         }[]
       }
       has_admin_role: {
-        Args: {
-          required_role?: Database["public"]["Enums"]["user_role"]
-          user_id: string
-        }
+        Args:
+          | {
+              _required_role?: Database["public"]["Enums"]["admin_role"]
+              _user_id: string
+            }
+          | {
+              required_role?: Database["public"]["Enums"]["user_role"]
+              user_id: string
+            }
         Returns: boolean
       }
       has_role: {
@@ -3952,6 +3999,17 @@ export type Database = {
           p_resource_id: string
           p_resource_type: string
           p_success: boolean
+        }
+        Returns: undefined
+      }
+      log_unauthorized_access: {
+        Args: {
+          _additional_data?: Json
+          _attempted_path: string
+          _blocked_reason?: string
+          _ip_address?: unknown
+          _user_agent?: string
+          _user_id?: string
         }
         Returns: undefined
       }

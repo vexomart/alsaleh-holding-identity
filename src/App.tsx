@@ -14,6 +14,7 @@ import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { TemplateVariableBlocker } from "@/components/TemplateVariableBlocker";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
+import EnhancedAdminProtectedRoute from "@/components/EnhancedAdminProtectedRoute";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
@@ -143,6 +144,8 @@ const AdminUpdates = lazy(() => import("./pages/admin/AdminUpdates"));
 const AdminWallets = lazy(() => import("./pages/admin/AdminWallets"));
 const AdminAffiliate = lazy(() => import("./pages/admin/AdminAffiliate"));
 const AdminEmailPipeline = lazy(() => import("./pages/admin/AdminEmailPipeline"));
+const UnauthorizedPage = lazy(() => import("./pages/UnauthorizedPage"));
+const AdminSecurityLogs = lazy(() => import("./pages/admin/AdminSecurityLogs"));
 const ClientOrders = lazy(() => import("./pages/client/ClientOrders"));
 const ClientAffiliate = lazy(() => import("./pages/client/ClientAffiliate"));
 const ClientNotifications = lazy(() => import("./pages/client/ClientNotifications"));
@@ -370,16 +373,17 @@ const App = () => {
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
                 <Route path="/auth" element={<Suspense fallback={<PageLoader />}><Auth /></Suspense>} />
+                <Route path="/unauthorized" element={<Suspense fallback={<PageLoader />}><UnauthorizedPage /></Suspense>} />
                 
                 <Route path="/admin-login" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
                 
-                {/* Admin Routes with Protection and Layout */}
+                {/* Admin Routes with Enhanced Protection and Layout */}
                 <Route path="/admin/*" element={
-                  <AdminProtectedRoute>
+                  <EnhancedAdminProtectedRoute requiredRole="admin">
                     <Suspense fallback={<PageLoader />}>
                       <AdminLayout />
                     </Suspense>
-                  </AdminProtectedRoute>
+                  </EnhancedAdminProtectedRoute>
                 }>
                   <Route index element={<Navigate to="/admin/dashboard" replace />} />
                   <Route path="dashboard" element={<AdminDashboard />} />
@@ -398,6 +402,7 @@ const App = () => {
                   <Route path="wallet" element={<AdminWallets />} />
                   <Route path="affiliate" element={<AdminAffiliate />} />
                   <Route path="email-pipeline" element={<AdminEmailPipeline />} />
+                  <Route path="security-logs" element={<AdminSecurityLogs />} />
                 </Route>
                 
                 {/* Legacy admin routes - redirect to admin login first */}
