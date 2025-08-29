@@ -144,7 +144,7 @@ export default function ClientWallet() {
       // إذا لم يوجد ملف شخصي، قم بإنشاء واحد
       let userProfileData = profileData;
       if (!profileData) {
-        console.log('Creating new profile for user');
+        console.log('Creating new profile for user:', user.id, user.email);
         const { data: newProfile, error: createProfileError } = await supabase
           .from('profiles')
           .insert({
