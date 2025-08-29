@@ -13,8 +13,10 @@ import { ImageOptimizer } from "@/components/ImageOptimizer";
 import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { TemplateVariableBlocker } from "@/components/TemplateVariableBlocker";
-import AdminProtectedRoute from "@/components/AdminProtectedRoute";
-import EnhancedAdminProtectedRoute from "@/components/EnhancedAdminProtectedRoute";
+import AuthProvider from "@/components/auth/AuthProvider";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import AdminGuard from "@/components/auth/AdminGuard";
+import ClientGuard from "@/components/auth/ClientGuard";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
@@ -270,6 +272,7 @@ const App = () => {
         <ReCaptchaProvider>
           <MobileOptimizer>
           <BrowserRouter>
+            <AuthProvider>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
               {/* Subtle pattern overlay */}
               <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
@@ -380,13 +383,13 @@ const App = () => {
                 
                 <Route path="/admin-login" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
                 
-                {/* Admin Routes with Enhanced Protection and Layout */}
+                {/* Admin Routes - Fully Protected */}
                 <Route path="/admin/*" element={
-                  <EnhancedAdminProtectedRoute requiredRole="admin">
+                  <AdminGuard>
                     <Suspense fallback={<PageLoader />}>
                       <AdminLayout />
                     </Suspense>
-                  </EnhancedAdminProtectedRoute>
+                  </AdminGuard>
                 }>
                   <Route index element={<Navigate to="/admin/dashboard" replace />} />
                   <Route path="dashboard" element={<AdminDashboard />} />
@@ -406,18 +409,18 @@ const App = () => {
                   <Route path="wallet" element={<AdminWallets />} />
                   <Route path="affiliate" element={<AdminAffiliate />} />
                   <Route path="email-pipeline" element={<AdminEmailPipeline />} />
-                  <Route path="security-logs" element={<AdminSecurityLogs />} />
+                  <Route path="security-logs" element={<Suspense fallback={<PageLoader />}><AdminSecurityLogs /></Suspense>} />
                 </Route>
                 
-                {/* Legacy admin routes - redirect to admin login first */}
-                <Route path="/admin-projects" element={<AdminProtectedRoute><Navigate to="/admin/projects" replace /></AdminProtectedRoute>} />
-                <Route path="/admin-dashboard" element={<AdminProtectedRoute><Navigate to="/admin/dashboard" replace /></AdminProtectedRoute>} />
-                <Route path="/admin-clients" element={<AdminProtectedRoute><Navigate to="/admin/clients" replace /></AdminProtectedRoute>} />
-                <Route path="/admin-invoices" element={<AdminProtectedRoute><Navigate to="/admin/invoices" replace /></AdminProtectedRoute>} />
-                <Route path="/admin-payments" element={<AdminProtectedRoute><Navigate to="/admin/payments" replace /></AdminProtectedRoute>} />
-                <Route path="/admin-users" element={<AdminProtectedRoute><Navigate to="/admin/users" replace /></AdminProtectedRoute>} />
-                <Route path="/admin-notifications" element={<AdminProtectedRoute><Navigate to="/admin/notifications" replace /></AdminProtectedRoute>} />
-                <Route path="/admin-settings" element={<AdminProtectedRoute><Navigate to="/admin/settings" replace /></AdminProtectedRoute>} />
+                {/* Legacy admin routes - redirect with protection */}
+                <Route path="/admin-projects" element={<AdminGuard><Navigate to="/admin/projects" replace /></AdminGuard>} />
+                <Route path="/admin-dashboard" element={<AdminGuard><Navigate to="/admin/dashboard" replace /></AdminGuard>} />
+                <Route path="/admin-clients" element={<AdminGuard><Navigate to="/admin/clients" replace /></AdminGuard>} />
+                <Route path="/admin-invoices" element={<AdminGuard><Navigate to="/admin/invoices" replace /></AdminGuard>} />
+                <Route path="/admin-payments" element={<AdminGuard><Navigate to="/admin/payments" replace /></AdminGuard>} />
+                <Route path="/admin-users" element={<AdminGuard><Navigate to="/admin/users" replace /></AdminGuard>} />
+                <Route path="/admin-notifications" element={<AdminGuard><Navigate to="/admin/notifications" replace /></AdminGuard>} />
+                <Route path="/admin-settings" element={<AdminGuard><Navigate to="/admin/settings" replace /></AdminGuard>} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
@@ -495,10 +498,14 @@ const App = () => {
           {/* Wallet Route */}
                 <Route path="/wallet" element={<Suspense fallback={<PageLoader />}><Wallet /></Suspense>} />
           
-                {/* Client Dashboard Routes */}
+                {/* Client Dashboard Routes - Protected */}
                 <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
                 <Route path="/my-projects" element={<Navigate to="/client/projects" replace />} />
-                <Route path="/client/*" element={<Suspense fallback={<PageLoader />}><ClientLayout /></Suspense>}>
+                <Route path="/client/*" element={
+                  <ClientGuard>
+                    <Suspense fallback={<PageLoader />}><ClientLayout /></Suspense>
+                  </ClientGuard>
+                }>
                   <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><ClientDashboard /></Suspense>} />
                   <Route path="projects" element={<Suspense fallback={<PageLoader />}><ClientProjects /></Suspense>} />
                   <Route path="service-requests" element={<Suspense fallback={<PageLoader />}><ServiceRequests /></Suspense>} />
@@ -527,6 +534,7 @@ const App = () => {
               </Routes>
               </div>
             </div>
+            </AuthProvider>
           </BrowserRouter>
           </MobileOptimizer>
         </ReCaptchaProvider>
