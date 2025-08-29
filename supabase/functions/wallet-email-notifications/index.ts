@@ -102,18 +102,21 @@ const handler = async (req: Request): Promise<Response> => {
     // Generate appropriate email based on type
     switch (type) {
       case 'deposit':
-        if (!amount || !transactionId) {
-          throw new Error('Amount and transaction ID required for deposit email');
+        const depositAmount = data?.amount || amount;
+        const depositTransactionId = data?.transaction_id || transactionId || `TXN_${Date.now()}`;
+        
+        if (!depositAmount) {
+          throw new Error('Amount required for deposit email');
         }
         
-        emailSubject = `✅ تم إيداع ${data.amount?.toLocaleString('ar-SA') || amount?.toLocaleString('ar-SA')} ريال في محفظتك الرقمية`;
+        emailSubject = `✅ تم إيداع ${depositAmount?.toLocaleString('ar-SA')} ريال في محفظتك الرقمية`;
         emailHtml = await renderAsync(
           React.createElement(WalletDepositEmail, {
             customerName: finalCustomerName,
-            amount: data.amount || amount,
+            amount: depositAmount,
             currency: 'SAR',
-            newBalance: data.new_balance || newBalance,
-            transactionId: data.transaction_id || transactionId,
+            newBalance: data?.new_balance || newBalance || 0,
+            transactionId: depositTransactionId,
             date: currentDate,
             walletNumber: walletNumber || 'W' + Math.random().toString().substr(2, 8),
           })
