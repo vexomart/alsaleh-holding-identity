@@ -22,6 +22,7 @@ interface WalletCustomerData {
   wallet_id: string;
   wallet_number: string; // رقم المحفظة الفعلي
   created_at: string;
+  has_wallet?: boolean; // هل يمتلك محفظة
 }
 
 interface WalletStats {
@@ -43,50 +44,49 @@ export const CustomerWalletsList = () => {
   const { data: walletsData, isLoading: walletsLoading, refetch: refetchWallets } = useQuery({
     queryKey: ['customer-wallets'],
     queryFn: async () => {
+      console.log('🔍 جاري جلب بيانات العملاء والمحافظ...');
+      
+      // جلب جميع العملاء من profiles أولاً
+      const { data: allProfiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, full_name, email, account_number, phone, created_at')
+        .order('created_at', { ascending: false });
+        
+      if (profilesError) {
+        console.error('❌ خطأ في جلب بيانات العملاء:', profilesError);
+        throw profilesError;
+      }
+
+      // جلب بيانات المحافظ لكل العملاء
       const { data: wallets, error: walletsError } = await supabase
         .from('customer_wallets')
-        .select(`
-          id,
-          user_id,
-          balance,
-          currency,
-          created_at
-        `)
-        .order('created_at', { ascending: false });
-
+        .select('user_id, balance, currency, id, created_at');
+        
       if (walletsError) {
-        console.error('Error fetching wallets:', walletsError);
+        console.error('❌ خطأ في جلب بيانات المحافظ:', walletsError);
         throw walletsError;
       }
 
-      if (!wallets || wallets.length === 0) return [];
-
-      // جلب معلومات المستخدمين الحقيقية
-      const userIds = wallets.map(w => w.user_id);
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('user_id, full_name, email, account_number, phone')
-        .in('user_id', userIds);
-
-      // دمج البيانات الحقيقية
-      return wallets.map((wallet, index) => {
-        const profile = profiles?.find(p => p.user_id === wallet.user_id);
-        // إنشاء رقم محفظة فريد
-        const walletNumber = `WAL-${String(index + 1).padStart(6, '0')}`;
+      console.log('✅ تم جلب البيانات:', allProfiles?.length, 'عميل،', wallets?.length, 'محفظة');
+      
+      // دمج البيانات
+      return allProfiles?.map((profile: any, index: number) => {
+        const wallet = wallets?.find((w: any) => w.user_id === profile.id);
         
         return {
-          user_id: wallet.user_id,
-          full_name: profile?.full_name || 'مستخدم غير محدد',
-          email: profile?.email || null,
-          account_number: profile?.account_number || 'غير محدد',
-          phone: profile?.phone || null,
-          balance: parseFloat(String(wallet.balance || 0)),
-          currency: wallet.currency,
-          wallet_id: wallet.id,
-          wallet_number: walletNumber, // رقم المحفظة الفعلي
-          created_at: wallet.created_at
+          user_id: profile.id,
+          full_name: profile.full_name || 'غير محدد',
+          email: profile.email,
+          account_number: profile.account_number || 'غير محدد',
+          phone: profile.phone,
+          balance: wallet?.balance || 0,
+          currency: wallet?.currency || 'SAR',
+          wallet_id: wallet?.id || '0',
+          wallet_number: wallet ? `WAL-${String(wallet.id).padStart(6, '0')}` : 'لا توجد محفظة',
+          created_at: profile.created_at,
+          has_wallet: !!wallet
         };
-      }) as WalletCustomerData[];
+      }) || [];
     },
     refetchInterval: 5000, // تحديث كل 5 ثواني
   });

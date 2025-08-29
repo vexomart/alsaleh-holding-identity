@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { User, Wallet, Mail, CreditCard, Plus, Minus } from "lucide-react";
+import { User, Wallet, Mail, CreditCard, Plus, Minus, AlertTriangle } from "lucide-react";
 import { WalletTransactionsView } from "./WalletTransactionsView";
 
 interface WalletCustomerData {
@@ -17,6 +17,7 @@ interface WalletCustomerData {
   wallet_id: string;
   wallet_number: string; // رقم المحفظة الفعلي
   created_at: string;
+  has_wallet?: boolean; // هل يمتلك محفظة
 }
 
 interface WalletCustomerCardProps {
@@ -85,27 +86,43 @@ export const WalletCustomerCard = ({
 
       <CardContent className="space-y-5">
         {/* الرصيد مع تصميم محسن */}
-        <div className="relative p-4 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 rounded-xl border border-emerald-200/50 dark:border-emerald-700/30">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-600 rounded-lg">
-                <Wallet className="h-5 w-5 text-white" />
+        {customer.has_wallet ? (
+          <div className="relative p-4 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 rounded-xl border border-emerald-200/50 dark:border-emerald-700/30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-emerald-600 rounded-lg">
+                  <Wallet className="h-5 w-5 text-white" />
+                </div>
+                <span className="font-semibold text-slate-700 dark:text-slate-200">الرصيد الحالي</span>
               </div>
-              <span className="font-semibold text-slate-700 dark:text-slate-200">الرصيد الحالي</span>
-            </div>
-            <div className="text-right">
-              <div className={`text-2xl font-bold ${getBalanceColor(customer.balance)}`}>
-                {formatBalance(customer.balance)}
+              <div className="text-right">
+                <div className={`text-2xl font-bold ${getBalanceColor(customer.balance)}`}>
+                  {formatBalance(customer.balance)}
+                </div>
+                <Badge 
+                  variant={customer.balance > 0 ? "default" : "secondary"} 
+                  className={`text-xs mt-1 ${customer.balance > 0 ? 'bg-emerald-600' : 'bg-slate-400'}`}
+                >
+                  {customer.balance > 0 ? "نشط" : "فارغ"}
+                </Badge>
               </div>
-              <Badge 
-                variant={customer.balance > 0 ? "default" : "secondary"} 
-                className={`text-xs mt-1 ${customer.balance > 0 ? 'bg-emerald-600' : 'bg-slate-400'}`}
-              >
-                {customer.balance > 0 ? "نشط" : "فارغ"}
-              </Badge>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="relative p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200/50 dark:border-amber-700/30">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-600 rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <span className="font-semibold text-amber-800 dark:text-amber-200">لا توجد محفظة رقمية</span>
+                <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                  يحتاج هذا العميل إلى إنشاء محفظة رقمية أولاً
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* معلومات الاتصال محسنة */}
         <div className="space-y-3 p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-lg">
@@ -169,6 +186,7 @@ export const WalletCustomerCard = ({
               size="sm"
               onClick={() => onDeposit(customer.user_id, customer.full_name)}
               className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              disabled={!customer.has_wallet}
             >
               <Plus className="h-4 w-4" />
               إيداع
@@ -178,7 +196,7 @@ export const WalletCustomerCard = ({
               variant="outline"
               onClick={() => onWithdraw(customer.user_id, customer.full_name)}
               className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50 dark:border-red-800 dark:hover:bg-red-900/20 shadow-sm hover:shadow-md transition-all duration-200"
-              disabled={customer.balance <= 0}
+              disabled={!customer.has_wallet || customer.balance <= 0}
             >
               <Minus className="h-4 w-4" />
               سحب
