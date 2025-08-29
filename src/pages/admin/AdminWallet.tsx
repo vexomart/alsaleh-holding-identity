@@ -86,23 +86,52 @@ const AdminWallet = () => {
 
   const fetchAvailableUsers = async () => {
     try {
-      const { data: profiles, error } = await supabase
+      // جلب المستخدمين من جدول profiles
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select('user_id, full_name, email')
-        .limit(20);
+        .select('user_id, full_name')
+        .order('created_at', { ascending: false })
+        .limit(50);
 
-      if (error) throw error;
+      if (profilesError) throw profilesError;
 
-      const users = profiles?.map(profile => ({
-        id: profile.user_id, // استخدام user_id بدلاً من id
-        name: profile.full_name || 'مستخدم بدون اسم',
-        email: profile.email || 'بدون إيميل'
-      })) || [];
+      // جلب معلومات الإيميل من auth.users للمستخدمين الموجودين
+      if (profiles && profiles.length > 0) {
+        const userIds = profiles.map(p => p.user_id);
+        
+        // استخدام admin function للحصول على معلومات المستخدمين
+        const { data: authUsers, error: authError } = await supabase.functions.invoke('get-user-emails', {
+          body: { user_ids: userIds }
+        });
 
-      console.log('Available users:', users);
-      setAvailableUsers(users);
+        if (authError) {
+          console.warn('Could not fetch auth data:', authError);
+        }
+
+        // دمج البيانات
+        const emailMap = new Map();
+        if (authUsers?.users) {
+          authUsers.users.forEach((user: any) => {
+            emailMap.set(user.id, user.email);
+          });
+        }
+
+        const users = profiles.map(profile => ({
+          id: profile.user_id,
+          name: profile.full_name || 'مستخدم بدون اسم',
+          email: emailMap.get(profile.user_id) || 'غير متوفر'
+        }));
+
+        console.log('Available users with emails:', users);
+        setAvailableUsers(users);
+      }
     } catch (error) {
       console.error('Error fetching users:', error);
+      toast({
+        title: "خطأ في جلب قائمة المستخدمين",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
