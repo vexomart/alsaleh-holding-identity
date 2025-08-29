@@ -104,10 +104,17 @@ const handler = async (req: Request): Promise<Response> => {
     const verificationCode = generateVerificationCode();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 دقائق
 
-    // حفظ الرمز في قاعدة البيانات
+    // حذف أي رموز سابقة للإيميل ونوع المستخدم
+    await supabase
+      .from('verification_codes')
+      .delete()
+      .eq('email', email)
+      .eq('type', type);
+
+    // حفظ الرمز الجديد في قاعدة البيانات
     const { error: insertError } = await supabase
       .from('verification_codes')
-      .upsert({
+      .insert({
         email,
         code: verificationCode,
         type,
