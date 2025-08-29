@@ -39,15 +39,56 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // Validate that user exists in auth.users table
+    const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(user_id);
+    
+    if (authError || !authUser.user) {
+      console.error('User not found in auth.users:', authError);
+      return new Response(
+        JSON.stringify({ 
+          error: 'المستخدم غير موجود في النظام',
+          details: 'User not found in authentication system'
+        }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Get user information for email
     const { data: userProfile, error: userError } = await supabase
       .from('profiles')
-      .select('full_name, email')
-      .eq('id', user_id)
+      .select('full_name, email, user_id')
+      .eq('user_id', user_id)
       .maybeSingle();
 
     if (userError) {
       console.error('Error fetching user profile:', userError);
+    }
+
+    // If no profile exists, create one with basic info from auth
+    let finalUserProfile = userProfile;
+    if (!userProfile && authUser.user) {
+      console.log('Creating profile for user:', user_id);
+      const { data: newProfile, error: createProfileError } = await supabase
+        .from('profiles')
+        .insert({
+          user_id: user_id,
+          email: authUser.user.email,
+          full_name: authUser.user.user_metadata?.full_name || authUser.user.email
+        })
+        .select('full_name, email, user_id')
+        .single();
+
+      if (createProfileError) {
+        console.error('Error creating user profile:', createProfileError);
+        // Continue without profile, just use auth data
+        finalUserProfile = {
+          full_name: authUser.user.user_metadata?.full_name || authUser.user.email,
+          email: authUser.user.email,
+          user_id: user_id
+        };
+      } else {
+        finalUserProfile = newProfile;
+      }
     }
 
     // Process wallet transaction using the database function
@@ -75,11 +116,11 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('Wallet transaction processed successfully:', walletResult);
 
     // Send email notification if user profile exists and email is available
-    if (userProfile && userProfile.email && resend) {
+    if (finalUserProfile && finalUserProfile.email && resend) {
       try {
         const emailResult = await resend.emails.send({
           from: 'شركة علي صالح محمد الشهري القابضة <no-reply@alsaleh-holding.com>',
-          to: [userProfile.email],
+          to: [finalUserProfile.email],
           subject: 'تم إضافة رصيد إلى محفظتك الرقمية',
           html: `
             <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
@@ -88,7 +129,7 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <h2 style="color: #1f2937; margin-top: 0;">مرحباً ${userProfile.full_name || 'عزيزي العميل'}</h2>
+                <h2 style="color: #1f2937; margin-top: 0;">مرحباً ${finalUserProfile.full_name || 'عزيزي العميل'}</h2>
                 
                 <p style="color: #6b7280; font-size: 16px; line-height: 1.6;">
                   نود إعلامك بأنه تم إضافة رصيد جديد إلى محفظتك الرقمية.
@@ -141,8 +182,8 @@ const handler = async (req: Request): Promise<Response> => {
         transaction_id: walletResult?.[0]?.transaction_id,
         new_balance: walletResult?.[0]?.new_balance,
         amount_added: amount,
-        user_email: userProfile?.email,
-        email_sent: !!userProfile?.email
+        user_email: finalUserProfile?.email,
+        email_sent: !!finalUserProfile?.email
       }),
       {
         status: 200,
