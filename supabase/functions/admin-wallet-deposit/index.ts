@@ -79,39 +79,81 @@ const handler = async (req: Request): Promise<Response> => {
       user_id: user_id
     };
 
-    // Process wallet transaction using the database function
-    console.log('Calling process_wallet_transaction with:', {
-      p_user_id: user_id,
-      p_transaction_type: 'deposit',
-      p_amount: amount,
-      p_description: description
-    });
+    // Get or create wallet for user
+    const walletId = await getOrCreateWallet(supabase, user_id);
+    
+    // Get current wallet balance
+    const { data: currentWallet, error: walletFetchError } = await supabase
+      .from('customer_wallets')
+      .select('balance')
+      .eq('user_id', user_id)
+      .single();
 
-    const { data: walletResult, error: walletError } = await supabase.rpc('process_wallet_transaction', {
-      p_user_id: user_id,
-      p_transaction_type: 'deposit',
-      p_amount: amount,
-      p_description: description,
-      p_reference_id: `ADMIN_${Date.now()}`,
-      p_metadata: {
-        admin_deposit: true,
-        admin_notes: admin_notes || '',
-        processed_at: new Date().toISOString()
-      }
-    });
-
-    if (walletError) {
-      console.error('Wallet transaction error:', walletError);
+    if (walletFetchError) {
+      console.error('Error fetching current wallet:', walletFetchError);
       return new Response(
-        JSON.stringify({ 
-          error: 'فشل في معالجة المعاملة المالية', 
-          details: walletError.message || 'Unknown error'
-        }),
+        JSON.stringify({ error: 'فشل في جلب بيانات المحفظة الحالية' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Wallet transaction processed successfully:', walletResult);
+    const currentBalance = parseFloat(currentWallet.balance || '0');
+    const newBalance = currentBalance + amount;
+
+    console.log('Current balance:', currentBalance, 'Adding:', amount, 'New balance:', newBalance);
+
+    // Update wallet balance
+    const { error: updateError } = await supabase
+      .from('customer_wallets')
+      .update({ 
+        balance: newBalance,
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', user_id);
+
+    if (updateError) {
+      console.error('Error updating wallet balance:', updateError);
+      return new Response(
+        JSON.stringify({ error: 'فشل في تحديث رصيد المحفظة' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Create transaction record
+    const { data: transactionData, error: transactionError } = await supabase
+      .from('wallet_transactions')
+      .insert({
+        user_id: user_id,
+        wallet_id: walletId,
+        transaction_type: 'deposit',
+        amount: amount,
+        balance_before: currentBalance,
+        balance_after: newBalance,
+        description: description,
+        status: 'completed',
+        payment_method: 'admin_deposit',
+        reference_id: `ADMIN_${Date.now()}`,
+        customer_name: finalUserProfile.full_name,
+        customer_email: finalUserProfile.email,
+        metadata: {
+          admin_deposit: true,
+          admin_notes: admin_notes || '',
+          processed_at: new Date().toISOString()
+        }
+      })
+      .select()
+      .single();
+
+    if (transactionError) {
+      console.error('Error creating transaction record:', transactionError);
+      return new Response(
+        JSON.stringify({ error: 'فشل في إنشاء سجل المعاملة' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Wallet deposit completed successfully. New balance:', newBalance);
+    const walletResult = [{ transaction_id: transactionData.id, new_balance: newBalance }];
 
     // Send email notification if user has email and resend is available
     if (finalUserProfile.email && finalUserProfile.email !== 'no-email@example.com' && resend) {
@@ -203,5 +245,36 @@ const handler = async (req: Request): Promise<Response> => {
     );
   }
 };
+
+// Helper function to get or create wallet
+async function getOrCreateWallet(supabase: any, userId: string): Promise<string> {
+  // Try to get existing wallet
+  const { data: existingWallet } = await supabase
+    .from('customer_wallets')
+    .select('id')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (existingWallet) {
+    return existingWallet.id;
+  }
+
+  // Create new wallet
+  const { data: newWallet, error } = await supabase
+    .from('customer_wallets')
+    .insert({
+      user_id: userId,
+      balance: 0,
+      currency: 'SAR'
+    })
+    .select('id')
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create wallet: ${error.message}`);
+  }
+
+  return newWallet.id;
+}
 
 serve(handler);
