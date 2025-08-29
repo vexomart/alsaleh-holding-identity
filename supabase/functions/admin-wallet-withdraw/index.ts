@@ -163,63 +163,29 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Wallet withdrawal completed successfully. New balance:', newBalance);
 
-    // Send email notification if user has email and resend is available
-    if (userProfile.email && userProfile.email !== 'no-email@example.com' && resend) {
+    // Send email notification using wallet-email-notifications function
+    if (userProfile.email && userProfile.email !== 'no-email@example.com') {
       try {
-        const emailResult = await resend.emails.send({
-          from: 'شركة علي صالح محمد الشهري القابضة <no-reply@alsaleh-holding.com>',
-          to: [userProfile.email],
-          subject: 'تم سحب رصيد من محفظتك الرقمية',
-          html: `
-            <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
-              <div style="background: linear-gradient(135deg, #ef4444, #dc2626); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
-                <h1 style="color: white; margin: 0; font-size: 24px;">تم سحب رصيد من محفظتك</h1>
-              </div>
-              
-              <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <h2 style="color: #1f2937; margin-top: 0;">مرحباً ${userProfile.full_name || 'عزيزي العميل'}</h2>
-                
-                <p style="color: #6b7280; font-size: 16px; line-height: 1.6;">
-                  نود إعلامك بأنه تم سحب مبلغ من رصيد محفظتك الرقمية.
-                </p>
-                
-                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 20px; margin: 20px 0;">
-                  <h3 style="color: #dc2626; margin: 0 0 15px 0;">تفاصيل العملية:</h3>
-                  <ul style="color: #991b1b; margin: 0; padding-right: 20px;">
-                    <li><strong>المبلغ المسحوب:</strong> ${amount.toLocaleString()} ريال سعودي</li>
-                    <li><strong>الوصف:</strong> ${description}</li>
-                    <li><strong>رقم الحساب:</strong> ${userProfile.account_number || 'غير محدد'}</li>
-                    <li><strong>الرصيد المتبقي:</strong> ${newBalance.toLocaleString()} ريال سعودي</li>
-                    <li><strong>التاريخ:</strong> ${new Date().toLocaleDateString('ar-SA')}</li>
-                    <li><strong>الوقت:</strong> ${new Date().toLocaleTimeString('ar-SA')}</li>
-                  </ul>
-                </div>
-                
-                <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
-                  إذا لم تطلب هذه العملية، يرجى التواصل مع خدمة العملاء فوراً.
-                </p>
-                
-                <div style="text-align: center; margin: 30px 0;">
-                  <a href="https://alsaleh-holding.com/client/wallet" 
-                     style="background: #ef4444; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                    عرض محفظتي
-                  </a>
-                </div>
-                
-                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-                
-                <p style="color: #9ca3af; font-size: 12px; text-align: center;">
-                  شركة علي صالح محمد الشهري القابضة<br>
-                  هذا إشعار تلقائي، يرجى عدم الرد على هذا الإيميل
-                </p>
-              </div>
-            </div>
-          `,
+        const emailResult = await supabase.functions.invoke('wallet-email-notifications', {
+          body: {
+            type: 'withdrawal',
+            customer_email: userProfile.email,
+            customer_name: userProfile.full_name || 'عميلنا الكريم',
+            data: {
+              amount: amount,
+              new_balance: newBalance,
+              old_balance: currentBalance,
+              transaction_id: transactionData.id,
+              reference_id: transactionData.reference_id,
+              description: description,
+              reason: description
+            }
+          }
         });
 
-        console.log('Email notification sent successfully:', emailResult);
+        console.log('Wallet email notification invoked:', emailResult);
       } catch (emailError) {
-        console.error('Error sending email notification:', emailError);
+        console.error('Error sending wallet email notification:', emailError);
         // Don't fail the transaction if email fails
       }
     }
