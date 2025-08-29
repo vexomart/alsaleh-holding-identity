@@ -123,17 +123,41 @@ export default function ClientWallet() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch user profile
-      const { data: profileData } = await supabase
+      // Fetch user profile with maybeSingle to avoid errors
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
+
+      if (profileError) {
+        console.error('Profile error:', profileError);
+      }
+
+      // إذا لم يوجد ملف شخصي، قم بإنشاء واحد
+      let userProfileData = profileData;
+      if (!profileData) {
+        const { data: newProfile, error: createProfileError } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: user.id,
+            full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'مستخدم جديد',
+            email: user.email
+          })
+          .select()
+          .single();
+
+        if (createProfileError) {
+          console.error('Error creating profile:', createProfileError);
+        } else {
+          userProfileData = newProfile;
+        }
+      }
 
       setUserProfile({
         id: user.id,
-        full_name: profileData?.full_name,
-        client_id: profileData?.client_id,
+        full_name: userProfileData?.full_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'مستخدم جديد',
+        client_id: userProfileData?.client_id,
         email: user.email
       });
 
