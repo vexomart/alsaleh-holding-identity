@@ -121,30 +121,35 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Create transaction record - using service role to bypass RLS
+    // Create transaction record with minimal required fields
+    const transactionRecord = {
+      user_id: user_id,
+      wallet_id: walletId,
+      transaction_type: 'deposit',
+      amount: amount,
+      balance_before: currentBalance,
+      balance_after: newBalance,
+      description: description || 'إيداع من الإدارة',
+      status: 'completed',
+      payment_method: 'admin_deposit',
+      payment_reference: `ADMIN_${Date.now()}`,
+      reference_id: `ADMIN_DEP_${Date.now()}`,
+      customer_name: finalUserProfile.full_name || 'مستخدم',
+      customer_email: finalUserProfile.email || 'no-email@example.com',
+      customer_phone: finalUserProfile.phone || null,
+      metadata: {
+        admin_deposit: true,
+        admin_notes: admin_notes || '',
+        processed_at: new Date().toISOString(),
+        processed_by: 'admin'
+      }
+    };
+
+    console.log('Creating transaction record:', transactionRecord);
+
     const { data: transactionData, error: transactionError } = await supabase
       .from('wallet_transactions')
-      .insert({
-        user_id: user_id,
-        wallet_id: walletId,
-        transaction_type: 'deposit',
-        amount: amount,
-        balance_before: currentBalance,
-        balance_after: newBalance,
-        description: description || 'إيداع من الإدارة',
-        status: 'completed',
-        payment_method: 'admin_deposit',
-        reference_id: `ADMIN_${Date.now()}`,
-        customer_name: finalUserProfile.full_name || 'مستخدم',
-        customer_email: finalUserProfile.email || 'no-email@example.com',
-        customer_phone: finalUserProfile.phone || null,
-        metadata: {
-          admin_deposit: true,
-          admin_notes: admin_notes || '',
-          processed_at: new Date().toISOString(),
-          processed_by: 'admin'
-        }
-      })
+      .insert(transactionRecord)
       .select()
       .single();
 
