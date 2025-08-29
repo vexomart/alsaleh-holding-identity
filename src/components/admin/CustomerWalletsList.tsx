@@ -40,9 +40,9 @@ export const CustomerWalletsList = () => {
   const [transactionType, setTransactionType] = useState<'deposit' | 'withdraw'>('deposit');
   const [showTransactionForm, setShowTransactionForm] = useState(false);
 
-  // جلب بيانات المحافظ مع معلومات العملاء الحقيقية - مع فرض إعادة التحميل
+  // جلب بيانات المحافظ مع معلومات العملاء الحقيقية
   const { data: walletsData, isLoading: walletsLoading, refetch: refetchWallets } = useQuery({
-    queryKey: ['customer-wallets', Date.now()], // إضافة timestamp لفرض إعادة التحميل
+    queryKey: ['customer-wallets'], // إزالة timestamp لتجنب التحديث المستمر
     queryFn: async () => {
       console.log('🔍 جاري جلب بيانات العملاء والمحافظ...');
       
@@ -82,13 +82,13 @@ export const CustomerWalletsList = () => {
           balance: wallet?.balance || 0,
           currency: wallet?.currency || 'SAR',
           wallet_id: wallet?.id || '0',
-          wallet_number: wallet ? `WAL-${String(wallet.id).padStart(6, '0')}` : 'لا توجد محفظة',
+          wallet_number: wallet ? `WAL-${wallet.id.toString().substring(0, 8)}` : 'لا توجد محفظة',
           created_at: profile.created_at,
           has_wallet: !!wallet
         };
       }) || [];
     },
-    refetchInterval: 5000, // تحديث كل 5 ثواني
+    staleTime: 30000, // البيانات صالحة لمدة 30 ثانية
   });
 
   // إضافة Realtime subscription للتحديث الفوري
