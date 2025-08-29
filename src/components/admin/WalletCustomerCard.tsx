@@ -15,6 +15,7 @@ interface WalletCustomerData {
   balance: number;
   currency: string;
   wallet_id: string;
+  wallet_number: string; // رقم المحفظة الفعلي
   created_at: string;
 }
 
@@ -71,9 +72,12 @@ export const WalletCustomerCard = ({
             </CardTitle>
             <div className="flex items-center gap-2 mt-2">
               <CreditCard className="h-4 w-4 text-primary" />
-              <span className="text-sm text-slate-600 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
-                {customer.account_number}
-              </span>
+              <div className="flex flex-col">
+                <span className="text-xs text-muted-foreground">رقم المحفظة:</span>
+                <span className="text-sm text-slate-600 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
+                  {customer.wallet_number}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -111,9 +115,20 @@ export const WalletCustomerCard = ({
             <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded">
               <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             </div>
-            <span className="font-medium text-slate-600 dark:text-slate-300 flex-1">
-              {customer.email || "لا يوجد إيميل مسجل"}
-            </span>
+            <div className="flex-1">
+              <div className="font-medium text-slate-600 dark:text-slate-300">
+                {customer.email ? (
+                  <a href={`mailto:${customer.email}`} className="text-blue-600 hover:underline">
+                    {customer.email}
+                  </a>
+                ) : (
+                  <span className="text-amber-600 font-medium">⚠️ لا يوجد إيميل مسجل</span>
+                )}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {customer.email ? 'إيميل نشط' : 'مطلوب تسجيل إيميل للإشعارات'}
+              </div>
+            </div>
           </div>
 
           {customer.phone && (
@@ -124,6 +139,18 @@ export const WalletCustomerCard = ({
               <span className="text-slate-600 dark:text-slate-300">{customer.phone}</span>
             </div>
           )}
+          
+          <div className="flex items-center gap-3 text-sm">
+            <div className="p-1.5 bg-slate-100 dark:bg-slate-700/30 rounded">
+              <CreditCard className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+            </div>
+            <div className="flex-1">
+              <div className="text-slate-600 dark:text-slate-300">
+                <span className="text-xs text-muted-foreground">رقم الحساب: </span>
+                <span className="font-mono">{customer.account_number}</span>
+              </div>
+            </div>
+          </div>
           
           <div className="flex items-center gap-3 text-sm">
             <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded">

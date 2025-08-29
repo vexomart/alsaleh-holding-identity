@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Minus, Loader2, User, CreditCard } from "lucide-react";
+import { Plus, Minus, Loader2, User, CreditCard, Mail, AlertTriangle } from "lucide-react";
 
 interface WalletTransactionFormProps {
   isOpen: boolean;
@@ -141,6 +141,20 @@ export const WalletTransactionForm = ({
               <div>
                 <p className="font-medium">{customerName}</p>
                 <p className="text-sm text-muted-foreground">معرف المستخدم: {userId}</p>
+              </div>
+            </div>
+            
+            {/* تحذير الإيميل */}
+            <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg dark:bg-amber-950/20 dark:border-amber-800">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                <div className="text-sm">
+                  <p className="font-medium text-amber-800 dark:text-amber-200">تنبيه الإشعارات</p>
+                  <p className="text-amber-700 dark:text-amber-300">
+                    سيتم إرسال إشعار بالإيميل للعميل إذا كان الإيميل مسجل في النظام. 
+                    تأكد من وجود إيميل صحيح لضمان وصول الإشعارات.
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>

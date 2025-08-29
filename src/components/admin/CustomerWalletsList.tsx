@@ -20,6 +20,7 @@ interface WalletCustomerData {
   balance: number;
   currency: string;
   wallet_id: string;
+  wallet_number: string; // رقم المحفظة الفعلي
   created_at: string;
 }
 
@@ -68,8 +69,11 @@ export const CustomerWalletsList = () => {
         .in('user_id', userIds);
 
       // دمج البيانات الحقيقية
-      return wallets.map(wallet => {
+      return wallets.map((wallet, index) => {
         const profile = profiles?.find(p => p.user_id === wallet.user_id);
+        // إنشاء رقم محفظة فريد
+        const walletNumber = `WAL-${String(index + 1).padStart(6, '0')}`;
+        
         return {
           user_id: wallet.user_id,
           full_name: profile?.full_name || 'مستخدم غير محدد',
@@ -79,6 +83,7 @@ export const CustomerWalletsList = () => {
           balance: parseFloat(String(wallet.balance || 0)),
           currency: wallet.currency,
           wallet_id: wallet.id,
+          wallet_number: walletNumber, // رقم المحفظة الفعلي
           created_at: wallet.created_at
         };
       }) as WalletCustomerData[];
@@ -135,6 +140,7 @@ export const CustomerWalletsList = () => {
       wallet.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       wallet.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       wallet.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      wallet.wallet_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       wallet.account_number.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesBalance = 
@@ -265,7 +271,7 @@ export const CustomerWalletsList = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="البحث بالاسم، الإيميل، أو رقم الحساب..."
+                  placeholder="البحث بالاسم، الإيميل، رقم المحفظة، أو رقم الحساب..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
