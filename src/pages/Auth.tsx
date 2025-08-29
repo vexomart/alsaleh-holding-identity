@@ -6,10 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, Shield, Mail, Lock, Building2, Key } from 'lucide-react';
+import { Eye, EyeOff, LogIn, UserPlus, ArrowRight, Shield, Mail, Lock, Building2, Key } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import programmingServices from "@/assets/programming-services.png";
+import designMarketing from "@/assets/design-marketing.png";
+import businessManagement from "@/assets/business-management.png";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -117,51 +120,42 @@ const Auth = () => {
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
-    const useVerification = formData.get('useVerification') === 'on';
+    const password = formData.get('password') as string;
 
-    if (useVerification) {
-      // إرسال رمز التحقق
-      try {
-        console.log('🔄 إرسال رمز التحقق للإيميل:', email);
-        const { data, error } = await supabase.functions.invoke('send-verification-code', {
-          body: { email, type: 'user' }
-        });
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-        console.log('📧 استجابة دالة إرسال رمز التحقق:', { data, error });
+      if (error) {
+        setError(error.message === 'Invalid login credentials' 
+          ? 'بيانات تسجيل الدخول غير صحيحة' 
+          : error.message);
+      } else {
+        // إرسال رمز التحقق بعد تسجيل الدخول الناجح
+        try {
+          console.log('🔄 إرسال رمز التحقق للإيميل:', email);
+          const { data, error: verificationError } = await supabase.functions.invoke('send-verification-code', {
+            body: { email, type: 'user' }
+          });
 
-        if (error) {
-          console.error('❌ خطأ في إرسال رمز التحقق:', error);
-          setError('فشل في إرسال رمز التحقق. تحقق من صحة الإيميل.');
-          setIsLoading(false);
-          return;
+          if (verificationError) {
+            console.error('❌ خطأ في إرسال رمز التحقق:', verificationError);
+            toast.success('تم تسجيل الدخول بنجاح!');
+            // المتابعة بدون رمز تحقق
+          } else {
+            setEmailForVerification(email);
+            setStep('verification');
+            toast.success('تم تسجيل الدخول! تم إرسال رمز التحقق لمزيد من الأمان.');
+          }
+        } catch (err) {
+          console.error('💥 خطأ غير متوقع في إرسال رمز التحقق:', err);
+          toast.success('تم تسجيل الدخول بنجاح!');
         }
-
-        setEmailForVerification(email);
-        setStep('verification');
-        toast('تم إرسال رمز التحقق إلى بريدك الإلكتروني');
-      } catch (err) {
-        console.error('💥 خطأ غير متوقع في إرسال رمز التحقق:', err);
-        setError('حدث خطأ أثناء إرسال رمز التحقق: ' + (err as Error).message);
       }
-    } else {
-      // تسجيل دخول تقليدي
-      const password = formData.get('password') as string;
-      try {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) {
-          setError(error.message === 'Invalid login credentials' 
-            ? 'بيانات تسجيل الدخول غير صحيحة' 
-            : error.message);
-        } else {
-          toast('تم تسجيل الدخول بنجاح');
-        }
-      } catch (err) {
-        setError('حدث خطأ أثناء تسجيل الدخول');
-      }
+    } catch (err) {
+      setError('حدث خطأ أثناء تسجيل الدخول');
     }
     
     setIsLoading(false);
@@ -340,14 +334,29 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden" dir="rtl">
       {/* خلفية شبكة ديناميكية */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.1)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] opacity-20"></div>
       
       {/* عناصر زخرفية متحركة */}
-      <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      <div className="absolute top-1/3 right-1/4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-20 right-20 w-32 h-32 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+      <div className="absolute bottom-20 left-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute top-1/3 left-1/4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      
+      {/* أيقونات الخدمات المتحركة */}
+      <div className="absolute top-10 right-10 w-20 h-20 opacity-20 animate-float">
+        <img src={programmingServices} alt="خدمات البرمجة" className="w-full h-full object-contain filter brightness-150" />
+      </div>
+      <div className="absolute bottom-32 right-1/4 w-16 h-16 opacity-20 animate-float-delayed">
+        <img src={designMarketing} alt="التصميم والتسويق" className="w-full h-full object-contain filter brightness-150" />
+      </div>
+      <div className="absolute top-1/2 left-10 w-18 h-18 opacity-20 animate-bounce-gentle">
+        <img src={businessManagement} alt="إدارة الأعمال" className="w-full h-full object-contain filter brightness-150" />
+      </div>
+      
+      {/* عناصر إضافية متحركة */}
+      <div className="absolute bottom-10 left-1/3 w-12 h-12 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full animate-glow"></div>
+      <div className="absolute top-1/4 right-1/3 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full animate-float" style={{ animationDelay: '3s' }}></div>
       
       <div className="w-full max-w-lg mx-auto relative z-10">
         {/* رابط العودة */}
@@ -355,7 +364,7 @@ const Auth = () => {
           to="/"
           className="inline-flex items-center gap-2 text-slate-300 hover:text-white mb-6 transition-all duration-300 font-medium"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" />
           العودة للرئيسية
         </Link>
 
@@ -435,51 +444,37 @@ const Auth = () => {
                       />
                     </div>
 
-                    {/* خيار استخدام التحقق بالإيميل */}
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-2xl border border-blue-400/30">
-                        <input
-                          type="checkbox"
-                          id="useVerification"
-                          name="useVerification"
-                          className="w-4 h-4 rounded border-blue-300 text-blue-600 focus:ring-blue-500/20"
+                    <div className="space-y-3">
+                      <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                        <Lock className="w-4 h-4" />
+                        كلمة المرور
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="signin-password"
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="كلمة المرور"
+                          required
+                          disabled={isLoading}
+                          className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300 pr-12 text-white placeholder:text-slate-400"
+                          dir="rtl"
                         />
-                        <Label htmlFor="useVerification" className="text-sm font-medium text-blue-300">
-                          استخدام التحقق بالإيميل (أكثر أماناً) 🔐
-                        </Label>
-                      </div>
-                      
-                      <div id="password-field" className="space-y-3">
-                        <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                          <Lock className="w-4 h-4" />
-                          كلمة المرور
-                        </Label>
-                        <div className="relative">
-                          <Input
-                            id="signin-password"
-                            name="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="كلمة المرور (اختياري مع التحقق بالإيميل)"
-                            disabled={isLoading}
-                            className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300 pr-12 text-white placeholder:text-slate-400"
-                            dir="rtl"
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-600/50 rounded-lg text-slate-400"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                          </Button>
-                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-600/50 rounded-lg text-slate-400"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
                       </div>
                     </div>
 
                     <Button 
                       type="submit" 
-                      className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-blue-500/30 rounded-xl transition-all duration-300" 
+                      className="w-full h-12 bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-blue-500/30 rounded-xl transition-all duration-300" 
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -542,7 +537,7 @@ const Auth = () => {
 
                     <Button 
                       type="submit" 
-                      className="w-full h-12 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30 rounded-xl transition-all duration-300 disabled:opacity-50" 
+                      className="w-full h-12 bg-gradient-to-l from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-green-500/30 rounded-xl transition-all duration-300 disabled:opacity-50" 
                       disabled={isLoading || verificationCode.length !== 6}
                     >
                       {isLoading ? (
@@ -615,7 +610,7 @@ const Auth = () => {
 
                     <Button 
                       type="submit" 
-                      className="w-full h-12 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold shadow-lg shadow-orange-500/30 rounded-xl transition-all duration-300" 
+                      className="w-full h-12 bg-gradient-to-l from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold shadow-lg shadow-orange-500/30 rounded-xl transition-all duration-300" 
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -733,7 +728,7 @@ const Auth = () => {
                   
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/30 rounded-xl transition-all duration-300" 
+                    className="w-full h-12 bg-gradient-to-l from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/30 rounded-xl transition-all duration-300" 
                     disabled={isLoading}
                   >
                     {isLoading ? (
