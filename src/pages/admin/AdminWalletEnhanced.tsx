@@ -309,68 +309,37 @@ const AdminWalletEnhanced = () => {
         return;
       }
 
-      console.log('Adding funds to wallet:', {
-        userId: addFundsForm.userId,
+      console.log('Sending request to: admin-wallet-deposit', {
+        user_id: addFundsForm.userId,
         amount,
-        description: addFundsForm.description
+        description: addFundsForm.description,
+        admin_notes: addFundsForm.notifyEmail ? 'إشعار بالإيميل مطلوب' : undefined
       });
 
-      // Call wallet RPC function
-      const { data, error } = await supabase.rpc('process_wallet_transaction', {
-        p_user_id: addFundsForm.userId,
-        p_transaction_type: 'deposit',
-        p_amount: amount,
-        p_description: addFundsForm.description,
-        p_reference_id: `ADMIN_${Date.now()}`,
-        p_metadata: {
-          added_by: 'admin',
-          requires_approval: addFundsForm.requireApproval,
-          notify_email: addFundsForm.notifyEmail
+      // Call admin wallet deposit edge function
+      const { data, error } = await supabase.functions.invoke('admin-wallet-deposit', {
+        body: {
+          user_id: addFundsForm.userId,
+          amount: amount,
+          description: addFundsForm.description,
+          admin_notes: addFundsForm.notifyEmail ? 'إشعار بالإيميل مطلوب' : undefined
         }
       });
 
-      console.log('RPC response:', { data, error });
+      console.log('Admin wallet deposit response:', { data, error });
 
       if (error) {
-        console.error('Wallet transaction error:', error);
-        throw new Error(error.message || 'خطأ في معالجة المعاملة');
+        console.error('Wallet deposit error:', error);
+        throw new Error(error.message || 'خطأ في معالجة الإيداع');
       }
 
-      if (!data || !Array.isArray(data) || data.length === 0) {
-        throw new Error('لم يتم إرجاع بيانات صحيحة من قاعدة البيانات');
-      }
-
-      const transaction = data[0];
-      const newBalance = transaction?.new_balance || 0;
-      const transactionId = transaction?.transaction_id || 'N/A';
-
-      // Send notification email if enabled
-      if (addFundsForm.notifyEmail) {
-        try {
-          await supabase.functions.invoke('wallet-email-notifications', {
-            body: {
-              type: 'deposit',
-              customer_email: user.email,
-              customer_name: user.user_metadata?.full_name || user.email,
-              data: {
-                amount: amount,
-                new_balance: newBalance,
-                old_balance: (newBalance - amount),
-                transaction_id: transactionId,
-                reference_id: `ADMIN_${Date.now()}`,
-                description: addFundsForm.description
-              }
-            }
-          });
-        } catch (emailError) {
-          console.warn('Failed to send notification email:', emailError);
-          // Don't fail the whole operation if email fails
-        }
+      if (!data || !data.success) {
+        throw new Error(data?.error || 'فشل في معالجة الإيداع');
       }
 
       toast({
-        title: "تم إضافة الرصيد بنجاح",
-        description: `تم إضافة ${amount} ريال إلى محفظة ${user.user_metadata?.full_name || user.email}. الرصيد الجديد: ${newBalance} ريال`,
+        title: "✅ تم إيداع الرصيد بنجاح",
+        description: `تم إيداع ${amount} ريال في محفظة ${user.user_metadata?.full_name || user.email}. الرصيد الجديد: ${data.new_balance} ريال${data.email_sent ? ' - تم إرسال إيميل الإشعار' : ''}`,
       });
 
       setIsAddFundsOpen(false);
@@ -403,7 +372,7 @@ const AdminWalletEnhanced = () => {
       }
       
       toast({
-        title: "خطأ في إضافة الرصيد",
+        title: "❌ خطأ في إيداع الرصيد",
         description: errorMessage,
         variant: "destructive",
       });
@@ -433,46 +402,46 @@ const AdminWalletEnhanced = () => {
 
       // Find user details
       const user = availableUsers.find(u => u.id === deductFundsForm.userId);
-      if (!user) return;
+      if (!user) {
+        toast({
+          title: "خطأ",
+          description: "لم يتم العثور على المستخدم المحدد",
+          variant: "destructive",
+        });
+        return;
+      }
 
-      // Call wallet RPC function
-      const { data, error } = await supabase.rpc('process_wallet_transaction', {
-        p_user_id: deductFundsForm.userId,
-        p_transaction_type: 'withdrawal',
-        p_amount: amount,
-        p_description: deductFundsForm.reason,
-        p_reference_id: `ADMIN-DEDUCT-${Date.now()}`,
-        p_metadata: {
-          deducted_by: 'admin',
-          requires_approval: deductFundsForm.requireApproval,
-          notify_email: deductFundsForm.notifyEmail
+      console.log('Sending request to: admin-wallet-withdraw', {
+        user_id: deductFundsForm.userId,
+        amount,
+        description: deductFundsForm.reason,
+        admin_notes: deductFundsForm.notifyEmail ? 'إشعار بالإيميل مطلوب' : undefined
+      });
+
+      // Call admin wallet withdraw edge function
+      const { data, error } = await supabase.functions.invoke('admin-wallet-withdraw', {
+        body: {
+          user_id: deductFundsForm.userId,
+          amount: amount,
+          description: deductFundsForm.reason,
+          admin_notes: deductFundsForm.notifyEmail ? 'إشعار بالإيميل مطلوب' : undefined
         }
       });
 
-      if (error) throw error;
+      console.log('Admin wallet withdraw response:', { data, error });
 
-      // Send notification email if enabled
-      if (deductFundsForm.notifyEmail) {
-        await supabase.functions.invoke('wallet-email-notifications', {
-          body: {
-            type: 'withdrawal',
-            customer_email: user.email,
-            customer_name: user.user_metadata?.full_name || user.email,
-            data: {
-              amount: amount,
-              new_balance: (data as any)?.[0]?.new_balance || 0,
-              old_balance: ((data as any)?.[0]?.new_balance || 0) + amount,
-              transaction_id: (data as any)?.[0]?.transaction_id || 'N/A',
-              reference_id: `ADMIN-DEDUCT-${Date.now()}`,
-              description: deductFundsForm.reason
-            }
-          }
-        });
+      if (error) {
+        console.error('Wallet withdraw error:', error);
+        throw new Error(error.message || 'خطأ في معالجة السحب');
+      }
+
+      if (!data || !data.success) {
+        throw new Error(data?.error || 'فشل في معالجة السحب');
       }
 
       toast({
-        title: "تم خصم الرصيد بنجاح",
-        description: `تم خصم ${amount} ريال من محفظة ${user.user_metadata?.full_name || user.email}`,
+        title: "✅ تم سحب الرصيد بنجاح",
+        description: `تم سحب ${amount} ريال من محفظة ${user.user_metadata?.full_name || user.email}. الرصيد الجديد: ${data.new_balance} ريال${data.email_sent ? ' - تم إرسال إيميل الإشعار' : ''}`,
       });
 
       setIsDeductFundsOpen(false);
@@ -483,12 +452,32 @@ const AdminWalletEnhanced = () => {
         notifyEmail: true,
         requireApproval: true
       });
-      fetchWalletData();
+      
+      // Refresh the data
+      await fetchWalletData();
     } catch (error: any) {
       console.error('Error deducting funds:', error);
+      
+      let errorMessage = 'حدث خطأ أثناء خصم الرصيد';
+      
+      // Handle specific error types
+      if (error.message) {
+        if (error.message.includes('Insufficient balance')) {
+          errorMessage = 'الرصيد غير كافي لإتمام العملية';
+        } else if (error.message.includes('Load failed')) {
+          errorMessage = 'فشل في الاتصال بقاعدة البيانات. يرجى المحاولة مرة أخرى';
+        } else if (error.message.includes('JWT')) {
+          errorMessage = 'انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى';
+        } else if (error.message.includes('permission')) {
+          errorMessage = 'ليس لديك صلاحية لتنفيذ هذه العملية';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
-        title: "خطأ في خصم الرصيد",
-        description: error.message,
+        title: "❌ خطأ في سحب الرصيد",
+        description: errorMessage,
         variant: "destructive",
       });
     }

@@ -104,6 +104,7 @@ const handler = async (req: Request): Promise<Response> => {
       case 'deposit':
         const depositAmount = data?.amount || amount;
         const depositTransactionId = data?.transaction_id || transactionId || `TXN_${Date.now()}`;
+        const depositWalletNumber = walletNumber || 'W' + Math.random().toString().substr(2, 8);
         
         if (!depositAmount) {
           throw new Error('Amount required for deposit email');
@@ -114,30 +115,34 @@ const handler = async (req: Request): Promise<Response> => {
           React.createElement(WalletDepositEmail, {
             customerName: finalCustomerName,
             amount: depositAmount,
-            currency: 'SAR',
+            currency: currency || 'SAR',
             newBalance: data?.new_balance || newBalance || 0,
             transactionId: depositTransactionId,
             date: currentDate,
-            walletNumber: walletNumber || 'W' + Math.random().toString().substr(2, 8),
+            walletNumber: depositWalletNumber,
           })
         );
         break;
 
       case 'withdrawal':
-        if (!amount || !transactionId) {
-          throw new Error('Amount and transaction ID required for withdrawal email');
+        const withdrawalAmount = data?.amount || amount;
+        const withdrawalTransactionId = data?.transaction_id || transactionId || `TXN_${Date.now()}`;
+        const withdrawalWalletNumber = walletNumber || 'W' + Math.random().toString().substr(2, 8);
+        
+        if (!withdrawalAmount) {
+          throw new Error('Amount required for withdrawal email');
         }
         
-        emailSubject = `⚠️ تم سحب ${data.amount?.toLocaleString('ar-SA') || amount?.toLocaleString('ar-SA')} ريال من محفظتك الرقمية`;
+        emailSubject = `⚠️ تم سحب ${withdrawalAmount?.toLocaleString('ar-SA')} ريال من محفظتك الرقمية`;
         emailHtml = await renderAsync(
           React.createElement(WalletWithdrawalEmail, {
             customerName: finalCustomerName,
-            amount: data.amount || amount,
-            currency: 'SAR',
-            newBalance: data.new_balance || newBalance,
-            transactionId: data.transaction_id || transactionId,
+            amount: withdrawalAmount,
+            currency: currency || 'SAR',
+            newBalance: data?.new_balance || newBalance || 0,
+            transactionId: withdrawalTransactionId,
             date: currentDate,
-            walletNumber: walletNumber || 'W' + Math.random().toString().substr(2, 8),
+            walletNumber: withdrawalWalletNumber,
           })
         );
         break;
@@ -218,7 +223,7 @@ const handler = async (req: Request): Promise<Response> => {
       subject: emailSubject,
       html: emailHtml,
       headers: {
-        'X-Entity-Ref-ID': transactionId || `${type}-${Date.now()}`,
+        'X-Entity-Ref-ID': (data?.transaction_id || transactionId || `${type}-${Date.now()}`),
         'X-Priority': type === 'balance_alert' ? '1' : type === 'withdrawal' ? '2' : '3',
         'X-Wallet-Number': walletNumber || 'N/A',
         'X-Email-Type': type,
