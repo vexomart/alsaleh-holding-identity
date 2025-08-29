@@ -503,7 +503,7 @@ export default function ClientWallet() {
 
   // Bank account details
   const bankDetails = {
-    companyName: "شركة علي صالح محمد الشهري",
+    companyName: "شركة علي صالح محمد الشهري القابضة",
     accountNumber: "161000010006086071040",
     iban: "SA1980000161608016071040",
     bankName: "البنك الأهلي السعودي"
@@ -681,7 +681,7 @@ export default function ClientWallet() {
                           <div className="flex items-start gap-3">
                             <Info className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
                             <div className="space-y-2">
-                              <p className="font-semibold text-amber-800">شركة علي صالح محمد الشهري</p>
+                              <p className="font-semibold text-amber-800">شركة علي صالح محمد الشهري القابضة</p>
                               <p className="text-sm text-amber-700">المملكة العربية السعودية</p>
                               <div className="text-xs text-amber-800 leading-relaxed">
                                 <p className="font-semibold">تنبيه مهم:</p>
