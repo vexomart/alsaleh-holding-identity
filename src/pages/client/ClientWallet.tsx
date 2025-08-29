@@ -274,6 +274,65 @@ const ClientWallet = () => {
     });
   };
 
+  // نسخ رقم الآيبان
+  const copyIBAN = (iban: string) => {
+    navigator.clipboard.writeText(iban);
+    toast({
+      title: "تم النسخ",
+      description: "تم نسخ رقم الآيبان إلى الحافظة",
+    });
+  };
+
+  // معالجة إرسال نموذج الراجحي
+  const handleSubmitRajhi = async () => {
+    if (!rajhiForm.name || !rajhiForm.email || !rajhiForm.phone || !rajhiForm.amount) {
+      toast({
+        title: "خطأ في البيانات",
+        description: "يرجى ملء جميع الحقول المطلوبة",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.functions.invoke('bank-transfer-request', {
+        body: {
+          name: rajhiForm.name,
+          email: rajhiForm.email,
+          phone: rajhiForm.phone,
+          amount: parseFloat(rajhiForm.amount),
+          bank: 'الراجحي',
+          receipt: rajhiForm.receipt
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "تم إرسال الطلب",
+        description: "تم إرسال طلب التحويل بنجاح وسيتم مراجعته",
+      });
+
+      // إعادة تعيين النموذج
+      setRajhiForm({
+        name: '',
+        email: '',
+        phone: '',
+        amount: '',
+        receipt: null
+      });
+    } catch (error) {
+      toast({
+        title: "خطأ في الإرسال",
+        description: "حدث خطأ أثناء إرسال الطلب",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // تصفية المعاملات
   const filteredTransactions = transactions?.filter(transaction => {
     const matchesSearch = transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -523,8 +582,12 @@ const ClientWallet = () => {
                           onChange={(e) => setRajhiForm({...rajhiForm, receipt: e.target.files?.[0] || null})}
                         />
                       </div>
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                        إرسال طلب التحويل
+                      <Button 
+                        className="w-full bg-emerald-600 hover:bg-emerald-700"
+                        onClick={handleSubmitRajhi}
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? 'جاري الإرسال...' : 'إرسال طلب التحويل'}
                       </Button>
                     </div>
                   </DialogContent>
@@ -756,6 +819,137 @@ const ClientWallet = () => {
                 </Dialog>
 
               </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* بيانات الحساب البنكي للشركة */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <Card className="bg-gradient-to-br from-emerald-50 via-emerald-100 to-emerald-50 border-2 border-emerald-200 shadow-xl">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-3 text-xl text-emerald-800">
+                <motion.div
+                  animate={{ rotate: animationIndex === 2 ? 360 : 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="p-2 bg-emerald-500 rounded-lg"
+                >
+                  <Building2 className="w-6 h-6 text-white" />
+                </motion.div>
+                بيانات الحساب البنكي للشركة - بنك الراجحي
+              </CardTitle>
+              <CardDescription className="text-emerald-700">
+                حول على هذا الحساب وأرفق إيصال التحويل في النموذج أعلاه
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                {/* اسم الحساب */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 hover:border-emerald-300 transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <User className="w-5 h-5 text-emerald-600" />
+                      <span className="font-semibold text-emerald-800">اسم الحساب</span>
+                    </div>
+                  </div>
+                  <p className="text-lg font-bold text-emerald-900 bg-emerald-100 p-3 rounded-lg">
+                    شركة علي صالح محمد الشهري القابضة
+                  </p>
+                </motion.div>
+
+                {/* رقم الحساب */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 hover:border-emerald-300 transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="w-5 h-5 text-emerald-600" />
+                      <span className="font-semibold text-emerald-800">رقم الحساب</span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyIBAN('123456789012345')}
+                      className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 p-2"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <p className="text-lg font-bold text-emerald-900 bg-emerald-100 p-3 rounded-lg font-mono">
+                    123456789012345
+                  </p>
+                </motion.div>
+
+                {/* رقم الآيبان */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 hover:border-emerald-300 transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Globe className="w-5 h-5 text-emerald-600" />
+                      <span className="font-semibold text-emerald-800">رقم الآيبان</span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyIBAN('SA1234567890123456789012')}
+                      className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 p-2"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <p className="text-lg font-bold text-emerald-900 bg-emerald-100 p-3 rounded-lg font-mono">
+                    SA1234567890123456789012
+                  </p>
+                </motion.div>
+
+                {/* اسم البنك */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 hover:border-emerald-300 transition-all duration-300"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Building2 className="w-5 h-5 text-emerald-600" />
+                    <span className="font-semibold text-emerald-800">اسم البنك</span>
+                  </div>
+                  <p className="text-lg font-bold text-emerald-900 bg-emerald-100 p-3 rounded-lg">
+                    مصرف الراجحي
+                  </p>
+                </motion.div>
+
+              </div>
+
+              {/* تعليمات مهمة */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 rounded-xl"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0">
+                    <Info className="w-6 h-6 text-amber-600 mt-1" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-amber-800 mb-2">تعليمات مهمة:</h4>
+                    <ul className="text-amber-700 space-y-1 text-sm">
+                      <li>• يرجى التأكد من إدخال البيانات الصحيحة في النموذج أعلاه</li>
+                      <li>• ارفق صورة واضحة من إيصال التحويل</li>
+                      <li>• سيتم مراجعة طلبك خلال 24 ساعة عمل</li>
+                      <li>• سيتم إضافة المبلغ لرصيدك بعد التأكد من التحويل</li>
+                    </ul>
+                  </div>
+                </div>
+              </motion.div>
             </CardContent>
           </Card>
         </motion.div>
