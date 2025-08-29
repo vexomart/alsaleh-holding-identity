@@ -104,14 +104,19 @@ const handler = async (req: Request): Promise<Response> => {
     const verificationCode = generateVerificationCode();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 دقائق
 
-    // حذف أي رموز سابقة للإيميل ونوع المستخدم
-    await supabase
+    // حذف أي رموز سابقة للإيميل ونوع المستخدم قبل إدراج رمز جديد
+    const { error: deleteError } = await supabase
       .from('verification_codes')
       .delete()
       .eq('email', email)
       .eq('type', type);
 
-    // حفظ الرمز الجديد في قاعدة البيانات
+    if (deleteError) {
+      console.log('Warning: Could not delete existing verification codes:', deleteError);
+      // لا نوقف العملية، فقط نسجل تحذير
+    }
+
+    // إدراج الرمز الجديد
     const { error: insertError } = await supabase
       .from('verification_codes')
       .insert({
