@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { NumberFormatter } from '@/components/NumberFormatter';
 import { 
   Wallet, 
   Plus, 
@@ -28,13 +29,24 @@ import {
   Building2,
   Upload,
   Info,
-  Copy
+  Copy,
+  User,
+  Shield,
+  ChevronRight
 } from 'lucide-react';
 
 interface WalletData {
   id: string;
   balance: number;
   currency: string;
+  user_id: string;
+}
+
+interface UserProfile {
+  id: string;
+  full_name?: string;
+  client_id?: string;
+  email?: string;
 }
 
 interface Transaction {
@@ -45,6 +57,8 @@ interface Transaction {
   created_at: string;
   status: string;
   reference_id?: string;
+  balance_before?: number;
+  balance_after?: number;
 }
 
 interface PaymentMethodDB {
@@ -61,12 +75,14 @@ export default function ClientWallet() {
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [availablePaymentMethods, setAvailablePaymentMethods] = useState<PaymentMethodDB[]>([]);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [depositAmount, setDepositAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+  const [accountNumberVisible, setAccountNumberVisible] = useState(false);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [depositing, setDepositing] = useState(false);
   const [showBankDetails, setShowBankDetails] = useState(false);
@@ -80,14 +96,6 @@ export default function ClientWallet() {
     Calendar,
     Shield: TrendingUp,
     Globe: TrendingDown
-  };
-
-  // Bank account details
-  const bankDetails = {
-    companyName: "شركة علي صالح الشهري القابضة",
-    accountNumber: "161000010006086071040",
-    iban: "SA1980000161608016071040",
-    bankName: "البنك الأهلي السعودي"
   };
 
   useEffect(() => {
@@ -114,6 +122,20 @@ export default function ClientWallet() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+
+      // Fetch user profile
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      setUserProfile({
+        id: user.id,
+        full_name: profileData?.full_name,
+        client_id: profileData?.client_id,
+        email: user.email
+      });
 
       // Fetch wallet
       const { data: walletData, error: walletError } = await supabase
@@ -164,102 +186,6 @@ export default function ClientWallet() {
     }
   };
 
-  const handlePaymentReturn = async (paymentStatus: string, transactionId: string) => {
-    console.log('Payment return detected:', { paymentStatus, transactionId });
-    
-    if (paymentStatus === 'success') {
-      toast({
-        title: "تم الدفع بنجاح!",
-        description: "تم إضافة المبلغ إلى محفظتك",
-        variant: "default"
-      });
-    } else if (paymentStatus === 'failed') {
-      toast({
-        title: "فشل في الدفع",
-        description: "لم يتم إتمام عملية الدفع، يرجى المحاولة مرة أخرى",
-        variant: "destructive"
-      });
-    }
-    
-    // Clean up localStorage
-    localStorage.removeItem('pending_transaction_id');
-    localStorage.removeItem('wallet_return_url');
-    
-    // Refresh wallet data
-    await fetchWalletData();
-  };
-
-  const checkTransactionStatus = async (transactionId: string) => {
-    try {
-      console.log('Checking transaction status for:', transactionId);
-      
-      const { data: transaction, error } = await supabase
-        .from('wallet_transactions')
-        .select('*')
-        .eq('id', transactionId)
-        .single();
-
-      if (error) {
-        console.error('Error checking transaction status:', error);
-        return;
-      }
-
-      console.log('Transaction status:', transaction?.status);
-      
-      if (transaction && transaction.status === 'completed') {
-        toast({
-          title: "تم تأكيد الدفع!",
-          description: "تم إضافة المبلغ إلى محفظتك بنجاح",
-          variant: "default"
-        });
-        
-        // Clean up localStorage
-        localStorage.removeItem('pending_transaction_id');
-        localStorage.removeItem('wallet_return_url');
-        
-        // Refresh wallet data
-        await fetchWalletData();
-      }
-    } catch (error) {
-      console.error('Error in checkTransactionStatus:', error);
-    }
-  };
-
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "تم النسخ",
-      description: `تم نسخ ${label} بنجاح`
-    });
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (file.size > maxSize) {
-        toast({
-          title: "خطأ في حجم الملف",
-          description: "حجم الملف يجب أن يكون أقل من 5 ميجابايت",
-          variant: "destructive"
-        });
-        return;
-      }
-      
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-      if (!allowedTypes.includes(file.type)) {
-        toast({
-          title: "نوع ملف غير مدعوم",
-          description: "يرجى اختيار ملف من نوع JPG, PNG أو PDF",
-          variant: "destructive"
-        });
-        return;
-      }
-      
-      setReceiptFile(file);
-    }
-  };
-
   const handleDeposit = async () => {
     if (!depositAmount || !paymentMethod) {
       toast({
@@ -295,13 +221,6 @@ export default function ClientWallet() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
-      console.log('Sending deposit request:', {
-        amount,
-        payment_method: paymentMethod === 'electronic_payment' ? 'tap_now' : paymentMethod,
-        description: `شحن المحفظة بمبلغ ${amount} ريال سعودي`,
-        receipt_file: receiptFile ? receiptFile.name : null
-      });
-
       const response = await supabase.functions.invoke('wallet-deposit', {
         body: {
           amount,
@@ -314,30 +233,20 @@ export default function ClientWallet() {
         }
       });
 
-      console.log('Response received:', response);
-
       if (response.error) {
-        console.error('Response error:', response.error);
         throw response.error;
       }
 
       const { data } = response;
-      console.log('Response data:', data);
       
       if (data?.success) {
         if (data.payment_url) {
-          console.log('Payment URL received:', data.payment_url);
-          
-          // Clear form first
           setDepositAmount('');
           setPaymentMethod('');
           setReceiptFile(null);
           setIsDepositOpen(false);
-          
-          // Immediate redirect without any delay or confirmation
           window.location.href = data.payment_url;
         } else {
-          // Payment was processed immediately (bank transfer)
           toast({
             title: "تم إرسال طلب الشحن",
             description: data.message || "سيتم مراجعة إيصال التحويل وإضافة المبلغ خلال 24 ساعة",
@@ -355,21 +264,9 @@ export default function ClientWallet() {
       }
     } catch (error) {
       console.error('Deposit error:', error);
-      let errorMessage = 'حدث خطأ أثناء شحن المحفظة';
-      
-      if (error?.message?.includes('wallet_id')) {
-        errorMessage = 'خطأ في إعدادات المحفظة. يرجى المحاولة مرة أخرى';
-      } else if (error?.message?.includes('payment_method')) {
-        errorMessage = 'طريقة الدفع غير مدعومة';
-      } else if (error?.message?.includes('amount')) {
-        errorMessage = 'المبلغ المدخل غير صحيح';
-      } else if (error?.message) {
-        errorMessage = error.message;
-      }
-      
       toast({
         title: "خطأ في الشحن",
-        description: errorMessage,
+        description: "حدث خطأ أثناء شحن المحفظة، يرجى المحاولة مرة أخرى",
         variant: "destructive"
       });
     } finally {
@@ -377,30 +274,71 @@ export default function ClientWallet() {
     }
   };
 
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        toast({
+          title: "خطأ في حجم الملف",
+          description: "حجم الملف يجب أن يكون أقل من 5 ميجابايت",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "نوع ملف غير مدعوم",
+          description: "يرجى اختيار ملف من نوع JPG, PNG أو PDF",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      setReceiptFile(file);
+    }
+  };
+
+  const generateAccountNumber = (userId: string, clientId?: string) => {
+    if (clientId) return clientId;
+    return `ACC${userId.slice(-8).toUpperCase()}`;
+  };
+
+  const copyAccountNumber = () => {
+    const accountNumber = generateAccountNumber(userProfile?.id || '', userProfile?.client_id);
+    navigator.clipboard.writeText(accountNumber);
+    toast({
+      title: "تم النسخ",
+      description: "تم نسخ رقم الحساب إلى الحافظة"
     });
   };
 
-  const walletBalance = wallet?.balance || 0;
-  const totalDeposits = transactions.filter(t => t.transaction_type === 'deposit' && t.status === 'completed').reduce((sum, t) => sum + t.amount, 0);
-  const totalPayments = Math.abs(transactions.filter(t => t.transaction_type === 'payment' && t.status === 'completed').reduce((sum, t) => sum + t.amount, 0));
-  const totalRefunds = transactions.filter(t => t.transaction_type === 'refund' && t.status === 'completed').reduce((sum, t) => sum + t.amount, 0);
+  const calculateStats = () => {
+    const totalDeposits = transactions
+      .filter(t => t.transaction_type === 'deposit' && t.status === 'completed')
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    const totalWithdrawals = transactions
+      .filter(t => (t.transaction_type === 'withdrawal' || t.transaction_type === 'payment') && t.status === 'completed')
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    const pendingTransactions = transactions.filter(t => t.status === 'pending').length;
+    
+    return { totalDeposits, totalWithdrawals, pendingTransactions };
+  };
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case 'deposit':
-        return <ArrowUpCircle className="w-5 h-5 text-green-500" />;
+        return <ArrowUpCircle className="w-4 h-4 text-emerald-600" />;
       case 'payment':
-        return <ArrowDownCircle className="w-5 h-5 text-red-500" />;
+        return <ArrowDownCircle className="w-4 h-4 text-rose-600" />;
       case 'refund':
-        return <TrendingUp className="w-5 h-5 text-blue-500" />;
+        return <TrendingUp className="w-4 h-4 text-blue-600" />;
       default:
-        return <History className="w-5 h-5 text-muted-foreground" />;
+        return <History className="w-4 h-4 text-slate-600" />;
     }
   };
 
@@ -415,11 +353,19 @@ export default function ClientWallet() {
 
   const getTransactionStatus = (status: string) => {
     const statusMap: { [key: string]: { label: string, className: string } } = {
-      'completed': { label: 'مكتمل', className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' },
-      'pending': { label: 'قيد المعالجة', className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' },
-      'failed': { label: 'فشل', className: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' }
+      'completed': { label: 'مكتمل', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+      'pending': { label: 'قيد المعالجة', className: 'bg-amber-50 text-amber-700 border-amber-200' },
+      'failed': { label: 'فشل', className: 'bg-rose-50 text-rose-700 border-rose-200' }
     };
-    return statusMap[status] || { label: status, className: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200' };
+    return statusMap[status] || { label: status, className: 'bg-slate-50 text-slate-700 border-slate-200' };
+  };
+
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "تم النسخ",
+      description: `تم نسخ ${label} بنجاح`
+    });
   };
 
   const filteredTransactions = transactions.filter(transaction => {
@@ -428,19 +374,31 @@ export default function ClientWallet() {
     return matchesType && matchesSearch;
   });
 
+  const stats = calculateStats();
+  const accountNumber = generateAccountNumber(userProfile?.id || '', userProfile?.client_id);
+  const walletBalance = wallet?.balance || 0;
+
+  // Bank account details
+  const bankDetails = {
+    companyName: "شركة علي صالح محمد الشهري",
+    accountNumber: "161000010006086071040",
+    iban: "SA1980000161608016071040",
+    bankName: "البنك الأهلي السعودي"
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/10 p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+        <div className="max-w-6xl mx-auto">
           <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-muted rounded w-1/3"></div>
-            <div className="h-64 bg-muted rounded-xl"></div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="h-32 bg-muted rounded-xl"></div>
-              <div className="h-32 bg-muted rounded-xl"></div>
-              <div className="h-32 bg-muted rounded-xl"></div>
+            <div className="h-12 bg-white/60 rounded-xl w-1/3"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 space-y-6">
+                <div className="h-48 bg-white/60 rounded-xl"></div>
+                <div className="h-32 bg-white/60 rounded-xl"></div>
+              </div>
+              <div className="h-96 bg-white/60 rounded-xl"></div>
             </div>
-            <div className="h-96 bg-muted rounded-xl"></div>
           </div>
         </div>
       </div>
@@ -448,316 +406,366 @@ export default function ClientWallet() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/10" dir="rtl">
-      <div className="max-w-7xl mx-auto p-6 space-y-8">
-        
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-foreground flex items-center gap-3 animate-fade-in">
-              <div className="p-3 bg-gradient-to-r from-primary to-primary/70 rounded-2xl shadow-lg">
-                <Wallet className="h-8 w-8 text-primary-foreground" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50" dir="rtl">
+      <div className="max-w-6xl mx-auto p-4 lg:p-6 space-y-6">
+        {/* Banking Header */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl text-white">
+                <Wallet className="h-6 w-6" />
               </div>
-              المحفظة الرقمية
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              إدارة أموالك وتتبع معاملاتك بسهولة وأمان
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="lg" className="gap-2">
-              <Download className="h-4 w-4" />
-              تصدير كشف حساب
-            </Button>
+              <div>
+                <h1 className="text-2xl font-bold text-slate-800">المحفظة الرقمية</h1>
+                <p className="text-slate-600">إدارة أموالك وتتبع معاملاتك بسهولة وأمان</p>
+              </div>
+            </div>
+            <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-lg">
+              <Shield className="h-4 w-4 text-slate-600" />
+              <span className="text-sm text-slate-600">محمي وآمن</span>
+            </div>
           </div>
         </div>
 
-        {/* Main Balance Card */}
-        <Card className="relative overflow-hidden bg-gradient-to-r from-primary via-primary/90 to-primary/80 border-0 shadow-2xl animate-scale-in">
-          <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
-          <CardContent className="relative p-8 text-center text-primary-foreground">
-            <div className="flex items-center justify-center mb-6">
-              <div className="p-4 bg-white/20 rounded-full backdrop-blur-sm">
-                <Wallet className="h-12 w-12" />
-              </div>
-            </div>
-            
-            <h2 className="text-2xl font-medium mb-4 opacity-90">رصيد المحفظة</h2>
-            
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="text-6xl font-bold">
-                {isBalanceVisible ? walletBalance.toFixed(2) : '••••••'}
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsBalanceVisible(!isBalanceVisible)}
-                className="text-primary-foreground hover:bg-white/20"
-              >
-                {isBalanceVisible ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </Button>
-            </div>
-            
-            <p className="text-xl opacity-90 mb-8">ريال سعودي</p>
-            
-            <Dialog open={isDepositOpen} onOpenChange={setIsDepositOpen}>
-              <DialogTrigger asChild>
-                <Button size="lg" variant="secondary" className="hover-scale bg-white text-primary hover:bg-white/90 shadow-lg">
-                  <Plus className="h-5 w-5 ml-2" />
-                  شحن المحفظة
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-sm max-h-[90vh] overflow-y-auto" dir="rtl">
-                <DialogHeader className="pb-2">
-                  <DialogTitle className="text-center text-lg">شحن المحفظة</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 pt-2">
-                  <div className="space-y-1">
-                    <Label htmlFor="amount" className="text-sm">المبلغ (ريال سعودي)</Label>
-                    <Input
-                      id="amount"
-                      type="number"
-                      min="1"
-                      step="0.01"
-                      value={depositAmount}
-                      onChange={(e) => setDepositAmount(e.target.value)}
-                      placeholder="أدخل المبلغ"
-                      className="h-10"
-                    />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Account Information Card */}
+            <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <User className="h-5 w-5 text-slate-600" />
+                    <CardTitle className="text-lg text-slate-800">معلومات الحساب</CardTitle>
                   </div>
-                  
-                  <div className="grid grid-cols-3 gap-2">
-                    {[100, 500, 1000].map(amount => (
-                      <Button
-                        key={amount}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setDepositAmount(amount.toString())}
-                        className="h-8 text-sm"
-                      >
-                        {amount}
-                      </Button>
-                    ))}
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                    نشط
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-slate-600 font-medium">اسم العميل</Label>
+                    <p className="text-slate-800 font-semibold">{userProfile?.full_name || 'غير محدد'}</p>
                   </div>
-                  
-                  <div className="space-y-1">
-                    <Label className="text-sm">طريقة الدفع</Label>
-                    <Select value={paymentMethod} onValueChange={(value) => {
-                      setPaymentMethod(value);
-                      setShowBankDetails(value === 'bank_transfer');
-                      if (value !== 'bank_transfer') {
-                        setReceiptFile(null);
-                      }
-                    }}>
-                      <SelectTrigger className="h-10">
-                        <SelectValue placeholder="اختر طريقة الدفع" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availablePaymentMethods.map((method) => {
-                          const IconComponent = iconMap[method.icon_name as keyof typeof iconMap] || CreditCard;
-                          return (
-                            <SelectItem key={method.id} value={method.provider}>
-                              <div className="flex items-center gap-2">
-                                <IconComponent className="h-4 w-4" />
-                                {method.name_ar}
-                              </div>
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
+                  <div className="space-y-2">
+                    <Label className="text-slate-600 font-medium">البريد الإلكتروني</Label>
+                    <p className="text-slate-800 font-medium">{userProfile?.email}</p>
                   </div>
-
-                  {/* Bank Details */}
-                  {showBankDetails && (
-                    <Card className="border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
-                      <CardHeader className="pb-2 pt-3">
-                        <CardTitle className="text-base flex items-center gap-2">
-                          <Info className="h-4 w-4 text-blue-600" />
-                          تفاصيل التحويل البنكي
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-2 pt-2">
-                        <div className="space-y-1">
-                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">اسم الشركة:</p>
-                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border text-xs">
-                            <span className="truncate">{bankDetails.companyName}</span>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              className="h-6 w-6 p-0"
-                              onClick={() => copyToClipboard(bankDetails.companyName, "اسم الشركة")}
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-1">
-                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">رقم الحساب:</p>
-                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border text-xs">
-                            <span className="font-mono">{bankDetails.accountNumber}</span>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              className="h-6 w-6 p-0"
-                              onClick={() => copyToClipboard(bankDetails.accountNumber, "رقم الحساب")}
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-1">
-                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">الآيبان:</p>
-                          <div className="flex items-center justify-between bg-white dark:bg-blue-900 p-2 rounded border text-xs">
-                            <span className="font-mono">{bankDetails.iban}</span>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              className="h-6 w-6 p-0"
-                              onClick={() => copyToClipboard(bankDetails.iban, "الآيبان")}
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="p-2 bg-yellow-50 dark:bg-yellow-900/30 rounded border border-yellow-200 dark:border-yellow-800">
-                          <p className="text-xs text-yellow-800 dark:text-yellow-200 font-medium">
-                            ⚠️ مهم: رفع إيصال التحويل مطلوب
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {/* File Upload for Bank Transfer */}
-                  {showBankDetails && (
-                    <div className="space-y-1">
-                      <Label className="text-sm">رفع إيصال التحويل</Label>
-                      <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-3 text-center">
-                        <input
-                          type="file"
-                          accept="image/*,.pdf"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                          id="receipt-upload"
-                        />
-                        <label htmlFor="receipt-upload" className="cursor-pointer">
-                          <div className="space-y-1">
-                            <Upload className="h-6 w-6 mx-auto text-muted-foreground" />
-                            <p className="text-xs text-muted-foreground">
-                              اضغط لرفع الإيصال
-                            </p>
-                            {receiptFile && (
-                              <p className="text-xs text-green-600 font-medium truncate">
-                                {receiptFile.name}
-                              </p>
-                            )}
-                          </div>
-                        </label>
+                </div>
+                
+                <div className="border-t pt-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-2">
+                      <Label className="text-slate-600 font-medium">رقم الحساب</Label>
+                      <div className="flex items-center gap-2">
+                        <p className="text-lg font-mono font-bold text-slate-800 tracking-wider">
+                          {accountNumberVisible ? accountNumber : '●●●●●●●●'}
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setAccountNumberVisible(!accountNumberVisible)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={copyAccountNumber}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-                  )}
-                  
-                  <Button 
-                    onClick={handleDeposit} 
-                    disabled={depositing || !depositAmount || !paymentMethod || (paymentMethod === 'bank_transfer' && !receiptFile)}
-                    className="w-full h-10"
-                    size="default"
-                  >
-                    <Zap className="h-4 w-4 ml-2" />
-                    {depositing ? 'جاري الشحن...' : 'تأكيد الشحن'}
-                  </Button>
+                    <div className="text-right">
+                      <Label className="text-slate-600 font-medium">شركة علي صالح محمد الشهري</Label>
+                      <p className="text-sm text-slate-500">المملكة العربية السعودية</p>
+                    </div>
+                  </div>
                 </div>
-              </DialogContent>
-            </Dialog>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="hover-scale bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-200 dark:border-green-800 shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+            {/* Balance Card */}
+            <Card className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white border-none shadow-lg">
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-white/90 font-medium">رصيد المحفظة</CardTitle>
+                  <Wallet className="h-6 w-6 text-white/70" />
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-green-700 dark:text-green-300">إجمالي الإيداعات</p>
-                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                    {totalDeposits.toLocaleString()}
-                  </p>
-                  <p className="text-xs text-green-600/70">ريال سعودي</p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl md:text-5xl font-bold tracking-tight">
+                      {isBalanceVisible ? (
+                        <NumberFormatter number={walletBalance} />
+                      ) : (
+                        '••••••'
+                      )}
+                    </span>
+                    <span className="text-xl text-white/80 font-medium">ريال سعودي</span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setIsBalanceVisible(!isBalanceVisible)}
+                      className="text-white/70 hover:bg-white/20 h-8 w-8 p-0"
+                    >
+                      {isBalanceVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  <p className="text-white/70 text-sm">الرصيد المتاح للاستخدام</p>
                 </div>
-                <div className="p-3 bg-green-500/20 rounded-full">
-                  <TrendingUp className="h-8 w-8 text-green-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          <Card className="hover-scale bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 border-red-200 dark:border-red-800 shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-red-700 dark:text-red-300">إجمالي المدفوعات</p>
-                  <p className="text-3xl font-bold text-red-600 dark:text-red-400">
-                    {totalPayments.toLocaleString()}
-                  </p>
-                  <p className="text-xs text-red-600/70">ريال سعودي</p>
-                </div>
-                <div className="p-3 bg-red-500/20 rounded-full">
-                  <TrendingDown className="h-8 w-8 text-red-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                <Dialog open={isDepositOpen} onOpenChange={setIsDepositOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      size="lg" 
+                      className="w-full bg-white text-blue-600 hover:bg-white/90 font-semibold"
+                    >
+                      <Plus className="h-5 w-5 ml-2" />
+                      شحن المحفظة
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md" dir="rtl">
+                    <DialogHeader>
+                      <DialogTitle className="text-center text-slate-800">شحن المحفظة</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="amount" className="text-slate-700 font-medium">المبلغ (ريال سعودي)</Label>
+                        <Input
+                          id="amount"
+                          type="number"
+                          min="1"
+                          step="0.01"
+                          value={depositAmount}
+                          onChange={(e) => setDepositAmount(e.target.value)}
+                          placeholder="أدخل المبلغ المراد شحنه"
+                          className="text-lg font-semibold"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-slate-700 font-medium">طريقة الدفع</Label>
+                        <Select value={paymentMethod} onValueChange={(value) => {
+                          setPaymentMethod(value);
+                          setShowBankDetails(value === 'bank_transfer');
+                          if (value !== 'bank_transfer') {
+                            setReceiptFile(null);
+                          }
+                        }}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="اختر طريقة الدفع" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availablePaymentMethods.map((method) => {
+                              const IconComponent = iconMap[method.icon_name as keyof typeof iconMap] || CreditCard;
+                              return (
+                                <SelectItem key={method.id} value={method.provider}>
+                                  <div className="flex items-center gap-2">
+                                    <IconComponent className="h-4 w-4" />
+                                    {method.name_ar}
+                                  </div>
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-          <Card className="hover-scale bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-blue-200 dark:border-blue-800 shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-blue-700 dark:text-blue-300">إجمالي المبالغ المستردة</p>
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    {totalRefunds.toLocaleString()}
-                  </p>
-                  <p className="text-xs text-blue-600/70">ريال سعودي</p>
+                      {/* Bank Details */}
+                      {showBankDetails && (
+                        <Card className="border border-blue-200 bg-blue-50">
+                          <CardHeader className="pb-2 pt-3">
+                            <CardTitle className="text-base flex items-center gap-2">
+                              <Info className="h-4 w-4 text-blue-600" />
+                              تفاصيل التحويل البنكي
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-2 pt-2">
+                            <div className="space-y-1">
+                              <p className="text-xs font-medium text-blue-700">اسم الشركة:</p>
+                              <div className="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                                <span className="truncate">{bankDetails.companyName}</span>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  className="h-6 w-6 p-0"
+                                  onClick={() => copyToClipboard(bankDetails.companyName, "اسم الشركة")}
+                                >
+                                  <Copy className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-1">
+                              <p className="text-xs font-medium text-blue-700">رقم الحساب:</p>
+                              <div className="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                                <span className="font-mono">{bankDetails.accountNumber}</span>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  className="h-6 w-6 p-0"
+                                  onClick={() => copyToClipboard(bankDetails.accountNumber, "رقم الحساب")}
+                                >
+                                  <Copy className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-1">
+                              <p className="text-xs font-medium text-blue-700">الآيبان:</p>
+                              <div className="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                                <span className="font-mono">{bankDetails.iban}</span>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  className="h-6 w-6 p-0"
+                                  onClick={() => copyToClipboard(bankDetails.iban, "الآيبان")}
+                                >
+                                  <Copy className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      {/* File Upload for Bank Transfer */}
+                      {showBankDetails && (
+                        <div className="space-y-1">
+                          <Label className="text-sm">رفع إيصال التحويل</Label>
+                          <div className="border-2 border-dashed border-slate-300 rounded-lg p-3 text-center">
+                            <input
+                              type="file"
+                              accept="image/*,.pdf"
+                              onChange={handleFileUpload}
+                              className="hidden"
+                              id="receipt-upload"
+                            />
+                            <label htmlFor="receipt-upload" className="cursor-pointer">
+                              <div className="space-y-1">
+                                <Upload className="h-6 w-6 mx-auto text-slate-500" />
+                                <p className="text-xs text-slate-500">
+                                  اضغط لرفع الإيصال
+                                </p>
+                                {receiptFile && (
+                                  <p className="text-xs text-green-600 font-medium truncate">
+                                    {receiptFile.name}
+                                  </p>
+                                )}
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      )}
+
+                      <Button 
+                        onClick={handleDeposit} 
+                        disabled={depositing || !depositAmount || !paymentMethod || (paymentMethod === 'bank_transfer' && !receiptFile)}
+                        className="w-full bg-blue-600 hover:bg-blue-700"
+                        size="lg"
+                      >
+                        {depositing ? 'جاري الشحن...' : 'تأكيد الشحن'}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Statistics Sidebar */}
+          <div className="space-y-6">
+            {/* Quick Stats */}
+            <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-slate-800">
+                  <TrendingUp className="h-5 w-5" />
+                  إحصائيات سريعة
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                  <div className="flex items-center gap-2">
+                    <ArrowUpCircle className="h-4 w-4 text-emerald-600" />
+                    <span className="text-sm font-medium text-emerald-800">إجمالي الإيداعات</span>
+                  </div>
+                  <span className="font-bold text-emerald-700">
+                    <NumberFormatter number={stats.totalDeposits} suffix=" ريال" />
+                  </span>
                 </div>
-                <div className="p-3 bg-blue-500/20 rounded-full">
-                  <ArrowUpCircle className="h-8 w-8 text-blue-500" />
+
+                <div className="flex items-center justify-between p-3 bg-rose-50 rounded-lg border border-rose-100">
+                  <div className="flex items-center gap-2">
+                    <ArrowDownCircle className="h-4 w-4 text-rose-600" />
+                    <span className="text-sm font-medium text-rose-800">إجمالي المدفوعات</span>
+                  </div>
+                  <span className="font-bold text-rose-700">
+                    <NumberFormatter number={stats.totalWithdrawals} suffix=" ريال" />
+                  </span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+
+                <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-100">
+                  <div className="flex items-center gap-2">
+                    <History className="h-4 w-4 text-amber-600" />
+                    <span className="text-sm font-medium text-amber-800">معاملات معلقة</span>
+                  </div>
+                  <span className="font-bold text-amber-700">
+                    <NumberFormatter number={stats.pendingTransactions} />
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Payment Methods */}
+            <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-slate-800">
+                  <CreditCard className="h-5 w-5" />
+                  طرق الدفع المتاحة
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {availablePaymentMethods.map((method) => (
+                  <div key={method.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-4 w-4 text-slate-600" />
+                      <span className="text-sm font-medium text-slate-700">{method.name_ar}</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-slate-400" />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
-        {/* Transactions Section */}
-        <Card className="shadow-xl">
-          <CardHeader className="border-b bg-muted/30">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <div>
-                <CardTitle className="text-2xl flex items-center gap-3">
-                  <History className="h-6 w-6 text-primary" />
-                  سجل المعاملات
-                </CardTitle>
-                <CardDescription className="text-base mt-2">
-                  تاريخ جميع معاملات المحفظة والمدفوعات
-                </CardDescription>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3">
+        {/* Transaction History */}
+        <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-sm">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-slate-800">
+                <History className="h-5 w-5" />
+                سجل المعاملات
+              </CardTitle>
+              <div className="flex items-center gap-3">
                 <div className="relative">
-                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
                   <Input
                     placeholder="البحث في المعاملات..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-4 pr-10 w-full sm:w-64"
+                    className="pl-4 pr-10 w-64"
                   />
                 </div>
                 
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="w-full sm:w-48">
+                  <SelectTrigger className="w-48">
                     <Filter className="h-4 w-4 ml-2" />
                     <SelectValue placeholder="نوع المعاملة" />
                   </SelectTrigger>
@@ -771,84 +779,89 @@ export default function ClientWallet() {
               </div>
             </div>
           </CardHeader>
-          
-          <CardContent className="p-6">
+          <CardContent>
             {filteredTransactions.length === 0 ? (
-              <div className="text-center py-16 animate-fade-in">
-                <div className="p-6 bg-muted/50 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                  <Wallet className="h-12 w-12 text-muted-foreground" />
+              <div className="text-center py-12">
+                <div className="p-4 bg-slate-50 rounded-full w-fit mx-auto mb-4">
+                  <Wallet className="h-8 w-8 text-slate-400" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">لا توجد معاملات</h3>
-                <p className="text-muted-foreground mb-6">
-                  {transactions.length === 0 ? 'ابدأ بشحن محفظتك لتظهر المعاملات هنا' : 'لا توجد معاملات تطابق البحث'}
-                </p>
-                {transactions.length === 0 && (
-                  <Button onClick={() => setIsDepositOpen(true)} className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    شحن المحفظة الآن
-                  </Button>
-                )}
+                <h3 className="text-lg font-semibold text-slate-700 mb-2">لا توجد معاملات</h3>
+                <p className="text-slate-500 mb-4">ابدأ بشحن محفظتك لتظهر المعاملات هنا</p>
+                <Dialog open={isDepositOpen} onOpenChange={setIsDepositOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100">
+                      <Plus className="h-4 w-4 ml-2" />
+                      شحن المحفظة الآن
+                    </Button>
+                  </DialogTrigger>
+                </Dialog>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm text-slate-600">آخر {filteredTransactions.length} معاملة</span>
+                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                    عرض الكل
+                    <ChevronRight className="h-4 w-4 mr-1" />
+                  </Button>
+                </div>
+                
                 {filteredTransactions.map((transaction, index) => {
                   const status = getTransactionStatus(transaction.status);
                   return (
-                    <div 
-                      key={transaction.id} 
-                      className="flex items-center justify-between p-5 rounded-xl border bg-card hover:bg-muted/50 transition-all duration-300 hover:shadow-md animate-fade-in"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="p-3 bg-muted rounded-full">
-                          {getTransactionIcon(transaction.transaction_type)}
+                    <div key={transaction.id} className="group">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-all duration-200 border border-slate-100">
+                        <div className="flex items-center gap-4">
+                          <div className={`p-2 rounded-lg ${
+                            transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund'
+                              ? 'bg-emerald-100 text-emerald-600'
+                              : 'bg-rose-100 text-rose-600'
+                          }`}>
+                            {getTransactionIcon(transaction.transaction_type)}
+                          </div>
+                          
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className={`${status.className} font-medium`}>
+                                {getTransactionTypeText(transaction.transaction_type)}
+                              </Badge>
+                              <Badge variant="outline" className={status.className}>
+                                {status.label}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-slate-700 font-medium">{transaction.description}</p>
+                            <p className="text-xs text-slate-500">
+                              {new Date(transaction.created_at).toLocaleDateString('ar-SA', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
                         </div>
                         
-                        <div className="flex-1 space-y-1">
-                          <h4 className="font-semibold text-foreground text-lg">
-                            {transaction.description}
-                          </h4>
-                          
-                          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              <span>
-                                {new Date(transaction.created_at).toLocaleDateString('ar-SA', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </span>
-                            </div>
-                            
-                            <Badge className={status.className}>
-                              {status.label}
-                            </Badge>
-
-                            {transaction.reference_id && (
-                              <span className="text-xs text-muted-foreground">
-                                #{transaction.reference_id}
-                              </span>
-                            )}
+                        <div className="text-left space-y-1">
+                          <div className={`text-lg font-bold ${
+                            transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund'
+                              ? 'text-emerald-600'
+                              : 'text-rose-600'
+                          }`}>
+                            {transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund' ? '+' : '-'}
+                            <NumberFormatter number={transaction.amount} suffix=" ريال" />
                           </div>
+                          {transaction.balance_after && (
+                            <div className="text-xs text-slate-500">
+                              الرصيد: <NumberFormatter number={transaction.balance_after} suffix=" ريال" />
+                            </div>
+                          )}
                         </div>
                       </div>
                       
-                      <div className="text-left space-y-1">
-                        <div className={`text-xl font-bold ${
-                          transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund'
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-red-600 dark:text-red-400'
-                        }`}>
-                          {transaction.transaction_type === 'deposit' || transaction.transaction_type === 'refund' ? '+' : '-'}
-                          {Math.abs(transaction.amount).toFixed(2)} ريال
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          {getTransactionTypeText(transaction.transaction_type)}
-                        </div>
-                      </div>
+                      {index < filteredTransactions.length - 1 && (
+                        <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-2" />
+                      )}
                     </div>
                   );
                 })}
