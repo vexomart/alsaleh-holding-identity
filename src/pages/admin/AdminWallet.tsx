@@ -86,50 +86,53 @@ const AdminWallet = () => {
 
   const fetchAvailableUsers = async () => {
     try {
-      // جلب المستخدمين من جدول profiles
+      // جلب المستخدمين مع إيميلاتهم من المعاملات الحالية
+      const { data: transactions, error: transactionsError } = await supabase
+        .from('wallet_transactions')
+        .select('user_id, customer_name, customer_email')
+        .order('created_at', { ascending: false });
+
+      if (transactionsError) throw transactionsError;
+
+      // إنشاء قائمة فريدة من المستخدمين
+      const userMap = new Map();
+      transactions?.forEach(transaction => {
+        if (transaction.customer_name && transaction.customer_email && !userMap.has(transaction.user_id)) {
+          userMap.set(transaction.user_id, {
+            id: transaction.user_id,
+            name: transaction.customer_name,
+            email: transaction.customer_email
+          });
+        }
+      });
+
+      // جلب المستخدمين من profiles أيضاً
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('user_id, full_name')
-        .order('created_at', { ascending: false })
-        .limit(50);
+        .order('created_at', { ascending: false });
 
       if (profilesError) throw profilesError;
 
-      // جلب معلومات الإيميل من auth.users للمستخدمين الموجودين
-      if (profiles && profiles.length > 0) {
-        const userIds = profiles.map(p => p.user_id);
-        
-        // استخدام admin function للحصول على معلومات المستخدمين
-        const { data: authUsers, error: authError } = await supabase.functions.invoke('get-user-emails', {
-          body: { user_ids: userIds }
-        });
-
-        if (authError) {
-          console.warn('Could not fetch auth data:', authError);
-        }
-
-        // دمج البيانات
-        const emailMap = new Map();
-        if (authUsers?.users) {
-          authUsers.users.forEach((user: any) => {
-            emailMap.set(user.id, user.email);
+      // إضافة مستخدمين من profiles للذين ليس لهم معاملات
+      profiles?.forEach(profile => {
+        if (profile.full_name && !userMap.has(profile.user_id)) {
+          userMap.set(profile.user_id, {
+            id: profile.user_id,
+            name: profile.full_name,
+            email: 'غير متوفر'
           });
         }
+      });
 
-        const users = profiles.map(profile => ({
-          id: profile.user_id,
-          name: profile.full_name || 'مستخدم بدون اسم',
-          email: emailMap.get(profile.user_id) || 'غير متوفر'
-        }));
-
-        console.log('Available users with emails:', users);
-        setAvailableUsers(users);
-      }
+      const users = Array.from(userMap.values());
+      console.log('Available users:', users);
+      setAvailableUsers(users);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast({
         title: "خطأ في جلب قائمة المستخدمين",
-        description: error.message,
+        description: "حدث خطأ أثناء جلب بيانات المستخدمين",
         variant: "destructive",
       });
     }
