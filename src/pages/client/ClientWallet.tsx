@@ -304,10 +304,12 @@ export default function ClientWallet() {
   const generateUniqueAccountNumber = (userId: string, clientId?: string) => {
     if (clientId) return clientId;
     
-    // إنشاء رقم حساب فريد من 9 أرقام للتحقق المالي
-    const userHash = userId.replace(/-/g, '').slice(-8);
-    const randomDigit = Math.floor(Math.random() * 10);
-    return `${randomDigit}${userHash}`.slice(0, 9);
+    // إنشاء رقم حساب فريد ثابت من 9 أرقام للتحقق المالي
+    const userHash = userId.replace(/-/g, '');
+    // استخدام hash ثابت بدلاً من رقم عشوائي
+    const firstDigit = parseInt(userHash.charAt(0), 16) % 10; // أول رقم ثابت
+    const remainingDigits = userHash.slice(-8); // آخر 8 أرقام
+    return `${firstDigit}${remainingDigits}`.slice(0, 9);
   };
 
   const copyAccountNumber = () => {
