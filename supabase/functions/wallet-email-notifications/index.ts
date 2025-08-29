@@ -7,6 +7,7 @@ import { WalletDepositEmail } from './_templates/wallet-deposit.tsx';
 import { WalletWithdrawalEmail } from './_templates/wallet-withdrawal.tsx';
 import { BalanceAlertEmail } from './_templates/balance-alert.tsx';
 import { TransactionSummaryEmail } from './_templates/transaction-summary.tsx';
+import { WelcomeEmailTemplate } from './_templates/welcome-email.tsx';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -16,14 +17,19 @@ const corsHeaders = {
 };
 
 interface WalletEmailRequest {
-  type: 'deposit' | 'withdrawal' | 'balance_alert' | 'transaction_summary';
-  customerName: string;
-  customerEmail: string;
+  type: 'deposit' | 'withdrawal' | 'balance_alert' | 'transaction_summary' | 'welcome';
+  customer_name: string;
+  customer_email: string;
+  data?: any; // بيانات مرنة حسب نوع الإيميل
+  
+  // الحقول القديمة للتوافق مع الإصدارات السابقة
+  customerName?: string;
+  customerEmail?: string;
   amount?: number;
-  currency: string;
-  newBalance: number;
+  currency?: string;
+  newBalance?: number;
   transactionId?: string;
-  walletNumber: string;
+  walletNumber?: string;
   alertThreshold?: number;
   topUpUrl?: string;
   period?: string;
@@ -48,6 +54,10 @@ const handler = async (req: Request): Promise<Response> => {
     const requestData: WalletEmailRequest = await req.json();
     const {
       type,
+      customer_name,
+      customer_email,
+      data,
+      // الحقول القديمة للتوافق
       customerName,
       customerEmail,
       amount,
@@ -63,14 +73,18 @@ const handler = async (req: Request): Promise<Response> => {
       totalWithdrawals
     } = requestData;
 
-    console.log(`📧 Processing ${type} email for ${customerName} (${customerEmail})`);
+    // دعم النظام القديم والجديد
+    const finalCustomerName = customer_name || customerName;
+    const finalCustomerEmail = customer_email || customerEmail;
+
+    console.log(`📧 Processing ${type} email for ${finalCustomerName} (${finalCustomerEmail})`);
 
     // Validate required fields
-    if (!customerName || !customerEmail || !currency || newBalance === undefined || !walletNumber) {
-      throw new Error('Missing required fields: customerName, customerEmail, currency, newBalance, walletNumber');
+    if (!finalCustomerName || !finalCustomerEmail) {
+      throw new Error('Missing required fields: customer_name and customer_email');
     }
 
-    if (!customerEmail.includes('@')) {
+    if (!finalCustomerEmail.includes('@')) {
       throw new Error('Invalid email address format');
     }
 
@@ -92,16 +106,16 @@ const handler = async (req: Request): Promise<Response> => {
           throw new Error('Amount and transaction ID required for deposit email');
         }
         
-        emailSubject = `✅ تم إيداع ${amount.toLocaleString('ar-SA')} ${currency} في محفظتك الرقمية`;
+        emailSubject = `✅ تم إيداع ${data.amount?.toLocaleString('ar-SA') || amount?.toLocaleString('ar-SA')} ريال في محفظتك الرقمية`;
         emailHtml = await renderAsync(
           React.createElement(WalletDepositEmail, {
-            customerName,
-            amount,
-            currency,
-            newBalance,
-            transactionId,
+            customerName: finalCustomerName,
+            amount: data.amount || amount,
+            currency: 'SAR',
+            newBalance: data.new_balance || newBalance,
+            transactionId: data.transaction_id || transactionId,
             date: currentDate,
-            walletNumber,
+            walletNumber: walletNumber || 'W' + Math.random().toString().substr(2, 8),
           })
         );
         break;
@@ -111,16 +125,36 @@ const handler = async (req: Request): Promise<Response> => {
           throw new Error('Amount and transaction ID required for withdrawal email');
         }
         
-        emailSubject = `⚠️ تم سحب ${amount.toLocaleString('ar-SA')} ${currency} من محفظتك الرقمية`;
+        emailSubject = `⚠️ تم سحب ${data.amount?.toLocaleString('ar-SA') || amount?.toLocaleString('ar-SA')} ريال من محفظتك الرقمية`;
         emailHtml = await renderAsync(
           React.createElement(WalletWithdrawalEmail, {
-            customerName,
-            amount,
-            currency,
-            newBalance,
-            transactionId,
+            customerName: finalCustomerName,
+            amount: data.amount || amount,
+            currency: 'SAR',
+            newBalance: data.new_balance || newBalance,
+            transactionId: data.transaction_id || transactionId,
             date: currentDate,
-            walletNumber,
+            walletNumber: walletNumber || 'W' + Math.random().toString().substr(2, 8),
+          })
+        );
+        break;
+
+      case 'welcome':
+        emailSubject = `🎉 مرحباً بك في محفظتك الرقمية - شركة الصالح القابضة`;
+        emailHtml = await renderAsync(
+          React.createElement(WelcomeEmailTemplate, {
+            customerName: finalCustomerName,
+            data: data || {
+              user_id: 'new-user',
+              welcome_message: 'مرحباً بك في منصتنا! تم إنشاء محفظتك الرقمية بنجاح.',
+              initial_balance: 0,
+              wallet_features: [
+                'إيداع وسحب الأموال بسهولة',
+                'تتبع جميع المعاملات المالية',
+                'إشعارات فورية عند كل معاملة',
+                'أمان عالي لحماية أموالك'
+              ]
+            }
           })
         );
         break;
@@ -130,15 +164,15 @@ const handler = async (req: Request): Promise<Response> => {
           throw new Error('Alert threshold and top-up URL required for balance alert email');
         }
         
-        emailSubject = `🚨 تنبيه: رصيد محفظتك منخفض - ${newBalance.toLocaleString('ar-SA')} ${currency}`;
+        emailSubject = `🚨 تنبيه: رصيد محفظتك منخفض - ${newBalance?.toLocaleString('ar-SA')} ريال`;
         emailHtml = await renderAsync(
           React.createElement(BalanceAlertEmail, {
-            customerName,
-            currentBalance: newBalance,
-            currency,
-            walletNumber,
-            alertThreshold,
-            topUpUrl,
+            customerName: finalCustomerName,
+            currentBalance: newBalance || 0,
+            currency: 'SAR',
+            walletNumber: walletNumber || 'W' + Math.random().toString().substr(2, 8),
+            alertThreshold: alertThreshold || 100,
+            topUpUrl: topUpUrl || 'https://alsaleh-holding.com/wallet',
           })
         );
         break;
@@ -151,14 +185,14 @@ const handler = async (req: Request): Promise<Response> => {
         emailSubject = `📊 ملخص معاملات محفظتك الرقمية - ${period}`;
         emailHtml = await renderAsync(
           React.createElement(TransactionSummaryEmail, {
-            customerName,
-            walletNumber,
-            currentBalance: newBalance,
-            currency,
-            period,
-            transactions,
-            totalDeposits,
-            totalWithdrawals,
+            customerName: finalCustomerName,
+            walletNumber: walletNumber || 'W' + Math.random().toString().substr(2, 8),
+            currentBalance: newBalance || 0,
+            currency: 'SAR',
+            period: period || 'الشهر الحالي',
+            transactions: transactions || [],
+            totalDeposits: totalDeposits || 0,
+            totalWithdrawals: totalWithdrawals || 0,
           })
         );
         break;
@@ -176,30 +210,30 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email using Resend
     const emailResponse = await resend.emails.send({
-      from: `${senderName} <wallet@alialshehriholding.com>`,
-      to: [customerEmail],
+      from: `${senderName} <wallet@alsaleh-holding.com>`,
+      to: [finalCustomerEmail],
       subject: emailSubject,
       html: emailHtml,
       headers: {
         'X-Entity-Ref-ID': transactionId || `${type}-${Date.now()}`,
         'X-Priority': type === 'balance_alert' ? '1' : type === 'withdrawal' ? '2' : '3',
-        'X-Wallet-Number': walletNumber,
+        'X-Wallet-Number': walletNumber || 'N/A',
         'X-Email-Type': type,
       },
     });
 
-    console.log(`✅ Email sent successfully to ${customerEmail}:`, emailResponse.data);
+    console.log(`✅ Email sent successfully to ${finalCustomerEmail}:`, emailResponse.data);
 
     // Log the email sending for audit purposes
     const logData = {
       timestamp: new Date().toISOString(),
       type,
-      recipient: customerEmail,
-      customerName,
-      amount: amount || 0,
-      newBalance,
-      transactionId,
-      walletNumber,
+      recipient: finalCustomerEmail,
+      customerName: finalCustomerName,
+      amount: (data?.amount || amount) || 0,
+      newBalance: (data?.new_balance || newBalance) || 0,
+      transactionId: (data?.transaction_id || transactionId),
+      walletNumber: walletNumber || 'N/A',
       emailId: emailResponse.data?.id,
       success: true,
       priority: type === 'balance_alert' ? 'high' : type === 'withdrawal' ? 'medium' : 'normal'
@@ -212,10 +246,10 @@ const handler = async (req: Request): Promise<Response> => {
         success: true, 
         emailId: emailResponse.data?.id,
         type,
-        recipient: customerEmail,
-        walletNumber,
+        recipient: finalCustomerEmail,
+        walletNumber: walletNumber || 'N/A',
         timestamp: new Date().toISOString(),
-        message: `${type} email sent successfully to ${customerName}`
+        message: `${type} email sent successfully to ${finalCustomerName}`
       }),
       {
         status: 200,
