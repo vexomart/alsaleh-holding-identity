@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Search, Wallet, Users, DollarSign, TrendingUp, TrendingDown, Filter, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { useWalletEmailNotifications } from "@/hooks/useWalletEmailNotifications";
 
 interface WalletCustomerData {
   user_id: string;
