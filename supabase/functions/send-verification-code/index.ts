@@ -1,6 +1,10 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
-import { supabase } from "../_shared/supabase.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -51,51 +55,50 @@ const handler = async (req: Request): Promise<Response> => {
 
     // للأدمن، التحقق من وجود المستخدم وأنه أدمين
     if (type === 'admin') {
-      const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-      
-      if (userError || !userData.user) {
-        console.error('User not found:', userError);
-        return new Response(
-          JSON.stringify({ error: "User not found" }),
-          { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
-      }
+      try {
+        const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
+        
+        if (userError || !userData.user) {
+          console.error('Admin user not found:', userError);
+          return new Response(
+            JSON.stringify({ error: "Admin user not found" }),
+            { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          );
+        }
 
-      // التحقق من كونه أدمين
-      const { data: adminData, error: adminError } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userData.user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
+        // التحقق من كونه أدمين
+        const { data: adminData, error: adminError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userData.user.id)
+          .eq('role', 'admin')
+          .maybeSingle();
 
-      if (adminError) {
-        console.error('Error checking admin status:', adminError);
+        if (adminError) {
+          console.error('Error checking admin status:', adminError);
+          return new Response(
+            JSON.stringify({ error: "Error checking admin status" }),
+            { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          );
+        }
+
+        if (!adminData) {
+          console.error('User is not an admin');
+          return new Response(
+            JSON.stringify({ error: "Access denied" }),
+            { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          );
+        }
+      } catch (error) {
+        console.error('Error in admin verification:', error);
         return new Response(
-          JSON.stringify({ error: "Error checking admin status" }),
+          JSON.stringify({ error: "Error verifying admin status" }),
           { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
-
-      if (!adminData) {
-        console.error('User is not an admin');
-        return new Response(
-          JSON.stringify({ error: "Access denied" }),
-          { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
-      }
-    } else {
-      // للمستخدمين العاديين، التحقق من وجود المستخدم فقط
-      const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-      
-      if (userError || !userData.user) {
-        console.error('User not found:', userError);
-        return new Response(
-          JSON.stringify({ error: "User not found" }),
-          { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
-      }
     }
+    // للمستخدمين العاديين، لا نحتاج للتحقق من وجودهم مسبقاً
+    // سنرسل رمز التحقق فقط
 
     // إنشاء رمز التحقق
     const verificationCode = generateVerificationCode();

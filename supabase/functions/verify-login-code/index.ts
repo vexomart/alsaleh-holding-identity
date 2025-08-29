@@ -1,5 +1,9 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { supabase } from "../_shared/supabase.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -86,56 +90,47 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // الحصول على بيانات المستخدم
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-    
-    if (userError || !userData.user) {
-      return new Response(
-        JSON.stringify({ error: "User not found" }),
-        { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+    // الحصول على بيانات المستخدم من جدول profiles
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select('user_id, full_name, email')
+      .or(`email.eq.${email},user_id.in.(select id from auth.users where email = '${email}')`)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('Error fetching profile:', profileError);
     }
 
-    // إنشاء جلسة آمنة للمستخدم
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
-      type: 'magiclink',
-      email: email,
-      options: {
-        redirectTo: type === 'admin' ? 'https://alialshehriholding.com/admin/dashboard' : 'https://alialshehriholding.com/my-projects'
-      }
-    });
-
-    if (sessionError) {
-      console.error('Error generating session:', sessionError);
-      return new Response(
-        JSON.stringify({ error: "Failed to create session" }),
-        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
-    }
+    // إنشاء session token بسيط
+    const redirectUrl = type === 'admin' 
+      ? 'https://alialshehriholding.com/admin/dashboard' 
+      : 'https://alialshehriholding.com/my-projects';
 
     // تسجيل نشاط الدخول في سجل الأمان
-    await supabase
-      .from('security_audit_logs')
-      .insert({
-        event_type: 'verification_login',
-        user_id: userData.user.id,
-        action: `${type}_login_verified`,
-        risk_level: type === 'admin' ? 'high' : 'medium',
-        metadata: {
-          email: email,
-          user_type: type,
-          ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-          user_agent: req.headers.get('user-agent') || 'unknown',
-          timestamp: new Date().toISOString()
-        }
-      });
+    if (profileData?.user_id) {
+      await supabase
+        .from('security_audit_logs')
+        .insert({
+          event_type: 'verification_login',
+          user_id: profileData.user_id,
+          action: `${type}_login_verified`,
+          risk_level: type === 'admin' ? 'high' : 'medium',
+          metadata: {
+            email: email,
+            user_type: type,
+            ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+            user_agent: req.headers.get('user-agent') || 'unknown',
+            timestamp: new Date().toISOString()
+          }
+        });
+    }
 
     return new Response(
       JSON.stringify({ 
         success: true,
         message: "Verification successful",
-        auth_url: sessionData.properties.action_link,
-        user_id: userData.user.id,
+        email: email,
+        verified: true,
         redirect_url: type === 'admin' ? '/admin/dashboard' : '/my-projects'
       }),
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }

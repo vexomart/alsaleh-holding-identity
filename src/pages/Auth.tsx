@@ -150,8 +150,15 @@ const Auth = () => {
 
       if (data.success) {
         toast.success('تم التحقق بنجاح! يتم الآن تسجيل دخولك...');
-        // استخدام الرابط الآمن للدخول
-        window.location.href = data.auth_url;
+        
+        // إذا كان هناك auth_url، استخدمه
+        if (data.auth_url) {
+          window.location.href = data.auth_url;
+        } else {
+          // وإلا، اطلب من المستخدم إدخال كلمة المرور لتسجيل الدخول
+          setStep('credentials');
+          setError('تم التحقق من الرمز بنجاح. الآن أدخل كلمة المرور لإكمال تسجيل الدخول.');
+        }
       }
     } catch (error: any) {
       console.error('خطأ في التحقق:', error);
