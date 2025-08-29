@@ -471,6 +471,104 @@ const AdminWallet = () => {
         </Card>
       </div>
 
+      {/* بيانات الحساب البنكي للشركة */}
+      <Card className="bg-gradient-to-br from-emerald-50 via-emerald-100 to-emerald-50 border-2 border-emerald-200 shadow-xl">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-xl text-emerald-800">
+            <Building2 className="w-6 h-6 text-emerald-600" />
+            بيانات الحساب البنكي للشركة - بنك الراجحي
+          </CardTitle>
+          <CardDescription className="text-emerald-700">
+            بيانات الحساب المصرفي لاستقبال تحويلات العملاء
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* اسم الحساب */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-emerald-200">
+              <div className="flex items-center gap-2 mb-2">
+                <Users className="w-5 h-5 text-emerald-600" />
+                <span className="font-semibold text-emerald-800">اسم الحساب</span>
+              </div>
+              <p className="text-lg font-bold text-emerald-900 bg-emerald-100 p-3 rounded-lg">
+                شركة علي صالح محمد الشهري القابضة
+              </p>
+            </div>
+
+            {/* رقم الحساب */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-emerald-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-emerald-600" />
+                  <span className="font-semibold text-emerald-800">رقم الحساب</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigator.clipboard.writeText('123456789012345')}
+                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 p-2"
+                >
+                  <CreditCard className="w-4 h-4" />
+                </Button>
+              </div>
+              <p className="text-lg font-bold text-emerald-900 bg-emerald-100 p-3 rounded-lg font-mono">
+                123456789012345
+              </p>
+            </div>
+
+            {/* رقم الآيبان */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-emerald-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-emerald-600" />
+                  <span className="font-semibold text-emerald-800">رقم الآيبان</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigator.clipboard.writeText('SA1234567890123456789012')}
+                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-100 p-2"
+                >
+                  <CreditCard className="w-4 h-4" />
+                </Button>
+              </div>
+              <p className="text-lg font-bold text-emerald-900 bg-emerald-100 p-3 rounded-lg font-mono">
+                SA1234567890123456789012
+              </p>
+            </div>
+
+            {/* اسم البنك */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-emerald-200">
+              <div className="flex items-center gap-2 mb-2">
+                <Building2 className="w-5 h-5 text-emerald-600" />
+                <span className="font-semibold text-emerald-800">اسم البنك</span>
+              </div>
+              <p className="text-lg font-bold text-emerald-900 bg-emerald-100 p-3 rounded-lg">
+                مصرف الراجحي
+              </p>
+            </div>
+
+          </div>
+
+          {/* تعليمات للأدمين */}
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-6 h-6 text-blue-600 mt-1" />
+              <div>
+                <h4 className="font-semibold text-blue-800 mb-2">ملاحظات للإدارة:</h4>
+                <ul className="text-blue-700 space-y-1 text-sm">
+                  <li>• هذه البيانات معروضة للعملاء في لوحة التحكم الخاصة بهم</li>
+                  <li>• يجب مراجعة طلبات التحويل الواردة يومياً</li>
+                  <li>• التأكد من مطابقة بيانات التحويل مع طلبات العملاء</li>
+                  <li>• إضافة الرصيد للعميل بعد التأكد من صحة التحويل</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Filters */}
       <Card className="border border-border/50">
         <CardHeader>
