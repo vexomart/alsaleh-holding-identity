@@ -39,7 +39,23 @@ const Auth = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/my-projects');
+        // التحقق من دور المستخدم وإعادة التوجيه وفقاً لذلك
+        try {
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', session.user.id)
+            .maybeSingle();
+
+          if (roleData?.role === 'admin') {
+            navigate('/admin/dashboard');
+          } else {
+            navigate('/my-projects');
+          }
+        } catch (error) {
+          console.error('Error checking user role:', error);
+          navigate('/my-projects');
+        }
       }
     };
     checkAuth();
@@ -69,7 +85,23 @@ const Auth = () => {
           }
         }
         
-        navigate('/my-projects');
+        // التحقق من دور المستخدم وإعادة التوجيه وفقاً لذلك
+        try {
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', session.user.id)
+            .maybeSingle();
+
+          if (roleData?.role === 'admin') {
+            navigate('/admin/dashboard');
+          } else {
+            navigate('/my-projects');
+          }
+        } catch (error) {
+          console.error('Error checking user role:', error);
+          navigate('/my-projects');
+        }
       }
     });
 
