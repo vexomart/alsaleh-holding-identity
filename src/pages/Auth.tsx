@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, Shield, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, Shield, Mail, Lock, Building2, Key } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
@@ -17,8 +17,10 @@ const Auth = () => {
   const [error, setError] = useState('');
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
-  const [step, setStep] = useState<'credentials' | 'verification'>('credentials');
+  const [step, setStep] = useState<'credentials' | 'verification' | 'forgot-password'>('credentials');
   const [emailForVerification, setEmailForVerification] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [showVerificationAfterSignup, setShowVerificationAfterSignup] = useState(false);
   const navigate = useNavigate();
 
   // تحقق من وجود كود إحالة في الرابط
@@ -186,20 +188,61 @@ const Auth = () => {
       }
 
       if (data.success) {
-        toast('تم التحقق بنجاح! يتم الآن تسجيل دخولك...');
+        // إرسال إيميل ترحيبي بعد التفعيل الناجح
+        try {
+          await supabase.functions.invoke('client-welcome-email', {
+            body: {
+              clientEmail: emailForVerification,
+              clientName: signupEmail || emailForVerification.split('@')[0]
+            }
+          });
+        } catch (welcomeError) {
+          console.log('Failed to send welcome email:', welcomeError);
+        }
+
+        toast.success('تم تفعيل حسابك بنجاح! مرحباً بك في منصتنا 🎉');
         
-        // إذا كان هناك auth_url، استخدمه
-        if (data.auth_url) {
-          window.location.href = data.auth_url;
+        // تسجيل الدخول التلقائي بعد التفعيل
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          // المستخدم مسجل دخول بالفعل
+          navigate('/my-projects');
         } else {
-          // وإلا، اطلب من المستخدم إدخال كلمة المرور لتسجيل الدخول
+          // إذا لم يكن مسجل دخول، إعادة توجيه للدخول
           setStep('credentials');
-          setError('تم التحقق من الرمز بنجاح. الآن أدخل كلمة المرور لإكمال تسجيل الدخول.');
+          setError('');
+          toast('تم تفعيل حسابك! يمكنك الآن تسجيل الدخول.');
         }
       }
     } catch (error: any) {
       console.error('خطأ في التحقق:', error);
       setError('حدث خطأ أثناء التحقق من الرمز.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      });
+
+      if (error) {
+        setError('حدث خطأ أثناء إرسال رابط إعادة تعيين كلمة المرور.');
+      } else {
+        toast.success('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.');
+        setStep('credentials');
+      }
+    } catch (err) {
+      setError('حدث خطأ أثناء إرسال رابط إعادة تعيين كلمة المرور.');
     } finally {
       setIsLoading(false);
     }
@@ -264,6 +307,10 @@ const Auth = () => {
               console.error('Email sending error:', emailError);
               toast.success('تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني لتأكيد الحساب.');
             } else {
+              setSignupEmail(email);
+              setEmailForVerification(email);
+              setShowVerificationAfterSignup(true);
+              setStep('verification');
               toast.success('تم إنشاء الحساب بنجاح! تم إرسال رمز التحقق إلى بريدك الإلكتروني.', {
                 duration: 6000,
                 style: {
@@ -293,52 +340,51 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/10 to-indigo-100/20 dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/20 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
       {/* خلفية شبكة ديناميكية */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.08)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] opacity-40"></div>
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.1)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] opacity-20"></div>
       
       {/* عناصر زخرفية متحركة */}
-      <div className="absolute top-20 left-20 w-32 h-32 bg-blue-200/30 dark:bg-blue-800/20 rounded-full blur-xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-20 w-40 h-40 bg-indigo-200/30 dark:bg-indigo-800/20 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute top-1/3 right-1/4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       
       <div className="w-full max-w-lg mx-auto relative z-10">
         {/* رابط العودة */}
         <Link 
           to="/"
-          className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 mb-6 transition-all duration-300 font-medium"
+          className="inline-flex items-center gap-2 text-slate-300 hover:text-white mb-6 transition-all duration-300 font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
           العودة للرئيسية
         </Link>
 
-        <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-0 shadow-2xl shadow-slate-200/50 dark:shadow-slate-900/50 rounded-3xl overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 pb-8 pt-10 text-center relative">
+        <Card className="bg-slate-800/90 backdrop-blur-xl border border-slate-700/50 shadow-2xl shadow-black/50 rounded-3xl overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-slate-700 via-slate-800 to-slate-700 pb-8 pt-10 text-center relative border-b border-slate-700/50">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
             
             {/* لوجو الشركة */}
-            <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/30 mb-6 relative">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                  <div className="w-4 h-4 bg-white rounded-sm"></div>
-                </div>
-              </div>
+            <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/30 mb-6 relative">
+              <Building2 className="w-12 h-12 text-white" />
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center animate-pulse">
                 <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
             </div>
             
-            <CardTitle className="text-3xl font-bold text-slate-800 dark:text-white mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              منصة إدارة المشاريع
+            <CardTitle className="text-3xl font-bold text-white mb-3">
+              <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                منصة الشركات المتقدمة
+              </span>
             </CardTitle>
-            <CardDescription className="text-slate-600 dark:text-slate-300 text-lg">
-              منصة متطورة لإدارة ومتابعة المشاريع
+            <CardDescription className="text-slate-300 text-lg">
+              نظام إدارة متكامل للشركات والمؤسسات
             </CardDescription>
             {referralCode && (
-              <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/50 dark:to-emerald-950/50 border border-green-200/50 dark:border-green-700/50 rounded-2xl backdrop-blur-sm">
-                <p className="text-sm text-green-700 dark:text-green-300 font-medium">
+              <div className="mt-6 p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 rounded-2xl backdrop-blur-sm">
+                <p className="text-sm text-green-300 font-medium">
                   🎉 تم اكتشاف كود إحالة! ستحصل على مزايا خاصة عند التسجيل
                 </p>
-                <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-mono">
+                <p className="text-xs text-green-400 mt-1 font-mono">
                   كود الإحالة: {referralCode}
                 </p>
               </div>
@@ -346,24 +392,24 @@ const Auth = () => {
           </CardHeader>
           <CardContent className="p-8">
             <Tabs defaultValue="signin" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-slate-100/80 dark:bg-slate-800/80 rounded-2xl p-1 mb-8">
+              <TabsList className="grid w-full grid-cols-2 bg-slate-700/80 rounded-2xl p-1 mb-8">
                 <TabsTrigger 
                   value="signin" 
-                  className="rounded-xl text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-blue-600 transition-all duration-300"
+                  className="rounded-xl text-sm font-medium data-[state=active]:bg-slate-600 data-[state=active]:shadow-lg data-[state=active]:text-blue-400 text-slate-300 transition-all duration-300"
                 >
                   تسجيل الدخول
                 </TabsTrigger>
                 <TabsTrigger 
                   value="signup" 
-                  className="rounded-xl text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-blue-600 transition-all duration-300"
+                  className="rounded-xl text-sm font-medium data-[state=active]:bg-slate-600 data-[state=active]:shadow-lg data-[state=active]:text-blue-400 text-slate-300 transition-all duration-300"
                 >
                   حساب جديد
                 </TabsTrigger>
               </TabsList>
 
               {error && (
-                <Alert className="mt-4 mb-6 border-red-200 bg-red-50/80 dark:bg-red-950/20 dark:border-red-800 backdrop-blur-sm rounded-2xl">
-                  <AlertDescription className="text-red-800 dark:text-red-300 text-right font-medium">
+                <Alert className="mt-4 mb-6 border-red-400/30 bg-red-500/20 backdrop-blur-sm rounded-2xl">
+                  <AlertDescription className="text-red-300 text-right font-medium">
                     {error}
                   </AlertDescription>
                 </Alert>
@@ -373,7 +419,7 @@ const Auth = () => {
                 {step === 'credentials' ? (
                   <form onSubmit={handleSignIn} className="space-y-6">
                     <div className="space-y-3">
-                      <Label htmlFor="signin-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <Label htmlFor="signin-email" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
                         <Mail className="w-4 h-4" />
                         البريد الإلكتروني
                       </Label>
@@ -384,27 +430,27 @@ const Auth = () => {
                         placeholder="example@company.com"
                         required
                         disabled={isLoading}
-                        className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300"
+                        className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
                         dir="rtl"
                       />
                     </div>
 
                     {/* خيار استخدام التحقق بالإيميل */}
                     <div className="space-y-4">
-                      <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-2xl border border-blue-200/50 dark:border-blue-800/50">
+                      <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-2xl border border-blue-400/30">
                         <input
                           type="checkbox"
                           id="useVerification"
                           name="useVerification"
                           className="w-4 h-4 rounded border-blue-300 text-blue-600 focus:ring-blue-500/20"
                         />
-                        <Label htmlFor="useVerification" className="text-sm font-medium text-blue-800 dark:text-blue-300">
+                        <Label htmlFor="useVerification" className="text-sm font-medium text-blue-300">
                           استخدام التحقق بالإيميل (أكثر أماناً) 🔐
                         </Label>
                       </div>
                       
                       <div id="password-field" className="space-y-3">
-                        <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
                           <Lock className="w-4 h-4" />
                           كلمة المرور
                         </Label>
@@ -415,14 +461,14 @@ const Auth = () => {
                             type={showPassword ? "text" : "password"}
                             placeholder="كلمة المرور (اختياري مع التحقق بالإيميل)"
                             disabled={isLoading}
-                            className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300 pr-12"
+                            className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl transition-all duration-300 pr-12 text-white placeholder:text-slate-400"
                             dir="rtl"
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 rounded-lg"
+                            className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-600/50 rounded-lg text-slate-400"
                             onClick={() => setShowPassword(!showPassword)}
                           >
                             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -448,22 +494,37 @@ const Auth = () => {
                         </div>
                       )}
                     </Button>
+
+                    {/* زر نسيت كلمة المرور */}
+                    <div className="text-center">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => setStep('forgot-password')}
+                        className="text-blue-400 hover:text-blue-300 text-sm"
+                      >
+                        <Key className="w-4 h-4 ml-2" />
+                        نسيت كلمة المرور؟
+                      </Button>
+                    </div>
                   </form>
-                ) : (
+                ) : step === 'verification' ? (
                   <form onSubmit={handleVerificationSubmit} className="space-y-6">
                     <div className="text-center space-y-4">
-                      <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-                        <Shield className="w-10 h-10 text-green-600 dark:text-green-400" />
+                      <div className="w-20 h-20 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-green-400/30">
+                        <Shield className="w-10 h-10 text-green-400" />
                       </div>
-                      <h3 className="text-xl font-bold text-slate-800 dark:text-white">أدخل رمز التحقق</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-100/80 dark:bg-slate-800/50 p-3 rounded-xl">
+                      <h3 className="text-xl font-bold text-white">
+                        {showVerificationAfterSignup ? 'فعل حسابك الآن' : 'أدخل رمز التحقق'}
+                      </h3>
+                      <p className="text-sm text-slate-300 bg-slate-700/50 p-3 rounded-xl border border-slate-600">
                         تم إرسال رمز مكون من 6 أرقام إلى<br/>
-                        <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">{emailForVerification}</span>
+                        <span className="font-mono font-semibold text-blue-400">{emailForVerification}</span>
                       </p>
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="verification-code" className="text-sm font-semibold text-slate-700 dark:text-slate-300 text-center block">
+                      <Label htmlFor="verification-code" className="text-sm font-semibold text-slate-300 text-center block">
                         رمز التحقق (6 أرقام)
                       </Label>
                       <Input
@@ -473,7 +534,7 @@ const Auth = () => {
                         value={verificationCode}
                         onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         maxLength={6}
-                        className="h-16 text-center text-2xl font-mono tracking-widest bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-green-400 focus:ring-green-400/20 rounded-xl transition-all duration-300"
+                        className="h-16 text-center text-2xl font-mono tracking-widest bg-slate-700/50 border-slate-600 focus:border-green-400 focus:ring-green-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
                         required
                         disabled={isLoading}
                       />
@@ -502,7 +563,7 @@ const Auth = () => {
                         type="button"
                         variant="ghost"
                         onClick={() => setStep('credentials')}
-                        className="text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 rounded-xl"
+                        className="text-slate-400 hover:text-slate-200 rounded-xl"
                       >
                         العودة للخلف
                       </Button>
@@ -515,10 +576,69 @@ const Auth = () => {
                           form.set('useVerification', 'on');
                           handleSignIn({preventDefault: () => {}, currentTarget: {elements: Object.fromEntries(form)}} as any);
                         }}
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 rounded-xl"
+                        className="text-blue-400 hover:text-blue-200 rounded-xl"
                         disabled={isLoading}
                       >
                         إعادة الإرسال
+                      </Button>
+                    </div>
+                  </form>
+                ) : (
+                  // صفحة نسيت كلمة المرور
+                  <form onSubmit={handleForgotPassword} className="space-y-6">
+                    <div className="text-center space-y-4">
+                      <div className="w-20 h-20 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-orange-400/30">
+                        <Key className="w-10 h-10 text-orange-400" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white">إعادة تعيين كلمة المرور</h3>
+                      <p className="text-sm text-slate-300 bg-slate-700/50 p-3 rounded-xl border border-slate-600">
+                        أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="forgot-email" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        البريد الإلكتروني
+                      </Label>
+                      <Input
+                        id="forgot-email"
+                        name="email"
+                        type="email"
+                        placeholder="example@company.com"
+                        required
+                        disabled={isLoading}
+                        className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-orange-400 focus:ring-orange-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
+                        dir="rtl"
+                      />
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full h-12 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold shadow-lg shadow-orange-500/30 rounded-xl transition-all duration-300" 
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          جارِ الإرسال...
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-3">
+                          <Mail className="w-5 h-5" />
+                          إرسال رابط إعادة التعيين
+                        </div>
+                      )}
+                    </Button>
+
+                    <div className="text-center">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => setStep('credentials')}
+                        className="text-slate-400 hover:text-slate-200 rounded-xl"
+                      >
+                        العودة لتسجيل الدخول
                       </Button>
                     </div>
                   </form>
@@ -528,7 +648,7 @@ const Auth = () => {
               <TabsContent value="signup" className="space-y-6">
                 <form onSubmit={handleSignUp} className="space-y-6">
                   <div className="space-y-3">
-                    <Label htmlFor="signup-name" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <Label htmlFor="signup-name" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
                       <UserPlus className="w-4 h-4" />
                       الاسم الكامل
                     </Label>
@@ -539,12 +659,12 @@ const Auth = () => {
                       placeholder="الاسم الكامل"
                       required
                       disabled={isLoading}
-                      className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300"
+                      className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
                       dir="rtl"
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="signup-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <Label htmlFor="signup-email" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
                       <Mail className="w-4 h-4" />
                       البريد الإلكتروني
                     </Label>
@@ -555,13 +675,13 @@ const Auth = () => {
                       placeholder="example@company.com"
                       required
                       disabled={isLoading}
-                      className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300"
+                      className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 text-white placeholder:text-slate-400"
                       dir="rtl"
                     />
                   </div>
                   
                   <div className="space-y-3">
-                    <Label htmlFor="signup-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <Label htmlFor="signup-password" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
                       <Lock className="w-4 h-4" />
                       كلمة المرور
                     </Label>
@@ -574,37 +694,37 @@ const Auth = () => {
                         required
                         minLength={8}
                         disabled={isLoading}
-                        className="h-12 text-right bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 pr-12"
+                        className="h-12 text-right bg-slate-700/50 border-slate-600 focus:border-purple-400 focus:ring-purple-400/20 rounded-xl transition-all duration-300 pr-12 text-white placeholder:text-slate-400"
                         dir="rtl"
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 rounded-lg"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-600/50 rounded-lg text-slate-400"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
                     
-                    <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 rounded-2xl border border-purple-200/50 dark:border-purple-800/50">
-                      <p className="text-xs font-semibold text-purple-800 dark:text-purple-300 mb-2">متطلبات كلمة المرور:</p>
-                      <ul className="text-xs text-purple-700 dark:text-purple-400 space-y-1">
+                    <div className="p-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl border border-purple-400/30">
+                      <p className="text-xs font-semibold text-purple-300 mb-2">متطلبات كلمة المرور:</p>
+                      <ul className="text-xs text-purple-400 space-y-1">
                         <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
                           8 أحرف على الأقل
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
                           حرف كبير وحرف صغير
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
                           رقم واحد على الأقل
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
+                          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
                           تجنب الكلمات الشائعة
                         </li>
                       </ul>
