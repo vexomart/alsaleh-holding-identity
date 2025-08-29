@@ -9,7 +9,6 @@ import { Wallet, Plus, Copy, Eye, User, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { NumberFormatter } from '@/components/NumberFormatter';
-import PaymentMethods from '@/components/PaymentMethods';
 import { Building2, CreditCard, Smartphone } from 'lucide-react';
 import SEO from '@/components/SEO';
 
