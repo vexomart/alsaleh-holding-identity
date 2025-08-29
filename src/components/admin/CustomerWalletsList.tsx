@@ -49,7 +49,7 @@ export const CustomerWalletsList = () => {
       // جلب جميع العملاء من profiles أولاً
       const { data: allProfiles, error: profilesError } = await supabase
         .from('profiles')
-        .select('id, full_name, email, account_number, phone, created_at')
+        .select('id, user_id, full_name, email, account_number, phone, created_at')
         .order('created_at', { ascending: false });
         
       if (profilesError) {
@@ -69,12 +69,12 @@ export const CustomerWalletsList = () => {
 
       console.log('✅ تم جلب البيانات:', allProfiles?.length, 'عميل،', wallets?.length, 'محفظة');
       
-      // دمج البيانات
+      // دمج البيانات - الربط بـ user_id بدلاً من id
       return allProfiles?.map((profile: any, index: number) => {
-        const wallet = wallets?.find((w: any) => w.user_id === profile.id);
+        const wallet = wallets?.find((w: any) => w.user_id === profile.user_id);
         
         return {
-          user_id: profile.id,
+          user_id: profile.user_id, // استخدام user_id بدلاً من id
           full_name: profile.full_name || 'غير محدد',
           email: profile.email,
           account_number: profile.account_number || 'غير محدد',
