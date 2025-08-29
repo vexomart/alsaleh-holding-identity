@@ -291,6 +291,228 @@ export type Database = {
         }
         Relationships: []
       }
+      ash_otps: {
+        Row: {
+          attempts: number | null
+          code: string
+          consumed: boolean | null
+          created_at: string | null
+          email: string
+          expires_at: string
+          id: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          code: string
+          consumed?: boolean | null
+          created_at?: string | null
+          email: string
+          expires_at: string
+          id?: string
+          type?: string
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          code?: string
+          consumed?: boolean | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ash_otps_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ash_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ash_users: {
+        Row: {
+          address: string | null
+          avatar_url: string | null
+          company_name: string | null
+          created_at: string | null
+          email: string
+          id: string
+          kyc_status: string
+          last_login_at: string | null
+          name: string
+          password_hash: string
+          phone: string | null
+          role: string
+          status: string
+          two_factor_enabled: boolean | null
+          updated_at: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          avatar_url?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          kyc_status?: string
+          last_login_at?: string | null
+          name: string
+          password_hash: string
+          phone?: string | null
+          role?: string
+          status?: string
+          two_factor_enabled?: boolean | null
+          updated_at?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          kyc_status?: string
+          last_login_at?: string | null
+          name?: string
+          password_hash?: string
+          phone?: string | null
+          role?: string
+          status?: string
+          two_factor_enabled?: boolean | null
+          updated_at?: string | null
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      ash_wallet_transactions: {
+        Row: {
+          admin_notes: string | null
+          amount: number
+          approved_at: string | null
+          approved_by: string | null
+          balance_after: number | null
+          balance_before: number | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          reference_id: string | null
+          status: string
+          type: string
+          user_id: string | null
+          wallet_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount: number
+          approved_at?: string | null
+          approved_by?: string | null
+          balance_after?: number | null
+          balance_before?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          status?: string
+          type: string
+          user_id?: string | null
+          wallet_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          amount?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          balance_after?: number | null
+          balance_before?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          status?: string
+          type?: string
+          user_id?: string | null
+          wallet_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ash_wallet_transactions_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "ash_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ash_wallet_transactions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "ash_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ash_wallet_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ash_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ash_wallet_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "ash_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ash_wallets: {
+        Row: {
+          balance: number
+          created_at: string | null
+          currency: string
+          id: string
+          is_active: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          balance?: number
+          created_at?: string | null
+          currency?: string
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          balance?: number
+          created_at?: string | null
+          currency?: string
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ash_wallets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "ash_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_usage: {
         Row: {
           automation_type: string
