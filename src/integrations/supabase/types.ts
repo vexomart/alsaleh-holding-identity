@@ -2094,6 +2094,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_number: string | null
           client_id: string | null
           company: string | null
           created_at: string | null
@@ -2106,6 +2107,7 @@ export type Database = {
           user_role: string | null
         }
         Insert: {
+          account_number?: string | null
           client_id?: string | null
           company?: string | null
           created_at?: string | null
@@ -2118,6 +2120,7 @@ export type Database = {
           user_role?: string | null
         }
         Update: {
+          account_number?: string | null
           client_id?: string | null
           company?: string | null
           created_at?: string | null
@@ -3502,6 +3505,10 @@ export type Database = {
       }
       ensure_user_wallet: {
         Args: { p_user_id: string }
+        Returns: string
+      }
+      generate_account_number: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
       generate_affiliate_code: {
