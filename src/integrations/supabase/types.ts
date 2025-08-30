@@ -3929,6 +3929,10 @@ export type Database = {
           | { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
       }
+      create_secure_password_hash: {
+        Args: { password_text: string }
+        Returns: string
+      }
       create_ultra_secure_admin_session: {
         Args: {
           additional_entropy?: string
@@ -3974,6 +3978,10 @@ export type Database = {
       }
       ensure_user_wallet: {
         Args: { p_user_id: string }
+        Returns: string
+      }
+      fix_legacy_data: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
       generate_account_number: {
