@@ -258,9 +258,9 @@ serve(async (req) => {
           throw new Error('البريد الإلكتروني مسجّل مسبقًا. جرّب تسجيل الدخول أو استعادة كلمة المرور.');
         }
 
-        // Hash password securely using database function
-        const { data: passwordHash, error: hashError } = await supabase.rpc(
-          'create_secure_password_hash',
+        // Hash password securely using enhanced database function
+        const { data: passwordHashData, error: hashError } = await supabase.rpc(
+          'create_secure_password_hash_v2',
           { password_text: password }
         );
 
@@ -271,7 +271,7 @@ serve(async (req) => {
         }
 
         try {
-          // Create user with transactional approach
+          // Create user with enhanced hash data
           const { data: newUser, error: userError } = await supabase
             .from('ash_users')
             .insert({
@@ -280,7 +280,9 @@ serve(async (req) => {
               name: name.trim(),
               phone: phone?.trim() || null,
               company_name: company_name?.trim() || null,
-              password_hash: passwordHash,
+              password_hash: passwordHashData.hash,
+              password_salt: passwordHashData.salt,
+              password_hash_version: passwordHashData.algorithm,
               role: 'client',
               status: 'pending'
             })
@@ -345,9 +347,9 @@ serve(async (req) => {
           throw new Error(passwordValidation.message);
         }
 
-        // Use simplified authentication function
+        // Use enhanced authentication function
         const { data: authResult, error: authError } = await supabase.rpc(
-          'simple_authenticate_user',
+          'simple_authenticate_user_enhanced',
           {
             p_email: email,
             p_password: password
@@ -450,8 +452,8 @@ serve(async (req) => {
         const normalizedCode = normalizeDigits(code);
         
         // Use enhanced verification function
-        const { data: isValidOTP, error: verifyError } = await supabase.rpc(
-          'verify_otp_code',
+        const { data: verificationResult, error: verifyError } = await supabase.rpc(
+          'verify_otp_code_enhanced',
           {
             p_email: email,
             p_code: normalizedCode,
@@ -459,17 +461,24 @@ serve(async (req) => {
           }
         );
 
-        if (verifyError || !isValidOTP) {
+        console.log('🔍 OTP verification result:', { verificationResult, verifyError });
+
+        if (verifyError) {
           console.error('OTP verification error:', verifyError);
-          await logAuthAttempt(emailValidation.normalized, 'invalid', 'otp_verification_failed', null, req);
-          throw new Error('رمز التحقق غير صحيح أو منتهي الصلاحية');
+          await logAuthAttempt(emailValidation.normalized, 'invalid', 'otp_verification_error', null, req);
+          throw new Error('خطأ في التحقق من الرمز');
         }
 
-        // Get updated user data
+        if (!verificationResult || !verificationResult.success) {
+          await logAuthAttempt(emailValidation.normalized, 'invalid', 'invalid_otp', null, req);
+          throw new Error(verificationResult?.message || 'رمز التحقق غير صحيح أو منتهي الصلاحية');
+        }
+
+        // Get updated user data after verification
         const { data: userData, error: userError } = await supabase
           .from('ash_users')
-          .select('id, email, name, role, status, verified_at')
-          .eq('email_lower', emailValidation.normalized)
+          .select('id, email, name, role, status, verified_at, email_verified_at')
+          .eq('id', verificationResult.user_id)
           .single();
 
         if (userError) {
@@ -485,14 +494,15 @@ serve(async (req) => {
 
         return new Response(JSON.stringify({
           success: true,
-          message: 'تم التحقق بنجاح. يمكنك الآن تسجيل الدخول بنفس البريد وكلمة المرور.',
+          message: 'تم التحقق بنجاح. حسابك مفعل الآن.',
           user: {
             id: userData.id,
             email: userData.email,
             name: userData.name,
             role: userData.role,
             status: userData.status,
-            verified: userData.verified_at !== null
+            verified: userData.verified_at !== null,
+            email_verified: userData.email_verified_at !== null
           },
           redirect_url: userData.role === 'admin' ? '/admin/dashboard' : '/my-projects'
         }), {

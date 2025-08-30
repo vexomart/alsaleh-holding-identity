@@ -3911,6 +3911,10 @@ export type Database = {
         }
         Returns: Json
       }
+      auth_diagnostic_check: {
+        Args: { p_email: string; p_password: string }
+        Returns: Json
+      }
       calculate_affiliate_level: {
         Args: { user_id: string }
         Returns: string
@@ -4340,6 +4344,10 @@ export type Database = {
       verify_otp_code: {
         Args: { p_code: string; p_email: string; p_type: string }
         Returns: boolean
+      }
+      verify_otp_code_enhanced: {
+        Args: { p_code: string; p_email: string; p_type: string }
+        Returns: Json
       }
       verify_password: {
         Args: { password_text: string; stored_hash: string }

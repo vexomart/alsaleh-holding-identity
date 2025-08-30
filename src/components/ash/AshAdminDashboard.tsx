@@ -20,12 +20,16 @@ import {
   RefreshCw,
   Bell,
   Settings,
-  LogOut
+  LogOut,
+  Shield,
+  BarChart3
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAsh } from './AshLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AuthDiagnostic } from '@/components/admin/AuthDiagnostic';
 
 interface DashboardStats {
   totalUsers: number;
@@ -57,6 +61,7 @@ export const AshAdminDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   // جلب إحصائيات لوحة التحكم
   const fetchDashboardData = async () => {
@@ -298,6 +303,31 @@ export const AshAdminDashboard: React.FC = () => {
         </div>
       </motion.div>
 
+      {/* Navigation Tabs */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="mb-8"
+      >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-xl border-white/20">
+            <TabsTrigger value="dashboard" className="text-white data-[state=active]:bg-white/20">
+              <BarChart3 className="w-4 h-4 ml-2" />
+              لوحة التحكم
+            </TabsTrigger>
+            <TabsTrigger value="users" className="text-white data-[state=active]:bg-white/20">
+              <Users className="w-4 h-4 ml-2" />
+              إدارة المستخدمين
+            </TabsTrigger>
+            <TabsTrigger value="diagnostics" className="text-white data-[state=active]:bg-white/20">
+              <Shield className="w-4 h-4 ml-2" />
+              تشخيص المصادقة
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="dashboard" className="mt-6">
+
       {/* Stats Cards */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -475,6 +505,32 @@ export const AshAdminDashboard: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+      </motion.div>
+          </TabsContent>
+
+          <TabsContent value="users" className="mt-6">
+            <Card className="bg-white/10 backdrop-blur-xl border-white/20">
+              <CardHeader>
+                <CardTitle className="text-white">إدارة المستخدمين</CardTitle>
+                <CardDescription className="text-white/70">
+                  سيتم إضافة إدارة المستخدمين قريباً
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12 text-white/60">
+                  <Users className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p>قريباً: إدارة شاملة للمستخدمين</p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="diagnostics" className="mt-6">
+            <div className="bg-white/10 backdrop-blur-xl border-white/20 rounded-lg p-6">
+              <AuthDiagnostic />
+            </div>
+          </TabsContent>
+        </Tabs>
       </motion.div>
     </div>
   );
