@@ -52,6 +52,12 @@ const ClientLogin = () => {
       });
 
       if (error) throw error;
+      
+      // تحقق من وجود خطأ في الاستجابة
+      if (result && !result.success) {
+        throw new Error(result.message || 'حدث خطأ في النظام');
+      }
+      
       return result;
     } catch (error: any) {
       console.error('Auth API Error:', error);

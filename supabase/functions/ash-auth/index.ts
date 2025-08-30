@@ -566,13 +566,29 @@ serve(async (req) => {
         throw new Error('عملية غير معروفة');
     }
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ ASH Auth Error:', error);
+    
+    // تحديد ما إذا كان هذا خطأ متوقع أم خطأ خادم فعلي
+    const isUserError = error.message && (
+      error.message.includes('البريد الإلكتروني مسجّل مسبقًا') ||
+      error.message.includes('كلمة المرور غير صحيحة') ||
+      error.message.includes('المستخدم غير موجود') ||
+      error.message.includes('رمز التحقق غير صحيح') ||
+      error.message.includes('رمز التحقق منتهي الصلاحية') ||
+      error.message.includes('فشل في تشفير كلمة المرور') ||
+      error.message.includes('كلمة المرور ضعيفة') ||
+      error.message.includes('البيانات مفقودة') ||
+      error.message.includes('حقل مفقود') ||
+      error.message.includes('البريد الإلكتروني غير صالح') ||
+      error.message.includes('طول أحد الحقول يتجاوز الحد المسموح')
+    );
+    
     return new Response(JSON.stringify({
       success: false,
-      error: error.message
+      message: error.message || 'حدث خطأ غير متوقع'
     }), {
-      status: 400,
+      status: isUserError ? 200 : 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
