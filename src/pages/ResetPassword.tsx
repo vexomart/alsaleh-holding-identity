@@ -23,10 +23,16 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (!token) {
-      navigate('/');
-      return;
-    }
+    // إعطاء وقت كافي لتحميل الـ token من الـ URL
+    const timer = setTimeout(() => {
+      if (!token) {
+        console.log('No token found, redirecting to home');
+        navigate('/');
+        return;
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [token, navigate]);
 
   const validatePassword = (password: string) => {
