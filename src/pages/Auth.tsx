@@ -192,26 +192,50 @@ const Auth = () => {
       }
 
       if (data.success) {
-        try {
-          await supabase.functions.invoke('client-welcome-email', {
-            body: {
-              clientEmail: emailForVerification,
-              clientName: signupEmail || emailForVerification.split('@')[0]
-            }
-          });
-        } catch (welcomeError) {
-          console.log('Failed to send welcome email:', welcomeError);
+        // إرسال رسالة ترحيب للمستخدمين الجدد فقط
+        if (showVerificationAfterSignup) {
+          try {
+            await supabase.functions.invoke('client-welcome-email', {
+              body: {
+                clientEmail: emailForVerification,
+                clientName: signupEmail || emailForVerification.split('@')[0]
+              }
+            });
+          } catch (welcomeError) {
+            console.log('Failed to send welcome email:', welcomeError);
+          }
+          toast.success('تم تفعيل حسابك بنجاح! مرحباً بك في منصتنا 🎉');
+        } else {
+          toast.success('تم التحقق من هويتك بنجاح!');
         }
-
-        toast.success('تم تفعيل حسابك بنجاح! مرحباً بك في منصتنا 🎉');
         
+        // التحقق من الجلسة الحالية والتوجيه المناسب
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
-          navigate('/my-projects');
+          try {
+            const { data: roleData } = await supabase
+              .from('user_roles')
+              .select('role')
+              .eq('user_id', session.user.id)
+              .maybeSingle();
+
+            if (roleData?.role === 'admin') {
+              navigate('/admin/dashboard');
+            } else {
+              navigate('/my-projects');
+            }
+          } catch (error) {
+            console.error('Error checking user role:', error);
+            navigate('/my-projects');
+          }
         } else {
+          // في حالة عدم وجود جلسة نشطة، نطلب من المستخدم تسجيل الدخول
           setStep('credentials');
           setError('');
-          toast('تم تفعيل حسابك! يمكنك الآن تسجيل الدخول.');
+          setVerificationCode('');
+          setEmailForVerification('');
+          setShowVerificationAfterSignup(false);
+          toast('تم التحقق بنجاح! يمكنك الآن تسجيل الدخول.');
         }
       }
     } catch (error: any) {
