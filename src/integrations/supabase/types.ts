@@ -4170,6 +4170,10 @@ export type Database = {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
       }
+      simulate_user_activities: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       validate_admin_session: {
         Args: { session_id: string } | { token: string; user_agent?: string }
         Returns: Json
