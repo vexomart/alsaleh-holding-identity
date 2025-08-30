@@ -4221,6 +4221,15 @@ export type Database = {
       log_auth_attempt: {
         Args:
           | {
+              action_param: string
+              email_lower_param: string
+              error_code_param?: string
+              metadata_param?: Json
+              probe_result_param?: Json
+              status_param: string
+              user_id_param?: string
+            }
+          | {
               p_email_lower: string
               p_error_code?: string
               p_error_constraint?: string

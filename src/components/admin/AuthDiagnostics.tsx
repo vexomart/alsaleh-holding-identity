@@ -42,11 +42,7 @@ const AuthDiagnostics = () => {
       // البحث عن المستخدم
       const { data: user, error: userError } = await supabase
         .from('ash_users')
-        .select(`
-          id, email, name, status, email_verified_at,
-          password_algo, password_salt_b64, password_hash_b64,
-          password_hash, password_salt, role
-        `)
+        .select('*')
         .eq('email_lower', email.trim().toLowerCase())
         .maybeSingle();
 
@@ -59,15 +55,8 @@ const AuthDiagnostics = () => {
         return;
       }
 
-      // البحث عن آخر محاولة دخول فاشلة
-      const { data: lastFailure } = await supabase
-        .from('auth_logs')
-        .select('error_code, probe_result, created_at')
-        .eq('email_lower', email.trim().toLowerCase())
-        .eq('status', 'failed')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+      // البحث عن آخر محاولة دخول فاشلة (تبسيط مؤقت)
+      let lastFailure = null;
 
       const diagnostic: DiagnosticResult = {
         user_id: user.id,
@@ -78,8 +67,8 @@ const AuthDiagnostics = () => {
         salt_len: user.password_salt_b64 ? user.password_salt_b64.length : 0,
         hash_len: user.password_hash_b64 ? user.password_hash_b64.length : 0,
         has_legacy_data: !!(user.password_hash || user.password_salt),
-        last_login_error: lastFailure?.error_code || null,
-        probe_results: lastFailure?.probe_result || {}
+        last_login_error: null,
+        probe_results: {}
       };
 
       setResult(diagnostic);
@@ -110,14 +99,18 @@ const AuthDiagnostics = () => {
 
     setLoading(true);
     try {
-      // محاولة الإصلاح التلقائي باستخدام كلمة مرور تجريبية
-      const { data: authResult } = await supabase
+      // محاولة الإصلاح التلقائي بتشغيل دالة التحقق
+      const { data: authResult, error } = await supabase
         .rpc('simple_authenticate_user', {
           email_lower_param: email.trim().toLowerCase(),
-          plain_password: 'test_password_for_diagnostic'
+          plain_password: 'diagnostic_test_password'
         });
 
-      if (authResult?.auto_fixed) {
+      if (error) {
+        throw new Error('فشل في تشغيل التشخيص');
+      }
+
+      if (authResult && (authResult as any).auto_fixed) {
         toast.success('تم إصلاح المستخدم تلقائياً');
         runDiagnostic(); // إعادة تشغيل التشخيص
       } else {
