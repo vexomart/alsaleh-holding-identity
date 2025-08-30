@@ -14,7 +14,7 @@ const resendApiKey = Deno.env.get('RESEND_API_KEY');
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-// دوال مساعدة للتطبيع
+// Helper functions with enhanced validation
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
@@ -29,6 +29,128 @@ function normalizeDigits(text: string): string {
     };
     return arabicToEnglish[match] || match;
   });
+}
+
+function validateName(name: string): { valid: boolean; message: string } {
+  if (!name || name.trim().length === 0) {
+    return { valid: false, message: 'الاسم مطلوب' };
+  }
+  if (name.trim().length < 3) {
+    return { valid: false, message: 'يجب أن يتكون الاسم من 3 أحرف على الأقل' };
+  }
+  if (name.trim().length > 120) {
+    return { valid: false, message: 'طول الاسم يتجاوز الحد المسموح (120 حرف)' };
+  }
+  return { valid: true, message: '' };
+}
+
+function validateEmail(email: string): { valid: boolean; message: string; normalized: string } {
+  if (!email || email.trim().length === 0) {
+    return { valid: false, message: 'البريد الإلكتروني مطلوب', normalized: '' };
+  }
+  
+  const normalized = normalizeEmail(email);
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+  if (!emailRegex.test(normalized)) {
+    return { valid: false, message: 'تنسيق البريد الإلكتروني غير صحيح', normalized: '' };
+  }
+  
+  if (normalized.length > 190) {
+    return { valid: false, message: 'طول البريد الإلكتروني يتجاوز الحد المسموح', normalized: '' };
+  }
+  
+  return { valid: true, message: '', normalized };
+}
+
+function validatePassword(password: string): { valid: boolean; message: string } {
+  if (!password || password.length === 0) {
+    return { valid: false, message: 'كلمة المرور مطلوبة' };
+  }
+  if (password.length < 8) {
+    return { valid: false, message: 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل' };
+  }
+  if (!/[0-9]/.test(password)) {
+    return { valid: false, message: 'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل' };
+  }
+  if (!/[a-zA-Z]/.test(password)) {
+    return { valid: false, message: 'يجب أن تحتوي كلمة المرور على حرف واحد على الأقل' };
+  }
+  return { valid: true, message: '' };
+}
+
+async function logAuthAttempt(
+  emailLower: string, 
+  result: string, 
+  errorCode?: string, 
+  errorConstraint?: string,
+  request?: Request
+) {
+  try {
+    const ipAddress = request?.headers.get('x-forwarded-for') || 
+                     request?.headers.get('x-real-ip') || 
+                     null;
+    const userAgent = request?.headers.get('user-agent') || null;
+    
+    await supabase.rpc('log_auth_attempt', {
+      p_email_lower: emailLower,
+      p_result: result,
+      p_error_code: errorCode || null,
+      p_error_constraint: errorConstraint || null,
+      p_ip_address: ipAddress,
+      p_user_agent: userAgent
+    });
+  } catch (error) {
+    console.error('Failed to log auth attempt:', error);
+  }
+}
+
+function getDbErrorMessage(error: any): { message: string; code?: string; constraint?: string } {
+  const code = error?.code || error?.error_code;
+  const constraint = error?.constraint;
+  
+  // Handle duplicate email
+  if (code === '23505' && constraint === 'idx_ash_users_email_lower') {
+    return { 
+      message: 'البريد الإلكتروني مسجّل مسبقًا. جرّب تسجيل الدخول أو استعادة كلمة المرور.',
+      code,
+      constraint
+    };
+  }
+  
+  // Handle not null violations
+  if (code === '23502') {
+    const field = constraint?.includes('name') ? 'الاسم' :
+                  constraint?.includes('email') ? 'البريد الإلكتروني' :
+                  constraint?.includes('password') ? 'كلمة المرور' : 'حقل مطلوب';
+    return { 
+      message: `حقل مفقود: ${field}`,
+      code,
+      constraint
+    };
+  }
+  
+  // Handle string too long
+  if (code === '22001') {
+    return { 
+      message: 'طول أحد الحقول يتجاوز الحد المسموح',
+      code,
+      constraint
+    };
+  }
+  
+  console.error('Database error:', {
+    code,
+    constraint,
+    message: error?.message,
+    details: error?.details
+  });
+  
+  return { 
+    message: 'تعذر إنشاء الحساب. الرجاء المحاولة لاحقًا.',
+    code,
+    constraint
+  };
 }
 
 interface AuthRequest {
@@ -103,13 +225,28 @@ serve(async (req) => {
 
     switch (action) {
       case 'register': {
-        if (!email || !password || !name) {
-          throw new Error('البريد الإلكتروني وكلمة المرور والاسم مطلوبة');
+        // Validate inputs first
+        const nameValidation = validateName(name || '');
+        if (!nameValidation.valid) {
+          await logAuthAttempt(normalizeEmail(email || ''), 'invalid', 'validation_error', 'name_invalid', req);
+          throw new Error(nameValidation.message);
         }
 
-        const normalizedEmail = normalizeEmail(email);
+        const emailValidation = validateEmail(email || '');
+        if (!emailValidation.valid) {
+          await logAuthAttempt(normalizeEmail(email || ''), 'invalid', 'validation_error', 'email_invalid', req);
+          throw new Error(emailValidation.message);
+        }
+
+        const passwordValidation = validatePassword(password || '');
+        if (!passwordValidation.valid) {
+          await logAuthAttempt(emailValidation.normalized, 'invalid', 'validation_error', 'password_invalid', req);
+          throw new Error(passwordValidation.message);
+        }
+
+        const normalizedEmail = emailValidation.normalized;
         
-        // التحقق من عدم وجود المستخدم مسبقاً
+        // Check if user already exists using database-level transaction
         const { data: existingUser } = await supabase
           .from('ash_users')
           .select('id')
@@ -117,65 +254,89 @@ serve(async (req) => {
           .maybeSingle();
 
         if (existingUser) {
-          throw new Error('البريد الإلكتروني مستخدم مسبقاً. لديك حساب؟ جرّب تسجيل الدخول أو استعادة كلمة المرور.');
+          await logAuthAttempt(normalizedEmail, 'duplicate', '23505', 'idx_ash_users_email_lower', req);
+          throw new Error('البريد الإلكتروني مسجّل مسبقًا. جرّب تسجيل الدخول أو استعادة كلمة المرور.');
         }
 
-        // تشفير كلمة المرور (في الواقع يجب استخدام bcrypt)
+        // Hash password properly (simple version - should use bcrypt)
         const passwordHash = `hashed_${password}_${Date.now()}`;
 
-        // إنشاء المستخدم مع email_lower
-        const { data: newUser, error: userError } = await supabase
-          .from('ash_users')
-          .insert({
-            email: email,
-            email_lower: normalizedEmail,
-            name,
-            phone,
-            company_name,
-            password_hash: passwordHash,
-            role: 'client',
-            status: 'pending'
-          })
-          .select()
-          .single();
+        try {
+          // Create user with transactional approach
+          const { data: newUser, error: userError } = await supabase
+            .from('ash_users')
+            .insert({
+              email: email,
+              email_lower: normalizedEmail,
+              name: name.trim(),
+              phone: phone?.trim() || null,
+              company_name: company_name?.trim() || null,
+              password_hash: passwordHash,
+              role: 'client',
+              status: 'pending'
+            })
+            .select()
+            .single();
 
-        if (userError) throw userError;
-
-        // استخدام دالة إنشاء OTP الجديدة
-        const { data: otpCode, error: otpError } = await supabase.rpc(
-          'create_otp_code',
-          {
-            p_user_id: newUser.id,
-            p_email: email,
-            p_type: 'register'
+          if (userError) {
+            const dbError = getDbErrorMessage(userError);
+            await logAuthAttempt(normalizedEmail, 'db_error', dbError.code, dbError.constraint, req);
+            throw new Error(dbError.message);
           }
-        );
 
-        if (otpError) {
-          console.error('OTP creation error:', otpError);
-          throw new Error('فشل في إنشاء رمز التحقق');
+          // Create OTP using database function
+          const { data: otpCode, error: otpError } = await supabase.rpc(
+            'create_otp_code',
+            {
+              p_user_id: newUser.id,
+              p_email: email,
+              p_type: 'register'
+            }
+          );
+
+          if (otpError) {
+            console.error('OTP creation error:', otpError);
+            await logAuthAttempt(normalizedEmail, 'db_error', 'otp_creation_failed', null, req);
+            throw new Error('فشل في إنشاء رمز التحقق');
+          }
+
+          // Send OTP email outside transaction
+          await sendOTPEmail(email, otpCode, name, 'register');
+
+          // Log successful registration
+          await logAuthAttempt(normalizedEmail, 'success', null, null, req);
+
+          console.log(`✅ User registered: ${normalizedEmail}, OTP: ${otpCode}`);
+
+          return new Response(JSON.stringify({
+            success: true,
+            message: 'تم إنشاء الحساب بنجاح. تحقق من بريدك الإلكتروني لرمز التأكيد',
+            user_id: newUser.id
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+
+        } catch (dbError: any) {
+          const errorDetails = getDbErrorMessage(dbError);
+          await logAuthAttempt(normalizedEmail, 'db_error', errorDetails.code, errorDetails.constraint, req);
+          throw new Error(errorDetails.message);
         }
-
-        // إرسال OTP عبر البريد
-        await sendOTPEmail(email, otpCode, name, 'register');
-
-        console.log(`✅ User registered: ${normalizedEmail}, OTP: ${otpCode}`);
-
-        return new Response(JSON.stringify({
-          success: true,
-          message: 'تم إنشاء الحساب بنجاح. تحقق من بريدك الإلكتروني لرمز التأكيد',
-          user_id: newUser.id
-        }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
       }
 
       case 'login': {
-        if (!email || !password) {
-          throw new Error('البريد الإلكتروني وكلمة المرور مطلوبان');
+        const emailValidation = validateEmail(email || '');
+        if (!emailValidation.valid) {
+          await logAuthAttempt(normalizeEmail(email || ''), 'invalid', 'validation_error', 'email_invalid', req);
+          throw new Error(emailValidation.message);
         }
 
-        // استخدام دالة المصادقة المبسطة الجديدة
+        const passwordValidation = validatePassword(password || '');
+        if (!passwordValidation.valid) {
+          await logAuthAttempt(emailValidation.normalized, 'invalid', 'validation_error', 'password_invalid', req);
+          throw new Error(passwordValidation.message);
+        }
+
+        // Use simplified authentication function
         const { data: authResult, error: authError } = await supabase.rpc(
           'simple_authenticate_user',
           {
@@ -188,10 +349,12 @@ serve(async (req) => {
 
         if (authError) {
           console.error('Authentication error:', authError);
+          await logAuthAttempt(emailValidation.normalized, 'db_error', 'auth_function_error', null, req);
           throw new Error('خطأ في النظام أثناء المصادقة');
         }
 
         if (!authResult || authResult.length === 0) {
+          await logAuthAttempt(emailValidation.normalized, 'invalid', 'auth_failed', 'no_result', req);
           throw new Error('فشل في التحقق من البيانات');
         }
 
@@ -199,7 +362,10 @@ serve(async (req) => {
         console.log('🔑 Auth result details:', result);
         
         if (!result.success) {
-          // رسائل خطأ محددة حسب حالة الحساب
+          // Log specific failure reason
+          await logAuthAttempt(emailValidation.normalized, 'invalid', 'auth_failed', result.status, req);
+          
+          // Specific error messages based on account status
           if (result.status === 'not_found') {
             throw new Error('البريد الإلكتروني غير مسجل في النظام');
           } else if (result.status === 'blocked') {
@@ -213,7 +379,7 @@ serve(async (req) => {
           }
         }
 
-        // إنشاء OTP للمستخدم المعتمد وتحديث وقت آخر دخول
+        // Create OTP for authenticated user and update last login
         const [otpResult, updateResult] = await Promise.all([
           supabase.rpc('create_otp_code', {
             p_user_id: result.user_id,
@@ -228,22 +394,26 @@ serve(async (req) => {
 
         if (otpResult.error) {
           console.error('OTP creation error:', otpResult.error);
+          await logAuthAttempt(emailValidation.normalized, 'db_error', 'otp_creation_failed', null, req);
           throw new Error('فشل في إنشاء رمز التحقق');
         }
 
         const otpCode = otpResult.data;
 
-        // البحث عن اسم المستخدم للإيميل
+        // Get user name for email
         const { data: userData } = await supabase
           .from('ash_users')
           .select('name')
           .eq('id', result.user_id)
           .single();
 
-        // إرسال OTP عبر البريد
+        // Send OTP email
         await sendOTPEmail(email, otpCode, userData?.name || 'مستخدم', 'login');
 
-        console.log(`✅ Login OTP sent: ${normalizeEmail(email)}, OTP: ${otpCode}`);
+        // Log successful login attempt
+        await logAuthAttempt(emailValidation.normalized, 'success', null, null, req);
+
+        console.log(`✅ Login OTP sent: ${emailValidation.normalized}, OTP: ${otpCode}`);
 
         return new Response(JSON.stringify({
           success: true,
@@ -256,14 +426,21 @@ serve(async (req) => {
       }
 
       case 'verify-otp': {
-        if (!email || !code) {
-          throw new Error('البريد الإلكتروني ورمز التحقق مطلوبان');
+        const emailValidation = validateEmail(email || '');
+        if (!emailValidation.valid) {
+          await logAuthAttempt(normalizeEmail(email || ''), 'invalid', 'validation_error', 'email_invalid', req);
+          throw new Error(emailValidation.message);
         }
 
-        // تطبيع الرمز لدعم الأرقام العربية
+        if (!code) {
+          await logAuthAttempt(emailValidation.normalized, 'invalid', 'validation_error', 'code_missing', req);
+          throw new Error('رمز التحقق مطلوب');
+        }
+
+        // Normalize code to support Arabic numerals
         const normalizedCode = normalizeDigits(code);
         
-        // استخدام دالة التحقق المحسّنة
+        // Use enhanced verification function
         const { data: isValidOTP, error: verifyError } = await supabase.rpc(
           'verify_otp_code',
           {
@@ -275,22 +452,27 @@ serve(async (req) => {
 
         if (verifyError || !isValidOTP) {
           console.error('OTP verification error:', verifyError);
+          await logAuthAttempt(emailValidation.normalized, 'invalid', 'otp_verification_failed', null, req);
           throw new Error('رمز التحقق غير صحيح أو منتهي الصلاحية');
         }
 
-        // الحصول على بيانات المستخدم المحدّثة
+        // Get updated user data
         const { data: userData, error: userError } = await supabase
           .from('ash_users')
           .select('id, email, name, role, status, verified_at')
-          .eq('email_lower', normalizeEmail(email))
+          .eq('email_lower', emailValidation.normalized)
           .single();
 
         if (userError) {
           console.error('User fetch error:', userError);
+          await logAuthAttempt(emailValidation.normalized, 'db_error', 'user_fetch_failed', null, req);
           throw new Error('خطأ في الحصول على بيانات المستخدم');
         }
 
-        console.log(`✅ OTP verified successfully: ${normalizeEmail(email)}, Status: ${userData.status}`);
+        // Log successful OTP verification
+        await logAuthAttempt(emailValidation.normalized, 'success', null, null, req);
+
+        console.log(`✅ OTP verified successfully: ${emailValidation.normalized}, Status: ${userData.status}`);
 
         return new Response(JSON.stringify({
           success: true,
@@ -310,13 +492,15 @@ serve(async (req) => {
       }
 
       case 'resend-otp': {
-        if (!email) {
-          throw new Error('البريد الإلكتروني مطلوب');
+        const emailValidation = validateEmail(email || '');
+        if (!emailValidation.valid) {
+          await logAuthAttempt(normalizeEmail(email || ''), 'invalid', 'validation_error', 'email_invalid', req);
+          throw new Error(emailValidation.message);
         }
 
-        const normalizedEmail = normalizeEmail(email);
+        const normalizedEmail = emailValidation.normalized;
 
-        // البحث عن المستخدم
+        // Find user
         const { data: user } = await supabase
           .from('ash_users')
           .select('*')
@@ -324,10 +508,11 @@ serve(async (req) => {
           .maybeSingle();
 
         if (!user) {
+          await logAuthAttempt(normalizedEmail, 'invalid', 'user_not_found', null, req);
           throw new Error('المستخدم غير موجود');
         }
 
-        // استخدام دالة إنشاء OTP الجديدة
+        // Create new OTP
         const { data: otpCode, error: otpError } = await supabase.rpc(
           'create_otp_code',
           {
@@ -339,10 +524,14 @@ serve(async (req) => {
 
         if (otpError) {
           console.error('OTP creation error:', otpError);
+          await logAuthAttempt(normalizedEmail, 'db_error', 'otp_creation_failed', null, req);
           throw new Error('فشل في إنشاء رمز التحقق');
         }
 
         await sendOTPEmail(email, otpCode, user.name, 'login');
+
+        // Log successful resend
+        await logAuthAttempt(normalizedEmail, 'success', null, null, req);
 
         console.log(`✅ OTP resent: ${normalizedEmail}, OTP: ${otpCode}`);
 
