@@ -67,6 +67,7 @@ interface ClientsTableProps {
   onStatusChange: (clientId: string, newStatus: string) => void;
   onKycStatusChange: (clientId: string, newKycStatus: string) => void;
   onTwoFactorToggle: (clientId: string, enabled: boolean) => void;
+  onEmailVerification: (client: Client) => void;
   realtimeEnabled: boolean;
 }
 
@@ -77,6 +78,7 @@ export const ClientsTable: React.FC<ClientsTableProps> = ({
   onStatusChange,
   onKycStatusChange,
   onTwoFactorToggle,
+  onEmailVerification,
   realtimeEnabled,
 }) => {
   const getStatusColor = (status: string) => {
@@ -363,6 +365,12 @@ export const ClientsTable: React.FC<ClientsTableProps> = ({
                           <Shield className="mr-2 h-4 w-4 text-blue-600" />
                           {client.kyc_status === 'verified' ? 'إلغاء التوثيق' : 'توثيق الحساب'}
                         </DropdownMenuItem>
+                        {!client.verified_at && (
+                          <DropdownMenuItem onClick={() => onEmailVerification(client)}>
+                            <Mail className="mr-2 h-4 w-4 text-green-600" />
+                            توثيق البريد الإلكتروني
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem onClick={() => onTwoFactorToggle(client.id, !client.two_factor_enabled)}>
                           <Settings className="mr-2 h-4 w-4 text-purple-600" />
                           {client.two_factor_enabled ? 'إيقاف المصادقة الثنائية' : 'تفعيل المصادقة الثنائية'}

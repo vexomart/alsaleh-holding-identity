@@ -60,6 +60,7 @@ interface ClientsCardsProps {
   onStatusChange: (clientId: string, newStatus: string) => void;
   onKycStatusChange: (clientId: string, newKycStatus: string) => void;
   onTwoFactorToggle: (clientId: string, enabled: boolean) => void;
+  onEmailVerification: (client: Client) => void;
   realtimeEnabled: boolean;
 }
 
@@ -70,6 +71,7 @@ export const ClientsCards: React.FC<ClientsCardsProps> = ({
   onStatusChange,
   onKycStatusChange,
   onTwoFactorToggle,
+  onEmailVerification,
   realtimeEnabled,
 }) => {
   const getStatusColor = (status: string) => {
@@ -252,6 +254,12 @@ export const ClientsCards: React.FC<ClientsCardsProps> = ({
                     <Settings className="mr-2 h-4 w-4 text-purple-600" />
                     {client.two_factor_enabled ? 'إيقاف المصادقة الثنائية' : 'تفعيل المصادقة الثنائية'}
                   </DropdownMenuItem>
+                  {!client.verified_at && (
+                    <DropdownMenuItem onClick={() => onEmailVerification(client)}>
+                      <Mail className="mr-2 h-4 w-4 text-green-600" />
+                      توثيق البريد الإلكتروني
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     className="text-red-600 focus:text-red-600"

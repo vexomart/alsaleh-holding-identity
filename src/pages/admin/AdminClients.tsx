@@ -41,6 +41,7 @@ import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
 import { ClientsTable } from '@/components/admin/ClientsTable';
 import { ClientsCards } from '@/components/admin/ClientsCards';
+import { EmailVerificationDialog } from '@/components/admin/EmailVerificationDialog';
 import { ClientsFilters } from '@/components/admin/ClientsFilters';
 
 interface Client {
@@ -173,6 +174,8 @@ const AdminClients = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
   const [realtimeEnabled, setRealtimeEnabled] = useState(true);
+  const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
+  const [verificationClient, setVerificationClient] = useState<Client | null>(null);
   
   // Hook for online status simulation
   const onlineStatuses = useClientOnlineStatus(clients);
@@ -431,6 +434,16 @@ const AdminClients = () => {
     }
   };
 
+  const handleEmailVerification = (client: Client) => {
+    setVerificationClient(client);
+    setEmailVerificationOpen(true);
+  };
+
+  const handleVerificationSuccess = () => {
+    // Refresh clients data
+    fetchClients();
+  };
+
   const handleTwoFactorToggle = async (clientId: string, enabled: boolean) => {
     try {
       const { error } = await supabase
@@ -603,6 +616,7 @@ const AdminClients = () => {
               onStatusChange={handleStatusChange}
               onKycStatusChange={handleKycStatusChange}
               onTwoFactorToggle={handleTwoFactorToggle}
+              onEmailVerification={handleEmailVerification}
               realtimeEnabled={realtimeEnabled}
             />
           </div>
@@ -616,6 +630,7 @@ const AdminClients = () => {
               onStatusChange={handleStatusChange}
               onKycStatusChange={handleKycStatusChange}
               onTwoFactorToggle={handleTwoFactorToggle}
+              onEmailVerification={handleEmailVerification}
               realtimeEnabled={realtimeEnabled}
             />
           </div>
@@ -860,6 +875,18 @@ const AdminClients = () => {
           )}
         </SheetContent>
       </Sheet>
+
+      {/* Email Verification Dialog */}
+      {verificationClient && (
+        <EmailVerificationDialog
+          open={emailVerificationOpen}
+          onOpenChange={setEmailVerificationOpen}
+          clientId={verificationClient.id}
+          clientEmail={verificationClient.email}
+          clientName={verificationClient.name}
+          onSuccess={handleVerificationSuccess}
+        />
+      )}
       </ResponsiveContainer>
     </div>
   );
