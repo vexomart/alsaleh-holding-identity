@@ -3833,16 +3833,6 @@ export type Database = {
         }
         Returns: Json
       }
-      authenticate_user: {
-        Args: { p_email: string; p_password: string }
-        Returns: {
-          message: string
-          status: string
-          success: boolean
-          user_data: Json
-          user_id: string
-        }[]
-      }
       calculate_affiliate_level: {
         Args: { user_id: string }
         Returns: string
@@ -4169,6 +4159,16 @@ export type Database = {
       record_automation_usage: {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
+      }
+      simple_authenticate_user: {
+        Args: { p_email: string; p_password: string }
+        Returns: {
+          message: string
+          status: string
+          success: boolean
+          user_id: string
+          user_name: string
+        }[]
       }
       simulate_user_activities: {
         Args: Record<PropertyKey, never>
