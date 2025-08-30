@@ -3820,6 +3820,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      confirm_user_after_verification: {
+        Args: { user_email: string }
+        Returns: boolean
+      }
       create_admin_session: {
         Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
         Returns: string
