@@ -124,11 +124,13 @@ export const AshAuthCard: React.FC<AshAuthCardProps> = ({ onAuthSuccess, isAdmin
     }
 
     setIsLoading(true);
+    console.log('🔐 Starting login process with:', { email: formData.email });
     try {
       const response = await callAuthAPI('login', {
         email: formData.email,
         password: formData.password
       });
+      console.log('✅ Login API response:', response);
 
       if (response.requires_otp) {
         setTempUserId(response.user_id);

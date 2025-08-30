@@ -175,28 +175,39 @@ serve(async (req) => {
           throw new Error('البريد الإلكتروني وكلمة المرور مطلوبان');
         }
 
-        // استخدام دالة المصادقة المحسّنة
+        // استخدام دالة المصادقة المبسطة الجديدة
         const { data: authResult, error: authError } = await supabase.rpc(
-          'authenticate_user',
+          'simple_authenticate_user',
           {
             p_email: email,
             p_password: password
           }
         );
 
-        if (authError || !authResult || authResult.length === 0) {
+        console.log('🔍 Authentication result:', { authResult, authError });
+
+        if (authError) {
           console.error('Authentication error:', authError);
-          throw new Error('خطأ في تسجيل الدخول');
+          throw new Error('خطأ في النظام أثناء المصادقة');
+        }
+
+        if (!authResult || authResult.length === 0) {
+          throw new Error('فشل في التحقق من البيانات');
         }
 
         const result = authResult[0];
+        console.log('🔑 Auth result details:', result);
         
         if (!result.success) {
           // رسائل خطأ محددة حسب حالة الحساب
-          if (result.status === 'not_verified') {
-            throw new Error('الرجاء تفعيل بريدك الإلكتروني قبل تسجيل الدخول');
-          } else if (result.status === 'blocked' || result.status === 'suspended') {
+          if (result.status === 'not_found') {
+            throw new Error('البريد الإلكتروني غير مسجل في النظام');
+          } else if (result.status === 'blocked') {
             throw new Error('تم حظر حسابك. يرجى التواصل مع الإدارة');
+          } else if (result.status === 'inactive') {
+            throw new Error('حسابك غير مفعل. يرجى التواصل مع الإدارة');
+          } else if (result.status === 'wrong_password') {
+            throw new Error('كلمة المرور غير صحيحة. حاول مرة أخرى');
           } else {
             throw new Error(result.message || 'بيانات تسجيل الدخول غير صحيحة');
           }
