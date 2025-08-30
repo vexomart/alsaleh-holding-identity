@@ -315,8 +315,20 @@ serve(async (req) => {
             throw new Error('فشل في إنشاء رمز التحقق');
           }
 
-          // Send OTP email outside transaction
-          await sendOTPEmail(email, otpCode, name, 'register');
+          // Send OTP email using edge function
+          const emailResult = await supabase.functions.invoke('send-otp-email', {
+            body: {
+              email: email,
+              name: name,
+              otpCode: otpCode,
+              type: 'registration'
+            }
+          });
+
+          if (emailResult.error) {
+            console.error('Email sending error:', emailResult.error);
+            // Don't throw error, just log it - user can still verify manually
+          }
 
           // Log successful registration
           await logAuthAttempt(normalizedEmail, 'success', null, null, req);
