@@ -3837,9 +3837,9 @@ export type Database = {
         Args: { p_email: string; p_password: string }
         Returns: {
           message: string
-          requires_otp: boolean
           status: string
           success: boolean
+          user_data: Json
           user_id: string
         }[]
       }
