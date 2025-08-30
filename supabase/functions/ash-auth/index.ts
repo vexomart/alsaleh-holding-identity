@@ -258,17 +258,21 @@ serve(async (req) => {
           throw new Error('البريد الإلكتروني مسجّل مسبقًا. جرّب تسجيل الدخول أو استعادة كلمة المرور.');
         }
 
-        // Hash password securely using enhanced database function
-        const { data: passwordHashData, error: hashError } = await supabase.rpc(
-          'create_secure_password_hash_v2',
-          { password_text: password }
-        );
+        // Hash password using native crypto
+        const salt = Array.from(crypto.getRandomValues(new Uint8Array(32)))
+          .map(b => b.toString(16).padStart(2, '0')).join('');
+        
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password + salt);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const passwordHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-        if (hashError) {
-          console.error('Password hashing error:', hashError);
-          await logAuthAttempt(normalizedEmail, 'db_error', 'password_hashing_failed', null, req);
-          throw new Error('فشل في تشفير كلمة المرور');
-        }
+        const passwordHashData = {
+          hash: passwordHash,
+          salt: salt,
+          algorithm: 'sha256'
+        };
 
         try {
           // Create user with enhanced hash data
