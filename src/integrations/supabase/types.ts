@@ -4194,11 +4194,7 @@ export type Database = {
       }
       verify_otp_code: {
         Args: { p_code: string; p_email: string; p_type: string }
-        Returns: {
-          message: string
-          success: boolean
-          user_id: string
-        }[]
+        Returns: boolean
       }
       verify_secure_admin_password: {
         Args: {

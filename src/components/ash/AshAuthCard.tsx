@@ -93,6 +93,8 @@ export const AshAuthCard: React.FC<AshAuthCardProps> = ({ onAuthSuccess, isAdmin
 
     setIsLoading(true);
     try {
+      console.log('🔐 Attempting registration with:', { email: formData.email, name: formData.name });
+      
       const response = await callAuthAPI('register', {
         email: formData.email,
         password: formData.password,

@@ -253,31 +253,25 @@ serve(async (req) => {
         const normalizedCode = normalizeDigits(code);
         
         // استخدام دالة التحقق المحسّنة
-        const { data: verifyResult, error: verifyError } = await supabase.rpc(
+        const { data: isValidOTP, error: verifyError } = await supabase.rpc(
           'verify_otp_code',
           {
             p_email: email,
             p_code: normalizedCode,
-            p_type: 'login' // يمكن أن يكون register أو login
+            p_type: 'login' 
           }
         );
 
-        if (verifyError || !verifyResult || verifyResult.length === 0) {
+        if (verifyError || !isValidOTP) {
           console.error('OTP verification error:', verifyError);
-          throw new Error('خطأ في التحقق من الرمز');
-        }
-
-        const result = verifyResult[0];
-        
-        if (!result.success) {
-          throw new Error(result.message || 'رمز التحقق غير صحيح أو منتهي الصلاحية');
+          throw new Error('رمز التحقق غير صحيح أو منتهي الصلاحية');
         }
 
         // الحصول على بيانات المستخدم المحدّثة
         const { data: userData, error: userError } = await supabase
           .from('ash_users')
           .select('id, email, name, role, status, verified_at')
-          .eq('id', result.user_id)
+          .eq('email_lower', normalizeEmail(email))
           .single();
 
         if (userError) {
