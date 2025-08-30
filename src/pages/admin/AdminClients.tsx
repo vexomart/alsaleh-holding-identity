@@ -101,7 +101,39 @@ interface Client {
   updated_at: string;
   last_login_at?: string;
   verified_at?: string;
+  is_online?: boolean;
+  last_seen?: string;
 }
+
+// Online status simulation hook
+const useClientOnlineStatus = (clients: Client[]) => {
+  const [onlineStatuses, setOnlineStatuses] = useState<Record<string, { is_online: boolean; last_seen: string }>>({});
+
+  useEffect(() => {
+    // Simulate real-time online status updates
+    const interval = setInterval(() => {
+      const updates: Record<string, { is_online: boolean; last_seen: string }> = {};
+      
+      clients.forEach(client => {
+        // Simulate random online status changes
+        const wasOnline = onlineStatuses[client.id]?.is_online || false;
+        const isNowOnline = Math.random() > 0.7; // 30% chance to be online
+        
+        updates[client.id] = {
+          is_online: isNowOnline,
+          last_seen: isNowOnline ? new Date().toISOString() : 
+                    (onlineStatuses[client.id]?.last_seen || new Date().toISOString())
+        };
+      });
+      
+      setOnlineStatuses(updates);
+    }, 3000); // Update every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [clients, onlineStatuses]);
+
+  return onlineStatuses;
+};
 
 const AdminClients = () => {
   const [clients, setClients] = useState<Client[]>([]);
@@ -112,6 +144,9 @@ const AdminClients = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
   const [realtimeEnabled, setRealtimeEnabled] = useState(true);
+  
+  // Hook for online status simulation
+  const onlineStatuses = useClientOnlineStatus(clients);
 
   // Setup real-time subscription
   useEffect(() => {
@@ -318,6 +353,44 @@ const AdminClients = () => {
       case 'finance': return <Banknote className="h-4 w-4 text-green-600" />;
       case 'client': return <UserCheck className="h-4 w-4 text-blue-600" />;
       default: return <UserCheck className="h-4 w-4 text-gray-600" />;
+    }
+  };
+
+  const getOnlineStatusBadge = (clientId: string) => {
+    const status = onlineStatuses[clientId];
+    if (!status) return null;
+
+    if (status.is_online) {
+      return (
+        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-green-50 border border-green-200 dark:bg-green-900/30">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-xs font-medium text-green-700 font-tajawal">متصل الآن</span>
+        </div>
+      );
+    } else {
+      const lastSeen = new Date(status.last_seen);
+      const now = new Date();
+      const diffInMinutes = Math.floor((now.getTime() - lastSeen.getTime()) / (1000 * 60));
+      
+      let timeText = '';
+      if (diffInMinutes < 1) {
+        timeText = 'منذ لحظات';
+      } else if (diffInMinutes < 60) {
+        timeText = `منذ ${diffInMinutes} دقيقة`;
+      } else if (diffInMinutes < 1440) {
+        const hours = Math.floor(diffInMinutes / 60);
+        timeText = `منذ ${hours} ساعة`;
+      } else {
+        const days = Math.floor(diffInMinutes / 1440);
+        timeText = `منذ ${days} يوم`;
+      }
+
+      return (
+        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-gray-50 border border-gray-200 dark:bg-gray-900/30">
+          <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+          <span className="text-xs font-medium text-gray-600 font-tajawal">{timeText}</span>
+        </div>
+      );
     }
   };
 
@@ -603,16 +676,18 @@ const AdminClients = () => {
           </div>
 
           {/* Clients Table */}
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
+            <div className="min-w-[1200px]">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-right">المستخدم</TableHead>
-                  <TableHead className="text-right">معلومات الاتصال</TableHead>
-                  <TableHead className="text-right">الدور</TableHead>
-                  <TableHead className="text-right">الحالة</TableHead>
-                  <TableHead className="text-right">تاريخ التسجيل</TableHead>
-                  <TableHead className="text-right">الإجراءات</TableHead>
+                  <TableHead className="text-right min-w-[200px]">المستخدم</TableHead>
+                  <TableHead className="text-right min-w-[250px]">معلومات الاتصال</TableHead>
+                  <TableHead className="text-right min-w-[150px]">الدور</TableHead>
+                  <TableHead className="text-right min-w-[180px]">الحالة والتوثيق</TableHead>
+                  <TableHead className="text-right min-w-[150px]">الحالة المتصل</TableHead>
+                  <TableHead className="text-right min-w-[150px]">تاريخ التسجيل</TableHead>
+                  <TableHead className="text-right min-w-[120px]">الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -719,6 +794,37 @@ const AdminClients = () => {
                     </TableCell>
                     
                     <TableCell>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`p-1.5 rounded-md ${getStatusColor(client.status).includes('emerald') ? 'bg-emerald-100 text-emerald-700' : 
+                                         getStatusColor(client.status).includes('red') ? 'bg-red-100 text-red-700' :
+                                         getStatusColor(client.status).includes('amber') ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'}`}>
+                            {getStatusIcon(client.status)}
+                          </div>
+                          <Badge className={`${getStatusColor(client.status)} border font-tajawal text-xs`}>
+                            {getStatusText(client.status)}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className={`p-1.5 rounded-md ${getKycStatusColor(client.kyc_status).includes('emerald') ? 'bg-emerald-100 text-emerald-700' : 
+                                         getKycStatusColor(client.kyc_status).includes('red') ? 'bg-red-100 text-red-700' :
+                                         getKycStatusColor(client.kyc_status).includes('amber') ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'}`}>
+                            {getKycStatusIcon(client.kyc_status)}
+                          </div>
+                          <Badge variant="outline" className={`${getKycStatusColor(client.kyc_status)} border text-xs font-tajawal`}>
+                            {getKycStatusText(client.kyc_status)}
+                          </Badge>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex flex-col items-start gap-2">
+                        {getOnlineStatusBadge(client.id)}
+                      </div>
+                    </TableCell>
+                    
+                    <TableCell>
                       <div className="flex items-center gap-2 text-sm">
                         <div className="p-1.5 rounded-md bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30">
                           <Calendar className="h-3 w-3" />
@@ -778,6 +884,7 @@ const AdminClients = () => {
                 ))}
               </TableBody>
             </Table>
+            </div>
           </div>
 
           {filteredClients.length === 0 && (
