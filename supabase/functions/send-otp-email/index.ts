@@ -37,7 +37,7 @@ const handler = async (req: Request): Promise<Response> => {
       : "استخدم الرمز التالي لتسجيل الدخول إلى حسابك:";
 
     const emailResponse = await resend.emails.send({
-      from: "شركة الشهري للتطوير <noreply@resend.dev>",
+      from: "شركة الشهري للتطوير <noreply@alialshehriholding.com>",
       to: [email],
       subject: subject,
       html: `
