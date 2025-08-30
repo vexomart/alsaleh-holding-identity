@@ -33,7 +33,7 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
       const publicPaths = [
         '/', '/auth', '/about', '/contact', '/services', '/careers',
         '/privacy', '/terms', '/support', '/faq', '/unauthorized',
-        '/story', '/team', '/vision', '/our-works'
+        '/story', '/team', '/vision', '/our-works', '/ash'
       ];
 
       const isPublicPath = publicPaths.some(path => 
