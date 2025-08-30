@@ -56,16 +56,15 @@ import { toast } from '@/hooks/use-toast';
 
 interface Client {
   id: string;
-  legal_name: string;
-  display_name?: string;
-  billing_email: string;
+  name: string;
+  email: string;
   phone?: string;
-  website?: string;
-  status: 'prospect' | 'active' | 'inactive' | 'blocked';
-  sector: 'private' | 'government' | 'nonprofit' | 'semi_government';
-  city?: string;
-  country?: string;
+  company_name?: string;
+  status: 'pending' | 'active' | 'inactive' | 'blocked';
+  role: string;
   created_at: string;
+  last_login_at?: string;
+  verified_at?: string;
 }
 
 const AdminClients = () => {
@@ -74,23 +73,6 @@ const AdminClients = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sectorFilter, setSectorFilter] = useState('all');
-  const [showAddDialog, setShowAddDialog] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [newClient, setNewClient] = useState({
-    legal_name: '',
-    display_name: '',
-    billing_email: '',
-    phone: '',
-    website: '',
-    status: 'prospect' as const,
-    sector: 'private' as const,
-    city: '',
-    country: 'SA',
-    tax_number: '',
-    commercial_register: '',
-    address: '',
-    notes: ''
-  });
 
   useEffect(() => {
     const checkAuthAndFetch = async () => {
@@ -117,22 +99,35 @@ const AdminClients = () => {
 
   const fetchClients = async () => {
     try {
-      console.log('🔍 جاري جلب بيانات العملاء...');
+      console.log('🔍 جاري جلب بيانات المستخدمين المسجلين...');
       
       const { data, error } = await supabase
-        .from('clients')
+        .from('ash_users')
         .select('*')
         .order('created_at', { ascending: false });
 
-      console.log('📊 نتيجة استعلام العملاء:', { data, error, count: data?.length });
+      console.log('📊 نتيجة استعلام المستخدمين:', { data, error, count: data?.length });
 
       if (error) {
-        console.error('❌ خطأ في استعلام العملاء:', error);
+        console.error('❌ خطأ في استعلام المستخدمين:', error);
         throw error;
       }
       
-      console.log('✅ تم جلب البيانات بنجاح:', data?.length || 0, 'عميل');
-      setClients(data || []);
+      console.log('✅ تم جلب البيانات بنجاح:', data?.length || 0, 'مستخدم');
+      // تحويل البيانات لتتوافق مع interface Client
+      const mappedData = (data || []).map(user => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        company_name: user.company_name,
+        status: user.status as 'pending' | 'active' | 'inactive' | 'blocked',
+        role: user.role,
+        created_at: user.created_at,
+        last_login_at: user.last_login_at,
+        verified_at: user.verified_at
+      }));
+      setClients(mappedData);
     } catch (error: any) {
       console.error('Error fetching clients:', error);
       toast({
@@ -146,21 +141,21 @@ const AdminClients = () => {
   };
 
   const filteredClients = clients.filter(client => {
-    const matchesSearch = client.legal_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         client.billing_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (client.display_name && client.display_name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (client.company_name && client.company_name.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesStatus = statusFilter === 'all' || client.status === statusFilter;
-    const matchesSector = sectorFilter === 'all' || client.sector === sectorFilter;
+    const matchesRole = sectorFilter === 'all' || client.role === sectorFilter;
     
-    return matchesSearch && matchesStatus && matchesSector;
+    return matchesSearch && matchesStatus && matchesRole;
   });
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
       case 'inactive': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      case 'prospect': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
       case 'blocked': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
@@ -170,152 +165,50 @@ const AdminClients = () => {
     switch (status) {
       case 'active': return 'نشط';
       case 'inactive': return 'غير نشط';
-      case 'prospect': return 'محتمل';
+      case 'pending': return 'في الانتظار';
       case 'blocked': return 'محظور';
       default: return status;
     }
   };
 
-  const getSectorText = (sector: string) => {
-    switch (sector) {
-      case 'private': return 'خاص';
-      case 'government': return 'حكومي';
-      case 'nonprofit': return 'غير ربحي';
-      case 'semi_government': return 'شبه حكومي';
-      default: return sector;
+  const getRoleText = (role: string) => {
+    switch (role) {
+      case 'client': return 'عميل';
+      case 'admin': return 'مدير';
+      case 'superadmin': return 'مدير عام';
+      default: return role;
     }
   };
 
-  const handleDeleteClient = async (clientId: string) => {
+  const handleStatusChange = async (clientId: string, newStatus: string) => {
     try {
       const { error } = await supabase
-        .from('clients')
-        .delete()
+        .from('ash_users')
+        .update({ status: newStatus })
         .eq('id', clientId);
 
       if (error) throw error;
 
-      setClients(clients.filter(c => c.id !== clientId));
+      setClients(clients.map(c => c.id === clientId ? { ...c, status: newStatus as any } : c));
       toast({
-        title: "تم حذف العميل بنجاح",
-        description: "تم حذف العميل من النظام",
+        title: "تم تحديث حالة المستخدم",
+        description: `تم تغيير الحالة إلى ${getStatusText(newStatus)}`,
       });
     } catch (error: any) {
       toast({
-        title: "خطأ في حذف العميل",
+        title: "خطأ في تحديث الحالة",
         description: error.message,
         variant: "destructive",
       });
     }
   };
 
-  const handleCreateClient = async () => {
-    if (!newClient.legal_name || !newClient.billing_email) {
-      toast({
-        title: "خطأ في البيانات",
-        description: "يرجى ملء الحقول المطلوبة (الاسم القانوني والبريد الإلكتروني)",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!newClient.billing_email.includes('@') || !newClient.billing_email.includes('.')) {
-      toast({
-        title: "بريد إلكتروني غير صالح",
-        description: "يرجى إدخال بريد إلكتروني صحيح",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setCreating(true);
-    
-    try {
-      const { data, error } = await supabase
-        .from('clients')
-        .insert([{
-          legal_name: newClient.legal_name,
-          display_name: newClient.display_name || null,
-          billing_email: newClient.billing_email.toLowerCase().trim(),
-          phone: newClient.phone || null,
-          website: newClient.website || null,
-          status: newClient.status,
-          sector: newClient.sector,
-          city: newClient.city || null,
-          country: newClient.country,
-          tax_number: newClient.tax_number || null,
-          commercial_register: newClient.commercial_register || null,
-          address: newClient.address || null,
-          notes: newClient.notes || null,
-          created_by: (await supabase.auth.getUser()).data.user?.id
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setClients([data, ...clients]);
-      setShowAddDialog(false);
-      setNewClient({
-        legal_name: '',
-        display_name: '',
-        billing_email: '',
-        phone: '',
-        website: '',
-        status: 'prospect',
-        sector: 'private',
-        city: '',
-        country: 'SA',
-        tax_number: '',
-        commercial_register: '',
-        address: '',
-        notes: ''
-      });
-
-      toast({
-        title: "تم إنشاء العميل بنجاح",
-        description: `تم إضافة ${newClient.legal_name} إلى قاعدة العملاء`,
-      });
-
-      // إرسال إيميل ترحيبي للعميل
-      try {
-        await supabase.functions.invoke('client-welcome-email', {
-          body: {
-            clientName: newClient.legal_name,
-            clientEmail: newClient.billing_email,
-            clientId: data.id, 
-            sector: newClient.sector
-          }
-        });
-        
-        console.log('✅ تم إرسال إيميل ترحيبي للعميل');
-      } catch (emailError: any) {
-        console.error('❌ خطأ في إرسال إيميل الترحيب:', emailError);
-        // لا نوقف العملية حتى لو فشل الإيميل
-      }
-    } catch (error: any) {
-      console.error('Error creating client:', error);
-      
-      let errorMessage = "حدث خطأ أثناء إنشاء العميل";
-      if (error.message) {
-        errorMessage = error.message;
-      }
-      
-      toast({
-        title: "خطأ في إنشاء العميل",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setCreating(false);
-    }
-  };
 
   const stats = {
     total: clients.length,
     active: clients.filter(c => c.status === 'active').length,
-    prospects: clients.filter(c => c.status === 'prospect').length,
-    private: clients.filter(c => c.sector === 'private').length,
+    pending: clients.filter(c => c.status === 'pending').length,
+    clientsRole: clients.filter(c => c.role === 'client').length,
   };
 
   if (loading) {
@@ -345,162 +238,6 @@ const AdminClients = () => {
           </h1>
           <p className="text-muted-foreground mt-2">إدارة ومتابعة قاعدة عملاء الشركة</p>
         </div>
-        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              إضافة عميل جديد
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto" dir="rtl">
-            <DialogHeader>
-              <DialogTitle>إضافة عميل جديد</DialogTitle>
-              <DialogDescription>
-                أدخل بيانات العميل الجديد لإضافته إلى قاعدة البيانات
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="legal_name">الاسم القانوني *</Label>
-                <Input
-                  id="legal_name"
-                  value={newClient.legal_name}
-                  onChange={(e) => setNewClient({...newClient, legal_name: e.target.value})}
-                  placeholder="أدخل الاسم القانوني للعميل"
-                  dir="rtl"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="display_name">الاسم التجاري</Label>
-                <Input
-                  id="display_name"
-                  value={newClient.display_name}
-                  onChange={(e) => setNewClient({...newClient, display_name: e.target.value})}
-                  placeholder="الاسم التجاري (اختياري)"
-                  dir="rtl"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="billing_email">البريد الإلكتروني *</Label>
-                <Input
-                  id="billing_email"
-                  type="email"
-                  value={newClient.billing_email}
-                  onChange={(e) => setNewClient({...newClient, billing_email: e.target.value.toLowerCase().trim()})}
-                  placeholder="example@company.com"
-                  dir="ltr"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">رقم الهاتف</Label>
-                <Input
-                  id="phone"
-                  value={newClient.phone}
-                  onChange={(e) => setNewClient({...newClient, phone: e.target.value})}
-                  placeholder="+966501234567"
-                  dir="ltr"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="status">الحالة</Label>
-                <Select value={newClient.status} onValueChange={(value: any) => setNewClient({...newClient, status: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر الحالة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="prospect">محتمل</SelectItem>
-                    <SelectItem value="active">نشط</SelectItem>
-                    <SelectItem value="inactive">غير نشط</SelectItem>
-                    <SelectItem value="blocked">محظور</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sector">القطاع</Label>
-                <Select value={newClient.sector} onValueChange={(value: any) => setNewClient({...newClient, sector: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر القطاع" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="private">خاص</SelectItem>
-                    <SelectItem value="government">حكومي</SelectItem>
-                    <SelectItem value="nonprofit">غير ربحي</SelectItem>
-                    <SelectItem value="semi_government">شبه حكومي</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="city">المدينة</Label>
-                <Input
-                  id="city"
-                  value={newClient.city}
-                  onChange={(e) => setNewClient({...newClient, city: e.target.value})}
-                  placeholder="الرياض"
-                  dir="rtl"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="website">الموقع الإلكتروني</Label>
-                <Input
-                  id="website"
-                  value={newClient.website}
-                  onChange={(e) => setNewClient({...newClient, website: e.target.value})}
-                  placeholder="https://example.com"
-                  dir="ltr"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tax_number">الرقم الضريبي</Label>
-                <Input
-                  id="tax_number"
-                  value={newClient.tax_number}
-                  onChange={(e) => setNewClient({...newClient, tax_number: e.target.value})}
-                  placeholder="123456789012345"
-                  dir="ltr"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="commercial_register">السجل التجاري</Label>
-                <Input
-                  id="commercial_register"
-                  value={newClient.commercial_register}
-                  onChange={(e) => setNewClient({...newClient, commercial_register: e.target.value})}
-                  placeholder="1234567890"
-                  dir="ltr"
-                />
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="address">العنوان</Label>
-                <Input
-                  id="address"
-                  value={newClient.address}
-                  onChange={(e) => setNewClient({...newClient, address: e.target.value})}
-                  placeholder="العنوان الكامل"
-                  dir="rtl"
-                />
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="notes">ملاحظات</Label>
-                <Textarea
-                  id="notes"
-                  value={newClient.notes}
-                  onChange={(e) => setNewClient({...newClient, notes: e.target.value})}
-                  placeholder="ملاحظات إضافية عن العميل"
-                  dir="rtl"
-                  rows={3}
-                />
-              </div>
-            </div>
-            <div className="flex gap-3 justify-end pt-4">
-              <Button variant="outline" onClick={() => setShowAddDialog(false)}>
-                إلغاء
-              </Button>
-              <Button onClick={handleCreateClient} disabled={creating}>
-                {creating ? 'جارٍ الإنشاء...' : 'إنشاء العميل'}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
 
       {/* Stats Cards */}
@@ -540,8 +277,8 @@ const AdminClients = () => {
                 <Eye className="h-6 w-6 text-yellow-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.prospects}</p>
-                <p className="text-sm text-muted-foreground">عملاء محتملون</p>
+                <p className="text-2xl font-bold">{stats.pending}</p>
+                <p className="text-sm text-muted-foreground">في الانتظار</p>
               </div>
             </div>
           </CardContent>
@@ -554,8 +291,8 @@ const AdminClients = () => {
                 <Building className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.private}</p>
-                <p className="text-sm text-muted-foreground">قطاع خاص</p>
+                <p className="text-2xl font-bold">{stats.clientsRole}</p>
+                <p className="text-sm text-muted-foreground">عملاء</p>
               </div>
             </div>
           </CardContent>
@@ -589,20 +326,20 @@ const AdminClients = () => {
                 <SelectItem value="all">جميع الحالات</SelectItem>
                 <SelectItem value="active">نشط</SelectItem>
                 <SelectItem value="inactive">غير نشط</SelectItem>
-                <SelectItem value="prospect">محتمل</SelectItem>
+                <SelectItem value="pending">في الانتظار</SelectItem>
+                <SelectItem value="blocked">محظور</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={sectorFilter} onValueChange={setSectorFilter}>
               <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="القطاع" />
+                <SelectValue placeholder="الدور" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">جميع القطاعات</SelectItem>
-                <SelectItem value="private">خاص</SelectItem>
-                <SelectItem value="government">حكومي</SelectItem>
-                <SelectItem value="nonprofit">غير ربحي</SelectItem>
-                <SelectItem value="semi_government">شبه حكومي</SelectItem>
+                <SelectItem value="all">جميع الأدوار</SelectItem>
+                <SelectItem value="client">عميل</SelectItem>
+                <SelectItem value="admin">مدير</SelectItem>
+                <SelectItem value="superadmin">مدير عام</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -612,11 +349,11 @@ const AdminClients = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-right">العميل</TableHead>
+                  <TableHead className="text-right">المستخدم</TableHead>
                   <TableHead className="text-right">معلومات الاتصال</TableHead>
-                  <TableHead className="text-right">القطاع</TableHead>
+                  <TableHead className="text-right">الدور</TableHead>
                   <TableHead className="text-right">الحالة</TableHead>
-                  <TableHead className="text-right">تاريخ الإضافة</TableHead>
+                  <TableHead className="text-right">تاريخ التسجيل</TableHead>
                   <TableHead className="text-right">الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
@@ -627,13 +364,13 @@ const AdminClients = () => {
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
                           <AvatarFallback>
-                            {client.legal_name.charAt(0)}
+                            {client.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">{client.legal_name}</p>
-                          {client.display_name && (
-                            <p className="text-sm text-muted-foreground">{client.display_name}</p>
+                          <p className="font-medium">{client.name}</p>
+                          {client.company_name && (
+                            <p className="text-sm text-muted-foreground">{client.company_name}</p>
                           )}
                         </div>
                       </div>
@@ -643,7 +380,7 @@ const AdminClients = () => {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 text-sm">
                           <Mail className="h-3 w-3" />
-                          {client.billing_email}
+                          {client.email}
                         </div>
                         {client.phone && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -651,10 +388,10 @@ const AdminClients = () => {
                             {client.phone}
                           </div>
                         )}
-                        {client.city && (
+                        {client.last_login_at && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <MapPin className="h-3 w-3" />
-                            {client.city}, {client.country}
+                            <Calendar className="h-3 w-3" />
+                            آخر دخول: {new Date(client.last_login_at).toLocaleDateString('ar-SA')}
                           </div>
                         )}
                       </div>
@@ -662,7 +399,7 @@ const AdminClients = () => {
                     
                     <TableCell>
                       <Badge variant="outline">
-                        {getSectorText(client.sector)}
+                        {getRoleText(client.role)}
                       </Badge>
                     </TableCell>
                     
@@ -691,16 +428,16 @@ const AdminClients = () => {
                             <Eye className="mr-2 h-4 w-4" />
                             عرض التفاصيل
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleStatusChange(client.id, client.status === 'active' ? 'inactive' : 'active')}>
                             <Edit className="mr-2 h-4 w-4" />
-                            تعديل
+                            {client.status === 'active' ? 'إيقاف' : 'تفعيل'}
                           </DropdownMenuItem>
                           <DropdownMenuItem 
                             className="text-red-600"
-                            onClick={() => handleDeleteClient(client.id)}
+                            onClick={() => handleStatusChange(client.id, 'blocked')}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            حذف
+                            حظر
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -714,11 +451,11 @@ const AdminClients = () => {
           {filteredClients.length === 0 && (
             <div className="text-center py-12">
               <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-muted-foreground">لا توجد عملاء</h3>
+              <h3 className="text-lg font-medium text-muted-foreground">لا يوجد مستخدمون</h3>
               <p className="text-sm text-muted-foreground mt-2">
                 {searchTerm || statusFilter !== 'all' || sectorFilter !== 'all' 
                   ? 'لا توجد نتائج تطابق البحث' 
-                  : 'لم يتم إضافة أي عملاء بعد'}
+                  : 'لم يتم تسجيل أي مستخدمين بعد'}
               </p>
             </div>
           )}
