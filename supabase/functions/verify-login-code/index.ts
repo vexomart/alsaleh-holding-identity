@@ -90,21 +90,28 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // تأكيد المستخدم في قاعدة البيانات بعد التحقق من الرمز
+    const { data: confirmResult, error: confirmError } = await supabase.rpc(
+      'confirm_user_after_verification',
+      { user_email: email }
+    );
+
+    if (confirmError) {
+      console.error('Error confirming user:', confirmError);
+    } else {
+      console.log('User confirmed successfully:', confirmResult);
+    }
+
     // الحصول على بيانات المستخدم من جدول profiles
     const { data: profileData, error: profileError } = await supabase
       .from('profiles')
-      .select('user_id, full_name, email')
+      .select('user_id, full_name, email, is_verified')
       .eq('email', email)
       .maybeSingle();
 
     if (profileError) {
       console.error('Error fetching profile:', profileError);
     }
-
-    // إنشاء session token بسيط
-    const redirectUrl = type === 'admin' 
-      ? 'https://alialshehriholding.com/admin/dashboard' 
-      : 'https://alialshehriholding.com/my-projects';
 
     // تسجيل نشاط الدخول في سجل الأمان
     if (profileData?.user_id) {
@@ -120,7 +127,8 @@ const handler = async (req: Request): Promise<Response> => {
             user_type: type,
             ip_address: req.headers.get('x-forwarded-for') || 'unknown',
             user_agent: req.headers.get('user-agent') || 'unknown',
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            is_verified: profileData.is_verified
           }
         });
     }
