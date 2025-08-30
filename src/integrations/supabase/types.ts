@@ -4174,6 +4174,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      update_user_last_activity: {
+        Args: { user_id_param: string }
+        Returns: undefined
+      }
       validate_admin_session: {
         Args: { session_id: string } | { token: string; user_agent?: string }
         Returns: Json
