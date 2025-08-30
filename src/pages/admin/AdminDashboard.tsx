@@ -55,6 +55,8 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AuthDiagnostics } from '@/components/admin/AuthDiagnostics';
 
 interface DashboardStats {
   totalProjects: number;
@@ -420,8 +422,22 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Executive KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
+        {/* Main Dashboard Content with Tabs */}
+        <Tabs defaultValue="dashboard" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="dashboard" className="text-lg">
+              <BarChart3 className="w-5 h-5 ml-2" />
+              لوحة التحكم الرئيسية
+            </TabsTrigger>
+            <TabsTrigger value="auth-diagnostics" className="text-lg">
+              <Shield className="w-5 h-5 ml-2" />
+              تشخيص نظام المصادقة
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="dashboard" className="space-y-6 lg:space-y-8">
+            {/* Executive KPI Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
           {statsCards.map((stat, index) => (
             <Card key={index} className={`group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 border border-border/50 ${stat.bgColor} backdrop-blur-sm hover:scale-105 cursor-pointer animate-fade-in`} style={{ animationDelay: `${index * 150}ms` }}>
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -659,6 +675,12 @@ const AdminDashboard = () => {
             </Card>
           </div>
         </div>
+          </TabsContent>
+
+          <TabsContent value="auth-diagnostics">
+            <AuthDiagnostics />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
