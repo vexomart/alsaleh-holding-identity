@@ -109,14 +109,25 @@ const ClientLoginPage = () => {
     setError('');
 
     try {
+      console.log('🔧 Starting registration for:', formData.email);
+      
       // إنشاء هاش آمن لكلمة المرور
+      console.log('🔐 Creating password hash...');
       const { data: passwordData, error: hashError } = await supabase.rpc('create_secure_password_hash', {
         plain_password: formData.password
       });
 
       if (hashError) {
-        throw new Error('خطأ في معالجة كلمة المرور');
+        console.error('❌ Password hash error:', hashError);
+        throw new Error(`خطأ في معالجة كلمة المرور: ${hashError.message}`);
       }
+
+      if (!passwordData) {
+        console.error('❌ No password data returned');
+        throw new Error('لم يتم إرجاع بيانات كلمة المرور');
+      }
+
+      console.log('✅ Password hash created successfully');
 
       // إدراج المستخدم الجديد
       const passwordInfo = passwordData as any;
