@@ -68,6 +68,17 @@ import {
   Activity,
   AlertTriangle,
   Zap,
+  UserCheck,
+  Crown,
+  Banknote,
+  CircleCheck,
+  CircleX,
+  CirclePause,
+  ShieldCheck,
+  ShieldAlert,
+  ShieldX,
+  WifiOff,
+  Wifi,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -232,11 +243,21 @@ const AdminClients = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      case 'inactive': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
-      case 'blocked': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+      case 'active': return 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300';
+      case 'inactive': return 'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900/30 dark:text-slate-300';
+      case 'pending': return 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300';
+      case 'blocked': return 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300';
+      default: return 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-300';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'active': return <CircleCheck className="h-3.5 w-3.5" />;
+      case 'inactive': return <CirclePause className="h-3.5 w-3.5" />;
+      case 'pending': return <Clock className="h-3.5 w-3.5" />;
+      case 'blocked': return <CircleX className="h-3.5 w-3.5" />;
+      default: return <CirclePause className="h-3.5 w-3.5" />;
     }
   };
 
@@ -272,11 +293,31 @@ const AdminClients = () => {
 
   const getKycStatusColor = (status: string) => {
     switch (status) {
-      case 'verified': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
-      case 'rejected': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      case 'unverified': return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+      case 'verified': return 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300';
+      case 'pending': return 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300';
+      case 'rejected': return 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300';
+      case 'unverified': return 'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900/30 dark:text-slate-300';
+      default: return 'bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900/30 dark:text-slate-300';
+    }
+  };
+
+  const getKycStatusIcon = (status: string) => {
+    switch (status) {
+      case 'verified': return <ShieldCheck className="h-3.5 w-3.5" />;
+      case 'pending': return <ShieldAlert className="h-3.5 w-3.5" />;
+      case 'rejected': return <ShieldX className="h-3.5 w-3.5" />;
+      case 'unverified': return <Shield className="h-3.5 w-3.5" />;
+      default: return <Shield className="h-3.5 w-3.5" />;
+    }
+  };
+
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case 'admin': return <Crown className="h-4 w-4 text-purple-600" />;
+      case 'superadmin': return <Crown className="h-4 w-4 text-red-600" />;
+      case 'finance': return <Banknote className="h-4 w-4 text-green-600" />;
+      case 'client': return <UserCheck className="h-4 w-4 text-blue-600" />;
+      default: return <UserCheck className="h-4 w-4 text-gray-600" />;
     }
   };
 
@@ -411,22 +452,24 @@ const AdminClients = () => {
   }
 
   return (
-    <div className="space-y-8" dir="rtl">
+    <div className="space-y-8 font-tajawal" dir="rtl">
       <ResponsiveContainer size="xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="text-right">
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <Users className="h-8 w-8 text-primary" />
+          <h1 className="text-4xl font-bold flex items-center gap-4 font-tajawal">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-primary-variant text-white shadow-lg">
+              <Users className="h-8 w-8" />
+            </div>
             إدارة العملاء
             {realtimeEnabled && (
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground">مباشر</span>
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-200 dark:bg-green-900/30">
+                <Wifi className="w-4 h-4 text-green-600 animate-pulse" />
+                <span className="text-sm text-green-700 font-medium font-tajawal">التحديث المباشر</span>
               </div>
             )}
           </h1>
-          <p className="text-muted-foreground mt-2">إدارة ومتابعة قاعدة عملاء الشركة</p>
+          <p className="text-muted-foreground mt-3 text-lg font-tajawal">إدارة ومتابعة قاعدة عملاء الشركة بالتحديث اللحظي</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -574,73 +617,115 @@ const AdminClients = () => {
               </TableHeader>
               <TableBody>
                 {filteredClients.map((client) => (
-                  <TableRow key={client.id}>
+                  <TableRow key={client.id} className="hover:bg-muted/30 transition-all duration-200 group">
                     <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback>
+                      <div className="flex items-center gap-4">
+                        <Avatar className="h-12 w-12 ring-2 ring-primary/10 group-hover:ring-primary/20 transition-all duration-200">
+                          <AvatarImage src={client.avatar_url} />
+                          <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/30 text-primary font-semibold">
                             {client.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-medium">{client.name}</p>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-tajawal font-semibold text-base">{client.name}</p>
+                            {realtimeEnabled && (
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            )}
+                          </div>
                           {client.company_name && (
-                            <p className="text-sm text-muted-foreground">{client.company_name}</p>
+                            <div className="flex items-center gap-1 mt-1">
+                              <Building className="h-3 w-3 text-muted-foreground" />
+                              <p className="text-sm text-muted-foreground font-tajawal">{client.company_name}</p>
+                            </div>
                           )}
                         </div>
                       </div>
                     </TableCell>
                     
                     <TableCell>
-                      <div className="space-y-1">
+                      <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm">
-                          <Mail className="h-3 w-3" />
-                          {client.email}
+                          <div className="p-1.5 rounded-md bg-blue-50 text-blue-600 dark:bg-blue-900/30">
+                            <Mail className="h-3 w-3" />
+                          </div>
+                          <span className="font-tajawal">{client.email}</span>
                         </div>
                         {client.phone && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Phone className="h-3 w-3" />
-                            {client.phone}
+                            <div className="p-1.5 rounded-md bg-green-50 text-green-600 dark:bg-green-900/30">
+                              <Phone className="h-3 w-3" />
+                            </div>
+                            <span className="font-tajawal">{client.phone}</span>
                           </div>
                         )}
                         {client.last_login_at && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Calendar className="h-3 w-3" />
-                            آخر دخول: {new Date(client.last_login_at).toLocaleDateString('ar-SA')}
+                            <div className="p-1.5 rounded-md bg-purple-50 text-purple-600 dark:bg-purple-900/30">
+                              <Activity className="h-3 w-3" />
+                            </div>
+                            <span className="font-tajawal text-xs">
+                              آخر دخول: {new Date(client.last_login_at).toLocaleDateString('ar-SA')}
+                            </span>
                           </div>
                         )}
                       </div>
                     </TableCell>
                     
                     <TableCell>
-                      <div className="space-y-1">
-                        <Badge variant="outline">
-                          {getRoleText(client.role)}
-                        </Badge>
-                        {client.two_factor_enabled && (
-                          <Badge variant="secondary" className="text-xs">
-                            <Shield className="h-3 w-3 mr-1" />
-                            2FA
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          {getRoleIcon(client.role)}
+                          <Badge variant="outline" className="font-tajawal">
+                            {getRoleText(client.role)}
                           </Badge>
+                        </div>
+                        {client.two_factor_enabled && (
+                          <div className="flex items-center gap-1">
+                            <div className="p-1 rounded-md bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30">
+                              <Shield className="h-3 w-3" />
+                            </div>
+                            <Badge variant="secondary" className="text-xs font-tajawal">
+                              2FA مفعل
+                            </Badge>
+                          </div>
                         )}
                       </div>
                     </TableCell>
                     
                     <TableCell>
-                      <div className="space-y-1">
-                        <Badge className={getStatusColor(client.status)}>
-                          {getStatusText(client.status)}
-                        </Badge>
-                        <Badge variant="outline" className={getKycStatusColor(client.kyc_status) + " text-xs"}>
-                          {getKycStatusText(client.kyc_status)}
-                        </Badge>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`p-1.5 rounded-md ${getStatusColor(client.status).includes('emerald') ? 'bg-emerald-100 text-emerald-700' : 
+                                         getStatusColor(client.status).includes('red') ? 'bg-red-100 text-red-700' :
+                                         getStatusColor(client.status).includes('amber') ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'}`}>
+                            {getStatusIcon(client.status)}
+                          </div>
+                          <Badge className={`${getStatusColor(client.status)} border font-tajawal`}>
+                            {getStatusText(client.status)}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className={`p-1.5 rounded-md ${getKycStatusColor(client.kyc_status).includes('emerald') ? 'bg-emerald-100 text-emerald-700' : 
+                                         getKycStatusColor(client.kyc_status).includes('red') ? 'bg-red-100 text-red-700' :
+                                         getKycStatusColor(client.kyc_status).includes('amber') ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'}`}>
+                            {getKycStatusIcon(client.kyc_status)}
+                          </div>
+                          <Badge variant="outline" className={`${getKycStatusColor(client.kyc_status)} border text-xs font-tajawal`}>
+                            {getKycStatusText(client.kyc_status)}
+                          </Badge>
+                        </div>
                       </div>
                     </TableCell>
                     
                     <TableCell>
                       <div className="flex items-center gap-2 text-sm">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(client.created_at).toLocaleDateString('ar-SA')}
+                        <div className="p-1.5 rounded-md bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30">
+                          <Calendar className="h-3 w-3" />
+                        </div>
+                        <span className="font-tajawal">
+                          {new Date(client.created_at).toLocaleDateString('ar-SA')}
+                        </span>
                       </div>
                     </TableCell>
                     
