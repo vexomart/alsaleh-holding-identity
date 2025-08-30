@@ -202,20 +202,25 @@ serve(async (req) => {
           }
         }
 
-        // إنشاء OTP للمستخدم المعتمد
-        const { data: otpCode, error: otpError } = await supabase.rpc(
-          'create_otp_code',
-          {
+        // إنشاء OTP للمستخدم المعتمد وتحديث وقت آخر دخول
+        const [otpResult, updateResult] = await Promise.all([
+          supabase.rpc('create_otp_code', {
             p_user_id: result.user_id,
             p_email: email,
             p_type: 'login'
-          }
-        );
+          }),
+          supabase
+            .from('ash_users')
+            .update({ last_login_at: new Date().toISOString() })
+            .eq('id', result.user_id)
+        ]);
 
-        if (otpError) {
-          console.error('OTP creation error:', otpError);
+        if (otpResult.error) {
+          console.error('OTP creation error:', otpResult.error);
           throw new Error('فشل في إنشاء رمز التحقق');
         }
+
+        const otpCode = otpResult.data;
 
         // البحث عن اسم المستخدم للإيميل
         const { data: userData } = await supabase
