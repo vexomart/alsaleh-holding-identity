@@ -47,15 +47,21 @@ const ClientLogin = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const callAshAuth = async (action: string, data: any) => {
+  const callSimpleAuth = async (action: string, data: any) => {
     try {
-      const { data: result, error } = await supabase.functions.invoke('ash-auth', {
+      console.log('🔄 Calling simple-auth function:', action, data);
+      
+      const { data: result, error } = await supabase.functions.invoke('simple-auth', {
         body: { action, ...data }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Edge function error:', error);
+        throw error;
+      }
       
-      // تحقق من وجود خطأ في الاستجابة
+      console.log('✅ Auth response:', result);
+      
       if (result && !result.success) {
         throw new Error(result.message || 'حدث خطأ في النظام');
       }
@@ -63,7 +69,7 @@ const ClientLogin = () => {
       return result;
     } catch (error: any) {
       console.error('Auth API Error:', error);
-      throw new Error(error.message || 'حدث خطأ في النظام');
+      throw new Error(error.message || 'فشل في الاتصال بالخادم');
     }
   };
 
@@ -77,7 +83,7 @@ const ClientLogin = () => {
     setError('');
 
     try {
-      const result = await callAshAuth('login', {
+      const result = await callSimpleAuth('login', {
         email: formData.email,
         password: formData.password
       });
@@ -111,7 +117,7 @@ const ClientLogin = () => {
     setError('');
 
     try {
-      const result = await callAshAuth('register', {
+      const result = await callSimpleAuth('register', {
         email: formData.email,
         password: formData.password,
         name: formData.name,
@@ -143,14 +149,17 @@ const ClientLogin = () => {
     setError('');
 
     try {
-      const result = await callAshAuth('verify-otp', {
+      const result = await callSimpleAuth('verify-otp', {
         email: formData.email,
         code: otpCode
       });
 
       if (result.success) {
         toast.success('تم تفعيل الحساب بنجاح');
-        navigate('/client/dashboard');
+        
+        // الانتقال للوجهة المناسبة
+        const redirectUrl = result.redirect_url || '/client/dashboard';
+        navigate(redirectUrl);
       } else {
         setError(result.message || 'رمز التحقق غير صحيح');
       }
