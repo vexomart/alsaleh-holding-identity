@@ -291,6 +291,53 @@ export type Database = {
         }
         Relationships: []
       }
+      ash_email_otps: {
+        Row: {
+          attempts: number | null
+          code: string
+          consumed: boolean | null
+          created_at: string | null
+          email_lower: string
+          expires_at: string
+          id: string
+          normalized_code: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number | null
+          code: string
+          consumed?: boolean | null
+          created_at?: string | null
+          email_lower: string
+          expires_at: string
+          id?: string
+          normalized_code: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number | null
+          code?: string
+          consumed?: boolean | null
+          created_at?: string | null
+          email_lower?: string
+          expires_at?: string
+          id?: string
+          normalized_code?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ash_email_otps_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "ash_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ash_otps: {
         Row: {
           attempts: number | null
@@ -342,6 +389,7 @@ export type Database = {
           company_name: string | null
           created_at: string | null
           email: string
+          email_lower: string
           id: string
           kyc_status: string
           last_login_at: string | null
@@ -360,6 +408,7 @@ export type Database = {
           company_name?: string | null
           created_at?: string | null
           email: string
+          email_lower: string
           id?: string
           kyc_status?: string
           last_login_at?: string | null
@@ -378,6 +427,7 @@ export type Database = {
           company_name?: string | null
           created_at?: string | null
           email?: string
+          email_lower?: string
           id?: string
           kyc_status?: string
           last_login_at?: string | null
@@ -3783,6 +3833,16 @@ export type Database = {
         }
         Returns: Json
       }
+      authenticate_user: {
+        Args: { p_email: string; p_password: string }
+        Returns: {
+          message: string
+          requires_otp: boolean
+          status: string
+          success: boolean
+          user_id: string
+        }[]
+      }
       calculate_affiliate_level: {
         Args: { user_id: string }
         Returns: string
@@ -3826,6 +3886,10 @@ export type Database = {
       }
       create_admin_session: {
         Args: { admin_user_id: string; user_agent?: string; user_ip?: unknown }
+        Returns: string
+      }
+      create_otp_code: {
+        Args: { p_email: string; p_type: string; p_user_id: string }
         Returns: string
       }
       create_secure_admin_password: {
@@ -3941,6 +4005,16 @@ export type Database = {
         Args: { user_id?: string }
         Returns: Database["public"]["Enums"]["admin_role"]
       }
+      get_auth_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          failed_logins_today: number
+          pending_users: number
+          successful_verifications_today: number
+          total_users: number
+          verified_users: number
+        }[]
+      }
       get_current_admin_user: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -4049,6 +4123,14 @@ export type Database = {
         Args: { phone_input: string; user_requesting?: string }
         Returns: string
       }
+      normalize_digits: {
+        Args: { text_input: string }
+        Returns: string
+      }
+      normalize_email: {
+        Args: { email_input: string }
+        Returns: string
+      }
       owns_payment_transaction: {
         Args: { transaction_user_id: string }
         Returns: boolean
@@ -4090,6 +4172,14 @@ export type Database = {
           | { plain_password: string; stored_hash: string; stored_salt: string }
           | { plain_password: string; stored_password: string }
         Returns: boolean
+      }
+      verify_otp_code: {
+        Args: { p_code: string; p_email: string; p_type: string }
+        Returns: {
+          message: string
+          success: boolean
+          user_id: string
+        }[]
       }
       verify_secure_admin_password: {
         Args: {
