@@ -390,11 +390,14 @@ export type Database = {
           created_at: string | null
           email: string
           email_lower: string
+          email_verified_at: string | null
           id: string
           kyc_status: string
           last_login_at: string | null
           name: string
           password_hash: string
+          password_hash_version: string | null
+          password_salt: string | null
           phone: string | null
           role: string
           status: string
@@ -409,11 +412,14 @@ export type Database = {
           created_at?: string | null
           email: string
           email_lower: string
+          email_verified_at?: string | null
           id?: string
           kyc_status?: string
           last_login_at?: string | null
           name: string
           password_hash: string
+          password_hash_version?: string | null
+          password_salt?: string | null
           phone?: string | null
           role?: string
           status?: string
@@ -428,11 +434,14 @@ export type Database = {
           created_at?: string | null
           email?: string
           email_lower?: string
+          email_verified_at?: string | null
           id?: string
           kyc_status?: string
           last_login_at?: string | null
           name?: string
           password_hash?: string
+          password_hash_version?: string | null
+          password_salt?: string | null
           phone?: string | null
           role?: string
           status?: string
@@ -3966,6 +3975,10 @@ export type Database = {
         Args: { password_text: string }
         Returns: string
       }
+      create_secure_password_hash_v2: {
+        Args: { password_text: string }
+        Returns: Json
+      }
       create_ultra_secure_admin_session: {
         Args: {
           additional_entropy?: string
@@ -4234,6 +4247,10 @@ export type Database = {
         Returns: string
       }
       normalize_email: {
+        Args: { email_input: string }
+        Returns: string
+      }
+      normalize_email_enhanced: {
         Args: { email_input: string }
         Returns: string
       }
