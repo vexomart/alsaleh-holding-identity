@@ -296,6 +296,7 @@ export type Database = {
           attempts: number | null
           code: string
           consumed: boolean | null
+          consumed_at: string | null
           created_at: string | null
           email_lower: string
           expires_at: string
@@ -308,6 +309,7 @@ export type Database = {
           attempts?: number | null
           code: string
           consumed?: boolean | null
+          consumed_at?: string | null
           created_at?: string | null
           email_lower: string
           expires_at: string
@@ -320,6 +322,7 @@ export type Database = {
           attempts?: number | null
           code?: string
           consumed?: boolean | null
+          consumed_at?: string | null
           created_at?: string | null
           email_lower?: string
           expires_at?: string
@@ -4292,6 +4295,18 @@ export type Database = {
           user_id: string
         }[]
       }
+      simple_authenticate_user_enhanced: {
+        Args: { p_email: string; p_password: string }
+        Returns: {
+          email_lower: string
+          error_code: string
+          message: string
+          role: string
+          status: string
+          success: boolean
+          user_id: string
+        }[]
+      }
       simulate_user_activities: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -4328,6 +4343,15 @@ export type Database = {
       }
       verify_password: {
         Args: { password_text: string; stored_hash: string }
+        Returns: boolean
+      }
+      verify_password_enhanced: {
+        Args: {
+          hash_version?: string
+          password_text: string
+          stored_hash: string
+          stored_salt?: string
+        }
         Returns: boolean
       }
       verify_secure_admin_password: {
