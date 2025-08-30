@@ -26,7 +26,7 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
       if (event === 'SIGNED_OUT' || !session) {
         console.log('User signed out or no session, redirecting to admin login');
         setLoading(false);
-        navigate('/admin-login', { replace: true });
+        navigate('/ashadmin', { replace: true });
       } else if (event === 'SIGNED_IN' && session && !isAdmin) {
         console.log('User signed in, checking admin access');
         setCheckingAuth(true);
@@ -53,13 +53,13 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
       if (sessionError) {
         console.error('Session error:', sessionError);
         setError('خطأ في التحقق من الجلسة');
-        navigate('/admin-login', { replace: true });
+        navigate('/ashadmin', { replace: true });
         return;
       }
 
       if (!session?.user) {
         console.log('No active session found, redirecting to admin login');
-        navigate('/admin-login', { replace: true });
+        navigate('/ashadmin', { replace: true });
         return;
       }
 
@@ -103,7 +103,7 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
   };
 
   const handleRetryAuth = () => {
-    navigate('/admin-login', { replace: true });
+    navigate('/ashadmin', { replace: true });
   };
 
   const handleGoHome = () => {

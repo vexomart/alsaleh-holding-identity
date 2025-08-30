@@ -32,7 +32,7 @@ const EnhancedAdminProtectedRoute: React.FC<EnhancedAdminProtectedRouteProps> = 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session) {
         logUnauthorizedAccess('unauthenticated_user');
-        navigate('/auth', { replace: true });
+        navigate('/login', { replace: true });
       } else if (event === 'SIGNED_IN' && session) {
         checkAuthAndRole();
       }
@@ -72,7 +72,7 @@ const EnhancedAdminProtectedRoute: React.FC<EnhancedAdminProtectedRouteProps> = 
 
       if (!session?.user) {
         await logUnauthorizedAccess('no_session');
-        navigate('/auth', { replace: true });
+        navigate('/login', { replace: true });
         return;
       }
 
@@ -145,7 +145,7 @@ const EnhancedAdminProtectedRoute: React.FC<EnhancedAdminProtectedRouteProps> = 
   };
 
   const handleRetryAuth = () => {
-    navigate('/auth', { replace: true });
+    navigate('/login', { replace: true });
   };
 
   const handleGoHome = () => {

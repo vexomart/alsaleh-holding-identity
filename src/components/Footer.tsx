@@ -264,7 +264,7 @@ const Footer = () => {
     { name: "رؤيتنا", href: "/vision", icon: Target },
     { name: "فريق العمل", href: "/team", icon: Award },
     { name: "تواصل معنا", href: "/contact", icon: Mail },
-    { name: "دخول الإدارة", href: "/admin-login", icon: Shield }
+    { name: "دخول الإدارة", href: "/ashadmin", icon: Shield }
   ];
 
   const supportLinks = [

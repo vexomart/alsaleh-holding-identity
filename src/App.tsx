@@ -137,8 +137,7 @@ const ProjectTracking = lazy(() => import("./pages/ProjectTracking"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
-const Auth = lazy(() => import("./pages/Auth"));
-const AuthCallback = lazy(() => import("./components/AuthCallback"));
+const ClientLogin = lazy(() => import("./pages/ClientLogin"));
 const MyProjects = lazy(() => import("./pages/MyProjects"));
 const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 const EnhancedProjectManagement = lazy(() => import("./pages/admin/EnhancedProjectManagement"));
@@ -377,11 +376,9 @@ const App = () => {
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
-                <Route path="/auth" element={<Suspense fallback={<PageLoader />}><Auth /></Suspense>} />
-                <Route path="/auth/callback" element={<Suspense fallback={<PageLoader />}><AuthCallback /></Suspense>} />
+                <Route path="/login" element={<Suspense fallback={<PageLoader />}><ClientLogin /></Suspense>} />
+                <Route path="/ashadmin" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
                 <Route path="/unauthorized" element={<Suspense fallback={<PageLoader />}><UnauthorizedPage /></Suspense>} />
-                
-                <Route path="/admin-login" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
                 
                 {/* Admin Routes - Fully Protected */}
                 <Route path="/admin/*" element={

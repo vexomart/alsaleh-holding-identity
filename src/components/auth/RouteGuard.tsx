@@ -31,7 +31,7 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
 
       // المسارات العامة التي لا تحتاج تحقق
       const publicPaths = [
-        '/', '/auth', '/about', '/contact', '/services', '/careers',
+        '/', '/login', '/about', '/contact', '/services', '/careers',
         '/privacy', '/terms', '/support', '/faq', '/unauthorized',
         '/story', '/team', '/vision', '/our-works', '/ash'
       ];
@@ -57,7 +57,7 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
             variant: "destructive",
           });
 
-          navigate('/auth', { 
+          navigate('/login', {
             replace: true, 
             state: { from: currentPath, requiredRole: 'admin' } 
           });
@@ -97,7 +97,7 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
             variant: "destructive",
           });
 
-          navigate('/auth', { 
+          navigate('/login', {
             replace: true, 
             state: { from: currentPath } 
           });
@@ -145,7 +145,7 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
           variant: "destructive",
         });
 
-        navigate('/auth', { 
+        navigate('/login', { 
           replace: true, 
           state: { from: currentPath } 
         });

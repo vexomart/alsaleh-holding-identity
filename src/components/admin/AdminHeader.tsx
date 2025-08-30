@@ -92,7 +92,7 @@ export const AdminHeader = () => {
         title: "تم تسجيل الخروج بنجاح",
         description: "سيتم إعادة توجيهك إلى صفحة تسجيل الدخول",
       });
-      navigate('/admin-login');
+      navigate('/ashadmin');
     }
   };
 

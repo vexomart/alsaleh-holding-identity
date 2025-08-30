@@ -113,7 +113,7 @@ export const useAuth = () => {
       localStorage.clear();
       sessionStorage.clear();
       
-      navigate('/auth', { replace: true });
+      navigate('/login', { replace: true });
       
       toast({
         title: "تم تسجيل الخروج بنجاح",
@@ -154,7 +154,7 @@ export const useAuth = () => {
   // حماية المسارات
   const checkRouteAccess = useCallback(async (path: string): Promise<boolean> => {
     // المسارات العامة
-    const publicPaths = ['/', '/auth', '/about', '/contact', '/services', '/careers', '/ash'];
+    const publicPaths = ['/', '/login', '/about', '/contact', '/services', '/careers', '/ash'];
     const isPublicPath = publicPaths.some(publicPath => 
       path === publicPath || path.startsWith(publicPath + '/')
     );
@@ -175,7 +175,7 @@ export const useAuth = () => {
         variant: "destructive",
       });
       
-      navigate('/auth', { 
+      navigate('/login', { 
         replace: true, 
         state: { from: path } 
       });
@@ -329,7 +329,7 @@ export const useAuth = () => {
   // التحقق من الوصول عند تغيير المسار
   useEffect(() => {
     const checkCurrentPath = async () => {
-      if (!authState.isLoading && location.pathname !== '/auth') {
+      if (!authState.isLoading && location.pathname !== '/login') {
         await checkRouteAccess(location.pathname);
       }
     };

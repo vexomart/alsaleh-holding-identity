@@ -1,32 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Label } from '@/components/ui/label';
-import { 
-  Eye, 
-  EyeOff, 
-  Shield, 
-  Building2,
-  Lock,
-  Monitor,
-  AlertTriangle,
-  Mail,
-  ArrowLeft
-} from 'lucide-react';
+import { Eye, EyeOff, Shield, Lock, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [step, setStep] = useState<'login' | 'verification'>('login');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,288 +37,171 @@ const AdminLogin = () => {
         }
       }
     } catch (error) {
-      console.log('لا توجد جلسة مصادقة سابقة');
+      console.error('Error checking session:', error);
     }
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) return;
-    
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError('يرجى إدخال البريد الإلكتروني وكلمة المرور');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
-      // التحقق من تسجيل الدخول بالإيميل والباسوورد
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      // Try admin authentication first
+      const { data: { session }, error: signInError } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password
       });
 
-      if (authError) {
-        setError('بيانات الدخول غير صحيحة. يرجى التحقق من الإيميل وكلمة المرور.');
-        setLoading(false);
-        return;
+      if (signInError) {
+        throw signInError;
       }
 
-      if (!authData.user) {
-        setError('فشل في تسجيل الدخول');
-        setLoading(false);
-        return;
+      if (!session?.user) {
+        throw new Error('فشل في إنشاء الجلسة');
       }
 
-      // التحقق من الصلاحيات الإدارية
+      // Check if user has admin role
       const { data: adminData, error: roleError } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', authData.user.id)
+        .eq('user_id', session.user.id)
         .eq('role', 'admin')
         .single();
 
       if (roleError || !adminData) {
-        setError('ليس لديك صلاحيات إدارية. يرجى التواصل مع المدير.');
         await supabase.auth.signOut();
-        setLoading(false);
-        return;
+        throw new Error('ليس لديك صلاحية الوصول للوحة الإدارة');
       }
 
-      // إرسال رمز التحقق للإيميل
-      const { data: verifyData, error: verifyError } = await supabase.functions.invoke('send-verification-code', {
-        body: { email, type: 'admin' }
-      });
-
-      if (verifyError) {
-        setError('فشل في إرسال رمز التحقق. يرجى المحاولة مرة أخرى.');
-        setLoading(false);
-        return;
-      }
-
-      toast("تم إرسال رمز التحقق - تحقق من بريدك الإلكتروني وأدخل الرمز المكون من 6 أرقام");
-
-      setStep('verification');
+      toast.success('تم تسجيل الدخول بنجاح');
+      navigate('/admin/dashboard');
+      
     } catch (error: any) {
-      console.error('خطأ في تسجيل الدخول:', error);
-      setError('حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.');
+      console.error('Admin login error:', error);
+      setError(error.message || 'فشل في تسجيل الدخول');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerificationComplete = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!verificationCode) return;
-    
-    setLoading(true);
-    setError('');
-
-    try {
-      const { data, error } = await supabase.functions.invoke('verify-login-code', {
-        body: { 
-          email, 
-          code: verificationCode, 
-          type: 'admin' 
-        }
-      });
-
-      if (error) {
-        setError('رمز التحقق غير صحيح أو منتهي الصلاحية.');
-        setLoading(false);
-        return;
-      }
-
-      if (data?.success) {
-        toast("تم التحقق بنجاح - مرحباً بك في لوحة الإدارة");
-
-        navigate('/admin/dashboard', { replace: true });
-      } else {
-        setError('رمز التحقق غير صحيح');
-      }
-    } catch (error: any) {
-      console.error('خطأ في التحقق:', error);
-      setError('حدث خطأ أثناء التحقق من الرمز.');
-    } finally {
-      setLoading(false);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleLogin();
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950/30 to-indigo-950/20 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* خلفية شبكة ديناميكية */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.15)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] opacity-30"></div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.1),transparent_70%)]"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_48%,rgba(56,189,248,0.03)_49%,rgba(56,189,248,0.03)_51%,transparent_52%)] bg-[length:20px_20px]"></div>
       
-      {/* عناصر زخرفية متحركة */}
-      <div className="absolute top-10 left-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      
-      <div className="w-full max-w-lg mx-auto relative z-10">
-        {/* رابط العودة */}
-        <button 
-          onClick={() => navigate('/')}
-          className="inline-flex items-center gap-2 text-slate-300 hover:text-white mb-8 transition-all duration-300 font-medium group"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          العودة للموقع الرئيسي
-        </button>
-        
-        {/* كارد تسجيل الدخول */}
-        <Card className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border-slate-200/20 shadow-2xl shadow-slate-900/30 rounded-3xl overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-slate-100 via-blue-50 to-indigo-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 pb-10 pt-12 text-center relative">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500"></div>
-            
-            {/* شعار الإدارة */}
-            <div className="mx-auto w-28 h-28 bg-gradient-to-br from-slate-800 to-slate-950 dark:from-slate-700 dark:to-slate-900 rounded-3xl flex items-center justify-center shadow-2xl shadow-slate-500/40 mb-6 relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-white to-slate-100 rounded-2xl flex items-center justify-center">
-                {step === 'login' ? <Building2 className="w-8 h-8 text-slate-800" /> : <Shield className="w-8 h-8 text-slate-800" />}
-              </div>
-              <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center animate-pulse">
-                <Lock className="w-4 h-4 text-white" />
+      <div className="relative w-full max-w-md z-10">
+        {/* Back to Home Button */}
+        <div className="mb-6 text-center">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/')}
+            className="mb-4 text-slate-400 hover:text-white hover:bg-white/10"
+          >
+            <ArrowLeft className="w-4 h-4 ml-2" />
+            العودة للرئيسية
+          </Button>
+        </div>
+
+        <Card className="bg-white/5 backdrop-blur-lg border-white/10 shadow-2xl">
+          <CardHeader className="text-center pb-8">
+            <div className="flex justify-center mb-4">
+              <div className="p-4 rounded-full bg-blue-500/20 border border-blue-400/30">
+                <Shield className="w-8 h-8 text-blue-400" />
               </div>
             </div>
-            
-            <CardTitle className="text-4xl font-bold text-slate-900 dark:text-white mb-3 bg-gradient-to-r from-slate-800 to-slate-900 bg-clip-text text-transparent">
-              {step === 'login' ? 'لوحة الإدارة' : 'التحقق الأمني'}
+            <CardTitle className="text-2xl text-white mb-2">
+              لوحة إدارة النظام
             </CardTitle>
-            <CardDescription className="text-slate-600 dark:text-slate-300 text-lg font-medium">
-              {step === 'login' ? 'وصول محدود للمديرين المعتمدين فقط' : 'أدخل رمز التحقق المرسل لبريدك الإلكتروني'}
-            </CardDescription>
+            <p className="text-slate-400">
+              تسجيل دخول المدراء فقط
+            </p>
           </CardHeader>
           
-          <CardContent className="p-8 space-y-6">
+          <CardContent className="space-y-6">
             {error && (
-              <Alert className="border-red-200 bg-red-50/50 backdrop-blur-sm">
-                <AlertTriangle className="h-4 w-4 text-red-600" />
-                <AlertDescription className="text-red-800 text-right">
-                  {error}
-                </AlertDescription>
+              <Alert variant="destructive" className="bg-red-500/10 border-red-500/20 text-red-300">
+                <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
-            {/* نموذج تسجيل الدخول */}
-            {step === 'login' && (
-              <form onSubmit={handleLogin} className="space-y-6">
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                    <Monitor className="w-4 h-4" />
-                    البريد الإلكتروني الإداري
-                  </label>
-                  <Input
-                    type="email"
-                    placeholder="admin@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="h-12 text-right bg-slate-50/50 border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl transition-all duration-300"
-                    dir="rtl"
-                  />
-                </div>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-slate-300">
+                البريد الإلكتروني
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="admin@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyPress={handleKeyPress}
+                className="bg-white/5 border-white/10 text-white placeholder:text-slate-400 focus:border-blue-400/50 focus:ring-blue-400/20"
+              />
+            </div>
 
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                    <Lock className="w-4 h-4" />
-                    كلمة المرور
-                  </label>
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="h-12 text-right bg-slate-50/50 border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl transition-all duration-300 pr-12"
-                      dir="rtl"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-200/50"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </Button>
-                  </div>
-                </div>
-
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-slate-300">
+                كلمة المرور
+              </Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="كلمة المرور"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-slate-400 focus:border-blue-400/50 focus:ring-blue-400/20 pl-12"
+                />
                 <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full h-14 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-lg shadow-2xl shadow-blue-500/30 rounded-xl transition-all duration-300"
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-white/10 text-slate-400 hover:text-white"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  {loading ? (
-                    <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      جاري التسجيل...
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-3">
-                      تسجيل الدخول
-                      <Shield className="w-5 h-5" />
-                    </div>
-                  )}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </Button>
-              </form>
-            )}
+              </div>
+            </div>
 
-            {/* نموذج رمز التحقق */}
-            {step === 'verification' && (
-              <form onSubmit={handleVerificationComplete} className="space-y-6">
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Mail className="w-8 h-8 text-green-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-slate-700">تحقق من بريدك الإلكتروني</h3>
-                  <p className="text-sm text-slate-500">تم إرسال رمز مكون من 6 أرقام إلى {email}</p>
+            <Button 
+              onClick={handleLogin}
+              disabled={loading || !email || !password}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin ml-2"></div>
+                  جارٍ تسجيل الدخول...
                 </div>
-
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-slate-700 text-center block">
-                    رمز التحقق (6 أرقام)
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="000000"
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    required
-                    maxLength={6}
-                    className="h-16 text-center text-2xl font-mono bg-slate-50/50 border-slate-300 focus:border-green-500 focus:ring-green-500/20 rounded-xl transition-all duration-300 tracking-widest"
-                  />
+              ) : (
+                <div className="flex items-center justify-center">
+                  <Lock className="w-4 h-4 ml-2" />
+                  تسجيل الدخول
                 </div>
+              )}
+            </Button>
 
-                <Button
-                  type="submit"
-                  disabled={loading || verificationCode.length !== 6}
-                  className="w-full h-14 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold text-lg shadow-2xl shadow-green-500/30 rounded-xl transition-all duration-300 disabled:opacity-50"
-                >
-                  {loading ? (
-                    <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      جاري التحقق...
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-3">
-                      تأكيد الرمز ودخول النظام
-                      <Shield className="w-5 h-5" />
-                    </div>
-                  )}
-                </Button>
-
-                <div className="flex justify-center">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => {setStep('login'); setVerificationCode(''); setError('');}}
-                    className="text-slate-600 hover:text-slate-800"
-                  >
-                    العودة لتسجيل الدخول
-                  </Button>
-                </div>
-              </form>
-            )}
+            <div className="text-center">
+              <p className="text-slate-400 text-sm">
+                مخصص للمدراء المعتمدين فقط
+              </p>
+            </div>
           </CardContent>
         </Card>
-
       </div>
     </div>
   );

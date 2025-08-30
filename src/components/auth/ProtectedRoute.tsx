@@ -101,7 +101,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     if (error === 'authentication_required') {
       return (
         <Navigate 
-          to="/auth" 
+          to="/login" 
           state={{ from: location.pathname }} 
           replace 
         />

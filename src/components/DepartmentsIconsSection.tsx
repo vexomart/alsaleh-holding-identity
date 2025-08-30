@@ -168,7 +168,7 @@ const mainServices = [
     icon: Activity,
     color: "from-emerald-600 to-teal-600",
     bgColor: "bg-gradient-to-br from-emerald-50 to-teal-50",
-    link: "/auth",
+    link: "/login",
     description: "تابع تقدم مشاريعك في الوقت الفعلي",
     category: "تقنية"
   }
