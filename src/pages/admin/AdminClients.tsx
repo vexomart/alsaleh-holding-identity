@@ -33,6 +33,7 @@ import {
   Calendar,
   MapPin,
   Settings,
+  Activity,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -62,32 +63,58 @@ interface Client {
   last_seen?: string;
 }
 
-// Online status simulation hook
+// Real-time online status hook
 const useClientOnlineStatus = (clients: Client[]) => {
   const [onlineStatuses, setOnlineStatuses] = useState<Record<string, { is_online: boolean; last_seen: string }>>({});
 
   useEffect(() => {
-    // Simulate real-time online status updates
-    const interval = setInterval(() => {
-      const updates: Record<string, { is_online: boolean; last_seen: string }> = {};
-      
-      clients.forEach(client => {
-        // Simulate random online status changes
-        const wasOnline = onlineStatuses[client.id]?.is_online || false;
-        const isNowOnline = Math.random() > 0.7; // 30% chance to be online
-        
-        updates[client.id] = {
-          is_online: isNowOnline,
-          last_seen: isNowOnline ? new Date().toISOString() : 
-                    (onlineStatuses[client.id]?.last_seen || new Date().toISOString())
-        };
-      });
-      
-      setOnlineStatuses(updates);
-    }, 3000); // Update every 3 seconds
+    const fetchOnlineStatuses = async () => {
+      try {
+        const { data: statusData, error } = await supabase
+          .from('user_activity_logs')
+          .select('user_id, created_at, activity_type')
+          .order('created_at', { ascending: false });
 
-    return () => clearInterval(interval);
-  }, [clients, onlineStatuses]);
+        if (statusData && !error) {
+          const updates: Record<string, { is_online: boolean; last_seen: string }> = {};
+          const now = Date.now();
+          
+          clients.forEach(client => {
+            const userActivities = statusData.filter(activity => activity.user_id === client.id);
+            const lastActivity = userActivities[0];
+            
+            if (lastActivity) {
+              const lastSeenTime = new Date(lastActivity.created_at).getTime();
+              const timeDiff = now - lastSeenTime;
+              const isOnline = timeDiff < 5 * 60 * 1000; // 5 minutes threshold
+              
+              updates[client.id] = {
+                is_online: isOnline,
+                last_seen: lastActivity.created_at
+              };
+            } else {
+              updates[client.id] = {
+                is_online: false,
+                last_seen: client.created_at || new Date().toISOString()
+              };
+            }
+          });
+          
+          setOnlineStatuses(updates);
+        }
+      } catch (error) {
+        console.error('Error fetching online statuses:', error);
+      }
+    };
+
+    if (clients.length > 0) {
+      fetchOnlineStatuses();
+      
+      // Update statuses every 30 seconds
+      const interval = setInterval(fetchOnlineStatuses, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [clients]);
 
   return onlineStatuses;
 };
