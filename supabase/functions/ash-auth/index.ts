@@ -258,8 +258,17 @@ serve(async (req) => {
           throw new Error('البريد الإلكتروني مسجّل مسبقًا. جرّب تسجيل الدخول أو استعادة كلمة المرور.');
         }
 
-        // Hash password properly (simple version - should use bcrypt)
-        const passwordHash = `hashed_${password}_${Date.now()}`;
+        // Hash password securely using database function
+        const { data: passwordHash, error: hashError } = await supabase.rpc(
+          'create_secure_password_hash',
+          { password_text: password }
+        );
+
+        if (hashError) {
+          console.error('Password hashing error:', hashError);
+          await logAuthAttempt(normalizedEmail, 'db_error', 'password_hashing_failed', null, req);
+          throw new Error('فشل في تشفير كلمة المرور');
+        }
 
         try {
           // Create user with transactional approach

@@ -4216,10 +4216,10 @@ export type Database = {
         Args: { p_email: string; p_password: string }
         Returns: {
           message: string
+          role: string
           status: string
           success: boolean
           user_id: string
-          user_name: string
         }[]
       }
       simulate_user_activities: {
