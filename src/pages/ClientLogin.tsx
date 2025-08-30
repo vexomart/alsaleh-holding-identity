@@ -83,8 +83,8 @@ const ClientLogin = () => {
       });
 
       if (result.success) {
-        if (result.requiresOTP) {
-          setTempUserId(result.tempUserId);
+        if (result.requires_otp) {
+          setTempUserId(result.user_id);
           setShowOTP(true);
           toast.success('تم إرسال رمز التحقق إلى بريدك الإلكتروني');
         } else {
@@ -120,7 +120,7 @@ const ClientLogin = () => {
       });
 
       if (result.success) {
-        setTempUserId(result.tempUserId);
+        setTempUserId(result.user_id);
         setShowOTP(true);
         toast.success('تم إرسال رمز التحقق إلى بريدك الإلكتروني');
       } else {
@@ -144,7 +144,7 @@ const ClientLogin = () => {
 
     try {
       const result = await callAshAuth('verify-otp', {
-        tempUserId,
+        email: formData.email,
         code: otpCode
       });
 
