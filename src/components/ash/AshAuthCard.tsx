@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import ForgotPassword from '@/components/auth/ForgotPassword';
 
 interface AshAuthCardProps {
   onAuthSuccess: (userData: any) => void;
@@ -23,6 +24,7 @@ export const AshAuthCard: React.FC<AshAuthCardProps> = ({ onAuthSuccess, isAdmin
   const [tempUserId, setTempUserId] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(0);
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   // بيانات النموذج
   const [formData, setFormData] = useState({
@@ -191,6 +193,20 @@ export const AshAuthCard: React.FC<AshAuthCardProps> = ({ onAuthSuccess, isAdmin
       setIsLoading(false);
     }
   };
+
+  if (showForgotPassword) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="w-full max-w-md mx-auto bg-white/10 backdrop-blur-xl border-white/20 shadow-2xl rounded-lg">
+          <ForgotPassword onBack={() => setShowForgotPassword(false)} />
+        </div>
+      </motion.div>
+    );
+  }
 
   if (showOTP) {
     return (
@@ -393,11 +409,22 @@ export const AshAuthCard: React.FC<AshAuthCardProps> = ({ onAuthSuccess, isAdmin
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       جارٍ تسجيل الدخول...
                     </div>
-                  ) : (
-                    'تسجيل الدخول'
-                  )}
+                ) : (
+                  'تسجيل الدخول'
+                )}
+              </Button>
+
+              <div className="text-center mt-4">
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-sm text-white/80 hover:text-white"
+                >
+                  نسيت كلمة المرور؟
                 </Button>
-              </form>
+              </div>
+            </form>
             </TabsContent>
 
             <TabsContent value="register" className="space-y-4">

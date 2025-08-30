@@ -65,3 +65,9 @@ verify_jwt = false
 
 [functions.send-otp-email]
 verify_jwt = false
+
+[functions.ash-auth]
+verify_jwt = false
+
+[functions.reset-password]
+verify_jwt = false

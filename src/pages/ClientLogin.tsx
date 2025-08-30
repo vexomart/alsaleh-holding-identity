@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Mail, User, Phone, Building, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import ForgotPassword from '@/components/auth/ForgotPassword';
 
 const ClientLogin = () => {
   const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ const ClientLogin = () => {
   const [error, setError] = useState('');
   const [showOTP, setShowOTP] = useState(false);
   const [tempUserId, setTempUserId] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -214,6 +216,26 @@ const ClientLogin = () => {
     );
   }
 
+  if (showForgotPassword) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-secondary/10 to-accent/5 p-4">
+        <div className="w-full max-w-md">
+          <div className="mb-6 text-center">
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/')}
+              className="mb-4 text-muted-foreground hover:text-primary"
+            >
+              <ArrowLeft className="w-4 h-4 ml-2" />
+              العودة للرئيسية
+            </Button>
+          </div>
+          <ForgotPassword onBack={() => setShowForgotPassword(false)} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-secondary/10 to-accent/5 p-4">
       <div className="w-full max-w-md">
@@ -286,6 +308,17 @@ const ClientLogin = () => {
                 >
                   {loading ? 'جارٍ تسجيل الدخول...' : 'تسجيل الدخول'}
                 </Button>
+
+                <div className="text-center">
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => setShowForgotPassword(true)}
+                    className="text-sm text-muted-foreground hover:text-primary"
+                  >
+                    نسيت كلمة المرور؟
+                  </Button>
+                </div>
               </TabsContent>
 
               <TabsContent value="register" className="space-y-4">

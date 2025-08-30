@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Shield, Lock, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import ForgotPassword from '@/components/auth/ForgotPassword';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,7 @@ const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,6 +96,32 @@ const AdminLogin = () => {
       handleLogin();
     }
   };
+
+  if (showForgotPassword) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.1),transparent_70%)]"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_48%,rgba(56,189,248,0.03)_49%,rgba(56,189,248,0.03)_51%,transparent_52%)] bg-[length:20px_20px]"></div>
+        
+        <div className="relative w-full max-w-md z-10">
+          <div className="mb-6 text-center">
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/')}
+              className="mb-4 text-slate-400 hover:text-white hover:bg-white/10"
+            >
+              <ArrowLeft className="w-4 h-4 ml-2" />
+              العودة للرئيسية
+            </Button>
+          </div>
+          <div className="bg-white/5 backdrop-blur-lg border-white/10 shadow-2xl rounded-lg">
+            <ForgotPassword onBack={() => setShowForgotPassword(false)} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4">
@@ -194,6 +222,17 @@ const AdminLogin = () => {
                 </div>
               )}
             </Button>
+
+            <div className="text-center">
+              <Button
+                type="button"
+                variant="link"
+                onClick={() => setShowForgotPassword(true)}
+                className="text-sm text-slate-400 hover:text-white"
+              >
+                نسيت كلمة المرور؟
+              </Button>
+            </div>
 
             <div className="text-center">
               <p className="text-slate-400 text-sm">

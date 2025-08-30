@@ -142,6 +142,7 @@ const MyProjects = lazy(() => import("./pages/MyProjects"));
 const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 const EnhancedProjectManagement = lazy(() => import("./pages/admin/EnhancedProjectManagement"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminUpdates = lazy(() => import("./pages/admin/AdminUpdates"));
 const AdminWallets = lazy(() => import("./pages/admin/AdminWallets"));
@@ -378,6 +379,7 @@ const App = () => {
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
                 <Route path="/login" element={<Suspense fallback={<PageLoader />}><ClientLogin /></Suspense>} />
                 <Route path="/ashadmin" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
+                <Route path="/reset-password" element={<Suspense fallback={<PageLoader />}><ResetPassword /></Suspense>} />
                 <Route path="/unauthorized" element={<Suspense fallback={<PageLoader />}><UnauthorizedPage /></Suspense>} />
                 
                 {/* Admin Routes - Fully Protected */}
