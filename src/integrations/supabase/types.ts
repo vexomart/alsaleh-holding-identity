@@ -4023,6 +4023,13 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_quick_auth_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          stat_name: string
+          stat_value: number
+        }[]
+      }
       get_unique_invoice_number: {
         Args: Record<PropertyKey, never>
         Returns: string
