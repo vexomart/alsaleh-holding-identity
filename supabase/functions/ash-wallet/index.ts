@@ -39,7 +39,7 @@ const handler = async (req: Request): Promise<Response> => {
           .single();
 
         if (walletError && walletError.code === 'PGRST116') {
-          // إنشاء محفظة جديدة إذا لم توجد
+          // إنشاء محفظة جديدة إذا لم توجد - استخدام صلاحيات النظام
           const { data: newWallet, error: createError } = await supabase
             .from('ash_wallets')
             .insert([{
@@ -52,9 +52,11 @@ const handler = async (req: Request): Promise<Response> => {
             .single();
 
           if (createError) {
+            console.error('خطأ في إنشاء المحفظة:', createError);
             throw new Error(`خطأ في إنشاء المحفظة: ${createError.message}`);
           }
 
+          console.log('✅ تم إنشاء محفظة جديدة:', newWallet);
           return new Response(JSON.stringify(newWallet), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
