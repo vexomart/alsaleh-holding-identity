@@ -3950,8 +3950,28 @@ export type Database = {
         }
         Returns: Json
       }
+      auth_create_test_user: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       auth_diagnostic_check: {
         Args: { p_email: string; p_password: string }
+        Returns: Json
+      }
+      auth_hotfix_auto_repair: {
+        Args: {
+          admin_user_id?: string
+          email_input: string
+          plain_password: string
+        }
+        Returns: Json
+      }
+      auth_hotfix_diagnose: {
+        Args: {
+          admin_user_id?: string
+          email_input: string
+          plain_password?: string
+        }
         Returns: Json
       }
       calculate_affiliate_level: {

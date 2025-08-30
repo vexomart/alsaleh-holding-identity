@@ -48,6 +48,9 @@ import {
   Tablet,
   Monitor,
   Award,
+  Wrench,
+  TestTube,
+  Search,
   Sparkles,
   Bell,
   MessageSquare

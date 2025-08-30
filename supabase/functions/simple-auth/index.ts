@@ -134,7 +134,7 @@ serve(async (req) => {
           throw new Error('البريد الإلكتروني وكلمة المرور مطلوبان');
         }
 
-        // استخدام دالة التحقق الذكية من قاعدة البيانات
+        // استخدام دالة التحقق الذكية من قاعدة البيانات مع الإصلاح التلقائي
         const { data: authResult, error: authError } = await supabase
           .rpc('simple_authenticate_user', { 
             email_lower_param: normalizedEmail, 
@@ -146,15 +146,34 @@ serve(async (req) => {
           throw new Error('فشل في التحقق من بيانات تسجيل الدخول');
         }
 
+        // تسجيل محاولة المصادقة
+        const logResult = await supabase.rpc('log_auth_attempt', {
+          email_lower_param: normalizedEmail,
+          action_param: 'login',
+          status_param: authResult.success ? 'success' : 'failed',
+          error_code_param: authResult.error_code || null,
+          probe_result_param: authResult.probe_results || {},
+          user_id_param: authResult.user_id || null,
+          metadata_param: {
+            auto_fixed: authResult.auto_fixed || null,
+            timestamp: new Date().toISOString()
+          }
+        });
+
         if (!authResult.success) {
-          // تسجيل محاولة فاشلة
-          await supabase.rpc('log_auth_attempt', {
-            email_lower_param: normalizedEmail,
-            action_param: 'login',
-            status_param: 'failed',
-            error_code_param: authResult.error_code,
-            probe_result_param: authResult.probe_results || {}
-          });
+          // في حالة الإصلاح التلقائي، إعطاء رسالة مناسبة
+          if (authResult.auto_fixed) {
+            console.log('🔧 Auto-fix applied for user, suggesting retry');
+            return new Response(JSON.stringify({
+              success: false,
+              message: authResult.message,
+              auto_fixed: true,
+              suggest_retry: true,
+              error_code: authResult.error_code
+            }), {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+          }
 
           throw new Error(authResult.message);
         }
@@ -185,13 +204,16 @@ serve(async (req) => {
           .update({ last_login_at: new Date().toISOString() })
           .eq('id', user.id);
 
-        console.log(`✅ Login OTP sent: ${normalizedEmail}, OTP: ${otpCode}`);
+        console.log(`✅ Login successful: ${normalizedEmail}, OTP: ${otpCode}`);
 
         return new Response(JSON.stringify({
           success: true,
-          message: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني',
+          message: authResult.auto_fixed ? 
+            'تمت معالجة مشكلة أمنية وتم إرسال رمز التحقق إلى بريدك الإلكتروني' :
+            'تم إرسال رمز التحقق إلى بريدك الإلكتروني',
           user_id: user.id,
-          requires_otp: true
+          requires_otp: true,
+          auto_fixed: authResult.auto_fixed || false
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
