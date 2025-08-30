@@ -596,6 +596,39 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_logs: {
+        Row: {
+          created_at: string | null
+          email_lower: string
+          error_code: string | null
+          error_constraint: string | null
+          id: string
+          ip_address: unknown | null
+          result: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_lower: string
+          error_code?: string | null
+          error_constraint?: string | null
+          id?: string
+          ip_address?: unknown | null
+          result: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_lower?: string
+          error_code?: string | null
+          error_constraint?: string | null
+          id?: string
+          ip_address?: unknown | null
+          result?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       automation_usage: {
         Row: {
           automation_type: string
@@ -4036,6 +4069,17 @@ export type Database = {
         Args: { user_id?: string }
         Returns: Database["public"]["Enums"]["admin_role"]
       }
+      get_auth_statistics: {
+        Args: { p_limit?: number }
+        Returns: {
+          email_lower: string
+          failure_count: number
+          last_attempt: string
+          last_success: string
+          success_count: number
+          total_attempts: number
+        }[]
+      }
       get_auth_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -4112,14 +4156,23 @@ export type Database = {
         Returns: boolean
       }
       log_auth_attempt: {
-        Args: {
-          p_email_lower: string
-          p_error_code?: string
-          p_error_constraint?: string
-          p_ip_address?: unknown
-          p_result: string
-          p_user_agent?: string
-        }
+        Args:
+          | {
+              p_email_lower: string
+              p_error_code?: string
+              p_error_constraint?: string
+              p_ip_address?: string
+              p_result: string
+              p_user_agent?: string
+            }
+          | {
+              p_email_lower: string
+              p_error_code?: string
+              p_error_constraint?: string
+              p_ip_address?: unknown
+              p_result: string
+              p_user_agent?: string
+            }
         Returns: undefined
       }
       log_sensitive_data_access: {
@@ -4254,6 +4307,10 @@ export type Database = {
       }
       verify_otp_code: {
         Args: { p_code: string; p_email: string; p_type: string }
+        Returns: boolean
+      }
+      verify_password: {
+        Args: { password_text: string; stored_hash: string }
         Returns: boolean
       }
       verify_secure_admin_password: {
