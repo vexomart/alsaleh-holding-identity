@@ -33,8 +33,12 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('📧 Reset Password Action:', action, 'for email:', email);
 
     if (action === 'send-reset') {
-      // التحقق من وجود المستخدم
-      const { data: user, error: userError } = await supabase.auth.admin.getUserByEmail(email);
+      // التحقق من وجود المستخدم في جدول ash_users
+      const { data: user, error: userError } = await supabase
+        .from('ash_users')
+        .select('id, email, status')
+        .eq('email_lower', email.toLowerCase().trim())
+        .single();
       
       if (userError || !user) {
         console.log('❌ User not found:', email);
@@ -43,6 +47,18 @@ const handler = async (req: Request): Promise<Response> => {
           JSON.stringify({ 
             success: true, 
             message: 'إذا كان البريد الإلكتروني مسجل لدينا، ستصلك رسالة لإعادة تعيين كلمة المرور'
+          }),
+          { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+        );
+      }
+
+      // التحقق من أن المستخدم نشط
+      if (user.status === 'blocked') {
+        console.log('❌ User is blocked:', email);
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: 'تم حظر حسابك. يرجى التواصل مع الإدارة'
           }),
           { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
         );
@@ -58,7 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
         .from('password_reset_tokens')
         .insert([
           {
-            user_id: user.user.id,
+            user_id: user.id,
             email: email,
             token: resetToken,
             expires_at: expiresAt.toISOString(),
@@ -158,11 +174,27 @@ const handler = async (req: Request): Promise<Response> => {
         throw new Error('رمز إعادة التعيين غير صالح أو منتهي الصلاحية');
       }
 
-      // تحديث كلمة المرور
-      const { error: updateError } = await supabase.auth.admin.updateUserById(
-        resetData.user_id,
-        { password: newPassword }
-      );
+      // تحديث كلمة المرور باستخدام النظام الجديد
+      const passwordResult = await supabase.rpc('create_secure_password_hash', {
+        plain_password: newPassword
+      });
+
+      if (passwordResult.error) {
+        console.error('❌ Error creating password hash:', passwordResult.error);
+        throw new Error('خطأ في تحديث كلمة المرور');
+      }
+
+      const { data: hashData } = passwordResult;
+      
+      const { error: updateError } = await supabase
+        .from('ash_users')
+        .update({
+          password_algo: hashData.password_algo,
+          password_salt_b64: hashData.password_salt_b64,
+          password_hash_b64: hashData.password_hash_b64,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', resetData.user_id);
 
       if (updateError) {
         console.error('❌ Error updating password:', updateError);
