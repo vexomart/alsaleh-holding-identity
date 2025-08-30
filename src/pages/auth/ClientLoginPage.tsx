@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Mail, User, Phone, Building, ArrowRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { AUTH_ROUTES, AUTH_MESSAGES } from '@/auth/new-auth-system';
+import { supabase } from '@/integrations/supabase/client';
 
 interface FormData {
   name: string;
@@ -48,11 +49,41 @@ const ClientLoginPage = () => {
     setError('');
 
     try {
-      // TODO: Implement actual login logic
-      console.log('Login attempt:', { email: formData.email, realm: 'client' });
-      
-      // مثال مؤقت
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // استخدام نظام المصادقة الجديد
+      const { data, error } = await supabase.rpc('simple_authenticate_user', {
+        email_lower_param: formData.email.toLowerCase().trim(),
+        plain_password: formData.password
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const authData = data as any;
+      if (!authData.success) {
+        if (authData.error_code === 'E_USER_BLOCKED') {
+          setError(AUTH_MESSAGES.ERROR.ACCOUNT_BLOCKED);
+        } else if (authData.error_code === 'E_USER_PENDING') {
+          setError(AUTH_MESSAGES.ERROR.NOT_VERIFIED);
+        } else if (authData.error_code === 'E_WRONG_PASSWORD') {
+          setError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
+        } else {
+          setError(authData.message || AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
+        }
+        return;
+      }
+
+      // تحديث الجلسة المحلية
+      const sessionData = {
+        id: crypto.randomUUID(),
+        user_id: authData.user.id,
+        session_token: `session_${Date.now()}`,
+        realm: 'client' as const,
+        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        user: authData.user
+      };
+
+      localStorage.setItem('auth_session', JSON.stringify(sessionData));
       
       toast.success(AUTH_MESSAGES.SUCCESS.LOGIN);
       navigate(AUTH_ROUTES.CLIENT.DASHBOARD);
@@ -78,14 +109,58 @@ const ClientLoginPage = () => {
     setError('');
 
     try {
-      // TODO: Implement actual registration logic
-      console.log('Registration attempt:', formData);
-      
-      // مثال مؤقت
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // إنشاء هاش آمن لكلمة المرور
+      const { data: passwordData, error: hashError } = await supabase.rpc('create_secure_password_hash', {
+        plain_password: formData.password
+      });
+
+      if (hashError) {
+        throw new Error('خطأ في معالجة كلمة المرور');
+      }
+
+      // إدراج المستخدم الجديد
+      const passwordInfo = passwordData as any;
+      const { data: userData, error: userError } = await supabase
+        .from('ash_users')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          email_lower: formData.email.toLowerCase().trim(),
+          phone: formData.phone || null,
+          company_name: formData.company_name || null,
+          role: 'client',
+          status: 'pending',
+          password_hash: '',
+          password_algo: passwordInfo.password_algo,
+          password_salt_b64: passwordInfo.password_salt_b64,
+          password_hash_b64: passwordInfo.password_hash_b64
+        })
+        .select()
+        .single();
+
+      if (userError) {
+        if (userError.code === '23505') {
+          setError(AUTH_MESSAGES.ERROR.EMAIL_EXISTS);
+        } else {
+          setError('حدث خطأ أثناء إنشاء الحساب');
+        }
+        return;
+      }
+
+      // إنشاء رمز OTP للتحقق
+      const { data: otpCode, error: otpError } = await supabase.rpc('create_otp_code', {
+        p_user_id: userData.id,
+        p_email: formData.email,
+        p_type: 'email_verification'
+      });
+
+      if (otpError) {
+        console.error('OTP creation error:', otpError);
+      }
+
       toast.success(AUTH_MESSAGES.SUCCESS.SIGNUP);
-      // سيتم إعادة التوجيه لصفحة تأكيد OTP
+      // يمكن إضافة إعادة توجيه لصفحة التحقق هنا
+      setActiveTab('login');
     } catch (error: any) {
       setError(error.message || 'حدث خطأ أثناء إنشاء الحساب');
     } finally {

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { AuthUser, AuthSession } from '@/auth/new-auth-system';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -67,8 +68,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const login = async (email: string, password: string, realm: 'client' | 'admin') => {
-    // سيتم تنفيذ منطق تسجيل الدخول هنا
-    throw new Error('Login not implemented yet');
+    try {
+      setIsLoading(true);
+      
+      // استدعاء دالة المصادقة من قاعدة البيانات
+      const { data, error } = await supabase.rpc('simple_authenticate_user', {
+        email_lower_param: email.toLowerCase().trim(),
+        plain_password: password
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const authData = data as any;
+      if (!authData.success) {
+        throw new Error(authData.message || 'فشل في تسجيل الدخول');
+      }
+
+      // إنشاء جلسة جديدة
+      const sessionData: AuthSession = {
+        id: crypto.randomUUID(),
+        user_id: authData.user.id,
+        session_token: `session_${Date.now()}`,
+        realm,
+        expires_at: new Date(Date.now() + (realm === 'admin' ? 8 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000)).toISOString(),
+        user: authData.user
+      };
+
+      // حفظ الجلسة
+      localStorage.setItem('auth_session', JSON.stringify(sessionData));
+      
+      setSession(sessionData);
+      setUser(authData.user);
+      
+    } catch (error: any) {
+      throw new Error(error.message || 'حدث خطأ أثناء تسجيل الدخول');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const logout = async () => {
