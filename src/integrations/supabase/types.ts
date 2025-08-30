@@ -563,6 +563,39 @@ export type Database = {
           },
         ]
       }
+      auth_diagnostics: {
+        Row: {
+          created_at: string | null
+          email_lower: string
+          error_code: string | null
+          error_constraint: string | null
+          id: string
+          ip_address: unknown | null
+          result: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_lower: string
+          error_code?: string | null
+          error_constraint?: string | null
+          id?: string
+          ip_address?: unknown | null
+          result: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_lower?: string
+          error_code?: string | null
+          error_constraint?: string | null
+          id?: string
+          ip_address?: unknown | null
+          result?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       automation_usage: {
         Row: {
           automation_type: string
@@ -4070,6 +4103,17 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      log_auth_attempt: {
+        Args: {
+          p_email_lower: string
+          p_error_code?: string
+          p_error_constraint?: string
+          p_ip_address?: unknown
+          p_result: string
+          p_user_agent?: string
+        }
+        Returns: undefined
+      }
       log_sensitive_data_access: {
         Args: {
           p_access_type: string
@@ -4180,6 +4224,14 @@ export type Database = {
       }
       validate_admin_session: {
         Args: { session_id: string } | { token: string; user_agent?: string }
+        Returns: Json
+      }
+      validate_email: {
+        Args: { email_input: string }
+        Returns: Json
+      }
+      validate_password: {
+        Args: { password_input: string }
         Returns: Json
       }
       validate_ultra_secure_admin_session: {
