@@ -297,6 +297,11 @@ const ClientLogin = () => {
                       placeholder="كلمة المرور"
                       value={formData.password}
                       onChange={(e) => updateFormData('password', e.target.value)}
+                      dir="ltr"
+                      autoComplete="current-password"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                      style={{ textAlign: 'left' }}
                     />
                     <Button
                       type="button"
@@ -308,6 +313,11 @@ const ClientLogin = () => {
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </Button>
                   </div>
+                  {formData.password && /[\u200C\u200D\u200E\u200F\uFEFF]/.test(formData.password) && (
+                    <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
+                      تحذير: تحتوي كلمة المرور على محارف خفية قد تؤثر على تسجيل الدخول
+                    </p>
+                  )}
                 </div>
 
                 <Button 
@@ -403,9 +413,14 @@ const ClientLogin = () => {
                     <Input
                       id="register-password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="كلمة المرور"
+                      placeholder="كلمة المرور (8 أحرف على الأقل)"
                       value={formData.password}
                       onChange={(e) => updateFormData('password', e.target.value)}
+                      dir="ltr"
+                      autoComplete="new-password"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                      style={{ textAlign: 'left' }}
                     />
                     <Button
                       type="button"
@@ -417,6 +432,11 @@ const ClientLogin = () => {
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </Button>
                   </div>
+                  {formData.password && /[\u200C\u200D\u200E\u200F\uFEFF]/.test(formData.password) && (
+                    <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
+                      تحذير: تحتوي كلمة المرور على محارف خفية قد تؤثر على تسجيل الدخول
+                    </p>
+                  )}
                 </div>
 
                 <Button 

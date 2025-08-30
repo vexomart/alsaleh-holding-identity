@@ -398,9 +398,12 @@ export type Database = {
           kyc_status: string
           last_login_at: string | null
           name: string
+          password_algo: Database["public"]["Enums"]["password_algorithm"]
           password_hash: string
+          password_hash_b64: string | null
           password_hash_version: string | null
           password_salt: string | null
+          password_salt_b64: string | null
           phone: string | null
           role: string
           status: string
@@ -420,9 +423,12 @@ export type Database = {
           kyc_status?: string
           last_login_at?: string | null
           name: string
+          password_algo?: Database["public"]["Enums"]["password_algorithm"]
           password_hash: string
+          password_hash_b64?: string | null
           password_hash_version?: string | null
           password_salt?: string | null
+          password_salt_b64?: string | null
           phone?: string | null
           role?: string
           status?: string
@@ -442,9 +448,12 @@ export type Database = {
           kyc_status?: string
           last_login_at?: string | null
           name?: string
+          password_algo?: Database["public"]["Enums"]["password_algorithm"]
           password_hash?: string
+          password_hash_b64?: string | null
           password_hash_version?: string | null
           password_salt?: string | null
+          password_salt_b64?: string | null
           phone?: string | null
           role?: string
           status?: string
@@ -4013,8 +4022,8 @@ export type Database = {
         Returns: string
       }
       create_secure_password_hash: {
-        Args: { password_text: string }
-        Returns: string
+        Args: { plain_password: string }
+        Returns: Json
       }
       create_secure_password_hash_v2: {
         Args: { password_text: string }
@@ -4324,14 +4333,8 @@ export type Database = {
         Returns: undefined
       }
       simple_authenticate_user: {
-        Args: { p_email: string; p_password: string }
-        Returns: {
-          message: string
-          role: string
-          status: string
-          success: boolean
-          user_id: string
-        }[]
+        Args: { email_lower_param: string; plain_password: string }
+        Returns: Json
       }
       simple_authenticate_user_enhanced: {
         Args: { p_email: string; p_password: string }
@@ -4438,6 +4441,7 @@ export type Database = {
       job_type: "full_time" | "part_time" | "contract" | "internship"
       news_type: "news" | "press"
       page_status: "draft" | "published"
+      password_algorithm: "sha256_v1" | "bcrypt_v1" | "argon2id_v1"
       payment_status: "pending" | "completed" | "failed" | "refunded"
       project_status:
         | "planning"
@@ -4616,6 +4620,7 @@ export const Constants = {
       job_type: ["full_time", "part_time", "contract", "internship"],
       news_type: ["news", "press"],
       page_status: ["draft", "published"],
+      password_algorithm: ["sha256_v1", "bcrypt_v1", "argon2id_v1"],
       payment_status: ["pending", "completed", "failed", "refunded"],
       project_status: [
         "planning",

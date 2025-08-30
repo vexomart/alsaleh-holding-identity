@@ -33,13 +33,7 @@ function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-async function hashPassword(password: string, salt: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password + salt);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
+// استخدام الدوال الجديدة في قاعدة البيانات
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -74,10 +68,14 @@ serve(async (req) => {
           throw new Error('البريد الإلكتروني مسجّل مسبقًا');
         }
 
-        // إنشاء salt وhash
-        const salt = Array.from(crypto.getRandomValues(new Uint8Array(32)))
-          .map(b => b.toString(16).padStart(2, '0')).join('');
-        const passwordHash = await hashPassword(password, salt);
+        // إنشاء كلمة مرور آمنة باستخدام PBKDF2
+        const { data: hashResult, error: hashError } = await supabase
+          .rpc('create_secure_password_hash', { plain_password: password });
+
+        if (hashError) {
+          console.error('Password hashing error:', hashError);
+          throw new Error('فشل في تشفير كلمة المرور');
+        }
 
         // إنشاء المستخدم
         const { data: newUser, error: userError } = await supabase
@@ -88,9 +86,9 @@ serve(async (req) => {
             name: name.trim(),
             phone: phone?.trim() || null,
             company_name: company_name?.trim() || null,
-            password_hash: passwordHash,
-            password_salt: salt,
-            password_hash_version: 'sha256',
+            password_algo: hashResult.password_algo,
+            password_salt_b64: hashResult.password_salt_b64,
+            password_hash_b64: hashResult.password_hash_b64,
             role: 'client',
             status: 'pending'
           })
@@ -136,33 +134,32 @@ serve(async (req) => {
           throw new Error('البريد الإلكتروني وكلمة المرور مطلوبان');
         }
 
-        // البحث عن المستخدم
-        const { data: user, error: userError } = await supabase
-          .from('ash_users')
-          .select('*')
-          .eq('email_lower', normalizedEmail)
-          .maybeSingle();
+        // استخدام دالة التحقق الذكية من قاعدة البيانات
+        const { data: authResult, error: authError } = await supabase
+          .rpc('simple_authenticate_user', { 
+            email_lower_param: normalizedEmail, 
+            plain_password: password 
+          });
 
-        if (userError || !user) {
-          throw new Error('البريد الإلكتروني غير مسجل في النظام');
+        if (authError) {
+          console.error('Authentication error:', authError);
+          throw new Error('فشل في التحقق من بيانات تسجيل الدخول');
         }
 
-        // التحقق من حالة المستخدم
-        if (user.status === 'blocked') {
-          throw new Error('تم حظر حسابك. يرجى التواصل مع الإدارة');
+        if (!authResult.success) {
+          // تسجيل محاولة فاشلة
+          await supabase.rpc('log_auth_attempt', {
+            email_lower_param: normalizedEmail,
+            action_param: 'login',
+            status_param: 'failed',
+            error_code_param: authResult.error_code,
+            probe_result_param: authResult.probe_results || {}
+          });
+
+          throw new Error(authResult.message);
         }
 
-        if (user.status === 'inactive') {
-          throw new Error('حسابك غير مفعل. يرجى التواصل مع الإدارة');
-        }
-
-        // التحقق من كلمة المرور
-        const salt = user.password_salt || '';
-        const passwordHash = await hashPassword(password, salt);
-
-        if (user.password_hash !== passwordHash) {
-          throw new Error('كلمة المرور غير صحيحة');
-        }
+        const user = authResult.user;
 
         // إنشاء OTP لتسجيل الدخول
         const otpCode = generateOTP();
