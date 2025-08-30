@@ -56,12 +56,30 @@ export const AshAuthCard: React.FC<AshAuthCardProps> = ({ onAuthSuccess, isAdmin
 
   // استدعاء API المصادقة
   const callAuthAPI = async (action: string, data: any) => {
+    console.log('🔐 Calling ash-auth with:', { action, data: { ...data, password: '***' } });
+    
     const { data: response, error } = await supabase.functions.invoke('ash-auth', {
       body: { action, ...data }
     });
 
-    if (error) throw error;
-    if (!response.success) throw new Error(response.error);
+    console.log('🔐 ash-auth response:', response);
+    console.log('🔐 ash-auth error:', error);
+
+    if (error) {
+      console.error('❌ Edge function error:', error);
+      throw new Error(error.message || 'حدث خطأ في الخدمة');
+    }
+    
+    if (!response) {
+      console.error('❌ No response from edge function');
+      throw new Error('لم يتم استلام رد من الخدمة');
+    }
+    
+    if (!response.success) {
+      console.error('❌ API returned error:', response.error || response.message);
+      throw new Error(response.error || response.message || 'بيانات تسجيل الدخول غير صحيحة');
+    }
+    
     return response;
   };
 
