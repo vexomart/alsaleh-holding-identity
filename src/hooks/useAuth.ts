@@ -154,7 +154,7 @@ export const useAuth = () => {
   // حماية المسارات
   const checkRouteAccess = useCallback(async (path: string): Promise<boolean> => {
     // المسارات العامة
-    const publicPaths = ['/', '/auth', '/about', '/contact', '/services', '/careers'];
+    const publicPaths = ['/', '/auth', '/about', '/contact', '/services', '/careers', '/ash'];
     const isPublicPath = publicPaths.some(publicPath => 
       path === publicPath || path.startsWith(publicPath + '/')
     );
