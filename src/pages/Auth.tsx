@@ -7,9 +7,25 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
-  Eye, EyeOff, LogIn, UserPlus, ArrowRight, Shield, Mail, Lock, 
-  Building2, Key, Sparkles, Zap, Globe, Users, Code, Palette,
-  BarChart3, Settings, CheckCircle, Star, Rocket
+  Eye, 
+  EyeOff, 
+  LogIn, 
+  UserPlus, 
+  ArrowRight, 
+  Shield, 
+  Mail, 
+  Lock, 
+  Building2, 
+  Key, 
+  Sparkles, 
+  Zap, 
+  Users, 
+  Code, 
+  Palette,
+  BarChart3, 
+  Settings, 
+  CheckCircle, 
+  Star
 } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -34,7 +50,6 @@ const Auth = () => {
     
     if (refCode) {
       setReferralCode(refCode);
-      // حفظ كود الإحالة في localStorage لاستخدامه لاحقاً
       localStorage.setItem('affiliate_referral_code', refCode);
       toast('تم اكتشاف كود الإحالة! ستحصل على مزايا خاصة عند التسجيل');
     }
@@ -45,7 +60,6 @@ const Auth = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        // التحقق من دور المستخدم وإعادة التوجيه وفقاً لذلك
         try {
           const { data: roleData } = await supabase
             .from('user_roles')
@@ -66,10 +80,8 @@ const Auth = () => {
     };
     checkAuth();
 
-    // استمع لتغييرات المصادقة
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session && event === 'SIGNED_IN') {
-        // إذا كان هناك كود إحالة، معالجة الإحالة
         const storedReferralCode = localStorage.getItem('affiliate_referral_code');
         if (storedReferralCode) {
           try {
@@ -91,7 +103,6 @@ const Auth = () => {
           }
         }
         
-        // التحقق من دور المستخدم وإعادة التوجيه وفقاً لذلك
         try {
           const { data: roleData } = await supabase
             .from('user_roles')
@@ -134,7 +145,6 @@ const Auth = () => {
           ? 'بيانات تسجيل الدخول غير صحيحة' 
           : error.message);
       } else {
-        // إرسال رمز التحقق بعد تسجيل الدخول الناجح
         try {
           console.log('🔄 إرسال رمز التحقق للإيميل:', email);
           const { data, error: verificationError } = await supabase.functions.invoke('send-verification-code', {
@@ -144,7 +154,6 @@ const Auth = () => {
           if (verificationError) {
             console.error('❌ خطأ في إرسال رمز التحقق:', verificationError);
             toast.success('تم تسجيل الدخول بنجاح!');
-            // المتابعة بدون رمز تحقق
           } else {
             setEmailForVerification(email);
             setStep('verification');
@@ -183,7 +192,6 @@ const Auth = () => {
       }
 
       if (data.success) {
-        // إرسال إيميل ترحيبي بعد التفعيل الناجح
         try {
           await supabase.functions.invoke('client-welcome-email', {
             body: {
@@ -197,13 +205,10 @@ const Auth = () => {
 
         toast.success('تم تفعيل حسابك بنجاح! مرحباً بك في منصتنا 🎉');
         
-        // تسجيل الدخول التلقائي بعد التفعيل
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
-          // المستخدم مسجل دخول بالفعل
           navigate('/my-projects');
         } else {
-          // إذا لم يكن مسجل دخول، إعادة توجيه للدخول
           setStep('credentials');
           setError('');
           toast('تم تفعيل حسابك! يمكنك الآن تسجيل الدخول.');
@@ -253,7 +258,6 @@ const Auth = () => {
     const password = formData.get('password') as string;
     const fullName = formData.get('fullName') as string;
 
-    // التحقق من قوة كلمة المرور قبل الإرسال
     if (password.length < 8) {
       setError('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
       setIsLoading(false);
@@ -289,7 +293,6 @@ const Auth = () => {
         }
       } else {
         if (data.user && !data.session) {
-          // إرسال إيميل تحقق مخصص عبر edge function
           try {
             const { data: emailData, error: emailError } = await supabase.functions.invoke('send-verification-code', {
               body: {
@@ -323,7 +326,6 @@ const Auth = () => {
           }
           setError('');
         } else if (data.session) {
-          // تم تسجيل الدخول مباشرة (إذا كان التأكيد معطل)
           toast.success('تم إنشاء الحساب وتسجيل الدخول بنجاح!');
         }
       }
@@ -347,7 +349,6 @@ const Auth = () => {
             <span className="hidden sm:inline">العودة للرئيسية</span>
           </Link>
           
-          {/* Theme Toggle Placeholder */}
           <div className="w-10 h-10 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 rounded-xl"></div>
         </div>
       </header>
@@ -355,7 +356,7 @@ const Auth = () => {
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.05)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')] dark:bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27 width=%2732%27 height=%2732%27 fill=%27none%27 stroke=%27rgb(148 163 184 / 0.02)%27%3e%3cpath d=%27m0 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2%27/%3e%3c/svg%3e')]"></div>
+        <div className="absolute inset-0 opacity-30"></div>
         
         {/* Floating Elements */}
         <div className="absolute top-20 right-20 w-32 h-32 bg-blue-500/5 dark:bg-blue-400/5 rounded-full blur-3xl animate-pulse"></div>
@@ -380,7 +381,7 @@ const Auth = () => {
       {/* Main Content */}
       <div className="flex items-center justify-center min-h-screen p-4 pt-20">
         <div className="w-full max-w-lg mx-auto relative z-10">
-          <Card className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 dark:border-slate-700/20 shadow-2xl shadow-black/5 dark:shadow-black/20 rounded-3xl overflow-hidden animate-scale-in">
+          <Card className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 dark:border-slate-700/20 shadow-2xl shadow-black/5 dark:shadow-black/20 rounded-3xl overflow-hidden">
             <CardHeader className="text-center relative pb-8 pt-10 bg-gradient-to-br from-white/50 to-slate-50/50 dark:from-slate-800/50 dark:to-slate-900/50">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
               
@@ -420,7 +421,6 @@ const Auth = () => {
 
             <CardContent className="p-8">
               {step === 'verification' ? (
-                // Verification Step
                 <div className="space-y-6">
                   <div className="text-center">
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/25 mb-4">
@@ -484,7 +484,6 @@ const Auth = () => {
                   </form>
                 </div>
               ) : step === 'forgot-password' ? (
-                // Forgot Password Step
                 <div className="space-y-6">
                   <div className="text-center">
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/25 mb-4">
@@ -549,7 +548,6 @@ const Auth = () => {
                   </form>
                 </div>
               ) : (
-                // Credentials Step
                 <Tabs defaultValue="signin" className="w-full">
                   <TabsList className="grid w-full grid-cols-2 bg-slate-100 dark:bg-slate-800 rounded-xl h-12">
                     <TabsTrigger 
