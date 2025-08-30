@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import ForgotPassword from '@/components/auth/ForgotPassword';
+// import ForgotPassword from '@/components/auth/ForgotPassword';
 
 interface AshAuthCardProps {
   onAuthSuccess: (userData: any) => void;
@@ -201,8 +201,18 @@ export const AshAuthCard: React.FC<AshAuthCardProps> = ({ onAuthSuccess, isAdmin
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="w-full max-w-md mx-auto bg-white/10 backdrop-blur-xl border-white/20 shadow-2xl rounded-lg">
-          <ForgotPassword onBack={() => setShowForgotPassword(false)} />
+        <div className="w-full max-w-md mx-auto bg-white/10 backdrop-blur-xl border-white/20 shadow-2xl rounded-lg p-6">
+          <div className="text-center text-white">
+            <h3 className="text-xl font-bold mb-4">نسيت كلمة المرور؟</h3>
+            <p className="mb-4">هذه الميزة ستكون متاحة قريباً</p>
+            <Button 
+              onClick={() => setShowForgotPassword(false)}
+              variant="outline"
+              className="border-white/30 text-white hover:bg-white/10"
+            >
+              العودة
+            </Button>
+          </div>
         </div>
       </motion.div>
     );

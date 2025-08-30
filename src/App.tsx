@@ -13,10 +13,8 @@ import { ImageOptimizer } from "@/components/ImageOptimizer";
 import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { TemplateVariableBlocker } from "@/components/TemplateVariableBlocker";
-import AuthProvider from "@/components/auth/AuthProvider";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import AdminGuard from "@/components/auth/AdminGuard";
-import ClientGuard from "@/components/auth/ClientGuard";
+import { AuthProvider } from "@/components/auth/AuthContext";
+import { RouteGuard } from "@/components/auth/RouteGuard";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
@@ -137,11 +135,11 @@ const ProjectTracking = lazy(() => import("./pages/ProjectTracking"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
-const ClientLogin = lazy(() => import("./pages/ClientLogin"));
+const ClientLoginPage = lazy(() => import("./pages/auth/ClientLoginPage"));
+const AdminLoginPage = lazy(() => import("./pages/auth/AdminLoginPage"));
 const MyProjects = lazy(() => import("./pages/MyProjects"));
 const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 const EnhancedProjectManagement = lazy(() => import("./pages/admin/EnhancedProjectManagement"));
-const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
 const AdminUpdates = lazy(() => import("./pages/admin/AdminUpdates"));
@@ -273,6 +271,7 @@ const App = () => {
           <MobileOptimizer>
           <BrowserRouter>
             <AuthProvider>
+            <RouteGuard>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
               {/* Subtle pattern overlay */}
               <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
@@ -377,18 +376,19 @@ const App = () => {
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
-                <Route path="/login" element={<Suspense fallback={<PageLoader />}><ClientLogin /></Suspense>} />
-                <Route path="/ashadmin" element={<Suspense fallback={<PageLoader />}><AdminLogin /></Suspense>} />
+                <Route path="/auth/client/login" element={<Suspense fallback={<PageLoader />}><ClientLoginPage /></Suspense>} />
+                <Route path="/auth/admin/login" element={<Suspense fallback={<PageLoader />}><AdminLoginPage /></Suspense>} />
+                {/* إعادة توجيه المسارات القديمة */}
+                <Route path="/login" element={<Navigate to="/auth/client/login" replace />} />
+                <Route path="/ashadmin" element={<Navigate to="/auth/admin/login" replace />} />
                 <Route path="/reset-password" element={<Suspense fallback={<PageLoader />}><ResetPassword /></Suspense>} />
                 <Route path="/unauthorized" element={<Suspense fallback={<PageLoader />}><UnauthorizedPage /></Suspense>} />
                 
-                {/* Admin Routes - Fully Protected */}
+                {/* Admin Routes - TODO: Will be protected by RouteGuard */}
                 <Route path="/admin/*" element={
-                  <AdminGuard>
                     <Suspense fallback={<PageLoader />}>
                       <AdminLayout />
                     </Suspense>
-                  </AdminGuard>
                 }>
                   <Route index element={<Navigate to="/admin/dashboard" replace />} />
                   <Route path="dashboard" element={<AdminDashboard />} />
@@ -411,15 +411,15 @@ const App = () => {
                   <Route path="security-logs" element={<Suspense fallback={<PageLoader />}><AdminSecurityLogs /></Suspense>} />
                 </Route>
                 
-                {/* Legacy admin routes - redirect with protection */}
-                <Route path="/admin-projects" element={<AdminGuard><Navigate to="/admin/projects" replace /></AdminGuard>} />
-                <Route path="/admin-dashboard" element={<AdminGuard><Navigate to="/admin/dashboard" replace /></AdminGuard>} />
-                <Route path="/admin-clients" element={<AdminGuard><Navigate to="/admin/clients" replace /></AdminGuard>} />
-                <Route path="/admin-invoices" element={<AdminGuard><Navigate to="/admin/invoices" replace /></AdminGuard>} />
-                <Route path="/admin-payments" element={<AdminGuard><Navigate to="/admin/payments" replace /></AdminGuard>} />
-                <Route path="/admin-users" element={<AdminGuard><Navigate to="/admin/users" replace /></AdminGuard>} />
-                <Route path="/admin-notifications" element={<AdminGuard><Navigate to="/admin/notifications" replace /></AdminGuard>} />
-                <Route path="/admin-settings" element={<AdminGuard><Navigate to="/admin/settings" replace /></AdminGuard>} />
+                {/* Legacy admin routes - redirect */}
+                <Route path="/admin-projects" element={<Navigate to="/admin/projects" replace />} />
+                <Route path="/admin-dashboard" element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="/admin-clients" element={<Navigate to="/admin/clients" replace />} />
+                <Route path="/admin-invoices" element={<Navigate to="/admin/invoices" replace />} />
+                <Route path="/admin-payments" element={<Navigate to="/admin/payments" replace />} />
+                <Route path="/admin-users" element={<Navigate to="/admin/users" replace />} />
+                <Route path="/admin-notifications" element={<Navigate to="/admin/notifications" replace />} />
+                <Route path="/admin-settings" element={<Navigate to="/admin/settings" replace />} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
@@ -497,13 +497,11 @@ const App = () => {
           {/* Wallet Route */}
                 <Route path="/wallet" element={<Suspense fallback={<PageLoader />}><Wallet /></Suspense>} />
           
-                {/* Client Dashboard Routes - Protected */}
+                {/* Client Dashboard Routes - TODO: Will be protected by RouteGuard */}
                 <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
                 <Route path="/my-projects" element={<Navigate to="/client/projects" replace />} />
                 <Route path="/client/*" element={
-                  <ClientGuard>
                     <Suspense fallback={<PageLoader />}><ClientLayout /></Suspense>
-                  </ClientGuard>
                 }>
                   <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><ClientDashboard /></Suspense>} />
                   <Route path="projects" element={<Suspense fallback={<PageLoader />}><ClientProjects /></Suspense>} />
@@ -530,9 +528,10 @@ const App = () => {
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
-              </Routes>
+                </Routes>
+                </div>
               </div>
-            </div>
+            </RouteGuard>
             </AuthProvider>
           </BrowserRouter>
           </MobileOptimizer>

@@ -1,174 +1,81 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from './AuthContext';
+import { AUTH_ROUTES } from '@/auth/new-auth-system';
 
 interface RouteGuardProps {
   children: React.ReactNode;
 }
 
-/**
- * مكون حماية المسارات العام - يعمل على جميع المسارات
- * يتحقق من الصلاحيات ويعيد التوجيه حسب الحاجة
- */
+const PROTECTED_ROUTES = {
+  ADMIN: ['/admin'],
+  CLIENT: ['/client', '/my-projects', '/wallet'],
+  PUBLIC: ['/', '/about', '/services', '/contact', '/auth']
+};
+
 export const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
+  const { isAuthenticated, isLoading, realm, user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { 
-    isLoading, 
-    isAuthenticated, 
-    userRole, 
-    checkRouteAccess,
-    logUnauthorizedAccess 
-  } = useAuth();
 
   useEffect(() => {
-    const validateRoute = async () => {
-      if (isLoading) return;
+    if (isLoading) return;
 
-      const currentPath = location.pathname;
+    const currentPath = location.pathname;
+    console.log('Route Guard - Current path:', currentPath, 'Auth status:', isAuthenticated, 'Realm:', realm);
 
-      // المسارات العامة التي لا تحتاج تحقق
-      const publicPaths = [
-        '/', '/login', '/about', '/contact', '/services', '/careers',
-        '/privacy', '/terms', '/support', '/faq', '/unauthorized',
-        '/story', '/team', '/vision', '/our-works', '/ash'
-      ];
-
-      const isPublicPath = publicPaths.some(path => 
-        currentPath === path || currentPath.startsWith(path + '/')
-      );
-
-      if (isPublicPath) return;
-
-      // تحقق خاص بمسارات الإدارة
-      if (currentPath.startsWith('/admin')) {
-        if (!isAuthenticated) {
-          await logUnauthorizedAccess({
-            path: currentPath,
-            reason: 'admin_access_without_auth',
-            timestamp: new Date(),
-          });
-
-          toast({
-            title: "يتطلب تسجيل الدخول",
-            description: "يجب تسجيل الدخول للوصول لوحة الإدارة",
-            variant: "destructive",
-          });
-
-          navigate('/login', {
-            replace: true, 
-            state: { from: currentPath, requiredRole: 'admin' } 
-          });
-          return;
-        }
-
-        if (userRole !== 'admin') {
-          await logUnauthorizedAccess({
-            path: currentPath,
-            reason: 'non_admin_access_attempt',
-            timestamp: new Date(),
-          });
-
-          toast({
-            title: "غير مخول للوصول",
-            description: "لا تملك صلاحية الوصول لوحة الإدارة",
-            variant: "destructive",
-          });
-
-          navigate('/unauthorized', { replace: true });
-          return;
-        }
-      }
-
-      // تحقق خاص بمسارات العملاء
-      if (currentPath.startsWith('/client')) {
-        if (!isAuthenticated) {
-          await logUnauthorizedAccess({
-            path: currentPath,
-            reason: 'client_access_without_auth',
-            timestamp: new Date(),
-          });
-
-          toast({
-            title: "يتطلب تسجيل الدخول",
-            description: "يجب تسجيل الدخول للوصول لوحة العملاء",
-            variant: "destructive",
-          });
-
-          navigate('/login', {
-            replace: true, 
-            state: { from: currentPath } 
-          });
-          return;
-        }
-
-        // الأدمن يمكنه الوصول لكل شيء
-        if (userRole === 'admin') return;
-
-        // المستخدمين العاديين يحتاجون على الأقل دور 'user'
-        if (!userRole || (userRole !== 'user' && userRole !== 'moderator' && userRole !== 'editor')) {
-          await logUnauthorizedAccess({
-            path: currentPath,
-            reason: 'insufficient_client_role',
-            timestamp: new Date(),
-          });
-
-          toast({
-            title: "غير مخول للوصول",
-            description: "لا تملك صلاحية الوصول لوحة العملاء",
-            variant: "destructive",
-          });
-
-          navigate('/unauthorized', { replace: true });
-          return;
-        }
-      }
-
-      // مسارات أخرى محمية
-      const protectedPaths = ['/wallet', '/my-projects', '/dashboard'];
-      const isProtectedPath = protectedPaths.some(path => 
-        currentPath.startsWith(path)
-      );
-
-      if (isProtectedPath && !isAuthenticated) {
-        await logUnauthorizedAccess({
-          path: currentPath,
-          reason: 'protected_access_without_auth',
-          timestamp: new Date(),
-        });
-
-        toast({
-          title: "يتطلب تسجيل الدخول",
-          description: "الرجاء تسجيل الدخول للمتابعة",
-          variant: "destructive",
-        });
-
-        navigate('/login', { 
-          replace: true, 
-          state: { from: currentPath } 
-        });
+    // التحقق من المسارات المحمية للإدارة
+    if (PROTECTED_ROUTES.ADMIN.some(route => currentPath.startsWith(route))) {
+      if (!isAuthenticated) {
+        console.log('Redirecting to admin login - not authenticated');
+        navigate(AUTH_ROUTES.ADMIN.LOGIN, { replace: true });
         return;
       }
+      
+      if (realm !== 'admin' || !user || !['admin', 'superadmin'].includes(user.role)) {
+        console.log('Redirecting to admin login - insufficient privileges');
+        navigate('/unauthorized', { replace: true });
+        return;
+      }
+    }
 
-      // استخدام checkRouteAccess للتحقق النهائي
-      await checkRouteAccess(currentPath);
-    };
+    // التحقق من المسارات المحمية للعملاء
+    if (PROTECTED_ROUTES.CLIENT.some(route => currentPath.startsWith(route))) {
+      if (!isAuthenticated) {
+        console.log('Redirecting to client login - not authenticated');
+        navigate(AUTH_ROUTES.CLIENT.LOGIN, { replace: true });
+        return;
+      }
+      
+      if (realm !== 'client' || !user || user.role !== 'client') {
+        console.log('Redirecting to client login - wrong realm');
+        navigate('/unauthorized', { replace: true });
+        return;
+      }
+    }
 
-    validateRoute();
-  }, [
-    location.pathname, 
-    isLoading, 
-    isAuthenticated, 
-    userRole, 
-    navigate, 
-    toast,
-    checkRouteAccess,
-    logUnauthorizedAccess
-  ]);
+    // إعادة توجيه المستخدمين المسجلين دخولهم بعيداً عن صفحات تسجيل الدخول
+    if (isAuthenticated && currentPath.includes('/auth/')) {
+      if (realm === 'admin') {
+        navigate(AUTH_ROUTES.ADMIN.DASHBOARD, { replace: true });
+      } else if (realm === 'client') {
+        navigate(AUTH_ROUTES.CLIENT.DASHBOARD, { replace: true });
+      }
+      return;
+    }
+
+    // إعادة توجيه الصفحات القديمة
+    if (currentPath === '/login') {
+      navigate(AUTH_ROUTES.CLIENT.LOGIN, { replace: true });
+      return;
+    }
+    
+    if (currentPath === '/ashadmin') {
+      navigate(AUTH_ROUTES.ADMIN.LOGIN, { replace: true });
+      return;
+    }
+
+  }, [isAuthenticated, isLoading, realm, user, location.pathname, navigate]);
 
   return <>{children}</>;
 };
-
-export default RouteGuard;
