@@ -27,6 +27,7 @@ import { useAsh } from './AshLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AshAuthCard } from './AshAuthCard';
 
 interface WalletInfo {
   balance: number;
@@ -46,7 +47,7 @@ interface Transaction {
 }
 
 export const AshClientDashboard: React.FC = () => {
-  const { user, logout } = useAsh();
+  const { user, logout, setUser } = useAsh();
   const [wallet, setWallet] = useState<WalletInfo | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -239,6 +240,20 @@ export const AshClientDashboard: React.FC = () => {
           <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
           جارٍ تحميل محفظتك...
         </div>
+      </div>
+    );
+  }
+
+  // إذا لم يكن المستخدم مسجل دخول، عرض نموذج تسجيل الدخول
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <AshAuthCard 
+          onAuthSuccess={(userData) => {
+            // تحديث بيانات المستخدم في السياق
+            setUser(userData);
+          }} 
+        />
       </div>
     );
   }
