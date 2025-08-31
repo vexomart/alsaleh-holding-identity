@@ -141,7 +141,7 @@ const ClientLoginPage = () => {
           company_name: formData.company_name || null,
           role: 'client',
           status: 'pending',
-          password_hash: '',
+          password_hash: 'temp_hash', // قيمة مؤقتة للعمود المطلوب
           password_algo: passwordInfo.password_algo,
           password_salt_b64: passwordInfo.password_salt_b64,
           password_hash_b64: passwordInfo.password_hash_b64
