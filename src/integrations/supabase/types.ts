@@ -4470,7 +4470,7 @@ export type Database = {
       job_type: "full_time" | "part_time" | "contract" | "internship"
       news_type: "news" | "press"
       page_status: "draft" | "published"
-      password_algorithm: "sha256_v1" | "bcrypt_v1" | "argon2id_v1"
+      password_algorithm: "sha256_v1" | "bcrypt_v1" | "argon2id_v1" | "md5_v1"
       payment_status: "pending" | "completed" | "failed" | "refunded"
       project_status:
         | "planning"
@@ -4649,7 +4649,7 @@ export const Constants = {
       job_type: ["full_time", "part_time", "contract", "internship"],
       news_type: ["news", "press"],
       page_status: ["draft", "published"],
-      password_algorithm: ["sha256_v1", "bcrypt_v1", "argon2id_v1"],
+      password_algorithm: ["sha256_v1", "bcrypt_v1", "argon2id_v1", "md5_v1"],
       payment_status: ["pending", "completed", "failed", "refunded"],
       project_status: [
         "planning",
