@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_credentials: {
+        Row: {
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          is_active: boolean | null
+          password_hash: string
+          role: string | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          full_name: string
+          id?: string
+          is_active?: boolean | null
+          password_hash: string
+          role?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          is_active?: boolean | null
+          password_hash?: string
+          role?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_credentials_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_profiles: {
         Row: {
           created_at: string
@@ -291,56 +335,6 @@ export type Database = {
         }
         Relationships: []
       }
-      ash_email_otps: {
-        Row: {
-          attempts: number | null
-          code: string
-          consumed: boolean | null
-          consumed_at: string | null
-          created_at: string | null
-          email_lower: string
-          expires_at: string
-          id: string
-          normalized_code: string
-          type: string
-          user_id: string
-        }
-        Insert: {
-          attempts?: number | null
-          code: string
-          consumed?: boolean | null
-          consumed_at?: string | null
-          created_at?: string | null
-          email_lower: string
-          expires_at: string
-          id?: string
-          normalized_code: string
-          type: string
-          user_id: string
-        }
-        Update: {
-          attempts?: number | null
-          code?: string
-          consumed?: boolean | null
-          consumed_at?: string | null
-          created_at?: string | null
-          email_lower?: string
-          expires_at?: string
-          id?: string
-          normalized_code?: string
-          type?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ash_email_otps_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       ash_otps: {
         Row: {
           attempts: number | null
@@ -375,214 +369,7 @@ export type Database = {
           type?: string
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "ash_otps_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ash_users: {
-        Row: {
-          address: string | null
-          avatar_url: string | null
-          company_name: string | null
-          created_at: string | null
-          email: string
-          email_lower: string
-          email_verified_at: string | null
-          id: string
-          kyc_status: string
-          last_login_at: string | null
-          name: string
-          password_algo: Database["public"]["Enums"]["password_algorithm"]
-          password_hash: string
-          password_hash_b64: string | null
-          password_hash_version: string | null
-          password_salt: string | null
-          password_salt_b64: string | null
-          phone: string | null
-          role: string
-          status: string
-          two_factor_enabled: boolean | null
-          updated_at: string | null
-          verified_at: string | null
-        }
-        Insert: {
-          address?: string | null
-          avatar_url?: string | null
-          company_name?: string | null
-          created_at?: string | null
-          email: string
-          email_lower: string
-          email_verified_at?: string | null
-          id?: string
-          kyc_status?: string
-          last_login_at?: string | null
-          name: string
-          password_algo?: Database["public"]["Enums"]["password_algorithm"]
-          password_hash: string
-          password_hash_b64?: string | null
-          password_hash_version?: string | null
-          password_salt?: string | null
-          password_salt_b64?: string | null
-          phone?: string | null
-          role?: string
-          status?: string
-          two_factor_enabled?: boolean | null
-          updated_at?: string | null
-          verified_at?: string | null
-        }
-        Update: {
-          address?: string | null
-          avatar_url?: string | null
-          company_name?: string | null
-          created_at?: string | null
-          email?: string
-          email_lower?: string
-          email_verified_at?: string | null
-          id?: string
-          kyc_status?: string
-          last_login_at?: string | null
-          name?: string
-          password_algo?: Database["public"]["Enums"]["password_algorithm"]
-          password_hash?: string
-          password_hash_b64?: string | null
-          password_hash_version?: string | null
-          password_salt?: string | null
-          password_salt_b64?: string | null
-          phone?: string | null
-          role?: string
-          status?: string
-          two_factor_enabled?: boolean | null
-          updated_at?: string | null
-          verified_at?: string | null
-        }
         Relationships: []
-      }
-      ash_wallet_transactions: {
-        Row: {
-          admin_notes: string | null
-          amount: number
-          approved_at: string | null
-          approved_by: string | null
-          balance_after: number | null
-          balance_before: number | null
-          created_at: string | null
-          created_by: string | null
-          description: string | null
-          id: string
-          reference_id: string | null
-          status: string
-          type: string
-          user_id: string | null
-          wallet_id: string | null
-        }
-        Insert: {
-          admin_notes?: string | null
-          amount: number
-          approved_at?: string | null
-          approved_by?: string | null
-          balance_after?: number | null
-          balance_before?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          reference_id?: string | null
-          status?: string
-          type: string
-          user_id?: string | null
-          wallet_id?: string | null
-        }
-        Update: {
-          admin_notes?: string | null
-          amount?: number
-          approved_at?: string | null
-          approved_by?: string | null
-          balance_after?: number | null
-          balance_before?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          reference_id?: string | null
-          status?: string
-          type?: string
-          user_id?: string | null
-          wallet_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ash_wallet_transactions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ash_wallet_transactions_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ash_wallet_transactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ash_wallet_transactions_wallet_id_fkey"
-            columns: ["wallet_id"]
-            isOneToOne: false
-            referencedRelation: "ash_wallets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ash_wallets: {
-        Row: {
-          balance: number
-          created_at: string | null
-          currency: string
-          id: string
-          is_active: boolean | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          balance?: number
-          created_at?: string | null
-          currency?: string
-          id?: string
-          is_active?: boolean | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          balance?: number
-          created_at?: string | null
-          currency?: string
-          id?: string
-          is_active?: boolean | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ash_wallets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "ash_users"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       auth_diagnostics: {
         Row: {
@@ -835,6 +622,7 @@ export type Database = {
           sent_at: string | null
           status: Database["public"]["Enums"]["invoice_status"] | null
           subtotal: number | null
+          tenant_id: string | null
           title: string
           total: number | null
           updated_at: string | null
@@ -860,6 +648,7 @@ export type Database = {
           sent_at?: string | null
           status?: Database["public"]["Enums"]["invoice_status"] | null
           subtotal?: number | null
+          tenant_id?: string | null
           title: string
           total?: number | null
           updated_at?: string | null
@@ -885,6 +674,7 @@ export type Database = {
           sent_at?: string | null
           status?: Database["public"]["Enums"]["invoice_status"] | null
           subtotal?: number | null
+          tenant_id?: string | null
           title?: string
           total?: number | null
           updated_at?: string | null
@@ -929,6 +719,7 @@ export type Database = {
           payment_method: string
           provider_reference: string | null
           status: Database["public"]["Enums"]["payment_status"] | null
+          tenant_id: string | null
           transaction_reference: string | null
         }
         Insert: {
@@ -943,6 +734,7 @@ export type Database = {
           payment_method: string
           provider_reference?: string | null
           status?: Database["public"]["Enums"]["payment_status"] | null
+          tenant_id?: string | null
           transaction_reference?: string | null
         }
         Update: {
@@ -957,6 +749,7 @@ export type Database = {
           payment_method?: string
           provider_reference?: string | null
           status?: Database["public"]["Enums"]["payment_status"] | null
+          tenant_id?: string | null
           transaction_reference?: string | null
         }
         Relationships: [
@@ -1038,6 +831,7 @@ export type Database = {
           status: Database["public"]["Enums"]["client_status"]
           tags: string[] | null
           tax_number: string | null
+          tenant_id: string | null
           updated_at: string | null
           website: string | null
         }
@@ -1059,6 +853,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["client_status"]
           tags?: string[] | null
           tax_number?: string | null
+          tenant_id?: string | null
           updated_at?: string | null
           website?: string | null
         }
@@ -1080,6 +875,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["client_status"]
           tags?: string[] | null
           tax_number?: string | null
+          tenant_id?: string | null
           updated_at?: string | null
           website?: string | null
         }
@@ -1725,6 +1521,44 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_activation_logs: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string | null
+          customer_id: string | null
+          id: string
+          metadata: Json | null
+          reason: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_activation_logs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_wallets: {
         Row: {
           balance: number
@@ -1749,6 +1583,51 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          created_at: string | null
+          email: string
+          email_verified: boolean | null
+          full_name: string
+          id: string
+          last_login_at: string | null
+          phone: string | null
+          phone_verified: boolean | null
+          profile_data: Json | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          email_verified?: boolean | null
+          full_name: string
+          id?: string
+          last_login_at?: string | null
+          phone?: string | null
+          phone_verified?: boolean | null
+          profile_data?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          email_verified?: boolean | null
+          full_name?: string
+          id?: string
+          last_login_at?: string | null
+          phone?: string | null
+          phone_verified?: boolean | null
+          profile_data?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1835,34 +1714,34 @@ export type Database = {
       }
       email_templates: {
         Row: {
-          created_at: string
+          created_at: string | null
           html_template: string
           id: string
-          is_active: boolean
+          is_active: boolean | null
           subject_template: string
           template_key: string
-          updated_at: string
-          variables: Json
+          updated_at: string | null
+          variables: Json | null
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           html_template: string
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
           subject_template: string
           template_key: string
-          updated_at?: string
-          variables?: Json
+          updated_at?: string | null
+          variables?: Json | null
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
           html_template?: string
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
           subject_template?: string
           template_key?: string
-          updated_at?: string
-          variables?: Json
+          updated_at?: string | null
+          variables?: Json | null
         }
         Relationships: []
       }
@@ -1870,27 +1749,91 @@ export type Database = {
         Row: {
           counter: number
           created_at: string
+          tenant_id: string | null
           updated_at: string
           year: number
         }
         Insert: {
           counter?: number
           created_at?: string
+          tenant_id?: string | null
           updated_at?: string
           year: number
         }
         Update: {
           counter?: number
           created_at?: string
+          tenant_id?: string | null
           updated_at?: string
           year?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "invoice_counters_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoice_items: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          discount_amount: number | null
+          discount_percentage: number | null
+          id: string
+          invoice_id: string | null
+          item_name: string
+          order_index: number | null
+          quantity: number | null
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          discount_amount?: number | null
+          discount_percentage?: number | null
+          id?: string
+          invoice_id?: string | null
+          item_name: string
+          order_index?: number | null
+          quantity?: number | null
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          discount_amount?: number | null
+          discount_percentage?: number | null
+          id?: string
+          invoice_id?: string | null
+          item_name?: string
+          order_index?: number | null
+          quantity?: number | null
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       invoices: {
         Row: {
+          address: string | null
           amount: number
+          bank_details: Json | null
           client_id: string | null
+          company_registration: string | null
           created_at: string
           currency: string | null
           customer_email: string
@@ -1898,20 +1841,34 @@ export type Database = {
           customer_phone: string | null
           due_date: string | null
           id: string
+          include_vat: boolean | null
           invoice_number: string
+          invoice_template: string | null
           issue_date: string
           notes: string | null
           offer_title: string
+          parent_company: string | null
           payment_method: string | null
           payment_status: string | null
+          pdf_generated: boolean | null
+          pdf_url: string | null
           status: string
+          subtotal: number | null
+          tax_number: string | null
+          tenant_id: string | null
+          terms_conditions: string | null
           transaction_id: string | null
           updated_at: string
           user_id: string | null
+          vat_amount: number | null
+          vat_rate: number | null
         }
         Insert: {
+          address?: string | null
           amount: number
+          bank_details?: Json | null
           client_id?: string | null
+          company_registration?: string | null
           created_at?: string
           currency?: string | null
           customer_email: string
@@ -1919,20 +1876,34 @@ export type Database = {
           customer_phone?: string | null
           due_date?: string | null
           id?: string
+          include_vat?: boolean | null
           invoice_number: string
+          invoice_template?: string | null
           issue_date?: string
           notes?: string | null
           offer_title: string
+          parent_company?: string | null
           payment_method?: string | null
           payment_status?: string | null
+          pdf_generated?: boolean | null
+          pdf_url?: string | null
           status?: string
+          subtotal?: number | null
+          tax_number?: string | null
+          tenant_id?: string | null
+          terms_conditions?: string | null
           transaction_id?: string | null
           updated_at?: string
           user_id?: string | null
+          vat_amount?: number | null
+          vat_rate?: number | null
         }
         Update: {
+          address?: string | null
           amount?: number
+          bank_details?: Json | null
           client_id?: string | null
+          company_registration?: string | null
           created_at?: string
           currency?: string | null
           customer_email?: string
@@ -1940,16 +1911,27 @@ export type Database = {
           customer_phone?: string | null
           due_date?: string | null
           id?: string
+          include_vat?: boolean | null
           invoice_number?: string
+          invoice_template?: string | null
           issue_date?: string
           notes?: string | null
           offer_title?: string
+          parent_company?: string | null
           payment_method?: string | null
           payment_status?: string | null
+          pdf_generated?: boolean | null
+          pdf_url?: string | null
           status?: string
+          subtotal?: number | null
+          tax_number?: string | null
+          tenant_id?: string | null
+          terms_conditions?: string | null
           transaction_id?: string | null
           updated_at?: string
           user_id?: string | null
+          vat_amount?: number | null
+          vat_rate?: number | null
         }
         Relationships: []
       }
@@ -2287,6 +2269,179 @@ export type Database = {
         }
         Relationships: []
       }
+      order_communications: {
+        Row: {
+          attachments: Json | null
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          order_id: string
+          sender_id: string
+          sender_name: string
+          sender_type: string
+        }
+        Insert: {
+          attachments?: Json | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          order_id: string
+          sender_id: string
+          sender_name: string
+          sender_type?: string
+        }
+        Update: {
+          attachments?: Json | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          order_id?: string
+          sender_id?: string
+          sender_name?: string
+          sender_type?: string
+        }
+        Relationships: []
+      }
+      order_files: {
+        Row: {
+          created_at: string | null
+          file_name: string
+          file_size: string | null
+          file_type: string | null
+          file_url: string
+          id: string
+          order_id: string
+          uploaded_by: string
+          uploaded_by_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          file_name: string
+          file_size?: string | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          order_id: string
+          uploaded_by: string
+          uploaded_by_type?: string
+        }
+        Update: {
+          created_at?: string | null
+          file_name?: string
+          file_size?: string | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          order_id?: string
+          uploaded_by?: string
+          uploaded_by_type?: string
+        }
+        Relationships: []
+      }
+      order_timeline: {
+        Row: {
+          actor_name: string | null
+          actor_type: string
+          completed_date: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          order_id: string
+          scheduled_date: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          actor_name?: string | null
+          actor_type?: string
+          completed_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id: string
+          scheduled_date?: string | null
+          status: string
+          title: string
+        }
+        Update: {
+          actor_name?: string | null
+          actor_type?: string
+          completed_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string
+          scheduled_date?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_timeline_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at: string | null
+          current_status: string
+          degree: string
+          description: string | null
+          estimated_delivery: string | null
+          id: string
+          phone_last_four: string
+          service_type: string
+          title: string
+          tracking_id: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at?: string | null
+          current_status?: string
+          degree: string
+          description?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          phone_last_four: string
+          service_type: string
+          title: string
+          tracking_id: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          client_email?: string
+          client_name?: string
+          client_phone?: string
+          created_at?: string | null
+          current_status?: string
+          degree?: string
+          description?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          phone_last_four?: string
+          service_type?: string
+          title?: string
+          tracking_id?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           author_id: string | null
@@ -2489,6 +2644,7 @@ export type Database = {
           payment_date: string | null
           payment_method: string
           status: string | null
+          tenant_id: string | null
           transaction_id: string
           updated_at: string | null
           user_id: string
@@ -2509,6 +2665,7 @@ export type Database = {
           payment_date?: string | null
           payment_method?: string
           status?: string | null
+          tenant_id?: string | null
           transaction_id: string
           updated_at?: string | null
           user_id: string
@@ -2529,9 +2686,574 @@ export type Database = {
           payment_date?: string | null
           payment_method?: string
           status?: string | null
+          tenant_id?: string | null
           transaction_id?: string
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      platform_audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: unknown | null
+          new_data: Json | null
+          old_data: Json | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_audit_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_categories: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description_ar: string | null
+          description_en: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          meta_data: Json | null
+          name_ar: string
+          name_en: string | null
+          slug: string
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          meta_data?: Json | null
+          name_ar: string
+          name_en?: string | null
+          slug: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          meta_data?: Json | null
+          name_ar?: string
+          name_en?: string | null
+          slug?: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      platform_email_verifications: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          token: string
+          user_id: string
+          verified: boolean | null
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          token: string
+          user_id: string
+          verified?: boolean | null
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          token?: string
+          user_id?: string
+          verified?: boolean | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_email_verifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_legacy_mappings: {
+        Row: {
+          entity_type: string
+          id: string
+          legacy_id: string
+          migrated_at: string | null
+          new_id: string
+        }
+        Insert: {
+          entity_type: string
+          id?: string
+          legacy_id: string
+          migrated_at?: string | null
+          new_id: string
+        }
+        Update: {
+          entity_type?: string
+          id?: string
+          legacy_id?: string
+          migrated_at?: string | null
+          new_id?: string
+        }
+        Relationships: []
+      }
+      platform_notifications: {
+        Row: {
+          action_label_ar: string | null
+          action_label_en: string | null
+          action_url: string | null
+          body_ar: string
+          body_en: string | null
+          category: string | null
+          created_at: string | null
+          data: Json | null
+          id: string
+          is_read: boolean | null
+          priority: string | null
+          read_at: string | null
+          title_ar: string
+          title_en: string | null
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          action_label_ar?: string | null
+          action_label_en?: string | null
+          action_url?: string | null
+          body_ar: string
+          body_en?: string | null
+          category?: string | null
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          priority?: string | null
+          read_at?: string | null
+          title_ar: string
+          title_en?: string | null
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          action_label_ar?: string | null
+          action_label_en?: string | null
+          action_url?: string | null
+          body_ar?: string
+          body_en?: string | null
+          category?: string | null
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          is_read?: boolean | null
+          priority?: string | null
+          read_at?: string | null
+          title_ar?: string
+          title_en?: string | null
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_order_items: {
+        Row: {
+          attachments: Json | null
+          created_at: string | null
+          custom_requirements: string | null
+          id: string
+          line_total: number
+          meta_data: Json | null
+          order_id: string
+          quantity: number
+          service_description: string | null
+          service_id: string | null
+          service_name: string
+          unit_price: number
+        }
+        Insert: {
+          attachments?: Json | null
+          created_at?: string | null
+          custom_requirements?: string | null
+          id?: string
+          line_total: number
+          meta_data?: Json | null
+          order_id: string
+          quantity?: number
+          service_description?: string | null
+          service_id?: string | null
+          service_name: string
+          unit_price: number
+        }
+        Update: {
+          attachments?: Json | null
+          created_at?: string | null
+          custom_requirements?: string | null
+          id?: string
+          line_total?: number
+          meta_data?: Json | null
+          order_id?: string
+          quantity?: number
+          service_description?: string | null
+          service_id?: string | null
+          service_name?: string
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "platform_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "platform_order_items_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "platform_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_orders: {
+        Row: {
+          admin_notes: string | null
+          billing_data: Json | null
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          completed_at: string | null
+          created_at: string | null
+          currency: string | null
+          customer_id: string
+          customer_notes: string | null
+          estimated_delivery: string | null
+          id: string
+          internal_notes: string | null
+          meta_data: Json | null
+          notes: string | null
+          order_number: string
+          payment_method: string | null
+          payment_reference: string | null
+          status: Database["public"]["Enums"]["platform_order_status"]
+          subtotal: number | null
+          total: number | null
+          updated_at: string | null
+          vat_amount: number | null
+          vat_percent: number | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          billing_data?: Json | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          currency?: string | null
+          customer_id: string
+          customer_notes?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          internal_notes?: string | null
+          meta_data?: Json | null
+          notes?: string | null
+          order_number: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          status?: Database["public"]["Enums"]["platform_order_status"]
+          subtotal?: number | null
+          total?: number | null
+          updated_at?: string | null
+          vat_amount?: number | null
+          vat_percent?: number | null
+        }
+        Update: {
+          admin_notes?: string | null
+          billing_data?: Json | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          currency?: string | null
+          customer_id?: string
+          customer_notes?: string | null
+          estimated_delivery?: string | null
+          id?: string
+          internal_notes?: string | null
+          meta_data?: Json | null
+          notes?: string | null
+          order_number?: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          status?: Database["public"]["Enums"]["platform_order_status"]
+          subtotal?: number | null
+          total?: number | null
+          updated_at?: string | null
+          vat_amount?: number | null
+          vat_percent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_orders_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_password_resets: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          token: string
+          used: boolean | null
+          used_at: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          token: string
+          used?: boolean | null
+          used_at?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          token?: string
+          used?: boolean | null
+          used_at?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_password_resets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "platform_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_services: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          currency: string | null
+          delivery_days: number | null
+          description_ar: string | null
+          description_en: string | null
+          features_ar: string[] | null
+          features_en: string[] | null
+          gallery_urls: string[] | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          max_quantity: number | null
+          meta_data: Json | null
+          min_quantity: number | null
+          name_ar: string
+          name_en: string | null
+          price: number
+          short_description_ar: string | null
+          short_description_en: string | null
+          show_to_clients: boolean | null
+          slug: string
+          sort_order: number | null
+          tags: string[] | null
+          unit_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          delivery_days?: number | null
+          description_ar?: string | null
+          description_en?: string | null
+          features_ar?: string[] | null
+          features_en?: string[] | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          max_quantity?: number | null
+          meta_data?: Json | null
+          min_quantity?: number | null
+          name_ar: string
+          name_en?: string | null
+          price?: number
+          short_description_ar?: string | null
+          short_description_en?: string | null
+          show_to_clients?: boolean | null
+          slug: string
+          sort_order?: number | null
+          tags?: string[] | null
+          unit_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          delivery_days?: number | null
+          description_ar?: string | null
+          description_en?: string | null
+          features_ar?: string[] | null
+          features_en?: string[] | null
+          gallery_urls?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          max_quantity?: number | null
+          meta_data?: Json | null
+          min_quantity?: number | null
+          name_ar?: string
+          name_en?: string | null
+          price?: number
+          short_description_ar?: string | null
+          short_description_en?: string | null
+          show_to_clients?: boolean | null
+          slug?: string
+          sort_order?: number | null
+          tags?: string[] | null
+          unit_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_services_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "platform_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_users: {
+        Row: {
+          created_at: string | null
+          email: string
+          email_normalized: string
+          email_verified: boolean | null
+          full_name: string | null
+          id: string
+          last_login_at: string | null
+          password_hash: string | null
+          phone: string | null
+          phone_verified: boolean | null
+          preferences: Json | null
+          profile_data: Json | null
+          role: Database["public"]["Enums"]["platform_user_role"]
+          status: Database["public"]["Enums"]["platform_user_status"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          email_normalized: string
+          email_verified?: boolean | null
+          full_name?: string | null
+          id?: string
+          last_login_at?: string | null
+          password_hash?: string | null
+          phone?: string | null
+          phone_verified?: boolean | null
+          preferences?: Json | null
+          profile_data?: Json | null
+          role?: Database["public"]["Enums"]["platform_user_role"]
+          status?: Database["public"]["Enums"]["platform_user_status"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          email_normalized?: string
+          email_verified?: boolean | null
+          full_name?: string | null
+          id?: string
+          last_login_at?: string | null
+          password_hash?: string | null
+          phone?: string | null
+          phone_verified?: boolean | null
+          preferences?: Json | null
+          profile_data?: Json | null
+          role?: Database["public"]["Enums"]["platform_user_role"]
+          status?: Database["public"]["Enums"]["platform_user_status"]
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -3043,6 +3765,7 @@ export type Database = {
           quote_number: string
           status: Database["public"]["Enums"]["quote_status"] | null
           subtotal: number | null
+          tenant_id: string | null
           terms_conditions: string | null
           title: string
           total: number | null
@@ -3064,6 +3787,7 @@ export type Database = {
           quote_number: string
           status?: Database["public"]["Enums"]["quote_status"] | null
           subtotal?: number | null
+          tenant_id?: string | null
           terms_conditions?: string | null
           title: string
           total?: number | null
@@ -3085,6 +3809,7 @@ export type Database = {
           quote_number?: string
           status?: Database["public"]["Enums"]["quote_status"] | null
           subtotal?: number | null
+          tenant_id?: string | null
           terms_conditions?: string | null
           title?: string
           total?: number | null
@@ -3210,6 +3935,180 @@ export type Database = {
         }
         Relationships: []
       }
+      service_categories: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description_ar: string | null
+          description_en: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name_ar: string
+          name_en: string
+          sort_order: number | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name_ar: string
+          name_en: string
+          sort_order?: number | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name_ar?: string
+          name_en?: string
+          sort_order?: number | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_categories_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_order_timeline: {
+        Row: {
+          actor_name: string | null
+          actor_type: string | null
+          completed_date: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          order_id: string | null
+          scheduled_date: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          actor_name?: string | null
+          actor_type?: string | null
+          completed_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          scheduled_date?: string | null
+          status: string
+          title: string
+        }
+        Update: {
+          actor_name?: string | null
+          actor_type?: string | null
+          completed_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          scheduled_date?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_order_timeline_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "service_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_orders: {
+        Row: {
+          additional_notes: string | null
+          client_email: string
+          client_name: string
+          client_phone: string | null
+          created_at: string | null
+          current_status: string | null
+          description: string | null
+          estimated_price: number | null
+          expected_delivery: string | null
+          id: string
+          quantity: number | null
+          requirements: string | null
+          rush_delivery: boolean | null
+          service_id: string | null
+          title: string
+          tracking_id: string
+          unit_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          additional_notes?: string | null
+          client_email: string
+          client_name: string
+          client_phone?: string | null
+          created_at?: string | null
+          current_status?: string | null
+          description?: string | null
+          estimated_price?: number | null
+          expected_delivery?: string | null
+          id?: string
+          quantity?: number | null
+          requirements?: string | null
+          rush_delivery?: boolean | null
+          service_id?: string | null
+          title: string
+          tracking_id: string
+          unit_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          additional_notes?: string | null
+          client_email?: string
+          client_name?: string
+          client_phone?: string | null
+          created_at?: string | null
+          current_status?: string | null
+          description?: string | null
+          estimated_price?: number | null
+          expected_delivery?: string | null
+          id?: string
+          quantity?: number | null
+          requirements?: string | null
+          rush_delivery?: boolean | null
+          service_id?: string | null
+          title?: string
+          tracking_id?: string
+          unit_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_orders_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_requests: {
         Row: {
           actual_cost: number | null
@@ -3269,6 +4168,89 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      services: {
+        Row: {
+          base_price: number | null
+          category_id: string
+          created_at: string | null
+          delivery_time_days: number | null
+          description_ar: string | null
+          description_en: string | null
+          features_ar: string[] | null
+          features_en: string[] | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          max_units: number | null
+          min_units: number | null
+          name_ar: string
+          name_en: string
+          price_per_unit: number | null
+          rush_delivery_available: boolean | null
+          rush_delivery_multiplier: number | null
+          show_to_clients: boolean | null
+          sort_order: number | null
+          unit_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          base_price?: number | null
+          category_id: string
+          created_at?: string | null
+          delivery_time_days?: number | null
+          description_ar?: string | null
+          description_en?: string | null
+          features_ar?: string[] | null
+          features_en?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          max_units?: number | null
+          min_units?: number | null
+          name_ar: string
+          name_en: string
+          price_per_unit?: number | null
+          rush_delivery_available?: boolean | null
+          rush_delivery_multiplier?: number | null
+          show_to_clients?: boolean | null
+          sort_order?: number | null
+          unit_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          base_price?: number | null
+          category_id?: string
+          created_at?: string | null
+          delivery_time_days?: number | null
+          description_ar?: string | null
+          description_en?: string | null
+          features_ar?: string[] | null
+          features_en?: string[] | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          max_units?: number | null
+          min_units?: number | null
+          name_ar?: string
+          name_en?: string
+          price_per_unit?: number | null
+          rush_delivery_available?: boolean | null
+          rush_delivery_multiplier?: number | null
+          show_to_clients?: boolean | null
+          sort_order?: number | null
+          unit_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscription_plans: {
         Row: {
@@ -3446,6 +4428,7 @@ export type Database = {
           sla_due_date: string | null
           status: Database["public"]["Enums"]["ticket_status"] | null
           subject: string
+          tenant_id: string | null
           ticket_number: string
           updated_at: string | null
         }
@@ -3466,6 +4449,7 @@ export type Database = {
           sla_due_date?: string | null
           status?: Database["public"]["Enums"]["ticket_status"] | null
           subject: string
+          tenant_id?: string | null
           ticket_number: string
           updated_at?: string | null
         }
@@ -3486,6 +4470,7 @@ export type Database = {
           sla_due_date?: string | null
           status?: Database["public"]["Enums"]["ticket_status"] | null
           subject?: string
+          tenant_id?: string | null
           ticket_number?: string
           updated_at?: string | null
         }
@@ -3505,6 +4490,7 @@ export type Database = {
           description: string | null
           id: string
           key: string
+          tenant_id: string | null
           updated_at: string | null
           updated_by: string | null
           value: Json
@@ -3514,6 +4500,7 @@ export type Database = {
           description?: string | null
           id?: string
           key: string
+          tenant_id?: string | null
           updated_at?: string | null
           updated_by?: string | null
           value: Json
@@ -3523,9 +4510,54 @@ export type Database = {
           description?: string | null
           id?: string
           key?: string
+          tenant_id?: string | null
           updated_at?: string | null
           updated_by?: string | null
           value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_settings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          code: string
+          created_at: string | null
+          database_url: string | null
+          domain: string
+          id: string
+          is_active: boolean | null
+          name: string
+          settings: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          database_url?: string | null
+          domain: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          settings?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          database_url?: string | null
+          domain?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          settings?: Json | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -3624,6 +4656,7 @@ export type Database = {
           priority: string
           resolved_at: string | null
           status: string
+          tenant_id: string | null
           ticket_number: string
           title: string
           updated_at: string | null
@@ -3638,6 +4671,7 @@ export type Database = {
           priority?: string
           resolved_at?: string | null
           status?: string
+          tenant_id?: string | null
           ticket_number: string
           title: string
           updated_at?: string | null
@@ -3652,6 +4686,7 @@ export type Database = {
           priority?: string
           resolved_at?: string | null
           status?: string
+          tenant_id?: string | null
           ticket_number?: string
           title?: string
           updated_at?: string | null
@@ -3811,6 +4846,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_notifications: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          id: string
+          message: string
+          metadata: Json | null
+          read_at: string | null
+          title: string
+          type: string | null
+          user_email: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message: string
+          metadata?: Json | null
+          read_at?: string | null
+          title: string
+          type?: string | null
+          user_email: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string
+          metadata?: Json | null
+          read_at?: string | null
+          title?: string
+          type?: string | null
+          user_email?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -3829,6 +4900,42 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          password_hash: string
+          phone: string | null
+          role: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          password_hash: string
+          phone?: string | null
+          role?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          password_hash?: string
+          phone?: string | null
+          role?: string
+          status?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -3978,6 +5085,14 @@ export type Database = {
         Args: { user_id: string }
         Returns: string
       }
+      check_admin_access: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      check_admin_credentials: {
+        Args: { email_input: string; password_input: string }
+        Returns: Json
+      }
       check_automation_limit: {
         Args: { p_automation_type: string; p_user_id: string }
         Returns: boolean
@@ -4007,6 +5122,14 @@ export type Database = {
         Args: { p_operation_type: string; p_user_id: string }
         Returns: boolean
       }
+      cleanup_expired_password_reset_tokens: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_expired_platform_password_resets: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_expired_reset_tokens: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -4025,6 +5148,19 @@ export type Database = {
       }
       create_otp_code: {
         Args: { p_email: string; p_type: string; p_user_id: string }
+        Returns: string
+      }
+      create_platform_notification: {
+        Args: {
+          p_body_ar: string
+          p_body_en?: string
+          p_category?: string
+          p_data?: Json
+          p_title_ar: string
+          p_title_en?: string
+          p_type?: string
+          p_user_id: string
+        }
         Returns: string
       }
       create_secure_admin_password: {
@@ -4132,6 +5268,14 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      generate_platform_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_professional_invoice_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_project_number: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -4234,10 +5378,6 @@ export type Database = {
         Args: { user_id?: string }
         Returns: boolean
       }
-      is_admin_user: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
       log_auth_attempt: {
         Args:
           | {
@@ -4321,8 +5461,12 @@ export type Database = {
         Args: { phone_input: string; user_requesting?: string }
         Returns: string
       }
+      migrate_tenant_data: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       normalize_digits: {
-        Args: { text_input: string }
+        Args: { input_text: string }
         Returns: string
       }
       normalize_email: {
@@ -4335,6 +5479,18 @@ export type Database = {
       }
       owns_payment_transaction: {
         Args: { transaction_user_id: string }
+        Returns: boolean
+      }
+      platform_has_role: {
+        Args: { required_role: string; user_id: string }
+        Returns: boolean
+      }
+      platform_is_admin: {
+        Args: { user_id?: string }
+        Returns: boolean
+      }
+      platform_is_staff_or_admin: {
+        Args: { user_id?: string }
         Returns: boolean
       }
       process_wallet_transaction: {
@@ -4361,6 +5517,10 @@ export type Database = {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
         Returns: undefined
       }
+      send_service_notification: {
+        Args: { p_message: string; p_service_data?: Json; p_title: string }
+        Returns: number
+      }
       simple_authenticate_user: {
         Args: { email_lower_param: string; plain_password: string }
         Returns: Json
@@ -4381,6 +5541,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      update_customer_status: {
+        Args: { p_customer_id: string; p_reason?: string; p_status: string }
+        Returns: Json
+      }
       update_user_last_activity: {
         Args: { user_id_param: string }
         Returns: undefined
@@ -4399,6 +5563,10 @@ export type Database = {
       }
       validate_ultra_secure_admin_session: {
         Args: { token: string; user_agent?: string; user_ip?: unknown }
+        Returns: Json
+      }
+      verify_admin_login: {
+        Args: { email_input: string; password_input: string }
         Returns: Json
       }
       verify_admin_password: {
@@ -4472,6 +5640,14 @@ export type Database = {
       page_status: "draft" | "published"
       password_algorithm: "sha256_v1" | "bcrypt_v1" | "argon2id_v1" | "md5_v1"
       payment_status: "pending" | "completed" | "failed" | "refunded"
+      platform_order_status:
+        | "pending"
+        | "paid"
+        | "processing"
+        | "completed"
+        | "cancelled"
+      platform_user_role: "admin" | "staff" | "customer"
+      platform_user_status: "pending" | "active" | "blocked"
       project_status:
         | "planning"
         | "in_progress"
@@ -4651,6 +5827,15 @@ export const Constants = {
       page_status: ["draft", "published"],
       password_algorithm: ["sha256_v1", "bcrypt_v1", "argon2id_v1", "md5_v1"],
       payment_status: ["pending", "completed", "failed", "refunded"],
+      platform_order_status: [
+        "pending",
+        "paid",
+        "processing",
+        "completed",
+        "cancelled",
+      ],
+      platform_user_role: ["admin", "staff", "customer"],
+      platform_user_status: ["pending", "active", "blocked"],
       project_status: [
         "planning",
         "in_progress",
