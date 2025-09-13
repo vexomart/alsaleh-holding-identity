@@ -59,7 +59,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import AuthDiagnostics from '@/components/admin/AuthDiagnostics';
+import { AuthDiagnostics } from '@/components/admin/AuthDiagnostics';
 
 interface DashboardStats {
   totalProjects: number;

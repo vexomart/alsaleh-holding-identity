@@ -94,7 +94,7 @@ export const pageMetadata = {
   contact: {
     title: "تواصل معنا",
     description: "تواصل مع شركة علي صالح الشهري القابضة. هاتف: 0555812567 | البريد: info@alialshehriholding.com",
-    keywords: ["تواصل", "اتصال", "عنوان", "هاتف"]
+    keywords: ["تواصل", "اتصال", "عنوان", "هاتف"] as string[]
   },
   privacy: {
     title: "سياسة الخصوصية",

@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthDiagnostics from '@/components/admin/AuthDiagnostics';
+import { AuthDiagnostics } from '@/components/admin/AuthDiagnostics';
 
 const AuthDiagnosticsPage = () => {
   return (
