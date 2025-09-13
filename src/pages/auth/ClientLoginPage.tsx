@@ -132,14 +132,13 @@ const ClientLoginPage = () => {
       // إدراج المستخدم الجديد
       const passwordInfo = passwordData as any;
       const { data: userData, error: userError } = await supabase
-        .from('ash_users')
+        .from('platform_users')
         .insert({
-          name: formData.name,
+          full_name: formData.name,
           email: formData.email,
-          email_lower: formData.email.toLowerCase().trim(),
+          email_normalized: formData.email.toLowerCase().trim(),
           phone: formData.phone || null,
-          company_name: formData.company_name || null,
-          role: 'client',
+          role: 'customer',
           status: 'pending',
           password_hash: 'temp_hash', // قيمة مؤقتة للعمود المطلوب
           password_algo: passwordInfo.password_algo,

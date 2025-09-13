@@ -185,13 +185,13 @@ const AdminClients = () => {
     if (!realtimeEnabled) return;
 
     const channel = supabase
-      .channel('ash_users_changes')
+      .channel('platform_users_changes')
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'ash_users'
+          table: 'platform_users'
         },
         (payload) => {
           console.log('🔄 Real-time update:', payload);
@@ -271,7 +271,7 @@ const AdminClients = () => {
       console.log('🔍 جاري جلب بيانات المستخدمين المسجلين...');
       
       const { data, error } = await supabase
-        .from('ash_users')
+        .from('platform_users')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -361,9 +361,9 @@ const AdminClients = () => {
   const handleStatusChange = async (clientId: string, newStatus: string) => {
     try {
       const { error } = await supabase
-        .from('ash_users')
+        .from('platform_users')
         .update({ 
-          status: newStatus,
+          status: newStatus as "pending" | "active" | "blocked",
           updated_at: new Date().toISOString()
         })
         .eq('id', clientId);
@@ -387,9 +387,9 @@ const AdminClients = () => {
   const handleRoleChange = async (clientId: string, newRole: string) => {
     try {
       const { error } = await supabase
-        .from('ash_users')
+        .from('platform_users')
         .update({ 
-          role: newRole,
+          role: newRole as "admin" | "staff" | "customer",
           updated_at: new Date().toISOString()
         })
         .eq('id', clientId);
@@ -412,7 +412,7 @@ const AdminClients = () => {
   const handleKycStatusChange = async (clientId: string, newKycStatus: string) => {
     try {
       const { error } = await supabase
-        .from('ash_users')
+        .from('platform_users')
         .update({ 
           kyc_status: newKycStatus,
           updated_at: new Date().toISOString()
@@ -447,7 +447,7 @@ const AdminClients = () => {
   const handleTwoFactorToggle = async (clientId: string, enabled: boolean) => {
     try {
       const { error } = await supabase
-        .from('ash_users')
+        .from('platform_users')
         .update({ 
           two_factor_enabled: enabled,
           updated_at: new Date().toISOString()

@@ -109,7 +109,7 @@ export const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = (
 
       // Update user verification status
       const { error: updateError } = await supabase
-        .from('ash_users')
+        .from('platform_users')
         .update({
           verified_at: new Date().toISOString(),
           status: 'active'

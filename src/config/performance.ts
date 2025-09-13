@@ -185,11 +185,11 @@ export const monitorPerformance = () => {
             console.log('LCP:', entry.startTime);
             break;
           case 'first-input':
-            console.log('FID:', entry.processingStart - entry.startTime);
+            console.log('FID:', (entry as any).processingStart - entry.startTime);
             break;
           case 'layout-shift':
-            if (!entry.hadRecentInput) {
-              console.log('CLS:', entry.value);
+            if (!(entry as any).hadRecentInput) {
+              console.log('CLS:', (entry as any).value);
             }
             break;
         }
@@ -220,7 +220,7 @@ export const cleanupMemory = () => {
     // تنظيف event listeners غير المستخدمة
     const elements = document.querySelectorAll('[data-cleanup]');
     elements.forEach(element => {
-      const handlers = element.dataset.handlers?.split(',') || [];
+      const handlers = (element as HTMLElement).dataset.handlers?.split(',') || [];
       handlers.forEach(handler => {
         element.removeEventListener(handler, () => {});
       });
