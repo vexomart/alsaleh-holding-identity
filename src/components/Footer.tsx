@@ -276,7 +276,6 @@ const Footer = () => {
   ];
 
   const services = [
-    { name: "مركز الذكاء الاصطناعي", href: "/ai-intelligence", icon: Brain, badge: "جديد" },
     { name: "الاستثمار التقني", href: "/tech-investment", icon: TrendingUp },
     { name: "التطوير والابتكار", href: "/development", icon: Lightbulb },
     { name: "الاستشارات الإستراتيجية", href: "/strategic-consulting", icon: Building2 },
