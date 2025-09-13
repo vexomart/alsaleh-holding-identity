@@ -15,6 +15,7 @@ import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { TemplateVariableBlocker } from "@/components/TemplateVariableBlocker";
 import { AuthProvider } from "@/components/auth/AuthContext";
 import { RouteGuard } from "@/components/auth/RouteGuard";
+import { TenantProvider } from "@/components/TenantProvider";
 
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
@@ -270,6 +271,7 @@ const App = () => {
         <ReCaptchaProvider>
           <MobileOptimizer>
           <BrowserRouter>
+            <TenantProvider>
             <AuthProvider>
             <RouteGuard>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
@@ -533,6 +535,7 @@ const App = () => {
               </div>
             </RouteGuard>
             </AuthProvider>
+            </TenantProvider>
           </BrowserRouter>
           </MobileOptimizer>
         </ReCaptchaProvider>

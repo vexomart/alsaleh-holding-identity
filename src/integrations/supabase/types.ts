@@ -5603,6 +5603,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      switch_tenant: {
+        Args: { tenant_code: string }
+        Returns: boolean
+      }
       update_customer_status: {
         Args: { p_customer_id: string; p_reason?: string; p_status: string }
         Returns: Json

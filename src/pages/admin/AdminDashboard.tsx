@@ -60,6 +60,7 @@ import { toast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AuthDiagnostics } from '@/components/admin/AuthDiagnostics';
+import { TenantSwitcher } from '@/components/admin/TenantSwitcher';
 
 interface DashboardStats {
   totalProjects: number;
@@ -598,6 +599,11 @@ const AdminDashboard = () => {
 
           {/* Recent Activities & Quick Actions */}
           <div className="space-y-6 lg:space-y-8">
+            {/* Tenant Switcher */}
+            <div className="animate-fade-in delay-300">
+              <TenantSwitcher />
+            </div>
+
             {/* Recent Activities */}
             <Card className="border-0 shadow-xl bg-gradient-to-br from-card to-card/95 backdrop-blur-sm animate-fade-in delay-400">
               <CardHeader className="pb-4 lg:pb-6">
