@@ -3219,6 +3219,7 @@ export type Database = {
           profile_data: Json | null
           role: Database["public"]["Enums"]["platform_user_role"]
           status: Database["public"]["Enums"]["platform_user_status"]
+          tenant_id: string | null
           updated_at: string | null
         }
         Insert: {
@@ -3236,6 +3237,7 @@ export type Database = {
           profile_data?: Json | null
           role?: Database["public"]["Enums"]["platform_user_role"]
           status?: Database["public"]["Enums"]["platform_user_status"]
+          tenant_id?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -3253,9 +3255,18 @@ export type Database = {
           profile_data?: Json | null
           role?: Database["public"]["Enums"]["platform_user_role"]
           status?: Database["public"]["Enums"]["platform_user_status"]
+          tenant_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "platform_users_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_orders: {
         Row: {
@@ -3865,6 +3876,7 @@ export type Database = {
           resource_id: string | null
           resource_type: string | null
           risk_level: string | null
+          tenant_id: string | null
           user_agent: string | null
           user_id: string | null
         }
@@ -3878,6 +3890,7 @@ export type Database = {
           resource_id?: string | null
           resource_type?: string | null
           risk_level?: string | null
+          tenant_id?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
@@ -3891,10 +3904,19 @@ export type Database = {
           resource_id?: string | null
           resource_type?: string | null
           risk_level?: string | null
+          tenant_id?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "security_audit_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sensitive_data_audit: {
         Row: {
@@ -4191,6 +4213,7 @@ export type Database = {
           rush_delivery_multiplier: number | null
           show_to_clients: boolean | null
           sort_order: number | null
+          tenant_id: string | null
           unit_type: string | null
           updated_at: string | null
         }
@@ -4215,6 +4238,7 @@ export type Database = {
           rush_delivery_multiplier?: number | null
           show_to_clients?: boolean | null
           sort_order?: number | null
+          tenant_id?: string | null
           unit_type?: string | null
           updated_at?: string | null
         }
@@ -4239,6 +4263,7 @@ export type Database = {
           rush_delivery_multiplier?: number | null
           show_to_clients?: boolean | null
           sort_order?: number | null
+          tenant_id?: string | null
           unit_type?: string | null
           updated_at?: string | null
         }
@@ -4248,6 +4273,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -4777,6 +4809,7 @@ export type Database = {
           publish_date: string | null
           target_audience: string
           target_client_id: string | null
+          tenant_id: string | null
           title: string
           update_type: string
           updated_at: string
@@ -4792,6 +4825,7 @@ export type Database = {
           publish_date?: string | null
           target_audience?: string
           target_client_id?: string | null
+          tenant_id?: string | null
           title: string
           update_type?: string
           updated_at?: string
@@ -4807,11 +4841,20 @@ export type Database = {
           publish_date?: string | null
           target_audience?: string
           target_client_id?: string | null
+          tenant_id?: string | null
           title?: string
           update_type?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "updates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_activity_logs: {
         Row: {
@@ -4854,6 +4897,7 @@ export type Database = {
           message: string
           metadata: Json | null
           read_at: string | null
+          tenant_id: string | null
           title: string
           type: string | null
           user_email: string
@@ -4865,6 +4909,7 @@ export type Database = {
           message: string
           metadata?: Json | null
           read_at?: string | null
+          tenant_id?: string | null
           title: string
           type?: string | null
           user_email: string
@@ -4876,11 +4921,20 @@ export type Database = {
           message?: string
           metadata?: Json | null
           read_at?: string | null
+          tenant_id?: string | null
           title?: string
           type?: string | null
           user_email?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_notifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -5080,6 +5134,10 @@ export type Database = {
           plain_password?: string
         }
         Returns: Json
+      }
+      belongs_to_tenant: {
+        Args: { record_tenant_id: string }
+        Returns: boolean
       }
       calculate_affiliate_level: {
         Args: { user_id: string }
@@ -5322,6 +5380,10 @@ export type Database = {
         Returns: string
       }
       get_current_ash_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_current_tenant_id: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
