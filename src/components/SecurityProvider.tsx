@@ -172,7 +172,7 @@ export const withSecurity = <P extends object>(
     rateLimit?: number;
   } = {}
 ) => {
-  return React.forwardRef<any, P>((props, ref) => {
+  return (props: P) => {
     const { isSecureEnvironment, reportSecurityIncident } = useSecurityContext();
 
     useEffect(() => {
@@ -213,8 +213,8 @@ export const withSecurity = <P extends object>(
       return <div className="p-4 text-center text-red-600">غير مسموح: بيئة غير آمنة</div>;
     }
 
-    return <Component {...props} ref={ref} />;
-  });
+    return <Component {...props} />;
+  };
 };
 
 // Hook للتحقق من الأمان في النماذج
