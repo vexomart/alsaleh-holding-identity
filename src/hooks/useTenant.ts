@@ -41,25 +41,7 @@ export const useTenantHook = () => {
 
   // تحديد التينانت بناء على النطاق الحالي
   const detectTenantFromDomain = (): string => {
-    if (typeof window === 'undefined') return 'alishehri';
-    
-    const hostname = window.location.hostname;
-    
-    // إذا كان النطاق هو alialshehriholding.com أو localhost مع البورت
-    if (hostname.includes('alialshehriholding.com') || 
-        hostname.includes('localhost') || 
-        hostname.includes('127.0.0.1') ||
-        hostname.includes('lovable.dev') ||
-        hostname.includes('sandbox.lovable')) {
-      return 'alishehri';
-    }
-    
-    // إذا كان النطاق هو masteredupath.com
-    if (hostname.includes('masteredupath.com')) {
-      return 'masteredupath';
-    }
-    
-    // افتراضي: موقع علي الشهري
+    // هذا النظام مخصص لموقع علي الشهري فقط
     return 'alishehri';
   };
 

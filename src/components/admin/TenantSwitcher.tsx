@@ -80,7 +80,7 @@ export const TenantSwitcher = () => {
               <SelectValue placeholder="اختر موقع..." />
             </SelectTrigger>
             <SelectContent>
-              {tenants.map((tenant) => (
+              {tenants.filter(tenant => tenant.code === 'alishehri').map((tenant) => (
                 <SelectItem key={tenant.id} value={tenant.code}>
                   <div className="flex items-center gap-2">
                     <Globe className="h-4 w-4" />
