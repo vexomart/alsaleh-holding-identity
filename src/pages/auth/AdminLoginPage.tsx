@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Shield, Lock, ArrowRight, Loader2, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import { AUTH_ROUTES, AUTH_MESSAGES } from '@/auth/new-auth-system';
-
+import { useAuth } from '@/components/auth/AuthContext';
+ 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,6 +17,7 @@ const AdminLoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -27,14 +29,9 @@ const AdminLoginPage = () => {
     setError('');
 
     try {
-      // TODO: Implement actual admin login logic
-      console.log('Admin login attempt:', { email, realm: 'admin' });
-      
-      // مثال مؤقت
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await login(email, password, 'admin');
       toast.success(AUTH_MESSAGES.SUCCESS.LOGIN);
-      navigate(AUTH_ROUTES.ADMIN.DASHBOARD);
+      navigate(AUTH_ROUTES.ADMIN.DASHBOARD, { replace: true });
     } catch (error: any) {
       setError(error.message || AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
     } finally {

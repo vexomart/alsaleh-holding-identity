@@ -70,38 +70,89 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string, realm: 'client' | 'admin') => {
     try {
       setIsLoading(true);
-      
-      // استدعاء دالة المصادقة من قاعدة البيانات
-      const { data, error } = await supabase.rpc('simple_authenticate_user', {
-        email_lower_param: email.toLowerCase().trim(),
-        plain_password: password
-      });
 
-      if (error) {
-        throw new Error(error.message);
+      let userData: AuthUser | null = null;
+
+      if (realm === 'admin') {
+        // حاول أولاً عبر دالة قاعدة البيانات إن وُجدت
+        try {
+          const { data, error } = await supabase.rpc('check_admin_credentials', {
+            email_input: email,
+            password_input: password,
+          });
+
+          if (error) throw error;
+
+          const adminRes: any = data as any;
+          if (adminRes && adminRes.success) {
+            const dbUser = adminRes.user as any;
+            userData = {
+              id: dbUser.id,
+              name: dbUser.full_name || 'مدير النظام',
+              email: dbUser.email,
+              email_lower: (dbUser.email || email).toLowerCase(),
+              role: (dbUser.role === 'owner' || dbUser.role === 'admin') ? 'admin' : 'admin',
+              status: 'active',
+              created_at: new Date().toISOString(),
+            };
+          }
+        } catch (_) {
+          // تجاهل ونستخدم التحقق المحلي بالأسفل
+        }
+
+        // تحقق محلي كخطة بديلة
+        if (!userData) {
+          const expectedEmail = 'admin@alialshehriholding.com';
+          const expectedPassword = 'Ali@@#@@1409';
+          const match = email.trim().toLowerCase() === expectedEmail && password === expectedPassword;
+          if (!match) {
+            throw new Error('بيانات تسجيل الدخول غير صحيحة');
+          }
+          userData = {
+            id: crypto.randomUUID(),
+            name: 'مدير النظام - شركة علي صالح الشهري القابضة',
+            email: expectedEmail,
+            email_lower: expectedEmail,
+            role: 'admin',
+            status: 'active',
+            created_at: new Date().toISOString(),
+          };
+        }
+      } else {
+        // عميل: استخدام الدالة الحالية (إن كانت متوفرة)
+        const { data, error } = await supabase.rpc('simple_authenticate_user', {
+          email_lower_param: email.toLowerCase().trim(),
+          plain_password: password,
+        });
+        if (error) throw new Error(error.message);
+        const authData = data as any;
+        if (!authData?.success || !authData?.user) {
+          throw new Error(authData?.message || 'فشل في تسجيل الدخول');
+        }
+        userData = {
+          id: authData.user.id,
+          name: authData.user.name || authData.user.full_name || authData.user.email,
+          email: authData.user.email,
+          email_lower: (authData.user.email || '').toLowerCase(),
+          role: 'client',
+          status: 'active',
+          created_at: authData.user.created_at || new Date().toISOString(),
+        };
       }
 
-      const authData = data as any;
-      if (!authData.success) {
-        throw new Error(authData.message || 'فشل في تسجيل الدخول');
-      }
-
-      // إنشاء جلسة جديدة
+      // إنشاء جلسة
       const sessionData: AuthSession = {
         id: crypto.randomUUID(),
-        user_id: authData.user.id,
+        user_id: userData.id,
         session_token: `session_${Date.now()}`,
         realm,
         expires_at: new Date(Date.now() + (realm === 'admin' ? 8 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000)).toISOString(),
-        user: authData.user
+        user: userData,
       };
 
-      // حفظ الجلسة
       localStorage.setItem('auth_session', JSON.stringify(sessionData));
-      
       setSession(sessionData);
-      setUser(authData.user);
-      
+      setUser(userData);
     } catch (error: any) {
       throw new Error(error.message || 'حدث خطأ أثناء تسجيل الدخول');
     } finally {
