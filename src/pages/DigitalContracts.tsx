@@ -387,9 +387,9 @@ const DigitalContracts = () => {
         width: 794px; /* A4 width at ~96 DPI */
         padding: 40px;
         background: white;
-        font-family: 'Arial', 'Tahoma', sans-serif;
-        font-size: 11pt;
-        line-height: 1.4;
+        font-family: 'Noto Sans Arabic', 'Cairo', 'Amiri', 'Al Bayan', 'Geeza Pro', 'Tahoma', 'Arial', sans-serif;
+        font-size: 12pt;
+        line-height: 1.6;
         direction: rtl;
         text-align: right;
         color: #000;
