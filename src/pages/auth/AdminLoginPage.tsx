@@ -96,7 +96,7 @@ const AdminLoginPage = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@alialshehriholding.com"
+                  placeholder="admin@alishehri.com"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
