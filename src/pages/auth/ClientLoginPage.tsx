@@ -11,6 +11,7 @@ import { Eye, EyeOff, Mail, User, Phone, Building, ArrowRight, Loader2 } from 'l
 import { toast } from 'sonner';
 import { AUTH_ROUTES, AUTH_MESSAGES } from '@/auth/new-auth-system';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/components/auth/AuthContext';
 
 interface FormData {
   name: string;
@@ -33,6 +34,7 @@ const ClientLoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const updateFormData = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -49,42 +51,7 @@ const ClientLoginPage = () => {
     setError('');
 
     try {
-      // استخدام نظام المصادقة الجديد
-      const { data, error } = await supabase.rpc('simple_authenticate_user', {
-        email_lower_param: formData.email.toLowerCase().trim(),
-        plain_password: formData.password
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      const authData = data as any;
-      if (!authData.success) {
-        if (authData.error_code === 'E_USER_BLOCKED') {
-          setError(AUTH_MESSAGES.ERROR.ACCOUNT_BLOCKED);
-        } else if (authData.error_code === 'E_USER_PENDING') {
-          setError(AUTH_MESSAGES.ERROR.NOT_VERIFIED);
-        } else if (authData.error_code === 'E_WRONG_PASSWORD') {
-          setError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
-        } else {
-          setError(authData.message || AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
-        }
-        return;
-      }
-
-      // تحديث الجلسة المحلية
-      const sessionData = {
-        id: crypto.randomUUID(),
-        user_id: authData.user.id,
-        session_token: `session_${Date.now()}`,
-        realm: 'client' as const,
-        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        user: authData.user
-      };
-
-      localStorage.setItem('auth_session', JSON.stringify(sessionData));
-      
+      await login(formData.email, formData.password, 'client');
       toast.success(AUTH_MESSAGES.SUCCESS.LOGIN);
       navigate(AUTH_ROUTES.CLIENT.DASHBOARD);
     } catch (error: any) {
@@ -109,70 +76,43 @@ const ClientLoginPage = () => {
     setError('');
 
     try {
-      console.log('🔧 Starting registration for:', formData.email);
-      
-      // إنشاء هاش آمن لكلمة المرور
-      console.log('🔐 Creating password hash...');
-      const { data: passwordData, error: hashError } = await supabase.rpc('create_secure_password_hash', {
-        plain_password: formData.password
+      // استخدام نظام مبسط لإنشاء الحساب
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.name,
+            phone: formData.phone,
+            company_name: formData.company_name
+          },
+          emailRedirectTo: `${window.location.origin}/auth/client/login`
+        }
       });
 
-      if (hashError) {
-        console.error('❌ Password hash error:', hashError);
-        throw new Error(`خطأ في معالجة كلمة المرور: ${hashError.message}`);
-      }
-
-      if (!passwordData) {
-        console.error('❌ No password data returned');
-        throw new Error('لم يتم إرجاع بيانات كلمة المرور');
-      }
-
-      console.log('✅ Password hash created successfully');
-
-      // إدراج المستخدم الجديد
-      const passwordInfo = passwordData as any;
-      const { data: userData, error: userError } = await supabase
-        .from('platform_users')
-        .insert({
-          full_name: formData.name,
-          email: formData.email,
-          email_normalized: formData.email.toLowerCase().trim(),
-          phone: formData.phone || null,
-          role: 'customer',
-          status: 'pending',
-          password_hash: 'temp_hash', // قيمة مؤقتة للعمود المطلوب
-          password_algo: passwordInfo.password_algo,
-          password_salt_b64: passwordInfo.password_salt_b64,
-          password_hash_b64: passwordInfo.password_hash_b64
-        })
-        .select()
-        .single();
-
-      if (userError) {
-        if (userError.code === '23505') {
-          setError(AUTH_MESSAGES.ERROR.EMAIL_EXISTS);
+      if (error) {
+        if (error.message.includes('User already registered')) {
+          setError('البريد الإلكتروني مسجل مسبقاً');
         } else {
-          setError('حدث خطأ أثناء إنشاء الحساب');
+          setError(error.message);
         }
         return;
       }
 
-      // إنشاء رمز OTP للتحقق
-      const { data: otpCode, error: otpError } = await supabase.rpc('create_otp_code', {
-        p_user_id: userData.id,
-        p_email: formData.email,
-        p_type: 'email_verification'
-      });
-
-      if (otpError) {
-        console.error('OTP creation error:', otpError);
-      }
-
-      toast.success(AUTH_MESSAGES.SUCCESS.SIGNUP);
-      // يمكن إضافة إعادة توجيه لصفحة التحقق هنا
+      toast.success('تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول.');
       setActiveTab('login');
+      
+      // مسح البيانات
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company_name: '',
+        password: ''
+      });
     } catch (error: any) {
-      setError(error.message || 'حدث خطأ أثناء إنشاء الحساب');
+      console.error('Registration error:', error);
+      setError('حدث خطأ أثناء إنشاء الحساب');
     } finally {
       setLoading(false);
     }
