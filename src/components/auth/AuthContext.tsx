@@ -39,6 +39,75 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
+  // استماع لتغييرات جلسات Supabase لعملاء المنصة
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, supaSession) => {
+      try {
+        if (supaSession?.user) {
+          const mappedUser: AuthUser = {
+            id: supaSession.user.id,
+            name: (supaSession.user.user_metadata as any)?.full_name || supaSession.user.email || 'عميل',
+            email: supaSession.user.email || '',
+            email_lower: (supaSession.user.email || '').toLowerCase(),
+            role: 'client',
+            status: 'active',
+            created_at: new Date().toISOString(),
+          };
+
+          const mappedSession: AuthSession = {
+            id: supaSession.access_token || crypto.randomUUID(),
+            user_id: supaSession.user.id,
+            session_token: supaSession.access_token || `session_${Date.now()}`,
+            realm: 'client',
+            expires_at: new Date(((supaSession.expires_at || 0) as number) * 1000).toISOString(),
+            user: mappedUser,
+          };
+
+          setUser(mappedUser);
+          setSession(mappedSession);
+        } else {
+          // لا نفرغ جلسة الأدمن إن كانت موجودة محلياً
+          const saved = localStorage.getItem('auth_session');
+          if (!saved) {
+            setUser(null);
+            setSession(null);
+          }
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    });
+
+    // التهيئة الأولية من جلسة Supabase الحالية
+    supabase.auth.getSession().then(({ data: { session: supaSession } }) => {
+      if (supaSession?.user) {
+        const mappedUser: AuthUser = {
+          id: supaSession.user.id,
+          name: (supaSession.user.user_metadata as any)?.full_name || supaSession.user.email || 'عميل',
+          email: supaSession.user.email || '',
+          email_lower: (supaSession.user.email || '').toLowerCase(),
+          role: 'client',
+          status: 'active',
+          created_at: new Date().toISOString(),
+        };
+        const mappedSession: AuthSession = {
+          id: supaSession.access_token || crypto.randomUUID(),
+          user_id: supaSession.user.id,
+          session_token: supaSession.access_token || `session_${Date.now()}`,
+          realm: 'client',
+          expires_at: new Date(((supaSession.expires_at || 0) as number) * 1000).toISOString(),
+          user: mappedUser,
+        };
+        setUser(mappedUser);
+        setSession(mappedSession);
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
   const initializeAuth = async () => {
     try {
       setIsLoading(true);
@@ -119,24 +188,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           };
         }
       } else {
-        // عميل: استخدام الدالة الحالية (إن كانت متوفرة)
-        const { data, error } = await supabase.rpc('simple_authenticate_user', {
-          email_lower_param: email.toLowerCase().trim(),
-          plain_password: password,
+        // تسجيل دخول العملاء عبر Supabase Auth
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
         });
         if (error) throw new Error(error.message);
-        const authData = data as any;
-        if (!authData?.success || !authData?.user) {
-          throw new Error(authData?.message || 'فشل في تسجيل الدخول');
+        const supaUser = data.user;
+        if (!supaUser) {
+          throw new Error('فشل في تسجيل الدخول');
         }
         userData = {
-          id: authData.user.id,
-          name: authData.user.name || authData.user.full_name || authData.user.email,
-          email: authData.user.email,
-          email_lower: (authData.user.email || '').toLowerCase(),
+          id: supaUser.id,
+          name: (supaUser.user_metadata as any)?.full_name || supaUser.email || email,
+          email: supaUser.email || email,
+          email_lower: (supaUser.email || email).toLowerCase(),
           role: 'client',
           status: 'active',
-          created_at: authData.user.created_at || new Date().toISOString(),
+          created_at: new Date().toISOString(),
         };
       }
 
@@ -162,7 +231,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
-      // حذف الجلسة من localStorage
+      // تسجيل الخروج من Supabase (لعملاء المنصة)
+      await supabase.auth.signOut().catch(() => {});
+
+      // حذف جلسة الأدمن المحلية إن وجدت
       localStorage.removeItem('auth_session');
       
       // إعادة تعيين الحالة
