@@ -29,9 +29,15 @@ interface Update {
 }
 
 interface Profile {
-  id: string;
-  full_name: string;
+  user_id: string;
   email: string;
+  full_name?: string;
+  phone?: string;
+  company?: string;
+  role: string;
+  site_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 const AdminUpdates = () => {
@@ -72,7 +78,7 @@ const AdminUpdates = () => {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, full_name, email")
+        .select("user_id, full_name, email, phone, company, role, site_id, created_at, updated_at")
         .not("email", "is", null);
 
       if (error) throw error;
@@ -352,7 +358,7 @@ const AdminUpdates = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {profiles.map((profile) => (
-                          <SelectItem key={profile.id} value={profile.id}>
+                          <SelectItem key={profile.user_id} value={profile.user_id}>
                             {profile.full_name || profile.email}
                           </SelectItem>
                         ))}

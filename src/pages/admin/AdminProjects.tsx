@@ -33,10 +33,15 @@ interface Project {
 }
 
 interface UserProfile {
-  id: string;
   user_id: string;
+  email: string;
   full_name?: string;
-  user_role: string;
+  phone?: string;
+  company?: string;
+  role: string;
+  site_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 const AdminProjects = () => {

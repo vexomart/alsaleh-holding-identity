@@ -29,10 +29,15 @@ interface Project {
 }
 
 interface UserProfile {
-  id: string;
   user_id: string;
+  email: string;
   full_name?: string;
-  user_role: string;
+  phone?: string;
+  company?: string;
+  role: string;
+  site_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface ProjectFormProps {
@@ -259,7 +264,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     {clients.map((client) => (
-                      <SelectItem key={client.id} value={client.user_id}>
+                      <SelectItem key={client.user_id} value={client.user_id}>
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                           <span>{client.full_name || client.user_id}</span>

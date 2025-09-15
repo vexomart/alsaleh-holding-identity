@@ -31,10 +31,15 @@ interface Project {
 }
 
 interface UserProfile {
-  id: string;
   user_id: string;
+  email: string;
   full_name?: string;
-  user_role: string;
+  phone?: string;
+  company?: string;
+  role: string;
+  site_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 const AdminProjects = () => {
@@ -146,8 +151,8 @@ const AdminProjects = () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
-        .eq('user_role', 'client');
+        .select('user_id, email, full_name, phone, company, role, site_id, created_at, updated_at')
+        .eq('role', 'customer');
 
       if (error) throw error;
       setClients(data || []);
@@ -434,7 +439,7 @@ const AdminProjects = () => {
                         </SelectTrigger>
                         <SelectContent>
                           {clients.map((client) => (
-                            <SelectItem key={client.id} value={client.user_id}>
+                            <SelectItem key={client.user_id} value={client.user_id}>
                               {client.full_name || client.user_id}
                             </SelectItem>
                           ))}

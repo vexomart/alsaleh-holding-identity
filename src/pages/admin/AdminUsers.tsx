@@ -26,13 +26,13 @@ import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
 
 interface UserProfile {
-  id: string;
   user_id: string;
+  email: string;
   full_name?: string;
   phone?: string;
   company?: string;
-  user_role: string;
-  client_id?: string;
+  role: string;
+  site_id: string;
   created_at: string;
   updated_at: string;
 }
@@ -124,9 +124,9 @@ const AdminUsers = () => {
   const filteredUsers = users.filter(user => {
     const userRole = getUserRole(user.user_id);
     const matchesSearch = user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.client_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.company?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = roleFilter === 'all' || userRole === roleFilter || user.user_role === roleFilter;
+    const matchesRole = roleFilter === 'all' || userRole === roleFilter || user.role === roleFilter;
     return matchesSearch && matchesRole;
   });
 
@@ -240,8 +240,8 @@ const AdminUsers = () => {
   const stats = {
     total: users.length,
     admins: userRoles.filter(r => r.role === 'admin').length,
-    clients: users.filter(u => u.user_role === 'client').length,
-    users: users.filter(u => u.user_role === 'user').length
+    clients: users.filter(u => u.role === 'customer').length,
+    users: users.filter(u => u.role === 'user').length
   };
 
   if (loading) {
@@ -455,16 +455,16 @@ const AdminUsers = () => {
           {filteredUsers.map((user) => {
             const userRole = getUserRole(user.user_id);
             return (
-              <ResponsiveCard key={user.id} className="space-y-4">
+              <ResponsiveCard key={user.user_id} className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div className="text-right flex-1 min-w-0">
                     <h3 className="font-semibold text-foreground truncate">{user.full_name || 'بدون اسم'}</h3>
-                    <p className="text-sm text-muted-foreground truncate">{user.client_id}</p>
+                    <p className="text-sm text-muted-foreground truncate">{user.email}</p>
                     {user.company && (
                       <p className="text-xs text-muted-foreground truncate">{user.company}</p>
                     )}
                   </div>
-                  <Badge className={getRoleColor(userRole || user.user_role)}>{getRoleText(userRole || user.user_role)}</Badge>
+                  <Badge className={getRoleColor(userRole || user.role)}>{getRoleText(userRole || user.role)}</Badge>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3 text-sm">

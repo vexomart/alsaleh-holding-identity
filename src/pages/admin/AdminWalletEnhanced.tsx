@@ -140,10 +140,10 @@ const AdminWalletEnhanced = () => {
       const userIds = [...new Set(transactionsData?.map(t => t.user_id) || [])];
       const { data: usersData } = await supabase
         .from('profiles')
-        .select('id, email, full_name')
-        .in('id', userIds);
+        .select('user_id, email, full_name')
+        .in('user_id', userIds);
 
-      const usersMap = new Map(usersData?.map(user => [user.id, user]) || []);
+      const usersMap = new Map(usersData?.map(user => [user.user_id, user]) || []);
 
       // Transform data
       const formattedTransactions: WalletTransaction[] = transactionsData?.map(transaction => ({
@@ -208,13 +208,13 @@ const AdminWalletEnhanced = () => {
     try {
       const { data: usersData, error } = await supabase
         .from('profiles')
-        .select('id, email, full_name, phone')
+        .select('user_id, email, full_name, phone')
         .order('full_name');
 
       if (error) throw error;
 
       const formattedUsers: User[] = usersData?.map(user => ({
-        id: user.id,
+        id: user.user_id,
         email: user.email,
         user_metadata: {
           full_name: user.full_name,

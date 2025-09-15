@@ -83,7 +83,6 @@ const ClientLoginPage = () => {
     setError('');
 
     try {
-      // استخدام نظام مبسط لإنشاء الحساب
       const { data, error } = await supabase.auth.signUp({
         email: formData.email.trim().toLowerCase(),
         password: formData.password,
@@ -91,17 +90,28 @@ const ClientLoginPage = () => {
           data: {
             full_name: formData.name,
             phone: formData.phone,
-            company_name: formData.company_name
+            company_name: formData.company_name,
+            site_id: '11111111-1111-1111-1111-111111111111', // default site for holding
+            domain: 'alialshehriholding.com'
           },
           emailRedirectTo: `${window.location.origin}/auth/client/login`
         }
       });
 
       if (error) {
-        if (error.message.includes('User already registered')) {
-          setError('البريد الإلكتروني مسجل مسبقاً');
+        console.error('Signup error:', error);
+        
+        // Handle specific error types with user-friendly messages
+        const errorMsg = error.message?.toLowerCase() || '';
+        
+        if (errorMsg.includes('duplicate') || errorMsg.includes('already registered')) {
+          setError('هذا البريد الإلكتروني مسجل لدينا مسبقاً. جرب تسجيل الدخول أو استرجاع كلمة المرور.');
+        } else if (errorMsg.includes('invalid email')) {
+          setError('البريد الإلكتروني غير صحيح');
+        } else if (errorMsg.includes('weak password')) {
+          setError('كلمة المرور ضعيفة. استخدم أحرف كبيرة وصغيرة وأرقام');
         } else {
-          setError(error.message);
+          setError('تعذر إنشاء الحساب حالياً. حاول مرة أخرى لاحقاً.');
         }
         return;
       }

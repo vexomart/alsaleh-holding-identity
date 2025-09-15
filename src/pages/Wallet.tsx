@@ -20,11 +20,15 @@ interface WalletData {
 }
 
 interface UserProfile {
-  id: string;
+  user_id: string;
+  email: string;
   full_name?: string;
-  client_id?: string;
-  email?: string;
   phone?: string;
+  company?: string;
+  role: string;
+  site_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 // Removed Transaction interface - no longer needed
@@ -53,16 +57,23 @@ const WalletPage = () => {
       // Fetch user profile
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('*')
-        .eq('id', user.id)
+        .select('user_id, email, full_name, phone, company, role, site_id, created_at, updated_at')
+        .eq('user_id', user.id)
         .single();
 
-      setUserProfile({
-        id: user.id,
-        full_name: profileData?.full_name,
-        client_id: profileData?.client_id,
-        email: user.email
-      });
+      if (profileData) {
+        setUserProfile({
+          user_id: user.id,
+          email: user.email,
+          full_name: profileData?.full_name,
+          phone: profileData?.phone,
+          company: profileData?.company,
+          role: profileData?.role || 'customer',
+          site_id: profileData?.site_id,
+          created_at: profileData?.created_at,
+          updated_at: profileData?.updated_at
+        });
+      }
 
       // Fetch wallet
       const { data: walletData, error: walletError } = await supabase
@@ -201,7 +212,7 @@ const WalletPage = () => {
   };
 
   const copyAccountNumber = () => {
-    const accountNumber = generateAccountNumber(userProfile?.id || '', userProfile?.client_id);
+    const accountNumber = generateAccountNumber(userProfile?.user_id || '', '');
     navigator.clipboard.writeText(accountNumber);
     toast({
       title: "تم النسخ",
@@ -230,7 +241,7 @@ const WalletPage = () => {
     );
   }
 
-  const accountNumber = generateAccountNumber(userProfile?.id || '', userProfile?.client_id);
+  const accountNumber = generateAccountNumber(userProfile?.user_id || '', '');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50" dir="rtl">

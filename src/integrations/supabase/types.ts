@@ -3330,16 +3330,60 @@ export type Database = {
       }
       profiles: {
         Row: {
+          company: string | null
+          created_at: string | null
+          email: string
+          full_name: string | null
+          phone: string | null
+          role: string
+          site_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          email: string
+          full_name?: string | null
+          phone?: string | null
+          role?: string
+          site_id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string | null
+          phone?: string | null
+          role?: string
+          site_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles_backup: {
+        Row: {
           account_number: string | null
           client_id: string | null
           company: string | null
           created_at: string | null
           email: string | null
           full_name: string | null
-          id: string
+          id: string | null
           phone: string | null
           updated_at: string | null
-          user_id: string
+          user_id: string | null
           user_role: string | null
         }
         Insert: {
@@ -3349,10 +3393,10 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           full_name?: string | null
-          id?: string
+          id?: string | null
           phone?: string | null
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
           user_role?: string | null
         }
         Update: {
@@ -3362,10 +3406,10 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           full_name?: string | null
-          id?: string
+          id?: string | null
           phone?: string | null
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
           user_role?: string | null
         }
         Relationships: []
@@ -4284,6 +4328,27 @@ export type Database = {
           },
         ]
       }
+      sites: {
+        Row: {
+          created_at: string | null
+          domain: string
+          id: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          domain: string
+          id?: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          domain?: string
+          id?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           billing_interval: string
@@ -5180,6 +5245,30 @@ export type Database = {
         Args: { p_operation_type: string; p_user_id: string }
         Returns: boolean
       }
+      citext: {
+        Args: { "": boolean } | { "": string } | { "": unknown }
+        Returns: string
+      }
+      citext_hash: {
+        Args: { "": string }
+        Returns: number
+      }
+      citextin: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      citextout: {
+        Args: { "": string }
+        Returns: unknown
+      }
+      citextrecv: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      citextsend: {
+        Args: { "": string }
+        Returns: string
+      }
       cleanup_expired_password_reset_tokens: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -5528,11 +5617,11 @@ export type Database = {
         Returns: string
       }
       normalize_digits: {
-        Args: { input_text: string }
+        Args: { txt: string }
         Returns: string
       }
       normalize_email: {
-        Args: { email_input: string }
+        Args: { txt: string }
         Returns: string
       }
       normalize_email_enhanced: {
