@@ -5573,7 +5573,10 @@ export type Database = {
               p_transaction_type: string
               p_user_id: string
             }
-        Returns: string
+        Returns: {
+          new_balance: number
+          transaction_id: string
+        }[]
       }
       record_automation_usage: {
         Args: { p_automation_type: string; p_count?: number; p_user_id: string }
