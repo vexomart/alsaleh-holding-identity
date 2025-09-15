@@ -55,7 +55,14 @@ const ClientLoginPage = () => {
       toast.success(AUTH_MESSAGES.SUCCESS.LOGIN);
       navigate(AUTH_ROUTES.CLIENT.DASHBOARD);
     } catch (error: any) {
-      setError(error.message || AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
+      const msg = (error?.message || '').toLowerCase();
+      if (msg.includes('email') && msg.includes('confirm')) {
+        setError(AUTH_MESSAGES.ERROR.NOT_VERIFIED);
+      } else if (msg.includes('invalid') || msg.includes('credentials')) {
+        setError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
+      } else {
+        setError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
+      }
     } finally {
       setLoading(false);
     }
@@ -78,7 +85,7 @@ const ClientLoginPage = () => {
     try {
       // استخدام نظام مبسط لإنشاء الحساب
       const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
+        email: formData.email.trim().toLowerCase(),
         password: formData.password,
         options: {
           data: {
@@ -99,7 +106,7 @@ const ClientLoginPage = () => {
         return;
       }
 
-      toast.success('تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول.');
+      toast.success(AUTH_MESSAGES.SUCCESS.SIGNUP);
       setActiveTab('login');
       
       // مسح البيانات
