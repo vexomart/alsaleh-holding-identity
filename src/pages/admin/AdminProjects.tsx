@@ -96,7 +96,7 @@ const AdminProjects = () => {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_role', 'client');
+        .eq('role', 'customer');
 
       if (error) throw error;
       setClients(data || []);

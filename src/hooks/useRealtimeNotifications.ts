@@ -42,7 +42,7 @@ export const useRealtimeNotifications = ({
         const { data: profile } = await supabase
           .from('profiles')
           .select('email')
-          .eq('id', userId)
+          .eq('user_id', userId)
           .single();
         
         if (profile?.email) {

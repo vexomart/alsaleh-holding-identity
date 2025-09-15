@@ -83,6 +83,12 @@ const ClientLoginPage = () => {
     setError('');
 
     try {
+      // إعداد site_id و domain للربط مع الموقع الحالي
+      const siteId = '11111111-1111-1111-1111-111111111111'; // ID ثابت لموقع علي الشهري
+      const domain = 'alialshehriholding.com';
+
+      console.log('Attempting signup with site_id:', siteId, 'domain:', domain);
+      
       const { data, error } = await supabase.auth.signUp({
         email: formData.email.trim().toLowerCase(),
         password: formData.password,
@@ -90,18 +96,18 @@ const ClientLoginPage = () => {
           data: {
             full_name: formData.name,
             phone: formData.phone,
-            company_name: formData.company_name,
-            site_id: '11111111-1111-1111-1111-111111111111', // default site for holding
-            domain: 'alialshehriholding.com'
+            company: formData.company_name, // تغيير من company_name إلى company
+            site_id: siteId,
+            domain: domain
           },
           emailRedirectTo: `${window.location.origin}/auth/client/login`
         }
       });
 
       if (error) {
-        console.error('Signup error:', error);
+        console.error('Signup error details:', error);
         
-        // Handle specific error types with user-friendly messages
+        // معالجة أنواع الأخطاء المختلفة برسائل واضحة
         const errorMsg = error.message?.toLowerCase() || '';
         
         if (errorMsg.includes('duplicate') || errorMsg.includes('already registered')) {
@@ -110,12 +116,17 @@ const ClientLoginPage = () => {
           setError('البريد الإلكتروني غير صحيح');
         } else if (errorMsg.includes('weak password')) {
           setError('كلمة المرور ضعيفة. استخدم أحرف كبيرة وصغيرة وأرقام');
+        } else if (errorMsg.includes('site_id') || errorMsg.includes('site')) {
+          setError('خطأ في إعداد الموقع. تواصل مع الدعم التقني.');
+        } else if (errorMsg.includes('trigger') || errorMsg.includes('function')) {
+          setError('خطأ في النظام أثناء إنشاء الملف الشخصي. تواصل مع الدعم التقني.');
         } else {
-          setError('تعذر إنشاء الحساب حالياً. حاول مرة أخرى لاحقاً.');
+          setError(`خطأ في التسجيل: ${error.message || 'حاول مرة أخرى لاحقاً'}`);
         }
         return;
       }
 
+      console.log('Signup successful:', data);
       toast.success(AUTH_MESSAGES.SUCCESS.SIGNUP);
       setActiveTab('login');
       
@@ -129,7 +140,7 @@ const ClientLoginPage = () => {
       });
     } catch (error: any) {
       console.error('Registration error:', error);
-      setError('حدث خطأ أثناء إنشاء الحساب');
+      setError(`حدث خطأ أثناء إنشاء الحساب: ${error.message || 'حاول مرة أخرى'}`);
     } finally {
       setLoading(false);
     }
