@@ -43,7 +43,9 @@ import {
   Brain,
   Radio,
   Scale,
-  Building
+  Building,
+  Banknote,
+  Info
 } from "lucide-react";
 
 const Footer = () => {
@@ -838,64 +840,119 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Company Legal Information */}
-        <div className="border-t border-white/10 bg-white/[0.02] py-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
-              {/* Company Logo/Name */}
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-br from-white/10 to-white/5 rounded-xl flex items-center justify-center border border-white/10">
-                  <Building className="w-6 h-6 text-white" />
+        {/* Company Legal Information - Global Standard */}
+        <div className="border-t border-white/5 bg-gradient-to-r from-white/[0.01] via-white/[0.02] to-white/[0.01] py-12">
+          <div className="max-w-7xl mx-auto px-6">
+            {/* Company Header */}
+            <div className="text-center mb-10">
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent rounded-2xl flex items-center justify-center border border-primary/20 shadow-lg">
+                  <Building className="w-8 h-8 text-primary" />
                 </div>
-                <div>
-                  <div className="text-white font-bold text-lg">Ali Saleh AlShehri Holding Company</div>
-                  <div className="text-gray-400 text-xs">شركة علي صالح الشهري القابضة</div>
-                </div>
-              </div>
-
-              {/* Legal Information */}
-              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs text-gray-400">
-                <div className="space-y-1">
-                  <div className="text-white/70 font-medium">التسجيل التجاري</div>
-                  <div>رقم السجل التجاري: 4030554749</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-white/70 font-medium">العنوان الوطني</div>
-                  <div>23733 جدة، حي الأبحر الجنوبية، 4658-9474</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-white/70 font-medium">رخصة الاستثمار</div>
-                  <div>رقم الرخصة: 7039030916</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-white/70 font-medium">رأس المال المدفوع</div>
-                  <div>500,000 ريال سعودي</div>
-                </div>
-                <div className="space-y-1 md:col-span-2 lg:col-span-2">
-                  <div className="text-white/70 font-medium">الترخيص والإشراف</div>
-                  <div>مرخصة ومشرف عليها من وزارة التجارة</div>
+                <div className="text-left">
+                  <h3 className="text-2xl font-bold text-white mb-1">Ali Saleh AlShehri Holding Company</h3>
+                  <p className="text-primary/80 font-medium">شركة علي صالح الشهري القابضة</p>
                 </div>
               </div>
+              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"></div>
+            </div>
 
-              {/* Certification Badges */}
-              <div className="flex flex-col gap-2 shrink-0">
-                <div className="flex items-center gap-2 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
-                  <Shield className="w-3 h-3 text-green-400" />
-                  <span className="text-green-300 text-xs font-medium">مرخص</span>
+            {/* Legal Information Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+              <div className="bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-primary/90 font-semibold text-sm">التسجيل التجاري</span>
                 </div>
-                <div className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                  <Scale className="w-3 h-3 text-blue-400" />
-                  <span className="text-blue-300 text-xs font-medium">منظم</span>
+                <p className="text-white text-sm font-mono">4030554749</p>
+                <p className="text-gray-400 text-xs mt-1">Commercial Registration</p>
+              </div>
+
+              <div className="bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <MapPin className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-primary/90 font-semibold text-sm">العنوان الوطني</span>
+                </div>
+                <p className="text-white text-sm">23733 جدة</p>
+                <p className="text-gray-400 text-xs">حي الأبحر الجنوبية، 4658-9474</p>
+              </div>
+
+              <div className="bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Award className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-primary/90 font-semibold text-sm">رخصة الاستثمار</span>
+                </div>
+                <p className="text-white text-sm font-mono">7039030916</p>
+                <p className="text-gray-400 text-xs mt-1">Investment License</p>
+              </div>
+
+              <div className="bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Banknote className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-primary/90 font-semibold text-sm">رأس المال</span>
+                </div>
+                <p className="text-white text-sm font-bold">500,000 ر.س</p>
+                <p className="text-gray-400 text-xs mt-1">Paid-up Capital</p>
+              </div>
+            </div>
+
+            {/* Regulatory Information */}
+            <div className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 rounded-2xl p-8 border border-primary/20 mb-8">
+              <div className="flex flex-col lg:flex-row items-center gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-lg mb-1">منظمة ومرخصة</h4>
+                    <p className="text-primary/80 text-sm">من وزارة التجارة - المملكة العربية السعودية</p>
+                  </div>
+                </div>
+                
+                <div className="flex-1 flex justify-center lg:justify-end">
+                  <div className="flex flex-wrap gap-3">
+                    <div className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-500/30">
+                      <Shield className="w-4 h-4 text-green-400" />
+                      <span className="text-green-300 text-sm font-medium">مرخص</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-blue-500/20 px-4 py-2 rounded-full border border-blue-500/30">
+                      <Scale className="w-4 h-4 text-blue-400" />
+                      <span className="text-blue-300 text-sm font-medium">منظم</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-purple-500/20 px-4 py-2 rounded-full border border-purple-500/30">
+                      <Star className="w-4 h-4 text-purple-400" />
+                      <span className="text-purple-300 text-sm font-medium">معتمد</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Disclaimer */}
-            <div className="mt-6 pt-4 border-t border-white/5 text-center">
-              <p className="text-gray-500 text-xs leading-relaxed max-w-4xl mx-auto">
-                تخضع جميع الخدمات والاستثمارات للقوانين واللوائح السارية في المملكة العربية السعودية. 
-                للمزيد من المعلومات حول خدماتنا وشروط الاستخدام، يرجى زيارة موقعنا الإلكتروني أو التواصل معنا مباشرة.
-              </p>
+            {/* Legal Disclaimer */}
+            <div className="text-center">
+              <div className="max-w-5xl mx-auto">
+                <div className="bg-white/[0.02] rounded-xl p-6 border border-white/5">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <Info className="w-5 h-5 text-primary/70" />
+                    <span className="text-primary/80 font-medium">إشعار قانوني</span>
+                  </div>
+                  <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                    تخضع جميع الخدمات والاستثمارات للقوانين واللوائح السارية في المملكة العربية السعودية. 
+                    الشركة مرخصة ومنظمة من قبل وزارة التجارة ومؤسسة النقد العربي السعودي حسب طبيعة النشاط.
+                  </p>
+                  <p className="text-gray-500 text-xs">
+                    للمزيد من المعلومات حول خدماتنا وشروط الاستخدام، يرجى التواصل معنا مباشرة أو زيارة مكاتبنا المعتمدة.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
