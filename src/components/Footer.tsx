@@ -329,7 +329,6 @@ const Footer = () => {
 
   const contactInfo = [
     { label: "البريد الإلكتروني", value: "info@alialshehriholding.com", icon: Mail },
-    { label: "الهاتف", value: "0555812567", icon: Phone },
     { label: "الموقع", value: "ash.holdings", icon: Globe }
   ];
 
