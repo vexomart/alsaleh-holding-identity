@@ -837,6 +837,68 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
+        {/* Company Legal Information */}
+        <div className="border-t border-white/10 bg-white/[0.02] py-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+              {/* Company Logo/Name */}
+              <div className="flex items-center gap-3 shrink-0">
+                <div className="w-12 h-12 bg-gradient-to-br from-white/10 to-white/5 rounded-xl flex items-center justify-center border border-white/10">
+                  <Building className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <div className="text-white font-bold text-lg">Ali Saleh AlShehri Holding Company</div>
+                  <div className="text-gray-400 text-xs">شركة علي صالح الشهري القابضة</div>
+                </div>
+              </div>
+
+              {/* Legal Information */}
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs text-gray-400">
+                <div className="space-y-1">
+                  <div className="text-white/70 font-medium">التسجيل التجاري</div>
+                  <div>رقم السجل التجاري: 4030554749</div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-white/70 font-medium">العنوان الوطني</div>
+                  <div>23733 جدة، حي الأبحر الجنوبية، 4658-9474</div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-white/70 font-medium">رخصة الاستثمار</div>
+                  <div>رقم الرخصة: 7039030916</div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-white/70 font-medium">رأس المال المدفوع</div>
+                  <div>500,000 ريال سعودي</div>
+                </div>
+                <div className="space-y-1 md:col-span-2 lg:col-span-2">
+                  <div className="text-white/70 font-medium">الترخيص والإشراف</div>
+                  <div>مرخصة ومشرف عليها من وزارة التجارة</div>
+                </div>
+              </div>
+
+              {/* Certification Badges */}
+              <div className="flex flex-col gap-2 shrink-0">
+                <div className="flex items-center gap-2 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+                  <Shield className="w-3 h-3 text-green-400" />
+                  <span className="text-green-300 text-xs font-medium">مرخص</span>
+                </div>
+                <div className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                  <Scale className="w-3 h-3 text-blue-400" />
+                  <span className="text-blue-300 text-xs font-medium">منظم</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Disclaimer */}
+            <div className="mt-6 pt-4 border-t border-white/5 text-center">
+              <p className="text-gray-500 text-xs leading-relaxed max-w-4xl mx-auto">
+                تخضع جميع الخدمات والاستثمارات للقوانين واللوائح السارية في المملكة العربية السعودية. 
+                للمزيد من المعلومات حول خدماتنا وشروط الاستخدام، يرجى زيارة موقعنا الإلكتروني أو التواصل معنا مباشرة.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Working Hours Notification */}
