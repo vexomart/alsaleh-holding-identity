@@ -46,6 +46,15 @@ export default function ClientSupportTickets() {
   const [showNewTicketForm, setShowNewTicketForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    title: '',
+    category: '',
+    priority: 'medium' as const,
+    description: ''
+  });
 
   useEffect(() => {
     const loadTickets = async () => {
@@ -85,6 +94,107 @@ export default function ClientSupportTickets() {
     };
     loadTickets();
   }, []);
+
+  const handleCreateTicket = async () => {
+    if (!formData.title || !formData.category || !formData.description) {
+      toast({
+        title: "خطأ",
+        description: "يرجى ملء جميع الحقول المطلوبة",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      const { data: { user }, error: authErr } = await supabase.auth.getUser();
+      if (authErr || !user) {
+        toast({
+          title: "خطأ",
+          description: "لم يتم العثور على جلسة صالحة",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Generate a simple ticket number
+      const ticketNumber = `TK${Date.now().toString().slice(-8)}`;
+
+      // Create ticket
+      const { data: ticketData, error: ticketErr } = await supabase
+        .from('tickets')
+        .insert([{
+          user_id: user.id,
+          ticket_number: ticketNumber,
+          title: formData.title,
+          description: formData.description,
+          category: formData.category,
+          priority: formData.priority,
+          status: 'open'
+        }])
+        .select()
+        .single();
+
+      if (ticketErr) throw ticketErr;
+
+      // Send email notification
+      try {
+        await supabase.functions.invoke('ticket-notification', {
+          body: {
+            ticketNumber: ticketData.ticket_number,
+            customerEmail: user.email,
+            customerName: user.user_metadata?.full_name || user.email,
+            title: formData.title,
+            description: formData.description,
+            priority: formData.priority,
+            category: formData.category
+          }
+        });
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError);
+        // Don't block ticket creation if email fails
+      }
+
+      toast({
+        title: "تم بنجاح",
+        description: "تم إنشاء التذكرة بنجاح وسيتم الرد عليك قريباً"
+      });
+
+      // Reset form and close
+      setFormData({
+        title: '',
+        category: '',
+        priority: 'medium',
+        description: ''
+      });
+      setShowNewTicketForm(false);
+      
+      // Reload tickets
+      const newTicket: Ticket = {
+        id: ticketData.id,
+        ticket_number: ticketData.ticket_number,
+        title: ticketData.title,
+        description: ticketData.description,
+        status: ticketData.status as 'open' | 'in_progress' | 'resolved' | 'closed',
+        priority: ticketData.priority as 'high' | 'medium' | 'low',
+        category: ticketData.category,
+        created_at: ticketData.created_at,
+        assigned_to: ticketData.assigned_to,
+        responses_count: 0
+      };
+      setTickets([newTicket, ...tickets]);
+
+    } catch (e: any) {
+      console.error('Error creating ticket:', e);
+      toast({
+        title: "خطأ",
+        description: "تعذر إنشاء التذكرة، يرجى المحاولة مرة أخرى",
+        variant: "destructive"
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const getStatusText = (status: string) => {
     const statusMap: { [key: string]: string } = {
@@ -307,11 +417,15 @@ export default function ClientSupportTickets() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">الموضوع</label>
-                <Input placeholder="موضوع التذكرة" />
+                <Input 
+                  placeholder="موضوع التذكرة" 
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">الفئة</label>
-                <Select>
+                <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="اختر الفئة" />
                   </SelectTrigger>
@@ -326,7 +440,7 @@ export default function ClientSupportTickets() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">الأولوية</label>
-              <Select>
+              <Select value={formData.priority} onValueChange={(value: any) => setFormData(prev => ({ ...prev, priority: value }))}>
                 <SelectTrigger>
                   <SelectValue placeholder="اختر الأولوية" />
                 </SelectTrigger>
@@ -339,11 +453,20 @@ export default function ClientSupportTickets() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">الوصف</label>
-              <Textarea placeholder="اشرح المشكلة أو الاستفسار بالتفصيل" rows={4} />
+              <Textarea 
+                placeholder="اشرح المشكلة أو الاستفسار بالتفصيل" 
+                rows={4}
+                value={formData.description}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              />
             </div>
             <div className="flex gap-2">
-              <Button className="flex-1">
-                إنشاء التذكرة
+              <Button 
+                className="flex-1" 
+                onClick={handleCreateTicket}
+                disabled={submitting}
+              >
+                {submitting ? 'جارٍ الإنشاء...' : 'إنشاء التذكرة'}
               </Button>
               <Button variant="outline" onClick={() => setShowNewTicketForm(false)}>
                 إلغاء
