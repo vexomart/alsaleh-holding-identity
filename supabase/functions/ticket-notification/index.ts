@@ -100,10 +100,11 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "نظام الدعم <support@alialsheehrholding.com>",
+      from: "Support Desk <onboarding@resend.dev>",
       to: [customerEmail],
       subject: `✅ تأكيد استلام تذكرة الدعم #${ticketNumber}`,
       html: customerEmailHtml,
+      reply_to: "support@alialsheehrholding.com",
     });
 
     console.log("✅ Customer email sent:", customerEmailResponse);
@@ -129,10 +130,11 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Send notification to admin/support team
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام التذاكر <system@alialsheehrholding.com>",
+      from: "Ticketing System <onboarding@resend.dev>",
       to: ["support@alialsheehrholding.com"], // Replace with actual support email
       subject: `🚨 تذكرة دعم جديدة #${ticketNumber} - ${priorityText} - ${title}`,
       html: adminEmailHtml,
+      reply_to: customerEmail,
     });
 
     console.log("✅ Admin email sent:", adminEmailResponse);
