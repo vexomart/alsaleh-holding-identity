@@ -840,117 +840,74 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Company Legal Information - Global Standard */}
-        <div className="border-t border-white/5 bg-gradient-to-r from-white/[0.01] via-white/[0.02] to-white/[0.01] py-12">
+        {/* Professional Legal Information - Al Rajhi Bank Style */}
+        <div className="border-t border-gray-200/20 bg-gray-50/[0.02] py-8">
           <div className="max-w-7xl mx-auto px-6">
-            {/* Company Header */}
-            <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent rounded-2xl flex items-center justify-center border border-primary/20 shadow-lg">
-                  <Building className="w-8 h-8 text-primary" />
+            
+            {/* Company Details in Clean Layout */}
+            <div className="bg-gray-50/5 rounded-lg p-6 mb-6">
+              <div className="text-center text-sm text-gray-300 space-y-3">
+                <div className="mb-4">
+                  <p className="font-semibold text-white text-base mb-2">شركة علي صالح الشهري القابضة</p>
+                  <p className="text-gray-400 text-sm">Ali Saleh AlShehri Holding Company</p>
                 </div>
-                <div className="text-left">
-                  <h3 className="text-2xl font-bold text-white mb-1">Ali Saleh AlShehri Holding Company</h3>
-                  <p className="text-primary/80 font-medium">شركة علي صالح الشهري القابضة</p>
+                
+                <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-gray-400">
+                  <span>السجل التجاري: 4030554749</span>
+                  <span className="hidden sm:inline">|</span>
+                  <span>العنوان الوطني: 23733 جدة، الأبحر الجنوبية، 4658-9474</span>
+                  <span className="hidden sm:inline">|</span>
+                  <span>رقم الترخيص: 7039030916</span>
+                  <span className="hidden sm:inline">|</span>
+                  <span>رأس المال المدفوع: 500,000 ر.س</span>
                 </div>
-              </div>
-              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"></div>
-            </div>
-
-            {/* Legal Information Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-              <div className="bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <FileText className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="text-primary/90 font-semibold text-sm">التسجيل التجاري</span>
-                </div>
-                <p className="text-white text-sm font-mono">4030554749</p>
-                <p className="text-gray-400 text-xs mt-1">Commercial Registration</p>
-              </div>
-
-              <div className="bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <MapPin className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="text-primary/90 font-semibold text-sm">العنوان الوطني</span>
-                </div>
-                <p className="text-white text-sm">23733 جدة</p>
-                <p className="text-gray-400 text-xs">حي الأبحر الجنوبية، 4658-9474</p>
-              </div>
-
-              <div className="bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Award className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="text-primary/90 font-semibold text-sm">رخصة الاستثمار</span>
-                </div>
-                <p className="text-white text-sm font-mono">7039030916</p>
-                <p className="text-gray-400 text-xs mt-1">Investment License</p>
-              </div>
-
-              <div className="bg-white/[0.03] backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Banknote className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="text-primary/90 font-semibold text-sm">رأس المال</span>
-                </div>
-                <p className="text-white text-sm font-bold">500,000 ر.س</p>
-                <p className="text-gray-400 text-xs mt-1">Paid-up Capital</p>
               </div>
             </div>
 
             {/* Regulatory Information */}
-            <div className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 rounded-2xl p-8 border border-primary/20 mb-8">
-              <div className="flex flex-col lg:flex-row items-center gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold text-lg mb-1">منظمة ومرخصة</h4>
-                    <p className="text-primary/80 text-sm">من وزارة التجارة - المملكة العربية السعودية</p>
-                  </div>
-                </div>
-                
-                <div className="flex-1 flex justify-center lg:justify-end">
-                  <div className="flex flex-wrap gap-3">
-                    <div className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-500/30">
-                      <Shield className="w-4 h-4 text-green-400" />
-                      <span className="text-green-300 text-sm font-medium">مرخص</span>
-                    </div>
-                    <div className="flex items-center gap-2 bg-blue-500/20 px-4 py-2 rounded-full border border-blue-500/30">
-                      <Scale className="w-4 h-4 text-blue-400" />
-                      <span className="text-blue-300 text-sm font-medium">منظم</span>
-                    </div>
-                    <div className="flex items-center gap-2 bg-purple-500/20 px-4 py-2 rounded-full border border-purple-500/30">
-                      <Star className="w-4 h-4 text-purple-400" />
-                      <span className="text-purple-300 text-sm font-medium">معتمد</span>
-                    </div>
-                  </div>
-                </div>
+            <div className="text-center text-xs text-gray-400 mb-6">
+              <p>منظمة ومراقبة من قبل وزارة التجارة - المملكة العربية السعودية</p>
+            </div>
+
+            {/* Contact Numbers - Al Rajhi Style */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+              <div>
+                <p className="text-gray-400 text-xs mb-1">الهاتف التسويقي</p>
+                <p className="text-white font-semibold">800-124-1222</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">العناية بالعملاء</p>
+                <p className="text-white font-semibold">920-003-344</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">الرقم المجاني للمبيعات والشكاوى</p>
+                <p className="text-white font-semibold">800-124-4455</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1">لرفع طلب أو شكوى</p>
+                <p className="text-blue-400 underline text-sm">care@alialshehriholding.com.sa</p>
               </div>
             </div>
 
-            {/* Legal Disclaimer */}
+            {/* Legal Footer Text */}
             <div className="text-center">
-              <div className="max-w-5xl mx-auto">
-                <div className="bg-white/[0.02] rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center justify-center gap-2 mb-4">
-                    <Info className="w-5 h-5 text-primary/70" />
-                    <span className="text-primary/80 font-medium">إشعار قانوني</span>
-                  </div>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                    تخضع جميع الخدمات والاستثمارات للقوانين واللوائح السارية في المملكة العربية السعودية. 
-                    الشركة مرخصة ومنظمة من قبل وزارة التجارة ومؤسسة النقد العربي السعودي حسب طبيعة النشاط.
-                  </p>
-                  <p className="text-gray-500 text-xs">
-                    للمزيد من المعلومات حول خدماتنا وشروط الاستخدام، يرجى التواصل معنا مباشرة أو زيارة مكاتبنا المعتمدة.
-                  </p>
+              <div className="max-w-6xl mx-auto text-xs text-gray-500 leading-relaxed">
+                <p className="mb-4">
+                  شركة علي صالح الشهري القابضة، شركة سعودية مساهمة برأس مال: 500,000 ﷼ مدفوع بالكامل، رقم السجل التجاري: 4030554749، صندوق بريد: 23733 جدة 21589 المملكة العربية السعودية، هاتف: 
+                  0555812567، العنوان الوطني: 23733 جدة، الأبحر الجنوبية، 4658-9474، www.alialshehriholding.com ، الموقع الإلكتروني، مرخص لها برقم الترخيص: 7039030916، وخاضعة 
+                  لرقابة وإشراف وزارة التجارة والاستثمار
+                </p>
+                
+                <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 pt-4 border-t border-gray-200/10">
+                  <span>سياسة ملفات تعريف الارتباط</span>
+                  <span className="hidden sm:inline text-gray-600">|</span>
+                  <span>سياسة الخصوصية</span>
+                  <span className="hidden sm:inline text-gray-600">|</span>
+                  <span>الأحكام والشروط</span>
+                  <span className="hidden sm:inline text-gray-600">|</span>
+                  <span>حقوق الطبع والنشر © 2025 شركة علي صالح الشهري القابضة</span>
+                  <span className="hidden sm:inline text-gray-600">|</span>
+                  <span>الاتصال بـ "0555812567"</span>
                 </div>
               </div>
             </div>
