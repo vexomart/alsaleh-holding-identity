@@ -47,6 +47,8 @@ export default function ClientSupportTickets() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [showTicketDetails, setShowTicketDetails] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -194,6 +196,19 @@ export default function ClientSupportTickets() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleViewDetails = (ticket: Ticket) => {
+    setSelectedTicket(ticket);
+    setShowTicketDetails(true);
+  };
+
+  const handleStartChat = (ticket: Ticket) => {
+    // You can implement chat functionality here or navigate to a chat page
+    toast({
+      title: "المحادثة",
+      description: `بدء محادثة للتذكرة ${ticket.ticket_number}`
+    });
   };
 
   const getStatusText = (status: string) => {
@@ -529,11 +544,20 @@ export default function ClientSupportTickets() {
                 </div>
 
                 <div className="flex gap-2 pt-4 border-t">
-                  <Button size="sm" variant="outline" className="flex-1">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => handleViewDetails(ticket)}
+                  >
                     <Eye className="w-4 h-4 mr-2" />
                     عرض التفاصيل
                   </Button>
-                  <Button size="sm" variant="outline">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => handleStartChat(ticket)}
+                  >
                     <MessageSquare className="w-4 h-4" />
                   </Button>
                 </div>
@@ -560,6 +584,82 @@ export default function ClientSupportTickets() {
             )}
           </CardContent>
         </Card>
+      )}
+
+      {/* Ticket Details Modal */}
+      {showTicketDetails && selectedTicket && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>{selectedTicket.ticket_number}</CardTitle>
+                  <CardDescription>{selectedTicket.title}</CardDescription>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowTicketDetails(false)}
+                >
+                  ✕
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge className={getStatusColor(selectedTicket.status)}>
+                  {getStatusIcon(selectedTicket.status)}
+                  <span className="mr-1">{getStatusText(selectedTicket.status)}</span>
+                </Badge>
+                <Badge variant="outline" className={getPriorityColor(selectedTicket.priority)}>
+                  {getPriorityText(selectedTicket.priority)}
+                </Badge>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <label className="font-medium">الفئة:</label>
+                  <p className="text-muted-foreground">{getCategoryText(selectedTicket.category)}</p>
+                </div>
+                <div>
+                  <label className="font-medium">تاريخ الإنشاء:</label>
+                  <p className="text-muted-foreground">{new Date(selectedTicket.created_at).toLocaleString('ar-SA')}</p>
+                </div>
+                <div>
+                  <label className="font-medium">مُكلف إلى:</label>
+                  <p className="text-muted-foreground">{selectedTicket.assigned_to || 'غير مُكلف'}</p>
+                </div>
+                <div>
+                  <label className="font-medium">عدد الردود:</label>
+                  <p className="text-muted-foreground">{selectedTicket.responses_count ?? 0}</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="font-medium">الوصف:</label>
+                <div className="mt-2 p-4 bg-muted rounded-lg">
+                  <p className="text-sm whitespace-pre-wrap">{selectedTicket.description}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <Button 
+                  onClick={() => handleStartChat(selectedTicket)}
+                  className="flex-1"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  بدء محادثة
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowTicketDetails(false)}
+                >
+                  إغلاق
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );
