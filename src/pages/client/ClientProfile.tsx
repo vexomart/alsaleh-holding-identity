@@ -87,48 +87,96 @@ export default function ClientProfile() {
         return;
       }
 
-      // Try to fetch existing profile
+      // 1) حاول جلب الملف من جدول profiles أولاً
+      let firstName = '';
+      let lastName = '';
+      let email = user.email || '';
+      let phone = '';
+      let company = '';
+      let position = '';
+      let city = '';
+      let country = 'المملكة العربية السعودية';
+      let bio = '';
+      let website = '';
+      let taxNumber = '';
+      let commercialRecord = '';
+
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (profileError && profileError.code !== 'PGRST116') {
-        console.error('Error fetching profile:', profileError);
-        setError('تعذر تحميل بيانات الملف الشخصي');
-        return;
+      if (profile && !profileError) {
+        const fullName = profile.full_name || '';
+        const parts = fullName.trim().split(' ');
+        firstName = parts[0] || '';
+        lastName = parts.slice(1).join(' ');
+        email = profile.email || email;
+        phone = profile.phone || '';
+        company = profile.company || '';
+        position = (profile as any).position || '';
+        city = (profile as any).city || '';
+        country = (profile as any).country || 'المملكة العربية السعودية';
+        bio = (profile as any).bio || '';
+        website = (profile as any).website || '';
+        taxNumber = (profile as any).tax_number || '';
+        commercialRecord = (profile as any).commercial_record || '';
+      } else {
+        // 2) Fallback: جدول platform_users مع تخزين التفاصيل داخل profile_data
+        const { data: platformUser, error: platformError } = await supabase
+          .from('platform_users')
+          .select('id, email, phone, full_name, profile_data')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (platformError) {
+          console.warn('فشل جلب profiles وسنسقط إلى platform_users، لكن حدث خطأ أيضاً:', platformError);
+        }
+
+        if (platformUser) {
+          const fullName = platformUser.full_name || '';
+          const parts = fullName.trim().split(' ');
+          firstName = parts[0] || '';
+          lastName = parts.slice(1).join(' ');
+          email = platformUser.email || email;
+          phone = platformUser.phone || '';
+
+          const pd = (platformUser as any).profile_data || {};
+          company = pd.company || '';
+          position = pd.position || '';
+          city = pd.city || '';
+          country = pd.country || 'المملكة العربية السعودية';
+          bio = pd.bio || '';
+          website = pd.website || '';
+          taxNumber = pd.tax_number || '';
+          commercialRecord = pd.commercial_record || '';
+        } else if (profileError && profileError.code !== 'PGRST116') {
+          console.error('Error fetching profile:', profileError);
+          setError('تعذر تحميل بيانات الملف الشخصي');
+          return;
+        } else {
+          // بدون سجلات: استخدم بيانات auth كبداية
+          firstName = user.user_metadata?.full_name?.split(' ')[0] || '';
+          lastName = user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '';
+          phone = user.user_metadata?.phone || '';
+        }
       }
 
-      if (profile) {
-        // Parse existing profile data
-        const fullName = profile.full_name || '';
-        const [firstName, ...lastNameParts] = fullName.split(' ');
-        
-        setProfileData({
-          firstName: firstName || '',
-          lastName: lastNameParts.join(' ') || '',
-          email: profile.email || user.email || '',
-          phone: profile.phone || '',
-          company: profile.company || '',
-          position: (profile as any).position || '',
-          city: (profile as any).city || '',
-          country: (profile as any).country || 'المملكة العربية السعودية',
-          bio: (profile as any).bio || '',
-          website: (profile as any).website || '',
-          taxNumber: (profile as any).tax_number || '',
-          commercialRecord: (profile as any).commercial_record || ''
-        });
-      } else {
-        // No profile exists, use auth data as defaults
-        setProfileData(prev => ({
-          ...prev,
-          email: user.email || '',
-          firstName: user.user_metadata?.full_name?.split(' ')[0] || '',
-          lastName: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
-          phone: user.user_metadata?.phone || ''
-        }));
-      }
+      setProfileData({
+        firstName,
+        lastName,
+        email,
+        phone,
+        company,
+        position,
+        city,
+        country,
+        bio,
+        website,
+        taxNumber,
+        commercialRecord,
+      });
 
       // Load stats
       await loadUserStats(user.id);
@@ -185,12 +233,9 @@ export default function ClientProfile() {
       }
 
       const fullName = `${profileData.firstName} ${profileData.lastName}`.trim();
-      
-      const profileUpdate = {
-        user_id: user.id,
-        full_name: fullName,
-        email: profileData.email,
-        phone: profileData.phone,
+
+      // بيانات إضافية نخزنها داخل profile_data عند استخدام platform_users
+      const profileDataJson = {
         company: profileData.company,
         position: profileData.position,
         city: profileData.city,
@@ -199,14 +244,43 @@ export default function ClientProfile() {
         website: profileData.website,
         tax_number: profileData.taxNumber,
         commercial_record: profileData.commercialRecord,
-        site_id: '11111111-1111-1111-1111-111111111111'
       };
-
-      const { error } = await supabase
+      
+      // المحاولة الأولى: التحديث داخل جدول profiles (إن كان متاحًا)
+      const { error: profilesError } = await supabase
         .from('profiles')
-        .upsert(profileUpdate);
+        .upsert({
+          user_id: user.id,
+          full_name: fullName,
+          email: profileData.email,
+          phone: profileData.phone,
+          company: profileData.company,
+          position: profileData.position,
+          city: profileData.city,
+          country: profileData.country,
+          bio: profileData.bio,
+          website: profileData.website,
+          tax_number: profileData.taxNumber,
+          commercial_record: profileData.commercialRecord,
+          site_id: '11111111-1111-1111-1111-111111111111'
+        });
 
-      if (error) throw error;
+      if (profilesError) {
+        console.warn('تعذر الحفظ في profiles، سيتم الحفظ في platform_users بدلاً من ذلك:', profilesError);
+        // Fallback: التحديث داخل platform_users
+        const { error: platformError } = await supabase
+          .from('platform_users')
+          .update({
+            full_name: fullName,
+            email: profileData.email,
+            phone: profileData.phone,
+            profile_data: profileDataJson,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', user.id);
+
+        if (platformError) throw platformError;
+      }
 
       setIsEditing(false);
       toast({
