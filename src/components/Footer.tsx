@@ -272,9 +272,7 @@ const Footer = () => {
   const supportLinks = [
     { name: "الدعم الفني", href: "/support", icon: HeadphonesIcon, badge: "24/7" },
     { name: "الأسئلة الشائعة", href: "/faq", icon: MessageCircle },
-    { name: "دليل المستخدم", href: "/user-guide", icon: FileText },
-    { name: "سياسة الخصوصية", href: "/privacy", icon: Shield },
-    { name: "شروط الاستخدام", href: "/terms", icon: FileText }
+    { name: "دليل المستخدم", href: "/user-guide", icon: FileText }
   ];
 
   const services = [
@@ -827,15 +825,7 @@ const Footer = () => {
               © 2025 ASH HOLDING. جميع الحقوق محفوظة.
             </div>
             <div className="flex flex-wrap justify-center gap-6">
-              <a href="/privacy" className="hover:text-white transition-colors duration-200">
-                سياسة الخصوصية
-              </a>
-              <a href="/terms" className="hover:text-white transition-colors duration-200">
-                شروط الاستخدام
-              </a>
-              <a href="/cookie-policy" className="hover:text-white transition-colors duration-200">
-                سياسة ملفات تعريف الارتباط
-              </a>
+              <span className="text-gray-400">جميع الحقوق محفوظة لشركة علي صالح الشهري القابضة</span>
             </div>
           </div>
         </div>
@@ -870,22 +860,14 @@ const Footer = () => {
             </div>
 
             {/* Contact Numbers - Al Rajhi Style */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-center mb-8">
               <div>
-                <p className="text-gray-400 text-xs mb-1">الهاتف التسويقي</p>
-                <p className="text-white font-semibold">800-124-1222</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs mb-1">العناية بالعملاء</p>
-                <p className="text-white font-semibold">920-003-344</p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-xs mb-1">الرقم المجاني للمبيعات والشكاوى</p>
-                <p className="text-white font-semibold">800-124-4455</p>
+                <p className="text-gray-400 text-xs mb-1">الهاتف التسويقي والعناية بالعملاء</p>
+                <p className="text-white font-semibold">0555812567</p>
               </div>
               <div>
                 <p className="text-gray-400 text-xs mb-1">لرفع طلب أو شكوى</p>
-                <p className="text-blue-400 underline text-sm">care@alialshehriholding.com.sa</p>
+                <p className="text-blue-400 underline text-sm">info@alialshehriholding.com</p>
               </div>
             </div>
 
@@ -899,15 +881,7 @@ const Footer = () => {
                 </p>
                 
                 <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 pt-4 border-t border-gray-200/10">
-                  <span>سياسة ملفات تعريف الارتباط</span>
-                  <span className="hidden sm:inline text-gray-600">|</span>
-                  <span>سياسة الخصوصية</span>
-                  <span className="hidden sm:inline text-gray-600">|</span>
-                  <span>الأحكام والشروط</span>
-                  <span className="hidden sm:inline text-gray-600">|</span>
                   <span>حقوق الطبع والنشر © 2025 شركة علي صالح الشهري القابضة</span>
-                  <span className="hidden sm:inline text-gray-600">|</span>
-                  <span>الاتصال بـ "0555812567"</span>
                 </div>
               </div>
             </div>
