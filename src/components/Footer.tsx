@@ -845,7 +845,7 @@ const Footer = () => {
                 <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs text-gray-400">
                   <span>السجل التجاري: 4030554749</span>
                   <span className="hidden sm:inline">|</span>
-                  <span>العنوان الوطني: 23733 جدة، الأبحر الجنوبية، 4658-9474</span>
+                  <span>جميع عملياتنا وخدماتنا رقمية بالكامل عبر الموقع الإلكتروني</span>
                   <span className="hidden sm:inline">|</span>
                   <span>رقم الترخيص: 7039030916</span>
                   <span className="hidden sm:inline">|</span>
@@ -876,7 +876,7 @@ const Footer = () => {
               <div className="max-w-6xl mx-auto text-xs text-gray-500 leading-relaxed">
                 <p className="mb-4">
                   شركة علي صالح الشهري القابضة، شركة سعودية مساهمة برأس مال: 500,000 ﷼ مدفوع بالكامل، رقم السجل التجاري: 4030554749، صندوق بريد: 23733 جدة 21589 المملكة العربية السعودية، هاتف: 
-                  0555812567، العنوان الوطني: 23733 جدة، الأبحر الجنوبية، 4658-9474، www.alialshehriholding.com ، الموقع الإلكتروني، مرخص لها برقم الترخيص: 7039030916، وخاضعة 
+                  0555812567، جميع عملياتنا وخدماتنا رقمية بالكامل عبر الموقع الإلكتروني، www.alialshehriholding.com ، الموقع الإلكتروني، مرخص لها برقم الترخيص: 7039030916، وخاضعة 
                   لرقابة وإشراف وزارة التجارة والاستثمار
                 </p>
                 
