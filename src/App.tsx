@@ -138,6 +138,7 @@ const PricingPage = lazy(() => import("./pages/PricingPage"));
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
 const ClientLoginPage = lazy(() => import("./pages/auth/ClientLoginPage"));
 const AdminLoginPage = lazy(() => import("./pages/auth/AdminLoginPage"));
+const AuthCallback = lazy(() => import("./pages/auth/AuthCallback"));
 const MyProjects = lazy(() => import("./pages/MyProjects"));
 const AdminProjects = lazy(() => import("./pages/AdminProjects"));
 const EnhancedProjectManagement = lazy(() => import("./pages/admin/EnhancedProjectManagement"));
@@ -290,6 +291,10 @@ const App = () => {
                 
                 <Routes>
                 <Route path="/" element={<Index />} />
+                
+                {/* Auth callback route */}
+                <Route path="/auth/callback" element={<Suspense fallback={<PageLoader />}><AuthCallback /></Suspense>} />
+                
                 <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />
                 <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
                 <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />

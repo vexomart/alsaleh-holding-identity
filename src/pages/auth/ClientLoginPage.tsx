@@ -100,7 +100,7 @@ const ClientLoginPage = () => {
             site_id: siteId,
             domain: domain
           },
-          emailRedirectTo: `${window.location.origin}/auth/client/login`
+          emailRedirectTo: `${window.location.origin}/auth/callback`
         }
       });
 
