@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import { 
   User, 
   Mail, 
@@ -19,24 +21,48 @@ import {
   Shield,
   Calendar,
   Globe,
-  FileText
+  FileText,
+  Loader2
 } from 'lucide-react';
+
+interface ProfileData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  position: string;
+  city: string;
+  country: string;
+  bio: string;
+  website: string;
+  taxNumber: string;
+  commercialRecord: string;
+}
 
 export default function ClientProfile() {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    firstName: 'محمد',
-    lastName: 'أحمد السعيد',
-    email: 'mohammed.ahmed@example.com',
-    phone: '+966501234567',
-    company: 'شركة التقنية المتقدمة',
-    position: 'مدير تقنية المعلومات',
-    city: 'الرياض',
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [profileData, setProfileData] = useState<ProfileData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    company: '',
+    position: '',
+    city: '',
     country: 'المملكة العربية السعودية',
-    bio: 'مدير تقنية معلومات مع خبرة أكثر من 10 سنوات في تطوير الحلول التقنية والإشراف على المشاريع الرقمية.',
-    website: 'https://example.com',
-    taxNumber: '300123456789003',
-    commercialRecord: 'CR-1234567890'
+    bio: '',
+    website: '',
+    taxNumber: '',
+    commercialRecord: ''
+  });
+  const [stats, setStats] = useState({
+    completedProjects: 0,
+    activeProjects: 0,
+    totalPayments: 0
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -46,18 +72,187 @@ export default function ClientProfile() {
     }));
   };
 
-  const handleSave = () => {
-    // Here you would typically save to backend
-    setIsEditing(false);
-    // Show success toast
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
+
+  const loadUserProfile = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        setError('لم يتم العثور على جلسة صالحة');
+        return;
+      }
+
+      // Try to fetch existing profile
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (profileError && profileError.code !== 'PGRST116') {
+        console.error('Error fetching profile:', profileError);
+        setError('تعذر تحميل بيانات الملف الشخصي');
+        return;
+      }
+
+      if (profile) {
+        // Parse existing profile data
+        const fullName = profile.full_name || '';
+        const [firstName, ...lastNameParts] = fullName.split(' ');
+        
+        setProfileData({
+          firstName: firstName || '',
+          lastName: lastNameParts.join(' ') || '',
+          email: profile.email || user.email || '',
+          phone: profile.phone || '',
+          company: profile.company || '',
+          position: (profile as any).position || '',
+          city: (profile as any).city || '',
+          country: (profile as any).country || 'المملكة العربية السعودية',
+          bio: (profile as any).bio || '',
+          website: (profile as any).website || '',
+          taxNumber: (profile as any).tax_number || '',
+          commercialRecord: (profile as any).commercial_record || ''
+        });
+      } else {
+        // No profile exists, use auth data as defaults
+        setProfileData(prev => ({
+          ...prev,
+          email: user.email || '',
+          firstName: user.user_metadata?.full_name?.split(' ')[0] || '',
+          lastName: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+          phone: user.user_metadata?.phone || ''
+        }));
+      }
+
+      // Load stats
+      await loadUserStats(user.id);
+    } catch (error) {
+      console.error('Error loading profile:', error);
+      setError('حدث خطأ أثناء تحميل البيانات');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadUserStats = async (userId: string) => {
+    try {
+      const [contractsResult, paymentsResult] = await Promise.all([
+        // Load contracts if table exists
+        supabase.from('contracts')
+          .select('id, status', { count: 'exact', head: true })
+          .eq('user_id', userId),
+        // Load payments if table exists  
+        supabase.from('payment_transactions')
+          .select('amount', { count: 'exact' })
+          .eq('user_id', userId)
+          .eq('status', 'completed')
+      ]);
+
+      const totalContracts = contractsResult.count || 0;
+      const completedContracts = contractsResult.data?.filter(c => c.status === 'completed').length || 0;
+      const activeContracts = totalContracts - completedContracts;
+      const totalPayments = paymentsResult.data?.reduce((sum, p) => sum + (Number(p.amount) || 0), 0) || 0;
+
+      setStats({
+        completedProjects: completedContracts,
+        activeProjects: activeContracts,
+        totalPayments
+      });
+    } catch (error) {
+      console.error('Error loading stats:', error);
+      // Don't show error for stats, just keep defaults
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "خطأ في المصادقة",
+          description: "يرجى تسجيل الدخول مرة أخرى",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const fullName = `${profileData.firstName} ${profileData.lastName}`.trim();
+      
+      const profileUpdate = {
+        user_id: user.id,
+        full_name: fullName,
+        email: profileData.email,
+        phone: profileData.phone,
+        company: profileData.company,
+        position: profileData.position,
+        city: profileData.city,
+        country: profileData.country,
+        bio: profileData.bio,
+        website: profileData.website,
+        tax_number: profileData.taxNumber,
+        commercial_record: profileData.commercialRecord,
+        site_id: '11111111-1111-1111-1111-111111111111'
+      };
+
+      const { error } = await supabase
+        .from('profiles')
+        .upsert(profileUpdate);
+
+      if (error) throw error;
+
+      setIsEditing(false);
+      toast({
+        title: "تم حفظ التغييرات",
+        description: "تم تحديث معلومات الملف الشخصي بنجاح",
+      });
+    } catch (error: any) {
+      console.error('Error saving profile:', error);
+      toast({
+        title: "خطأ في الحفظ",
+        description: error.message || "حدث خطأ أثناء حفظ التغييرات",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const profileStats = [
-    { label: 'المشاريع المكتملة', value: '12', icon: FileText, color: 'text-green-600' },
-    { label: 'المشاريع النشطة', value: '3', icon: Calendar, color: 'text-blue-600' },
-    { label: 'سنوات الخبرة', value: '10+', icon: Shield, color: 'text-purple-600' },
-    { label: 'معدل الرضا', value: '98%', icon: User, color: 'text-orange-600' }
+    { label: 'المشاريع المكتملة', value: stats.completedProjects.toString(), icon: FileText, color: 'text-green-600' },
+    { label: 'المشاريع النشطة', value: stats.activeProjects.toString(), icon: Calendar, color: 'text-blue-600' },
+    { label: 'إجمالي المدفوعات', value: `${stats.totalPayments.toLocaleString()} ريال`, icon: Shield, color: 'text-purple-600' },
+    { label: 'حالة الحساب', value: 'نشط', icon: User, color: 'text-orange-600' }
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-muted-foreground">جارٍ تحميل معلومات الملف الشخصي...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={loadUserProfile}>إعادة المحاولة</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -70,8 +265,14 @@ export default function ClientProfile() {
         <Button 
           onClick={() => isEditing ? handleSave() : setIsEditing(true)}
           className="w-full sm:w-auto"
+          disabled={saving}
         >
-          {isEditing ? (
+          {saving ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              جارٍ الحفظ...
+            </>
+          ) : isEditing ? (
             <>
               <Save className="w-4 h-4 mr-2" />
               حفظ التغييرات
