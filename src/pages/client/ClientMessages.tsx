@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   MessageSquare, 
   Send, 
@@ -20,75 +21,80 @@ import {
   Plus
 } from 'lucide-react';
 
-const mockConversations = [
-  {
-    id: '1',
-    subject: 'استفسار حول مشروع تطوير الموقع',
-    participant: 'أحمد محمد - مدير المشروع',
-    last_message: 'سنقوم بإرسال التحديث الأسبوعي غداً صباحاً',
-    last_message_date: '2024-01-20T14:30:00',
-    status: 'active',
-    unread_count: 2,
-    project_id: 'PRJ-001'
-  },
-  {
-    id: '2',
-    subject: 'مراجعة التصاميم المبدئية',
-    participant: 'سارة أحمد - مصممة',
-    last_message: 'تم رفع النسخة المحدثة من التصاميم',
-    last_message_date: '2024-01-19T16:45:00',
-    status: 'waiting',
-    unread_count: 0,
-    project_id: 'PRJ-002'
-  },
-  {
-    id: '3',
-    subject: 'دعم فني للتطبيق',
-    participant: 'فريق الدعم الفني',
-    last_message: 'شكراً لك، تم حل المشكلة بنجاح',
-    last_message_date: '2024-01-18T10:20:00',
-    status: 'resolved',
-    unread_count: 0,
-    project_id: null
-  }
-];
+type Conversation = {
+  id: string;
+  subject: string;
+  participant: string;
+  last_message: string;
+  last_message_date: string;
+  status: 'active' | 'waiting' | 'resolved';
+  unread_count: number;
+  project_id: string | null;
+};
 
-const mockMessages = [
-  {
-    id: '1',
-    conversation_id: '1',
-    sender: 'أحمد محمد',
-    sender_role: 'مدير المشروع',
-    message: 'مرحباً، أردت أن أطلعك على آخر التطورات في مشروع تطوير الموقع الإلكتروني. لقد أنجزنا 75% من المهام المطلوبة.',
-    timestamp: '2024-01-20T14:30:00',
-    is_client: false
-  },
-  {
-    id: '2',
-    conversation_id: '1',
-    sender: 'أنت',
-    sender_role: 'العميل',
-    message: 'ممتاز! متى من المتوقع أن يكتمل المشروع؟',
-    timestamp: '2024-01-20T14:45:00',
-    is_client: true
-  },
-  {
-    id: '3',
-    conversation_id: '1',
-    sender: 'أحمد محمد',
-    sender_role: 'مدير المشروع',
-    message: 'وفقاً للجدول الزمني، سنقوم بتسليم النسخة النهائية خلال أسبوعين من الآن.',
-    timestamp: '2024-01-20T15:00:00',
-    is_client: false
-  }
-];
+type MessageItem = {
+  id: string;
+  conversation_id: string;
+  sender: string;
+  sender_role: string;
+  message: string;
+  timestamp: string;
+  is_client: boolean;
+};
 
 export default function ClientMessages() {
-  const [conversations, setConversations] = useState(mockConversations);
-  const [messages, setMessages] = useState(mockMessages);
-  const [selectedConversation, setSelectedConversation] = useState<string | null>('1');
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [messages, setMessages] = useState<MessageItem[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const { data: { user }, error: authErr } = await supabase.auth.getUser();
+        if (authErr || !user) { setError('لم يتم العثور على جلسة'); return; }
+        const { data, error: qErr } = await supabase
+          .from('user_notifications')
+          .select('id, title, message, created_at, read_at, category, type, user_email')
+          .eq('user_email', user.email)
+          .order('created_at', { ascending: false });
+        if (qErr) throw qErr;
+        const convs: Conversation[] = (data || []).map((n: any) => ({
+          id: n.id,
+          subject: n.title,
+          participant: 'النظام',
+          last_message: n.message,
+          last_message_date: n.created_at,
+          status: n.read_at ? 'resolved' : 'active',
+          unread_count: n.read_at ? 0 : 1,
+          project_id: null,
+        }));
+        setConversations(convs);
+        const msgs: MessageItem[] = (data || []).map((n: any) => ({
+          id: n.id,
+          conversation_id: n.id,
+          sender: 'النظام',
+          sender_role: 'إشعار',
+          message: n.message,
+          timestamp: n.created_at,
+          is_client: false,
+        }));
+        setMessages(msgs);
+        setSelectedConversation(convs[0]?.id ?? null);
+      } catch (e) {
+        console.error('Error loading messages:', e);
+        setError('تعذر تحميل الرسائل');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   const getStatusColor = (status: string) => {
     const colorMap: { [key: string]: string } = {
@@ -137,6 +143,27 @@ export default function ClientMessages() {
     active: conversations.filter(c => c.status === 'active').length,
     unread: conversations.reduce((sum, c) => sum + c.unread_count, 0)
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <span className="text-muted-foreground">جارٍ تحميل الرسائل...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>إعادة المحاولة</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

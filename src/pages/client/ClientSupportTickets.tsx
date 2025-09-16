@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
 import { ResponsiveCard } from '@/components/ResponsiveCard';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import { 
   HelpCircle, 
   Plus, 
@@ -22,55 +24,67 @@ import {
   Tag
 } from 'lucide-react';
 
-const mockTickets = [
-  {
-    id: '1',
-    ticket_number: 'TKT-2024-001',
-    subject: 'مشكلة في تسجيل الدخول',
-    description: 'لا أستطيع تسجيل الدخول إلى حسابي رغم إدخال كلمة المرور الصحيحة',
-    status: 'open',
-    priority: 'high',
-    category: 'technical',
-    created_at: '2024-01-20',
-    last_response: '2024-01-20',
-    assigned_to: 'فريق الدعم الفني',
-    responses_count: 3
-  },
-  {
-    id: '2',
-    ticket_number: 'TKT-2024-002',
-    subject: 'استفسار حول الفواتير',
-    description: 'أريد الحصول على تفاصيل أكثر حول فاتورة الشهر الماضي',
-    status: 'in_progress',
-    priority: 'medium',
-    category: 'billing',
-    created_at: '2024-01-18',
-    last_response: '2024-01-19',
-    assigned_to: 'قسم المحاسبة',
-    responses_count: 2
-  },
-  {
-    id: '3',
-    ticket_number: 'TKT-2024-003',
-    subject: 'طلب تعديل في المشروع',
-    description: 'أريد إضافة ميزات جديدة للمشروع الحالي',
-    status: 'resolved',
-    priority: 'low',
-    category: 'project',
-    created_at: '2024-01-15',
-    last_response: '2024-01-17',
-    assigned_to: 'مدير المشروع',
-    responses_count: 5
-  }
-];
+type Ticket = {
+  id: string;
+  ticket_number: string;
+  title: string;
+  description: string;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  priority: 'high' | 'medium' | 'low';
+  category: string;
+  created_at: string;
+  assigned_to: string | null;
+  responses_count?: number;
+};
 
 export default function ClientSupportTickets() {
-  const [tickets, setTickets] = useState(mockTickets);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [showNewTicketForm, setShowNewTicketForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadTickets = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const { data: { user }, error: authErr } = await supabase.auth.getUser();
+        if (authErr || !user) {
+          setError('لم يتم العثور على جلسة صالحة');
+          return;
+        }
+        const { data, error: qErr } = await supabase
+          .from('tickets')
+          .select('id, ticket_number, title, description, priority, status, category, created_at, assigned_to')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+        if (qErr) throw qErr;
+        const mapped: Ticket[] = (data || []).map((t: any) => ({
+          id: t.id,
+          ticket_number: t.ticket_number,
+          title: t.title,
+          description: t.description,
+          status: t.status,
+          priority: t.priority,
+          category: t.category,
+          created_at: t.created_at,
+          assigned_to: t.assigned_to,
+          responses_count: 0,
+        }));
+        setTickets(mapped);
+      } catch (e: any) {
+        console.error('Error loading tickets:', e);
+        setError('تعذر تحميل تذاكر الدعم');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadTickets();
+  }, []);
 
   const getStatusText = (status: string) => {
     const statusMap: { [key: string]: string } = {
@@ -137,7 +151,7 @@ export default function ClientSupportTickets() {
 
   const filteredTickets = tickets.filter(ticket => {
     const matchesSearch = ticket.ticket_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         ticket.subject.toLowerCase().includes(searchTerm.toLowerCase());
+                         ticket.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || ticket.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || ticket.priority === priorityFilter;
     const matchesCategory = categoryFilter === 'all' || ticket.category === categoryFilter;
@@ -151,6 +165,27 @@ export default function ClientSupportTickets() {
     inProgress: tickets.filter(t => t.status === 'in_progress').length,
     resolved: tickets.filter(t => t.status === 'resolved').length
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <span className="text-muted-foreground">جارٍ تحميل التذاكر...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>إعادة المحاولة</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -330,7 +365,7 @@ export default function ClientSupportTickets() {
                       {ticket.ticket_number}
                     </h3>
                     <h4 className="font-medium text-base text-foreground mb-2">
-                      {ticket.subject}
+                      {ticket.title}
                     </h4>
                     <p className="text-sm text-muted-foreground line-clamp-3">
                       {ticket.description}
@@ -362,11 +397,11 @@ export default function ClientSupportTickets() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>مُكلف إلى:</span>
-                    <span className="font-medium">{ticket.assigned_to}</span>
+                    <span className="font-medium">{ticket.assigned_to || '—'}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>عدد الردود:</span>
-                    <span className="font-medium">{ticket.responses_count}</span>
+                    <span className="font-medium">{ticket.responses_count ?? 0}</span>
                   </div>
                 </div>
 
