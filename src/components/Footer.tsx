@@ -818,10 +818,13 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-            <div className="text-center md:text-right">
+        <div className="border-t border-white/10 py-8">
+          <div className="flex flex-col items-center text-center">
+            <div className="text-white font-medium text-lg mb-2">
               © 2025 ASH HOLDING. جميع الحقوق محفوظة.
+            </div>
+            <div className="text-gray-400 text-sm">
+              شركة علي صالح الشهري القابضة - تميز في الاستثمار والابتكار
             </div>
           </div>
         </div>
