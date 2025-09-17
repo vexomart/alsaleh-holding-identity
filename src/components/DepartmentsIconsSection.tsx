@@ -225,18 +225,18 @@ const DepartmentsIconsSection = () => {
           <div className="absolute top-0 left-0 w-16 h-16 bg-gradient-to-br from-white/30 to-transparent rounded-br-full"></div>
           <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-white/20 to-transparent rounded-tl-full"></div>
 
-          <CardContent className="p-6 text-center relative z-10 h-full flex flex-col justify-between">
+          <CardContent className="p-3 sm:p-4 md:p-6 text-center relative z-10 h-full flex flex-col justify-between">
             {/* Icon */}
-            <div className="mb-4 flex justify-center">
+            <div className="mb-2 sm:mb-3 md:mb-4 flex justify-center">
               <div className={`
-                relative p-4 rounded-2xl bg-gradient-to-br ${service.color} 
+                relative p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${service.color} 
                 group-hover:scale-110 transition-transform duration-300 shadow-lg
               `}>
-                <IconComponent className="w-8 h-8 text-white" />
+                <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
                 
                 {/* Glow Effect */}
                 <div className={`
-                  absolute inset-0 rounded-2xl bg-gradient-to-br ${service.color} 
+                  absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br ${service.color} 
                   opacity-0 group-hover:opacity-40 transition-opacity duration-300 blur-md
                 `}></div>
               </div>
@@ -244,19 +244,19 @@ const DepartmentsIconsSection = () => {
 
             {/* Content */}
             <div className="flex-1 flex flex-col justify-center">
-              <h3 className="text-base font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
+              <h3 className="text-xs sm:text-sm md:text-base font-bold text-foreground mb-1 sm:mb-2 group-hover:text-primary transition-colors line-clamp-2">
                 {service.title}
               </h3>
-              <h4 className="text-xs font-medium text-muted-foreground mb-2 opacity-80">
+              <h4 className="hidden sm:block text-xs font-medium text-muted-foreground mb-2 opacity-80">
                 {service.subtitle}
               </h4>
-              <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+              <p className="hidden md:block text-xs text-muted-foreground leading-relaxed line-clamp-2">
                 {service.description}
               </p>
             </div>
 
             {/* Hover Indicator */}
-            <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="hidden sm:block mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div className={`
                 inline-flex items-center text-xs font-medium 
                 bg-gradient-to-r ${service.color} bg-clip-text text-transparent
@@ -271,46 +271,39 @@ const DepartmentsIconsSection = () => {
   };
 
   return (
-    <section className="py-12 sm:py-20 relative overflow-hidden">
+    <section className="py-8 sm:py-12 md:py-16 lg:py-20 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/2 to-secondary/3"></div>
       
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Animated Background Elements - Hidden on mobile for performance */}
+      <div className="hidden md:block absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full blur-2xl animate-float"></div>
         <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br from-accent/10 to-primary/10 rounded-full blur-2xl animate-float" style={{ animationDelay: '2s' }}></div>
         <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-gradient-to-br from-secondary/10 to-accent/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '4s' }}></div>
-        
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
-        </div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Main Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Lightbulb className="w-8 h-8 text-yellow-500 animate-pulse" />
-            <Badge className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-6 py-2 text-sm font-semibold shadow-lg">
+      <div className="container-fluid relative z-10">
+        {/* Main Header - Mobile optimized */}
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+            <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-yellow-500 animate-pulse" />
+            <Badge className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-3 py-1 sm:px-4 sm:py-2 md:px-6 md:py-2 text-xs sm:text-sm font-semibold shadow-lg">
               ASH HOLDING SERVICES
             </Badge>
-            <Lightbulb className="w-8 h-8 text-yellow-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
+            <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-yellow-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
           </div>
           
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-black mb-3 sm:mb-4 md:mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent leading-tight">
             خدماتنا المتكاملة
           </h2>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2 sm:px-4">
             نقدم مجموعة شاملة من الخدمات الرقمية والتقنية لتلبية جميع احتياجات عملك
           </p>
         </div>
 
-        {/* Services Section */}
-        <div className="mb-16">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6">
+        {/* Services Section - Mobile optimized grid */}
+        <div className="mb-8 sm:mb-12 md:mb-16">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
             {mainServices.map((service, index) => renderServiceCard(service, index))}
           </div>
         </div>

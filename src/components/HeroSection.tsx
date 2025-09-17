@@ -150,50 +150,51 @@ const HeroSection = () => {
       
       
       {/* Enhanced Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-7xl">
+      <div className="relative z-10 container-fluid text-center">
         
-        {/* Top Badge - Fully visible and centered */}
-        <div className="mb-8 sm:mb-12 animate-fade-in w-full flex justify-center px-4 sm:px-6 pt-8 sm:pt-12">
-          <div className="inline-flex items-center justify-center px-4 py-3 sm:px-6 sm:py-4 bg-white/20 rounded-full backdrop-blur-md border border-white/40 shadow-2xl animate-scale-in group hover:scale-105 transition-all duration-500">
-            <span className="text-sm sm:text-base lg:text-lg font-bold text-white whitespace-nowrap">شركة عالمية رائدة • منذ 2016</span>
+        {/* Top Badge - Mobile optimized */}
+        <div className="mb-6 sm:mb-8 md:mb-12 animate-fade-in w-full flex justify-center px-2 sm:px-4 pt-4 sm:pt-8">
+          <div className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4 bg-white/20 rounded-full backdrop-blur-md border border-white/40 shadow-2xl animate-scale-in group hover:scale-105 transition-all duration-500">
+            <span className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-white text-center">شركة عالمية رائدة • منذ 2016</span>
           </div>
         </div>
         
-        {/* Enhanced Main Title - Responsive */}
-        <div className="mb-6 sm:mb-8 space-y-4 sm:space-y-6">
-          <div className="relative">
-            {/* Main Title with Better Visibility - Responsive Sizes */}
-            <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl px-4 sm:px-0">
+        {/* Enhanced Main Title - Mobile first responsive */}
+        <div className="mb-4 sm:mb-6 md:mb-8 space-y-2 sm:space-y-4 md:space-y-6">
+          <div className="relative px-2 sm:px-4">
+            {/* Main Title with Better Visibility - Mobile optimized */}
+            <h1 className="relative text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold leading-tight animate-fade-in text-white drop-shadow-2xl">
               ASH HOLDING
               
               {/* Animated Underline */}
               <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-0.5 sm:h-1 bg-gradient-to-r from-secondary to-primary hover:w-full transition-all duration-1000 rounded-full shadow-glow" />
             </h1>
             
-            {/* Text Glow Effect for Better Visibility - Responsive */}
-            <div className="absolute inset-0 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white/20 blur-sm px-4 sm:px-0">
+            {/* Text Glow Effect for Better Visibility - Mobile optimized */}
+            <div className="absolute inset-0 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-white/20 blur-sm">
               ASH HOLDING
             </div>
           </div>
           
-          {/* Enhanced Subtitle - Responsive */}
-          <div className="flex justify-center items-center gap-2 sm:gap-3 animate-fade-in px-4 sm:px-0" style={{ animationDelay: '0.3s' }}>
-            <Target className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-secondary animate-pulse" />
-            <p className="text-lg sm:text-xl md:text-2xl font-bold text-secondary drop-shadow-lg">
+          {/* Enhanced Subtitle - Mobile optimized */}
+          <div className="flex justify-center items-center gap-1 sm:gap-2 md:gap-3 animate-fade-in px-2 sm:px-4" style={{ animationDelay: '0.3s' }}>
+            <Target className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-secondary animate-pulse" />
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-secondary drop-shadow-lg">
               رؤية • ابتكار • تميز
             </p>
-            <Rocket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-secondary animate-bounce" />
+            <Rocket className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-secondary animate-bounce" />
           </div>
         </div>
         
-        {/* Enhanced Description - Responsive */}
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-primary-foreground/95 mb-8 sm:mb-12 max-w-5xl mx-auto leading-relaxed animate-fade-in font-medium px-4 sm:px-6" style={{ animationDelay: '0.9s' }}>
-          رؤية مستقبلية في عالم التقنية والإعلام، نبني جسوراً نحو الابتكار والتميز العالمي
-          <br />
-          <span className="text-sm sm:text-base md:text-lg lg:text-xl text-primary-foreground/80 mt-1 sm:mt-2 block">
+        {/* Enhanced Description - Mobile optimized */}
+        <div className="mb-6 sm:mb-8 md:mb-12 max-w-4xl mx-auto px-2 sm:px-4 md:px-6 animate-fade-in" style={{ animationDelay: '0.9s' }}>
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-primary-foreground/95 leading-relaxed font-medium">
+            رؤية مستقبلية في عالم التقنية والإعلام، نبني جسوراً نحو الابتكار والتميز العالمي
+          </p>
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-primary-foreground/80 mt-2 sm:mt-3">
             مع شركاء النجاح حول العالم لتحقيق أهداف استثنائية
-          </span>
-        </p>
+          </p>
+        </div>
         
         {/* Corporate Action Buttons - Responsive */}
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-12 sm:mb-16 animate-fade-in px-4 sm:px-0" style={{ animationDelay: '1.2s' }}>
