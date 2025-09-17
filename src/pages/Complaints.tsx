@@ -35,8 +35,10 @@ const Complaints = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submission started');
     
     if (!formData.name || !formData.email || !formData.category || !formData.title || !formData.description) {
+      console.log('Validation failed: missing required fields');
       toast({
         title: "خطأ في البيانات",
         description: "يرجى ملء جميع الحقول المطلوبة",
@@ -46,6 +48,7 @@ const Complaints = () => {
     }
 
     if (!formData.email.includes('@')) {
+      console.log('Validation failed: invalid email');
       toast({
         title: "خطأ في البريد الإلكتروني",
         description: "يرجى إدخال بريد إلكتروني صحيح",
@@ -54,9 +57,11 @@ const Complaints = () => {
       return;
     }
 
+    console.log('Starting submission with data:', formData);
     setIsSubmitting(true);
 
     try {
+      console.log('Invoking complaint-handler function...');
       const { data, error } = await supabase.functions.invoke('complaint-handler', {
         body: {
           customerName: formData.name,
@@ -69,11 +74,17 @@ const Complaints = () => {
         }
       });
 
-      if (error) throw error;
+      console.log('Function response:', { data, error });
 
+      if (error) {
+        console.error('Function returned error:', error);
+        throw error;
+      }
+
+      console.log('Success! Ticket number:', data?.ticketNumber);
       toast({
         title: "تم إرسال الشكوى بنجاح! ✅",
-        description: `رقم الشكوى: ${data.ticketNumber}. سنتواصل معك قريباً.`,
+        description: `رقم الشكوى: ${data?.ticketNumber}. سنتواصل معك قريباً.`,
       });
 
       // Reset form
@@ -91,7 +102,7 @@ const Complaints = () => {
       console.error("Complaint submission error:", error);
       toast({
         title: "خطأ في إرسال الشكوى",
-        description: "حدث خطأ أثناء إرسال الشكوى. يرجى المحاولة مرة أخرى.",
+        description: `حدث خطأ أثناء إرسال الشكوى: ${error.message || 'خطأ غير معروف'}`,
         variant: "destructive"
       });
     } finally {
