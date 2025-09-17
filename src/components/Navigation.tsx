@@ -102,30 +102,30 @@ const Navigation = () => {
       {/* Corporate Top Bar */}
       <div className="hidden lg:block bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50">
         <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between py-3">
-            <div className="flex items-center gap-8 text-sm text-slate-300">
-              <div className="flex items-center gap-2 group hover:text-blue-300 transition-colors">
-                <Clock className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
+          <div className="flex items-center justify-between py-2">
+            <div className="flex items-center gap-6 text-xs text-slate-300">
+              <div className="flex items-center gap-1.5 group hover:text-blue-300 transition-colors">
+                <Clock className="w-3 h-3 text-blue-400 group-hover:scale-110 transition-transform" />
                 <span className="font-medium">الأحد - الخميس • 8:00 ص - 6:00 م</span>
               </div>
-              <div className="flex items-center gap-2 group hover:text-emerald-300 transition-colors">
-                <MapPin className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <div className="flex items-center gap-1.5 group hover:text-emerald-300 transition-colors">
+                <MapPin className="w-3 h-3 text-emerald-400 group-hover:scale-110 transition-transform" />
                 <span className="font-medium">جدة، المملكة العربية السعودية</span>
               </div>
             </div>
             
-            <div className="flex items-center gap-6">
-              <a href="mailto:info@alialshehriholding.com" className="flex items-center gap-2 text-slate-300 hover:text-blue-300 transition-all duration-300 group">
-                <Mail className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">info@alialshehriholding.com</span>
+            <div className="flex items-center gap-4">
+              <a href="mailto:info@alialshehriholding.com" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-all duration-300 group">
+                <Mail className="w-3 h-3 group-hover:scale-110 transition-transform" />
+                <span className="font-medium text-xs">info@alialshehriholding.com</span>
               </a>
-              <a href="tel:0555812567" className="flex items-center gap-2 text-slate-300 hover:text-blue-300 transition-all duration-300 group">
-                <Phone className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">0555812567</span>
+              <a href="tel:0555812567" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-all duration-300 group">
+                <Phone className="w-3 h-3 group-hover:scale-110 transition-transform" />
+                <span className="font-medium text-xs">0555812567</span>
               </a>
-              <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30">
-                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                <span className="text-emerald-300 font-semibold text-sm">متاح الآن</span>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30">
+                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span className="text-emerald-300 font-semibold text-xs">متاح الآن</span>
               </div>
             </div>
           </div>
@@ -133,41 +133,38 @@ const Navigation = () => {
       </div>
 
       {/* Main Corporate Navigation */}
-      <nav className={`fixed ${isScrolled ? 'top-0 shadow-xl' : 'top-0 lg:top-[56px]'} w-full z-50 transition-all duration-300`}>
+      <nav className={`fixed ${isScrolled ? 'top-0 shadow-xl' : 'top-0 lg:top-[40px]'} w-full z-50 transition-all duration-300`}>
         <div className="bg-white/95 backdrop-blur-xl border-b border-slate-200/80">
           <div className="container mx-auto px-4 lg:px-6">
-            <div className="flex items-center justify-between h-16 lg:h-18">
+            <div className="flex items-center justify-between h-14 lg:h-16">
               
               {/* Logo & Company Name - Enhanced Mobile */}
-              <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
-                <a href="/" className="flex items-center gap-2 sm:gap-3 group">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <a href="/" className="flex items-center gap-2 group">
                   {/* Logo */}
                   <div className="relative">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 touch-manipulation">
-                      <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">ASH</span>
-                      </div>
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
+                      <span className="text-white font-bold text-sm lg:text-base">ASH</span>
                     </div>
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></div>
+                    <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full border border-white animate-pulse"></div>
                   </div>
                   
                   {/* Company Name - Enhanced Typography */}
                   <div className="hidden sm:block">
-                    <h1 className="text-lg lg:text-xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
+                    <h1 className="text-base lg:text-lg font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
                       ASH HOLDING
                     </h1>
-                    <div className="flex items-center gap-2 mt-0.5">
+                    <div className="flex items-center gap-1.5 mt-0.5">
                       <div className="flex items-center gap-0.5">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-2.5 h-2.5 text-amber-400 fill-current group-hover:text-amber-500 transition-colors" />
+                          <Star key={i} className="w-2 h-2 text-amber-400 fill-current group-hover:text-amber-500 transition-colors" />
                         ))}
                       </div>
                       <span className="text-xs text-slate-500 font-medium">
-                        <span className="hidden lg:inline">شركة رائدة منذ 2016 • مستوى عالمي</span>
-                        <span className="lg:hidden">منذ 2016</span>
+                        منذ 2016
                       </span>
-                      <Badge variant="secondary" className="hidden lg:flex text-xs px-2 py-0.5 bg-emerald-100 text-emerald-700 border-emerald-200">
-                        <ShieldCheck className="w-3 h-3 mr-1" />
+                      <Badge variant="secondary" className="hidden lg:flex text-xs px-1.5 py-0.5 bg-emerald-100 text-emerald-700 border-emerald-200">
+                        <ShieldCheck className="w-2.5 h-2.5 mr-1" />
                         موثق
                       </Badge>
                     </div>
@@ -175,13 +172,13 @@ const Navigation = () => {
                   
                   {/* Mobile Company Name */}
                   <div className="block sm:hidden">
-                    <h1 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                    <h1 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
                       ASH HOLDING
                     </h1>
                     <div className="flex items-center gap-1 mt-0.5">
                       <div className="flex items-center gap-0.5">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-2 h-2 text-amber-400 fill-current" />
+                          <Star key={i} className="w-1.5 h-1.5 text-amber-400 fill-current" />
                         ))}
                       </div>
                       <span className="text-xs text-slate-500">2016</span>
@@ -191,20 +188,20 @@ const Navigation = () => {
               </div>
 
               {/* Desktop Navigation Menu */}
-              <div className="hidden lg:flex items-center gap-1 xl:gap-2">
+              <div className="hidden lg:flex items-center gap-0.5 xl:gap-1">
                 <a 
                   href="/" 
-                  className="relative px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
+                  className="relative px-3 py-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
                 >
                   الرئيسية
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                  <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
                 </a>
                 <a 
                   href="/about" 
-                  className="relative px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
+                  className="relative px-3 py-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
                 >
                   من نحن
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                  <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
                 </a>
               
                 {/* Services Dropdown */}
@@ -214,11 +211,11 @@ const Navigation = () => {
                   onMouseLeave={() => { servicesHideRef.current = window.setTimeout(() => setShowServices(false), 200); }}
                 >
                   <button 
-                    className="relative flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 rounded-lg hover:bg-blue-50/80 group"
+                    className="relative flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 rounded-lg hover:bg-blue-50/80 group"
                   >
                     خدماتنا
-                    <ChevronDown className="w-3.5 h-3.5 group-hover:rotate-180 transition-all duration-300" />
-                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                    <ChevronDown className="w-3 h-3 group-hover:rotate-180 transition-all duration-300" />
+                    <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
                   </button>
                   
                   {showServices && (
@@ -256,11 +253,11 @@ const Navigation = () => {
                   onMouseLeave={() => { productsHideRef.current = window.setTimeout(() => setShowProducts(false), 200); }}
                 >
                   <button 
-                    className="relative flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 rounded-lg hover:bg-blue-50/80 group"
+                    className="relative flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 rounded-lg hover:bg-blue-50/80 group"
                   >
                     منتجاتنا
-                    <ChevronDown className="w-3.5 h-3.5 group-hover:rotate-180 transition-all duration-300" />
-                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                    <ChevronDown className="w-3 h-3 group-hover:rotate-180 transition-all duration-300" />
+                    <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
                   </button>
                   
                   {showProducts && (
@@ -294,17 +291,17 @@ const Navigation = () => {
 
                 <a 
                   href="/vision" 
-                  className="relative px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
+                  className="relative px-3 py-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
                 >
                   رؤيتنا
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                  <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
                 </a>
                 <a 
                   href="/subsidiaries"
-                  className="relative px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
+                  className="relative px-3 py-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 group rounded-lg hover:bg-blue-50/80"
                 >
                   شركاتنا
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                  <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
                 </a>
 
                 {/* Others Dropdown */}
@@ -314,11 +311,11 @@ const Navigation = () => {
                   onMouseLeave={() => { othersHideRef.current = window.setTimeout(() => setShowOthers(false), 200); }}
                 >
                   <button 
-                    className="relative flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 rounded-lg hover:bg-blue-50/80 group"
+                    className="relative flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-all duration-300 rounded-lg hover:bg-blue-50/80 group"
                   >
                     أخرى
-                    <ChevronDown className="w-3.5 h-3.5 group-hover:rotate-180 transition-all duration-300" />
-                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
+                    <ChevronDown className="w-3 h-3 group-hover:rotate-180 transition-all duration-300" />
+                    <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 group-hover:w-3/4 transition-all duration-300 rounded-full"></div>
                   </button>
                   
                   {showOthers && (
