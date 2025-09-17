@@ -573,6 +573,15 @@ const Footer = () => {
                     </li>
                   );
                 })}
+                <li>
+                  <Button 
+                    onClick={() => window.location.href = '/complaints'}
+                    className="flex items-center gap-3 text-white bg-red-600 hover:bg-red-700 transition-all duration-300 w-full justify-start p-3 rounded-lg animate-pulse hover:animate-none border border-red-400"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    رفع طلب أو شكوى
+                  </Button>
+                </li>
               </ul>
             </div>
           </div>

@@ -185,6 +185,7 @@ const CarFleet = lazy(() => import("./pages/CarFleet"));
 const CarBooking = lazy(() => import("./pages/CarBooking"));
 const EmailTest = lazy(() => import("./pages/EmailTest"));
 const EnhancedDesignCategory = lazy(() => import("./pages/EnhancedDesignCategory"));
+const Complaints = lazy(() => import("./pages/Complaints"));
 
 // Enterprise pages
 const EnterpriseDevelopment = lazy(() => import("./pages/enterprise/EnterpriseDevelopment"));
@@ -487,6 +488,7 @@ const App = () => {
                 <Route path="/car-fleet" element={<CarFleet />} />
                 <Route path="/car-booking" element={<CarBooking />} />
                 <Route path="/email-test" element={<EmailTest />} />
+                <Route path="/complaints" element={<Suspense fallback={<PageLoader />}><Complaints /></Suspense>} />
                 
                 
                 <Route path="/tech-ecosystem" element={<TechEcosystem />} />
