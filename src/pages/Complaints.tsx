@@ -666,34 +666,6 @@ const Complaints = () => {
                     </CardContent>
                   </Card>
 
-                  {/* Response Time */}
-                  <Card className="bg-gradient-to-br from-orange-50 to-red-100 border-orange-200 shadow-xl">
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                          <Clock className="w-5 h-5 text-white" />
-                        </div>
-                        أوقات الاستجابة
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      {[
-                        { priority: "عالية", time: "خلال ساعة", color: "red", icon: "🚨" },
-                        { priority: "متوسطة", time: "خلال 4 ساعات", color: "yellow", icon: "⚡" },
-                        { priority: "منخفضة", time: "خلال 24 ساعة", color: "green", icon: "📝" }
-                      ].map((item) => (
-                        <div key={item.priority} className="flex justify-between items-center p-3 bg-white/60 rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">{item.icon}</span>
-                            <span className={`text-${item.color}-600 font-medium`}>{item.priority}</span>
-                          </div>
-                          <Badge className={`bg-${item.color}-100 text-${item.color}-800`}>
-                            {item.time}
-                          </Badge>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
 
                   {/* Emergency Contact */}
                   <Card className="bg-gradient-to-br from-red-50 to-pink-100 border-red-200 shadow-xl">
