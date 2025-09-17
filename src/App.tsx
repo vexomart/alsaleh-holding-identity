@@ -1,5 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { HelmetProvider } from "react-helmet-async";
 
 import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -269,14 +270,15 @@ const App = () => {
   
   return (
     <QueryClientProvider client={queryClientRef.current!}>
-      <TooltipProvider>
-        <ReCaptchaProvider>
-          <MobileOptimizer>
-          <BrowserRouter>
-            <TenantProvider>
-            <AuthProvider>
-            <RouteGuard>
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
+      <HelmetProvider>
+        <TooltipProvider>
+          <ReCaptchaProvider>
+            <MobileOptimizer>
+            <BrowserRouter>
+              <TenantProvider>
+              <AuthProvider>
+              <RouteGuard>
+              <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 mobile-text">
               {/* Subtle pattern overlay */}
               <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
               
@@ -540,13 +542,14 @@ const App = () => {
                 </Routes>
                 </div>
               </div>
-            </RouteGuard>
-            </AuthProvider>
-            </TenantProvider>
-          </BrowserRouter>
-          </MobileOptimizer>
-        </ReCaptchaProvider>
-      </TooltipProvider>
+              </RouteGuard>
+              </AuthProvider>
+              </TenantProvider>
+            </BrowserRouter>
+            </MobileOptimizer>
+          </ReCaptchaProvider>
+        </TooltipProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 };
