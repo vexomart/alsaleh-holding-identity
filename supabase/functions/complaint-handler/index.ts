@@ -22,6 +22,58 @@ interface ComplaintRequest {
   description: string;
 }
 
+// Helper: send email with company domain, fallback to Resend domain if unauthorized
+async function sendEmailWithFallback({
+  to,
+  subject,
+  html,
+  preferredFrom,
+  fallbackFrom,
+  replyTo,
+}: {
+  to: string | string[];
+  subject: string;
+  html: string;
+  preferredFrom: string;
+  fallbackFrom: string;
+  replyTo?: string;
+}) {
+  const toArray = Array.isArray(to) ? to : [to];
+  try {
+    const primary = await resend.emails.send({
+      from: preferredFrom,
+      to: toArray,
+      subject,
+      html,
+      ...(replyTo ? { reply_to: replyTo } : {}),
+    });
+
+    if (primary?.error && (primary.error.statusCode === 403 || String(primary.error.message || '').toLowerCase().includes('not authorized'))) {
+      console.log('⚠️ Preferred domain not authorized, retrying with Resend domain...');
+      const retry = await resend.emails.send({
+        from: fallbackFrom,
+        to: toArray,
+        subject,
+        html,
+        ...(replyTo ? { reply_to: replyTo } : {}),
+      });
+      return { response: retry, fallbackUsed: true };
+    }
+
+    return { response: primary, fallbackUsed: false };
+  } catch (err) {
+    console.log('❌ Primary send failed, retry with fallback:', (err as any)?.message || err);
+    const retry = await resend.emails.send({
+      from: fallbackFrom,
+      to: toArray,
+      subject,
+      html,
+      ...(replyTo ? { reply_to: replyTo } : {}),
+    });
+    return { response: retry, fallbackUsed: true };
+  }
+}
+
 const handler = async (req: Request): Promise<Response> => {
   console.log("📝 Complaint handler function called");
 
@@ -99,17 +151,18 @@ const handler = async (req: Request): Promise<Response> => {
       })
     );
 
-    console.log("📧 Sending customer confirmation email...");
-    
-    // Send confirmation email to customer
-    const customerEmailResponse = await resend.emails.send({
-      from: "نظام الشكاوي <support@alialsheehrholding.com>",
-      to: [customerEmail],
+console.log("📧 Sending customer confirmation email...");
+
+    // Send confirmation email to customer with fallback
+    const { response: customerEmailResponse, fallbackUsed: customerFallback } = await sendEmailWithFallback({
+      preferredFrom: "ASH HOLDING Support <support@alialshehriholding.com>",
+      fallbackFrom: "ASH HOLDING Support <onboarding@resend.dev>",
+      to: customerEmail,
       subject: `✅ تأكيد استلام شكواك #${ticketNumber}`,
       html: customerEmailHtml,
     });
 
-    console.log("✅ Customer email sent:", customerEmailResponse);
+    console.log("✅ Customer email result:", customerEmailResponse, "fallback:", customerFallback);
 
     console.log("🎨 Rendering admin email template...");
     
@@ -129,18 +182,19 @@ const handler = async (req: Request): Promise<Response> => {
       })
     );
 
-    console.log("📧 Sending admin notification email...");
+console.log("📧 Sending admin notification email...");
     
-    // Send notification to admin
-    const adminEmailResponse = await resend.emails.send({
-      from: "نظام الشكاوي <system@alialsheehrholding.com>",
-      to: ["support@alialsheehrholding.com"],
+    // Send notification to admin with fallback and corrected admin address
+    const { response: adminEmailResponse, fallbackUsed: adminFallback } = await sendEmailWithFallback({
+      preferredFrom: "ASH System <system@alialshehriholding.com>",
+      fallbackFrom: "ASH System <onboarding@resend.dev>",
+      to: "support@alialshehriholding.com",
       subject: `🚨 شكوى جديدة #${ticketNumber} - ${priorityText} - ${title}`,
       html: adminEmailHtml,
-      reply_to: customerEmail,
+      replyTo: customerEmail,
     });
 
-    console.log("✅ Admin email sent:", adminEmailResponse);
+    console.log("✅ Admin email result:", adminEmailResponse, "fallback:", adminFallback);
 
     return new Response(
       JSON.stringify({ 
