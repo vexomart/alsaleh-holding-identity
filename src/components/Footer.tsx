@@ -823,9 +823,6 @@ const Footer = () => {
             <div className="text-center md:text-right">
               © 2025 ASH HOLDING. جميع الحقوق محفوظة.
             </div>
-            <div className="flex flex-wrap justify-center gap-6">
-              <span className="text-gray-400">جميع الحقوق محفوظة لشركة علي صالح الشهري القابضة</span>
-            </div>
           </div>
         </div>
 
