@@ -1,5 +1,5 @@
-import { serve } from 'https://deno.land/std@0.190.0/http/server.ts';
-import { Resend } from 'npm:resend@2.0.0';
+// Using Deno.serve directly for Supabase Edge runtime
+import { Resend } from 'npm:resend@4.0.0';
 // Using simple inline HTML templates to avoid React email rendering in Edge Functions
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
@@ -147,4 +147,4 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-serve(handler);
+Deno.serve(handler);
