@@ -188,7 +188,7 @@ console.log("📧 Sending admin notification email...");
     const { response: adminEmailResponse, fallbackUsed: adminFallback } = await sendEmailWithFallback({
       preferredFrom: "ASH System <system@alialshehriholding.com>",
       fallbackFrom: "ASH System <onboarding@resend.dev>",
-      to: "support@alialshehriholding.com",
+      to: "info@alialshehriholding.com",
       subject: `🚨 شكوى جديدة #${ticketNumber} - ${priorityText} - ${title}`,
       html: adminEmailHtml,
       replyTo: customerEmail,

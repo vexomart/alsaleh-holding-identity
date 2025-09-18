@@ -10,6 +10,7 @@ import {
   Hr,
   Row,
   Column,
+  Link,
 } from 'npm:@react-email/components@0.0.22'
 import * as React from 'npm:react@18.3.1'
 
@@ -147,6 +148,26 @@ export const AdminComplaintNotification = ({
             • تسجيل الحل المقترح<br/>
             • متابعة رضا العميل
           </Text>
+          
+          <Row style={actionButtonRow}>
+            <Column>
+              <Link
+                href={`mailto:${customerEmail}?subject=رد على شكواك ${ticketNumber}`}
+                style={primaryActionButton}
+              >
+                الرد على العميل
+              </Link>
+            </Column>
+            <Column style={{ width: '20px' }} />
+            <Column>
+              <Link
+                href="https://alialshehriholding.com/admin/complaints"
+                style={secondaryActionButton}
+              >
+                إدارة الشكاوي
+              </Link>
+            </Column>
+          </Row>
         </Section>
 
         {/* Response Time */}
@@ -238,25 +259,28 @@ const getPriorityTimeStyle = (priority: string) => {
 
 const main = {
   backgroundColor: '#f6f9fc',
-  fontFamily: 'Arial, sans-serif',
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   direction: 'rtl' as const,
   textAlign: 'right' as const,
+  lineHeight: '1.6',
 }
 
 const container = {
   backgroundColor: '#ffffff',
   border: '1px solid #e2e8f0',
-  borderRadius: '12px',
-  margin: '40px auto',
+  borderRadius: '16px',
+  margin: '20px auto',
   maxWidth: '650px',
   padding: '0',
-  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.12)',
+  overflow: 'hidden',
 }
 
 const header = {
-  borderRadius: '12px 12px 0 0',
-  padding: '30px',
+  borderRadius: '16px 16px 0 0',
+  padding: '40px 30px',
   textAlign: 'center' as const,
+  background: 'linear-gradient(135deg, currentColor 0%, rgba(0,0,0,0.8) 100%)',
 }
 
 const h1 = {
@@ -319,11 +343,12 @@ const text = {
 }
 
 const ticketBox = {
-  backgroundColor: '#3b82f6',
-  borderRadius: '8px',
-  padding: '20px',
+  background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+  borderRadius: '12px',
+  padding: '24px',
   margin: '20px 30px',
   textAlign: 'center' as const,
+  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
 }
 
 const ticketLabel = {
@@ -382,11 +407,12 @@ const description = {
 }
 
 const actionBox = {
-  backgroundColor: '#fef3c7',
+  background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
   border: '1px solid #fcd34d',
-  borderRadius: '8px',
-  padding: '20px',
+  borderRadius: '12px',
+  padding: '24px',
   margin: '0 30px 20px 30px',
+  boxShadow: '0 4px 12px rgba(251, 191, 36, 0.1)',
 }
 
 const timeBox = {
@@ -422,6 +448,42 @@ const footerText = {
   margin: '0',
   textAlign: 'center' as const,
   fontFamily: 'Arial, sans-serif',
+}
+
+// New styles for action buttons
+const actionButtonRow = {
+  marginTop: '20px',
+  textAlign: 'center' as const,
+}
+
+const primaryActionButton = {
+  backgroundColor: '#dc2626',
+  color: '#ffffff',
+  padding: '14px 28px',
+  borderRadius: '8px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  fontFamily: 'Arial, sans-serif',
+  textAlign: 'center' as const,
+  transition: 'all 0.3s ease',
+  boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)',
+}
+
+const secondaryActionButton = {
+  backgroundColor: 'transparent',
+  color: '#1e293b',
+  padding: '14px 28px',
+  borderRadius: '8px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  fontFamily: 'Arial, sans-serif',
+  textAlign: 'center' as const,
+  border: '2px solid #1e293b',
+  transition: 'all 0.3s ease',
 }
 
 export default AdminComplaintNotification

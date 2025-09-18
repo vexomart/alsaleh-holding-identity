@@ -110,16 +110,45 @@ export const CustomerComplaintConfirmation = ({
             • سنتواصل معك عبر البريد الإلكتروني أو الهاتف<br/>
             • يمكنك الرد على هذا البريد للمتابعة
           </Text>
+          
+          <Row style={buttonRow}>
+            <Column>
+              <Link
+                href={`mailto:info@alialshehriholding.com?subject=متابعة الشكوى ${ticketNumber}`}
+                style={primaryButton}
+              >
+                متابعة الشكوى
+              </Link>
+            </Column>
+            <Column style={{ width: '20px' }} />
+            <Column>
+              <Link
+                href="https://alialshehriholding.com/support"
+                style={secondaryButton}
+              >
+                مركز المساعدة
+              </Link>
+            </Column>
+          </Row>
         </Section>
 
         {/* Contact Info */}
         <Section style={contactBox}>
           <Heading style={h4}>للاستفسارات العاجلة</Heading>
-          <Text style={text}>
-            📞 الهاتف: 0555812567<br/>
-            📧 البريد: support@alialsheehrholding.com<br/>
-            🌐 الموقع: alialshehriholding.com
-          </Text>
+          <Row style={contactRow}>
+            <Column style={contactItem}>
+              <Text style={contactIcon}>📞</Text>
+              <Text style={contactText}>0555812567</Text>
+            </Column>
+            <Column style={contactItem}>
+              <Text style={contactIcon}>📧</Text>
+              <Text style={contactText}>info@alialshehriholding.com</Text>
+            </Column>
+            <Column style={contactItem}>
+              <Text style={contactIcon}>🌐</Text>
+              <Text style={contactText}>alialshehriholding.com</Text>
+            </Column>
+          </Row>
         </Section>
 
         {/* Footer */}
@@ -151,26 +180,29 @@ const getPriorityStyle = (priority: string) => {
 
 const main = {
   backgroundColor: '#f6f9fc',
-  fontFamily: 'Arial, sans-serif',
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   direction: 'rtl' as const,
   textAlign: 'right' as const,
+  lineHeight: '1.6',
 }
 
 const container = {
   backgroundColor: '#ffffff',
   border: '1px solid #e2e8f0',
-  borderRadius: '12px',
-  margin: '40px auto',
+  borderRadius: '16px',
+  margin: '20px auto',
   maxWidth: '600px',
   padding: '0',
-  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.12)',
+  overflow: 'hidden',
 }
 
 const header = {
-  backgroundColor: '#1e293b',
-  borderRadius: '12px 12px 0 0',
-  padding: '30px',
+  background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+  borderRadius: '16px 16px 0 0',
+  padding: '40px 30px',
   textAlign: 'center' as const,
+  position: 'relative' as const,
 }
 
 const h1 = {
@@ -225,12 +257,13 @@ const text = {
 }
 
 const ticketBox = {
-  backgroundColor: '#f1f5f9',
+  background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
   border: '2px solid #3b82f6',
-  borderRadius: '8px',
-  padding: '20px',
+  borderRadius: '12px',
+  padding: '24px',
   margin: '20px 30px',
   textAlign: 'center' as const,
+  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)',
 }
 
 const ticketLabel = {
@@ -289,19 +322,21 @@ const description = {
 }
 
 const nextStepsBox = {
-  backgroundColor: '#ecfdf5',
+  background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
   border: '1px solid #bbf7d0',
-  borderRadius: '8px',
-  padding: '20px',
+  borderRadius: '12px',
+  padding: '24px',
   margin: '0 30px 20px 30px',
+  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.1)',
 }
 
 const contactBox = {
-  backgroundColor: '#fef3c7',
+  background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
   border: '1px solid #fcd34d',
-  borderRadius: '8px',
-  padding: '20px',
+  borderRadius: '12px',
+  padding: '24px',
   margin: '0 30px 30px 30px',
+  boxShadow: '0 4px 12px rgba(251, 191, 36, 0.1)',
 }
 
 const hr = {
@@ -322,6 +357,71 @@ const footerText = {
   lineHeight: '1.5',
   margin: '0',
   textAlign: 'center' as const,
+  fontFamily: 'Arial, sans-serif',
+}
+
+// New styles for buttons and responsive design
+const buttonRow = {
+  marginTop: '20px',
+  textAlign: 'center' as const,
+}
+
+const primaryButton = {
+  backgroundColor: '#3b82f6',
+  color: '#ffffff',
+  padding: '12px 24px',
+  borderRadius: '8px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  fontFamily: 'Arial, sans-serif',
+  textAlign: 'center' as const,
+  transition: 'all 0.3s ease',
+  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+}
+
+const secondaryButton = {
+  backgroundColor: 'transparent',
+  color: '#3b82f6',
+  padding: '12px 24px',
+  borderRadius: '8px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  fontFamily: 'Arial, sans-serif',
+  textAlign: 'center' as const,
+  border: '2px solid #3b82f6',
+  transition: 'all 0.3s ease',
+}
+
+const contactRow = {
+  display: 'flex',
+  flexDirection: 'row' as const,
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  flexWrap: 'wrap' as const,
+  gap: '16px',
+}
+
+const contactItem = {
+  textAlign: 'center' as const,
+  flex: '1',
+  minWidth: '120px',
+}
+
+const contactIcon = {
+  fontSize: '24px',
+  margin: '0 0 8px 0',
+  display: 'block',
+}
+
+const contactText = {
+  color: '#92400e',
+  fontSize: '14px',
+  fontWeight: 'bold',
+  margin: '0',
   fontFamily: 'Arial, sans-serif',
 }
 
