@@ -79,7 +79,7 @@ const JobApplicationPage = () => {
       if (!allowedTypes.includes(file.type)) {
         toast.error("نوع ملف غير مدعوم ❌", {
           description: "يرجى رفع ملف PDF أو Word فقط",
-          duration: 5000
+          duration: 10000
         });
         return;
       }
@@ -88,7 +88,7 @@ const JobApplicationPage = () => {
       if (file.size > 5 * 1024 * 1024) {
         toast.error("حجم الملف كبير ❌", {
           description: "يرجى رفع ملف أقل من 5 ميجابايت",
-          duration: 5000
+          duration: 10000
         });
         return;
       }
@@ -104,7 +104,7 @@ const JobApplicationPage = () => {
     if (!formData.fullName || !formData.email || !formData.phone || !formData.position) {
       toast.error("خطأ في البيانات ❌", {
         description: "يرجى ملء جميع الحقول المطلوبة",
-        duration: 5000
+        duration: 10000
       });
       return;
     }
@@ -112,7 +112,7 @@ const JobApplicationPage = () => {
     if (!formData.email.includes('@')) {
       toast.error("خطأ في البريد الإلكتروني ❌", {
         description: "يرجى إدخال بريد إلكتروني صحيح",
-        duration: 5000
+        duration: 10000
       });
       return;
     }
@@ -167,19 +167,7 @@ const JobApplicationPage = () => {
       if (response.ok) {
         toast.success("تم إرسال طلب التوظيف بنجاح! ✅", {
           description: `رقم الطلب: ${result.jobNumber || jobNumber} - سيتم التواصل معك خلال 10 أيام عمل 📧`,
-          duration: 8000,
-          style: {
-            fontSize: '16px',
-            fontWeight: '600',
-            color: '#15803d',
-            backgroundColor: '#f0fdf4',
-            border: '2px solid #16a34a',
-            borderRadius: '12px',
-            padding: '20px 24px',
-            textAlign: 'center',
-            minWidth: '420px',
-            margin: '0 auto'
-          }
+          duration: 10000,
         });
         
         // Reset form
@@ -208,19 +196,7 @@ const JobApplicationPage = () => {
       console.error("Job application error:", error);
       toast.error("خطأ في إرسال الطلب ❌", {
         description: error instanceof Error ? error.message : "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
-        duration: 8000,
-        style: {
-          fontSize: '16px',
-          fontWeight: '600',
-          color: '#dc2626',
-          backgroundColor: '#fef2f2',
-          border: '2px solid #ef4444',
-          borderRadius: '12px',
-          padding: '20px 24px',
-          textAlign: 'center',
-          minWidth: '420px',
-          margin: '0 auto'
-        }
+        duration: 10000,
       });
     } finally {
       setIsSubmitting(false);

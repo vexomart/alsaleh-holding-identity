@@ -10,26 +10,26 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
-      position="bottom-center"
+      position="top-center"
       toastOptions={{
+        duration: 10000,
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-2xl group-[.toaster]:backdrop-blur-md group-[.toaster]:bg-opacity-95 group-[.toaster]:min-w-[400px] group-[.toaster]:mx-auto",
-          description: "group-[.toast]:text-muted-foreground",
+            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border group-[.toaster]:shadow-2xl group-[.toaster]:backdrop-blur-sm group-[.toaster]:bg-opacity-95 group-[.toaster]:min-w-[450px] group-[.toaster]:max-w-[600px] group-[.toaster]:mx-auto",
+          description: "group-[.toast]:text-muted-foreground group-[.toast]:text-sm group-[.toast]:mt-1",
           actionButton:
             "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton:
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
         },
         style: {
-          transform: 'translateX(-50%)',
-          left: '50%',
-          margin: '0 auto',
-          textAlign: 'center',
-          borderRadius: '12px',
-          padding: '16px 24px',
+          borderRadius: '16px',
+          padding: '20px 24px',
           fontSize: '16px',
-          fontWeight: '500',
+          fontWeight: '600',
+          textAlign: 'center',
+          border: '2px solid hsl(var(--border))',
+          boxShadow: '0 20px 40px -12px rgba(0, 0, 0, 0.15)',
         }
       }}
       {...props}

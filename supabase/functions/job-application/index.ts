@@ -41,33 +41,58 @@ const handler = async (req: Request): Promise<Response> => {
     const data: JobApplicationData = await req.json();
     console.log("Parsed data:", data);
 
-    // Save to database
+    // Save to database with retry logic for duplicate key conflicts
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
-    const { data: insertData, error: dbError } = await supabase
-      .from('job_applications')
-      .insert([
-        {
-          full_name: data.fullName,
-          email: data.email,
-          phone: data.phone,
-          position: data.position,
-          experience: data.experience || null,
-          cv_url: data.cvUrl || null,
-          cover_letter: data.message || data.coverLetter || null,
-          status: 'pending',
-          portfolio_url: data.portfolio || null,
-          linkedin_url: data.linkedIn || null,
-          city: data.city || null,
-          education: data.education || null
-        }
-      ])
-      .select()
-      .single();
+    let insertData;
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    while (retryCount < maxRetries) {
+      try {
+        const { data: result, error: dbError } = await supabase
+          .from('job_applications')
+          .insert([
+            {
+              full_name: data.fullName,
+              email: data.email,
+              phone: data.phone,
+              position: data.position,
+              experience: data.experience || null,
+              cv_url: data.cvUrl || null,
+              cover_letter: data.message || data.coverLetter || null,
+              status: 'pending',
+              portfolio_url: data.portfolio || null,
+              linkedin_url: data.linkedIn || null,
+              city: data.city || null,
+              education: data.education || null,
+              cv_file_name: data.cvFileName || null
+            }
+          ])
+          .select()
+          .single();
 
-    if (dbError) {
-      console.error("Database error:", dbError);
-      throw new Error(`Database error: ${dbError.message}`);
+        if (dbError) {
+          if (dbError.code === '23505' && retryCount < maxRetries - 1) {
+            // Duplicate key error, wait a bit and retry
+            console.log(`Duplicate key error, retrying... (attempt ${retryCount + 1})`);
+            await new Promise(resolve => setTimeout(resolve, 100 + (retryCount * 50)));
+            retryCount++;
+            continue;
+          }
+          throw new Error(`خطأ في حفظ البيانات: ${dbError.message}`);
+        }
+
+        insertData = result;
+        break; // Success, exit the retry loop
+        
+      } catch (error) {
+        if (retryCount === maxRetries - 1) {
+          console.error("Database error after retries:", error);
+          throw error;
+        }
+        retryCount++;
+      }
     }
 
     console.log("Application saved successfully:", insertData);
