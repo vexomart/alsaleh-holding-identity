@@ -136,6 +136,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
 const Consultation = lazy(() => import("./pages/Consultation"));
+const StartProject = lazy(() => import("./pages/StartProject"));
 const ProjectTracking = lazy(() => import("./pages/ProjectTracking"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
@@ -391,6 +392,7 @@ const App = () => {
             <Route path="/start-with-us" element={<StartWithUs />} />
                 <Route path="/book-consultation" element={<BookConsultation />} />
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
+                <Route path="/start-project" element={<Suspense fallback={<PageLoader />}><StartProject /></Suspense>} />
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
                 <Route path="/auth/client/login" element={<Suspense fallback={<PageLoader />}><ClientLoginPage /></Suspense>} />
                 <Route path="/auth/admin/login" element={<Suspense fallback={<PageLoader />}><AdminLoginPage /></Suspense>} />

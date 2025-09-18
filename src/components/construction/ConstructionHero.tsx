@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 interface ConstructionHeroProps {
   stats: Array<{
@@ -35,10 +36,12 @@ const ConstructionHero = ({ stats }: ConstructionHeroProps) => {
             من ناطحات السحاب إلى المجمعات السكنية، نحول رؤيتكم إلى واقع ملموس بتقنيات متطورة وخبرة تمتد لعقود
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-            <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-10 py-6 text-xl shadow-2xl shadow-amber-500/25 hover-scale">
-              🚀 ابدأ مشروعك الآن
-              <ArrowRight className="mr-2 h-6 w-6" />
-            </Button>
+            <Link to="/start-project">
+              <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-10 py-6 text-xl shadow-2xl shadow-amber-500/25 hover-scale">
+                🚀 ابدأ مشروعك الآن
+                <ArrowRight className="mr-2 h-6 w-6" />
+              </Button>
+            </Link>
             <Button size="lg" variant="outline" className="border-white/40 text-white hover:bg-white/10 px-10 py-6 text-xl backdrop-blur-sm">
               📋 احصل على عرض سعر
             </Button>
