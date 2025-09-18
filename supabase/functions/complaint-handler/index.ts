@@ -2,8 +2,8 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@4.0.0";
 import React from 'npm:react@18.3.1';
 import { renderAsync } from 'npm:@react-email/components@0.0.22';
-import { CustomerComplaintConfirmation } from './_templates/customer-complaint-confirmation.tsx';
-import { AdminComplaintNotification } from './_templates/admin-complaint-notification.tsx';
+import { CustomerComplaintConfirmation } from './_templates/simple-customer-confirmation.tsx';
+import { AdminComplaintNotification } from './_templates/simple-admin-notification.tsx';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 

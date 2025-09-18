@@ -41,23 +41,19 @@ export const CustomerComplaintConfirmation = ({
     <Body style={main}>
       <Container style={container}>
         
-        {/* Premium Header with Animated Background */}
+        {/* Premium Header */}
         <Section style={header}>
-          <Section style={logoContainer}>
-            <Text style={logoText}>ASH</Text>
-            <Text style={logoSubtext}>HOLDING</Text>
-          </Section>
+          <Heading style={h1}>ASH HOLDING</Heading>
+          <Text style={subtitle}>نظام إدارة الشكاوي المتطور</Text>
           <Text style={headerTitle}>✅ تم استلام شكواك بنجاح</Text>
           <Text style={headerSubtitle}>نحن نقدر ثقتك بنا ونعتذر عن أي إزعاج</Text>
         </Section>
 
         {/* Success Status */}
         <Section style={statusSection}>
-          <Section style={statusContainer}>
-            <Text style={statusIcon}>✅</Text>
-            <Text style={statusText}>تم استلام الشكوى</Text>
-            <Text style={statusTime}>{new Date().toLocaleString('ar-SA')}</Text>
-          </Section>
+          <Text style={statusIcon}>✅</Text>
+          <Text style={statusText}>تم استلام الشكوى</Text>
+          <Text style={statusTime}>{new Date().toLocaleString('ar-SA')}</Text>
         </Section>
 
         {/* Greeting Card */}
@@ -84,28 +80,26 @@ export const CustomerComplaintConfirmation = ({
           </Row>
         </Section>
 
-        {/* Details Grid */}
+        {/* Details Section */}
         <Section style={detailsSection}>
           <Heading style={sectionTitle}>📋 تفاصيل الشكوى</Heading>
           
-          <Section style={detailsGrid}>
-            <Section style={detailCard}>
-              <Text style={detailIcon}>📝</Text>
-              <Text style={detailLabel}>العنوان</Text>
-              <Text style={detailValue}>{title}</Text>
-            </Section>
-            
-            <Section style={detailCard}>
-              <Text style={detailIcon}>📂</Text>
-              <Text style={detailLabel}>الفئة</Text>
-              <Text style={detailValue}>{categoryText}</Text>
-            </Section>
-            
-            <Section style={detailCard}>
-              <Text style={detailIcon}>⚡</Text>
-              <Text style={detailLabel}>الأولوية</Text>
-              <Text style={[detailValue, getPriorityStyle(priority)]}>{priorityText}</Text>
-            </Section>
+          <Section style={detailCard}>
+            <Text style={detailIcon}>📝</Text>
+            <Text style={detailLabel}>العنوان</Text>
+            <Text style={detailValue}>{title}</Text>
+          </Section>
+          
+          <Section style={detailCard}>
+            <Text style={detailIcon}>📂</Text>
+            <Text style={detailLabel}>الفئة</Text>
+            <Text style={detailValue}>{categoryText}</Text>
+          </Section>
+          
+          <Section style={detailCard}>
+            <Text style={detailIcon}>⚡</Text>
+            <Text style={detailLabel}>الأولوية</Text>
+            <Text style={[detailValue, getPriorityStyle(priority)]}>{priorityText}</Text>
           </Section>
 
           <Section style={descriptionCard}>
@@ -117,34 +111,33 @@ export const CustomerComplaintConfirmation = ({
         {/* Timeline Section */}
         <Section style={timelineSection}>
           <Heading style={sectionTitle}>⏰ خطة المعالجة</Heading>
-          <div style={timelineContainer}>
-            <div style={timelineItem}>
-              <Text style={timelineStep}>1</Text>
-              <div style={timelineContent}>
-                <Text style={timelineTitle}>مراجعة فورية</Text>
-                <Text style={timelineDesc}>تم استلام شكواك وبدء المعالجة</Text>
-                <Text style={timelineTime}>مكتمل ✅</Text>
-              </div>
-            </div>
-            
-            <div style={timelineItem}>
-              <Text style={timelineStep}>2</Text>
-              <div style={timelineContent}>
-                <Text style={timelineTitle}>التحليل والتقييم</Text>
-                <Text style={timelineDesc}>دراسة الشكوى وتحديد الحلول</Text>
-                <Text style={timelineTime}>خلال 4 ساعات 🔄</Text>
-              </div>
-            </div>
-            
-            <div style={timelineItem}>
-              <Text style={timelineStep}>3</Text>
-              <div style={timelineContent}>
-                <Text style={timelineTitle}>التواصل والحل</Text>
-                <Text style={timelineDesc}>التواصل معك وتطبيق الحل</Text>
-                <Text style={timelineTime}>خلال 24 ساعة ⏳</Text>
-              </div>
-            </div>
-          </div>
+          
+          <Section style={timelineItem}>
+            <Text style={timelineStep}>1</Text>
+            <Section style={timelineContent}>
+              <Text style={timelineTitle}>مراجعة فورية</Text>
+              <Text style={timelineDesc}>تم استلام شكواك وبدء المعالجة</Text>
+              <Text style={timelineTime}>مكتمل ✅</Text>
+            </Section>
+          </Section>
+          
+          <Section style={timelineItem}>
+            <Text style={timelineStep}>2</Text>
+            <Section style={timelineContent}>
+              <Text style={timelineTitle}>التحليل والتقييم</Text>
+              <Text style={timelineDesc}>دراسة الشكوى وتحديد الحلول</Text>
+              <Text style={timelineTime}>خلال 4 ساعات 🔄</Text>
+            </Section>
+          </Section>
+          
+          <Section style={timelineItem}>
+            <Text style={timelineStep}>3</Text>
+            <Section style={timelineContent}>
+              <Text style={timelineTitle}>التواصل والحل</Text>
+              <Text style={timelineDesc}>التواصل معك وتطبيق الحل</Text>
+              <Text style={timelineTime}>خلال 24 ساعة ⏳</Text>
+            </Section>
+          </Section>
         </Section>
 
         {/* Action Buttons */}
@@ -174,42 +167,39 @@ export const CustomerComplaintConfirmation = ({
         {/* Contact Cards */}
         <Section style={contactSection}>
           <Heading style={sectionTitle}>📞 طرق التواصل</Heading>
-          <div style={contactGrid}>
-            <div style={contactCard}>
-              <Text style={contactCardIcon}>📞</Text>
-              <Text style={contactCardTitle}>الهاتف</Text>
-              <Text style={contactCardValue}>0555812567</Text>
-              <Text style={contactCardDesc}>متاح 24/7</Text>
-            </div>
-            
-            <div style={contactCard}>
-              <Text style={contactCardIcon}>📧</Text>
-              <Text style={contactCardTitle}>البريد الإلكتروني</Text>
-              <Text style={contactCardValue}>info@alialshehriholding.com</Text>
-              <Text style={contactCardDesc}>رد خلال ساعة</Text>
-            </div>
-            
-            <div style={contactCard}>
-              <Text style={contactCardIcon}>🌐</Text>
-              <Text style={contactCardTitle}>الموقع</Text>
-              <Text style={contactCardValue}>alialshehriholding.com</Text>
-              <Text style={contactCardDesc}>مساعدة فورية</Text>
-            </div>
-          </div>
+          
+          <Section style={contactCard}>
+            <Text style={contactCardIcon}>📞</Text>
+            <Text style={contactCardTitle}>الهاتف</Text>
+            <Text style={contactCardValue}>0555812567</Text>
+            <Text style={contactCardDesc}>متاح 24/7</Text>
+          </Section>
+          
+          <Section style={contactCard}>
+            <Text style={contactCardIcon}>📧</Text>
+            <Text style={contactCardTitle}>البريد الإلكتروني</Text>
+            <Text style={contactCardValue}>info@alialshehriholding.com</Text>
+            <Text style={contactCardDesc}>رد خلال ساعة</Text>
+          </Section>
+          
+          <Section style={contactCard}>
+            <Text style={contactCardIcon}>🌐</Text>
+            <Text style={contactCardTitle}>الموقع</Text>
+            <Text style={contactCardValue}>alialshehriholding.com</Text>
+            <Text style={contactCardDesc}>مساعدة فورية</Text>
+          </Section>
         </Section>
 
         {/* Premium Footer */}
         <Section style={premiumFooter}>
-          <div style={footerContent}>
-            <Text style={footerLogo}>ASH HOLDING</Text>
-            <Text style={footerTagline}>الثقة والجودة في الخدمة</Text>
-            <Text style={footerText}>
-              شكراً لك على ثقتك في ASH HOLDING. نحن ملتزمون بتقديم أفضل خدمة عملاء.
-            </Text>
-            <Text style={footerNote}>
-              تم إرسال هذا البريد تلقائياً في {new Date().toLocaleString('ar-SA')}
-            </Text>
-          </div>
+          <Text style={footerLogo}>ASH HOLDING</Text>
+          <Text style={footerTagline}>الثقة والجودة في الخدمة</Text>
+          <Text style={footerText}>
+            شكراً لك على ثقتك في ASH HOLDING. نحن ملتزمون بتقديم أفضل خدمة عملاء.
+          </Text>
+          <Text style={footerNote}>
+            تم إرسال هذا البريد تلقائياً في {new Date().toLocaleString('ar-SA')}
+          </Text>
         </Section>
 
       </Container>
@@ -264,25 +254,21 @@ const header = {
   overflow: 'hidden',
 }
 
-const logoContainer = {
-  marginBottom: '30px',
-}
-
-const logoText = {
+const h1 = {
   color: '#ffffff',
   fontSize: '36px',
   fontWeight: '900',
-  margin: '0',
+  margin: '0 0 10px 0',
   letterSpacing: '2px',
   textShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
 }
 
-const logoSubtext = {
+const subtitle = {
   color: '#e2e8f0',
   fontSize: '14px',
   fontWeight: '500',
-  margin: '5px 0 0 0',
-  letterSpacing: '4px',
+  margin: '0 0 20px 0',
+  letterSpacing: '2px',
   opacity: 0.9,
 }
 
@@ -306,14 +292,11 @@ const headerSubtitle = {
 const statusSection = {
   padding: '30px 40px',
   borderBottom: '1px solid #f1f5f9',
-}
-
-const statusContainer = {
   textAlign: 'center' as const,
   backgroundColor: '#f0fdf4',
   border: '2px solid #22c55e',
   borderRadius: '20px',
-  padding: '25px',
+  margin: '20px',
 }
 
 const statusIcon = {
@@ -339,7 +322,7 @@ const statusTime = {
 // Greeting Card
 const greetingCard = {
   backgroundColor: '#f8fafc',
-  margin: '0 40px',
+  margin: '20px 40px',
   padding: '40px',
   borderRadius: '24px',
   border: '1px solid #e2e8f0',
@@ -368,7 +351,7 @@ const greetingText = {
 
 // Modern Ticket Card
 const modernTicketCard = {
-  margin: '40px',
+  margin: '20px 40px',
   background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
   borderRadius: '24px',
   padding: '30px',
@@ -426,19 +409,13 @@ const sectionTitle = {
   textAlign: 'center' as const,
 }
 
-const detailsGrid = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  gap: '20px',
-  marginBottom: '30px',
-}
-
 const detailCard = {
   backgroundColor: '#f8fafc',
   border: '1px solid #e2e8f0',
   borderRadius: '16px',
   padding: '25px',
   textAlign: 'center' as const,
+  margin: '0 0 20px 0',
 }
 
 const detailIcon = {
@@ -466,6 +443,7 @@ const descriptionCard = {
   border: '1px solid #e2e8f0',
   borderRadius: '16px',
   padding: '25px',
+  margin: '20px 0',
 }
 
 const descriptionLabel = {
@@ -488,10 +466,6 @@ const timelineSection = {
   backgroundColor: '#f8fafc',
 }
 
-const timelineContainer = {
-  position: 'relative' as const,
-}
-
 const timelineItem = {
   display: 'flex',
   alignItems: 'flex-start',
@@ -512,10 +486,10 @@ const timelineStep = {
   fontWeight: '700',
   flexShrink: 0,
   boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+  marginRight: '20px',
 }
 
 const timelineContent = {
-  marginLeft: '20px',
   flex: 1,
 }
 
@@ -606,12 +580,6 @@ const contactSection = {
   backgroundColor: '#f8fafc',
 }
 
-const contactGrid = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  gap: '20px',
-}
-
 const contactCard = {
   backgroundColor: '#ffffff',
   border: '1px solid #e2e8f0',
@@ -619,6 +587,7 @@ const contactCard = {
   padding: '25px',
   textAlign: 'center' as const,
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+  margin: '0 0 20px 0',
 }
 
 const contactCardIcon = {
@@ -652,11 +621,6 @@ const premiumFooter = {
   background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
   padding: '50px 40px',
   textAlign: 'center' as const,
-}
-
-const footerContent = {
-  maxWidth: '500px',
-  margin: '0 auto',
 }
 
 const footerLogo = {

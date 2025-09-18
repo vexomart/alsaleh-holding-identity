@@ -47,194 +47,190 @@ export const AdminComplaintNotification = ({
         
         {/* Dynamic Priority Header */}
         <Section style={[header, getPriorityHeaderStyle(priority)]}>
-          <Section style={headerContent}>
-            <Text style={urgencyBadge}>{getUrgencyIcon(priority)} {getUrgencyText(priority)}</Text>
-            <Heading style={h1}>شكوى جديدة واردة</Heading>
-            <Text style={headerSubtitle}>نظام إدارة الشكاوي - ASH HOLDING</Text>
-            <Text style={timeStamp}>تم الاستلام: {new Date().toLocaleString('ar-SA')}</Text>
-          </Section>
+          <Text style={urgencyBadge}>{getUrgencyIcon(priority)} {getUrgencyText(priority)}</Text>
+          <Heading style={h1}>شكوى جديدة واردة</Heading>
+          <Text style={headerSubtitle}>نظام إدارة الشكاوي - ASH HOLDING</Text>
+          <Text style={timeStamp}>تم الاستلام: {new Date().toLocaleString('ar-SA')}</Text>
         </Section>
 
         {/* Critical Alert Banner */}
         <Section style={[criticalAlert, getPriorityAlertStyle(priority)]}>
-          <Section style={alertContent}>
-            <Text style={alertIcon}>{getAlertIcon(priority)}</Text>
-            <Section style={alertTextContainer}>
-              <Text style={alertTitle}>تنبيه: شكوى بأولوية {priorityText}</Text>
-              <Text style={alertDesc}>مطلوب اتخاذ إجراء خلال {getResponseTime(priority)}</Text>
-            </Section>
+          <Text style={alertIcon}>{getAlertIcon(priority)}</Text>
+          <Section style={alertTextContainer}>
+            <Text style={alertTitle}>تنبيه: شكوى بأولوية {priorityText}</Text>
+            <Text style={alertDesc}>مطلوب اتخاذ إجراء خلال {getResponseTime(priority)}</Text>
           </Section>
         </Section>
 
         {/* Modern Ticket Card */}
         <Section style={modernTicketSection}>
-          <div style={ticketCard}>
-            <div style={ticketHeader}>
-              <Text style={ticketIcon}>🎫</Text>
-              <div style={ticketDetails}>
+          <Section style={ticketCard}>
+            <Row style={ticketHeader}>
+              <Column>
+                <Text style={ticketIcon}>🎫</Text>
+              </Column>
+              <Column style={ticketDetails}>
                 <Text style={ticketLabel}>رقم التذكرة</Text>
                 <Text style={ticketNumber}>{ticketNumber}</Text>
-              </div>
-              <div style={[priorityBadge, getPriorityBadgeStyle(priority)]}>
+              </Column>
+              <Column style={[priorityBadge, getPriorityBadgeStyle(priority)]}>
                 <Text style={priorityText}>{priorityText}</Text>
-              </div>
-            </div>
-          </div>
+              </Column>
+            </Row>
+          </Section>
         </Section>
 
         {/* Customer Profile Card */}
         <Section style={customerSection}>
-          <div style={sectionHeader}>
+          <Section style={sectionHeader}>
             <Text style={sectionIcon}>👤</Text>
             <Heading style={sectionTitle}>ملف العميل</Heading>
-          </div>
+          </Section>
           
-          <div style={customerCard}>
-            <div style={customerInfo}>
-              <div style={infoItem}>
-                <Text style={infoIcon}>👤</Text>
-                <div style={infoContent}>
-                  <Text style={infoLabel}>اسم العميل</Text>
-                  <Text style={infoValue}>{customerName}</Text>
-                </div>
-              </div>
-              
-              <div style={infoItem}>
-                <Text style={infoIcon}>📧</Text>
-                <div style={infoContent}>
-                  <Text style={infoLabel}>البريد الإلكتروني</Text>
-                  <Text style={infoValue}>{customerEmail}</Text>
-                </div>
-              </div>
-              
-              <div style={infoItem}>
-                <Text style={infoIcon}>📱</Text>
-                <div style={infoContent}>
-                  <Text style={infoLabel}>رقم الهاتف</Text>
-                  <Text style={infoValue}>{customerPhone}</Text>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Section style={customerCard}>
+            <Section style={infoItem}>
+              <Text style={infoIcon}>👤</Text>
+              <Section style={infoContent}>
+                <Text style={infoLabel}>اسم العميل</Text>
+                <Text style={infoValue}>{customerName}</Text>
+              </Section>
+            </Section>
+            
+            <Section style={infoItem}>
+              <Text style={infoIcon}>📧</Text>
+              <Section style={infoContent}>
+                <Text style={infoLabel}>البريد الإلكتروني</Text>
+                <Text style={infoValue}>{customerEmail}</Text>
+              </Section>
+            </Section>
+            
+            <Section style={infoItem}>
+              <Text style={infoIcon}>📱</Text>
+              <Section style={infoContent}>
+                <Text style={infoLabel}>رقم الهاتف</Text>
+                <Text style={infoValue}>{customerPhone}</Text>
+              </Section>
+            </Section>
+          </Section>
         </Section>
 
         {/* Complaint Analysis */}
         <Section style={complaintSection}>
-          <div style={sectionHeader}>
+          <Section style={sectionHeader}>
             <Text style={sectionIcon}>📋</Text>
             <Heading style={sectionTitle}>تحليل الشكوى</Heading>
-          </div>
+          </Section>
           
-          <div style={analysisGrid}>
-            <div style={analysisCard}>
-              <Text style={analysisIcon}>📝</Text>
-              <Text style={analysisLabel}>عنوان الشكوى</Text>
-              <Text style={analysisValue}>{title}</Text>
-            </div>
-            
-            <div style={analysisCard}>
-              <Text style={analysisIcon}>📂</Text>
-              <Text style={analysisLabel}>فئة الشكوى</Text>
-              <Text style={analysisValue}>{categoryText}</Text>
-            </div>
-            
-            <div style={analysisCard}>
-              <Text style={analysisIcon}>⚡</Text>
-              <Text style={analysisLabel}>مستوى الأولوية</Text>
-              <Text style={[analysisValue, getPriorityStyle(priority)]}>{priorityText}</Text>
-            </div>
-          </div>
+          <Section style={analysisCard}>
+            <Text style={analysisIcon}>📝</Text>
+            <Text style={analysisLabel}>عنوان الشكوى</Text>
+            <Text style={analysisValue}>{title}</Text>
+          </Section>
+          
+          <Section style={analysisCard}>
+            <Text style={analysisIcon}>📂</Text>
+            <Text style={analysisLabel}>فئة الشكوى</Text>
+            <Text style={analysisValue}>{categoryText}</Text>
+          </Section>
+          
+          <Section style={analysisCard}>
+            <Text style={analysisIcon}>⚡</Text>
+            <Text style={analysisLabel}>مستوى الأولوية</Text>
+            <Text style={[analysisValue, getPriorityStyle(priority)]}>{priorityText}</Text>
+          </Section>
 
-          <div style={descriptionCard}>
+          <Section style={descriptionCard}>
             <Text style={descriptionHeader}>📄 تفاصيل الشكوى</Text>
             <Text style={descriptionText}>{description}</Text>
-          </div>
+          </Section>
         </Section>
 
         {/* Action Dashboard */}
         <Section style={actionDashboard}>
-          <div style={sectionHeader}>
+          <Section style={sectionHeader}>
             <Text style={sectionIcon}>⚡</Text>
             <Heading style={sectionTitle}>لوحة الإجراءات</Heading>
-          </div>
+          </Section>
           
-          <div style={actionTimeline}>
-            <div style={timelineStep}>
-              <div style={stepNumber}>1</div>
-              <div style={stepContent}>
-                <Text style={stepTitle}>مراجعة فورية</Text>
-                <Text style={stepDesc}>تحليل الشكوى وتصنيف الأولوية</Text>
-                <Text style={stepTime}>الآن</Text>
-              </div>
-            </div>
-            
-            <div style={timelineStep}>
-              <div style={stepNumber}>2</div>
-              <div style={stepContent}>
-                <Text style={stepTitle}>التواصل مع العميل</Text>
-                <Text style={stepDesc}>الرد المباشر وتقديم الحلول</Text>
-                <Text style={stepTime}>{getResponseTime(priority)}</Text>
-              </div>
-            </div>
-            
-            <div style={timelineStep}>
-              <div style={stepNumber}>3</div>
-              <div style={stepContent}>
-                <Text style={stepTitle}>المتابعة والحل</Text>
-                <Text style={stepDesc}>تطبيق الحل ومتابعة رضا العميل</Text>
-                <Text style={stepTime}>خلال 48 ساعة</Text>
-              </div>
-            </div>
-          </div>
+          <Section style={timelineStep}>
+            <Text style={stepNumber}>1</Text>
+            <Section style={stepContent}>
+              <Text style={stepTitle}>مراجعة فورية</Text>
+              <Text style={stepDesc}>تحليل الشكوى وتصنيف الأولوية</Text>
+              <Text style={stepTime}>الآن</Text>
+            </Section>
+          </Section>
           
-          <div style={actionButtons}>
-            <Link href={`mailto:${customerEmail}?subject=رد على شكواك ${ticketNumber}`} style={[primaryActionBtn, getPriorityButtonStyle(priority)]}>
-              📞 اتصال فوري
-            </Link>
-            <Link href={`mailto:${customerEmail}?subject=رد على شكواك ${ticketNumber}`} style={emailActionBtn}>
-              📧 إرسال رد
-            </Link>
-            <Link href="https://alialshehriholding.com/admin/complaints" style={dashboardActionBtn}>
-              📊 لوحة التحكم
-            </Link>
-          </div>
+          <Section style={timelineStep}>
+            <Text style={stepNumber}>2</Text>
+            <Section style={stepContent}>
+              <Text style={stepTitle}>التواصل مع العميل</Text>
+              <Text style={stepDesc}>الرد المباشر وتقديم الحلول</Text>
+              <Text style={stepTime}>{getResponseTime(priority)}</Text>
+            </Section>
+          </Section>
+          
+          <Section style={timelineStep}>
+            <Text style={stepNumber}>3</Text>
+            <Section style={stepContent}>
+              <Text style={stepTitle}>المتابعة والحل</Text>
+              <Text style={stepDesc}>تطبيق الحل ومتابعة رضا العميل</Text>
+              <Text style={stepTime}>خلال 48 ساعة</Text>
+            </Section>
+          </Section>
+          
+          <Row style={actionButtons}>
+            <Column>
+              <Link href={`mailto:${customerEmail}?subject=رد على شكواك ${ticketNumber}`} style={[primaryActionBtn, getPriorityButtonStyle(priority)]}>
+                📞 اتصال فوري
+              </Link>
+            </Column>
+            <Column>
+              <Link href={`mailto:${customerEmail}?subject=رد على شكواك ${ticketNumber}`} style={emailActionBtn}>
+                📧 إرسال رد
+              </Link>
+            </Column>
+            <Column>
+              <Link href="https://alialshehriholding.com/admin/complaints" style={dashboardActionBtn}>
+                📊 لوحة التحكم
+              </Link>
+            </Column>
+          </Row>
         </Section>
 
         {/* SLA Timer */}
         <Section style={[slaSection, getPrioritySLAStyle(priority)]}>
-          <div style={slaContainer}>
-            <Text style={slaIcon}>⏰</Text>
-            <div style={slaContent}>
-              <Text style={slaTitle}>مؤشر الاستجابة المطلوبة</Text>
-              <Text style={slaTime}>{getResponseTime(priority)}</Text>
-              <Text style={slaDesc}>حسب معايير الجودة وأولوية الشكوى</Text>
-            </div>
-          </div>
+          <Text style={slaIcon}>⏰</Text>
+          <Section style={slaContent}>
+            <Text style={slaTitle}>مؤشر الاستجابة المطلوبة</Text>
+            <Text style={slaTime}>{getResponseTime(priority)}</Text>
+            <Text style={slaDesc}>حسب معايير الجودة وأولوية الشكوى</Text>
+          </Section>
         </Section>
 
         {/* Premium Footer */}
         <Section style={premiumFooter}>
-          <div style={footerContent}>
-            <Text style={footerLogo}>ASH HOLDING</Text>
-            <Text style={footerTagline}>نظام إدارة الشكاوي المتطور</Text>
-            <div style={footerStats}>
-              <div style={footerStat}>
-                <Text style={footerStatValue}>99.9%</Text>
-                <Text style={footerStatLabel}>معدل الحل</Text>
-              </div>
-              <div style={footerStat}>
-                <Text style={footerStatValue}>< 1 ساعة</Text>
-                <Text style={footerStatLabel}>متوسط الاستجابة</Text>
-              </div>
-              <div style={footerStat}>
-                <Text style={footerStatValue}>24/7</Text>
-                <Text style={footerStatLabel}>دعم متواصل</Text>
-              </div>
-            </div>
-            <Text style={footerNote}>
-              تم إرسال هذا الإشعار تلقائياً - {new Date().toLocaleString('ar-SA')}
-            </Text>
-          </div>
+          <Text style={footerLogo}>ASH HOLDING</Text>
+          <Text style={footerTagline}>نظام إدارة الشكاوي المتطور</Text>
+          
+          <Row style={footerStats}>
+            <Column style={footerStat}>
+              <Text style={footerStatValue}>99.9%</Text>
+              <Text style={footerStatLabel}>معدل الحل</Text>
+            </Column>
+            <Column style={footerStat}>
+              <Text style={footerStatValue}>< 1 ساعة</Text>
+              <Text style={footerStatLabel}>متوسط الاستجابة</Text>
+            </Column>
+            <Column style={footerStat}>
+              <Text style={footerStatValue}>24/7</Text>
+              <Text style={footerStatLabel}>دعم متواصل</Text>
+            </Column>
+          </Row>
+          
+          <Text style={footerNote}>
+            تم إرسال هذا الإشعار تلقائياً - {new Date().toLocaleString('ar-SA')}
+          </Text>
         </Section>
 
       </Container>
@@ -407,11 +403,6 @@ const header = {
   position: 'relative' as const,
 }
 
-const headerContent = {
-  position: 'relative' as const,
-  zIndex: 2,
-}
-
 const urgencyBadge = {
   backgroundColor: 'rgba(255, 255, 255, 0.2)',
   color: '#ffffff',
@@ -449,16 +440,12 @@ const timeStamp = {
 
 // Alert Styles
 const criticalAlert = {
-  margin: '0 40px',
+  margin: '20px 40px',
   borderRadius: '20px',
   padding: '25px',
   marginBottom: '30px',
-}
-
-const alertContent = {
   display: 'flex',
   alignItems: 'center',
-  gap: '20px',
 }
 
 const alertIcon = {
@@ -582,14 +569,10 @@ const customerCard = {
   padding: '30px',
 }
 
-const customerInfo = {
-  display: 'grid',
-  gap: '20px',
-}
-
 const infoItem = {
   display: 'flex',
   alignItems: 'center',
+  marginBottom: '20px',
 }
 
 const infoIcon = {
@@ -616,20 +599,14 @@ const infoValue = {
   margin: '0',
 }
 
-// Analysis Grid
-const analysisGrid = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  gap: '20px',
-  marginBottom: '30px',
-}
-
+// Analysis Styles
 const analysisCard = {
   backgroundColor: '#f8fafc',
   border: '1px solid #e2e8f0',
   borderRadius: '16px',
   padding: '25px',
   textAlign: 'center' as const,
+  marginBottom: '20px',
 }
 
 const analysisIcon = {
@@ -657,6 +634,7 @@ const descriptionCard = {
   border: '1px solid #e2e8f0',
   borderRadius: '16px',
   padding: '25px',
+  marginTop: '20px',
 }
 
 const descriptionHeader = {
@@ -674,10 +652,6 @@ const descriptionText = {
 }
 
 // Timeline
-const actionTimeline = {
-  marginBottom: '30px',
-}
-
 const timelineStep = {
   display: 'flex',
   alignItems: 'flex-start',
@@ -725,10 +699,7 @@ const stepTime = {
 
 // Action Buttons
 const actionButtons = {
-  display: 'flex',
-  gap: '15px',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
+  marginTop: '30px',
 }
 
 const primaryActionBtn = {
@@ -740,6 +711,8 @@ const primaryActionBtn = {
   fontWeight: '600',
   minWidth: '150px',
   textAlign: 'center' as const,
+  display: 'inline-block',
+  margin: '0 5px 10px 5px',
 }
 
 const emailActionBtn = {
@@ -753,6 +726,8 @@ const emailActionBtn = {
   minWidth: '150px',
   textAlign: 'center' as const,
   boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)',
+  display: 'inline-block',
+  margin: '0 5px 10px 5px',
 }
 
 const dashboardActionBtn = {
@@ -766,17 +741,16 @@ const dashboardActionBtn = {
   minWidth: '150px',
   textAlign: 'center' as const,
   border: '2px solid #3b82f6',
+  display: 'inline-block',
+  margin: '0 5px 10px 5px',
 }
 
 // SLA Section
 const slaSection = {
-  margin: '0 40px 40px 40px',
+  margin: '20px 40px 40px 40px',
   borderRadius: '20px',
   padding: '25px',
   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
-}
-
-const slaContainer = {
   display: 'flex',
   alignItems: 'center',
 }
@@ -817,11 +791,6 @@ const premiumFooter = {
   textAlign: 'center' as const,
 }
 
-const footerContent = {
-  maxWidth: '500px',
-  margin: '0 auto',
-}
-
 const footerLogo = {
   color: '#ffffff',
   fontSize: '28px',
@@ -838,14 +807,12 @@ const footerTagline = {
 }
 
 const footerStats = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: '20px',
   marginBottom: '30px',
 }
 
 const footerStat = {
   textAlign: 'center' as const,
+  padding: '0 10px',
 }
 
 const footerStatValue = {
