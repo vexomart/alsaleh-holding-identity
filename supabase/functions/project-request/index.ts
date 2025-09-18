@@ -1,5 +1,5 @@
 // Using Deno.serve directly for Supabase Edge runtime
-import { Resend } from 'npm:resend@4.0.0';
+import { Resend } from 'npm:resend@2.0.0';
 // Using simple inline HTML templates to avoid React email rendering in Edge Functions
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
