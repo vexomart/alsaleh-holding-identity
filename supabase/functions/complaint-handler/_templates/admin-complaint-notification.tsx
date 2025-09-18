@@ -41,150 +41,200 @@ export const AdminComplaintNotification = ({
 }: AdminComplaintNotificationProps) => (
   <Html>
     <Head />
-    <Preview>شكوى جديدة #{ticketNumber} من {customerName}</Preview>
+    <Preview>🚨 شكوى جديدة عاجلة #{ticketNumber} - {customerName}</Preview>
     <Body style={main}>
       <Container style={container}>
         
-        {/* Header */}
+        {/* Dynamic Priority Header */}
         <Section style={[header, getPriorityHeaderStyle(priority)]}>
-          <Heading style={h1}>🚨 شكوى جديدة</Heading>
-          <Text style={subtitle}>نظام إدارة الشكاوي - ASH HOLDING</Text>
+          <div style={headerContent}>
+            <Text style={urgencyBadge}>{getUrgencyIcon(priority)} {getUrgencyText(priority)}</Text>
+            <Heading style={h1}>شكوى جديدة واردة</Heading>
+            <Text style={headerSubtitle}>نظام إدارة الشكاوي - ASH HOLDING</Text>
+            <Text style={timeStamp}>تم الاستلام: {new Date().toLocaleString('ar-SA')}</Text>
+          </div>
         </Section>
 
-        {/* Alert */}
-        <Section style={[alertBox, getPriorityAlertStyle(priority)]}>
-          <Text style={alertText}>
-            تم استلام شكوى جديدة بأولوية <strong>{priorityText}</strong>
-          </Text>
+        {/* Critical Alert Banner */}
+        <Section style={[criticalAlert, getPriorityAlertStyle(priority)]}>
+          <div style={alertContent}>
+            <Text style={alertIcon}>{getAlertIcon(priority)}</Text>
+            <div style={alertTextContainer}>
+              <Text style={alertTitle}>تنبيه: شكوى بأولوية {priorityText}</Text>
+              <Text style={alertDesc}>مطلوب اتخاذ إجراء خلال {getResponseTime(priority)}</Text>
+            </div>
+          </div>
         </Section>
 
-        {/* Ticket Info */}
-        <Section style={ticketBox}>
-          <Row>
-            <Column style={{ textAlign: 'center' }}>
-              <Text style={ticketLabel}>رقم التذكرة</Text>
-              <Text style={ticketNumber}>{ticketNumber}</Text>
-            </Column>
-          </Row>
+        {/* Modern Ticket Card */}
+        <Section style={modernTicketSection}>
+          <div style={ticketCard}>
+            <div style={ticketHeader}>
+              <Text style={ticketIcon}>🎫</Text>
+              <div style={ticketDetails}>
+                <Text style={ticketLabel}>رقم التذكرة</Text>
+                <Text style={ticketNumber}>{ticketNumber}</Text>
+              </div>
+              <div style={[priorityBadge, getPriorityBadgeStyle(priority)]}>
+                <Text style={priorityText}>{priorityText}</Text>
+              </div>
+            </div>
+          </div>
         </Section>
 
-        {/* Customer Info */}
-        <Section style={section}>
-          <Heading style={h3}>معلومات العميل</Heading>
+        {/* Customer Profile Card */}
+        <Section style={customerSection}>
+          <div style={sectionHeader}>
+            <Text style={sectionIcon}>👤</Text>
+            <Heading style={sectionTitle}>ملف العميل</Heading>
+          </div>
           
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>الاسم:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={value}>{customerName}</Text>
-            </Column>
-          </Row>
-
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>البريد الإلكتروني:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={value}>{customerEmail}</Text>
-            </Column>
-          </Row>
-
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>الهاتف:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={value}>{customerPhone}</Text>
-            </Column>
-          </Row>
+          <div style={customerCard}>
+            <div style={customerInfo}>
+              <div style={infoItem}>
+                <Text style={infoIcon}>👤</Text>
+                <div style={infoContent}>
+                  <Text style={infoLabel}>اسم العميل</Text>
+                  <Text style={infoValue}>{customerName}</Text>
+                </div>
+              </div>
+              
+              <div style={infoItem}>
+                <Text style={infoIcon}>📧</Text>
+                <div style={infoContent}>
+                  <Text style={infoLabel}>البريد الإلكتروني</Text>
+                  <Text style={infoValue}>{customerEmail}</Text>
+                </div>
+              </div>
+              
+              <div style={infoItem}>
+                <Text style={infoIcon}>📱</Text>
+                <div style={infoContent}>
+                  <Text style={infoLabel}>رقم الهاتف</Text>
+                  <Text style={infoValue}>{customerPhone}</Text>
+                </div>
+              </div>
+            </div>
+          </div>
         </Section>
 
-        <Hr style={hr} />
-
-        {/* Complaint Details */}
-        <Section style={section}>
-          <Heading style={h3}>تفاصيل الشكوى</Heading>
+        {/* Complaint Analysis */}
+        <Section style={complaintSection}>
+          <div style={sectionHeader}>
+            <Text style={sectionIcon}>📋</Text>
+            <Heading style={sectionTitle}>تحليل الشكوى</Heading>
+          </div>
           
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>العنوان:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={value}>{title}</Text>
-            </Column>
-          </Row>
+          <div style={analysisGrid}>
+            <div style={analysisCard}>
+              <Text style={analysisIcon}>📝</Text>
+              <Text style={analysisLabel}>عنوان الشكوى</Text>
+              <Text style={analysisValue}>{title}</Text>
+            </div>
+            
+            <div style={analysisCard}>
+              <Text style={analysisIcon}>📂</Text>
+              <Text style={analysisLabel}>فئة الشكوى</Text>
+              <Text style={analysisValue}>{categoryText}</Text>
+            </div>
+            
+            <div style={analysisCard}>
+              <Text style={analysisIcon}>⚡</Text>
+              <Text style={analysisLabel}>مستوى الأولوية</Text>
+              <Text style={[analysisValue, getPriorityStyle(priority)]}>{priorityText}</Text>
+            </div>
+          </div>
 
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>الفئة:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={value}>{categoryText}</Text>
-            </Column>
-          </Row>
-
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>الأولوية:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={[value, getPriorityStyle(priority)]}>{priorityText}</Text>
-            </Column>
-          </Row>
-
-          <Hr style={hr} />
-
-          <Text style={label}>وصف الشكوى:</Text>
-          <Text style={description}>{description}</Text>
+          <div style={descriptionCard}>
+            <Text style={descriptionHeader}>📄 تفاصيل الشكوى</Text>
+            <Text style={descriptionText}>{description}</Text>
+          </div>
         </Section>
 
-        {/* Action Required */}
-        <Section style={actionBox}>
-          <Heading style={h4}>الإجراء المطلوب</Heading>
-          <Text style={text}>
-            • مراجعة الشكوى والتصنيف<br/>
-            • التواصل مع العميل خلال {getResponseTime(priority)}<br/>
-            • تسجيل الحل المقترح<br/>
-            • متابعة رضا العميل
-          </Text>
+        {/* Action Dashboard */}
+        <Section style={actionDashboard}>
+          <div style={sectionHeader}>
+            <Text style={sectionIcon}>⚡</Text>
+            <Heading style={sectionTitle}>لوحة الإجراءات</Heading>
+          </div>
           
-          <Row style={actionButtonRow}>
-            <Column>
-              <Link
-                href={`mailto:${customerEmail}?subject=رد على شكواك ${ticketNumber}`}
-                style={primaryActionButton}
-              >
-                الرد على العميل
-              </Link>
-            </Column>
-            <Column style={{ width: '20px' }} />
-            <Column>
-              <Link
-                href="https://alialshehriholding.com/admin/complaints"
-                style={secondaryActionButton}
-              >
-                إدارة الشكاوي
-              </Link>
-            </Column>
-          </Row>
+          <div style={actionTimeline}>
+            <div style={timelineStep}>
+              <div style={stepNumber}>1</div>
+              <div style={stepContent}>
+                <Text style={stepTitle}>مراجعة فورية</Text>
+                <Text style={stepDesc}>تحليل الشكوى وتصنيف الأولوية</Text>
+                <Text style={stepTime}>الآن</Text>
+              </div>
+            </div>
+            
+            <div style={timelineStep}>
+              <div style={stepNumber}>2</div>
+              <div style={stepContent}>
+                <Text style={stepTitle}>التواصل مع العميل</Text>
+                <Text style={stepDesc}>الرد المباشر وتقديم الحلول</Text>
+                <Text style={stepTime}>{getResponseTime(priority)}</Text>
+              </div>
+            </div>
+            
+            <div style={timelineStep}>
+              <div style={stepNumber}>3</div>
+              <div style={stepContent}>
+                <Text style={stepTitle}>المتابعة والحل</Text>
+                <Text style={stepDesc}>تطبيق الحل ومتابعة رضا العميل</Text>
+                <Text style={stepTime}>خلال 48 ساعة</Text>
+              </div>
+            </div>
+          </div>
+          
+          <div style={actionButtons}>
+            <Link href={`mailto:${customerEmail}?subject=رد على شكواك ${ticketNumber}`} style={[primaryActionBtn, getPriorityButtonStyle(priority)]}>
+              📞 اتصال فوري
+            </Link>
+            <Link href={`mailto:${customerEmail}?subject=رد على شكواك ${ticketNumber}`} style={emailActionBtn}>
+              📧 إرسال رد
+            </Link>
+            <Link href="https://alialshehriholding.com/admin/complaints" style={dashboardActionBtn}>
+              📊 لوحة التحكم
+            </Link>
+          </div>
         </Section>
 
-        {/* Response Time */}
-        <Section style={[timeBox, getPriorityTimeStyle(priority)]}>
-          <Text style={timeText}>
-            ⏰ وقت الاستجابة المطلوب: <strong>{getResponseTime(priority)}</strong>
-          </Text>
+        {/* SLA Timer */}
+        <Section style={[slaSection, getPrioritySLAStyle(priority)]}>
+          <div style={slaContainer}>
+            <Text style={slaIcon}>⏰</Text>
+            <div style={slaContent}>
+              <Text style={slaTitle}>مؤشر الاستجابة المطلوبة</Text>
+              <Text style={slaTime}>{getResponseTime(priority)}</Text>
+              <Text style={slaDesc}>حسب معايير الجودة وأولوية الشكوى</Text>
+            </div>
+          </div>
         </Section>
 
-        {/* Footer */}
-        <Section style={footer}>
-          <Hr style={hr} />
-          <Text style={footerText}>
-            تم إرسال هذا الإشعار تلقائياً من نظام إدارة الشكاوي<br/>
-            ASH HOLDING - نظام الدعم الفني<br/>
-            تاريخ الإرسال: {new Date().toLocaleString('ar-SA')}
-          </Text>
+        {/* Premium Footer */}
+        <Section style={premiumFooter}>
+          <div style={footerContent}>
+            <Text style={footerLogo}>ASH HOLDING</Text>
+            <Text style={footerTagline}>نظام إدارة الشكاوي المتطور</Text>
+            <div style={footerStats}>
+              <div style={footerStat}>
+                <Text style={footerStatValue}>99.9%</Text>
+                <Text style={footerStatLabel}>معدل الحل</Text>
+              </div>
+              <div style={footerStat}>
+                <Text style={footerStatValue}>< 1 ساعة</Text>
+                <Text style={footerStatLabel}>متوسط الاستجابة</Text>
+              </div>
+              <div style={footerStat}>
+                <Text style={footerStatValue}>24/7</Text>
+                <Text style={footerStatLabel}>دعم متواصل</Text>
+              </div>
+            </div>
+            <Text style={footerNote}>
+              تم إرسال هذا الإشعار تلقائياً - {new Date().toLocaleString('ar-SA')}
+            </Text>
+          </div>
         </Section>
 
       </Container>
@@ -192,6 +242,7 @@ export const AdminComplaintNotification = ({
   </Html>
 )
 
+// Enhanced Helper Functions
 const getResponseTime = (priority: string) => {
   switch (priority) {
     case 'high':
@@ -202,6 +253,45 @@ const getResponseTime = (priority: string) => {
       return 'خلال 24 ساعة';
     default:
       return 'خلال 24 ساعة';
+  }
+};
+
+const getUrgencyIcon = (priority: string) => {
+  switch (priority) {
+    case 'high':
+      return '🚨';
+    case 'medium':
+      return '⚠️';
+    case 'low':
+      return '📢';
+    default:
+      return '📄';
+  }
+};
+
+const getUrgencyText = (priority: string) => {
+  switch (priority) {
+    case 'high':
+      return 'عاجل جداً';
+    case 'medium':
+      return 'متوسط الأولوية';
+    case 'low':
+      return 'أولوية منخفضة';
+    default:
+      return 'عادي';
+  }
+};
+
+const getAlertIcon = (priority: string) => {
+  switch (priority) {
+    case 'high':
+      return '🔥';
+    case 'medium':
+      return '⚡';
+    case 'low':
+      return '📋';
+    default:
+      return '📄';
   }
 };
 
@@ -221,289 +311,560 @@ const getPriorityStyle = (priority: string) => {
 const getPriorityHeaderStyle = (priority: string) => {
   switch (priority) {
     case 'high':
-      return { backgroundColor: '#dc2626' };
+      return { background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)' };
     case 'medium':
-      return { backgroundColor: '#ea580c' };
+      return { background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' };
     case 'low':
-      return { backgroundColor: '#16a34a' };
+      return { background: 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)' };
     default:
-      return { backgroundColor: '#6b7280' };
+      return { background: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)' };
   }
 };
 
 const getPriorityAlertStyle = (priority: string) => {
   switch (priority) {
     case 'high':
-      return { backgroundColor: '#fef2f2', border: '2px solid #dc2626' };
+      return { backgroundColor: '#fef2f2', border: '3px solid #dc2626', boxShadow: '0 8px 24px rgba(220, 38, 38, 0.2)' };
     case 'medium':
-      return { backgroundColor: '#fff7ed', border: '2px solid #ea580c' };
+      return { backgroundColor: '#fff7ed', border: '3px solid #ea580c', boxShadow: '0 8px 24px rgba(234, 88, 12, 0.2)' };
     case 'low':
-      return { backgroundColor: '#f0fdf4', border: '2px solid #16a34a' };
+      return { backgroundColor: '#f0fdf4', border: '3px solid #16a34a', boxShadow: '0 8px 24px rgba(22, 163, 74, 0.2)' };
     default:
-      return { backgroundColor: '#f9fafb', border: '2px solid #6b7280' };
+      return { backgroundColor: '#f9fafb', border: '3px solid #6b7280', boxShadow: '0 8px 24px rgba(107, 114, 128, 0.2)' };
   }
 };
 
-const getPriorityTimeStyle = (priority: string) => {
+const getPriorityBadgeStyle = (priority: string) => {
   switch (priority) {
     case 'high':
-      return { backgroundColor: '#fef2f2', borderLeft: '4px solid #dc2626' };
+      return { backgroundColor: '#dc2626', color: '#ffffff' };
     case 'medium':
-      return { backgroundColor: '#fff7ed', borderLeft: '4px solid #ea580c' };
+      return { backgroundColor: '#ea580c', color: '#ffffff' };
     case 'low':
-      return { backgroundColor: '#f0fdf4', borderLeft: '4px solid #16a34a' };
+      return { backgroundColor: '#16a34a', color: '#ffffff' };
     default:
-      return { backgroundColor: '#f9fafb', borderLeft: '4px solid #6b7280' };
+      return { backgroundColor: '#6b7280', color: '#ffffff' };
   }
 };
 
+const getPriorityButtonStyle = (priority: string) => {
+  switch (priority) {
+    case 'high':
+      return { backgroundColor: '#dc2626', boxShadow: '0 8px 24px rgba(220, 38, 38, 0.4)' };
+    case 'medium':
+      return { backgroundColor: '#ea580c', boxShadow: '0 8px 24px rgba(234, 88, 12, 0.4)' };
+    case 'low':
+      return { backgroundColor: '#16a34a', boxShadow: '0 8px 24px rgba(22, 163, 74, 0.4)' };
+    default:
+      return { backgroundColor: '#6b7280', boxShadow: '0 8px 24px rgba(107, 114, 128, 0.4)' };
+  }
+};
+
+const getPrioritySLAStyle = (priority: string) => {
+  switch (priority) {
+    case 'high':
+      return { backgroundColor: '#fef2f2', borderLeft: '6px solid #dc2626' };
+    case 'medium':
+      return { backgroundColor: '#fff7ed', borderLeft: '6px solid #ea580c' };
+    case 'low':
+      return { backgroundColor: '#f0fdf4', borderLeft: '6px solid #16a34a' };
+    default:
+      return { backgroundColor: '#f9fafb', borderLeft: '6px solid #6b7280' };
+  }
+};
+
+// Enhanced Modern Design System
 const main = {
-  backgroundColor: '#f0f4f8',
-  fontFamily: 'Cairo, Tajawal, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  backgroundColor: '#0f0f23',
+  background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
+  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   direction: 'rtl' as const,
   textAlign: 'right' as const,
-  lineHeight: '1.7',
+  lineHeight: '1.6',
   margin: '0',
-  padding: '20px 10px',
+  padding: '20px',
   minHeight: '100vh',
 }
 
 const container = {
   backgroundColor: '#ffffff',
-  border: '3px solid #e2e8f0',
-  borderRadius: '24px',
+  borderRadius: '32px',
   margin: '0 auto',
-  maxWidth: '650px',
+  maxWidth: '720px',
   width: '100%',
   padding: '0',
-  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 40px 120px rgba(0, 0, 0, 0.3), 0 20px 60px rgba(0, 0, 0, 0.15)',
   overflow: 'hidden',
   position: 'relative',
 }
 
+// Dynamic Header Styles
 const header = {
-  borderRadius: '24px 24px 0 0',
-  padding: '50px 20px',
+  borderRadius: '32px 32px 0 0',
+  padding: '60px 40px',
   textAlign: 'center' as const,
-  background: 'linear-gradient(135deg, currentColor 0%, rgba(0,0,0,0.8) 100%)',
   overflow: 'hidden',
+  position: 'relative' as const,
+}
+
+const headerContent = {
+  position: 'relative' as const,
+  zIndex: 2,
+}
+
+const urgencyBadge = {
+  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  color: '#ffffff',
+  padding: '8px 20px',
+  borderRadius: '20px',
+  fontSize: '14px',
+  fontWeight: '600',
+  display: 'inline-block',
+  marginBottom: '20px',
+  backdropFilter: 'blur(10px)',
 }
 
 const h1 = {
   color: '#ffffff',
-  fontSize: '28px',
-  fontWeight: 'bold',
-  margin: '0 0 8px 0',
-  fontFamily: 'Arial, sans-serif',
+  fontSize: '32px',
+  fontWeight: '800',
+  margin: '0 0 15px 0',
+  textShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
 }
 
-const subtitle = {
-  color: '#ffffff',
+const headerSubtitle = {
+  color: '#e2e8f0',
   fontSize: '16px',
-  margin: '0',
+  fontWeight: '500',
+  margin: '0 0 15px 0',
   opacity: 0.9,
-  fontFamily: 'Arial, sans-serif',
 }
 
-const alertBox = {
-  borderRadius: '20px',
-  padding: '25px 20px',
-  margin: '20px 20px',
-  textAlign: 'center' as const,
-  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-}
-
-const alertText = {
-  color: '#1e293b',
-  fontSize: '18px',
-  fontWeight: 'bold',
+const timeStamp = {
+  color: '#cbd5e1',
+  fontSize: '14px',
   margin: '0',
-  fontFamily: 'Arial, sans-serif',
+  opacity: 0.8,
 }
 
-const section = {
-  padding: '25px 20px',
+// Alert Styles
+const criticalAlert = {
+  margin: '0 40px',
+  borderRadius: '20px',
+  padding: '25px',
+  marginBottom: '30px',
 }
 
-const h3 = {
-  color: '#1e293b',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  margin: '0 0 16px 0',
-  fontFamily: 'Arial, sans-serif',
+const alertContent = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '20px',
 }
 
-const h4 = {
-  color: '#1e293b',
+const alertIcon = {
+  fontSize: '32px',
+  marginRight: '15px',
+}
+
+const alertTextContainer = {
+  flex: 1,
+}
+
+const alertTitle = {
   fontSize: '18px',
-  fontWeight: 'bold',
-  margin: '0 0 12px 0',
-  fontFamily: 'Arial, sans-serif',
+  fontWeight: '700',
+  margin: '0 0 8px 0',
+  color: '#1e293b',
 }
 
-const text = {
-  color: '#475569',
-  fontSize: '16px',
-  lineHeight: '1.6',
-  margin: '0 0 16px 0',
-  fontFamily: 'Arial, sans-serif',
+const alertDesc = {
+  fontSize: '14px',
+  margin: '0',
+  color: '#64748b',
 }
 
-const ticketBox = {
+// Modern Ticket Styles
+const modernTicketSection = {
+  padding: '0 40px',
+  marginBottom: '30px',
+}
+
+const ticketCard = {
   background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-  borderRadius: '12px',
-  padding: '24px',
-  margin: '20px 30px',
-  textAlign: 'center' as const,
-  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+  borderRadius: '24px',
+  padding: '30px',
+  boxShadow: '0 20px 40px rgba(59, 130, 246, 0.3)',
+}
+
+const ticketHeader = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+}
+
+const ticketIcon = {
+  fontSize: '48px',
+  color: '#ffffff',
+  margin: '0',
+}
+
+const ticketDetails = {
+  flex: 1,
+  marginLeft: '20px',
 }
 
 const ticketLabel = {
   color: '#bfdbfe',
   fontSize: '14px',
+  fontWeight: '500',
   margin: '0 0 8px 0',
-  fontFamily: 'Arial, sans-serif',
 }
 
 const ticketNumber = {
   color: '#ffffff',
-  fontSize: '24px',
-  fontWeight: 'bold',
+  fontSize: '32px',
+  fontWeight: '800',
   margin: '0',
-  fontFamily: 'Arial, sans-serif',
+  letterSpacing: '1px',
 }
 
-const detailRow = {
-  marginBottom: '16px',
-  display: 'block',
-}
-
-const labelColumn = {
-  width: '100%',
-  verticalAlign: 'top',
-  display: 'block',
-  marginBottom: '5px',
-}
-
-const valueColumn = {
-  width: '100%',
-  display: 'block',
-}
-
-const label = {
-  color: '#64748b',
+const priorityBadge = {
+  padding: '8px 16px',
+  borderRadius: '12px',
   fontSize: '14px',
-  fontWeight: 'bold',
-  margin: '0',
-  fontFamily: 'Arial, sans-serif',
+  fontWeight: '600',
 }
 
-const value = {
+const priorityText = {
+  color: 'inherit',
+  margin: '0',
+}
+
+// Section Styles
+const customerSection = {
+  padding: '40px',
+  borderBottom: '1px solid #f1f5f9',
+}
+
+const complaintSection = {
+  padding: '40px',
+  borderBottom: '1px solid #f1f5f9',
+}
+
+const actionDashboard = {
+  padding: '40px',
+  backgroundColor: '#f8fafc',
+}
+
+const sectionHeader = {
+  display: 'flex',
+  alignItems: 'center',
+  marginBottom: '25px',
+}
+
+const sectionIcon = {
+  fontSize: '24px',
+  marginRight: '15px',
+}
+
+const sectionTitle = {
   color: '#1e293b',
-  fontSize: '16px',
+  fontSize: '24px',
+  fontWeight: '700',
   margin: '0',
-  fontFamily: 'Arial, sans-serif',
 }
 
-const description = {
-  color: '#475569',
-  fontSize: '16px',
-  lineHeight: '1.6',
+// Customer Card
+const customerCard = {
   backgroundColor: '#f8fafc',
   border: '1px solid #e2e8f0',
-  borderRadius: '6px',
-  padding: '16px',
-  margin: '8px 0 0 0',
-  fontFamily: 'Arial, sans-serif',
-}
-
-const actionBox = {
-  background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-  border: '3px solid #fcd34d',
   borderRadius: '20px',
-  padding: '30px 20px',
-  margin: '0 20px 20px 20px',
-  boxShadow: '0 8px 25px rgba(251, 191, 36, 0.15)',
-  position: 'relative',
+  padding: '30px',
 }
 
-const timeBox = {
-  borderRadius: '20px',
-  padding: '25px 20px',
-  margin: '0 20px 30px 20px',
-  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+const customerInfo = {
+  display: 'grid',
+  gap: '20px',
 }
 
-const timeText = {
-  color: '#1e293b',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  margin: '0',
-  fontFamily: 'Arial, sans-serif',
+const infoItem = {
+  display: 'flex',
+  alignItems: 'center',
 }
 
-const hr = {
-  border: 'none',
-  borderTop: '1px solid #e2e8f0',
-  margin: '20px 0',
+const infoIcon = {
+  fontSize: '24px',
+  marginRight: '15px',
+  width: '40px',
 }
 
-const footer = {
-  padding: '30px 20px',
-  backgroundColor: '#f8fafc',
-  borderRadius: '0 0 24px 24px',
-  borderTop: '3px solid #e2e8f0',
+const infoContent = {
+  flex: 1,
 }
 
-const footerText = {
+const infoLabel = {
   color: '#64748b',
   fontSize: '14px',
-  lineHeight: '1.5',
-  margin: '0',
-  textAlign: 'center' as const,
-  fontFamily: 'Arial, sans-serif',
+  fontWeight: '600',
+  margin: '0 0 5px 0',
 }
 
-// New styles for action buttons
-const actionButtonRow = {
-  marginTop: '25px',
+const infoValue = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0',
+}
+
+// Analysis Grid
+const analysisGrid = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap: '20px',
+  marginBottom: '30px',
+}
+
+const analysisCard = {
+  backgroundColor: '#f8fafc',
+  border: '1px solid #e2e8f0',
+  borderRadius: '16px',
+  padding: '25px',
   textAlign: 'center' as const,
+}
+
+const analysisIcon = {
+  fontSize: '32px',
+  margin: '0 0 15px 0',
   display: 'block',
 }
 
-const primaryActionButton = {
-  backgroundColor: '#dc2626',
-  color: '#ffffff',
-  padding: '18px 36px',
-  borderRadius: '12px',
-  textDecoration: 'none',
-  display: 'inline-block',
-  fontSize: '18px',
-  fontWeight: 'bold',
-  fontFamily: 'Cairo, Arial, sans-serif',
-  textAlign: 'center' as const,
-  margin: '10px',
-  minWidth: '220px',
-  boxShadow: '0 8px 20px rgba(220, 38, 38, 0.4)',
-  transform: 'translateY(0)',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+const analysisLabel = {
+  color: '#64748b',
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '0 0 8px 0',
 }
 
-const secondaryActionButton = {
-  backgroundColor: 'transparent',
+const analysisValue = {
   color: '#1e293b',
-  padding: '18px 36px',
-  borderRadius: '12px',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0',
+}
+
+const descriptionCard = {
+  backgroundColor: '#f8fafc',
+  border: '1px solid #e2e8f0',
+  borderRadius: '16px',
+  padding: '25px',
+}
+
+const descriptionHeader = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 0 15px 0',
+}
+
+const descriptionText = {
+  color: '#475569',
+  fontSize: '15px',
+  lineHeight: '1.7',
+  margin: '0',
+}
+
+// Timeline
+const actionTimeline = {
+  marginBottom: '30px',
+}
+
+const timelineStep = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  marginBottom: '25px',
+}
+
+const stepNumber = {
+  backgroundColor: '#3b82f6',
+  color: '#ffffff',
+  width: '32px',
+  height: '32px',
+  borderRadius: '50%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '14px',
+  fontWeight: '700',
+  flexShrink: 0,
+  marginRight: '15px',
+}
+
+const stepContent = {
+  flex: 1,
+}
+
+const stepTitle = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 0 5px 0',
+}
+
+const stepDesc = {
+  color: '#64748b',
+  fontSize: '14px',
+  margin: '0 0 5px 0',
+}
+
+const stepTime = {
+  color: '#3b82f6',
+  fontSize: '12px',
+  fontWeight: '600',
+  margin: '0',
+}
+
+// Action Buttons
+const actionButtons = {
+  display: 'flex',
+  gap: '15px',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+}
+
+const primaryActionBtn = {
+  color: '#ffffff',
+  padding: '16px 24px',
+  borderRadius: '16px',
   textDecoration: 'none',
-  display: 'inline-block',
-  fontSize: '18px',
-  fontWeight: 'bold',
-  fontFamily: 'Cairo, Arial, sans-serif',
+  fontSize: '16px',
+  fontWeight: '600',
+  minWidth: '150px',
   textAlign: 'center' as const,
-  border: '3px solid #1e293b',
-  margin: '10px',
-  minWidth: '220px',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+}
+
+const emailActionBtn = {
+  backgroundColor: '#3b82f6',
+  color: '#ffffff',
+  padding: '16px 24px',
+  borderRadius: '16px',
+  textDecoration: 'none',
+  fontSize: '16px',
+  fontWeight: '600',
+  minWidth: '150px',
+  textAlign: 'center' as const,
+  boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)',
+}
+
+const dashboardActionBtn = {
+  backgroundColor: '#ffffff',
+  color: '#3b82f6',
+  padding: '16px 24px',
+  borderRadius: '16px',
+  textDecoration: 'none',
+  fontSize: '16px',
+  fontWeight: '600',
+  minWidth: '150px',
+  textAlign: 'center' as const,
+  border: '2px solid #3b82f6',
+}
+
+// SLA Section
+const slaSection = {
+  margin: '0 40px 40px 40px',
+  borderRadius: '20px',
+  padding: '25px',
+  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
+}
+
+const slaContainer = {
+  display: 'flex',
+  alignItems: 'center',
+}
+
+const slaIcon = {
+  fontSize: '32px',
+  marginRight: '20px',
+}
+
+const slaContent = {
+  flex: 1,
+}
+
+const slaTitle = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '700',
+  margin: '0 0 8px 0',
+}
+
+const slaTime = {
+  color: '#3b82f6',
+  fontSize: '20px',
+  fontWeight: '800',
+  margin: '0 0 5px 0',
+}
+
+const slaDesc = {
+  color: '#64748b',
+  fontSize: '14px',
+  margin: '0',
+}
+
+// Premium Footer
+const premiumFooter = {
+  background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+  padding: '50px 40px',
+  textAlign: 'center' as const,
+}
+
+const footerContent = {
+  maxWidth: '500px',
+  margin: '0 auto',
+}
+
+const footerLogo = {
+  color: '#ffffff',
+  fontSize: '28px',
+  fontWeight: '800',
+  margin: '0 0 10px 0',
+  letterSpacing: '1px',
+}
+
+const footerTagline = {
+  color: '#cbd5e1',
+  fontSize: '16px',
+  fontWeight: '500',
+  margin: '0 0 30px 0',
+}
+
+const footerStats = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: '20px',
+  marginBottom: '30px',
+}
+
+const footerStat = {
+  textAlign: 'center' as const,
+}
+
+const footerStatValue = {
+  color: '#ffffff',
+  fontSize: '20px',
+  fontWeight: '700',
+  margin: '0 0 5px 0',
+}
+
+const footerStatLabel = {
+  color: '#94a3b8',
+  fontSize: '12px',
+  margin: '0',
+}
+
+const footerNote = {
+  color: '#94a3b8',
+  fontSize: '12px',
+  margin: '0',
 }
 
 export default AdminComplaintNotification

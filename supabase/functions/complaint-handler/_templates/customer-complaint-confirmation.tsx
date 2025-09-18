@@ -37,128 +37,179 @@ export const CustomerComplaintConfirmation = ({
 }: CustomerComplaintConfirmationProps) => (
   <Html>
     <Head />
-    <Preview>تأكيد استلام شكواك #{ticketNumber}</Preview>
+    <Preview>✅ تم استلام شكواك - رقم التذكرة {ticketNumber}</Preview>
     <Body style={main}>
       <Container style={container}>
         
-        {/* Header */}
+        {/* Premium Header with Animated Background */}
         <Section style={header}>
-          <Heading style={h1}>ASH HOLDING</Heading>
-          <Text style={subtitle}>نظام إدارة الشكاوي</Text>
+          <div style={logoContainer}>
+            <Text style={logoText}>ASH</Text>
+            <Text style={logoSubtext}>HOLDING</Text>
+          </div>
+          <Text style={headerTitle}>✅ تم استلام شكواك بنجاح</Text>
+          <Text style={headerSubtitle}>نحن نقدر ثقتك بنا ونعتذر عن أي إزعاج</Text>
         </Section>
 
-        {/* Greeting */}
-        <Section style={section}>
-          <Heading style={h2}>عزيزي/عزيزتي {customerName}</Heading>
-          <Text style={text}>
-            تم استلام شكواك بنجاح. نقدر لك التواصل معنا ونؤكد لك أننا سنتعامل مع شكواك بكل جدية واهتمام.
+        {/* Success Status */}
+        <Section style={statusSection}>
+          <div style={statusContainer}>
+            <Text style={statusIcon}>✅</Text>
+            <Text style={statusText}>تم استلام الشكوى</Text>
+            <Text style={statusTime}>{new Date().toLocaleString('ar-SA')}</Text>
+          </div>
+        </Section>
+
+        {/* Greeting Card */}
+        <Section style={greetingCard}>
+          <Text style={greetingIcon}>👋</Text>
+          <Heading style={h2}>مرحباً {customerName}</Heading>
+          <Text style={greetingText}>
+            نشكرك على تواصلك معنا. تم استلام شكواك وسيتم التعامل معها بأقصى درجات الاهتمام والسرعة. 
+            فريقنا المختص يعمل الآن على حل المشكلة.
           </Text>
         </Section>
 
-        {/* Ticket Info */}
-        <Section style={ticketBox}>
+        {/* Modern Ticket Card */}
+        <Section style={modernTicketCard}>
           <Row>
-            <Column>
-              <Text style={ticketLabel}>رقم التذكرة:</Text>
-              <Text style={ticketNumber}>{ticketNumber}</Text>
+            <Column style={ticketIconColumn}>
+              <Text style={ticketCardIcon}>🎫</Text>
+            </Column>
+            <Column style={ticketDetailsColumn}>
+              <Text style={ticketCardLabel}>رقم التذكرة</Text>
+              <Text style={ticketCardNumber}>{ticketNumber}</Text>
+              <Text style={ticketCardStatus}>قيد المعالجة</Text>
             </Column>
           </Row>
         </Section>
 
-        {/* Complaint Details */}
-        <Section style={section}>
-          <Heading style={h3}>تفاصيل الشكوى</Heading>
+        {/* Details Grid */}
+        <Section style={detailsSection}>
+          <Heading style={sectionTitle}>📋 تفاصيل الشكوى</Heading>
           
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>العنوان:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={value}>{title}</Text>
-            </Column>
-          </Row>
+          <div style={detailsGrid}>
+            <div style={detailCard}>
+              <Text style={detailIcon}>📝</Text>
+              <Text style={detailLabel}>العنوان</Text>
+              <Text style={detailValue}>{title}</Text>
+            </div>
+            
+            <div style={detailCard}>
+              <Text style={detailIcon}>📂</Text>
+              <Text style={detailLabel}>الفئة</Text>
+              <Text style={detailValue}>{categoryText}</Text>
+            </div>
+            
+            <div style={detailCard}>
+              <Text style={detailIcon}>⚡</Text>
+              <Text style={detailLabel}>الأولوية</Text>
+              <Text style={[detailValue, getPriorityStyle(priority)]}>{priorityText}</Text>
+            </div>
+          </div>
 
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>الفئة:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={value}>{categoryText}</Text>
-            </Column>
-          </Row>
-
-          <Row style={detailRow}>
-            <Column style={labelColumn}>
-              <Text style={label}>الأولوية:</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={[value, getPriorityStyle(priority)]}>{priorityText}</Text>
-            </Column>
-          </Row>
-
-          <Hr style={hr} />
-
-          <Text style={label}>الوصف:</Text>
-          <Text style={descriptionBox}>{description}</Text>
+          <div style={descriptionCard}>
+            <Text style={descriptionLabel}>📄 تفاصيل الشكوى</Text>
+            <Text style={descriptionText}>{description}</Text>
+          </div>
         </Section>
 
-        {/* Next Steps */}
-        <Section style={nextStepsBox}>
-          <Heading style={h3}>الخطوات القادمة</Heading>
-          <Text style={text}>
-            • سيقوم فريقنا المتخصص بمراجعة شكواك خلال 24 ساعة<br/>
-            • ستتلقى تحديثات دورية حول حالة شكواك<br/>
-            • سنتواصل معك عبر البريد الإلكتروني أو الهاتف<br/>
-            • يمكنك الرد على هذا البريد للمتابعة
-          </Text>
-          
-          <Row style={buttonRow}>
+        {/* Timeline Section */}
+        <Section style={timelineSection}>
+          <Heading style={sectionTitle}>⏰ خطة المعالجة</Heading>
+          <div style={timelineContainer}>
+            <div style={timelineItem}>
+              <Text style={timelineStep}>1</Text>
+              <div style={timelineContent}>
+                <Text style={timelineTitle}>مراجعة فورية</Text>
+                <Text style={timelineDesc}>تم استلام شكواك وبدء المعالجة</Text>
+                <Text style={timelineTime}>مكتمل ✅</Text>
+              </div>
+            </div>
+            
+            <div style={timelineItem}>
+              <Text style={timelineStep}>2</Text>
+              <div style={timelineContent}>
+                <Text style={timelineTitle}>التحليل والتقييم</Text>
+                <Text style={timelineDesc}>دراسة الشكوى وتحديد الحلول</Text>
+                <Text style={timelineTime}>خلال 4 ساعات 🔄</Text>
+              </div>
+            </div>
+            
+            <div style={timelineItem}>
+              <Text style={timelineStep}>3</Text>
+              <div style={timelineContent}>
+                <Text style={timelineTitle}>التواصل والحل</Text>
+                <Text style={timelineDesc}>التواصل معك وتطبيق الحل</Text>
+                <Text style={timelineTime}>خلال 24 ساعة ⏳</Text>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        {/* Action Buttons */}
+        <Section style={actionSection}>
+          <Text style={actionTitle}>🚀 كيف يمكننا مساعدتك؟</Text>
+          <Row style={actionRow}>
             <Column>
-              <Link
-                href={`mailto:info@alialshehriholding.com?subject=متابعة الشكوى ${ticketNumber}`}
-                style={primaryButton}
-              >
-                متابعة الشكوى
+              <Link href={`mailto:info@alialshehriholding.com?subject=متابعة الشكوى ${ticketNumber}`} style={primaryAction}>
+                💬 متابعة الشكوى
               </Link>
             </Column>
-            <Column style={{ width: '20px' }} />
             <Column>
-              <Link
-                href="https://alialshehriholding.com/support"
-                style={secondaryButton}
-              >
-                مركز المساعدة
+              <Link href="https://alialshehriholding.com/support" style={secondaryAction}>
+                📚 مركز المساعدة
+              </Link>
+            </Column>
+          </Row>
+          <Row style={actionRow}>
+            <Column>
+              <Link href="tel:0555812567" style={emergencyAction}>
+                📞 اتصال عاجل
               </Link>
             </Column>
           </Row>
         </Section>
 
-        {/* Contact Info */}
-        <Section style={contactBox}>
-          <Heading style={h4}>للاستفسارات العاجلة</Heading>
-          <Row style={contactRow}>
-            <Column style={contactItem}>
-              <Text style={contactIcon}>📞</Text>
-              <Text style={contactText}>0555812567</Text>
-            </Column>
-            <Column style={contactItem}>
-              <Text style={contactIcon}>📧</Text>
-              <Text style={contactText}>info@alialshehriholding.com</Text>
-            </Column>
-            <Column style={contactItem}>
-              <Text style={contactIcon}>🌐</Text>
-              <Text style={contactText}>alialshehriholding.com</Text>
-            </Column>
-          </Row>
+        {/* Contact Cards */}
+        <Section style={contactSection}>
+          <Heading style={sectionTitle}>📞 طرق التواصل</Heading>
+          <div style={contactGrid}>
+            <div style={contactCard}>
+              <Text style={contactCardIcon}>📞</Text>
+              <Text style={contactCardTitle}>الهاتف</Text>
+              <Text style={contactCardValue}>0555812567</Text>
+              <Text style={contactCardDesc}>متاح 24/7</Text>
+            </div>
+            
+            <div style={contactCard}>
+              <Text style={contactCardIcon}>📧</Text>
+              <Text style={contactCardTitle}>البريد الإلكتروني</Text>
+              <Text style={contactCardValue}>info@alialshehriholding.com</Text>
+              <Text style={contactCardDesc}>رد خلال ساعة</Text>
+            </div>
+            
+            <div style={contactCard}>
+              <Text style={contactCardIcon}>🌐</Text>
+              <Text style={contactCardTitle}>الموقع</Text>
+              <Text style={contactCardValue}>alialshehriholding.com</Text>
+              <Text style={contactCardDesc}>مساعدة فورية</Text>
+            </div>
+          </div>
         </Section>
 
-        {/* Footer */}
-        <Section style={footer}>
-          <Hr style={hr} />
-          <Text style={footerText}>
-            شكراً لك على ثقتك في ASH HOLDING<br/>
-            هذه رسالة تلقائية، يرجى عدم الرد عليها مباشرة
-          </Text>
+        {/* Premium Footer */}
+        <Section style={premiumFooter}>
+          <div style={footerContent}>
+            <Text style={footerLogo}>ASH HOLDING</Text>
+            <Text style={footerTagline}>الثقة والجودة في الخدمة</Text>
+            <Text style={footerText}>
+              شكراً لك على ثقتك في ASH HOLDING. نحن ملتزمون بتقديم أفضل خدمة عملاء.
+            </Text>
+            <Text style={footerNote}>
+              تم إرسال هذا البريد تلقائياً في {new Date().toLocaleString('ar-SA')}
+            </Text>
+          </div>
         </Section>
 
       </Container>
@@ -179,270 +230,461 @@ const getPriorityStyle = (priority: string) => {
   }
 };
 
+// Modern Premium Design System
 const main = {
-  backgroundColor: '#f0f4f8',
-  fontFamily: 'Cairo, Tajawal, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  backgroundColor: '#0f0f23',
+  background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
+  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   direction: 'rtl' as const,
   textAlign: 'right' as const,
-  lineHeight: '1.7',
+  lineHeight: '1.6',
   margin: '0',
-  padding: '20px 10px',
+  padding: '20px',
   minHeight: '100vh',
 }
 
 const container = {
   backgroundColor: '#ffffff',
-  border: '3px solid #e2e8f0',
-  borderRadius: '24px',
+  borderRadius: '32px',
   margin: '0 auto',
-  maxWidth: '600px',
+  maxWidth: '680px',
   width: '100%',
   padding: '0',
-  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 40px 120px rgba(0, 0, 0, 0.3), 0 20px 60px rgba(0, 0, 0, 0.15)',
   overflow: 'hidden',
   position: 'relative',
 }
 
+// Premium Header Styles
 const header = {
-  background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%)',
-  borderRadius: '24px 24px 0 0',
-  padding: '50px 20px',
+  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+  padding: '60px 40px',
   textAlign: 'center' as const,
   position: 'relative' as const,
   overflow: 'hidden',
 }
 
-const h1 = {
+const logoContainer = {
+  marginBottom: '30px',
+}
+
+const logoText = {
+  color: '#ffffff',
+  fontSize: '36px',
+  fontWeight: '900',
+  margin: '0',
+  letterSpacing: '2px',
+  textShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+}
+
+const logoSubtext = {
+  color: '#e2e8f0',
+  fontSize: '14px',
+  fontWeight: '500',
+  margin: '5px 0 0 0',
+  letterSpacing: '4px',
+  opacity: 0.9,
+}
+
+const headerTitle = {
   color: '#ffffff',
   fontSize: '28px',
-  fontWeight: 'bold',
-  margin: '0 0 8px 0',
-  fontFamily: 'Arial, sans-serif',
+  fontWeight: '700',
+  margin: '0 0 15px 0',
+  textShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
 }
 
-const subtitle = {
-  color: '#cbd5e1',
+const headerSubtitle = {
+  color: '#e2e8f0',
   fontSize: '16px',
+  fontWeight: '400',
   margin: '0',
-  fontFamily: 'Arial, sans-serif',
+  opacity: 0.9,
 }
 
-const section = {
-  padding: '25px 20px',
+// Status Section
+const statusSection = {
+  padding: '30px 40px',
+  borderBottom: '1px solid #f1f5f9',
+}
+
+const statusContainer = {
+  textAlign: 'center' as const,
+  backgroundColor: '#f0fdf4',
+  border: '2px solid #22c55e',
+  borderRadius: '20px',
+  padding: '25px',
+}
+
+const statusIcon = {
+  fontSize: '48px',
+  margin: '0 0 15px 0',
+  display: 'block',
+}
+
+const statusText = {
+  color: '#15803d',
+  fontSize: '20px',
+  fontWeight: '700',
+  margin: '0 0 10px 0',
+}
+
+const statusTime = {
+  color: '#65a30d',
+  fontSize: '14px',
+  fontWeight: '500',
+  margin: '0',
+}
+
+// Greeting Card
+const greetingCard = {
+  backgroundColor: '#f8fafc',
+  margin: '0 40px',
+  padding: '40px',
+  borderRadius: '24px',
+  border: '1px solid #e2e8f0',
+  textAlign: 'center' as const,
+}
+
+const greetingIcon = {
+  fontSize: '48px',
+  margin: '0 0 20px 0',
+  display: 'block',
 }
 
 const h2 = {
   color: '#1e293b',
-  fontSize: '24px',
-  fontWeight: 'bold',
-  margin: '0 0 16px 0',
-  fontFamily: 'Arial, sans-serif',
+  fontSize: '28px',
+  fontWeight: '700',
+  margin: '0 0 20px 0',
 }
 
-const h3 = {
-  color: '#1e293b',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  margin: '0 0 16px 0',
-  fontFamily: 'Arial, sans-serif',
-}
-
-const h4 = {
-  color: '#1e293b',
-  fontSize: '18px',
-  fontWeight: 'bold',
-  margin: '0 0 12px 0',
-  fontFamily: 'Arial, sans-serif',
-}
-
-const text = {
+const greetingText = {
   color: '#475569',
   fontSize: '16px',
-  lineHeight: '1.6',
-  margin: '0 0 16px 0',
-  fontFamily: 'Arial, sans-serif',
+  lineHeight: '1.7',
+  margin: '0',
 }
 
-const ticketBox = {
-  background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-  border: '3px solid #3b82f6',
-  borderRadius: '20px',
-  padding: '30px 20px',
-  margin: '20px 20px',
+// Modern Ticket Card
+const modernTicketCard = {
+  margin: '40px',
+  background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+  borderRadius: '24px',
+  padding: '30px',
+  boxShadow: '0 20px 40px rgba(59, 130, 246, 0.3)',
+}
+
+const ticketIconColumn = {
+  width: '80px',
   textAlign: 'center' as const,
-  boxShadow: '0 8px 25px rgba(59, 130, 246, 0.2)',
-  position: 'relative',
 }
 
-const ticketLabel = {
+const ticketCardIcon = {
+  fontSize: '48px',
+  color: '#ffffff',
+  margin: '0',
+  display: 'block',
+}
+
+const ticketDetailsColumn = {
+  paddingLeft: '20px',
+}
+
+const ticketCardLabel = {
+  color: '#bfdbfe',
+  fontSize: '14px',
+  fontWeight: '500',
+  margin: '0 0 8px 0',
+}
+
+const ticketCardNumber = {
+  color: '#ffffff',
+  fontSize: '32px',
+  fontWeight: '800',
+  margin: '0 0 8px 0',
+  letterSpacing: '1px',
+}
+
+const ticketCardStatus = {
+  color: '#93c5fd',
+  fontSize: '14px',
+  fontWeight: '500',
+  margin: '0',
+}
+
+// Details Section
+const detailsSection = {
+  padding: '40px',
+}
+
+const sectionTitle = {
+  color: '#1e293b',
+  fontSize: '24px',
+  fontWeight: '700',
+  margin: '0 0 30px 0',
+  textAlign: 'center' as const,
+}
+
+const detailsGrid = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap: '20px',
+  marginBottom: '30px',
+}
+
+const detailCard = {
+  backgroundColor: '#f8fafc',
+  border: '1px solid #e2e8f0',
+  borderRadius: '16px',
+  padding: '25px',
+  textAlign: 'center' as const,
+}
+
+const detailIcon = {
+  fontSize: '32px',
+  margin: '0 0 15px 0',
+  display: 'block',
+}
+
+const detailLabel = {
+  color: '#64748b',
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '0 0 8px 0',
+}
+
+const detailValue = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0',
+}
+
+const descriptionCard = {
+  backgroundColor: '#f8fafc',
+  border: '1px solid #e2e8f0',
+  borderRadius: '16px',
+  padding: '25px',
+}
+
+const descriptionLabel = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 0 15px 0',
+}
+
+const descriptionText = {
+  color: '#475569',
+  fontSize: '15px',
+  lineHeight: '1.7',
+  margin: '0',
+}
+
+// Timeline Section
+const timelineSection = {
+  padding: '40px',
+  backgroundColor: '#f8fafc',
+}
+
+const timelineContainer = {
+  position: 'relative' as const,
+}
+
+const timelineItem = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  marginBottom: '30px',
+  position: 'relative' as const,
+}
+
+const timelineStep = {
+  backgroundColor: '#3b82f6',
+  color: '#ffffff',
+  width: '40px',
+  height: '40px',
+  borderRadius: '50%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '16px',
+  fontWeight: '700',
+  flexShrink: 0,
+  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+}
+
+const timelineContent = {
+  marginLeft: '20px',
+  flex: 1,
+}
+
+const timelineTitle = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 0 8px 0',
+}
+
+const timelineDesc = {
   color: '#64748b',
   fontSize: '14px',
   margin: '0 0 8px 0',
-  fontFamily: 'Arial, sans-serif',
 }
 
-const ticketNumber = {
+const timelineTime = {
   color: '#3b82f6',
-  fontSize: '24px',
-  fontWeight: 'bold',
+  fontSize: '12px',
+  fontWeight: '600',
   margin: '0',
-  fontFamily: 'Arial, sans-serif',
 }
 
-const detailRow = {
-  marginBottom: '16px',
-  display: 'block',
+// Action Section
+const actionSection = {
+  padding: '40px',
+  textAlign: 'center' as const,
 }
 
-const labelColumn = {
-  width: '100%',
-  verticalAlign: 'top',
-  display: 'block',
-  marginBottom: '5px',
-}
-
-const valueColumn = {
-  width: '100%',
-  display: 'block',
-}
-
-const label = {
-  color: '#64748b',
-  fontSize: '14px',
-  fontWeight: 'bold',
-  margin: '0',
-  fontFamily: 'Arial, sans-serif',
-}
-
-const value = {
+const actionTitle = {
   color: '#1e293b',
-  fontSize: '16px',
-  margin: '0',
-  fontFamily: 'Arial, sans-serif',
+  fontSize: '20px',
+  fontWeight: '700',
+  margin: '0 0 30px 0',
 }
 
-const descriptionBox = {
-  color: '#475569',
-  fontSize: '16',
-  lineHeight: '1.6',
-  backgroundColor: '#f8fafc',
-  border: '1px solid #e2e8f0',
-  borderRadius: '6px',
-  padding: '16px',
-  margin: '8px 0 0 0',
-  fontFamily: 'Arial, sans-serif',
+const actionRow = {
+  marginBottom: '20px',
 }
 
-const nextStepsBox = {
-  background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
-  border: '3px solid #bbf7d0',
-  borderRadius: '20px',
-  padding: '30px 20px',
-  margin: '0 20px 20px 20px',
-  boxShadow: '0 8px 25px rgba(34, 197, 94, 0.15)',
-  position: 'relative',
-}
-
-const contactBox = {
-  background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-  border: '3px solid #fcd34d',
-  borderRadius: '20px',
-  padding: '30px 20px',
-  margin: '0 20px 30px 20px',
-  boxShadow: '0 8px 25px rgba(251, 191, 36, 0.15)',
-  position: 'relative',
-}
-
-const hr = {
-  border: 'none',
-  borderTop: '1px solid #e2e8f0',
-  margin: '20px 0',
-}
-
-const footer = {
-  padding: '30px 20px',
-  backgroundColor: '#f8fafc',
-  borderRadius: '0 0 24px 24px',
-  borderTop: '3px solid #e2e8f0',
-}
-
-const footerText = {
-  color: '#64748b',
-  fontSize: '14px',
-  lineHeight: '1.5',
-  margin: '0',
-  textAlign: 'center' as const,
-  fontFamily: 'Arial, sans-serif',
-}
-
-// New styles for buttons and responsive design
-const buttonRow = {
-  marginTop: '25px',
-  textAlign: 'center' as const,
-  display: 'block',
-}
-
-const primaryButton = {
+const primaryAction = {
   backgroundColor: '#3b82f6',
   color: '#ffffff',
   padding: '16px 32px',
-  borderRadius: '12px',
+  borderRadius: '16px',
   textDecoration: 'none',
   display: 'inline-block',
-  fontSize: '18px',
-  fontWeight: 'bold',
-  fontFamily: 'Cairo, Arial, sans-serif',
-  textAlign: 'center' as const,
-  margin: '10px',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 10px 10px 10px',
   minWidth: '200px',
-  boxShadow: '0 8px 20px rgba(59, 130, 246, 0.4)',
-  transform: 'translateY(0)',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  boxShadow: '0 8px 24px rgba(59, 130, 246, 0.4)',
+  border: 'none',
 }
 
-const secondaryButton = {
-  backgroundColor: 'transparent',
+const secondaryAction = {
+  backgroundColor: '#ffffff',
   color: '#3b82f6',
   padding: '16px 32px',
-  borderRadius: '12px',
+  borderRadius: '16px',
   textDecoration: 'none',
   display: 'inline-block',
-  fontSize: '18px',
-  fontWeight: 'bold',
-  fontFamily: 'Cairo, Arial, sans-serif',
-  textAlign: 'center' as const,
-  border: '3px solid #3b82f6',
-  margin: '10px',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 10px 10px 10px',
   minWidth: '200px',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  border: '2px solid #3b82f6',
 }
 
-const contactRow = {
+const emergencyAction = {
+  backgroundColor: '#dc2626',
+  color: '#ffffff',
+  padding: '16px 32px',
+  borderRadius: '16px',
+  textDecoration: 'none',
+  display: 'inline-block',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 10px 10px 10px',
+  minWidth: '200px',
+  boxShadow: '0 8px 24px rgba(220, 38, 38, 0.4)',
+  border: 'none',
+}
+
+// Contact Section
+const contactSection = {
+  padding: '40px',
+  backgroundColor: '#f8fafc',
+}
+
+const contactGrid = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap: '20px',
+}
+
+const contactCard = {
+  backgroundColor: '#ffffff',
+  border: '1px solid #e2e8f0',
+  borderRadius: '16px',
+  padding: '25px',
+  textAlign: 'center' as const,
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+}
+
+const contactCardIcon = {
+  fontSize: '32px',
+  margin: '0 0 15px 0',
   display: 'block',
-  textAlign: 'center' as const,
 }
 
-const contactItem = {
-  textAlign: 'center' as const,
-  margin: '15px 0',
-  padding: '15px',
-  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-  borderRadius: '12px',
-  border: '2px solid rgba(251, 191, 36, 0.3)',
-}
-
-const contactIcon = {
-  fontSize: '24px',
+const contactCardTitle = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '600',
   margin: '0 0 8px 0',
-  display: 'block',
 }
 
-const contactText = {
-  color: '#92400e',
+const contactCardValue = {
+  color: '#3b82f6',
   fontSize: '14px',
-  fontWeight: 'bold',
+  fontWeight: '600',
+  margin: '0 0 8px 0',
+}
+
+const contactCardDesc = {
+  color: '#64748b',
+  fontSize: '12px',
   margin: '0',
-  fontFamily: 'Arial, sans-serif',
+}
+
+// Premium Footer
+const premiumFooter = {
+  background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+  padding: '50px 40px',
+  textAlign: 'center' as const,
+}
+
+const footerContent = {
+  maxWidth: '500px',
+  margin: '0 auto',
+}
+
+const footerLogo = {
+  color: '#ffffff',
+  fontSize: '24px',
+  fontWeight: '800',
+  margin: '0 0 10px 0',
+  letterSpacing: '1px',
+}
+
+const footerTagline = {
+  color: '#cbd5e1',
+  fontSize: '14px',
+  fontWeight: '500',
+  margin: '0 0 20px 0',
+}
+
+const footerText = {
+  color: '#e2e8f0',
+  fontSize: '14px',
+  lineHeight: '1.6',
+  margin: '0 0 20px 0',
+}
+
+const footerNote = {
+  color: '#94a3b8',
+  fontSize: '12px',
+  margin: '0',
 }
 
 export default CustomerComplaintConfirmation
