@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { 
   Briefcase, 
   Users, 
@@ -62,7 +62,7 @@ const JobApplicationPage = () => {
   
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  // Using Sonner toast for better notifications
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -77,20 +77,18 @@ const JobApplicationPage = () => {
       // Validate file type
       const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
       if (!allowedTypes.includes(file.type)) {
-        toast({
-          title: "نوع ملف غير مدعوم",
+        toast.error("نوع ملف غير مدعوم ❌", {
           description: "يرجى رفع ملف PDF أو Word فقط",
-          variant: "destructive"
+          duration: 5000
         });
         return;
       }
       
       // Validate file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "حجم الملف كبير",
+        toast.error("حجم الملف كبير ❌", {
           description: "يرجى رفع ملف أقل من 5 ميجابايت",
-          variant: "destructive"
+          duration: 5000
         });
         return;
       }
@@ -104,19 +102,17 @@ const JobApplicationPage = () => {
     
     // Validation
     if (!formData.fullName || !formData.email || !formData.phone || !formData.position) {
-      toast({
-        title: "خطأ في البيانات",
+      toast.error("خطأ في البيانات ❌", {
         description: "يرجى ملء جميع الحقول المطلوبة",
-        variant: "destructive"
+        duration: 5000
       });
       return;
     }
 
     if (!formData.email.includes('@')) {
-      toast({
-        title: "خطأ في البريد الإلكتروني",
+      toast.error("خطأ في البريد الإلكتروني ❌", {
         description: "يرجى إدخال بريد إلكتروني صحيح",
-        variant: "destructive"
+        duration: 5000
       });
       return;
     }
@@ -169,10 +165,21 @@ const JobApplicationPage = () => {
       const result = await response.json();
 
       if (response.ok) {
-        toast({
-          title: "تم إرسال الطلب بنجاح!",
-          description: `رقم الطلب: ${result.jobNumber || jobNumber} - سيتم التواصل معك خلال 10 أيام عمل`,
-          duration: 10000,
+        toast.success("تم إرسال طلب التوظيف بنجاح! ✅", {
+          description: `رقم الطلب: ${result.jobNumber || jobNumber} - سيتم التواصل معك خلال 10 أيام عمل 📧`,
+          duration: 8000,
+          style: {
+            fontSize: '16px',
+            fontWeight: '600',
+            color: '#15803d',
+            backgroundColor: '#f0fdf4',
+            border: '2px solid #16a34a',
+            borderRadius: '12px',
+            padding: '20px 24px',
+            textAlign: 'center',
+            minWidth: '420px',
+            margin: '0 auto'
+          }
         });
         
         // Reset form
@@ -199,10 +206,21 @@ const JobApplicationPage = () => {
       }
     } catch (error) {
       console.error("Job application error:", error);
-      toast({
-        title: "خطأ في إرسال الطلب",
+      toast.error("خطأ في إرسال الطلب ❌", {
         description: error instanceof Error ? error.message : "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
-        variant: "destructive"
+        duration: 8000,
+        style: {
+          fontSize: '16px',
+          fontWeight: '600',
+          color: '#dc2626',
+          backgroundColor: '#fef2f2',
+          border: '2px solid #ef4444',
+          borderRadius: '12px',
+          padding: '20px 24px',
+          textAlign: 'center',
+          minWidth: '420px',
+          margin: '0 auto'
+        }
       });
     } finally {
       setIsSubmitting(false);
