@@ -1,9 +1,6 @@
 import { serve } from 'https://deno.land/std@0.190.0/http/server.ts';
 import { Resend } from 'npm:resend@2.0.0';
-import { renderAsync } from 'npm:@react-email/components@0.0.22';
-import React from 'npm:react@18.3.1';
-import { ProjectRequestNotification } from './_templates/project-request-notification.tsx';
-import { ProjectRequestConfirmation } from './_templates/project-request-confirmation.tsx';
+// Using simple inline HTML templates to avoid React email rendering in Edge Functions
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
@@ -74,15 +71,36 @@ const handler = async (req: Request): Promise<Response> => {
       })
     };
 
-    // Render customer confirmation email
-    const customerEmailHtml = await renderAsync(
-      React.createElement(ProjectRequestConfirmation, emailData)
-    );
+    // Build customer confirmation email HTML (inline)
+    const customerEmailHtml = `
+      <div dir="rtl" style="font-family: Tahoma, Arial, sans-serif;">
+        <h2>تم استلام طلب مشروعك (${emailData.projectRef})</h2>
+        <p>شكرًا لك ${emailData.name}. سنراجع التفاصيل ونتواصل معك قريبًا.</p>
+        <hr />
+        <p><strong>نوع المشروع:</strong> ${emailData.projectTypeArabic}</p>
+        ${emailData.budget ? `<p><strong>الميزانية المتوقعة:</strong> ${emailData.budget}</p>` : ''}
+        ${emailData.timeline ? `<p><strong>الجدول الزمني:</strong> ${emailData.timeline}</p>` : ''}
+        ${emailData.description ? `<p><strong>الوصف:</strong> ${emailData.description}</p>` : ''}
+        ${Array.isArray(emailData.additionalServices) && emailData.additionalServices.length ? `<p><strong>خدمات إضافية:</strong> ${emailData.additionalServices.join(', ')}</p>` : ''}
+        <p style="color:#6b7280">تاريخ الإرسال: ${emailData.submissionDate}</p>
+      </div>
+    `;
 
-    // Render admin notification email  
-    const adminEmailHtml = await renderAsync(
-      React.createElement(ProjectRequestNotification, emailData)
-    );
+    // Build admin notification email HTML (inline)
+    const adminEmailHtml = `
+      <div dir="rtl" style="font-family: Tahoma, Arial, sans-serif;">
+        <h2>طلب مشروع جديد - ${emailData.projectTypeArabic} (${emailData.projectRef})</h2>
+        <p><strong>الاسم:</strong> ${emailData.name}</p>
+        <p><strong>البريد:</strong> ${emailData.email}</p>
+        ${emailData.phone ? `<p><strong>الهاتف:</strong> ${emailData.phone}</p>` : ''}
+        ${emailData.company ? `<p><strong>الشركة:</strong> ${emailData.company}</p>` : ''}
+        ${emailData.budget ? `<p><strong>الميزانية:</strong> ${emailData.budget}</p>` : ''}
+        ${emailData.timeline ? `<p><strong>المدة:</strong> ${emailData.timeline}</p>` : ''}
+        ${emailData.description ? `<p><strong>الوصف:</strong> ${emailData.description}</p>` : ''}
+        ${Array.isArray(emailData.additionalServices) && emailData.additionalServices.length ? `<p><strong>الخدمات الإضافية:</strong> ${emailData.additionalServices.join(', ')}</p>` : ''}
+        <p style="color:#6b7280">تاريخ الإرسال: ${emailData.submissionDate}</p>
+      </div>
+    `;
 
     // Send customer confirmation email
     const customerEmailResult = await resend.emails.send({
