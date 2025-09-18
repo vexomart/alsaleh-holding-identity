@@ -75,7 +75,7 @@ async function sendEmailWithFallback({
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("📝 Complaint handler function called");
+  console.log("📝 Complaint handler function called - New Modern Design V2.0");
 
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
