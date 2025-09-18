@@ -5,7 +5,7 @@ import HeroSection from "@/components/HeroSection";
 import DepartmentsIconsSection from "@/components/DepartmentsIconsSection";
 
 import Footer from "@/components/Footer";
-import SmartChatBot from "@/components/SmartChatBot";
+
 
 import { Gift, Sparkles, ArrowRight, TrendingUp, Globe, Shield, Star, Monitor, Clock, Settings, Zap, Palette, Code2, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -56,13 +56,6 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* Smart ChatBot Component */}
-      <SmartChatBot 
-        position="bottom-right"
-        showWelcomeMessage={true}
-        showRating={true}
-        theme="auto"
-      />
       
     </div>
   );
