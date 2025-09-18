@@ -3514,6 +3514,57 @@ export type Database = {
           },
         ]
       }
+      project_requests: {
+        Row: {
+          additional_services: string[] | null
+          budget: string | null
+          company: string | null
+          created_at: string
+          description: string | null
+          email: string
+          email_sent: boolean | null
+          id: string
+          name: string
+          phone: string | null
+          project_ref: string | null
+          project_type: string
+          timeline: string | null
+          updated_at: string
+        }
+        Insert: {
+          additional_services?: string[] | null
+          budget?: string | null
+          company?: string | null
+          created_at?: string
+          description?: string | null
+          email: string
+          email_sent?: boolean | null
+          id?: string
+          name: string
+          phone?: string | null
+          project_ref?: string | null
+          project_type: string
+          timeline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          additional_services?: string[] | null
+          budget?: string | null
+          company?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string
+          email_sent?: boolean | null
+          id?: string
+          name?: string
+          phone?: string | null
+          project_ref?: string | null
+          project_type?: string
+          timeline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       project_stages: {
         Row: {
           completion_percentage: number | null
