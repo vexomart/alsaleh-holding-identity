@@ -53,17 +53,6 @@ const Footer = () => {
   const [newsletterName, setNewsletterName] = useState("");
   const [isSubscribing, setIsSubscribing] = useState(false);
   
-  // Job Application Form State
-  const [jobFormData, setJobFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    position: "",
-    experience: "",
-    message: ""
-  });
-  const [isSubmittingJob, setIsSubmittingJob] = useState(false);
-  const [showJobForm, setShowJobForm] = useState(false);
   
   const { toast } = useToast();
 
@@ -120,78 +109,6 @@ const Footer = () => {
     }
   };
 
-  const handleJobInputChange = (field: string, value: string) => {
-    setJobFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleJobSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!jobFormData.fullName || !jobFormData.email || !jobFormData.phone || !jobFormData.position) {
-      toast({
-        title: "خطأ في البيانات",
-        description: "يرجى ملء جميع الحقول المطلوبة",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!jobFormData.email.includes('@')) {
-      toast({
-        title: "خطأ في البريد الإلكتروني",
-        description: "يرجى إدخال بريد إلكتروني صحيح",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsSubmittingJob(true);
-
-    try {
-      const response = await fetch(
-        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/job-application",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(jobFormData),
-        }
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: "تم إرسال الطلب بنجاح!",
-          description: "سنتواصل معك قريباً",
-        });
-        setJobFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          position: "",
-          experience: "",
-          message: ""
-        });
-        setShowJobForm(false);
-      } else {
-        throw new Error(result.error || "حدث خطأ أثناء إرسال الطلب");
-      }
-    } catch (error) {
-      console.error("Job application error:", error);
-      toast({
-        title: "خطأ في إرسال الطلب",
-        description: error instanceof Error ? error.message : "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmittingJob(false);
-    }
-  };
 
   const socialLinks = [
     { 
@@ -282,7 +199,7 @@ const Footer = () => {
   ];
 
   const careersAndOpportunities = [
-    { name: "طلب وظيفة", href: "/careers", icon: Users },
+    { name: "طلب وظيفة", href: "/job-application", icon: Users },
     { name: "فرص التدريب", href: "/training", icon: Award },
     { name: "العمل التطوعي", href: "/volunteer", icon: Users },
     { name: "برنامج التطوير", href: "/development-program", icon: Lightbulb }
@@ -508,10 +425,6 @@ const Footer = () => {
                       <a 
                         href={career.href} 
                         className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-200 group"
-                        onClick={career.name === "طلب وظيفة" ? (e) => {
-                          e.preventDefault();
-                          setShowJobForm(true);
-                        } : undefined}
                       >
                         <IconComponent className="w-4 h-4 group-hover:text-white transition-colors duration-200" />
                         <span>{career.name}</span>
@@ -898,115 +811,6 @@ const Footer = () => {
       {/* Working Hours Notification */}
       
 
-      {/* Job Application Dialog */}
-      <Dialog open={showJobForm} onOpenChange={setShowJobForm}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-right flex items-center gap-3">
-              <Users className="w-6 h-6 text-primary" />
-              طلب وظيفة
-            </DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleJobSubmit} className="space-y-6 mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">الاسم الكامل *</Label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  value={jobFormData.fullName}
-                  onChange={(e) => handleJobInputChange('fullName', e.target.value)}
-                  placeholder="أدخل اسمك الكامل"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">البريد الإلكتروني *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={jobFormData.email}
-                  onChange={(e) => handleJobInputChange('email', e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone">رقم الهاتف *</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={jobFormData.phone}
-                  onChange={(e) => handleJobInputChange('phone', e.target.value)}
-                  placeholder="05xxxxxxxx"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="position">المنصب المرغوب *</Label>
-                <Select 
-                  value={jobFormData.position} 
-                  onValueChange={(value) => handleJobInputChange('position', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر المنصب" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="developer">مطور برمجيات</SelectItem>
-                    <SelectItem value="designer">مصمم جرافيك</SelectItem>
-                    <SelectItem value="marketing">أخصائي تسويق</SelectItem>
-                    <SelectItem value="sales">أخصائي مبيعات</SelectItem>
-                    <SelectItem value="support">دعم فني</SelectItem>
-                    <SelectItem value="manager">مدير مشروع</SelectItem>
-                    <SelectItem value="other">أخرى</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="experience">سنوات الخبرة</Label>
-              <Select 
-                value={jobFormData.experience} 
-                onValueChange={(value) => handleJobInputChange('experience', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر سنوات الخبرة" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0-1">أقل من سنة</SelectItem>
-                  <SelectItem value="1-3">1-3 سنوات</SelectItem>
-                  <SelectItem value="3-5">3-5 سنوات</SelectItem>
-                  <SelectItem value="5-10">5-10 سنوات</SelectItem>
-                  <SelectItem value="10+">أكثر من 10 سنوات</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="message">رسالة إضافية</Label>
-              <Textarea
-                id="message"
-                value={jobFormData.message}
-                onChange={(e) => handleJobInputChange('message', e.target.value)}
-                placeholder="أخبرنا عن نفسك وسبب اهتمامك بالعمل معنا..."
-                rows={4}
-              />
-            </div>
-
-            <Button
-              type="submit"
-              disabled={isSubmittingJob}
-              className="w-full"
-            >
-              {isSubmittingJob ? "جاري الإرسال..." : "إرسال الطلب"}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
     </footer>
   );
 };

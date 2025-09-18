@@ -60,7 +60,7 @@ const TechSystemsSupport = lazy(() => import("./pages/support/TechSystemsSupport
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Contracts = lazy(() => import("./pages/Contracts"));
-const JobApplication = lazy(() => import("./pages/JobApplication"));
+const JobApplicationPage = lazy(() => import("./pages/JobApplicationPage"));
 const TechInvestment = lazy(() => import("./pages/TechInvestment"));
 const Development = lazy(() => import("./pages/Development"));
 const StrategicConsulting = lazy(() => import("./pages/StrategicConsulting"));
@@ -317,7 +317,7 @@ const App = () => {
                 <Route path="/terms" element={<Suspense fallback={<PageLoader />}><Terms /></Suspense>} />
                 <Route path="/careers" element={<Suspense fallback={<PageLoader />}><Careers /></Suspense>} />
                 <Route path="/jobs" element={<Suspense fallback={<PageLoader />}><Careers /></Suspense>} />
-                <Route path="/job-application" element={<Suspense fallback={<PageLoader />}><JobApplication /></Suspense>} />
+                <Route path="/job-application" element={<Suspense fallback={<PageLoader />}><JobApplicationPage /></Suspense>} />
                 <Route path="/tech-investment" element={<Suspense fallback={<PageLoader />}><TechInvestment /></Suspense>} />
                 <Route path="/development" element={<Suspense fallback={<PageLoader />}><Development /></Suspense>} />
                 <Route path="/strategic-consulting" element={<Suspense fallback={<PageLoader />}><StrategicConsulting /></Suspense>} />
