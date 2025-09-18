@@ -25,6 +25,9 @@ verify_jwt = false
 [functions.consultation-booking]
 verify_jwt = false
 
+[functions.project-request]
+verify_jwt = false
+
 [functions.email-test]
 verify_jwt = false
 
