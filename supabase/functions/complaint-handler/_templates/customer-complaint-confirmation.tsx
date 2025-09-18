@@ -99,7 +99,7 @@ export const CustomerComplaintConfirmation = ({
           <Hr style={hr} />
 
           <Text style={label}>الوصف:</Text>
-          <Text style={description}>{description}</Text>
+          <Text style={descriptionBox}>{description}</Text>
         </Section>
 
         {/* Next Steps */}
@@ -310,7 +310,7 @@ const value = {
   fontFamily: 'Arial, sans-serif',
 }
 
-const description = {
+const descriptionBox = {
   color: '#475569',
   fontSize: '16',
   lineHeight: '1.6',
