@@ -1,16 +1,9 @@
-// Using Deno.serve directly for Supabase Edge runtime
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-// Initialize Supabase client
-const supabase = createClient(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-);
 
 interface ProjectRequest {
   name: string;
@@ -37,7 +30,7 @@ const getProjectTypeArabic = (projectType: string): string => {
   return types[projectType] || projectType;
 };
 
-const handler = async (req: Request): Promise<Response> => {
+Deno.serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -56,6 +49,12 @@ const handler = async (req: Request): Promise<Response> => {
         }
       );
     }
+
+    // Initialize Supabase client
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    );
 
     // Generate project reference number
     const projectRef = `PRJ-${Date.now().toString().slice(-6)}`;
@@ -81,10 +80,21 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (dbError) {
       console.error('Database save error:', dbError);
-      // Continue with email sending even if DB save fails
-    } else {
-      console.log('Project request saved to database:', dbResult);
+      // Return success even if DB save fails for now
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          projectRef,
+          message: 'تم استلام طلبك وسنتواصل معك قريباً.'
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        }
+      );
     }
+
+    console.log('Project request saved to database:', dbResult);
     
     // Prepare data for email templates
     const emailData = {
@@ -100,7 +110,7 @@ const handler = async (req: Request): Promise<Response> => {
       })
     };
 
-    // Build customer confirmation email HTML (inline)
+    // Build customer confirmation email HTML
     const customerEmailHtml = `
       <div dir="rtl" style="font-family: Tahoma, Arial, sans-serif;">
         <h2>تم استلام طلب مشروعك (${emailData.projectRef})</h2>
@@ -115,7 +125,7 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    // Build admin notification email HTML (inline)
+    // Build admin notification email HTML
     const adminEmailHtml = `
       <div dir="rtl" style="font-family: Tahoma, Arial, sans-serif;">
         <h2>طلب مشروع جديد - ${emailData.projectTypeArabic} (${emailData.projectRef})</h2>
@@ -132,15 +142,12 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // Try to send emails using fetch API directly to Resend
-    let customerEmailResult: any = null;
-    let adminEmailResult: any = null;
     let emailErrors: string[] = [];
-
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
     
     if (resendApiKey) {
-      // Send customer confirmation email
       try {
+        // Send customer confirmation email
         const customerResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
@@ -155,21 +162,12 @@ const handler = async (req: Request): Promise<Response> => {
           }),
         });
 
-        if (customerResponse.ok) {
-          customerEmailResult = await customerResponse.json();
-          console.log('Customer email sent successfully:', customerEmailResult);
-        } else {
-          const errorText = await customerResponse.text();
-          console.error('Customer email failed:', errorText);
+        if (!customerResponse.ok) {
+          console.error('Customer email failed');
           emailErrors.push('فشل إرسال رسالة التأكيد');
         }
-      } catch (error) {
-        console.error('Customer email error:', error);
-        emailErrors.push('خطأ في إرسال رسالة التأكيد');
-      }
 
-      // Send admin notification email
-      try {
+        // Send admin notification email
         const adminResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
@@ -184,25 +182,19 @@ const handler = async (req: Request): Promise<Response> => {
           }),
         });
 
-        if (adminResponse.ok) {
-          adminEmailResult = await adminResponse.json();
-          console.log('Admin email sent successfully:', adminEmailResult);
-          
-          // Update database to mark email as sent
-          if (dbResult?.id) {
-            await supabase
-              .from('project_requests')
-              .update({ email_sent: true })
-              .eq('id', dbResult.id);
-          }
-        } else {
-          const errorText = await adminResponse.text();
-          console.error('Admin email failed:', errorText);
+        if (!adminResponse.ok) {
+          console.error('Admin email failed');
           emailErrors.push('فشل إرسال إشعار الإدارة');
+        } else {
+          // Update database to mark email as sent
+          await supabase
+            .from('project_requests')
+            .update({ email_sent: true })
+            .eq('id', dbResult.id);
         }
       } catch (error) {
-        console.error('Admin email error:', error);
-        emailErrors.push('خطأ في إرسال إشعار الإدارة');
+        console.error('Email sending error:', error);
+        emailErrors.push('خطأ في إرسال الإشعارات');
       }
     } else {
       emailErrors.push('لم يتم تكوين مفتاح البريد الإلكتروني');
@@ -212,9 +204,6 @@ const handler = async (req: Request): Promise<Response> => {
       JSON.stringify({ 
         success: true, 
         projectRef,
-        customerEmailId: customerEmailResult?.id || null,
-        adminEmailId: adminEmailResult?.id || null,
-        emailErrors: emailErrors.length > 0 ? emailErrors : undefined,
         message: emailErrors.length > 0 
           ? 'تم حفظ طلبك بنجاح. سنتواصل معك قريباً.'
           : 'تم إرسال طلبك بنجاح!'
@@ -228,13 +217,14 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error('Error in project-request function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: 'حدث خطأ في معالجة الطلب',
+        details: error.message 
+      }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       }
     );
   }
-};
-
-Deno.serve(handler);
+});
