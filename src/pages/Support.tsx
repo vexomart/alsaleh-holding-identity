@@ -282,7 +282,20 @@ const Support = () => {
                           </div>
                         </div>
 
-                        <Button className={`mt-6 w-full bg-gradient-to-r ${category.color} text-white border-0 hover:scale-105 transition-transform duration-200`}>
+                        <Button 
+                          className={`mt-6 w-full bg-gradient-to-r ${category.color} text-white border-0 hover:scale-105 transition-transform duration-200`}
+                          onClick={() => {
+                            const supportRoutes: { [key: string]: string } = {
+                              "دعم الأنظمة التقنية": "/support/tech-systems",
+                              "دعم التطبيقات": "/support/applications", 
+                              "دعم قواعد البيانات": "/support/database"
+                            };
+                            const route = supportRoutes[category.title];
+                            if (route) {
+                              window.location.href = route;
+                            }
+                          }}
+                        >
                           <MessageCircle className="w-4 h-4 mr-2" />
                           طلب دعم
                         </Button>

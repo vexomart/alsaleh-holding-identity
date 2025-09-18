@@ -54,6 +54,9 @@ const Team = lazy(() => import("./pages/Team"));
 const Vision = lazy(() => import("./pages/Vision"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Support = lazy(() => import("./pages/Support"));
+const DatabaseSupport = lazy(() => import("./pages/support/DatabaseSupport"));
+const AppSupport = lazy(() => import("./pages/support/AppSupport"));
+const TechSystemsSupport = lazy(() => import("./pages/support/TechSystemsSupport"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Contracts = lazy(() => import("./pages/Contracts"));
@@ -305,6 +308,9 @@ const App = () => {
                 <Route path="/vision" element={<Suspense fallback={<PageLoader />}><Vision /></Suspense>} />
                 <Route path="/contact" element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
                 <Route path="/support" element={<Suspense fallback={<PageLoader />}><Support /></Suspense>} />
+                <Route path="/support/database" element={<Suspense fallback={<PageLoader />}><DatabaseSupport /></Suspense>} />
+                <Route path="/support/applications" element={<Suspense fallback={<PageLoader />}><AppSupport /></Suspense>} />
+                <Route path="/support/tech-systems" element={<Suspense fallback={<PageLoader />}><TechSystemsSupport /></Suspense>} />
                 <Route path="/privacy" element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
                 <Route path="/cookie-policy" element={<Suspense fallback={<PageLoader />}><CookiePolicy /></Suspense>} />
                 <Route path="/terms" element={<Suspense fallback={<PageLoader />}><Terms /></Suspense>} />
