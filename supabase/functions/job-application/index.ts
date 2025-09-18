@@ -214,7 +214,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: emailError } = await resend.emails.send({
       from: "نظام التوظيف <jobs@alialshehriholding.com>",
       to: [hrEmail, "jobs@alialshehriholding.com"],
-      subject: `🎯 طلب توظيف جديد - ${data.position} - ${applicationNumber}`,
+      subject: `طلب توظيف جديد - ${data.position} - ${applicationNumber}`,
       html: hrEmailHtml,
     });
 
@@ -315,7 +315,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: confirmationEmailError } = await resend.emails.send({
       from: "قسم التوظيف <jobs@alialshehriholding.com>",
       to: [data.email],
-      subject: `✅ تأكيد استلام طلب التوظيف - ${applicationNumber}`,
+      subject: `تأكيد استلام طلب التوظيف - ${applicationNumber}`,
       html: applicantEmailHtml,
     });
 
