@@ -1,13 +1,10 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.53.0";
 import { Resend } from "npm:resend@2.0.0";
 
-const supabase = createClient(
-  Deno.env.get('SUPABASE_URL') ?? '',
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-);
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const resend = new Resend(Deno.env.get("RESEND_API_KEY")!);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,202 +20,318 @@ interface JobApplicationData {
   experience?: string;
   education?: string;
   coverLetter?: string;
+  message?: string;
   cvUrl?: string;
   cvFileName?: string;
-  message?: string;
+  portfolio?: string;
+  linkedIn?: string;
+  jobNumber?: string;
+  hrEmail?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  console.log("Job application request received");
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const applicationData: JobApplicationData = await req.json();
-    
-    console.log("Received job application:", { ...applicationData, cvUrl: applicationData.cvUrl ? 'FILE_UPLOADED' : 'NO_FILE' });
+    const data: JobApplicationData = await req.json();
+    console.log("Parsed data:", data);
 
-    // Save to database first
+    // Save to database
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    
     const { data: insertData, error: dbError } = await supabase
       .from('job_applications')
-      .insert({
-        full_name: applicationData.fullName,
-        email: applicationData.email,
-        phone: applicationData.phone,
-        city: applicationData.city,
-        position: applicationData.position,
-        experience: applicationData.experience,
-        education: applicationData.education,
-        cover_letter: applicationData.coverLetter || applicationData.message,
-        cv_file_name: applicationData.cvFileName
-      })
+      .insert([
+        {
+          full_name: data.fullName,
+          email: data.email,
+          phone: data.phone,
+          position: data.position,
+          experience: data.experience || null,
+          cv_url: data.cvUrl || null,
+          cover_letter: data.message || data.coverLetter || null,
+          status: 'pending',
+          portfolio_url: data.portfolio || null,
+          linkedin_url: data.linkedIn || null,
+          city: data.city || null,
+          education: data.education || null
+        }
+      ])
       .select()
       .single();
 
     if (dbError) {
       console.error("Database error:", dbError);
-      throw new Error(`خطأ في حفظ البيانات: ${dbError.message}`);
+      throw new Error(`Database error: ${dbError.message}`);
     }
 
-    console.log("Application saved to database:", insertData);
+    console.log("Application saved successfully:", insertData);
+    const applicationNumber = insertData.application_number;
 
-    // Generate CV download URL if file exists
-    let cvDownloadLink = '';
-    if (applicationData.cvUrl) {
-      const { data: signedUrlData } = await supabase.storage
+    // Generate signed URL for CV if provided
+    let cvDownloadUrl = null;
+    if (data.cvUrl) {
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
         .from('cvs')
-        .createSignedUrl(applicationData.cvUrl, 7 * 24 * 60 * 60); // Valid for 7 days
-      
-      cvDownloadLink = signedUrlData?.signedUrl || '';
-      console.log("CV download URL created:", cvDownloadLink ? 'SUCCESS' : 'FAILED');
+        .createSignedUrl(data.cvUrl, 60 * 60 * 24 * 7); // 7 days
+
+      if (signedUrlError) {
+        console.error("Signed URL error:", signedUrlError);
+      } else {
+        cvDownloadUrl = signedUrlData.signedUrl;
+      }
     }
 
-    // Send email to company
-    const companyEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
-      bcc: ["info@alialshehriholding.com"],
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 10px;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-            <h1 style="margin: 0; text-align: center;">طلب توظيف جديد</h1>
-          </div>
-          
-          <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h2 style="color: #333; margin-bottom: 20px;">تفاصيل المتقدم:</h2>
-            
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">الاسم الكامل:</strong>
-              <span style="margin-right: 10px;">${applicationData.fullName}</span>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">البريد الإلكتروني:</strong>
-              <span style="margin-right: 10px;">${applicationData.email}</span>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">رقم الهاتف:</strong>
-              <span style="margin-right: 10px;">${applicationData.phone}</span>
-            </div>
-            
-            ${applicationData.city ? `
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">المدينة:</strong>
-              <span style="margin-right: 10px;">${applicationData.city}</span>
-            </div>
-            ` : ''}
-            
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">المنصب المطلوب:</strong>
-              <span style="margin-right: 10px;">${applicationData.position}</span>
-            </div>
-            
-            ${applicationData.experience ? `
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">سنوات الخبرة:</strong>
-              <span style="margin-right: 10px;">${applicationData.experience}</span>
-            </div>
-            ` : ''}
-            
-            ${applicationData.education ? `
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">المؤهل التعليمي:</strong>
-              <span style="margin-right: 10px;">${applicationData.education}</span>
-            </div>
-            ` : ''}
-            
-            ${cvDownloadLink ? `
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">السيرة الذاتية:</strong>
-              <div style="margin-top: 10px;">
-                <a href="${cvDownloadLink}" 
-                   style="display: inline-block; background: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                  📎 تحميل السيرة الذاتية (${applicationData.cvFileName})
-                </a>
-              </div>
-            </div>
-            ` : '<div style="margin-bottom: 15px; color: #999;">لم يتم رفع سيرة ذاتية</div>'}
-            
-            ${(applicationData.coverLetter || applicationData.message) ? `
-            <div style="margin-bottom: 15px;">
-              <strong style="color: #667eea;">الرسالة التعريفية:</strong>
-              <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; border-right: 4px solid #667eea;">
-                ${applicationData.coverLetter || applicationData.message}
-              </div>
-            </div>
-            ` : ''}
-            
-            <div style="margin-top: 20px; padding: 15px; background: #e8f4fd; border-radius: 5px; border-right: 4px solid #667eea;">
-              <strong>تاريخ التقديم:</strong> ${new Date().toLocaleDateString('ar-SA')} ${new Date().toLocaleTimeString('ar-SA')}
-            </div>
-          </div>
-          
-          <div style="margin-top: 20px; text-align: center; color: #666; font-size: 14px;">
-            تم إرسال هذا الإيميل تلقائياً من نظام طلبات التوظيف
+    // Professional HR email template
+    const hrEmailHtml = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 700px; margin: 0 auto; background: #ffffff; direction: rtl;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; padding: 40px 30px; text-align: center;">
+          <h1 style="margin: 0; font-size: 32px; font-weight: 700;">🎯 طلب توظيف جديد</h1>
+          <p style="margin: 15px 0 0; font-size: 18px; opacity: 0.9;">رقم الطلب: ${applicationNumber}</p>
+          <div style="background: rgba(255,255,255,0.1); margin: 20px auto 0; padding: 10px 20px; border-radius: 25px; display: inline-block;">
+            <p style="margin: 0; font-size: 16px;">📅 تاريخ التقديم: ${new Date().toLocaleDateString('ar-SA')}</p>
           </div>
         </div>
-      `,
-    });
-
-    console.log("Company email sent:", companyEmailResponse);
-
-    // Send confirmation email to applicant
-    const applicantEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: [applicationData.email],
-      bcc: ["info@alialshehriholding.com"],
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 10px;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-            <h1 style="margin: 0; text-align: center;">شكراً لتقديمك</h1>
-          </div>
-          
-          <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <p style="color: #333; font-size: 16px; line-height: 1.6;">
-              عزيزي/ة <strong>${applicationData.fullName}</strong>,
-            </p>
+        
+        <!-- Main Content -->
+        <div style="padding: 40px 30px;">
+          <!-- Applicant Info Card -->
+          <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+            <h2 style="color: #1e293b; margin: 0 0 25px; font-size: 24px; display: flex; align-items: center;">
+              👤 معلومات المتقدم
+            </h2>
             
-            <p style="color: #333; font-size: 16px; line-height: 1.6;">
-              شكراً لك على تقديم طلب التوظيف لمنصب <strong>${applicationData.position}</strong> في شركة علي صالح الشهري القابضة.
-            </p>
-            
-            <p style="color: #333; font-size: 16px; line-height: 1.6;">
-              تم استلام طلبك بنجاح ${applicationData.cvUrl ? 'مع السيرة الذاتية المرفقة' : ''} وسيقوم فريق الموارد البشرية بمراجعته خلال 3-5 أيام عمل. سنتواصل معك في حال وجود فرصة مناسبة.
-            </p>
-            
-            <div style="background: #e8f4fd; padding: 15px; border-radius: 5px; margin: 20px 0; border-right: 4px solid #667eea;">
-              <h3 style="color: #667eea; margin-top: 0;">ملخص طلبك:</h3>
-              <p style="margin: 5px 0;"><strong>المنصب:</strong> ${applicationData.position}</p>
-              <p style="margin: 5px 0;"><strong>الخبرة:</strong> ${applicationData.experience || 'غير محدد'}</p>
-              ${applicationData.education ? `<p style="margin: 5px 0;"><strong>التعليم:</strong> ${applicationData.education}</p>` : ''}
-              <p style="margin: 5px 0;"><strong>السيرة الذاتية:</strong> ${applicationData.cvUrl ? '✅ تم الرفع' : '❌ لم يتم الرفع'}</p>
-              <p style="margin: 5px 0;"><strong>تاريخ التقديم:</strong> ${new Date().toLocaleDateString('ar-SA')}</p>
+            <div style="display: grid; gap: 15px;">
+              <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #2563eb;">
+                <span style="font-weight: 600; color: #475569;">الاسم الكامل:</span>
+                <span style="color: #1e293b;">${data.fullName}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #059669;">
+                <span style="font-weight: 600; color: #475569;">البريد الإلكتروني:</span>
+                <span style="color: #1e293b;">${data.email}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #dc2626;">
+                <span style="font-weight: 600; color: #475569;">رقم الهاتف:</span>
+                <span style="color: #1e293b;">${data.phone}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #7c3aed;">
+                <span style="font-weight: 600; color: #475569;">الوظيفة المطلوبة:</span>
+                <span style="color: #1e293b; font-weight: 600;">${data.position}</span>
+              </div>
+              ${data.experience ? `
+                <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #ea580c;">
+                  <span style="font-weight: 600; color: #475569;">سنوات الخبرة:</span>
+                  <span style="color: #1e293b;">${data.experience}</span>
+                </div>
+              ` : ''}
+              ${data.city ? `
+                <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #0891b2;">
+                  <span style="font-weight: 600; color: #475569;">المدينة:</span>
+                  <span style="color: #1e293b;">${data.city}</span>
+                </div>
+              ` : ''}
+              ${data.education ? `
+                <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #be123c;">
+                  <span style="font-weight: 600; color: #475569;">المؤهل العلمي:</span>
+                  <span style="color: #1e293b;">${data.education}</span>
+                </div>
+              ` : ''}
+              ${data.linkedIn ? `
+                <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #0a66c2;">
+                  <span style="font-weight: 600; color: #475569;">LinkedIn:</span>
+                  <a href="${data.linkedIn}" style="color: #0a66c2; text-decoration: none;">${data.linkedIn}</a>
+                </div>
+              ` : ''}
+              ${data.portfolio ? `
+                <div style="display: flex; justify-content: space-between; padding: 15px; background: white; border-radius: 8px; border-right: 4px solid #9333ea;">
+                  <span style="font-weight: 600; color: #475569;">Portfolio:</span>
+                  <a href="${data.portfolio}" style="color: #9333ea; text-decoration: none;">${data.portfolio}</a>
+                </div>
+              ` : ''}
             </div>
-            
-            <p style="color: #333; font-size: 16px; line-height: 1.6;">
-              مع أطيب التحيات،<br>
-              <strong>فريق الموارد البشرية</strong><br>
-              شركة علي صالح الشهري القابضة
-            </p>
           </div>
-          
-            <div style="margin-top: 20px; text-align: center;">
-              <p style="color: #666; font-size: 14px;">
-                للتواصل معنا: info@alialshehriholding.com | 0555812567
-              </p>
+
+          ${data.message || data.coverLetter ? `
+            <!-- Cover Letter Card -->
+            <div style="background: #fefce8; border: 2px solid #fbbf24; border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+              <h3 style="color: #92400e; margin: 0 0 20px; font-size: 20px; display: flex; align-items: center;">
+                📝 خطاب التغطية
+              </h3>
+              <div style="background: white; padding: 20px; border-radius: 8px; border-right: 4px solid #fbbf24;">
+                <p style="margin: 0; color: #1f2937; line-height: 1.8; font-size: 16px;">${data.message || data.coverLetter}</p>
+              </div>
             </div>
+          ` : ''}
+
+          ${cvDownloadUrl ? `
+            <!-- CV Download Card -->
+            <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 30px;">
+              <h3 style="color: #166534; margin: 0 0 20px; font-size: 20px;">📄 السيرة الذاتية</h3>
+              <a href="${cvDownloadUrl}" 
+                 style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 15px 40px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; transition: all 0.3s;">
+                📥 تحميل السيرة الذاتية
+              </a>
+              <p style="margin: 15px 0 0; font-size: 14px; color: #16a34a;">ملف ${data.cvFileName || 'السيرة الذاتية'} - الرابط صالح لمدة 7 أيام</p>
+            </div>
+          ` : ''}
+
+          <!-- Next Steps Card -->
+          <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 30px;">
+            <h3 style="color: #1e40af; margin: 0 0 20px; font-size: 20px; display: flex; align-items: center;">
+              ⏰ الخطوات التالية
+            </h3>
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+              <ul style="margin: 0; padding-right: 20px; color: #1f2937; line-height: 1.8;">
+                <li style="margin-bottom: 10px;"><strong>المراجعة الأولية:</strong> سيتم مراجعة الطلب خلال 3 أيام عمل</li>
+                <li style="margin-bottom: 10px;"><strong>المقابلة التقنية:</strong> في حالة اجتياز المراجعة الأولية</li>
+                <li style="margin-bottom: 10px;"><strong>المقابلة الشخصية:</strong> مع فريق الإدارة</li>
+                <li><strong>القرار النهائي:</strong> سيتم إبلاغ المتقدم خلال 10 أيام عمل كحد أقصى</li>
+              </ul>
+            </div>
+          </div>
         </div>
-      `,
+        
+        <!-- Footer -->
+        <div style="background: #f1f5f9; padding: 25px 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+          <p style="margin: 0 0 10px; color: #64748b; font-size: 14px;">
+            📧 تم إرسال هذا البريد تلقائياً من نظام إدارة الموارد البشرية
+          </p>
+          <p style="margin: 0; color: #64748b; font-size: 14px;">
+            © 2025 شركة علي صالح الشهري القابضة - قسم الموارد البشرية
+          </p>
+        </div>
+      </div>
+    `;
+
+    const hrEmail = data.hrEmail || "hr@masteredupath.com";
+    
+    const { error: emailError } = await resend.emails.send({
+      from: "نظام الموارد البشرية <hr@masteredupath.com>",
+      to: [hrEmail, "admin@masteredupath.com"],
+      subject: `🎯 طلب توظيف جديد - ${data.position} - ${applicationNumber}`,
+      html: hrEmailHtml,
     });
 
-    console.log("Applicant email sent:", applicantEmailResponse);
+    if (emailError) {
+      console.error("HR Email error:", emailError);
+    } else {
+      console.log("HR Email sent successfully");
+    }
+
+    // Professional confirmation email to applicant
+    const applicantEmailHtml = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; direction: rtl;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 40px 30px; text-align: center;">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 700;">🎉 مرحباً ${data.fullName}</h1>
+          <p style="margin: 15px 0 0; font-size: 18px; opacity: 0.9;">تم استلام طلب التوظيف بنجاح!</p>
+          <div style="background: rgba(255,255,255,0.1); margin: 20px auto 0; padding: 10px 20px; border-radius: 25px; display: inline-block;">
+            <p style="margin: 0; font-size: 16px;">📋 رقم الطلب: ${applicationNumber}</p>
+          </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div style="padding: 40px 30px;">
+          <!-- Application Summary -->
+          <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+            <h2 style="color: #166534; margin: 0 0 20px; font-size: 22px; display: flex; align-items: center;">
+              📊 ملخص طلبك
+            </h2>
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
+                <span style="font-weight: 600; color: #374151;">الوظيفة المطلوبة:</span>
+                <span style="color: #166534; font-weight: 600;">${data.position}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
+                <span style="font-weight: 600; color: #374151;">رقم الطلب:</span>
+                <span style="color: #059669;">${applicationNumber}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="font-weight: 600; color: #374151;">تاريخ التقديم:</span>
+                <span style="color: #374151;">${new Date().toLocaleDateString('ar-SA')}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Next Steps -->
+          <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+            <h3 style="color: #1e40af; margin: 0 0 20px; font-size: 20px; display: flex; align-items: center;">
+              🚀 الخطوات التالية
+            </h3>
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+              <div style="display: flex; align-items: center; margin-bottom: 15px; padding: 15px; background: #f8fafc; border-radius: 8px; border-right: 4px solid #3b82f6;">
+                <span style="background: #3b82f6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 15px; font-size: 12px;">1</span>
+                <span style="color: #1f2937;">مراجعة أولية (خلال 3 أيام عمل)</span>
+              </div>
+              <div style="display: flex; align-items: center; margin-bottom: 15px; padding: 15px; background: #f8fafc; border-radius: 8px; border-right: 4px solid #7c3aed;">
+                <span style="background: #7c3aed; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 15px; font-size: 12px;">2</span>
+                <span style="color: #1f2937;">مقابلة تقنية (هاتفية أو عبر الفيديو)</span>
+              </div>
+              <div style="display: flex; align-items: center; margin-bottom: 15px; padding: 15px; background: #f8fafc; border-radius: 8px; border-right: 4px solid #dc2626;">
+                <span style="background: #dc2626; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 15px; font-size: 12px;">3</span>
+                <span style="color: #1f2937;">مقابلة شخصية مع فريق الإدارة</span>
+              </div>
+              <div style="display: flex; align-items: center; padding: 15px; background: #f0fdf4; border-radius: 8px; border-right: 4px solid #22c55e;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 15px; font-size: 12px;">4</span>
+                <span style="color: #1f2937;">القرار النهائي (خلال 10 أيام عمل)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Important Notice -->
+          <div style="background: #fefce8; border: 2px solid #eab308; border-radius: 12px; padding: 25px;">
+            <h3 style="color: #a16207; margin: 0 0 15px; font-size: 18px; display: flex; align-items: center;">
+              ⚠️ معلومات مهمة
+            </h3>
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+              <ul style="margin: 0; padding-right: 20px; color: #374151; line-height: 1.8;">
+                <li style="margin-bottom: 8px;">سيتم التواصل معك عبر البريد الإلكتروني أو الهاتف</li>
+                <li style="margin-bottom: 8px;">تأكد من مراجعة صندوق الرسائل غير المرغوب فيها</li>
+                <li style="margin-bottom: 8px;">احتفظ برقم الطلب للمراجع المستقبلية</li>
+                <li>فريق الموارد البشرية سيتولى جميع مراحل التوظيف</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background: #f1f5f9; padding: 25px 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+          <p style="margin: 0 0 10px; color: #64748b; font-size: 16px; font-weight: 600;">
+            شكراً لاهتمامك بالعمل معنا! 🤝
+          </p>
+          <p style="margin: 0; color: #64748b; font-size: 14px;">
+            © 2025 شركة علي صالح الشهري القابضة - قسم الموارد البشرية
+          </p>
+        </div>
+      </div>
+    `;
+
+    const { error: confirmationEmailError } = await resend.emails.send({
+      from: "قسم الموارد البشرية <hr@masteredupath.com>",
+      to: [data.email],
+      subject: `✅ تأكيد استلام طلب التوظيف - ${applicationNumber}`,
+      html: applicantEmailHtml,
+    });
+
+    if (confirmationEmailError) {
+      console.error("Confirmation email error:", confirmationEmailError);
+    } else {
+      console.log("Confirmation email sent successfully");
+    }
+
+    console.log("Job application processed successfully");
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "تم إرسال طلب التوظيف بنجاح" 
+        message: "تم إرسال طلب التوظيف بنجاح",
+        jobNumber: applicationNumber
       }),
       {
         status: 200,
@@ -230,16 +343,17 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
   } catch (error: any) {
-    console.error("Error in job-application function:", error);
+    console.error("Error in job application function:", error);
     return new Response(
       JSON.stringify({ 
-        error: error.message || "حدث خطأ أثناء معالجة طلب التوظيف" 
+        success: false, 
+        error: error.message || "حدث خطأ في معالجة الطلب" 
       }),
       {
         status: 500,
-        headers: { 
-          "Content-Type": "application/json", 
-          ...corsHeaders 
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
         },
       }
     );

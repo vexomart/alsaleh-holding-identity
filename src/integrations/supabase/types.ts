@@ -1993,49 +1993,61 @@ export type Database = {
       }
       job_applications: {
         Row: {
+          application_number: string | null
           city: string | null
           cover_letter: string | null
           created_at: string
           cv_file_name: string | null
           cv_file_size: number | null
+          cv_url: string | null
           education: string | null
           email: string
           experience: string | null
           full_name: string
           id: string
+          linkedin_url: string | null
           phone: string
+          portfolio_url: string | null
           position: string
           status: string | null
           updated_at: string
         }
         Insert: {
+          application_number?: string | null
           city?: string | null
           cover_letter?: string | null
           created_at?: string
           cv_file_name?: string | null
           cv_file_size?: number | null
+          cv_url?: string | null
           education?: string | null
           email: string
           experience?: string | null
           full_name: string
           id?: string
+          linkedin_url?: string | null
           phone: string
+          portfolio_url?: string | null
           position: string
           status?: string | null
           updated_at?: string
         }
         Update: {
+          application_number?: string | null
           city?: string | null
           cover_letter?: string | null
           created_at?: string
           cv_file_name?: string | null
           cv_file_size?: number | null
+          cv_url?: string | null
           education?: string | null
           email?: string
           experience?: string | null
           full_name?: string
           id?: string
+          linkedin_url?: string | null
           phone?: string
+          portfolio_url?: string | null
           position?: string
           status?: string | null
           updated_at?: string
@@ -5439,6 +5451,10 @@ export type Database = {
         Returns: string
       }
       generate_affiliate_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_application_number: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
