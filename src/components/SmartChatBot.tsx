@@ -450,161 +450,166 @@ const SmartChatBot: React.FC<SmartChatBotProps> = ({
                 </div>
               </CardHeader>
 
-              {/* Messages Area */}
               {!isMinimized && (
-                <CardContent className="flex flex-col h-[calc(100%-140px)] p-0">
-                  <ScrollArea className="flex-1 p-4">
+                <CardContent className="flex flex-col h-full p-0">
+                  {/* Messages Area */}
+                  <ScrollArea className="flex-1 p-4 space-y-4">
                     <div className="space-y-4">
                       {messages.map((message) => (
                         <motion.div
                           key={message.id}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                          className={`flex gap-3 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
-                          <div className={`flex items-start gap-2 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                            <Avatar className="h-8 w-8 flex-shrink-0">
-                              <AvatarFallback className={message.sender === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}>
-                                {message.sender === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                          {message.sender === 'bot' && (
+                            <Avatar className="h-8 w-8 shrink-0">
+                              <AvatarFallback className="bg-primary/10 text-primary">
+                                <Bot className="h-4 w-4" />
                               </AvatarFallback>
                             </Avatar>
-                            <div
-                              className={`p-3 rounded-2xl ${
-                                message.sender === 'user'
-                                  ? 'bg-primary text-primary-foreground rounded-br-sm'
-                                  : 'bg-muted text-muted-foreground rounded-bl-sm'
-                              }`}
-                            >
-                              <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
-                              <p className="text-xs mt-1 opacity-70">
-                                {message.timestamp.toLocaleTimeString('ar-SA', {
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                            </div>
+                          )}
+                          <div
+                            className={`max-w-[75%] p-3 rounded-2xl ${
+                              message.sender === 'user'
+                                ? 'bg-primary text-primary-foreground ml-4'
+                                : 'bg-muted text-muted-foreground'
+                            }`}
+                          >
+                            <p className="text-sm whitespace-pre-wrap leading-relaxed">
+                              {message.text}
+                            </p>
+                            <p className={`text-xs mt-2 opacity-70 ${
+                              message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground/70'
+                            }`}>
+                              {message.timestamp.toLocaleTimeString('ar-SA', { 
+                                hour: '2-digit', 
+                                minute: '2-digit' 
+                              })}
+                            </p>
                           </div>
+                          {message.sender === 'user' && (
+                            <Avatar className="h-8 w-8 shrink-0">
+                              <AvatarFallback className="bg-primary/10 text-primary">
+                                <User className="h-4 w-4" />
+                              </AvatarFallback>
+                            </Avatar>
+                          )}
                         </motion.div>
                       ))}
                       
+                      {/* Typing Indicator */}
                       {isTyping && (
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="flex justify-start"
+                          className="flex gap-3 justify-start"
                         >
-                          <div className="flex items-center gap-2">
-                            <Avatar className="h-8 w-8">
-                              <AvatarFallback className="bg-muted">
-                                <Bot className="h-4 w-4" />
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="bg-muted p-3 rounded-2xl rounded-bl-sm">
-                              <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                                <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                              </div>
+                          <Avatar className="h-8 w-8 shrink-0">
+                            <AvatarFallback className="bg-primary/10 text-primary">
+                              <Bot className="h-4 w-4" />
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="bg-muted p-3 rounded-2xl">
+                            <div className="flex space-x-1">
+                              <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce"></div>
+                              <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                              <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                             </div>
                           </div>
                         </motion.div>
                       )}
+                      
                       <div ref={messagesEndRef} />
                     </div>
                   </ScrollArea>
 
                   {/* Rating Section */}
-                  {showRating && currentStep === 'rating' && (
-                    <div className="p-4 border-t bg-muted/50">
-                      <div className="text-center space-y-3">
-                        <p className="text-sm font-medium">كيف كانت تجربتك معنا؟</p>
-                        <div className="flex justify-center gap-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
+                  {currentStep === 'rating' && (
+                    <div className="p-4 border-t bg-muted/20">
+                      <div className="text-center space-y-4">
+                        <h3 className="font-semibold text-lg">⭐ قيم خدمة العملاء</h3>
+                        <p className="text-sm text-muted-foreground">كيف كانت تجربتك معنا؟</p>
+                        <div className="flex justify-center gap-2">
+                          {[1, 2, 3, 4, 5].map((rating) => (
                             <Button
-                              key={star}
+                              key={rating}
                               variant="ghost"
                               size="sm"
-                              onClick={() => rateConversation(star)}
-                              className="h-8 w-8 p-0 hover:bg-yellow-100"
+                              onClick={() => rateConversation(rating)}
+                              className="p-2 hover:bg-yellow-100"
                             >
-                              <Star className="h-5 w-5 text-yellow-500" />
+                              <Star className="h-6 w-6 fill-yellow-400 text-yellow-400" />
                             </Button>
                           ))}
                         </div>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => endConversation()}
+                          className="w-full"
+                        >
+                          إنهاء المحادثة بدون تقييم
+                        </Button>
                       </div>
                     </div>
                   )}
 
                   {/* Input Area */}
                   {currentStep === 'chatting' && (
-                    <div className="p-4 border-t">
-                      <div className="flex items-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-10 w-10 p-0 flex-shrink-0"
-                          disabled
-                        >
-                          <Paperclip className="h-4 w-4" />
-                        </Button>
+                    <div className="p-4 border-t bg-background">
+                      <div className="flex gap-2">
                         <div className="flex-1">
                           <Textarea
+                            ref={inputRef}
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyPress={handleKeyPress}
                             placeholder="اكتب رسالتك هنا..."
-                            className="min-h-[40px] max-h-[120px] resize-none border-2 border-border/50 focus:border-primary rounded-xl"
+                            className="min-h-[44px] max-h-32 resize-none border-0 focus-visible:ring-1"
                             disabled={isLoading}
                           />
                         </div>
-                        <Button
-                          onClick={sendMessage}
-                          disabled={!inputValue.trim() || isLoading}
-                          className="h-10 w-10 p-0 flex-shrink-0 rounded-xl"
-                        >
-                          {isLoading ? (
-                            <RefreshCw className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Send className="h-4 w-4" />
-                          )}
-                        </Button>
+                        <div className="flex flex-col gap-2">
+                          <Button
+                            onClick={sendMessage}
+                            disabled={!inputValue.trim() || isLoading}
+                            size="sm"
+                            className="h-[44px] w-[44px] p-0"
+                          >
+                            {isLoading ? (
+                              <RefreshCw className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Send className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  )}
 
-                  {/* Action Buttons */}
-                  {currentStep === 'chatting' && messages.length > 2 && (
-                    <div className="p-4 border-t bg-muted/30">
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setCurrentStep('rating')}
-                          className="text-xs"
-                        >
-                          <Star className="h-3 w-3 mr-1" />
-                          تقييم المحادثة
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={endConversation}
-                          className="text-xs"
-                          disabled={isLoading}
-                        >
-                          <Mail className="h-3 w-3 mr-1" />
-                          إنهاء وإرسال التقرير
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={startNewConversation}
-                          className="text-xs"
-                        >
-                          <RefreshCw className="h-3 w-3 mr-1" />
-                          محادثة جديدة
-                        </Button>
+                      {/* Action Buttons */}
+                      <div className="flex justify-between items-center mt-2 pt-2">
+                        <div className="flex gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setCurrentStep('rating')}
+                            className="text-xs"
+                          >
+                            <Star className="h-3 w-3 mr-1" />
+                            إنهاء المحادثة
+                          </Button>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={startNewConversation}
+                            className="text-xs"
+                          >
+                            <RefreshCw className="h-3 w-3 mr-1" />
+                            محادثة جديدة
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   )}
