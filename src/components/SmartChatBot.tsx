@@ -374,6 +374,7 @@ const SmartChatBot: React.FC<SmartChatBotProps> = ({
   };
 
   const toggleBot = () => {
+    console.log('toggleBot clicked, current isOpen:', isOpen);
     setIsOpen(!isOpen);
     if (!isOpen && notifications > 0) {
       setNotifications(0);
@@ -630,7 +631,10 @@ const SmartChatBot: React.FC<SmartChatBotProps> = ({
           className="relative"
         >
           <Button
-            onClick={toggleBot}
+            onClick={(e) => {
+              console.log('Button clicked!', e);
+              toggleBot();
+            }}
             className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl 
               bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70
               transition-all duration-300 group"
