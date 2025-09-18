@@ -335,6 +335,27 @@ export type Database = {
         }
         Relationships: []
       }
+      application_counters: {
+        Row: {
+          counter: number
+          created_at: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          counter?: number
+          created_at?: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          counter?: number
+          created_at?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
       ash_otps: {
         Row: {
           attempts: number | null
