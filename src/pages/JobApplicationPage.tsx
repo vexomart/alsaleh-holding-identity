@@ -27,7 +27,6 @@ import {
   Award,
   Shield,
   Globe,
-  DollarSign,
   TrendingUp,
   Heart,
   Coffee,
@@ -38,7 +37,12 @@ import {
   MessageCircle,
   AlertCircle,
   Timer,
-  Handshake
+  Handshake,
+  Rocket,
+  Code,
+  Palette,
+  BarChart3,
+  HeadphonesIcon
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -167,7 +171,7 @@ const JobApplicationPage = () => {
       if (response.ok) {
         toast({
           title: "تم إرسال الطلب بنجاح!",
-          description: `رقم الطلب: ${jobNumber} - سيتم التواصل معك خلال 10 أيام عمل`,
+          description: `رقم الطلب: ${result.jobNumber || jobNumber} - سيتم التواصل معك خلال 10 أيام عمل`,
           duration: 10000,
         });
         
@@ -211,8 +215,7 @@ const JobApplicationPage = () => {
       title: "مطور ويب متقدم", 
       type: "دوام كامل", 
       location: "عن بُعد",
-      salary: "8,000 - 15,000 ريال",
-      commission: "عمولة تسويقية 5%",
+      icon: Code,
       requirements: ["خبرة 3+ سنوات", "React/Next.js", "Node.js", "قواعد البيانات"],
       benefits: ["تأمين طبي", "إجازات مرنة", "تدريب مستمر"]
     },
@@ -221,8 +224,7 @@ const JobApplicationPage = () => {
       title: "مطور تطبيقات محمولة", 
       type: "دوام كامل", 
       location: "عن بُعد",
-      salary: "9,000 - 16,000 ريال",
-      commission: "عمولة تسويقية 7%",
+      icon: Laptop,
       requirements: ["خبرة 2+ سنوات", "React Native/Flutter", "iOS/Android", "API Integration"],
       benefits: ["تأمين طبي", "مكافآت أداء", "دورات تطوير"]
     },
@@ -231,8 +233,7 @@ const JobApplicationPage = () => {
       title: "مصمم UI/UX", 
       type: "دوام جزئي", 
       location: "عن بُعد",
-      salary: "5,000 - 10,000 ريال",
-      commission: "عمولة تسويقية 4%",
+      icon: Palette,
       requirements: ["خبرة 2+ سنوات", "Figma/Adobe XD", "تصميم متجاوب", "User Research"],
       benefits: ["مرونة في العمل", "أدوات التصميم", "ورش عمل"]
     },
@@ -241,10 +242,18 @@ const JobApplicationPage = () => {
       title: "أخصائي تسويق رقمي", 
       type: "دوام كامل", 
       location: "الرياض/عن بُعد",
-      salary: "6,000 - 12,000 ريال",
-      commission: "عمولة تسويقية 10%",
+      icon: BarChart3,
       requirements: ["خبرة 2+ سنوات", "Google Ads", "Social Media", "SEO/SEM"],
-      benefits: ["عمولات عالية", "برامج تدريبية", "سيارة شركة"]
+      benefits: ["عمولات تسويقية", "برامج تدريبية", "حوافز الأداء"]
+    },
+    { 
+      id: "JOB005", 
+      title: "أخصائي دعم فني", 
+      type: "دوام كامل", 
+      location: "الرياض",
+      icon: HeadphonesIcon,
+      requirements: ["خبرة سنة واحدة", "مهارات تواصل", "حل المشكلات", "صبر ومرونة"],
+      benefits: ["تدريب شامل", "بيئة داعمة", "فرص ترقية"]
     }
   ];
 
@@ -288,11 +297,11 @@ const JobApplicationPage = () => {
 
   const companyBenefits = [
     { icon: Globe, title: "عمل عن بُعد", description: "مرونة كاملة في اختيار مكان العمل" },
-    { icon: DollarSign, title: "راتب تنافسي", description: "رواتب متميزة مع عمولات تسويقية مجزية" },
     { icon: TrendingUp, title: "نمو مهني سريع", description: "فرص ترقية وتطوير مستمرة" },
     { icon: Heart, title: "بيئة عمل صحية", description: "فريق داعم وبيئة عمل إيجابية" },
     { icon: Coffee, title: "ساعات مرنة", description: "توازن مثالي بين العمل والحياة" },
-    { icon: Award, title: "تدريب مستمر", description: "دورات ومؤتمرات تطوير مهني" }
+    { icon: Award, title: "تدريب مستمر", description: "دورات ومؤتمرات تطوير مهني" },
+    { icon: Shield, title: "استقرار وظيفي", description: "عقود عمل ثابتة مع ضمانات اجتماعية" }
   ];
 
   return (
@@ -304,32 +313,31 @@ const JobApplicationPage = () => {
         description="كن جزءاً من رحلتنا في تشكيل مستقبل التكنولوجيا"
         showBackButton={true}
         backButtonFallback="/"
+        className="py-12 md:py-16"
       />
 
-      <div className="container mx-auto px-6 py-16 space-y-20">
+      <div className="container mx-auto px-4 md:px-6 py-8 md:py-16 space-y-16 md:space-y-20">
         
         {/* Company Benefits */}
         <section className="animate-fade-in">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">لماذا تنضم إلينا؟</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              نوفر بيئة عمل مثالية تجمع بين التطور المهني والاستقرار المالي
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">لماذا تنضم إلينا؟</h2>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
+              نوفر بيئة عمل مثالية تجمع بين التطور المهني والاستقرار الوظيفي
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {companyBenefits.map((benefit, index) => {
               const IconComponent = benefit.icon;
               return (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-card to-muted/20">
-                  <CardContent className="p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="bg-gradient-to-r from-primary to-primary/80 rounded-lg w-12 h-12 flex items-center justify-center ml-4">
-                        <IconComponent className="w-6 h-6 text-primary-foreground" />
-                      </div>
-                      <h3 className="text-xl font-bold text-foreground">{benefit.title}</h3>
+                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 bg-gradient-to-br from-card to-muted/20 group">
+                  <CardContent className="p-6 text-center">
+                    <div className="bg-gradient-to-r from-primary to-primary/80 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="w-8 h-8 text-primary-foreground" />
                     </div>
-                    <p className="text-muted-foreground">{benefit.description}</p>
+                    <h3 className="text-xl font-bold text-foreground mb-3">{benefit.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
                   </CardContent>
                 </Card>
               );
@@ -339,96 +347,103 @@ const JobApplicationPage = () => {
 
         {/* Available Positions */}
         <section className="animate-fade-in">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">الوظائف المتاحة</h2>
-            <p className="text-xl text-muted-foreground">اختر الوظيفة التي تناسب خبراتك ومهاراتك</p>
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">الوظائف المتاحة</h2>
+            <p className="text-lg md:text-xl text-muted-foreground px-4">اختر الوظيفة التي تناسب خبراتك ومهاراتك</p>
+            <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg max-w-2xl mx-auto">
+              <p className="text-amber-800 font-medium">💼 الراتب والمزايا المالية سيتم توضيحها بعد اجتياز المقابلة بنجاح</p>
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {positions.map((position) => (
-              <Card key={position.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-card to-accent/5">
-                <CardHeader className="pb-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <CardTitle className="text-xl text-foreground">{position.title}</CardTitle>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                      {position.id}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {position.type}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4" />
-                      {position.location}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="w-4 h-4" />
-                      {position.salary}
-                    </div>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-2">المتطلبات:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {position.requirements.map((req, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {req}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            {positions.map((position) => {
+              const IconComponent = position.icon;
+              return (
+                <Card key={position.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-card to-accent/5 group">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="bg-gradient-to-r from-primary to-primary/80 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <IconComponent className="w-6 h-6 text-primary-foreground" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-xl text-foreground mb-2">{position.title}</CardTitle>
+                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 mb-3">
+                          {position.id}
                         </Badge>
-                      ))}
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-2">المزايا:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {position.benefits.map((benefit, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
-                          {benefit}
-                        </Badge>
-                      ))}
+                    
+                    <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {position.type}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        {position.location}
+                      </div>
                     </div>
-                  </div>
+                  </CardHeader>
                   
-                  <div className="pt-2">
-                    <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">
-                      {position.commission}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                        <Star className="w-4 h-4 text-yellow-500" />
+                        المتطلبات:
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {position.requirements.map((req, index) => (
+                          <Badge key={index} variant="outline" className="text-xs border-primary/20 hover:bg-primary/10 transition-colors">
+                            {req}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                        <Award className="w-4 h-4 text-green-500" />
+                        المزايا:
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {position.benefits.map((benefit, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs bg-green-50 text-green-700 border-green-200 hover:bg-green-100 transition-colors">
+                            {benefit}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
 
         {/* Application Process */}
         <section className="animate-fade-in">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">عملية التوظيف</h2>
-            <p className="text-xl text-muted-foreground">خطوات واضحة ومحددة للوصول إلى فريق العمل</p>
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">عملية التوظيف</h2>
+            <p className="text-lg md:text-xl text-muted-foreground px-4">خطوات واضحة ومحددة للوصول إلى فريق العمل</p>
           </div>
           
-          <div className="relative">
-            {/* Connection Line */}
-            <div className="absolute top-12 left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary to-primary/30 hidden lg:block"></div>
+          <div className="relative max-w-4xl mx-auto">
+            {/* Connection Line - Hidden on mobile */}
+            <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary to-primary/30 hidden lg:block"></div>
             
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8">
               {applicationProcess.map((process, index) => (
-                <div key={process.step} className={`flex items-center gap-8 ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}>
-                  <div className="flex-1">
-                    <Card className="border-0 shadow-lg bg-gradient-to-br from-card to-muted/10">
+                <div key={process.step} className={`flex flex-col lg:flex-row items-center gap-6 md:gap-8 ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}>
+                  <div className="flex-1 w-full">
+                    <Card className="border-0 shadow-lg bg-gradient-to-br from-card to-muted/10 hover:shadow-xl transition-all duration-300">
                       <CardContent className="p-6">
-                        <div className="flex items-center gap-4 mb-3">
-                          <div className={`${process.color} rounded-full w-12 h-12 flex items-center justify-center text-white font-bold`}>
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className={`${process.color} rounded-full w-12 h-12 flex items-center justify-center text-white font-bold text-lg`}>
                             {process.step}
                           </div>
                           <h3 className="text-xl font-bold text-foreground">{process.title}</h3>
                         </div>
-                        <p className="text-muted-foreground">{process.description}</p>
+                        <p className="text-muted-foreground leading-relaxed">{process.description}</p>
                       </CardContent>
                     </Card>
                   </div>
@@ -448,30 +463,30 @@ const JobApplicationPage = () => {
 
         {/* Important Notice */}
         <section className="animate-fade-in">
-          <Card className="border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-            <CardContent className="p-8">
-              <div className="flex items-start gap-4">
+          <Card className="border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 mx-4 md:mx-0">
+            <CardContent className="p-6 md:p-8">
+              <div className="flex flex-col md:flex-row items-start gap-4">
                 <div className="bg-blue-500 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
                   <AlertCircle className="w-6 h-6 text-white" />
                 </div>
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-blue-900">معلومات مهمة للمتقدمين</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-blue-800">
+                <div className="space-y-4 w-full">
+                  <h3 className="text-xl md:text-2xl font-bold text-blue-900">معلومات مهمة للمتقدمين</h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 text-blue-800">
                     <div className="flex items-center gap-3">
-                      <Timer className="w-5 h-5 text-blue-600" />
-                      <span>سيتم التواصل معك خلال <strong>10 أيام عمل</strong></span>
+                      <Timer className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                      <span className="text-sm md:text-base">سيتم التواصل معك خلال <strong>10 أيام عمل</strong></span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <MessageCircle className="w-5 h-5 text-blue-600" />
-                      <span>فريق الموارد البشرية سيتولى المتابعة</span>
+                      <MessageCircle className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                      <span className="text-sm md:text-base">فريق الموارد البشرية سيتولى المتابعة</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Calendar className="w-5 h-5 text-blue-600" />
-                      <span>المقابلة الشخصية ستكون بعد المقابلة التقنية</span>
+                      <Calendar className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                      <span className="text-sm md:text-base">المقابلة الشخصية ستكون بعد المقابلة التقنية</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5 text-blue-600" />
-                      <span>جميع التحديثات ستصلك عبر البريد الإلكتروني</span>
+                      <Mail className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                      <span className="text-sm md:text-base">جميع التحديثات ستصلك عبر البريد الإلكتروني</span>
                     </div>
                   </div>
                 </div>
@@ -482,28 +497,28 @@ const JobApplicationPage = () => {
 
         {/* Application Form */}
         <section className="animate-fade-in">
-          <Card className="max-w-4xl mx-auto border-0 shadow-2xl bg-gradient-to-br from-card to-accent/5">
-            <CardHeader className="text-center bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-t-lg">
-              <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3">
+          <Card className="max-w-4xl mx-auto border-0 shadow-2xl bg-gradient-to-br from-card to-accent/5 mx-4 md:mx-auto">
+            <CardHeader className="text-center bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-t-lg p-6 md:p-8">
+              <CardTitle className="text-2xl md:text-3xl font-bold flex flex-col md:flex-row items-center justify-center gap-3">
                 <FileText className="w-8 h-8" />
                 نموذج طلب التوظيف
               </CardTitle>
-              <p className="text-primary-foreground/90 mt-2">
+              <p className="text-primary-foreground/90 mt-3 text-sm md:text-base leading-relaxed">
                 املأ البيانات بدقة وسيتم التواصل معك من قبل فريق الموارد البشرية خلال 10 أيام عمل
               </p>
             </CardHeader>
             
-            <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-8">
+            <CardContent className="p-6 md:p-8">
+              <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
                 
                 {/* Personal Information */}
-                <div className="bg-muted/30 rounded-lg p-6 border border-border/50">
-                  <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
+                <div className="bg-muted/30 rounded-lg p-4 md:p-6 border border-border/50">
+                  <h3 className="text-lg font-bold text-foreground mb-4 md:mb-6 flex items-center gap-2">
                     <Users className="w-5 h-5 text-primary" />
                     البيانات الشخصية
                   </h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="fullName" className="text-foreground font-medium">الاسم الكامل *</Label>
                       <Input
@@ -511,7 +526,7 @@ const JobApplicationPage = () => {
                         type="text"
                         value={formData.fullName}
                         onChange={(e) => handleInputChange("fullName", e.target.value)}
-                        className="border-border focus:border-primary"
+                        className="border-border focus:border-primary h-11"
                         placeholder="أدخل اسمك الكامل"
                         required
                       />
@@ -524,7 +539,7 @@ const JobApplicationPage = () => {
                         type="email"
                         value={formData.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="border-border focus:border-primary"
+                        className="border-border focus:border-primary h-11"
                         placeholder="example@email.com"
                         required
                       />
@@ -537,7 +552,7 @@ const JobApplicationPage = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value)}
-                        className="border-border focus:border-primary"
+                        className="border-border focus:border-primary h-11"
                         placeholder="05xxxxxxxx"
                         required
                       />
@@ -550,7 +565,7 @@ const JobApplicationPage = () => {
                         type="text"
                         value={formData.city}
                         onChange={(e) => handleInputChange("city", e.target.value)}
-                        className="border-border focus:border-primary"
+                        className="border-border focus:border-primary h-11"
                         placeholder="مدينة الإقامة"
                       />
                     </div>
@@ -558,17 +573,17 @@ const JobApplicationPage = () => {
                 </div>
 
                 {/* Professional Information */}
-                <div className="bg-muted/30 rounded-lg p-6 border border-border/50">
-                  <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
+                <div className="bg-muted/30 rounded-lg p-4 md:p-6 border border-border/50">
+                  <h3 className="text-lg font-bold text-foreground mb-4 md:mb-6 flex items-center gap-2">
                     <Briefcase className="w-5 h-5 text-primary" />
                     البيانات المهنية
                   </h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="position" className="text-foreground font-medium">الوظيفة المطلوبة *</Label>
                       <Select value={formData.position} onValueChange={(value) => handleInputChange("position", value)}>
-                        <SelectTrigger className="border-border focus:border-primary">
+                        <SelectTrigger className="border-border focus:border-primary h-11">
                           <SelectValue placeholder="اختر الوظيفة" />
                         </SelectTrigger>
                         <SelectContent>
@@ -584,7 +599,7 @@ const JobApplicationPage = () => {
                     <div className="space-y-2">
                       <Label htmlFor="experience" className="text-foreground font-medium">سنوات الخبرة</Label>
                       <Select value={formData.experience} onValueChange={(value) => handleInputChange("experience", value)}>
-                        <SelectTrigger className="border-border focus:border-primary">
+                        <SelectTrigger className="border-border focus:border-primary h-11">
                           <SelectValue placeholder="اختر سنوات الخبرة" />
                         </SelectTrigger>
                         <SelectContent>
@@ -600,7 +615,7 @@ const JobApplicationPage = () => {
                     <div className="space-y-2">
                       <Label htmlFor="education" className="text-foreground font-medium">المؤهل العلمي</Label>
                       <Select value={formData.education} onValueChange={(value) => handleInputChange("education", value)}>
-                        <SelectTrigger className="border-border focus:border-primary">
+                        <SelectTrigger className="border-border focus:border-primary h-11">
                           <SelectValue placeholder="اختر المؤهل العلمي" />
                         </SelectTrigger>
                         <SelectContent>
@@ -620,7 +635,7 @@ const JobApplicationPage = () => {
                         type="url"
                         value={formData.linkedIn}
                         onChange={(e) => handleInputChange("linkedIn", e.target.value)}
-                        className="border-border focus:border-primary"
+                        className="border-border focus:border-primary h-11"
                         placeholder="https://linkedin.com/in/yourprofile"
                       />
                     </div>
@@ -628,13 +643,13 @@ const JobApplicationPage = () => {
                 </div>
 
                 {/* CV Upload */}
-                <div className="bg-muted/30 rounded-lg p-6 border border-border/50">
-                  <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
+                <div className="bg-muted/30 rounded-lg p-4 md:p-6 border border-border/50">
+                  <h3 className="text-lg font-bold text-foreground mb-4 md:mb-6 flex items-center gap-2">
                     <Upload className="w-5 h-5 text-primary" />
                     رفع السيرة الذاتية والمرفقات
                   </h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="cv-file" className="text-foreground font-medium">السيرة الذاتية (PDF أو Word)</Label>
                       <Input
@@ -642,7 +657,7 @@ const JobApplicationPage = () => {
                         type="file"
                         accept=".pdf,.doc,.docx"
                         onChange={handleFileChange}
-                        className="border-border focus:border-primary"
+                        className="border-border focus:border-primary h-11"
                       />
                       {cvFile && (
                         <p className="text-sm text-green-600 flex items-center gap-1">
@@ -659,7 +674,7 @@ const JobApplicationPage = () => {
                         type="url"
                         value={formData.portfolio}
                         onChange={(e) => handleInputChange("portfolio", e.target.value)}
-                        className="border-border focus:border-primary"
+                        className="border-border focus:border-primary h-11"
                         placeholder="https://yourportfolio.com"
                       />
                     </div>
@@ -667,8 +682,8 @@ const JobApplicationPage = () => {
                 </div>
 
                 {/* Cover Letter */}
-                <div className="bg-muted/30 rounded-lg p-6 border border-border/50">
-                  <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
+                <div className="bg-muted/30 rounded-lg p-4 md:p-6 border border-border/50">
+                  <h3 className="text-lg font-bold text-foreground mb-4 md:mb-6 flex items-center gap-2">
                     <MessageCircle className="w-5 h-5 text-primary" />
                     خطاب التغطية
                   </h3>
@@ -686,12 +701,12 @@ const JobApplicationPage = () => {
                 </div>
 
                 {/* Submit Button */}
-                <div className="flex justify-center pt-6">
+                <div className="flex justify-center pt-4 md:pt-6">
                   <Button
                     type="submit"
                     size="lg"
                     disabled={isSubmitting}
-                    className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground px-12 py-4 text-lg font-semibold"
+                    className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground px-8 md:px-12 py-3 md:py-4 text-base md:text-lg font-semibold w-full md:w-auto"
                   >
                     {isSubmitting ? (
                       <>
