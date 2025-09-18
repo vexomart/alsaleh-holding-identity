@@ -258,29 +258,35 @@ const getPriorityTimeStyle = (priority: string) => {
 };
 
 const main = {
-  backgroundColor: '#f6f9fc',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  backgroundColor: '#f0f4f8',
+  fontFamily: 'Cairo, Tajawal, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   direction: 'rtl' as const,
   textAlign: 'right' as const,
-  lineHeight: '1.6',
+  lineHeight: '1.7',
+  margin: '0',
+  padding: '20px 10px',
+  minHeight: '100vh',
 }
 
 const container = {
   backgroundColor: '#ffffff',
-  border: '1px solid #e2e8f0',
-  borderRadius: '16px',
-  margin: '20px auto',
+  border: '3px solid #e2e8f0',
+  borderRadius: '24px',
+  margin: '0 auto',
   maxWidth: '650px',
+  width: '100%',
   padding: '0',
-  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.12)',
+  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)',
   overflow: 'hidden',
+  position: 'relative',
 }
 
 const header = {
-  borderRadius: '16px 16px 0 0',
-  padding: '40px 30px',
+  borderRadius: '24px 24px 0 0',
+  padding: '50px 20px',
   textAlign: 'center' as const,
   background: 'linear-gradient(135deg, currentColor 0%, rgba(0,0,0,0.8) 100%)',
+  overflow: 'hidden',
 }
 
 const h1 = {
@@ -300,10 +306,11 @@ const subtitle = {
 }
 
 const alertBox = {
-  borderRadius: '8px',
-  padding: '16px',
-  margin: '20px 30px',
+  borderRadius: '20px',
+  padding: '25px 20px',
+  margin: '20px 20px',
   textAlign: 'center' as const,
+  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
 }
 
 const alertText = {
@@ -315,7 +322,7 @@ const alertText = {
 }
 
 const section = {
-  padding: '30px',
+  padding: '25px 20px',
 }
 
 const h3 = {
@@ -367,16 +374,20 @@ const ticketNumber = {
 }
 
 const detailRow = {
-  marginBottom: '12px',
+  marginBottom: '16px',
+  display: 'block',
 }
 
 const labelColumn = {
-  width: '30%',
+  width: '100%',
   verticalAlign: 'top',
+  display: 'block',
+  marginBottom: '5px',
 }
 
 const valueColumn = {
-  width: '70%',
+  width: '100%',
+  display: 'block',
 }
 
 const label = {
@@ -408,17 +419,19 @@ const description = {
 
 const actionBox = {
   background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-  border: '1px solid #fcd34d',
-  borderRadius: '12px',
-  padding: '24px',
-  margin: '0 30px 20px 30px',
-  boxShadow: '0 4px 12px rgba(251, 191, 36, 0.1)',
+  border: '3px solid #fcd34d',
+  borderRadius: '20px',
+  padding: '30px 20px',
+  margin: '0 20px 20px 20px',
+  boxShadow: '0 8px 25px rgba(251, 191, 36, 0.15)',
+  position: 'relative',
 }
 
 const timeBox = {
-  borderRadius: '8px',
-  padding: '16px',
-  margin: '0 30px 30px 30px',
+  borderRadius: '20px',
+  padding: '25px 20px',
+  margin: '0 20px 30px 20px',
+  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
 }
 
 const timeText = {
@@ -436,9 +449,10 @@ const hr = {
 }
 
 const footer = {
-  padding: '30px',
+  padding: '30px 20px',
   backgroundColor: '#f8fafc',
-  borderRadius: '0 0 12px 12px',
+  borderRadius: '0 0 24px 24px',
+  borderTop: '3px solid #e2e8f0',
 }
 
 const footerText = {
@@ -452,38 +466,44 @@ const footerText = {
 
 // New styles for action buttons
 const actionButtonRow = {
-  marginTop: '20px',
+  marginTop: '25px',
   textAlign: 'center' as const,
+  display: 'block',
 }
 
 const primaryActionButton = {
   backgroundColor: '#dc2626',
   color: '#ffffff',
-  padding: '14px 28px',
-  borderRadius: '8px',
+  padding: '18px 36px',
+  borderRadius: '12px',
   textDecoration: 'none',
   display: 'inline-block',
-  fontSize: '16px',
+  fontSize: '18px',
   fontWeight: 'bold',
-  fontFamily: 'Arial, sans-serif',
+  fontFamily: 'Cairo, Arial, sans-serif',
   textAlign: 'center' as const,
-  transition: 'all 0.3s ease',
-  boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)',
+  margin: '10px',
+  minWidth: '220px',
+  boxShadow: '0 8px 20px rgba(220, 38, 38, 0.4)',
+  transform: 'translateY(0)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 }
 
 const secondaryActionButton = {
   backgroundColor: 'transparent',
   color: '#1e293b',
-  padding: '14px 28px',
-  borderRadius: '8px',
+  padding: '18px 36px',
+  borderRadius: '12px',
   textDecoration: 'none',
   display: 'inline-block',
-  fontSize: '16px',
+  fontSize: '18px',
   fontWeight: 'bold',
-  fontFamily: 'Arial, sans-serif',
+  fontFamily: 'Cairo, Arial, sans-serif',
   textAlign: 'center' as const,
-  border: '2px solid #1e293b',
-  transition: 'all 0.3s ease',
+  border: '3px solid #1e293b',
+  margin: '10px',
+  minWidth: '220px',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 }
 
 export default AdminComplaintNotification

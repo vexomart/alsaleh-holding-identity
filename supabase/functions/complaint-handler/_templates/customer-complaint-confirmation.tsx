@@ -180,30 +180,36 @@ const getPriorityStyle = (priority: string) => {
 };
 
 const main = {
-  backgroundColor: '#f6f9fc',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  backgroundColor: '#f0f4f8',
+  fontFamily: 'Cairo, Tajawal, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   direction: 'rtl' as const,
   textAlign: 'right' as const,
-  lineHeight: '1.6',
+  lineHeight: '1.7',
+  margin: '0',
+  padding: '20px 10px',
+  minHeight: '100vh',
 }
 
 const container = {
   backgroundColor: '#ffffff',
-  border: '1px solid #e2e8f0',
-  borderRadius: '16px',
-  margin: '20px auto',
+  border: '3px solid #e2e8f0',
+  borderRadius: '24px',
+  margin: '0 auto',
   maxWidth: '600px',
+  width: '100%',
   padding: '0',
-  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.12)',
+  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)',
   overflow: 'hidden',
+  position: 'relative',
 }
 
 const header = {
-  background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-  borderRadius: '16px 16px 0 0',
-  padding: '40px 30px',
+  background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%)',
+  borderRadius: '24px 24px 0 0',
+  padding: '50px 20px',
   textAlign: 'center' as const,
   position: 'relative' as const,
+  overflow: 'hidden',
 }
 
 const h1 = {
@@ -222,7 +228,7 @@ const subtitle = {
 }
 
 const section = {
-  padding: '30px',
+  padding: '25px 20px',
 }
 
 const h2 = {
@@ -259,12 +265,13 @@ const text = {
 
 const ticketBox = {
   background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-  border: '2px solid #3b82f6',
-  borderRadius: '12px',
-  padding: '24px',
-  margin: '20px 30px',
+  border: '3px solid #3b82f6',
+  borderRadius: '20px',
+  padding: '30px 20px',
+  margin: '20px 20px',
   textAlign: 'center' as const,
-  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)',
+  boxShadow: '0 8px 25px rgba(59, 130, 246, 0.2)',
+  position: 'relative',
 }
 
 const ticketLabel = {
@@ -283,16 +290,20 @@ const ticketNumber = {
 }
 
 const detailRow = {
-  marginBottom: '12px',
+  marginBottom: '16px',
+  display: 'block',
 }
 
 const labelColumn = {
-  width: '30%',
+  width: '100%',
   verticalAlign: 'top',
+  display: 'block',
+  marginBottom: '5px',
 }
 
 const valueColumn = {
-  width: '70%',
+  width: '100%',
+  display: 'block',
 }
 
 const label = {
@@ -324,20 +335,22 @@ const descriptionBox = {
 
 const nextStepsBox = {
   background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
-  border: '1px solid #bbf7d0',
-  borderRadius: '12px',
-  padding: '24px',
-  margin: '0 30px 20px 30px',
-  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.1)',
+  border: '3px solid #bbf7d0',
+  borderRadius: '20px',
+  padding: '30px 20px',
+  margin: '0 20px 20px 20px',
+  boxShadow: '0 8px 25px rgba(34, 197, 94, 0.15)',
+  position: 'relative',
 }
 
 const contactBox = {
   background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-  border: '1px solid #fcd34d',
-  borderRadius: '12px',
-  padding: '24px',
-  margin: '0 30px 30px 30px',
-  boxShadow: '0 4px 12px rgba(251, 191, 36, 0.1)',
+  border: '3px solid #fcd34d',
+  borderRadius: '20px',
+  padding: '30px 20px',
+  margin: '0 20px 30px 20px',
+  boxShadow: '0 8px 25px rgba(251, 191, 36, 0.15)',
+  position: 'relative',
 }
 
 const hr = {
@@ -347,9 +360,10 @@ const hr = {
 }
 
 const footer = {
-  padding: '30px',
+  padding: '30px 20px',
   backgroundColor: '#f8fafc',
-  borderRadius: '0 0 12px 12px',
+  borderRadius: '0 0 24px 24px',
+  borderTop: '3px solid #e2e8f0',
 }
 
 const footerText = {
@@ -363,53 +377,58 @@ const footerText = {
 
 // New styles for buttons and responsive design
 const buttonRow = {
-  marginTop: '20px',
+  marginTop: '25px',
   textAlign: 'center' as const,
+  display: 'block',
 }
 
 const primaryButton = {
   backgroundColor: '#3b82f6',
   color: '#ffffff',
-  padding: '12px 24px',
-  borderRadius: '8px',
+  padding: '16px 32px',
+  borderRadius: '12px',
   textDecoration: 'none',
   display: 'inline-block',
-  fontSize: '16px',
+  fontSize: '18px',
   fontWeight: 'bold',
-  fontFamily: 'Arial, sans-serif',
+  fontFamily: 'Cairo, Arial, sans-serif',
   textAlign: 'center' as const,
-  transition: 'all 0.3s ease',
-  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+  margin: '10px',
+  minWidth: '200px',
+  boxShadow: '0 8px 20px rgba(59, 130, 246, 0.4)',
+  transform: 'translateY(0)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 }
 
 const secondaryButton = {
   backgroundColor: 'transparent',
   color: '#3b82f6',
-  padding: '12px 24px',
-  borderRadius: '8px',
+  padding: '16px 32px',
+  borderRadius: '12px',
   textDecoration: 'none',
   display: 'inline-block',
-  fontSize: '16px',
+  fontSize: '18px',
   fontWeight: 'bold',
-  fontFamily: 'Arial, sans-serif',
+  fontFamily: 'Cairo, Arial, sans-serif',
   textAlign: 'center' as const,
-  border: '2px solid #3b82f6',
-  transition: 'all 0.3s ease',
+  border: '3px solid #3b82f6',
+  margin: '10px',
+  minWidth: '200px',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 }
 
 const contactRow = {
-  display: 'flex',
-  flexDirection: 'row' as const,
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  flexWrap: 'wrap' as const,
-  gap: '16px',
+  display: 'block',
+  textAlign: 'center' as const,
 }
 
 const contactItem = {
   textAlign: 'center' as const,
-  flex: '1',
-  minWidth: '120px',
+  margin: '15px 0',
+  padding: '15px',
+  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+  borderRadius: '12px',
+  border: '2px solid rgba(251, 191, 36, 0.3)',
 }
 
 const contactIcon = {
