@@ -209,11 +209,11 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    const hrEmail = data.hrEmail || "hr@masteredupath.com";
+    const hrEmail = data.hrEmail || "jobs@alialshehriholding.com";
     
     const { error: emailError } = await resend.emails.send({
-      from: "نظام الموارد البشرية <hr@masteredupath.com>",
-      to: [hrEmail, "admin@masteredupath.com"],
+      from: "نظام التوظيف <jobs@alialshehriholding.com>",
+      to: [hrEmail, "jobs@alialshehriholding.com"],
       subject: `🎯 طلب توظيف جديد - ${data.position} - ${applicationNumber}`,
       html: hrEmailHtml,
     });
@@ -313,7 +313,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     const { error: confirmationEmailError } = await resend.emails.send({
-      from: "قسم الموارد البشرية <hr@masteredupath.com>",
+      from: "قسم التوظيف <jobs@alialshehriholding.com>",
       to: [data.email],
       subject: `✅ تأكيد استلام طلب التوظيف - ${applicationNumber}`,
       html: applicantEmailHtml,
