@@ -192,7 +192,7 @@ const About = () => {
       description: "نسعى دائماً لاستكشاف آفاق جديدة وتطوير حلول مبتكرة تلبي احتياجات المستقبل وتحقق التميز",
       color: "from-blue-500 to-cyan-500",
       features: ["تقنيات حديثة", "حلول مبتكرة", "رؤية مستقبلية"],
-      stats: "200+ مشروع مبتكر"
+      stats: "تميز تقني"
     },
     {
       icon: Shield,
@@ -200,7 +200,7 @@ const About = () => {
       description: "نبني علاقاتنا على أساس الثقة المتبادلة والشفافية مع أعلى معايير الأمان والحماية",
       color: "from-emerald-500 to-teal-500",
       features: ["شفافية كاملة", "أمان البيانات", "ثقة متبادلة"],
-      stats: "99.9% وقت تشغيل"
+      stats: "أمان متقدم"
     },
     {
       icon: Trophy,
@@ -208,7 +208,7 @@ const About = () => {
       description: "نلتزم بأعلى معايير الجودة في جميع خدماتنا ونسعى للتميز في كل ما نقوم به",
       color: "from-purple-500 to-pink-500",
       features: ["معايير عالمية", "جودة مضمونة", "أداء متميز"],
-      stats: "15+ جائزة تقدير"
+      stats: "جودة استثنائية"
     },
     {
       icon: Users,
@@ -216,7 +216,7 @@ const About = () => {
       description: "نؤمن بقوة الشراكة والعمل الجماعي لتحقيق أهداف مشتركة وبناء علاقات طويلة الأمد",
       color: "from-orange-500 to-red-500",
       features: ["فريق متخصص", "شراكات قوية", "تعاون مثمر"],
-      stats: "500+ شريك عالمي"
+      stats: "شراكات متميزة"
     }
   ];
 
@@ -278,7 +278,7 @@ const About = () => {
 
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-950">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-950 font-corporate">
         
         {/* Hero Section */}
         <motion.section 
@@ -310,7 +310,7 @@ const About = () => {
               
               <motion.h1 
                 variants={itemVariants}
-                className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-blue-700 via-purple-600 to-indigo-700 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent mb-8 leading-tight"
+                className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-blue-700 via-purple-600 to-indigo-700 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent mb-8 leading-tight font-formal"
               >
                 نبني مستقبل التكنولوجيا
                 <br />
