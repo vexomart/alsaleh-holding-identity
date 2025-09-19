@@ -201,7 +201,7 @@ const About = () => {
           <div className="relative">
             <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-sm px-6 py-3 rounded-full mb-8 border border-primary/20">
               <Globe className="w-5 h-5 text-primary" />
-              <span className="text-primary font-executive-bold">شركة آل الشهري القابضة</span>
+              <span className="text-primary font-executive-bold">ASH HOLDING</span>
             </div>
             
             <ResponsiveText size="3xl" className="font-title-executive text-primary mb-6 leading-tight">
