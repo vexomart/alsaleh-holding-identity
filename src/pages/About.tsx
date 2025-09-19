@@ -402,7 +402,7 @@ const About = () => {
           className="py-24 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md"
         >
           <ResponsiveContainer>
-            <ResponsiveGrid cols="1-2" gap="xl" className="items-center">
+            <ResponsiveGrid cols="1-2" gap="lg" className="items-center">
               <motion.div variants={itemVariants} className="space-y-8">
                 <div className="flex items-center gap-4 mb-8">
                   <div className="p-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl shadow-lg">
