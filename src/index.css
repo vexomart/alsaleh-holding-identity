@@ -188,7 +188,7 @@
 
 @import url('./styles/rtl-fixes.css');
 
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Almarai:wght@300;400;700;800&family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -196,107 +196,109 @@
 
 @layer base {
   :root {
-    /* Professional Color System - Unified and Consistent */
-    --background: 0 0% 100%;
-    --foreground: 210 15% 15%;
+    /* Professional Corporate Color System */
+    --background: 0 0% 99%;
+    --foreground: 220 25% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 210 15% 15%;
+    --card-foreground: 220 25% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 15%;
+    --popover-foreground: 220 25% 12%;
     
-    /* Primary Brand Colors - Consistent Blue System */
-    --primary: 220 85% 35%;
+    /* Executive Primary - Deep Professional Blue */
+    --primary: 220 100% 20%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 220 85% 50%;
-    --primary-variant: 220 75% 45%;
+    --primary-glow: 220 85% 35%;
+    --primary-variant: 220 90% 25%;
     
-    /* Secondary - Elegant Gold System */
-    --secondary: 45 95% 55%;
-    --secondary-foreground: 210 15% 15%;
-    --secondary-dark: 40 85% 45%;
-    --secondary-light: 50 100% 65%;
+    /* Corporate Secondary - Sophisticated Gold */
+    --secondary: 35 85% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-dark: 30 80% 35%;
+    --secondary-light: 40 90% 55%;
     
-    /* Accent - Refined Teal System */
-    --accent: 185 85% 40%;
+    /* Professional Accent - Elite Teal */
+    --accent: 190 100% 25%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 185 75% 55%;
-    --accent-dark: 185 95% 25%;
+    --accent-light: 190 85% 35%;
+    --accent-dark: 190 100% 15%;
     
-    /* Neutral System - Enhanced Harmony */
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 20% 45%;
-    --border: 220 15% 88%;
-    --input: 220 15% 94%;
-    --ring: 220 85% 35%;
+    /* Executive Neutral System */
+    --muted: 220 20% 97%;
+    --muted-foreground: 220 25% 40%;
+    --border: 220 25% 90%;
+    --input: 220 20% 96%;
+    --ring: 220 100% 20%;
     
-    /* Status Colors - Consistent System */
-    --destructive: 0 80% 55%;
+    /* Status Colors - Professional System */
+    --destructive: 0 75% 45%;
     --destructive-foreground: 0 0% 98%;
-    --success: 145 70% 45%;
+    --success: 145 75% 35%;
     --success-foreground: 0 0% 98%;
-    --warning: 40 90% 55%;
-    --warning-foreground: 210 15% 15%;
+    --warning: 40 85% 50%;
+    --warning-foreground: 220 25% 12%;
     
-    /* Unified Gradients System */
-    --gradient-primary: linear-gradient(135deg, hsl(220 85% 35%), hsl(220 75% 45%));
-    --gradient-secondary: linear-gradient(135deg, hsl(45 95% 55%), hsl(40 85% 45%));
-    --gradient-accent: linear-gradient(135deg, hsl(185 85% 40%), hsl(185 75% 55%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 85% 35%) 0%, hsl(185 85% 40%) 50%, hsl(45 95% 55%) 100%);
-    --gradient-subtle: linear-gradient(135deg, hsl(220 85% 35% / 0.1), hsl(185 85% 40% / 0.1));
+    /* Corporate Gradients - Executive Level */
+    --gradient-primary: linear-gradient(135deg, hsl(220 100% 20%), hsl(220 90% 25%));
+    --gradient-secondary: linear-gradient(135deg, hsl(35 85% 45%), hsl(30 80% 35%));
+    --gradient-accent: linear-gradient(135deg, hsl(190 100% 25%), hsl(190 85% 35%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 100% 20%) 0%, hsl(190 100% 25%) 50%, hsl(35 85% 45%) 100%);
+    --gradient-corporate: linear-gradient(135deg, hsl(220 100% 20% / 0.05), hsl(190 100% 25% / 0.05));
+    --gradient-section: linear-gradient(135deg, hsl(220 100% 20% / 0.02), hsl(0 0% 100%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(220 20% 98%));
     
-    /* Professional Shadow System */
-    --shadow-sm: 0 2px 4px -1px hsl(220 20% 20% / 0.08);
-    --shadow-md: 0 4px 8px -2px hsl(220 20% 20% / 0.12), 0 2px 4px -1px hsl(220 20% 20% / 0.08);
-    --shadow-lg: 0 12px 24px -4px hsl(220 20% 20% / 0.15), 0 4px 8px -2px hsl(220 20% 20% / 0.08);
-    --shadow-xl: 0 24px 48px -12px hsl(220 20% 20% / 0.25);
-    --shadow-glow: 0 0 32px hsl(220 85% 35% / 0.5);
-    --shadow-accent-glow: 0 0 32px hsl(185 85% 40% / 0.4);
-    --shadow-secondary-glow: 0 0 32px hsl(45 95% 55% / 0.4);
+    /* Executive Shadow System */
+    --shadow-sm: 0 2px 8px -2px hsl(220 25% 15% / 0.08);
+    --shadow-md: 0 8px 24px -8px hsl(220 25% 15% / 0.12), 0 4px 8px -2px hsl(220 25% 15% / 0.06);
+    --shadow-lg: 0 20px 40px -8px hsl(220 25% 15% / 0.15), 0 8px 16px -4px hsl(220 25% 15% / 0.08);
+    --shadow-xl: 0 32px 64px -16px hsl(220 25% 15% / 0.25);
+    --shadow-glow: 0 0 40px hsl(220 100% 20% / 0.4);
+    --shadow-accent-glow: 0 0 40px hsl(190 100% 25% / 0.3);
+    --shadow-secondary-glow: 0 0 40px hsl(35 85% 45% / 0.3);
     
-    --radius: 0.75rem;
+    --radius: 0.875rem;
     
-    /* Sidebar Colors */
-    --sidebar-background: 220 90% 15%;
+    /* Executive Sidebar */
+    --sidebar-background: 220 100% 15%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 45 95% 65%;
-    --sidebar-primary-foreground: 225 15% 15%;
-    --sidebar-accent: 220 85% 25%;
+    --sidebar-primary: 35 85% 55%;
+    --sidebar-primary-foreground: 220 25% 12%;
+    --sidebar-accent: 220 90% 20%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 220 60% 35%;
-    --sidebar-ring: 45 95% 65%;
+    --sidebar-border: 220 80% 30%;
+    --sidebar-ring: 35 85% 55%;
   }
 
   .dark {
-    /* Dark Mode - Unified Professional System */
-    --background: 220 25% 6%;
+    /* Dark Mode - Executive Professional System */
+    --background: 220 35% 4%;
     --foreground: 0 0% 98%;
-    --card: 220 20% 8%;
+    --card: 220 30% 6%;
     --card-foreground: 0 0% 98%;
-    --popover: 220 20% 8%;
+    --popover: 220 30% 6%;
     --popover-foreground: 0 0% 98%;
     
-    /* Dark Primary - Consistent with Light Mode */
-    --primary: 45 95% 65%;
-    --primary-foreground: 210 15% 15%;
-    --primary-glow: 45 100% 75%;
-    --primary-variant: 50 90% 60%;
+    /* Dark Executive Primary */
+    --primary: 35 85% 55%;
+    --primary-foreground: 220 25% 12%;
+    --primary-glow: 35 95% 65%;
+    --primary-variant: 40 80% 50%;
     
-    /* Dark Secondary */
-    --secondary: 220 100% 30%;
+    /* Dark Corporate Secondary */
+    --secondary: 220 100% 35%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-dark: 220 100% 15%;
+    --secondary-dark: 220 100% 20%;
     
-    /* Dark Accent */
-    --accent: 180 100% 50%;
+    /* Dark Professional Accent */
+    --accent: 190 100% 45%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 180 100% 60%;
+    --accent-light: 190 100% 55%;
     
-    /* Dark Neutrals with better contrast */
-    --muted: 220 100% 12%;
-    --muted-foreground: 220 20% 70%;
-    --border: 220 80% 20%;
-    --input: 220 80% 15%;
-    --ring: 40 100% 60%;
+    /* Dark Executive Neutrals */
+    --muted: 220 100% 8%;
+    --muted-foreground: 220 25% 75%;
+    --border: 220 80% 15%;
+    --input: 220 80% 10%;
+    --ring: 35 85% 55%;
     
     /* Dark Status Colors */
     --destructive: 0 75% 60%;
@@ -304,49 +306,54 @@
     --success: 145 75% 50%;
     --success-foreground: 0 0% 98%;
     --warning: 35 85% 60%;
-    --warning-foreground: 225 15% 15%;
+    --warning-foreground: 220 25% 12%;
     
-    /* Dark Sidebar */
-    --sidebar-background: 220 90% 5%;
+    /* Dark Executive Sidebar */
+    --sidebar-background: 220 100% 3%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 45 95% 65%;
-    --sidebar-primary-foreground: 225 15% 15%;
-    --sidebar-accent: 220 85% 15%;
+    --sidebar-primary: 35 85% 55%;
+    --sidebar-primary-foreground: 220 25% 12%;
+    --sidebar-accent: 220 90% 12%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 220 60% 20%;
-    --sidebar-ring: 45 95% 65%;
+    --sidebar-border: 220 80% 18%;
+    --sidebar-ring: 35 85% 55%;
   }
 }
 
-/* Professional Corporate Font System */
-.font-corporate {
-  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', system-ui, sans-serif;
+/* Executive Corporate Font System */
+.font-executive {
+  font-family: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', system-ui, sans-serif;
   font-weight: 400;
-  letter-spacing: -0.02em;
-}
-
-.font-corporate-bold {
-  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', system-ui, sans-serif;
-  font-weight: 600;
   letter-spacing: -0.01em;
-}
-
-.font-formal {
-  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', system-ui, sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-}
-
-.font-formal-bold {
-  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', system-ui, sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
-.font-elegant {
-  font-family: 'SF Pro Display', 'Inter', 'Segoe UI', serif;
-  font-weight: 400;
   line-height: 1.6;
+}
+
+.font-executive-bold {
+  font-family: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+}
+
+.font-executive-medium {
+  font-family: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+
+.font-corporate-formal {
+  font-family: 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.7;
+}
+
+.font-title-executive {
+  font-family: 'IBM Plex Sans Arabic', 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 @layer base {
@@ -354,9 +361,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-corporate;
+    @apply bg-background text-foreground font-executive;
     direction: rtl;
-    font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', system-ui, sans-serif;
   }
 }
 
@@ -497,6 +504,133 @@
   box-shadow: 0 16px 64px -16px hsl(var(--primary) / 0.25);
   transform: translateY(-2px);
   transition: all 0.3s ease;
+}
+
+/* Executive Section Backgrounds */
+.section-executive {
+  background: linear-gradient(135deg, 
+    hsl(var(--background)) 0%, 
+    hsl(var(--muted)) 25%, 
+    hsl(var(--background)) 100%);
+  position: relative;
+}
+
+.section-executive::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, hsl(var(--primary) / 0.03) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, hsl(var(--accent) / 0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.section-corporate-hero {
+  background: linear-gradient(135deg, 
+    hsl(var(--primary) / 0.02) 0%, 
+    hsl(var(--background)) 35%, 
+    hsl(var(--accent) / 0.02) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-corporate-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 10%, hsl(var(--primary) / 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 90%, hsl(var(--secondary) / 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 40% 60%, hsl(var(--accent) / 0.04) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.section-values {
+  background: linear-gradient(135deg, 
+    hsl(var(--background)) 0%, 
+    hsl(var(--primary) / 0.02) 50%, 
+    hsl(var(--background)) 100%);
+  position: relative;
+}
+
+.section-values::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000' fill-opacity='0.01'%3E%3Cpath d='M20 20c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm-10 0c0-5.523-4.477-10-10-10s-10 4.477-10 10 4.477 10 10 10 10-4.477 10-10z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.section-partners {
+  background: linear-gradient(135deg, 
+    hsl(var(--secondary) / 0.03) 0%, 
+    hsl(var(--background)) 40%, 
+    hsl(var(--accent) / 0.03) 100%);
+  position: relative;
+}
+
+.section-partners::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    hsl(var(--secondary) / 0.3) 50%, 
+    transparent 100%);
+}
+
+.section-expertise {
+  background: linear-gradient(135deg, 
+    hsl(var(--background)) 0%, 
+    hsl(var(--accent) / 0.02) 30%, 
+    hsl(var(--background)) 70%, 
+    hsl(var(--primary) / 0.02) 100%);
+  position: relative;
+}
+
+.section-cta-executive {
+  background: linear-gradient(135deg, 
+    hsl(var(--primary)) 0%, 
+    hsl(var(--primary-variant)) 25%, 
+    hsl(var(--accent)) 50%, 
+    hsl(var(--secondary-dark)) 75%, 
+    hsl(var(--primary)) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-cta-executive::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 25% 25%, hsl(0 0% 100% / 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, hsl(0 0% 100% / 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Executive Card Enhancements */
+.card-executive {
+  background: var(--gradient-card);
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-md);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-executive:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: hsl(var(--primary) / 0.3);
+  transform: translateY(-4px);
+}
+
+/* Executive Grid Pattern */
+.bg-executive-pattern {
+  background-image: 
+    linear-gradient(hsl(var(--primary) / 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--primary) / 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
 /* Enhanced Responsive Design Classes */

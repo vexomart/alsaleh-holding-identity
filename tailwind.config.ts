@@ -29,12 +29,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        'official': ['Noto Sans Arabic', 'Cairo', 'Tajawal', 'sans-serif'],
-        'noto': ['Noto Sans Arabic', 'sans-serif'],
-        'cairo': ['Cairo', 'sans-serif'],
-        'tajawal': ['Tajawal', 'sans-serif'],
-        'formal': ['Noto Sans Arabic', 'Cairo', 'sans-serif'],
-        sans: ['Noto Sans Arabic', 'Cairo', 'Tajawal', 'ui-sans-serif', 'system-ui'],
+        'executive': ['IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
+        'corporate': ['Noto Kufi Arabic', 'IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
+        'formal': ['IBM Plex Sans Arabic', 'Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
+        'title': ['IBM Plex Sans Arabic', 'Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
+        sans: ['IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', 'ui-sans-serif', 'system-ui'],
       },
       colors: {
         border: "hsl(var(--border))",
