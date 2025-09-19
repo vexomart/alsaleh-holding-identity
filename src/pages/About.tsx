@@ -204,17 +204,13 @@ const About = () => {
               <span className="text-primary font-executive-bold">ASH HOLDING</span>
             </div>
             
-            <ResponsiveText size="3xl" className="font-title-executive text-primary mb-6 leading-tight">
-              نبني مستقبل التكنولوجيا
-              <br />
-              <span className="gradient-text-primary">
-                بحلول مبتكرة ومتقدمة
-              </span>
-            </ResponsiveText>
-            
-            <ResponsiveText size="lg" className="font-executive text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
-              شريكك الاستراتيجي في رحلة التحول الرقمي، نقدم حلولاً تقنية متطورة تدعم النمو المستدام وتحقق رؤية المملكة 2030
-            </ResponsiveText>
+             <ResponsiveText size="3xl" className="font-title-executive text-primary mb-6 leading-tight">
+               نبني مستقبل التكنولوجيا بحلول مبتكرة ومتقدمة
+             </ResponsiveText>
+             
+             <ResponsiveText size="lg" className="font-executive text-muted-foreground max-w-4xl mx-auto mb-8 leading-relaxed text-center">
+               شريكك الاستراتيجي في رحلة التحول الرقمي، نقدم حلولاً تقنية متطورة تدعم النمو المستدام وتحقق رؤية المملكة 2030
+             </ResponsiveText>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="font-executive-medium px-8 py-6 text-lg shadow-glow hover:shadow-xl">
