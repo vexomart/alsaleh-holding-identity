@@ -83,33 +83,37 @@ const About = () => {
 
   const stats = [
     { 
-      number: "150+", 
-      label: "مشروع منجز", 
-      sublabel: "Completed Projects",
-      icon: Trophy,
-      color: "from-blue-600 to-blue-800",
-      delay: 0.1
-    },
-    { 
-      number: "500+", 
-      label: "عميل راضٍ", 
-      sublabel: "Satisfied Clients",
-      icon: Users,
-      color: "from-emerald-600 to-emerald-800",
-      delay: 0.2
-    },
-    { 
       number: "2016", 
       label: "سنة التأسيس", 
       sublabel: "Foundation Year",
+      description: "بداية رحلة النجاح",
       icon: Building2,
       color: "from-purple-600 to-purple-800",
+      delay: 0.1
+    },
+    { 
+      number: "14,883", 
+      label: "مشروع منجز", 
+      sublabel: "Completed Projects",
+      description: "إنجازات متميزة",
+      icon: Trophy,
+      color: "from-blue-600 to-blue-800",
+      delay: 0.2
+    },
+    { 
+      number: "9512", 
+      label: "عميل راضٍ", 
+      sublabel: "Satisfied Clients",
+      description: "ثقة العملاء",
+      icon: Users,
+      color: "from-emerald-600 to-emerald-800",
       delay: 0.3
     },
     { 
-      number: "98%", 
+      number: "100%", 
       label: "معدل الرضا", 
       sublabel: "Satisfaction Rate",
+      description: "رضا كامل",
       icon: Star,
       color: "from-amber-600 to-amber-800",
       delay: 0.4
@@ -383,7 +387,8 @@ const About = () => {
                           {stat.number}
                         </motion.div>
                         <div className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">{stat.label}</div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400">{stat.sublabel}</div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400 mb-1">{stat.sublabel}</div>
+                        <div className="text-xs text-slate-400 dark:text-slate-500">{stat.description}</div>
                       </CardContent>
                     </Card>
                   </motion.div>
