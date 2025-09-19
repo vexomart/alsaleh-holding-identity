@@ -137,6 +137,11 @@ export default {
           "50%": { boxShadow: "0 0 30px rgba(59, 130, 246, 0.8)" },
         },
       },
+      fontFamily: {
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        'serif': ['Playfair Display', 'serif'], 
+        'arabic': ['Cairo', 'system-ui', 'sans-serif'],
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",

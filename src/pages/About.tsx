@@ -278,7 +278,38 @@ const About = () => {
 
   return (
     <PageLayout>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-950">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-950 font-arabic">
+        
+        {/* Floating Navigation */}
+        <motion.nav
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-white/20 dark:bg-slate-800/20 backdrop-blur-2xl rounded-2xl px-8 py-4 border border-white/30 dark:border-slate-700/30 shadow-2xl"
+        >
+          <div className="flex items-center gap-8">
+            <motion.div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                <Crown className="w-6 h-6 text-white" />
+              </div>
+              <span className="font-bold text-slate-800 dark:text-white text-lg">ASH</span>
+            </motion.div>
+            <div className="flex items-center gap-6 text-sm font-medium">
+              {["الرئيسية", "من نحن", "خدماتنا", "شركاؤنا", "اتصل بنا"].map((item, index) => (
+                <motion.a
+                  key={index}
+                  href="#"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 relative group"
+                >
+                  {item}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
+                </motion.a>
+              ))}
+            </div>
+          </div>
+        </motion.nav>
         
         {/* Hero Section */}
         <motion.section 
@@ -286,65 +317,117 @@ const About = () => {
           initial="hidden"
           animate={heroInView ? "visible" : "hidden"}
           variants={containerVariants}
-          className="relative py-20 lg:py-32 overflow-hidden"
+          className="relative py-32 lg:py-40 overflow-hidden"
         >
-          {/* Background Effects */}
+          {/* Advanced Background Effects */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 dark:from-blue-800/30 dark:to-purple-800/30"></div>
-            <div className="absolute top-0 left-0 w-full h-full">
-              <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-blue-400/30 to-cyan-400/30 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/10 to-indigo-600/20 dark:from-blue-800/30 dark:via-purple-800/20 dark:to-indigo-800/30"></div>
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+              <motion.div 
+                animate={{ 
+                  x: [0, 50, 0],
+                  y: [0, -30, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/30 to-cyan-400/30 rounded-full blur-3xl"
+              ></motion.div>
+              <motion.div 
+                animate={{ 
+                  x: [0, -40, 0],
+                  y: [0, 50, 0],
+                  scale: [1, 0.9, 1]
+                }}
+                transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full blur-3xl"
+              ></motion.div>
+              <motion.div 
+                animate={{ 
+                  rotate: [0, 360],
+                  scale: [1, 1.2, 1]
+                }}
+                transition={{ duration: 15, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-full blur-3xl"
+              ></motion.div>
+            </div>
+            {/* Geometric patterns */}
+            <div className="absolute inset-0 opacity-5 dark:opacity-10">
+              <div className="absolute top-20 left-20 w-32 h-32 border-2 border-blue-500 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-32 right-32 w-24 h-24 border-2 border-purple-500 rotate-45 animate-pulse delay-1000"></div>
+              <div className="absolute top-1/2 right-20 w-20 h-20 border-2 border-emerald-500 rounded-lg animate-pulse delay-2000"></div>
             </div>
           </div>
 
           <ResponsiveContainer className="relative z-10">
-            <div className="text-center max-w-5xl mx-auto">
+            <div className="text-center max-w-6xl mx-auto">
               <motion.div
                 variants={itemVariants}
-                className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full mb-8 border border-white/20"
+                className="inline-flex items-center gap-4 bg-white/15 dark:bg-slate-800/15 backdrop-blur-2xl px-8 py-4 rounded-full mb-12 border border-white/30 dark:border-slate-700/30 shadow-2xl"
               >
-                <Globe className="w-6 h-6 text-blue-600 animate-pulse" />
-                <span className="text-slate-700 dark:text-slate-300 font-semibold tracking-wide">ASH HOLDING</span>
-                <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0">منذ 2016</Badge>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                >
+                  <Globe className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+                </motion.div>
+                <span className="text-slate-700 dark:text-slate-300 font-bold text-lg tracking-wide">ASH HOLDING</span>
+                <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 px-4 py-1 text-sm">منذ 2016</Badge>
               </motion.div>
               
               <motion.h1 
                 variants={itemVariants}
-                className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-blue-700 via-purple-600 to-indigo-700 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent mb-8 leading-tight"
+                className="text-6xl lg:text-8xl font-black font-serif bg-gradient-to-r from-blue-700 via-purple-600 to-indigo-700 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent mb-12 leading-tight"
               >
                 نبني مستقبل التكنولوجيا
                 <br />
-                <span className="text-4xl lg:text-6xl bg-gradient-to-r from-emerald-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                <motion.span 
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.8 }}
+                  className="text-5xl lg:text-7xl bg-gradient-to-r from-emerald-600 via-cyan-600 to-teal-600 dark:from-emerald-400 dark:via-cyan-400 dark:to-teal-400 bg-clip-text text-transparent block"
+                >
                   بحلول مبتكرة ومتقدمة
-                </span>
+                </motion.span>
               </motion.h1>
               
               <motion.p 
                 variants={itemVariants}
-                className="text-xl lg:text-2xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto mb-12 leading-relaxed"
+                className="text-2xl lg:text-3xl text-slate-600 dark:text-slate-300 max-w-5xl mx-auto mb-16 leading-relaxed font-medium"
               >
                 شريكك الاستراتيجي في رحلة التحول الرقمي، نقدم حلولاً تقنية متطورة تدعم النمو المستدام وتحقق رؤية المملكة 2030
               </motion.p>
 
               <motion.div 
                 variants={itemVariants}
-                className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                className="flex flex-col sm:flex-row gap-8 justify-center items-center"
               >
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-10 py-6 text-lg rounded-2xl shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300"
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <Rocket className="w-6 h-6 ml-3" />
-                  اكتشف خدماتنا
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-2 border-slate-300 dark:border-slate-600 hover:bg-white/10 backdrop-blur-sm px-10 py-6 text-lg rounded-2xl transition-all duration-300"
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white px-12 py-8 text-xl font-bold rounded-3xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 border-0"
+                  >
+                    <Rocket className="w-7 h-7 ml-4" />
+                    اكتشف خدماتنا
+                    <Sparkles className="w-7 h-7 mr-4" />
+                  </Button>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <Globe className="w-6 h-6 ml-3" />
-                  شركاؤنا العالميون
-                </Button>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-3 border-slate-300/50 dark:border-slate-600/50 hover:bg-white/20 dark:hover:bg-slate-800/20 backdrop-blur-2xl px-12 py-8 text-xl font-bold rounded-3xl transition-all duration-500 text-slate-700 dark:text-slate-300"
+                  >
+                    <Globe className="w-7 h-7 ml-4" />
+                    شركاؤنا العالميون
+                    <ChevronRight className="w-7 h-7 mr-4" />
+                  </Button>
+                </motion.div>
               </motion.div>
             </div>
           </ResponsiveContainer>
