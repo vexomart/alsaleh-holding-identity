@@ -360,13 +360,6 @@ const Navigation = () => {
                 {/* Desktop CTA Button */}
                 <div className="hidden lg:flex items-center gap-3">
                   <a 
-                    href="/login"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-sm font-medium rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                  >
-                    <Users className="w-4 h-4" />
-                    دخول العملاء
-                  </a>
-                  <a 
                     href="/book-consultation"
                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
@@ -633,16 +626,6 @@ const Navigation = () => {
               
                 {/* Enhanced Footer */}
               <div className="p-6 border-t border-slate-200/60 bg-gradient-to-r from-slate-50/80 to-blue-50/30 space-y-4">
-                <a 
-                  href="/login"
-                  className="block w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white text-center py-3 rounded-2xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-98 touch-manipulation"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <div className="flex items-center justify-center gap-3">
-                    <Users className="w-5 h-5" />
-                    <span className="text-base">دخول العملاء</span>
-                  </div>
-                </a>
                 <a 
                   href="/book-consultation"
                   className="block w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-center py-4 rounded-2xl font-semibold hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-98 touch-manipulation"
