@@ -24,31 +24,7 @@ import Index from "./pages/Index";
 // Lazy load pages for better performance
 const OurWorks = lazy(() => import("./pages/OurWorks"));
 const About = lazy(() => import("./pages/About"));
-const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
-const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
-const AdminInvoicesEnhanced = lazy(() => import("./pages/admin/AdminInvoicesEnhanced"));
-const AdminPayments = lazy(() => import("./pages/admin/AdminPayments"));
-const AdminPaymentMethods = lazy(() => import("./pages/admin/AdminPaymentMethods"));
-const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
-const AdminLogos = lazy(() => import("./pages/admin/AdminLogos"));
-const AdminFinancialTemplates = lazy(() => import("./pages/admin/AdminFinancialTemplates"));
-const AdminNotifications = lazy(() => import("./pages/admin/AdminNotifications"));
-const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const Wallet = lazy(() => import("./pages/Wallet"));
-const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
-const ClientLayout = lazy(() => import("./components/client/ClientLayout"));
-const ClientDashboard = lazy(() => import("./pages/client/ClientDashboard"));
-const ClientProjects = lazy(() => import("./pages/client/ClientProjects"));
-const ClientInvoices = lazy(() => import("./pages/client/ClientInvoices"));
-const ServiceRequests = lazy(() => import("./pages/client/ServiceRequests"));
-const NewServiceRequest = lazy(() => import("./pages/client/NewServiceRequest"));
-const ClientPayments = lazy(() => import("./pages/client/ClientPayments"));
-const ClientWallet = lazy(() => import("./pages/client/ClientWallet"));
-const ClientReceipts = lazy(() => import("./pages/client/ClientReceipts"));
-const ClientMessages = lazy(() => import("./pages/client/ClientMessages"));
-const ClientSupportTickets = lazy(() => import("./pages/client/ClientSupportTickets"));
-const ClientProfile = lazy(() => import("./pages/client/ClientProfile"));
-const ClientSettings = lazy(() => import("./pages/client/ClientSettings"));
 const Story = lazy(() => import("./pages/Story"));
 const Team = lazy(() => import("./pages/Team"));
 const Vision = lazy(() => import("./pages/Vision"));
@@ -141,24 +117,9 @@ const ProjectTracking = lazy(() => import("./pages/ProjectTracking"));
 const AutomationSystem = lazy(() => import("./pages/AutomationSystem"));
 const PricingPage = lazy(() => import("./pages/PricingPage"));
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
-const ClientLoginPage = lazy(() => import("./pages/auth/ClientLoginPage"));
-const AdminLoginPage = lazy(() => import("./pages/auth/AdminLoginPage"));
-const AuthCallback = lazy(() => import("./pages/auth/AuthCallback"));
 const MyProjects = lazy(() => import("./pages/MyProjects"));
-const AdminProjects = lazy(() => import("./pages/AdminProjects"));
-const EnhancedProjectManagement = lazy(() => import("./pages/admin/EnhancedProjectManagement"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
-const AdminUpdates = lazy(() => import("./pages/admin/AdminUpdates"));
-const AdminWallets = lazy(() => import("./pages/admin/AdminWallets"));
-const AdminAffiliate = lazy(() => import("./pages/admin/AdminAffiliate"));
-const AdminEmailPipeline = lazy(() => import("./pages/admin/AdminEmailPipeline"));
 const UnauthorizedPage = lazy(() => import("./pages/UnauthorizedPage"));
-const AdminSecurityLogs = lazy(() => import("./pages/admin/AdminSecurityLogs"));
-const ClientOrders = lazy(() => import("./pages/client/ClientOrders"));
-const ClientAffiliate = lazy(() => import("./pages/client/ClientAffiliate"));
-const ClientNotifications = lazy(() => import("./pages/client/ClientNotifications"));
-const ClientUpdates = lazy(() => import("./pages/client/ClientUpdates"));
 
 const CompanyUpdates = lazy(() => import("./pages/CompanyUpdates"));
 const SoftwareProducts = lazy(() => import("./pages/SoftwareProducts"));
@@ -209,8 +170,6 @@ const CardsStoreContact = lazy(() => import("./pages/cards-store/Contact"));
 
 // ASH HOLDING Pages
 const AshHolding = lazy(() => import("./pages/AshHolding"));
-const AshAdmin = lazy(() => import("./pages/ash/AshAdmin"));
-const AshClient = lazy(() => import("./pages/ash/AshClient"));
 const CardsStoreFAQ = lazy(() => import("./pages/cards-store/FAQ"));
 const CardsStorePrivacy = lazy(() => import("./pages/cards-store/Privacy"));
 const CardsStoreTerms = lazy(() => import("./pages/cards-store/Terms"));
@@ -299,8 +258,6 @@ const App = () => {
                 <Routes>
                 <Route path="/" element={<Index />} />
                 
-                {/* Auth callback route */}
-                <Route path="/auth/callback" element={<Suspense fallback={<PageLoader />}><AuthCallback /></Suspense>} />
                 
                 <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />
                 <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
@@ -394,50 +351,9 @@ const App = () => {
                 <Route path="/consultation" element={<Suspense fallback={<PageLoader />}><Consultation /></Suspense>} />
                 <Route path="/start-project" element={<Suspense fallback={<PageLoader />}><StartProject /></Suspense>} />
                 <Route path="/project-tracking" element={<Suspense fallback={<PageLoader />}><ProjectTracking /></Suspense>} />
-                <Route path="/auth/client/login" element={<Suspense fallback={<PageLoader />}><ClientLoginPage /></Suspense>} />
-                <Route path="/auth/admin/login" element={<Suspense fallback={<PageLoader />}><AdminLoginPage /></Suspense>} />
-                {/* إعادة توجيه المسارات القديمة */}
-                <Route path="/login" element={<Navigate to="/auth/client/login" replace />} />
-                <Route path="/ashadmin" element={<Navigate to="/auth/admin/login" replace />} />
                 <Route path="/reset-password" element={<Suspense fallback={<PageLoader />}><ResetPassword /></Suspense>} />
                 <Route path="/unauthorized" element={<Suspense fallback={<PageLoader />}><UnauthorizedPage /></Suspense>} />
                 
-                {/* Admin Routes - TODO: Will be protected by RouteGuard */}
-                <Route path="/admin/*" element={
-                    <Suspense fallback={<PageLoader />}>
-                      <AdminLayout />
-                    </Suspense>
-                }>
-                  <Route index element={<Navigate to="/admin/dashboard" replace />} />
-                  <Route path="dashboard" element={<AdminDashboard />} />
-                  <Route path="projects" element={<AdminProjects />} />
-                  <Route path="project-management" element={<EnhancedProjectManagement />} />
-                  <Route path="clients" element={<AdminClients />} />
-                  <Route path="invoices" element={<AdminInvoicesEnhanced />} />
-                  <Route path="payments" element={<AdminPayments />} />
-                  <Route path="payment-methods" element={<AdminPaymentMethods />} />
-                  <Route path="users" element={<AdminUsers />} />
-                  <Route path="logos" element={<AdminLogos />} />
-                  <Route path="financial-templates" element={<AdminFinancialTemplates />} />
-                  <Route path="notifications" element={<AdminNotifications />} />
-                  <Route path="settings" element={<AdminSettings />} />
-                  <Route path="orders" element={<AdminOrders />} />
-                  <Route path="updates" element={<AdminUpdates />} />
-                  <Route path="wallet" element={<AdminWallets />} />
-                  <Route path="affiliate" element={<AdminAffiliate />} />
-                  <Route path="email-pipeline" element={<AdminEmailPipeline />} />
-                  <Route path="security-logs" element={<Suspense fallback={<PageLoader />}><AdminSecurityLogs /></Suspense>} />
-                </Route>
-                
-                {/* Legacy admin routes - redirect */}
-                <Route path="/admin-projects" element={<Navigate to="/admin/projects" replace />} />
-                <Route path="/admin-dashboard" element={<Navigate to="/admin/dashboard" replace />} />
-                <Route path="/admin-clients" element={<Navigate to="/admin/clients" replace />} />
-                <Route path="/admin-invoices" element={<Navigate to="/admin/invoices" replace />} />
-                <Route path="/admin-payments" element={<Navigate to="/admin/payments" replace />} />
-                <Route path="/admin-users" element={<Navigate to="/admin/users" replace />} />
-                <Route path="/admin-notifications" element={<Navigate to="/admin/notifications" replace />} />
-                <Route path="/admin-settings" element={<Navigate to="/admin/settings" replace />} />
                 <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                 <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                 <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
@@ -516,34 +432,9 @@ const App = () => {
           {/* Wallet Route */}
                 <Route path="/wallet" element={<Suspense fallback={<PageLoader />}><Wallet /></Suspense>} />
           
-                {/* Client Dashboard Routes - TODO: Will be protected by RouteGuard */}
-                <Route path="/client" element={<Navigate to="/client/dashboard" replace />} />
-                <Route path="/my-projects" element={<Navigate to="/client/projects" replace />} />
-                <Route path="/client/*" element={
-                    <Suspense fallback={<PageLoader />}><ClientLayout /></Suspense>
-                }>
-                  <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><ClientDashboard /></Suspense>} />
-                  <Route path="projects" element={<Suspense fallback={<PageLoader />}><ClientProjects /></Suspense>} />
-                  <Route path="service-requests" element={<Suspense fallback={<PageLoader />}><ServiceRequests /></Suspense>} />
-                  <Route path="new-service-request" element={<Suspense fallback={<PageLoader />}><NewServiceRequest /></Suspense>} />
-                  <Route path="invoices" element={<Suspense fallback={<PageLoader />}><ClientInvoices /></Suspense>} />
-                  <Route path="payments" element={<Suspense fallback={<PageLoader />}><ClientPayments /></Suspense>} />
-                  <Route path="wallet" element={<Suspense fallback={<PageLoader />}><ClientWallet /></Suspense>} />
-                  <Route path="receipts" element={<Suspense fallback={<PageLoader />}><ClientReceipts /></Suspense>} />
-                  <Route path="messages" element={<Suspense fallback={<PageLoader />}><ClientMessages /></Suspense>} />
-                  <Route path="support-tickets" element={<Suspense fallback={<PageLoader />}><ClientSupportTickets /></Suspense>} />
-                  <Route path="profile" element={<Suspense fallback={<PageLoader />}><ClientProfile /></Suspense>} />
-                  <Route path="settings" element={<Suspense fallback={<PageLoader />}><ClientSettings /></Suspense>} />
-                  <Route path="orders" element={<Suspense fallback={<PageLoader />}><ClientOrders /></Suspense>} />
-                  <Route path="affiliate" element={<Suspense fallback={<PageLoader />}><ClientAffiliate /></Suspense>} />
-                  <Route path="notifications" element={<Suspense fallback={<PageLoader />}><ClientNotifications /></Suspense>} />
-                  <Route path="updates" element={<Suspense fallback={<PageLoader />}><ClientUpdates /></Suspense>} />
-              </Route>
 
               {/* ASH HOLDING Routes */}
               <Route path="/ash" element={<Suspense fallback={<PageLoader />}><AshHolding /></Suspense>} />
-              <Route path="/ash/admin" element={<Suspense fallback={<PageLoader />}><AshAdmin /></Suspense>} />
-              <Route path="/ash/client" element={<Suspense fallback={<PageLoader />}><AshClient /></Suspense>} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

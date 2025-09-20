@@ -8,7 +8,7 @@ import { Clock, CheckCircle, AlertCircle, Users, Calendar, DollarSign, Plus } fr
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
-import ProjectTrackingDemo from '@/components/ProjectTrackingDemo';
+
 
 interface Project {
   id: string;
