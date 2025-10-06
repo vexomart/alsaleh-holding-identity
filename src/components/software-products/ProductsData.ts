@@ -94,34 +94,6 @@ export const products = [
     version: "V 1.0"
   },
   {
-    id: 4,
-    name: "🛍️ متجر البطاقات الإلكترونية الذكي",
-    description: "متجر إلكتروني متطور لبيع البطاقات الرقمية مع نظام تحويل للواتساب وتصميم متجاوب وأنيميشن احترافي",
-    category: "التجارة الإلكترونية",
-    icon: ShoppingCart,
-    features: [
-      "🎮 مجموعة متنوعة من البطاقات الرقمية",
-      "💬 تحويل تلقائي لواتساب للطلبات",
-      "📱 تصميم متجاوب 100% مع جميع الأجهزة",
-      "✨ أنيميشن وحركات احترافية متطورة",
-      "🔍 نظام بحث وفلترة ذكي",
-      "📊 إحصائيات تفاعلية ولوحة معلومات"
-    ],
-    price: "1799 ريال",
-    rating: 4.9,
-    downloads: "89",
-    status: "متاح الآن",
-    color: "from-green-500 to-emerald-500",
-    demoUrl: "/electronic-cards-store",
-    tags: ["E-commerce", "Cards", "WhatsApp", "Responsive"],
-    isNew: true,
-    isFeatured: true,
-    isExclusive: true,
-    emoji: "🛍️",
-    estimatedDelivery: "15-45 يوم",
-    version: "V 1.0"
-  },
-  {
     id: 5,
     name: "👑 متجر عبايتي",
     description: "متجر إلكتروني فاخر ومتكامل للعبايات العصرية مع تصميم عالمي مميز وتكامل مع الواتساب وتجربة تسوق استثنائية",
@@ -154,6 +126,6 @@ export const products = [
 export const categories = [
   { name: "جميع المنتجات", emoji: "🛍️", count: products.length },
   { name: "المواقع التعريفية", emoji: "🌐", count: 2 },
-  { name: "التجارة الإلكترونية", emoji: "🛒", count: 2 },
+  { name: "التجارة الإلكترونية", emoji: "🛒", count: 1 },
   { name: "التسويق الرقمي", emoji: "📈", count: 1 }
 ];
