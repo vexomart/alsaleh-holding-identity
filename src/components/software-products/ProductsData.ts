@@ -79,7 +79,7 @@ export const products = [
       "📈 تقارير مفصلة وتفاعلية",
       "💬 دعم فني متخصص على مدار الساعة"
     ],
-    price: "5 ريال",
+    price: "3500 ريال",
     rating: 4.9,
     downloads: "234",
     status: "متاح الآن",
