@@ -751,17 +751,17 @@ const OurWorks = () => {
 
                 {/* Pagination Component - أسفل الأعمال مباشرة */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-2 mt-12 flex-wrap" dir="ltr">
-                    {/* Previous Button */}
+                  <div className="flex justify-center items-center gap-2 mt-12 flex-wrap" dir="rtl">
+                    {/* Next Button - على اليمين */}
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
                       className="group px-4 py-2 rounded-xl border-primary/30 hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                     >
-                      <ArrowUpRight className="w-4 h-4 rotate-180 group-hover:scale-110 transition-transform" />
-                      <span className="mr-2">السابق</span>
+                      <ArrowUpRight className="w-4 h-4 ml-2 group-hover:scale-110 transition-transform" />
+                      <span>التالي</span>
                     </Button>
 
                     {/* Page Numbers */}
@@ -783,16 +783,16 @@ const OurWorks = () => {
                       ))}
                     </div>
 
-                    {/* Next Button */}
+                    {/* Previous Button - على اليسار */}
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
                       className="group px-4 py-2 rounded-xl border-primary/30 hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                     >
-                      <span className="ml-2">التالي</span>
-                      <ArrowUpRight className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      <span>السابق</span>
+                      <ArrowUpRight className="w-4 h-4 mr-2 rotate-180 group-hover:scale-110 transition-transform" />
                     </Button>
                   </div>
                 )}
