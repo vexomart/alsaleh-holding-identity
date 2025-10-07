@@ -549,8 +549,8 @@ const AffiliateMarketing = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">راسلنا</h3>
-                    <a href="mailto:affiliate@alialshehriholding.com" className="text-green-600 hover:text-green-700 transition-colors">
-                      affiliate@alialshehriholding.com
+                    <a href="mailto:info@alialshehriholding.com" className="text-green-600 hover:text-green-700 transition-colors">
+                      info@alialshehriholding.com
                     </a>
                   </div>
                 </div>
