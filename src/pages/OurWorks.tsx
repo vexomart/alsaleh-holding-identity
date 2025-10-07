@@ -98,6 +98,146 @@ const OurWorks = () => {
       status: "مكتمل",
       rating: 5,
       duration: "شهرين"
+    },
+    {
+      id: 3,
+      title: "نظام إدارة المحاسبة والفواتير",
+      subtitle: "نظام محاسبي متكامل للشركات",
+      description: "نظام محاسبي شامل يساعد الشركات على إدارة الفواتير والعروض والمدفوعات والعملاء بكفاءة عالية مع تقارير مالية تفصيلية",
+      image: "/placeholder.svg",
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "Supabase", color: "bg-emerald-600", icon: "🔥" }
+      ],
+      features: [
+        { name: "إدارة الفواتير", icon: Database, description: "إنشاء وتتبع الفواتير" },
+        { name: "إدارة العملاء", icon: Users, description: "قاعدة بيانات شاملة للعملاء" },
+        { name: "التقارير المالية", icon: TrendingUp, description: "تقارير مالية تفصيلية" },
+        { name: "نظام آمن", icon: Shield, description: "حماية متقدمة للبيانات المالية" }
+      ],
+      year: "2025",
+      client: "شركة علي صالح الشهري القابضة",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين"
+    },
+    {
+      id: 4,
+      title: "نظام إدارة المشاريع",
+      subtitle: "إدارة احترافية للمشاريع والفرق",
+      description: "نظام متقدم لإدارة المشاريع يتيح تتبع المهام والجداول الزمنية والموارد بطريقة احترافية مع لوحات تحكم تفاعلية",
+      image: "/placeholder.svg",
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "Socket.io", color: "bg-gray-800", icon: "🔌" }
+      ],
+      features: [
+        { name: "تتبع المهام", icon: CheckCircle, description: "إدارة المهام بكفاءة" },
+        { name: "لوحات كانبان", icon: Layers, description: "تنظيم بصري للمهام" },
+        { name: "التعاون الفوري", icon: Users, description: "تواصل مباشر بين الفريق" },
+        { name: "تقارير الأداء", icon: TrendingUp, description: "تحليلات شاملة للإنتاجية" }
+      ],
+      year: "2025",
+      client: "عدة شركات",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 5,
+      title: "نظام إدارة المخزون",
+      subtitle: "حلول متكاملة لإدارة المخازن",
+      description: "نظام ذكي لإدارة المخزون والمستودعات مع تتبع دقيق للمنتجات والكميات والحركات اليومية وإشعارات تلقائية",
+      image: "/placeholder.svg",
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Vue.js", color: "bg-emerald-500", icon: "🖖" },
+        { name: "Laravel", color: "bg-red-500", icon: "🔺" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "Redis", color: "bg-red-600", icon: "⚡" },
+        { name: "Docker", color: "bg-blue-600", icon: "🐳" }
+      ],
+      features: [
+        { name: "إدارة المخزون", icon: Database, description: "تتبع شامل للمنتجات" },
+        { name: "تنبيهات ذكية", icon: Zap, description: "إشعارات عند نقص المخزون" },
+        { name: "إدارة الموردين", icon: Briefcase, description: "قاعدة بيانات للموردين" },
+        { name: "تقارير مفصلة", icon: TrendingUp, description: "تحليلات حركة المخزون" }
+      ],
+      year: "2025",
+      client: "شركات تجارية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين ونصف"
+    },
+    {
+      id: 6,
+      title: "نظام إدارة الموارد البشرية",
+      subtitle: "إدارة شاملة للموظفين والموارد",
+      description: "نظام متطور لإدارة الموارد البشرية يشمل الرواتب والحضور والإجازات والتقييم والتدريب مع تكامل كامل",
+      image: "/placeholder.svg",
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Angular", color: "bg-red-600", icon: "🅰️" },
+        { name: "Spring Boot", color: "bg-green-600", icon: "🍃" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Kafka", color: "bg-gray-900", icon: "📨" },
+        { name: "AWS", color: "bg-orange-500", icon: "☁️" }
+      ],
+      features: [
+        { name: "إدارة الرواتب", icon: TrendingUp, description: "حساب آلي للرواتب" },
+        { name: "تتبع الحضور", icon: Calendar, description: "نظام بصمة متقدم" },
+        { name: "إدارة الإجازات", icon: CheckCircle, description: "موافقة إلكترونية" },
+        { name: "تقييم الأداء", icon: Star, description: "نظام تقييم شامل" }
+      ],
+      year: "2025",
+      client: "مؤسسات كبرى",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر"
+    },
+    {
+      id: 7,
+      title: "نظام إدارة علاقات العملاء CRM",
+      subtitle: "إدارة ذكية لعلاقات العملاء",
+      description: "نظام CRM متطور لإدارة العملاء والمبيعات والفرص التجارية مع أتمتة ذكية وتحليلات متقدمة لزيادة الإيرادات",
+      image: "/placeholder.svg",
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Express", color: "bg-gray-700", icon: "🚂" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "GraphQL", color: "bg-pink-600", icon: "◆" },
+        { name: "Docker", color: "bg-blue-600", icon: "🐳" }
+      ],
+      features: [
+        { name: "إدارة العملاء", icon: Users, description: "قاعدة بيانات شاملة" },
+        { name: "تتبع المبيعات", icon: TrendingUp, description: "إدارة خط المبيعات" },
+        { name: "أتمتة التسويق", icon: Zap, description: "حملات تسويقية آلية" },
+        { name: "تحليلات متقدمة", icon: Target, description: "تقارير ذكاء أعمال" }
+      ],
+      year: "2025",
+      client: "شركات تسويق",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
     }
   ];
 
