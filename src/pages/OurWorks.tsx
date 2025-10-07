@@ -30,6 +30,11 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import masterEduPathScreenshot from "@/assets/works/masteredupath-screenshot.png";
 import fekrahAcademyScreenshot from "@/assets/works/fekrah-academy-screenshot.png";
+import accountingSystemImg from "@/assets/systems/accounting-system.jpg";
+import projectManagementImg from "@/assets/systems/project-management-system.jpg";
+import inventorySystemImg from "@/assets/systems/inventory-system.jpg";
+import hrSystemImg from "@/assets/systems/hr-system.jpg";
+import crmSystemImg from "@/assets/systems/crm-system.jpg";
 
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -104,7 +109,7 @@ const OurWorks = () => {
       title: "نظام إدارة المحاسبة والفواتير",
       subtitle: "نظام محاسبي متكامل للشركات",
       description: "نظام محاسبي شامل يساعد الشركات على إدارة الفواتير والعروض والمدفوعات والعملاء بكفاءة عالية مع تقارير مالية تفصيلية",
-      image: "/placeholder.svg",
+      image: accountingSystemImg,
       url: "#",
       category: "systems",
       technologies: [
@@ -132,7 +137,7 @@ const OurWorks = () => {
       title: "نظام إدارة المشاريع",
       subtitle: "إدارة احترافية للمشاريع والفرق",
       description: "نظام متقدم لإدارة المشاريع يتيح تتبع المهام والجداول الزمنية والموارد بطريقة احترافية مع لوحات تحكم تفاعلية",
-      image: "/placeholder.svg",
+      image: projectManagementImg,
       url: "#",
       category: "systems",
       technologies: [
@@ -160,7 +165,7 @@ const OurWorks = () => {
       title: "نظام إدارة المخزون",
       subtitle: "حلول متكاملة لإدارة المخازن",
       description: "نظام ذكي لإدارة المخزون والمستودعات مع تتبع دقيق للمنتجات والكميات والحركات اليومية وإشعارات تلقائية",
-      image: "/placeholder.svg",
+      image: inventorySystemImg,
       url: "#",
       category: "systems",
       technologies: [
@@ -188,7 +193,7 @@ const OurWorks = () => {
       title: "نظام إدارة الموارد البشرية",
       subtitle: "إدارة شاملة للموظفين والموارد",
       description: "نظام متطور لإدارة الموارد البشرية يشمل الرواتب والحضور والإجازات والتقييم والتدريب مع تكامل كامل",
-      image: "/placeholder.svg",
+      image: hrSystemImg,
       url: "#",
       category: "systems",
       technologies: [
@@ -216,7 +221,7 @@ const OurWorks = () => {
       title: "نظام إدارة علاقات العملاء CRM",
       subtitle: "إدارة ذكية لعلاقات العملاء",
       description: "نظام CRM متطور لإدارة العملاء والمبيعات والفرص التجارية مع أتمتة ذكية وتحليلات متقدمة لزيادة الإيرادات",
-      image: "/placeholder.svg",
+      image: crmSystemImg,
       url: "#",
       category: "systems",
       technologies: [
@@ -417,17 +422,6 @@ const OurWorks = () => {
                             />
                           ))}
                           <span className="text-xs font-bold text-slate-700 ml-1">{work.rating}.0</span>
-                        </div>
-                        
-                        {/* Enhanced Action Button */}
-                        <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-y-4 group-hover:translate-y-0 z-30">
-                          <Button size="sm" asChild className="w-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-xl text-white border border-white/30 hover:from-white/30 hover:to-white/20 rounded-xl text-xs font-semibold shadow-2xl hover:shadow-white/20 transition-all duration-500">
-                            <a href={work.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
-                              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                              مشاهدة المشروع
-                              <ArrowUpRight className="w-3 h-3 transition-transform group-hover:scale-125 group-hover:rotate-12" />
-                            </a>
-                          </Button>
                         </div>
                       </div>
                       
