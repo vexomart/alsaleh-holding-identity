@@ -441,9 +441,30 @@ const OurWorks = () => {
               </h1>
               
               {/* Enhanced Description */}
-              <p className="text-xl lg:text-2xl text-muted-foreground mb-12 leading-relaxed max-w-4xl mx-auto">
+              <p className="text-xl lg:text-2xl text-muted-foreground mb-8 leading-relaxed max-w-4xl mx-auto">
                 ألقِ نظرة على معرض أعمالنا بأنواعها المختلفة واكتشف كيف نحول الأفكار إلى واقع رقمي مبهر
               </p>
+
+              {/* Intellectual Property Notice */}
+              <div className="max-w-3xl mx-auto mb-12">
+                <div className="relative p-6 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 rounded-2xl border border-amber-500/20 backdrop-blur-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
+                        <Shield className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                    <div className="flex-1 text-right">
+                      <h3 className="text-lg font-bold text-foreground mb-2">
+                        ملاحظة هامة بخصوص الحقوق الفكرية
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        نحترم خصوصية عملائنا واتفاقيات السرية المُبرمة معهم. بعض أعمالنا المميزة غير معروضة هنا بناءً على طلب العملاء وحفاظاً على حقوقهم الفكرية وسرية أعمالهم. المعروض هنا جزء من محفظة أعمالنا المتاح مشاركتها.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               {/* Enhanced Filter Buttons */}
               <div className="flex flex-wrap justify-center gap-4 mb-16">
