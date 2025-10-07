@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-console.log('Main.tsx loaded successfully');
+console.log('Main.tsx loaded successfully - build refresh');
 console.log('CSS file check - starting build process');
 
 // Debug DOM and errors
