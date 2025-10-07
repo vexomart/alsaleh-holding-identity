@@ -445,22 +445,59 @@ const OurWorks = () => {
                 ألقِ نظرة على معرض أعمالنا بأنواعها المختلفة واكتشف كيف نحول الأفكار إلى واقع رقمي مبهر
               </p>
 
-              {/* Intellectual Property Notice */}
-              <div className="max-w-3xl mx-auto mb-12">
-                <div className="relative p-6 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 rounded-2xl border border-amber-500/20 backdrop-blur-sm">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
-                        <Shield className="w-6 h-6 text-white" />
+              {/* Enhanced Intellectual Property Notice with Alert Indicator */}
+              <div className="max-w-4xl mx-auto mb-12">
+                <div className="relative group">
+                  {/* Animated Background Glow */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 rounded-3xl blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                  
+                  {/* Main Notice Card */}
+                  <div className="relative p-8 bg-gradient-to-br from-background via-amber-500/5 to-background rounded-3xl border-2 border-amber-500/30 backdrop-blur-xl shadow-2xl">
+                    {/* Animated Alert Indicator */}
+                    <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-2xl flex items-center justify-center animate-bounce">
+                      <div className="relative">
+                        <Shield className="w-12 h-12 text-white relative z-10" />
+                        <div className="absolute inset-0 bg-white/30 rounded-full animate-ping"></div>
                       </div>
                     </div>
-                    <div className="flex-1 text-right">
-                      <h3 className="text-lg font-bold text-foreground mb-2">
-                        ملاحظة هامة بخصوص الحقوق الفكرية
-                      </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        نحترم خصوصية عملائنا واتفاقيات السرية المُبرمة معهم. بعض أعمالنا المميزة غير معروضة هنا بناءً على طلب العملاء وحفاظاً على حقوقهم الفكرية وسرية أعمالهم. المعروض هنا جزء من محفظة أعمالنا المتاح مشاركتها.
-                      </p>
+
+                    {/* Decorative Corner Elements */}
+                    <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-amber-500/20 to-transparent rounded-tl-3xl"></div>
+                    <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-orange-500/20 to-transparent rounded-br-3xl"></div>
+
+                    <div className="flex items-start gap-6">
+                      {/* Pulsing Icon Container */}
+                      <div className="flex-shrink-0 relative">
+                        <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-xl relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                          <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                          <Shield className="w-8 h-8 text-white relative z-10" />
+                        </div>
+                        {/* Pulsing Ring */}
+                        <div className="absolute inset-0 border-4 border-amber-500/30 rounded-2xl animate-ping"></div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 text-right pt-2">
+                        <div className="flex items-center justify-end gap-3 mb-3">
+                          <h3 className="text-2xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 bg-clip-text text-transparent">
+                            ملاحظة هامة بخصوص الحقوق الفكرية
+                          </h3>
+                          <div className="flex gap-1">
+                            <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
+                            <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
+                          </div>
+                        </div>
+                        
+                        <p className="text-base text-muted-foreground leading-relaxed mb-4">
+                          نحترم خصوصية عملائنا واتفاقيات السرية المُبرمة معهم. بعض أعمالنا المميزة غير معروضة هنا بناءً على طلب العملاء وحفاظاً على حقوقهم الفكرية وسرية أعمالهم.
+                        </p>
+
+                        <div className="flex items-center justify-end gap-3 pt-3 border-t border-amber-500/20">
+                          <span className="text-sm font-semibold text-amber-600">المعروض هنا جزء من محفظة أعمالنا المتاح مشاركتها</span>
+                          <CheckCircle className="w-5 h-5 text-emerald-500" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
