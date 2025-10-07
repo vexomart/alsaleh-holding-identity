@@ -39,6 +39,18 @@ import restaurantSystemImg from "@/assets/systems/restaurant-system.jpg";
 import lmsSystemImg from "@/assets/systems/lms-system.jpg";
 import realEstateSystemImg from "@/assets/systems/real-estate-system.jpg";
 import healthcareSystemImg from "@/assets/systems/healthcare-system.jpg";
+import bookingSystemImg from "@/assets/systems/booking-system.jpg";
+import schoolSystemImg from "@/assets/systems/school-system.jpg";
+import hotelSystemImg from "@/assets/systems/hotel-system.jpg";
+import gymSystemImg from "@/assets/systems/gym-system.jpg";
+import maintenanceSystemImg from "@/assets/systems/maintenance-system.jpg";
+import logisticsSystemImg from "@/assets/systems/logistics-system.jpg";
+import workshopSystemImg from "@/assets/systems/workshop-system.jpg";
+import librarySystemImg from "@/assets/systems/library-system.jpg";
+import eventSystemImg from "@/assets/systems/event-system.jpg";
+import ecommerceSystemImg from "@/assets/systems/ecommerce-system.jpg";
+import supplierSystemImg from "@/assets/systems/supplier-system.jpg";
+import manufacturingSystemImg from "@/assets/systems/manufacturing-system.jpg";
 
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -384,6 +396,342 @@ const OurWorks = () => {
       ],
       year: "2025",
       client: "عيادات طبية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "5 أشهر"
+    },
+    {
+      id: 13,
+      title: "نظام إدارة الحجوزات والمواعيد",
+      subtitle: "حلول ذكية لإدارة الحجوزات",
+      description: "نظام متقدم لإدارة الحجوزات والمواعيد مع تقويم تفاعلي وإشعارات تلقائية وتأكيد آلي للمواعيد عبر الرسائل",
+      image: bookingSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Calendar API", color: "bg-purple-600", icon: "📅" },
+        { name: "Twilio", color: "bg-red-500", icon: "📱" }
+      ],
+      features: [
+        { name: "التقويم التفاعلي", icon: Calendar, description: "جدولة سهلة ومرنة" },
+        { name: "الإشعارات التلقائية", icon: Zap, description: "تذكير بالمواعيد" },
+        { name: "إدارة العملاء", icon: Users, description: "سجل كامل للعملاء" },
+        { name: "التقارير", icon: TrendingUp, description: "إحصائيات الحجوزات" }
+      ],
+      year: "2025",
+      client: "مراكز خدمية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين ونصف"
+    },
+    {
+      id: 14,
+      title: "نظام إدارة المدارس والطلاب",
+      subtitle: "منصة تعليمية شاملة للمدارس",
+      description: "نظام متكامل لإدارة المدارس يشمل سجلات الطلاب والدرجات والحضور وجداول الدراسة مع بوابة إلكترونية لأولياء الأمور",
+      image: schoolSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Next.js", color: "bg-black", icon: "▲" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Prisma", color: "bg-indigo-600", icon: "🔷" },
+        { name: "Tailwind", color: "bg-cyan-500", icon: "🎨" }
+      ],
+      features: [
+        { name: "سجلات الطلاب", icon: Database, description: "ملفات إلكترونية شاملة" },
+        { name: "الدرجات", icon: Star, description: "نظام تقييم متقدم" },
+        { name: "الحضور", icon: CheckCircle, description: "تتبع يومي دقيق" },
+        { name: "بوابة الأهل", icon: Users, description: "تواصل مباشر" }
+      ],
+      year: "2025",
+      client: "مدارس خاصة",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر"
+    },
+    {
+      id: 15,
+      title: "نظام إدارة الفنادق",
+      subtitle: "حلول فندقية متطورة",
+      description: "نظام شامل لإدارة الفنادق يتضمن الحجوزات والغرف والخدمات الفندقية وإدارة النزلاء مع نظام فوترة متكامل",
+      image: hotelSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Laravel", color: "bg-red-500", icon: "🔺" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "Redis", color: "bg-red-600", icon: "⚡" },
+        { name: "Stripe", color: "bg-purple-500", icon: "💳" }
+      ],
+      features: [
+        { name: "إدارة الغرف", icon: Database, description: "حالة الغرف الفورية" },
+        { name: "الحجوزات", icon: Calendar, description: "نظام حجز متقدم" },
+        { name: "خدمة الغرف", icon: Zap, description: "طلبات فورية" },
+        { name: "الفواتير", icon: TrendingUp, description: "نظام محاسبي" }
+      ],
+      year: "2025",
+      client: "فنادق ومنتجعات",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر ونصف"
+    },
+    {
+      id: 16,
+      title: "نظام إدارة الصالات الرياضية",
+      subtitle: "إدارة احترافية للنوادي الرياضية",
+      description: "نظام متطور لإدارة الصالات الرياضية مع تتبع العضويات والحصص والمدربين وبرامج التمارين الشخصية",
+      image: gymSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Vue.js", color: "bg-emerald-500", icon: "🖖" },
+        { name: "Express", color: "bg-gray-700", icon: "🚂" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "Socket.io", color: "bg-gray-800", icon: "🔌" },
+        { name: "Chart.js", color: "bg-pink-500", icon: "📊" }
+      ],
+      features: [
+        { name: "إدارة العضويات", icon: Users, description: "اشتراكات متنوعة" },
+        { name: "جدول الحصص", icon: Calendar, description: "حجز الحصص" },
+        { name: "برامج التمارين", icon: Target, description: "خطط مخصصة" },
+        { name: "متابعة التقدم", icon: TrendingUp, description: "تقارير الأداء" }
+      ],
+      year: "2025",
+      client: "صالات رياضية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين ونصف"
+    },
+    {
+      id: 17,
+      title: "نظام إدارة الصيانة",
+      subtitle: "حلول ذكية لإدارة الصيانة",
+      description: "نظام متكامل لإدارة طلبات الصيانة والأصول والفنيين مع جدولة تلقائية وتتبع حالة الطلبات لحظياً",
+      image: maintenanceSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "Docker", color: "bg-blue-600", icon: "🐳" }
+      ],
+      features: [
+        { name: "طلبات الصيانة", icon: Database, description: "نظام تذاكر متقدم" },
+        { name: "إدارة الفنيين", icon: Users, description: "جدولة ذكية" },
+        { name: "إدارة الأصول", icon: Briefcase, description: "سجل الأصول" },
+        { name: "التقارير", icon: TrendingUp, description: "تحليلات الأداء" }
+      ],
+      year: "2025",
+      client: "شركات الصيانة",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 18,
+      title: "نظام إدارة النقل والشحن",
+      subtitle: "حلول لوجستية متطورة",
+      description: "نظام شامل لإدارة النقل والشحن مع تتبع الشحنات في الوقت الفعلي وإدارة الأسطول وتحسين المسارات",
+      image: logisticsSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "Google Maps", color: "bg-blue-500", icon: "🗺️" },
+        { name: "WebSocket", color: "bg-gray-800", icon: "🔌" }
+      ],
+      features: [
+        { name: "تتبع الشحنات", icon: Target, description: "تتبع مباشر" },
+        { name: "إدارة الأسطول", icon: Database, description: "إدارة المركبات" },
+        { name: "تحسين المسارات", icon: Zap, description: "مسارات ذكية" },
+        { name: "التقارير", icon: TrendingUp, description: "تحليلات النقل" }
+      ],
+      year: "2025",
+      client: "شركات الشحن",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر"
+    },
+    {
+      id: 19,
+      title: "نظام إدارة الورش",
+      subtitle: "إدارة احترافية لورش السيارات",
+      description: "نظام متطور لإدارة ورش السيارات مع سجلات المركبات وطلبات الإصلاح وإدارة قطع الغيار والفواتير",
+      image: workshopSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Angular", color: "bg-red-600", icon: "🅰️" },
+        { name: "ASP.NET", color: "bg-purple-600", icon: "🔷" },
+        { name: "SQL Server", color: "bg-red-700", icon: "🗄️" },
+        { name: "SignalR", color: "bg-blue-600", icon: "📡" },
+        { name: "Azure", color: "bg-blue-500", icon: "☁️" }
+      ],
+      features: [
+        { name: "سجلات المركبات", icon: Database, description: "تاريخ الصيانة" },
+        { name: "طلبات الإصلاح", icon: CheckCircle, description: "إدارة الطلبات" },
+        { name: "قطع الغيار", icon: Briefcase, description: "إدارة المخزون" },
+        { name: "الفواتير", icon: TrendingUp, description: "نظام محاسبي" }
+      ],
+      year: "2025",
+      client: "ورش سيارات",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 20,
+      title: "نظام إدارة المكتبات",
+      subtitle: "حلول رقمية للمكتبات",
+      description: "نظام متكامل لإدارة المكتبات مع فهرسة الكتب والإعارة والإرجاع وإدارة الأعضاء والأرشفة الرقمية",
+      image: librarySystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Django", color: "bg-green-700", icon: "🐍" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Elasticsearch", color: "bg-yellow-500", icon: "🔍" },
+        { name: "Docker", color: "bg-blue-600", icon: "🐳" }
+      ],
+      features: [
+        { name: "فهرسة الكتب", icon: Database, description: "كتالوج شامل" },
+        { name: "الإعارة والإرجاع", icon: CheckCircle, description: "نظام آلي" },
+        { name: "إدارة الأعضاء", icon: Users, description: "سجل المستفيدين" },
+        { name: "البحث المتقدم", icon: Target, description: "بحث ذكي" }
+      ],
+      year: "2025",
+      client: "مكتبات عامة",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين ونصف"
+    },
+    {
+      id: 21,
+      title: "نظام إدارة الفعاليات والمؤتمرات",
+      subtitle: "منصة شاملة لإدارة الفعاليات",
+      description: "نظام متطور لإدارة الفعاليات والمؤتمرات مع التسجيل الإلكتروني والتذاكر وإدارة المتحدثين والحضور",
+      image: eventSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Next.js", color: "bg-black", icon: "▲" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "Stripe", color: "bg-purple-500", icon: "💳" },
+        { name: "SendGrid", color: "bg-blue-600", icon: "📧" }
+      ],
+      features: [
+        { name: "التسجيل الإلكتروني", icon: Database, description: "تسجيل سهل" },
+        { name: "إدارة التذاكر", icon: CheckCircle, description: "تذاكر ذكية" },
+        { name: "إدارة المتحدثين", icon: Users, description: "جدول المتحدثين" },
+        { name: "تقارير الحضور", icon: TrendingUp, description: "إحصائيات مفصلة" }
+      ],
+      year: "2025",
+      client: "منظمو الفعاليات",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 22,
+      title: "نظام إدارة التجارة الإلكترونية",
+      subtitle: "منصة متكاملة للبيع أونلاين",
+      description: "نظام شامل للتجارة الإلكترونية مع إدارة المنتجات والطلبات والمدفوعات والشحن والتقارير التحليلية",
+      image: ecommerceSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Stripe", color: "bg-purple-500", icon: "💳" },
+        { name: "AWS", color: "bg-orange-500", icon: "☁️" }
+      ],
+      features: [
+        { name: "إدارة المنتجات", icon: Database, description: "كتالوج شامل" },
+        { name: "سلة التسوق", icon: Briefcase, description: "تسوق سهل" },
+        { name: "المدفوعات", icon: CheckCircle, description: "بوابات آمنة" },
+        { name: "التحليلات", icon: TrendingUp, description: "تقارير المبيعات" }
+      ],
+      year: "2025",
+      client: "متاجر إلكترونية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر"
+    },
+    {
+      id: 23,
+      title: "نظام إدارة الموردين",
+      subtitle: "إدارة احترافية للموردين والمشتريات",
+      description: "نظام متكامل لإدارة الموردين وطلبات الشراء والعقود والمدفوعات مع تقييم أداء الموردين",
+      image: supplierSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Vue.js", color: "bg-emerald-500", icon: "🖖" },
+        { name: "Laravel", color: "bg-red-500", icon: "🔺" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "Redis", color: "bg-red-600", icon: "⚡" },
+        { name: "Docker", color: "bg-blue-600", icon: "🐳" }
+      ],
+      features: [
+        { name: "إدارة الموردين", icon: Users, description: "قاعدة بيانات شاملة" },
+        { name: "طلبات الشراء", icon: Database, description: "نظام آلي" },
+        { name: "إدارة العقود", icon: CheckCircle, description: "عقود إلكترونية" },
+        { name: "تقييم الأداء", icon: Star, description: "تقييم الموردين" }
+      ],
+      year: "2025",
+      client: "شركات صناعية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر ونصف"
+    },
+    {
+      id: 24,
+      title: "نظام إدارة المصانع",
+      subtitle: "حلول صناعية ذكية",
+      description: "نظام متطور لإدارة المصانع مع مراقبة خطوط الإنتاج والجودة والصيانة الوقائية وإدارة المعدات",
+      image: manufacturingSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Python", color: "bg-blue-600", icon: "🐍" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "IoT", color: "bg-green-600", icon: "📡" },
+        { name: "Docker", color: "bg-blue-600", icon: "🐳" }
+      ],
+      features: [
+        { name: "مراقبة الإنتاج", icon: Target, description: "تتبع لحظي" },
+        { name: "مراقبة الجودة", icon: Star, description: "ضمان الجودة" },
+        { name: "الصيانة الوقائية", icon: CheckCircle, description: "جدولة آلية" },
+        { name: "التقارير", icon: TrendingUp, description: "تحليلات الإنتاج" }
+      ],
+      year: "2025",
+      client: "مصانع ومنشآت صناعية",
       type: "نظام إداري",
       status: "مكتمل",
       rating: 5,
