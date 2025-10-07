@@ -8,7 +8,6 @@ import {
   Monitor, 
   Smartphone, 
   Globe, 
-  ExternalLink, 
   Calendar, 
   Users, 
   Code2, 
@@ -23,8 +22,7 @@ import {
   Briefcase,
   Target,
   TrendingUp,
-  CheckCircle,
-  ArrowUpRight
+  CheckCircle
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -658,11 +656,7 @@ const OurWorks = () => {
                         </div>
 
                         {/* Premium Footer */}
-                        <div className={`flex items-center justify-between pt-3 border-t ${
-                          index === 0 
-                            ? 'border-gradient-to-r from-blue-500/30 via-purple-500/20 to-pink-500/30' 
-                            : 'border-gradient-to-r from-emerald-500/30 via-teal-500/20 to-cyan-500/30'
-                        }`}>
+                        <div className="flex items-center justify-center pt-3 border-t border-border/30">
                           <div className="flex items-center gap-2 text-xs">
                             <div className={`w-2 h-2 rounded-full animate-pulse ${
                               index === 0 ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gradient-to-r from-emerald-500 to-teal-500'
@@ -670,19 +664,6 @@ const OurWorks = () => {
                             <Users className="w-3 h-3 text-primary" />
                             <span className="truncate text-xs font-medium text-foreground group-hover:text-primary transition-colors">{work.client}</span>
                           </div>
-                          
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            asChild 
-                            className="group/btn bg-gradient-to-r from-primary/10 to-secondary/10 hover:from-primary hover:to-secondary hover:text-white border-primary/30 hover:border-primary text-xs px-3 py-1.5 h-auto transition-all duration-500 hover:scale-110 shadow-lg hover:shadow-xl backdrop-blur-sm font-semibold"
-                          >
-                            <a href={work.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
-                              <div className="w-1.5 h-1.5 bg-current rounded-full animate-pulse"></div>
-                              <ExternalLink className="w-3 h-3 group-hover/btn:scale-125 transition-transform" />
-                              زيارة المشروع
-                            </a>
-                          </Button>
                         </div>
                       </CardContent>
                     </Card>
