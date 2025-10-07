@@ -538,7 +538,7 @@ const AffiliateMarketing = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">اتصل بنا</h3>
                     <a href="tel:+966555812567" className="text-blue-600 hover:text-blue-700 transition-colors">
-                      +966 555 812 567
+                      0555812567
                     </a>
                   </div>
                 </div>
