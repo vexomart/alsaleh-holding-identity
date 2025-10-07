@@ -43,7 +43,7 @@ import healthcareSystemImg from "@/assets/systems/healthcare-system.jpg";
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 6; // عرض 6 أعمال في كل صفحة
   const filterButtons = [
     { id: "all", label: "كل الأعمال", color: "bg-gradient-to-r from-amber-500 to-orange-500", icon: Award },
     { id: "websites", label: "المواقع الإلكترونية", color: "bg-gradient-to-r from-blue-500 to-indigo-500", icon: Globe },
