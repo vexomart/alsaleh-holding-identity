@@ -37,8 +37,8 @@ const TechProjects = () => {
       title: "نظام المحاسبة والفواتير",
       description: "نظام شامل لإدارة المحاسبة والفواتير مع تقارير مالية متطورة وإدارة العملاء",
       category: "web",
-      status: "قيد التطوير",
-      progress: 65,
+      status: "مكتمل",
+      progress: 100,
       technologies: ["React", "Node.js", "PostgreSQL", "TypeScript"],
       startDate: "2025-07-23",
       estimatedCompletion: "2025-08-15",
@@ -276,12 +276,16 @@ const TechProjects = () => {
                         <span className="text-sm text-slate-400">تقدم المشروع</span>
                         <span className="text-sm font-medium text-orange-400">{project.progress}%</span>
                       </div>
-                      <div className="w-full bg-slate-700 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${project.progress}%` }}
-                        ></div>
-                      </div>
+                       <div className="w-full bg-slate-700 rounded-full h-2">
+                         <div 
+                           className={`h-2 rounded-full transition-all duration-300 ${
+                             project.progress === 100 
+                               ? 'bg-gradient-to-r from-green-500 to-green-600' 
+                               : 'bg-gradient-to-r from-orange-500 to-orange-600'
+                           }`}
+                           style={{ width: `${project.progress}%` }}
+                         ></div>
+                       </div>
                     </div>
 
                     {/* Technologies */}
