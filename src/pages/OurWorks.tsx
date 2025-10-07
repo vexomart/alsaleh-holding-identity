@@ -730,10 +730,26 @@ const OurWorks = () => {
                                 </div>
                                 <p className="text-xs text-muted-foreground leading-tight line-clamp-1 relative z-10">{feature.description}</p>
                               </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Premium Footer */}
+                        <div className="flex items-center justify-center pt-3 border-t border-border/30">
+                          <div className="flex items-center gap-2 text-xs">
+                            <div className={`w-2 h-2 rounded-full animate-pulse ${
+                              index === 0 ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gradient-to-r from-emerald-500 to-teal-500'
+                            }`}></div>
+                            <Users className="w-3 h-3 text-primary" />
+                            <span className="truncate text-xs font-medium text-foreground group-hover:text-primary transition-colors">{work.client}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
 
-                {/* Pagination Component */}
+                {/* Pagination Component - أسفل الأعمال مباشرة */}
                 {totalPages > 1 && (
                   <div className="flex justify-center items-center gap-2 mt-12 flex-wrap" dir="ltr">
                     {/* Previous Button */}
@@ -786,22 +802,6 @@ const OurWorks = () => {
                   <p className="text-sm text-muted-foreground font-['Cairo',sans-serif]">
                     عرض {startIndex + 1} - {Math.min(endIndex, filteredWorks.length)} من أصل {filteredWorks.length} عمل
                   </p>
-                </div>
-              </div>
-
-                        {/* Premium Footer */}
-                        <div className="flex items-center justify-center pt-3 border-t border-border/30">
-                          <div className="flex items-center gap-2 text-xs">
-                            <div className={`w-2 h-2 rounded-full animate-pulse ${
-                              index === 0 ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gradient-to-r from-emerald-500 to-teal-500'
-                            }`}></div>
-                            <Users className="w-3 h-3 text-primary" />
-                            <span className="truncate text-xs font-medium text-foreground group-hover:text-primary transition-colors">{work.client}</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
                 </div>
               </div>
             ) : (
