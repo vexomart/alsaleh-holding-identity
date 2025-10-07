@@ -445,16 +445,16 @@ const OurWorks = () => {
                 ألقِ نظرة على معرض أعمالنا بأنواعها المختلفة واكتشف كيف نحول الأفكار إلى واقع رقمي مبهر
               </p>
 
-              {/* Enhanced Intellectual Property Notice with Alert Indicator - Fully Responsive */}
-              <div className="max-w-4xl mx-auto mb-12 px-4">
+              {/* Enhanced Intellectual Property Notice with Alert Indicator - Fully Responsive with Corporate Font */}
+              <div className="max-w-4xl mx-auto mb-12 px-4" dir="rtl">
                 <div className="relative group">
                   {/* Animated Background Glow */}
                   <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 rounded-2xl lg:rounded-3xl blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                   
                   {/* Main Notice Card */}
-                  <div className="relative p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-background via-amber-500/5 to-background rounded-2xl lg:rounded-3xl border-2 border-amber-500/30 backdrop-blur-xl shadow-2xl">
+                  <div className="relative p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-background via-amber-500/5 to-background rounded-2xl lg:rounded-3xl border-2 border-amber-500/30 backdrop-blur-xl shadow-2xl font-['Cairo',sans-serif]">
                     {/* Animated Alert Indicator - Responsive */}
-                    <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl lg:rounded-2xl shadow-2xl flex items-center justify-center animate-bounce">
+                    <div className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl lg:rounded-2xl shadow-2xl flex items-center justify-center animate-bounce">
                       <div className="relative">
                         <Shield className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white relative z-10" />
                         <div className="absolute inset-0 bg-white/30 rounded-full animate-ping"></div>
@@ -462,12 +462,12 @@ const OurWorks = () => {
                     </div>
 
                     {/* Decorative Corner Elements */}
-                    <div className="absolute top-0 left-0 w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-amber-500/20 to-transparent rounded-tl-2xl lg:rounded-tl-3xl"></div>
-                    <div className="absolute bottom-0 right-0 w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-tl from-orange-500/20 to-transparent rounded-br-2xl lg:rounded-br-3xl"></div>
+                    <div className="absolute top-0 right-0 w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-bl from-amber-500/20 to-transparent rounded-tr-2xl lg:rounded-tr-3xl"></div>
+                    <div className="absolute bottom-0 left-0 w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-tr from-orange-500/20 to-transparent rounded-bl-2xl lg:rounded-bl-3xl"></div>
 
                     <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
                       {/* Pulsing Icon Container - Hidden on mobile, shown on larger screens */}
-                      <div className="hidden sm:flex flex-shrink-0 relative">
+                      <div className="hidden sm:flex flex-shrink-0 relative order-last">
                         <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl lg:rounded-2xl flex items-center justify-center shadow-xl relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
                           <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                           <Shield className="w-6 h-6 lg:w-8 lg:h-8 text-white relative z-10" />
@@ -478,24 +478,24 @@ const OurWorks = () => {
 
                       {/* Content - Full width on mobile */}
                       <div className="flex-1 text-right w-full sm:pt-2">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end gap-2 sm:gap-3 mb-3">
-                          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 bg-clip-text text-transparent">
-                            ملاحظة هامة بخصوص الحقوق الفكرية
-                          </h3>
-                          <div className="flex gap-1">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-2 sm:gap-3 mb-3">
+                          <div className="flex gap-1 order-last sm:order-first">
                             <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
                             <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
                             <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
                           </div>
+                          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 bg-clip-text text-transparent">
+                            ملاحظة هامة بخصوص الحقوق الفكرية
+                          </h3>
                         </div>
                         
                         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4">
                           نحترم خصوصية عملائنا واتفاقيات السرية المُبرمة معهم. بعض أعمالنا المميزة غير معروضة هنا بناءً على طلب العملاء وحفاظاً على حقوقهم الفكرية وسرية أعمالهم.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end gap-2 sm:gap-3 pt-3 border-t border-amber-500/20">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-2 sm:gap-3 pt-3 border-t border-amber-500/20">
+                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500 order-last sm:order-first" />
                           <span className="text-xs sm:text-sm font-semibold text-amber-600">المعروض هنا جزء من محفظة أعمالنا المتاح مشاركتها</span>
-                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
                         </div>
                       </div>
                     </div>
