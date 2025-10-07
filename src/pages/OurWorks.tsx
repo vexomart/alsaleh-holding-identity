@@ -22,7 +22,8 @@ import {
   Briefcase,
   Target,
   TrendingUp,
-  CheckCircle
+  CheckCircle,
+  ArrowUpRight
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -41,7 +42,8 @@ import healthcareSystemImg from "@/assets/systems/healthcare-system.jpg";
 
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   const filterButtons = [
     { id: "all", label: "كل الأعمال", color: "bg-gradient-to-r from-amber-500 to-orange-500", icon: Award },
     { id: "websites", label: "المواقع الإلكترونية", color: "bg-gradient-to-r from-blue-500 to-indigo-500", icon: Globe },
@@ -389,10 +391,29 @@ const OurWorks = () => {
     }
   ];
 
-  // تصفية الأعمال
-  const filteredWorks = activeFilter === "all" 
-    ? works 
-    : works.filter(work => work.category === activeFilter);
+  // Filter works and reset to page 1 when filter changes
+  const filteredWorks = works.filter(work => 
+    activeFilter === "all" ? true : work.category === activeFilter
+  );
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredWorks.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentWorks = filteredWorks.slice(startIndex, endIndex);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of works section
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  };
+
+  // Handle filter change
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]">
@@ -510,7 +531,7 @@ const OurWorks = () => {
                   return (
                     <Button
                       key={filter.id}
-                      onClick={() => setActiveFilter(filter.id)}
+                      onClick={() => handleFilterChange(filter.id)}
                       variant={activeFilter === filter.id ? "default" : "outline"}
                       className={`group px-8 py-4 text-base font-medium transition-all duration-300 rounded-2xl ${
                         activeFilter === filter.id 
@@ -555,7 +576,7 @@ const OurWorks = () => {
               <div className="space-y-16">
                 {/* Works Grid - Responsive for all devices */}
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
-                  {filteredWorks.map((work, index) => (
+                  {currentWorks.map((work, index) => (
                     <Card 
                       key={work.id} 
                       className={`group overflow-hidden relative bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-xl border-0 transition-all duration-700 hover:scale-[1.03] rounded-3xl animate-fade-in-up opacity-0 shadow-lg hover:shadow-2xl ${
@@ -709,9 +730,64 @@ const OurWorks = () => {
                                 </div>
                                 <p className="text-xs text-muted-foreground leading-tight line-clamp-1 relative z-10">{feature.description}</p>
                               </div>
-                            ))}
-                          </div>
-                        </div>
+                  ))}
+                </div>
+
+                {/* Pagination Component */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-12 flex-wrap" dir="ltr">
+                    {/* Previous Button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="group px-4 py-2 rounded-xl border-primary/30 hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                    >
+                      <ArrowUpRight className="w-4 h-4 rotate-180 group-hover:scale-110 transition-transform" />
+                      <span className="mr-2">السابق</span>
+                    </Button>
+
+                    {/* Page Numbers */}
+                    <div className="flex gap-2">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handlePageChange(page)}
+                          className={`w-10 h-10 rounded-xl font-bold transition-all duration-300 ${
+                            currentPage === page
+                              ? "bg-gradient-to-r from-primary to-secondary text-white shadow-lg scale-110"
+                              : "border-primary/30 hover:bg-primary/10 hover:border-primary/50 hover:scale-105"
+                          }`}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                    </div>
+
+                    {/* Next Button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="group px-4 py-2 rounded-xl border-primary/30 hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                    >
+                      <span className="ml-2">التالي</span>
+                      <ArrowUpRight className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                    </Button>
+                  </div>
+                )}
+
+                {/* Results Info */}
+                <div className="text-center mt-8">
+                  <p className="text-sm text-muted-foreground font-['Cairo',sans-serif]">
+                    عرض {startIndex + 1} - {Math.min(endIndex, filteredWorks.length)} من أصل {filteredWorks.length} عمل
+                  </p>
+                </div>
+              </div>
 
                         {/* Premium Footer */}
                         <div className="flex items-center justify-center pt-3 border-t border-border/30">
