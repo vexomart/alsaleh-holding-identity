@@ -35,6 +35,11 @@ import projectManagementImg from "@/assets/systems/project-management-system.jpg
 import inventorySystemImg from "@/assets/systems/inventory-system.jpg";
 import hrSystemImg from "@/assets/systems/hr-system.jpg";
 import crmSystemImg from "@/assets/systems/crm-system.jpg";
+import posSystemImg from "@/assets/systems/pos-system.jpg";
+import restaurantSystemImg from "@/assets/systems/restaurant-system.jpg";
+import lmsSystemImg from "@/assets/systems/lms-system.jpg";
+import realEstateSystemImg from "@/assets/systems/real-estate-system.jpg";
+import healthcareSystemImg from "@/assets/systems/healthcare-system.jpg";
 
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -243,6 +248,146 @@ const OurWorks = () => {
       status: "مكتمل",
       rating: 5,
       duration: "3 أشهر"
+    },
+    {
+      id: 8,
+      title: "نظام نقاط البيع POS",
+      subtitle: "نظام كاشير ذكي متكامل",
+      description: "نظام نقاط بيع حديث للمحلات التجارية مع إدارة المبيعات والمخزون والتقارير اليومية وربط مع طابعة الفواتير",
+      image: posSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Electron", color: "bg-cyan-600", icon: "⚡" },
+        { name: "SQLite", color: "bg-blue-400", icon: "💾" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "Thermal Printer", color: "bg-gray-700", icon: "🖨️" }
+      ],
+      features: [
+        { name: "واجهة كاشير سريعة", icon: Zap, description: "معاملات فورية" },
+        { name: "إدارة المنتجات", icon: Database, description: "كتالوج شامل" },
+        { name: "طباعة الفواتير", icon: CheckCircle, description: "فواتير احترافية" },
+        { name: "تقارير المبيعات", icon: TrendingUp, description: "تحليلات يومية" }
+      ],
+      year: "2025",
+      client: "محلات تجارية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين"
+    },
+    {
+      id: 9,
+      title: "نظام إدارة المطاعم",
+      subtitle: "حلول شاملة لإدارة المطاعم",
+      description: "نظام متكامل لإدارة المطاعم يشمل الطلبات والمطبخ والتوصيل وحجز الطاولات مع واجهة سهلة للعملاء والموظفين",
+      image: restaurantSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React Native", color: "bg-blue-500", icon: "📱" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "Socket.io", color: "bg-gray-800", icon: "🔌" },
+        { name: "Firebase", color: "bg-orange-500", icon: "🔥" }
+      ],
+      features: [
+        { name: "إدارة القوائم", icon: Database, description: "قوائم طعام ديناميكية" },
+        { name: "نظام المطبخ", icon: Zap, description: "شاشة المطبخ الذكية" },
+        { name: "حجز الطاولات", icon: Calendar, description: "حجوزات مباشرة" },
+        { name: "التوصيل", icon: Target, description: "تتبع الطلبات" }
+      ],
+      year: "2025",
+      client: "سلسلة مطاعم",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 10,
+      title: "نظام إدارة التعلم LMS",
+      subtitle: "منصة تعليمية إلكترونية متكاملة",
+      description: "نظام إدارة التعلم الإلكتروني مع الدورات التدريبية والاختبارات والشهادات وتتبع تقدم الطلاب بشكل تفاعلي",
+      image: lmsSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Next.js", color: "bg-black", icon: "▲" },
+        { name: "Prisma", color: "bg-indigo-600", icon: "🔷" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Mux", color: "bg-purple-600", icon: "🎥" },
+        { name: "Stripe", color: "bg-purple-500", icon: "💳" }
+      ],
+      features: [
+        { name: "إدارة الدورات", icon: Database, description: "محتوى تفاعلي" },
+        { name: "الاختبارات", icon: CheckCircle, description: "تقييم ذكي" },
+        { name: "الشهادات", icon: Award, description: "شهادات معتمدة" },
+        { name: "تتبع التقدم", icon: TrendingUp, description: "تقارير مفصلة" }
+      ],
+      year: "2025",
+      client: "مؤسسات تعليمية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر"
+    },
+    {
+      id: 11,
+      title: "نظام إدارة العقارات",
+      subtitle: "إدارة احترافية للعقارات",
+      description: "نظام شامل لإدارة العقارات والإيجارات والمستأجرين مع متابعة الصيانة والمدفوعات وعقود الإيجار الإلكترونية",
+      image: realEstateSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Vue.js", color: "bg-emerald-500", icon: "🖖" },
+        { name: "Django", color: "bg-green-700", icon: "🐍" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Google Maps", color: "bg-blue-500", icon: "🗺️" },
+        { name: "AWS S3", color: "bg-orange-500", icon: "☁️" }
+      ],
+      features: [
+        { name: "إدارة العقارات", icon: Database, description: "كتالوج شامل" },
+        { name: "المستأجرين", icon: Users, description: "قاعدة بيانات كاملة" },
+        { name: "العقود", icon: CheckCircle, description: "توقيع إلكتروني" },
+        { name: "الصيانة", icon: Target, description: "طلبات الصيانة" }
+      ],
+      year: "2025",
+      client: "شركات عقارية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر ونصف"
+    },
+    {
+      id: 12,
+      title: "نظام إدارة العيادات الطبية",
+      subtitle: "حلول صحية رقمية متقدمة",
+      description: "نظام متطور لإدارة العيادات الطبية مع سجلات المرضى والمواعيد والوصفات الطبية والتكامل مع الأجهزة الطبية",
+      image: healthcareSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Angular", color: "bg-red-600", icon: "🅰️" },
+        { name: "ASP.NET", color: "bg-purple-600", icon: "🔷" },
+        { name: "SQL Server", color: "bg-red-700", icon: "🗄️" },
+        { name: "HL7 FHIR", color: "bg-blue-600", icon: "🏥" },
+        { name: "Azure", color: "bg-blue-500", icon: "☁️" }
+      ],
+      features: [
+        { name: "سجلات المرضى", icon: Database, description: "ملفات إلكترونية" },
+        { name: "المواعيد", icon: Calendar, description: "جدولة ذكية" },
+        { name: "الوصفات", icon: CheckCircle, description: "وصفات رقمية" },
+        { name: "التقارير الطبية", icon: TrendingUp, description: "تحليلات صحية" }
+      ],
+      year: "2025",
+      client: "عيادات طبية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "5 أشهر"
     }
   ];
 
@@ -352,8 +497,8 @@ const OurWorks = () => {
           <div className="container mx-auto px-6 relative z-10">
             {filteredWorks.length > 0 ? (
               <div className="space-y-16">
-                {/* Works Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                {/* Works Grid - Responsive for all devices */}
+                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
                   {filteredWorks.map((work, index) => (
                     <Card 
                       key={work.id} 
