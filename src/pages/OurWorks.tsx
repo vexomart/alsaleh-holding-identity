@@ -1221,6 +1221,566 @@ const OurWorks = () => {
       status: "مكتمل",
       rating: 5,
       duration: "4 أشهر"
+    },
+    {
+      id: 40,
+      title: "نظام إدارة النوادي الرياضية",
+      subtitle: "إدارة ذكية للمرافق الرياضية",
+      description: "نظام متكامل لإدارة النوادي الرياضية مع العضويات والحجوزات والمدربين والبرامج التدريبية والمدفوعات",
+      image: sportsClubSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "Stripe", color: "bg-purple-500", icon: "💳" }
+      ],
+      features: [
+        { name: "إدارة العضويات", icon: Users, description: "تتبع الأعضاء" },
+        { name: "حجز المرافق", icon: Calendar, description: "نظام الحجز" },
+        { name: "البرامج التدريبية", icon: Target, description: "جدولة التمارين" },
+        { name: "نظام الدفع", icon: TrendingUp, description: "معالجة المدفوعات" }
+      ],
+      year: "2025",
+      client: "نوادي رياضية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 41,
+      title: "نظام إدارة حدائق الحيوان",
+      subtitle: "إدارة شاملة للمحميات الطبيعية",
+      description: "نظام متطور لإدارة حدائق الحيوان مع سجلات الحيوانات والرعاية الصحية والحجوزات والفعاليات",
+      image: zooSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Next.js", color: "bg-black", icon: "▲" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "Supabase", color: "bg-emerald-600", icon: "🔥" },
+        { name: "Maps", color: "bg-blue-500", icon: "🗺️" }
+      ],
+      features: [
+        { name: "سجلات الحيوانات", icon: Database, description: "ملفات تفصيلية" },
+        { name: "الرعاية الصحية", icon: CheckCircle, description: "متابعة طبية" },
+        { name: "إدارة الزوار", icon: Users, description: "حجز التذاكر" },
+        { name: "الفعاليات", icon: Calendar, description: "تنظيم الأنشطة" }
+      ],
+      year: "2025",
+      client: "حدائق الحيوان",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر"
+    },
+    {
+      id: 42,
+      title: "نظام إدارة دور السينما",
+      subtitle: "تجربة سينمائية رقمية متكاملة",
+      description: "نظام شامل لإدارة دور السينما مع حجز التذاكر والعروض والقاعات والمبيعات والتقارير",
+      image: cinemaSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Vue.js", color: "bg-emerald-500", icon: "🖖" },
+        { name: "Laravel", color: "bg-red-500", icon: "🔺" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "Stripe", color: "bg-purple-500", icon: "💳" },
+        { name: "QR Code", color: "bg-gray-700", icon: "📱" }
+      ],
+      features: [
+        { name: "حجز التذاكر", icon: Database, description: "نظام حجز أونلاين" },
+        { name: "إدارة العروض", icon: Calendar, description: "جدولة الأفلام" },
+        { name: "القاعات", icon: CheckCircle, description: "إدارة المقاعد" },
+        { name: "تقارير المبيعات", icon: TrendingUp, description: "تحليلات الإيرادات" }
+      ],
+      year: "2025",
+      client: "دور السينما",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 43,
+      title: "نظام إدارة محطات الوقود",
+      subtitle: "إدارة ذكية لمحطات البنزين",
+      description: "نظام متكامل لإدارة محطات الوقود مع المبيعات والمخزون والموظفين والصيانة والتقارير المالية",
+      image: gasStationSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "IoT", color: "bg-green-600", icon: "📡" }
+      ],
+      features: [
+        { name: "نقاط البيع", icon: Database, description: "نظام POS متقدم" },
+        { name: "إدارة المخزون", icon: TrendingUp, description: "تتبع الوقود" },
+        { name: "الموظفين", icon: Users, description: "إدارة الورديات" },
+        { name: "تقارير مالية", icon: Target, description: "تحليلات شاملة" }
+      ],
+      year: "2025",
+      client: "محطات الوقود",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر ونصف"
+    },
+    {
+      id: 44,
+      title: "نظام إدارة المسابح",
+      subtitle: "إدارة احترافية للمرافق المائية",
+      description: "نظام شامل لإدارة المسابح والنوادي المائية مع العضويات والحجوزات والدروس والفعاليات",
+      image: poolSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Angular", color: "bg-red-600", icon: "🅰️" },
+        { name: "Spring Boot", color: "bg-green-600", icon: "🍃" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "Cloud", color: "bg-cyan-500", icon: "☁️" }
+      ],
+      features: [
+        { name: "إدارة العضويات", icon: Users, description: "تتبع الأعضاء" },
+        { name: "حجز المسارات", icon: Calendar, description: "جدولة السباحة" },
+        { name: "دروس السباحة", icon: Target, description: "إدارة التدريب" },
+        { name: "الفعاليات", icon: CheckCircle, description: "تنظيم المسابقات" }
+      ],
+      year: "2025",
+      client: "مسابح ونوادي مائية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين ونصف"
+    },
+    {
+      id: 45,
+      title: "نظام إدارة مراكز التدريب",
+      subtitle: "منصة تدريب شاملة ومتطورة",
+      description: "نظام متكامل لإدارة مراكز التدريب مع الدورات والمدربين والمتدربين والشهادات والتقييمات",
+      image: trainingCenterSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Next.js", color: "bg-black", icon: "▲" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "Zoom API", color: "bg-blue-600", icon: "📹" }
+      ],
+      features: [
+        { name: "إدارة الدورات", icon: Database, description: "منهج شامل" },
+        { name: "المدربين", icon: Users, description: "قاعدة بيانات" },
+        { name: "المتدربين", icon: Target, description: "تتبع التقدم" },
+        { name: "الشهادات", icon: CheckCircle, description: "إصدار آلي" }
+      ],
+      year: "2025",
+      client: "مراكز تدريب",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 46,
+      title: "نظام إدارة مكاتب البريد",
+      subtitle: "حلول بريدية رقمية متطورة",
+      description: "نظام شامل لإدارة مكاتب البريد مع الطرود والرسائل والتتبع والمدفوعات والخدمات البريدية",
+      image: postOfficeSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Express", color: "bg-gray-700", icon: "🚂" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Maps API", color: "bg-blue-500", icon: "🗺️" },
+        { name: "Barcode", color: "bg-gray-700", icon: "📊" }
+      ],
+      features: [
+        { name: "إدارة الطرود", icon: Database, description: "تتبع الشحنات" },
+        { name: "نظام التتبع", icon: Target, description: "GPS متقدم" },
+        { name: "الخدمات البريدية", icon: CheckCircle, description: "متعددة" },
+        { name: "المدفوعات", icon: TrendingUp, description: "معالجة آمنة" }
+      ],
+      year: "2025",
+      client: "مكاتب البريد",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر"
+    },
+    {
+      id: 47,
+      title: "نظام إدارة البنوك",
+      subtitle: "حلول مصرفية رقمية متقدمة",
+      description: "نظام بنكي شامل مع الحسابات والتحويلات والقروض والاستثمارات والخدمات المصرفية الإلكترونية",
+      image: bankSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Java", color: "bg-red-600", icon: "☕" },
+        { name: "Spring Boot", color: "bg-green-600", icon: "🍃" },
+        { name: "Oracle", color: "bg-red-700", icon: "🗄️" },
+        { name: "Security", color: "bg-gray-900", icon: "🔐" },
+        { name: "Blockchain", color: "bg-purple-600", icon: "⛓️" }
+      ],
+      features: [
+        { name: "الحسابات البنكية", icon: Database, description: "إدارة شاملة" },
+        { name: "التحويلات", icon: TrendingUp, description: "آمنة وسريعة" },
+        { name: "القروض", icon: Target, description: "نظام متكامل" },
+        { name: "الأمان", icon: Shield, description: "حماية متقدمة" }
+      ],
+      year: "2025",
+      client: "مؤسسات مصرفية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "6 أشهر"
+    },
+    {
+      id: 48,
+      title: "نظام إدارة الجامعات",
+      subtitle: "منصة تعليمية أكاديمية متكاملة",
+      description: "نظام جامعي شامل مع القبول والتسجيل والمقررات والدرجات والخريجين والبحث العلمي",
+      image: universitySystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Angular", color: "bg-red-600", icon: "🅰️" },
+        { name: "ASP.NET", color: "bg-purple-600", icon: "🔷" },
+        { name: "SQL Server", color: "bg-red-700", icon: "🗄️" },
+        { name: "Azure", color: "bg-blue-600", icon: "☁️" },
+        { name: "Power BI", color: "bg-yellow-500", icon: "📊" }
+      ],
+      features: [
+        { name: "القبول والتسجيل", icon: Users, description: "نظام متطور" },
+        { name: "إدارة المقررات", icon: Database, description: "منهج شامل" },
+        { name: "الدرجات", icon: Target, description: "تتبع الأداء" },
+        { name: "البحث العلمي", icon: CheckCircle, description: "إدارة الأبحاث" }
+      ],
+      year: "2025",
+      client: "جامعات ومعاهد",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "8 أشهر"
+    },
+    {
+      id: 49,
+      title: "نظام إدارة المستشفيات الكبرى",
+      subtitle: "نظام صحي إلكتروني متكامل",
+      description: "نظام مستشفى شامل مع المرضى والأطباء والعيادات والصيدلية والمختبرات والعمليات والإدارة",
+      image: hospitalSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "HL7/FHIR", color: "bg-blue-600", icon: "🏥" },
+        { name: "DICOM", color: "bg-purple-600", icon: "🩻" }
+      ],
+      features: [
+        { name: "السجلات الطبية", icon: Database, description: "ملفات إلكترونية" },
+        { name: "إدارة العيادات", icon: Calendar, description: "جدولة المواعيد" },
+        { name: "الصيدلية", icon: CheckCircle, description: "إدارة الأدوية" },
+        { name: "العمليات الجراحية", icon: Target, description: "تنظيم العمليات" }
+      ],
+      year: "2025",
+      client: "مستشفيات كبرى",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "10 أشهر"
+    },
+    {
+      id: 50,
+      title: "نظام إدارة المولات التجارية",
+      subtitle: "إدارة ذكية للمراكز التجارية",
+      description: "نظام متكامل لإدارة المولات مع المحلات والإيجارات والصيانة والفعاليات والتسويق",
+      image: mallSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Vue.js", color: "bg-emerald-500", icon: "🖖" },
+        { name: "Laravel", color: "bg-red-500", icon: "🔺" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "Maps", color: "bg-blue-500", icon: "🗺️" },
+        { name: "IoT", color: "bg-green-600", icon: "📡" }
+      ],
+      features: [
+        { name: "إدارة المحلات", icon: Database, description: "قاعدة بيانات" },
+        { name: "الإيجارات", icon: TrendingUp, description: "العقود والدفعات" },
+        { name: "الصيانة", icon: CheckCircle, description: "طلبات الخدمة" },
+        { name: "الفعاليات", icon: Calendar, description: "تنظيم الأنشطة" }
+      ],
+      year: "2025",
+      client: "مولات تجارية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "5 أشهر"
+    },
+    {
+      id: 51,
+      title: "نظام إدارة الحملات الإعلانية",
+      subtitle: "منصة تسويق رقمي متكاملة",
+      description: "نظام متطور لإدارة الحملات الإعلانية مع التخطيط والإنتاج والنشر والتحليلات والعملاء",
+      image: advertisingSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Express", color: "bg-gray-700", icon: "🚂" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "Analytics", color: "bg-orange-500", icon: "📊" },
+        { name: "Social API", color: "bg-blue-600", icon: "📱" }
+      ],
+      features: [
+        { name: "إدارة الحملات", icon: Target, description: "تخطيط شامل" },
+        { name: "الإنتاج الإبداعي", icon: Palette, description: "إدارة المحتوى" },
+        { name: "النشر", icon: Zap, description: "قنوات متعددة" },
+        { name: "التحليلات", icon: TrendingUp, description: "تقارير الأداء" }
+      ],
+      year: "2025",
+      client: "وكالات إعلانية",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر"
+    },
+    {
+      id: 52,
+      title: "نظام إدارة خدمات التوصيل",
+      subtitle: "حلول لوجستية ذكية ومتطورة",
+      description: "نظام توصيل شامل مع الطلبات والسائقين والمسارات والتتبع والمدفوعات والتقييمات",
+      image: deliverySystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React Native", color: "bg-blue-500", icon: "📱" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Google Maps", color: "bg-blue-500", icon: "🗺️" },
+        { name: "Socket.io", color: "bg-gray-800", icon: "🔌" }
+      ],
+      features: [
+        { name: "إدارة الطلبات", icon: Database, description: "نظام متكامل" },
+        { name: "السائقين", icon: Users, description: "تتبع الأسطول" },
+        { name: "التتبع الحي", icon: Target, description: "GPS فوري" },
+        { name: "المدفوعات", icon: TrendingUp, description: "معالجة آمنة" }
+      ],
+      year: "2025",
+      client: "شركات التوصيل",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "4 أشهر ونصف"
+    },
+    {
+      id: 53,
+      title: "نظام إدارة محلات النظارات",
+      subtitle: "حلول بصرية رقمية متقدمة",
+      description: "نظام متكامل لإدارة محلات النظارات مع العملاء والنظارات والفحوصات والمبيعات والمخزون",
+      image: opticalSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Vue.js", color: "bg-emerald-500", icon: "🖖" },
+        { name: "Laravel", color: "bg-red-500", icon: "🔺" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "Cloud", color: "bg-cyan-500", icon: "☁️" }
+      ],
+      features: [
+        { name: "سجلات العملاء", icon: Users, description: "ملفات شاملة" },
+        { name: "فحص النظر", icon: CheckCircle, description: "نتائج دقيقة" },
+        { name: "المبيعات", icon: TrendingUp, description: "نقاط البيع" },
+        { name: "المخزون", icon: Database, description: "تتبع المنتجات" }
+      ],
+      year: "2025",
+      client: "محلات النظارات",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين ونصف"
+    },
+    {
+      id: 54,
+      title: "نظام إدارة مراكز الليزر",
+      subtitle: "إدارة تجميلية طبية متطورة",
+      description: "نظام شامل لإدارة مراكز الليزر مع العملاء والجلسات والأجهزة والمواعيد والمدفوعات",
+      image: laserCenterSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Angular", color: "bg-red-600", icon: "🅰️" },
+        { name: "Spring Boot", color: "bg-green-600", icon: "🍃" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+        { name: "SMS", color: "bg-purple-600", icon: "📨" }
+      ],
+      features: [
+        { name: "إدارة العملاء", icon: Users, description: "سجلات شاملة" },
+        { name: "الجلسات", icon: Calendar, description: "جدولة متقدمة" },
+        { name: "الأجهزة", icon: Target, description: "متابعة الاستخدام" },
+        { name: "المدفوعات", icon: TrendingUp, description: "نظام آمن" }
+      ],
+      year: "2025",
+      client: "مراكز الليزر",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 55,
+      title: "نظام إدارة محطات غسيل السيارات",
+      subtitle: "حلول عصرية لغسيل المركبات",
+      description: "نظام متكامل لإدارة محطات غسيل السيارات مع الحجوزات والخدمات والعملاء والمدفوعات",
+      image: carWashSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "Stripe", color: "bg-purple-500", icon: "💳" },
+        { name: "QR Code", color: "bg-gray-700", icon: "📱" }
+      ],
+      features: [
+        { name: "نظام الحجز", icon: Calendar, description: "حجز أونلاين" },
+        { name: "إدارة الخدمات", icon: Database, description: "باقات متنوعة" },
+        { name: "العملاء", icon: Users, description: "برنامج الولاء" },
+        { name: "المدفوعات", icon: TrendingUp, description: "معالجة سريعة" }
+      ],
+      year: "2025",
+      client: "محطات غسيل",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين"
+    },
+    {
+      id: 56,
+      title: "نظام إدارة المخابز",
+      subtitle: "حلول رقمية للمخابز الحديثة",
+      description: "نظام متكامل لإدارة المخابز مع الإنتاج والمبيعات والمخزون والتوزيع والطلبات",
+      image: bakerySystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Vue.js", color: "bg-emerald-500", icon: "🖖" },
+        { name: "Laravel", color: "bg-red-500", icon: "🔺" },
+        { name: "MySQL", color: "bg-orange-500", icon: "🗃️" },
+        { name: "POS", color: "bg-gray-700", icon: "💰" },
+        { name: "Reports", color: "bg-blue-600", icon: "📊" }
+      ],
+      features: [
+        { name: "إدارة الإنتاج", icon: Target, description: "جدولة يومية" },
+        { name: "نقاط البيع", icon: Database, description: "نظام POS" },
+        { name: "المخزون", icon: CheckCircle, description: "تتبع المكونات" },
+        { name: "التوزيع", icon: TrendingUp, description: "إدارة التوصيل" }
+      ],
+      year: "2025",
+      client: "مخابز ومطاحن",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين ونصف"
+    },
+    {
+      id: 57,
+      title: "نظام إدارة المغاسل",
+      subtitle: "حلول غسيل وكي احترافية",
+      description: "نظام شامل لإدارة المغاسل مع الطلبات والعملاء والخدمات والتسليم والمدفوعات",
+      image: laundrySystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Express", color: "bg-gray-700", icon: "🚂" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "Barcode", color: "bg-gray-700", icon: "📊" },
+        { name: "SMS", color: "bg-purple-600", icon: "📨" }
+      ],
+      features: [
+        { name: "إدارة الطلبات", icon: Database, description: "تتبع دقيق" },
+        { name: "العملاء", icon: Users, description: "سجلات شاملة" },
+        { name: "الخدمات", icon: CheckCircle, description: "أسعار مرنة" },
+        { name: "التسليم", icon: Target, description: "نظام توصيل" }
+      ],
+      year: "2025",
+      client: "مغاسل",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "شهرين"
+    },
+    {
+      id: 58,
+      title: "نظام إدارة استوديوهات التصوير",
+      subtitle: "إدارة احترافية للتصوير الفوتوغرافي",
+      description: "نظام متكامل لإدارة استوديوهات التصوير مع الحجوزات والجلسات والمعارض والعملاء والمدفوعات",
+      image: photographySystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "Next.js", color: "bg-black", icon: "▲" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "MongoDB", color: "bg-green-700", icon: "🍃" },
+        { name: "Cloud Storage", color: "bg-cyan-500", icon: "☁️" },
+        { name: "Stripe", color: "bg-purple-500", icon: "💳" }
+      ],
+      features: [
+        { name: "نظام الحجز", icon: Calendar, description: "جدولة الجلسات" },
+        { name: "معرض الصور", icon: Palette, description: "إدارة الألبومات" },
+        { name: "العملاء", icon: Users, description: "ملفات شاملة" },
+        { name: "المدفوعات", icon: TrendingUp, description: "معالجة آمنة" }
+      ],
+      year: "2025",
+      client: "استوديوهات تصوير",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر"
+    },
+    {
+      id: 59,
+      title: "نظام إدارة مواقف السيارات",
+      subtitle: "حلول ذكية لإدارة المواقف",
+      description: "نظام متطور لإدارة مواقف السيارات مع الحجوزات والدخول والخروج والمدفوعات والأمان",
+      image: parkingSystemImg,
+      url: "#",
+      category: "systems",
+      technologies: [
+        { name: "React", color: "bg-blue-500", icon: "⚛️" },
+        { name: "Node.js", color: "bg-green-600", icon: "🟢" },
+        { name: "PostgreSQL", color: "bg-blue-700", icon: "🐘" },
+        { name: "IoT", color: "bg-green-600", icon: "📡" },
+        { name: "RFID", color: "bg-gray-700", icon: "📡" }
+      ],
+      features: [
+        { name: "نظام الدخول", icon: Database, description: "بوابات ذكية" },
+        { name: "الحجوزات", icon: Calendar, description: "حجز مسبق" },
+        { name: "المدفوعات", icon: TrendingUp, description: "آلي وآمن" },
+        { name: "الأمان", icon: Shield, description: "كاميرات مراقبة" }
+      ],
+      year: "2025",
+      client: "مواقف السيارات",
+      type: "نظام إداري",
+      status: "مكتمل",
+      rating: 5,
+      duration: "3 أشهر ونصف"
     }
   ];
 
