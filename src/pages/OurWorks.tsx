@@ -96,6 +96,26 @@ import petrolStationSystemImg from "@/assets/systems/petrol-station-system.jpg";
 import callCenterSystemImg from "@/assets/systems/call-center-system.jpg";
 import movingCompanySystemImg from "@/assets/systems/moving-company-system.jpg";
 import electronicsRepairSystemImg from "@/assets/systems/electronics-repair-system.jpg";
+import realEstateAgencySystemImg from "@/assets/systems/real-estate-agency-system.jpg";
+import coffeeShopSystemImg from "@/assets/systems/coffee-shop-system.jpg";
+import evChargingSystemImg from "@/assets/systems/ev-charging-system.jpg";
+import dialysisCenterSystemImg from "@/assets/systems/dialysis-center-system.jpg";
+import physiotherapySystemImg from "@/assets/systems/physiotherapy-system.jpg";
+import drivingSchoolSystemImg from "@/assets/systems/driving-school-system.jpg";
+import kindergartenSystemImg from "@/assets/systems/kindergarten-system.jpg";
+import carAuctionSystemImg from "@/assets/systems/car-auction-system.jpg";
+import daycareSystemImg from "@/assets/systems/daycare-system.jpg";
+import giftShopSystemImg from "@/assets/systems/gift-shop-system.jpg";
+import medicalAestheticsSystemImg from "@/assets/systems/medical-aesthetics-system.jpg";
+import tireShopSystemImg from "@/assets/systems/tire-shop-system.jpg";
+import cleaningServiceSystemImg from "@/assets/systems/cleaning-service-system.jpg";
+import securityServiceSystemImg from "@/assets/systems/security-service-system.jpg";
+import toyStoreSystemImg from "@/assets/systems/toy-store-system.jpg";
+import lasikCenterSystemImg from "@/assets/systems/lasik-center-system.jpg";
+import customsClearanceSystemImg from "@/assets/systems/customs-clearance-system.jpg";
+import flowerShopSystemImg from "@/assets/systems/flower-shop-system.jpg";
+import oxygenTherapySystemImg from "@/assets/systems/oxygen-therapy-system.jpg";
+import specializedLabSystemImg from "@/assets/systems/specialized-lab-system.jpg";
 
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
