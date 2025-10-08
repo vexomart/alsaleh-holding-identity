@@ -2094,7 +2094,7 @@ const OurWorks = () => {
 
                         {/* Luxury Rating */}
                         <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/95 backdrop-blur-md rounded-full px-3 py-2 shadow-xl transform transition-all duration-300 group-hover:scale-110 border border-white/20 z-30">
-                          {[...Array(work.rating)].map((_, i) => (
+                          {Array.from({ length: Math.max(0, Math.min(5, Math.floor(Number(work.rating) || 0))) }).map((_, i) => (
                             <Star 
                               key={i} 
                               className="w-3 h-3 text-amber-500 fill-current transition-all duration-300 group-hover:text-amber-400" 
@@ -2104,9 +2104,10 @@ const OurWorks = () => {
                               }}
                             />
                           ))}
-                          <span className="text-xs font-bold text-slate-700 ml-1">{work.rating}.0</span>
+                          <span className="text-xs font-bold text-slate-700 ml-1">{Number.isFinite(Number(work.rating)) ? Number(work.rating).toFixed(1) : '0.0'}</span>
                         </div>
-                      </div>
+                          
+                        </div>
                       
                       <CardContent className="p-5 relative z-20 bg-gradient-to-br from-background/95 to-background/90">
                         {/* Luxury Header with Glass Effect */}
