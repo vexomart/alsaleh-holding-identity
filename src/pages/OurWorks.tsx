@@ -1826,6 +1826,38 @@ const OurWorks = () => {
   const endIndex = startIndex + itemsPerPage;
   const currentWorks = filteredWorks.slice(startIndex, endIndex);
 
+  // دالة لحساب أرقام الصفحات المرئية (للأجهزة الصغيرة)
+  const getVisiblePages = () => {
+    const maxVisiblePages = 5; // عدد الصفحات المرئية على الجوال
+    const pages: (number | string)[] = [];
+    
+    if (totalPages <= maxVisiblePages + 2) {
+      // إذا كان العدد قليل، اعرض الكل
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    
+    // دائماً اعرض الصفحة الأولى
+    pages.push(1);
+    
+    if (currentPage > 3) {
+      pages.push('...');
+    }
+    
+    // اعرض الصفحات المجاورة للصفحة الحالية
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      pages.push(i);
+    }
+    
+    if (currentPage < totalPages - 2) {
+      pages.push('...');
+    }
+    
+    // دائماً اعرض الصفحة الأخيرة
+    pages.push(totalPages);
+    
+    return pages;
+  };
+
   // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -2173,51 +2205,61 @@ const OurWorks = () => {
                   ))}
                 </div>
 
-                {/* Pagination Component - أسفل الأعمال مباشرة */}
+                {/* Pagination Component - متجاوب مع جميع الأجهزة */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-2 mt-12 flex-wrap" dir="rtl">
-                    {/* Next Button - على اليمين */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                      className="group px-4 py-2 rounded-xl border-primary/30 hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                    >
-                      <ArrowUpRight className="w-4 h-4 ml-2 group-hover:scale-110 transition-transform" />
-                      <span>التالي</span>
-                    </Button>
+                  <div className="mt-12">
+                    <div className="flex justify-center items-center gap-2 sm:gap-3 flex-wrap" dir="rtl">
+                      {/* Next Button - على اليمين */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="group px-3 sm:px-4 py-2 rounded-xl border-primary/30 hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-xs sm:text-sm"
+                      >
+                        <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 group-hover:scale-110 transition-transform" />
+                        <span className="hidden sm:inline">التالي</span>
+                        <span className="sm:hidden">›</span>
+                      </Button>
 
-                    {/* Page Numbers */}
-                    <div className="flex gap-2">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <Button
-                          key={page}
-                          variant={currentPage === page ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handlePageChange(page)}
-                          className={`w-10 h-10 rounded-xl font-bold transition-all duration-300 ${
-                            currentPage === page
-                              ? "bg-gradient-to-r from-primary to-secondary text-white shadow-lg scale-110"
-                              : "border-primary/30 hover:bg-primary/10 hover:border-primary/50 hover:scale-105"
-                          }`}
-                        >
-                          {page}
-                        </Button>
-                      ))}
+                      {/* Page Numbers - متجاوب */}
+                      <div className="flex gap-1 sm:gap-2 flex-wrap justify-center max-w-full">
+                        {getVisiblePages().map((page, index) => (
+                          page === '...' ? (
+                            <span key={`ellipsis-${index}`} className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center text-muted-foreground text-sm sm:text-base">
+                              ...
+                            </span>
+                          ) : (
+                            <Button
+                              key={page}
+                              variant={currentPage === page ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => handlePageChange(page as number)}
+                              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl font-bold transition-all duration-300 text-xs sm:text-sm ${
+                                currentPage === page
+                                  ? "bg-gradient-to-r from-primary to-secondary text-white shadow-lg scale-105 sm:scale-110"
+                                  : "border-primary/30 hover:bg-primary/10 hover:border-primary/50 hover:scale-105"
+                              }`}
+                            >
+                              {page}
+                            </Button>
+                          )
+                        ))}
+                      </div>
+
+                      {/* Previous Button - على اليسار */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="group px-3 sm:px-4 py-2 rounded-xl border-primary/30 hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-xs sm:text-sm"
+                      >
+                        <span className="hidden sm:inline">السابق</span>
+                        <span className="sm:hidden">‹</span>
+                        <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 rotate-180 group-hover:scale-110 transition-transform" />
+                      </Button>
                     </div>
-
-                    {/* Previous Button - على اليسار */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      className="group px-4 py-2 rounded-xl border-primary/30 hover:bg-primary hover:text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                    >
-                      <span>السابق</span>
-                      <ArrowUpRight className="w-4 h-4 mr-2 rotate-180 group-hover:scale-110 transition-transform" />
-                    </Button>
                   </div>
                 )}
 
