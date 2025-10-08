@@ -116,6 +116,7 @@ import customsClearanceSystemImg from "@/assets/systems/customs-clearance-system
 import flowerShopSystemImg from "@/assets/systems/flower-shop-system.jpg";
 import oxygenTherapySystemImg from "@/assets/systems/oxygen-therapy-system.jpg";
 import specializedLabSystemImg from "@/assets/systems/specialized-lab-system.jpg";
+import { products } from "@/components/software-products/ProductsData";
 
 const OurWorks = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -1784,8 +1785,38 @@ const OurWorks = () => {
     }
   ];
 
+  // دمج الأنظمة من ProductsData مع الأعمال الحالية
+  const systemsFromProducts = products.map((product, index) => ({
+    id: works.length + index + 1,
+    title: product.name,
+    subtitle: product.description.substring(0, 50) + "...",
+    description: product.description,
+    image: accountingSystemImg, // استخدام صورة افتراضية
+    url: product.demoUrl || "#",
+    category: "systems",
+    technologies: [
+      { name: "React", color: "bg-blue-500", icon: "⚛️" },
+      { name: "TypeScript", color: "bg-blue-600", icon: "📘" },
+      { name: "Supabase", color: "bg-emerald-600", icon: "🔥" },
+      { name: "Tailwind CSS", color: "bg-cyan-500", icon: "🎨" },
+    ],
+    features: product.features.slice(0, 4).map((feat: string, i: number) => ({
+      name: feat.replace(/[^\u0600-\u06FF\s]/g, '').trim(),
+      icon: [Database, Shield, TrendingUp, CheckCircle][i % 4],
+      description: feat
+    })),
+    year: "2025",
+    client: "متاح للجميع",
+    type: "نظام إداري",
+    status: product.status || "متاح الآن",
+    rating: product.rating || 5,
+    duration: product.estimatedDelivery || "متاح فوراً"
+  }));
+
+  const allWorks = [...works, ...systemsFromProducts];
+
   // Filter works and reset to page 1 when filter changes
-  const filteredWorks = works.filter(work => 
+  const filteredWorks = allWorks.filter(work => 
     activeFilter === "all" ? true : work.category === activeFilter
   );
 
