@@ -192,6 +192,7 @@ const ServicesCatalog = lazy(() => import("./pages/ServicesCatalog"));
 const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 
 // Loading component for better UX
@@ -424,6 +425,7 @@ const App = () => {
                 <Route path="/mobile-apps" element={<Suspense fallback={<PageLoader />}><MobileApps /></Suspense>} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/enhanced-payment" element={<EnhancedPaymentPage />} />
+          <Route path="/admin" element={<Suspense fallback={<PageLoader />}><Admin /></Suspense>} />
           
           {/* Enterprise Services Routes */}
           <Route path="/enterprise/development" element={<Suspense fallback={<PageLoader />}><EnterpriseDevelopment /></Suspense>} />
