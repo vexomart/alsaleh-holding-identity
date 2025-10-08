@@ -1831,6 +1831,11 @@ const OurWorks = () => {
     const maxVisiblePages = 5; // عدد الصفحات المرئية على الجوال
     const pages: (number | string)[] = [];
     
+    // التحقق من صحة totalPages
+    if (!totalPages || totalPages < 1 || !Number.isFinite(totalPages)) {
+      return [1];
+    }
+    
     if (totalPages <= maxVisiblePages + 2) {
       // إذا كان العدد قليل، اعرض الكل
       return Array.from({ length: totalPages }, (_, i) => i + 1);
