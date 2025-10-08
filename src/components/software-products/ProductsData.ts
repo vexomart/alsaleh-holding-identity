@@ -168,6 +168,34 @@ export const products = [
     version: "V 1.0"
   },
   {
+    id: 4,
+    name: "🛒 متجر متعدد التجار الذكي",
+    description: "منصة تجارة إلكترونية متعددة التجار مع نظام عمولات ذكي وإدارة متقدمة",
+    category: "التجارة الإلكترونية",
+    icon: ShoppingCart,
+    features: [
+      "🏪 إدارة متعددة التجار",
+      "💰 نظام العمولات التلقائي",
+      "📦 تتبع الطلبات والشحن",
+      "💳 بوابات دفع متعددة",
+      "📊 لوحة تحكم للتجار",
+      "🎯 نظام التسويق بالعمولة"
+    ],
+    price: "4500 ريال",
+    rating: 4.9,
+    downloads: "156",
+    status: "متاح الآن",
+    color: "from-blue-500 to-indigo-500",
+    demoUrl: "#",
+    tags: ["E-commerce", "Multi-Vendor", "Marketplace", "AI-Powered"],
+    isNew: true,
+    isFeatured: true,
+    isExclusive: true,
+    emoji: "🛒",
+    estimatedDelivery: "20-40 يوم",
+    version: "V 1.0"
+  },
+  {
     id: 5,
     name: "👑 متجر عبايتي",
     description: "متجر إلكتروني فاخر ومتكامل للعبايات العصرية مع تصميم عالمي مميز وتكامل مع الواتساب وتجربة تسوق استثنائية",
@@ -2328,7 +2356,7 @@ export const products = [
 export const categories = [
   { name: "جميع المنتجات", emoji: "🛍️", count: products.length },
   { name: "المواقع التعريفية", emoji: "🌐", count: 2 },
-  { name: "التجارة الإلكترونية", emoji: "🛒", count: 1 },
+  { name: "التجارة الإلكترونية", emoji: "🛒", count: 2 },
   { name: "التسويق الرقمي", emoji: "📈", count: 1 },
-  { name: "الأنظمة الإدارية", emoji: "⚙️", count: 77 }
+  { name: "الأنظمة الإدارية", emoji: "⚙️", count: 76 }
 ];
