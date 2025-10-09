@@ -5,19 +5,16 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { 
   Heart, 
-  HandshakeIcon, 
-  GraduationCap, 
-  Hospital, 
-  Users,
-  FileText,
-  ChevronDown,
-  ArrowRight
+  Sparkles, 
+  Clock,
+  Mail
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const SocialResponsibility = () => {
   useEffect(() => {
     document.title = "المسؤولية المجتمعية | شركة علي صالح الشهري القابضة";
-    const desc = "نلتزم بدعم المجتمع من خلال تخصيص 2% من قيمة كل طلب لصالح جمعية جدة الخيرية";
+    const desc = "قريباً.. مبادرات المسؤولية المجتمعية من شركة علي صالح الشهري القابضة";
     
     let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!meta) {
@@ -43,386 +40,204 @@ const SocialResponsibility = () => {
     transition: { duration: 0.6 }
   };
 
-  const staggerContainer = {
-    initial: {},
-    whileInView: { transition: { staggerChildren: 0.2 } },
-    viewport: { once: true }
-  };
-
-  const goals = [
-    {
-      icon: Heart,
-      title: "دعم المجتمع",
-      color: "from-green-500 to-emerald-600"
-    },
-    {
-      icon: GraduationCap,
-      title: "التعليم",
-      color: "from-blue-500 to-cyan-600"
-    },
-    {
-      icon: Hospital,
-      title: "الصحة",
-      color: "from-red-500 to-pink-600"
-    },
-    {
-      icon: Users,
-      title: "المساعدة الإنسانية",
-      color: "from-amber-500 to-orange-600"
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       <Navigation />
       
-      <main className="relative">
-        {/* Hero Section */}
-        <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
-          {/* Animated Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `radial-gradient(circle at 25% 25%, rgba(16, 185, 129, 0.3) 0%, transparent 50%),
-                               radial-gradient(circle at 75% 75%, rgba(5, 150, 105, 0.3) 0%, transparent 50%)`
-            }} />
-          </div>
+      <main className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        {/* Modern Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950">
+          {/* Animated Gradient Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full blur-3xl opacity-20"
+            animate={{
+              scale: [1, 1.2, 1],
+              x: [0, 50, 0],
+              y: [0, 30, 0],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full blur-3xl opacity-20"
+            animate={{
+              scale: [1, 1.3, 1],
+              x: [0, -50, 0],
+              y: [0, -30, 0],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,102,241,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,102,241,0.1)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        </div>
 
-          <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <motion.div 
-              className="text-center max-w-4xl mx-auto"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              {/* Floating Hearts Animation */}
-              <div className="absolute inset-0 pointer-events-none">
-                {[...Array(8)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute"
-                    initial={{ 
-                      x: `${Math.random() * 100}%`,
-                      y: "100%",
-                      opacity: 0
-                    }}
-                    animate={{
-                      y: "-100%",
-                      opacity: [0, 0.6, 0],
-                    }}
-                    transition={{
-                      duration: 8 + Math.random() * 4,
-                      repeat: Infinity,
-                      delay: i * 1.5,
-                      ease: "linear"
-                    }}
-                  >
-                    <Heart className="w-6 h-6 text-emerald-500 fill-emerald-500/30" />
-                  </motion.div>
-                ))}
-              </div>
-
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="mb-8"
-              >
-                <div className="inline-block p-4 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full shadow-2xl">
-                  <Heart className="w-16 h-16 text-white" />
-                </div>
-              </motion.div>
-
-              <motion.h1 
-                className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 bg-clip-text text-transparent"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                معًا نحو مستقبلٍ أكثر عطاءً
-              </motion.h1>
-
-              <motion.p 
-                className="text-xl lg:text-2xl text-gray-700 mb-10 leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                تلتزم شركة علي صالح الشهري القابضة بدعم المجتمع من خلال تخصيص 
-                <span className="font-bold text-emerald-600 mx-2">٢٪</span> 
-                من قيمة كل طلب لصالح جمعية جدة الخيرية
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-              >
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-bold text-lg px-10 py-6 rounded-full shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 group"
-                >
-                  اعرف المزيد عن المبادرة
-                  <ArrowRight className="mr-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </motion.div>
-
-              <motion.div
-                className="mt-12"
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <ChevronDown className="w-8 h-8 text-emerald-600 mx-auto" />
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Partnership Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-6 lg:px-8">
-            <motion.div
-              className="max-w-5xl mx-auto text-center"
-              {...fadeInUp}
-            >
-              <motion.div
-                className="flex items-center justify-center gap-8 mb-12"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <motion.div 
-                  className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <span className="text-white font-bold text-2xl">ASH</span>
-                </motion.div>
-
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <motion.div 
+            className="text-center max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Sparkles Animation */}
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(12)].map((_, i) => (
                 <motion.div
-                  animate={{ x: [0, 10, 0] }}
+                  key={i}
+                  className="absolute"
+                  initial={{ 
+                    x: `${Math.random() * 100}%`,
+                    y: `${Math.random() * 100}%`,
+                    scale: 0,
+                    opacity: 0
+                  }}
+                  animate={{
+                    scale: [0, 1, 0],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: i * 0.5,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <Sparkles className="w-6 h-6 text-indigo-500" />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Main Icon */}
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 200,
+                damping: 15,
+                delay: 0.2 
+              }}
+              className="mb-8"
+            >
+              <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl relative">
+                <motion.div
+                  animate={{ 
+                    rotate: 360,
+                  }}
+                  transition={{ 
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                />
+                <Heart className="w-16 h-16 text-white relative z-10" />
+              </div>
+            </motion.div>
+
+            {/* Main Title */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mb-6"
+            >
+              <h1 className="text-6xl lg:text-8xl font-bold mb-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                قريباً
+              </h1>
+              <div className="flex items-center justify-center gap-3">
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <HandshakeIcon className="w-16 h-16 text-emerald-600" />
+                  <Clock className="w-8 h-8 text-indigo-600" />
                 </motion.div>
-
-                <motion.div 
-                  className="w-24 h-24 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center shadow-2xl"
-                  whileHover={{ scale: 1.1, rotate: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <span className="text-white font-bold text-lg text-center">جمعية<br/>جدة</span>
-                </motion.div>
-              </motion.div>
-
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
-                شراكتنا مع جمعية جدة
-              </h2>
-              
-              <p className="text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto">
-                في إطار مسؤوليتنا الاجتماعية، نفخر بشراكتنا مع جمعية جدة لدعم المشاريع الخيرية 
-                والتنموية داخل المملكة. نؤمن بأن النجاح الحقيقي يُقاس بما نقدمه لمجتمعنا.
-              </p>
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white">
+                  المسؤولية المجتمعية
+                </h2>
+              </div>
             </motion.div>
-          </div>
-        </section>
 
-        {/* Goals Section */}
-        <section className="py-20 bg-gradient-to-br from-gray-50 to-slate-50">
-          <div className="container mx-auto px-6 lg:px-8">
-            <motion.h2 
-              className="text-4xl lg:text-5xl font-bold text-center mb-16 text-gray-900"
-              {...fadeInUp}
+            {/* Description */}
+            <motion.p 
+              className="text-xl lg:text-2xl text-gray-700 dark:text-gray-300 mb-12 leading-relaxed max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
-              أهدافنا المجتمعية
-            </motion.h2>
+              نعمل على إطلاق مبادرات مجتمعية مبتكرة تعكس التزامنا بخدمة المجتمع وتحقيق التنمية المستدامة
+            </motion.p>
 
-            <motion.div 
-              className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto"
-              variants={staggerContainer}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true }}
-            >
-              {goals.map((goal, index) => {
-                const IconComponent = goal.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    variants={fadeInUp}
-                    whileHover={{ y: -10, scale: 1.05 }}
-                    className="relative group"
-                  >
-                    <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
-                      <div className={`w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br ${goal.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className="w-8 h-8 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-center text-gray-900">
-                        {goal.title}
-                      </h3>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Transparency Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-6 lg:px-8">
+            {/* Loading Animation */}
             <motion.div
-              className="max-w-4xl mx-auto text-center"
-              {...fadeInUp}
+              className="flex items-center justify-center gap-2 mb-12"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
             >
-              <motion.div
-                className="inline-block mb-8"
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", duration: 0.8 }}
-              >
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-2xl">
-                  <FileText className="w-10 h-10 text-white" />
-                </div>
-              </motion.div>
-
-              <h2 className="text-4xl lg:text-5xl font-bold mb-8 text-gray-900">
-                الشفافية والمصداقية
-              </h2>
-              
-              <p className="text-xl text-gray-700 leading-relaxed">
-                يتم تحويل المبالغ بشكل سنوي إلى جمعية جدة وفق اتفاقية تعاون رسمية، 
-                مع التزامنا الكامل بالشفافية والإفصاح التام عن أثر المبادرة في خدمة المجتمع.
-              </p>
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="w-3 h-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
+                  animate={{
+                    scale: [1, 1.5, 1],
+                    opacity: [0.5, 1, 0.5],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
             </motion.div>
-          </div>
-        </section>
 
-        {/* Thank You Section */}
-        <section className="relative py-20 bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 overflow-hidden">
-          {/* Floating Hearts Background */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(15)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute"
-                initial={{ 
-                  x: `${Math.random() * 100}%`,
-                  y: `${100 + Math.random() * 20}%`,
-                  opacity: 0
-                }}
-                animate={{
-                  y: `${-20 - Math.random() * 20}%`,
-                  opacity: [0, 0.3, 0.6, 0.3, 0],
-                }}
-                transition={{
-                  duration: 10 + Math.random() * 5,
-                  repeat: Infinity,
-                  delay: i * 0.8,
-                  ease: "linear"
-                }}
-              >
-                <Heart className="w-8 h-8 text-emerald-400 fill-emerald-400/20" />
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            {/* CTA Buttons */}
             <motion.div
-              className="max-w-4xl mx-auto text-center"
-              {...fadeInUp}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1 }}
             >
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{ 
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="inline-block mb-8"
-              >
-                <Heart className="w-24 h-24 text-emerald-600 fill-emerald-600/30 mx-auto" />
-              </motion.div>
-
-              <h2 className="text-4xl lg:text-5xl font-bold mb-8 text-gray-900">
-                شكراً لكم
-              </h2>
-              
-              <p className="text-2xl text-gray-700 leading-relaxed mb-12">
-                شكراً لكل عميل ساهم في دعم المبادرة، فكل عملية شراء تترك أثراً جميلاً في حياة الآخرين. 
-                أنتم شركاء في صنع الفرق وبناء مجتمع أفضل.
-              </p>
-
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <Link to="/">
                 <Button 
                   size="lg" 
-                  className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-bold text-lg px-10 py-6 rounded-full shadow-2xl hover:shadow-amber-500/50 transition-all duration-300"
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-lg px-10 py-6 rounded-full shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300"
                 >
-                  تواصل معنا للمزيد من المبادرات
-                  <ArrowRight className="mr-2 w-5 h-5" />
+                  العودة للرئيسية
                 </Button>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
+              </Link>
 
-        {/* Footer Logos Section */}
-        <section className="py-16 bg-gray-900 text-white">
-          <div className="container mx-auto px-6 lg:px-8">
-            <motion.div
-              className="flex flex-col md:flex-row items-center justify-center gap-12 mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <motion.div 
-                className="text-center"
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl mx-auto mb-4">
-                  <span className="text-white font-bold text-3xl">ASH</span>
-                </div>
-                <p className="text-gray-300">شركة علي صالح الشهري القابضة</p>
-              </motion.div>
-
-              <motion.div
-                animate={{ x: [0, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Heart className="w-12 h-12 text-emerald-500 fill-emerald-500/30" />
-              </motion.div>
-
-              <motion.div 
-                className="text-center"
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <div className="w-32 h-32 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center shadow-2xl mx-auto mb-4">
-                  <span className="text-white font-bold text-2xl">جمعية جدة</span>
-                </div>
-                <p className="text-gray-300">جمعية جدة الخيرية</p>
-              </motion.div>
+              <Link to="/contact">
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950 font-bold text-lg px-10 py-6 rounded-full transition-all duration-300 group"
+                >
+                  <Mail className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform" />
+                  تواصل معنا
+                </Button>
+              </Link>
             </motion.div>
 
-            <motion.p 
-              className="text-center text-gray-400 max-w-3xl mx-auto"
+            {/* Bottom Text */}
+            <motion.p
+              className="mt-16 text-gray-600 dark:text-gray-400"
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
             >
-              يُحول المبلغ الإجمالي المتجمع سنويًا لدعم برامج الجمعية الخيرية وفق الاتفاقية الموقعة بين الطرفين.
+              ترقبوا إطلاق مبادراتنا المجتمعية قريباً
             </motion.p>
-          </div>
-        </section>
+          </motion.div>
+        </div>
       </main>
 
       <Footer />
