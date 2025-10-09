@@ -182,6 +182,7 @@ const Footer = () => {
     { name: "من نحن", href: "/about", icon: Users },
     { name: "رؤيتنا", href: "/vision", icon: Target },
     { name: "فريق العمل", href: "/team", icon: Award },
+    { name: "المسؤولية المجتمعية", href: "/social-responsibility", icon: Building },
     { name: "تواصل معنا", href: "/contact", icon: Mail }
   ];
 
