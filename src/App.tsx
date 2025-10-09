@@ -193,6 +193,7 @@ const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
 const Admin = lazy(() => import("./pages/Admin"));
+const SocialResponsibility = lazy(() => import("./pages/SocialResponsibility"));
 
 
 // Loading component for better UX
@@ -437,6 +438,9 @@ const App = () => {
 
               {/* ASH HOLDING Routes */}
               <Route path="/ash" element={<Suspense fallback={<PageLoader />}><AshHolding /></Suspense>} />
+              
+              {/* Social Responsibility */}
+              <Route path="/social-responsibility" element={<Suspense fallback={<PageLoader />}><SocialResponsibility /></Suspense>} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
