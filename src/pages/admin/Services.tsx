@@ -1,22 +1,31 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Plus, Edit, Trash2, Package } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Package, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/useLanguage';
-
-const mockServices = [
-  { id: '1', name: 'تصميم المواقع', nameEn: 'Website Design', price: '5,000', category: 'development', status: 'active' },
-  { id: '2', name: 'تطوير التطبيقات', nameEn: 'App Development', price: '15,000', category: 'development', status: 'active' },
-  { id: '3', name: 'استشارات تقنية', nameEn: 'Tech Consulting', price: '2,500', category: 'consulting', status: 'active' },
-  { id: '4', name: 'تصميم الهوية', nameEn: 'Brand Identity', price: '3,000', category: 'design', status: 'inactive' },
-];
+import { useServices } from '@/hooks/useServices';
 
 const AdminServices = () => {
   const { isRTL } = useLanguage();
   const [search, setSearch] = useState('');
+  const { services, loading, deleteService } = useServices();
+
+  const filteredServices = services.filter(service =>
+    service.name.toLowerCase().includes(search.toLowerCase()) ||
+    (service.name_ar || '').includes(search) ||
+    (service.category || '').toLowerCase().includes(search.toLowerCase())
+  );
+
+  const formatCurrency = (amount?: number) => {
+    if (!amount) return '-';
+    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-SA', {
+      style: 'decimal',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   return (
     <div className="space-y-6">
@@ -53,49 +62,78 @@ const AdminServices = () => {
       </Card>
 
       {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {mockServices.map((service, index) => (
-          <motion.div
-            key={service.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-primary/10">
-                    <Package className="w-6 h-6 text-primary" />
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      ) : filteredServices.length === 0 ? (
+        <Card>
+          <CardContent className="py-12 text-center text-muted-foreground">
+            {search ? (isRTL ? 'لا توجد نتائج للبحث' : 'No search results') : (isRTL ? 'لا توجد خدمات بعد' : 'No services yet')}
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredServices.map((service, index) => (
+            <motion.div
+              key={service.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 rounded-xl bg-primary/10">
+                      <Package className="w-6 h-6 text-primary" />
+                    </div>
+                    <Badge variant={service.is_active ? 'default' : 'secondary'}>
+                      {isRTL 
+                        ? (service.is_active ? 'نشط' : 'غير نشط')
+                        : (service.is_active ? 'Active' : 'Inactive')}
+                    </Badge>
                   </div>
-                  <Badge variant={service.status === 'active' ? 'default' : 'secondary'}>
-                    {isRTL 
-                      ? (service.status === 'active' ? 'نشط' : 'غير نشط')
-                      : (service.status === 'active' ? 'Active' : 'Inactive')}
-                  </Badge>
-                </div>
 
-                <h3 className="font-semibold text-lg mb-2">
-                  {isRTL ? service.name : service.nameEn}
-                </h3>
+                  <h3 className="font-semibold text-lg mb-2">
+                    {isRTL ? service.name_ar || service.name : service.name}
+                  </h3>
 
-                <p className="text-2xl font-bold text-primary mb-4">
-                  {service.price} {isRTL ? 'ريال' : 'SAR'}
-                </p>
+                  {service.description && (
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                      {isRTL ? service.description_ar || service.description : service.description}
+                    </p>
+                  )}
 
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    <Edit className="w-4 h-4 me-1" />
-                    {isRTL ? 'تعديل' : 'Edit'}
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-red-500">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+                  <p className="text-2xl font-bold text-primary mb-4">
+                    {formatCurrency(service.price)} {isRTL ? 'ريال' : 'SAR'}
+                  </p>
+
+                  {service.category && (
+                    <Badge variant="outline" className="mb-4">
+                      {service.category}
+                    </Badge>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <Edit className="w-4 h-4 me-1" />
+                      {isRTL ? 'تعديل' : 'Edit'}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-red-500"
+                      onClick={() => deleteService(service.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
