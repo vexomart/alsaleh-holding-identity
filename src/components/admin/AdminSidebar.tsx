@@ -236,8 +236,8 @@ export function AdminSidebar() {
         className={cn(
           "group/item relative flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-300",
           isActive 
-            ? "bg-gradient-to-l from-primary/15 to-primary/5 text-primary shadow-sm border border-primary/20" 
-            : "hover:bg-muted/60 text-muted-foreground hover:text-foreground"
+            ? "bg-gradient-to-l from-amber-500/20 to-amber-500/5 text-amber-400 shadow-sm border border-amber-500/30" 
+            : "hover:bg-white/5 text-slate-400 hover:text-white"
         )}
       >
         {/* Active Indicator Line */}
@@ -248,7 +248,7 @@ export function AdminSidebar() {
               animate={{ scaleY: 1 }}
               exit={{ scaleY: 0 }}
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 h-6 w-1 rounded-full bg-gradient-to-b from-primary to-primary/60",
+                "absolute top-1/2 -translate-y-1/2 h-6 w-1 rounded-full bg-gradient-to-b from-amber-400 to-amber-600",
                 isRTL ? "-left-1" : "-right-1"
               )}
             />
@@ -259,8 +259,8 @@ export function AdminSidebar() {
         <div className={cn(
           "flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-300 shrink-0",
           isActive 
-            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" 
-            : "bg-muted/40 text-muted-foreground group-hover/item:bg-muted group-hover/item:text-foreground group-hover/item:scale-105"
+            ? "bg-gradient-to-br from-amber-500 to-amber-600 text-slate-900 shadow-lg shadow-amber-500/40" 
+            : "bg-white/5 text-slate-400 group-hover/item:bg-white/10 group-hover/item:text-white group-hover/item:scale-105"
         )}>
           <Icon className="h-[18px] w-[18px]" />
         </div>
@@ -270,7 +270,7 @@ export function AdminSidebar() {
           <>
             <span className={cn(
               "flex-1 truncate text-sm font-medium transition-colors",
-              isActive && "font-semibold"
+              isActive ? "font-semibold text-white" : ""
             )}>
               {getTitle(item)}
             </span>
@@ -278,7 +278,7 @@ export function AdminSidebar() {
               <Badge 
                 className={cn(
                   "h-5 min-w-5 rounded-full text-[10px] font-bold text-white px-1.5 shadow-sm",
-                  item.badgeColor || "bg-primary"
+                  item.badgeColor || "bg-amber-500"
                 )}
               >
                 {item.badge > 99 ? "99+" : item.badge}
@@ -321,7 +321,7 @@ export function AdminSidebar() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="text-[11px] font-bold text-muted-foreground/60 uppercase tracking-widest px-3 mb-2"
+      className="text-[11px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2"
     >
       {children}
     </motion.div>
@@ -332,12 +332,12 @@ export function AdminSidebar() {
       side={isRTL ? "right" : "left"} 
       collapsible="icon"
       className={cn(
-        "border-0 bg-gradient-to-b from-card via-card to-muted/30",
-        "shadow-xl shadow-black/5"
+        "border-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950",
+        "shadow-2xl shadow-black/50"
       )}
     >
       {/* Header */}
-      <SidebarHeader className="relative border-b border-border/40 bg-gradient-to-b from-muted/30 to-transparent">
+      <SidebarHeader className="relative border-b border-white/10 bg-gradient-to-b from-white/5 to-transparent">
         <div className={cn(
           "flex items-center gap-3 px-4 py-5",
           isCollapsed && "justify-center px-2"
@@ -349,13 +349,13 @@ export function AdminSidebar() {
             className="relative cursor-pointer"
             onClick={() => handleNavClick(ROUTES.ADMIN.OVERVIEW)}
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/80 text-primary-foreground shadow-xl shadow-primary/30 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-500 text-slate-900 shadow-xl shadow-amber-500/40 ring-2 ring-amber-400/30 ring-offset-2 ring-offset-slate-900">
               <Building2 className="h-6 w-6" />
             </div>
             <motion.div 
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ repeat: Infinity, duration: 2 }}
-              className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-green-500 border-2 border-card shadow-lg shadow-green-500/50" 
+              className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-lg shadow-emerald-500/50" 
             />
           </motion.div>
 
@@ -368,11 +368,11 @@ export function AdminSidebar() {
                 exit={{ opacity: 0, x: isRTL ? 10 : -10 }}
                 className="flex flex-col overflow-hidden"
               >
-                <span className="font-bold text-base text-foreground tracking-tight leading-tight">
+              <span className="font-bold text-base text-white tracking-tight leading-tight">
                   {language === "ar" ? "الصالح القابضة" : "AlSaleh Holding"}
                 </span>
-                <span className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                  <Sparkles className="h-3 w-3 text-primary animate-pulse" />
+                <span className="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+                  <Sparkles className="h-3 w-3 text-amber-400 animate-pulse" />
                   {language === "ar" ? "لوحة الإدارة" : "Admin Console"}
                 </span>
               </motion.div>
@@ -391,7 +391,7 @@ export function AdminSidebar() {
             variant="outline"
             size="icon"
             onClick={toggleSidebar}
-            className="h-6 w-6 rounded-full border-border/60 bg-card shadow-lg hover:bg-muted hover:scale-110 transition-transform hidden md:flex"
+            className="h-6 w-6 rounded-full border-slate-700 bg-slate-800 text-slate-300 shadow-lg hover:bg-slate-700 hover:text-white hover:scale-110 transition-transform hidden md:flex"
           >
             {isRTL ? (
               isCollapsed ? <ChevronLeft className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />
@@ -406,14 +406,14 @@ export function AdminSidebar() {
           variant="ghost"
           size="icon"
           onClick={() => setOpenMobile(false)}
-          className="absolute top-3 left-3 h-8 w-8 rounded-lg md:hidden"
+          className="absolute top-3 left-3 h-8 w-8 rounded-lg md:hidden text-slate-400 hover:text-white hover:bg-white/10"
         >
           <X className="h-4 w-4" />
         </Button>
       </SidebarHeader>
 
       {/* Content */}
-      <SidebarContent className="px-3 py-4 custom-scrollbar">
+      <SidebarContent className="px-3 py-4 custom-scrollbar-dark">
         {/* Main Navigation */}
         <SidebarGroup>
           {!isCollapsed && (
@@ -433,7 +433,7 @@ export function AdminSidebar() {
         {/* Business Navigation */}
         {filteredBusinessNav.length > 0 && (
           <>
-            <SidebarSeparator className="my-4 bg-border/30" />
+            <SidebarSeparator className="my-4 bg-white/10" />
             <SidebarGroup>
               {!isCollapsed && (
                 <SectionLabel>
@@ -454,11 +454,11 @@ export function AdminSidebar() {
         {/* CMS Navigation */}
         {filteredCmsNav.length > 0 && (
           <>
-            <SidebarSeparator className="my-4 bg-border/30" />
+            <SidebarSeparator className="my-4 bg-white/10" />
             <SidebarGroup>
               {!isCollapsed ? (
-                <Collapsible defaultOpen={isCmsActive} className="group/collapsible">
-                  <CollapsibleTrigger className="flex w-full items-center justify-between px-3 mb-2 text-[11px] font-bold text-muted-foreground/60 uppercase tracking-widest hover:text-muted-foreground transition-colors">
+                <Collapsible defaultOpen={isCmsActive} className="group/collapsible text-slate-400">
+                  <CollapsibleTrigger className="flex w-full items-center justify-between px-3 mb-2 text-[11px] font-bold text-slate-500 uppercase tracking-widest hover:text-slate-300 transition-colors">
                     <span>{language === "ar" ? "إدارة المحتوى" : "Content"}</span>
                     <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300 group-data-[state=open]/collapsible:rotate-180" />
                   </CollapsibleTrigger>
@@ -488,7 +488,7 @@ export function AdminSidebar() {
         {/* System Navigation */}
         {filteredSystemNav.length > 0 && (
           <>
-            <SidebarSeparator className="my-4 bg-border/30" />
+            <SidebarSeparator className="my-4 bg-white/10" />
             <SidebarGroup>
               {!isCollapsed && (
                 <SectionLabel>
@@ -508,28 +508,28 @@ export function AdminSidebar() {
       </SidebarContent>
 
       {/* Footer - User Profile */}
-      <SidebarFooter className="border-t border-border/40 p-3 bg-gradient-to-t from-muted/30 to-transparent">
+      <SidebarFooter className="border-t border-white/10 p-3 bg-gradient-to-t from-black/30 to-transparent">
         <SidebarMenu>
           {/* User Card */}
           <SidebarMenuItem>
             <motion.div 
               whileHover={{ scale: isCollapsed ? 1 : 1.01 }}
               className={cn(
-                "flex items-center gap-3 rounded-xl p-3 bg-gradient-to-l from-muted/50 to-muted/20 border border-border/40 transition-all duration-300 hover:border-border/60 hover:shadow-sm",
+                "flex items-center gap-3 rounded-xl p-3 bg-gradient-to-l from-white/10 to-white/5 border border-white/10 transition-all duration-300 hover:border-white/20 hover:shadow-sm",
                 isCollapsed && "justify-center p-2"
               )}
             >
               <div className="relative shrink-0">
-                <Avatar className="h-10 w-10 ring-2 ring-primary/20 ring-offset-2 ring-offset-card shadow-lg">
+                <Avatar className="h-10 w-10 ring-2 ring-amber-400/30 ring-offset-2 ring-offset-slate-900 shadow-lg">
                   <AvatarImage src={profile?.avatar_url || undefined} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/70 text-primary-foreground font-bold text-sm">
+                  <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-600 text-slate-900 font-bold text-sm">
                     {profile?.full_name?.charAt(0) || profile?.email?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
                 <motion.div 
                   animate={{ scale: [1, 1.15, 1] }}
                   transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
-                  className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 border-2 border-card shadow-lg shadow-green-500/40" 
+                  className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-lg shadow-emerald-500/40" 
                 />
               </div>
               <AnimatePresence>
@@ -540,10 +540,10 @@ export function AdminSidebar() {
                     exit={{ opacity: 0 }}
                     className="flex flex-1 flex-col overflow-hidden min-w-0"
                   >
-                    <span className="truncate text-sm font-semibold text-foreground">
+                    <span className="truncate text-sm font-semibold text-white">
                       {profile?.full_name || profile?.email?.split("@")[0] || "User"}
                     </span>
-                    <span className="truncate text-[11px] text-muted-foreground font-medium">
+                    <span className="truncate text-[11px] text-slate-400 font-medium">
                       {isSuperAdmin 
                         ? (language === "ar" ? "مدير النظام" : "Super Admin")
                         : (language === "ar" ? "مدير" : "Administrator")}
@@ -565,11 +565,11 @@ export function AdminSidebar() {
                     onClick={handleSignOut}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-300",
-                      "text-destructive/80 hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/20",
+                      "text-red-400/80 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20",
                       isCollapsed && "justify-center px-2"
                     )}
                   >
-                    <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-destructive/10 shrink-0">
+                    <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-red-500/10 shrink-0">
                       <LogOut className="h-[18px] w-[18px]" />
                     </div>
                     {!isCollapsed && (
