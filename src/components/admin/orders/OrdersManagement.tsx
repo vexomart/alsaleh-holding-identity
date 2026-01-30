@@ -268,7 +268,7 @@ export function OrdersManagement() {
   };
 
   return (
-    <div className="space-y-6 p-1">
+    <div className="space-y-6 p-1" dir="rtl">
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
@@ -280,7 +280,15 @@ export function OrdersManagement() {
             {language === 'ar' ? 'تتبع وإدارة جميع الطلبات' : 'Track and manage all orders'}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-row-reverse md:flex-row">
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            {language === 'ar' ? 'طلب جديد' : 'New Order'}
+          </Button>
+          <Button variant="outline" size="sm" className="gap-2">
+            <Download className="h-4 w-4" />
+            {language === 'ar' ? 'تصدير' : 'Export'}
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -293,14 +301,6 @@ export function OrdersManagement() {
           >
             <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
             {language === 'ar' ? 'تحديث' : 'Refresh'}
-          </Button>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Download className="h-4 w-4" />
-            {language === 'ar' ? 'تصدير' : 'Export'}
-          </Button>
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" />
-            {language === 'ar' ? 'طلب جديد' : 'New Order'}
           </Button>
         </div>
       </div>
@@ -323,7 +323,7 @@ export function OrdersManagement() {
           >
             <Card className="border-0 shadow-sm hover:shadow-md transition-shadow">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-row-reverse">
                   <div className={cn(
                     "p-2 rounded-lg",
                     stat.color === 'primary' ? 'bg-primary/10 text-primary' : `bg-${stat.color}/10 text-${stat.color}`
@@ -334,7 +334,7 @@ export function OrdersManagement() {
                     <stat.icon className={cn("h-4 w-4", stat.color === 'primary' ? 'text-primary' : '')} />
                   </div>
                 </div>
-                <div className="mt-3">
+                <div className="mt-3 text-right">
                   <p className={cn(
                     "text-2xl font-bold",
                     stat.color === 'primary' ? 'text-primary' : ''
@@ -373,19 +373,10 @@ export function OrdersManagement() {
                 </TabsTrigger>
               </TabsList>
 
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1 md:w-64">
-                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder={language === 'ar' ? 'بحث عن طلب...' : 'Search orders...'}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pr-10"
-                  />
-                </div>
+              <div className="flex items-center gap-2 flex-row-reverse md:flex-row">
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[140px]">
-                    <Filter className="h-4 w-4 ml-2" />
+                  <SelectTrigger className="w-[160px]">
+                    <Filter className="h-4 w-4 ms-2" />
                     <SelectValue placeholder={language === 'ar' ? 'الحالة' : 'Status'} />
                   </SelectTrigger>
                   <SelectContent>
@@ -397,6 +388,15 @@ export function OrdersManagement() {
                     ))}
                   </SelectContent>
                 </Select>
+                <div className="relative flex-1 md:w-64">
+                  <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder={language === 'ar' ? 'بحث عن طلب...' : 'Search orders...'}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="ps-10"
+                  />
+                </div>
               </div>
             </div>
 
@@ -415,11 +415,11 @@ export function OrdersManagement() {
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-muted/50">
-                        <TableHead className="font-semibold">{language === 'ar' ? 'رقم الطلب' : 'Order #'}</TableHead>
-                        <TableHead className="font-semibold">{language === 'ar' ? 'العنوان' : 'Title'}</TableHead>
-                        <TableHead className="font-semibold">{language === 'ar' ? 'الحالة' : 'Status'}</TableHead>
-                        <TableHead className="font-semibold">{language === 'ar' ? 'المبلغ' : 'Amount'}</TableHead>
-                        <TableHead className="font-semibold">{language === 'ar' ? 'التاريخ' : 'Date'}</TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'رقم الطلب' : 'Order #'}</TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'العنوان' : 'Title'}</TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'الحالة' : 'Status'}</TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'المبلغ' : 'Amount'}</TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'التاريخ' : 'Date'}</TableHead>
                         <TableHead className="font-semibold w-[50px]"></TableHead>
                       </TableRow>
                     </TableHeader>
@@ -438,10 +438,10 @@ export function OrdersManagement() {
                               setViewDialogOpen(true);
                             }}
                           >
-                            <TableCell className="font-mono text-sm font-medium">
+                            <TableCell className="font-mono text-sm font-medium text-right">
                               {order.order_number}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="text-right">
                               <div>
                                 <p className="font-medium">{language === 'ar' ? order.title_ar || order.title : order.title}</p>
                                 {order.description && (
@@ -451,9 +451,9 @@ export function OrdersManagement() {
                                 )}
                               </div>
                             </TableCell>
-                            <TableCell>{getStatusBadge(order.status)}</TableCell>
-                            <TableCell className="font-medium">{formatCurrency(order.total_amount)}</TableCell>
-                            <TableCell className="text-muted-foreground">{formatDate(order.created_at)}</TableCell>
+                            <TableCell className="text-right">{getStatusBadge(order.status)}</TableCell>
+                            <TableCell className="font-medium text-right">{formatCurrency(order.total_amount)}</TableCell>
+                            <TableCell className="text-muted-foreground text-right">{formatDate(order.created_at)}</TableCell>
                             <TableCell>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
@@ -461,13 +461,13 @@ export function OrdersManagement() {
                                     <MoreVertical className="h-4 w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
+                                <DropdownMenuContent align="start">
                                   <DropdownMenuItem onClick={(e) => {
                                     e.stopPropagation();
                                     setSelectedOrder(order);
                                     setViewDialogOpen(true);
                                   }}>
-                                    <Eye className="h-4 w-4 ml-2" />
+                                    <Eye className="h-4 w-4 ms-2" />
                                     {language === 'ar' ? 'عرض التفاصيل' : 'View Details'}
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
@@ -480,7 +480,7 @@ export function OrdersManagement() {
                                           handleStatusChange(order.id, key);
                                         }}
                                       >
-                                        <config.icon className="h-4 w-4 ml-2" />
+                                        <config.icon className="h-4 w-4 ms-2" />
                                         {language === 'ar' ? `تحويل إلى ${config.labelAr}` : `Mark as ${config.labelEn}`}
                                       </DropdownMenuItem>
                                     )
@@ -502,7 +502,7 @@ export function OrdersManagement() {
 
       {/* View Order Dialog */}
       <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl" dir="rtl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <ShoppingCart className="h-5 w-5 text-primary" />
@@ -515,15 +515,18 @@ export function OrdersManagement() {
           {selectedOrder && (
             <div className="space-y-6">
               {/* Status Timeline */}
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
-                {['pending', 'processing', 'in_progress', 'completed'].map((status, idx) => {
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg flex-row-reverse">
+                {['completed', 'in_progress', 'processing', 'pending'].map((status, idx) => {
                   const config = statusConfig[status];
                   const Icon = config.icon;
                   const isActive = selectedOrder.status === status;
-                  const isPast = ['pending', 'processing', 'in_progress', 'completed'].indexOf(selectedOrder.status || '') >= idx;
+                  const statusOrder = ['pending', 'processing', 'in_progress', 'completed'];
+                  const currentStatusIndex = statusOrder.indexOf(selectedOrder.status || '');
+                  const thisStatusIndex = statusOrder.indexOf(status);
+                  const isPast = currentStatusIndex >= thisStatusIndex;
                   
                   return (
-                    <div key={status} className="flex items-center">
+                    <div key={status} className="flex items-center flex-row-reverse">
                       <div className={cn(
                         "flex flex-col items-center gap-1",
                         isPast ? "opacity-100" : "opacity-40"
@@ -551,25 +554,25 @@ export function OrdersManagement() {
 
               {/* Order Info */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
+                <div className="space-y-1 text-right">
                   <span className="text-sm text-muted-foreground">
                     {language === 'ar' ? 'عنوان الطلب' : 'Order Title'}
                   </span>
                   <p className="font-medium">{language === 'ar' ? selectedOrder.title_ar || selectedOrder.title : selectedOrder.title}</p>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 text-right">
                   <span className="text-sm text-muted-foreground">
                     {language === 'ar' ? 'المبلغ الإجمالي' : 'Total Amount'}
                   </span>
                   <p className="font-bold text-lg text-primary">{formatCurrency(selectedOrder.total_amount)}</p>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 text-right">
                   <span className="text-sm text-muted-foreground">
                     {language === 'ar' ? 'تاريخ الإنشاء' : 'Created Date'}
                   </span>
                   <p className="font-medium">{formatDate(selectedOrder.created_at)}</p>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 text-right">
                   <span className="text-sm text-muted-foreground">
                     {language === 'ar' ? 'تاريخ الاستحقاق' : 'Due Date'}
                   </span>
@@ -578,7 +581,7 @@ export function OrdersManagement() {
               </div>
 
               {selectedOrder.description && (
-                <div className="space-y-1">
+                <div className="space-y-1 text-right">
                   <span className="text-sm text-muted-foreground">
                     {language === 'ar' ? 'الوصف' : 'Description'}
                   </span>
@@ -587,7 +590,7 @@ export function OrdersManagement() {
               )}
             </div>
           )}
-          <DialogFooter>
+          <DialogFooter className="flex-row-reverse sm:flex-row-reverse">
             <Button variant="outline" onClick={() => setViewDialogOpen(false)}>
               {language === 'ar' ? 'إغلاق' : 'Close'}
             </Button>
