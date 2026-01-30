@@ -70,6 +70,11 @@ const AdminDashboardContent: React.FC = () => {
   const [notificationCount, setNotificationCount] = useState(5);
   const [alertCount, setAlertCount] = useState(2);
 
+  // Log to help debug
+  useEffect(() => {
+    console.log('AdminDashboard mounted successfully');
+  }, []);
+
   // Enable dark mode by default for admin dashboard
   useEffect(() => {
     document.documentElement.classList.add('dark');
@@ -352,7 +357,16 @@ const AdminDashboardContent: React.FC = () => {
 const AdminDashboard: React.FC = () => {
   return (
     <LanguageProvider>
-      <AdminDashboardContent />
+      <React.Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-muted-foreground">جاري تحميل لوحة التحكم...</p>
+          </div>
+        </div>
+      }>
+        <AdminDashboardContent />
+      </React.Suspense>
     </LanguageProvider>
   );
 };
