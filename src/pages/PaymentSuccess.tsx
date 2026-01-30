@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle, XCircle, Clock, AlertCircle, Home, Download, Receipt, FileText } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -55,7 +55,7 @@ const PaymentSuccess = () => {
         }
 
         // Fetch transaction details
-        const { data: transactions, error } = await supabase
+        const { data: transactions, error } = await db
           .from('payment_transactions')
           .select('*')
           .or(`id.eq.${transactionId},paylink_transaction_no.eq.${transactionId},tap_charge_id.eq.${transactionId}`)
@@ -68,7 +68,7 @@ const PaymentSuccess = () => {
           return;
         }
 
-        const transaction = transactions[0];
+        const transaction = transactions[0] as any;
         setTransactionDetails(transaction);
 
         // Verify payment status

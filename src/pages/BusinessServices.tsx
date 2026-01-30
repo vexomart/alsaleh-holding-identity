@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import { motion } from 'framer-motion';
 import { 
   Building2, 
@@ -64,7 +64,7 @@ const BusinessServices = () => {
 
   const checkCurrentSubscription = async (userId) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('subscriptions')
         .select(`
           *,
@@ -90,7 +90,7 @@ const BusinessServices = () => {
 
   const fetchSubscriptionPlans = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('subscription_plans')
         .select('*')
         .eq('is_active', true)

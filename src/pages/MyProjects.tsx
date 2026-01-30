@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Clock, CheckCircle, AlertCircle, Users, Calendar, DollarSign, LogOut, Home } from 'lucide-react';
-import { supabase } from "@/integrations/supabase/client";
+import { db, supabase } from "@/integrations/supabase/db";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
@@ -90,7 +90,7 @@ const MyProjects = () => {
 
   const fetchUserProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
@@ -108,7 +108,7 @@ const MyProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('projects')
         .select('*')
         .order('created_at', { ascending: false });
@@ -131,7 +131,7 @@ const MyProjects = () => {
   const fetchProjectDetails = async (projectId: string) => {
     try {
       // جلب مراحل المشروع
-      const { data: phasesData, error: phasesError } = await supabase
+      const { data: phasesData, error: phasesError } = await db
         .from('project_phases')
         .select('*')
         .eq('project_id', projectId)
@@ -141,7 +141,7 @@ const MyProjects = () => {
       setPhases(phasesData || []);
 
       // جلب تحديثات المشروع
-      const { data: timelineData, error: timelineError } = await supabase
+      const { data: timelineData, error: timelineError } = await db
         .from('project_timeline')
         .select('*')
         .eq('project_id', projectId)

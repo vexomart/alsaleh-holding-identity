@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Wallet, Plus, Copy, Eye, User, Shield } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import { useToast } from '@/hooks/use-toast';
 import { NumberFormatter } from '@/components/NumberFormatter';
 import { Building2, CreditCard, Smartphone } from 'lucide-react';
@@ -55,28 +55,29 @@ const WalletPage = () => {
       if (!user) return;
 
       // Fetch user profile
-      const { data: profileData } = await supabase
+      const { data: profileData } = await db
         .from('profiles')
         .select('user_id, email, full_name, phone, company, role, site_id, created_at, updated_at')
         .eq('user_id', user.id)
         .single();
 
       if (profileData) {
+        const profile = profileData as any;
         setUserProfile({
           user_id: user.id,
           email: user.email,
-          full_name: profileData?.full_name,
-          phone: profileData?.phone,
-          company: profileData?.company,
-          role: profileData?.role || 'customer',
-          site_id: profileData?.site_id,
-          created_at: profileData?.created_at,
-          updated_at: profileData?.updated_at
+          full_name: profile?.full_name,
+          phone: profile?.phone,
+          company: profile?.company,
+          role: profile?.role || 'customer',
+          site_id: profile?.site_id,
+          created_at: profile?.created_at,
+          updated_at: profile?.updated_at
         });
       }
 
       // Fetch wallet
-      const { data: walletData, error: walletError } = await supabase
+      const { data: walletData, error: walletError } = await db
         .from('customer_wallets')
         .select('*')
         .eq('user_id', user.id)
@@ -89,7 +90,7 @@ const WalletPage = () => {
 
       if (!walletData) {
         // Create wallet if doesn't exist
-        const { data: newWallet, error: createError } = await supabase
+        const { data: newWallet, error: createError } = await db
           .from('customer_wallets')
           .insert({ user_id: user.id, balance: 0 })
           .select()

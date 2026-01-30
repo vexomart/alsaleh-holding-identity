@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 
 import { Json } from '@/integrations/supabase/types';
 
@@ -39,16 +39,13 @@ export const useTenantHook = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // تحديد التينانت بناء على النطاق الحالي
   const detectTenantFromDomain = (): string => {
-    // هذا النظام مخصص لموقع علي الشهري فقط
     return 'alishehri';
   };
 
-  // تحميل جميع التينانتس
   const loadTenants = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('tenants')
         .select('*')
         .eq('is_active', true)
@@ -62,10 +59,9 @@ export const useTenantHook = () => {
     }
   };
 
-  // تعيين التينانت الحالي
   const setCurrentTenantFromCode = async (tenantCode: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('tenants')
         .select('*')
         .eq('code', tenantCode)
@@ -74,8 +70,7 @@ export const useTenantHook = () => {
 
       if (error) {
         console.warn(`Tenant ${tenantCode} not found, falling back to alishehri`);
-        // البحث عن التينانت الافتراضي
-        const { data: fallbackData, error: fallbackError } = await supabase
+        const { data: fallbackData, error: fallbackError } = await db
           .from('tenants')
           .select('*')
           .eq('code', 'alishehri')
@@ -89,9 +84,8 @@ export const useTenantHook = () => {
 
       setCurrentTenant(data);
       
-      // تعيين التينانت في الجلسة للاستخدام في RLS
       try {
-        await supabase.rpc('switch_tenant', { tenant_code: tenantCode });
+        await db.rpc('switch_tenant', { tenant_code: tenantCode });
       } catch (rpcError) {
         console.warn('Could not switch tenant in database, continuing with client-side context');
       }
@@ -102,7 +96,6 @@ export const useTenantHook = () => {
     }
   };
 
-  // التبديل بين التينانتس (للأدمن فقط)
   const switchTenant = async (tenantCode: string): Promise<boolean> => {
     try {
       setLoading(true);
@@ -118,18 +111,13 @@ export const useTenantHook = () => {
     }
   };
 
-  // تحميل البيانات عند بدء التشغيل
   useEffect(() => {
     const initializeTenant = async () => {
       setLoading(true);
       try {
-        // تحميل جميع التينانتس
         await loadTenants();
-        
-        // تحديد التينانت الحالي بناء على النطاق
         const detectedTenant = detectTenantFromDomain();
         await setCurrentTenantFromCode(detectedTenant);
-        
       } catch (err) {
         console.error('Error initializing tenant:', err);
         setError('فشل في تهيئة نظام المواقع');

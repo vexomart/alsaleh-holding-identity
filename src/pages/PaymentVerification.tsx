@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle, XCircle, Clock, AlertTriangle, Home, Download, Receipt, FileText, Loader2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -66,7 +66,7 @@ const PaymentVerification = () => {
         setVerificationProgress(20);
 
         // Fetch transaction details
-        const { data: transactions, error: fetchError } = await supabase
+        const { data: transactions, error: fetchError } = await db
           .from('payment_transactions')
           .select('*')
           .or(`id.eq.${transactionId},paylink_transaction_no.eq.${transactionId},tap_charge_id.eq.${transactionId},tamara_order_id.eq.${transactionId}`)
@@ -78,7 +78,7 @@ const PaymentVerification = () => {
           return;
         }
 
-        const transactionData = transactions[0];
+        const transactionData = transactions[0] as any;
         setTransaction(transactionData);
         setVerificationProgress(40);
 
@@ -89,7 +89,7 @@ const PaymentVerification = () => {
                                 metadata?.tamara_order_id || 
                                 transactionData.transaction_id;
         
-        const { data: orders } = await supabase
+        const { data: orders } = await db
           .from('product_orders')
           .select('*')
           .eq('payment_reference', paymentReference)

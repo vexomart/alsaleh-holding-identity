@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import { toast } from '@/hooks/use-toast';
 
 interface ProjectNotification {
@@ -31,15 +31,13 @@ export const useRealtimeNotifications = ({
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      let query = supabase
+      let query = db
         .from('project_notifications')
         .select('*')
         .order('created_at', { ascending: false });
 
-      // If userId is provided, filter by that user's email
       if (userId) {
-        // We need to get the user's email first
-        const { data: profile } = await supabase
+        const { data: profile } = await db
           .from('profiles')
           .select('email')
           .eq('user_id', userId)
@@ -49,7 +47,6 @@ export const useRealtimeNotifications = ({
           query = query.eq('recipient_email', profile.email);
         }
       } else {
-        // For current user, use their email
         query = query.eq('recipient_email', user.email);
       }
 
@@ -66,7 +63,7 @@ export const useRealtimeNotifications = ({
 
   const markAsRead = useCallback(async (notificationId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await db
         .from('project_notifications')
         .update({ is_read: true })
         .eq('id', notificationId);
@@ -102,7 +99,7 @@ export const useRealtimeNotifications = ({
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { error } = await supabase
+      const { error } = await db
         .from('project_notifications')
         .update({ is_read: true })
         .eq('recipient_email', user.email)
@@ -176,7 +173,6 @@ export const useRealtimeNotifications = ({
   }, [fetchNotifications]);
 
   useEffect(() => {
-    // Only set up realtime in secure contexts to avoid WebSocket errors
     if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
       console.log('⚠️ Skipping realtime notifications (insecure context)');
       return;
@@ -198,7 +194,7 @@ export const useRealtimeNotifications = ({
           },
           handleRealtimeUpdate
         )
-        .subscribe((status) => {
+        .subscribe((status: any) => {
           console.log('📡 Realtime notifications subscription status:', status);
           
           if (status === 'SUBSCRIBED') {

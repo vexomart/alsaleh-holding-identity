@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import { 
   Bot,
   Settings, 
@@ -95,7 +95,7 @@ const AutomationSystem = () => {
 
   const checkCurrentSubscription = async (userId) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('subscriptions')
         .select(`
           *,
@@ -121,7 +121,7 @@ const AutomationSystem = () => {
 
   const fetchSubscriptionPlans = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('subscription_plans')
         .select('*')
         .eq('is_active', true)
