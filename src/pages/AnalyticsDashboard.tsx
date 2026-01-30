@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { BarChart3, RefreshCw, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
+import { LanguageProvider } from '@/components/dashboard/LanguageProvider';
 import { AnalyticsFilters } from '@/components/analytics-dashboard/AnalyticsFilters';
 import { RealtimeMetrics } from '@/components/analytics-dashboard/RealtimeMetrics';
 import { FinancialCharts } from '@/components/analytics-dashboard/FinancialCharts';
@@ -11,7 +12,7 @@ import { TrendIndicators } from '@/components/analytics-dashboard/TrendIndicator
 import { ExportReports } from '@/components/analytics-dashboard/ExportReports';
 import { toast } from 'sonner';
 
-const AnalyticsDashboard: React.FC = () => {
+const AnalyticsDashboardContent: React.FC = () => {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -127,6 +128,14 @@ const AnalyticsDashboard: React.FC = () => {
         </div>
       </main>
     </div>
+  );
+};
+
+const AnalyticsDashboard: React.FC = () => {
+  return (
+    <LanguageProvider>
+      <AnalyticsDashboardContent />
+    </LanguageProvider>
   );
 };
 
