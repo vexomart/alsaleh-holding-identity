@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { 
   Users, 
   ShoppingCart, 
@@ -17,9 +18,27 @@ import {
   AlertCircle,
   Activity,
   DollarSign,
-  BarChart3
+  BarChart3,
+  Calendar,
+  Star,
+  Zap,
+  Eye,
+  Plus,
+  RefreshCw
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from "recharts";
 
 interface StatCard {
   titleAr: string;
@@ -41,6 +60,41 @@ interface RecentOrder {
   total_amount: number | null;
 }
 
+interface TopService {
+  id: string;
+  name: string;
+  name_ar: string | null;
+  orders_count: number;
+  revenue: number;
+}
+
+interface ActivityItem {
+  id: string;
+  type: "order" | "user" | "service";
+  titleAr: string;
+  titleEn: string;
+  time: string;
+  icon: React.ElementType;
+  color: string;
+}
+
+const revenueData = [
+  { month: "يناير", revenue: 4500 },
+  { month: "فبراير", revenue: 5200 },
+  { month: "مارس", revenue: 4800 },
+  { month: "أبريل", revenue: 6100 },
+  { month: "مايو", revenue: 5500 },
+  { month: "يونيو", revenue: 7200 },
+  { month: "يوليو", revenue: 6800 },
+];
+
+const orderStatusData = [
+  { name: "مكتمل", value: 45, color: "#10b981" },
+  { name: "قيد التنفيذ", value: 25, color: "#3b82f6" },
+  { name: "معلق", value: 20, color: "#f59e0b" },
+  { name: "ملغي", value: 10, color: "#ef4444" },
+];
+
 export function AdminOverview() {
   const { language } = useLanguage();
   const { profile } = useAuth();
@@ -51,45 +105,77 @@ export function AdminOverview() {
     revenue: 0,
   });
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [topServices, setTopServices] = useState<TopService[]>([]);
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      // Fetch counts in parallel
+      const [usersRes, ordersRes, servicesRes] = await Promise.all([
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("orders").select("id, total_amount, created_at, title, status", { count: "exact" }),
+        supabase.from("services").select("id, name, name_ar", { count: "exact" }),
+      ]);
+
+      // Calculate total revenue from orders
+      const revenue = ordersRes.data?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+
+      setStats({
+        users: usersRes.count || 0,
+        orders: ordersRes.count || 0,
+        services: servicesRes.count || 0,
+        revenue,
+      });
+
+      // Fetch recent orders
+      const { data: orders } = await supabase
+        .from("orders")
+        .select("id, order_number, title, status, created_at, total_amount")
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      setRecentOrders(orders || []);
+
+      // Generate mock top services (since we don't have order-service join data)
+      const mockTopServices: TopService[] = (servicesRes.data || []).slice(0, 4).map((s, i) => ({
+        id: s.id,
+        name: s.name,
+        name_ar: s.name_ar,
+        orders_count: Math.floor(Math.random() * 50) + 10,
+        revenue: Math.floor(Math.random() * 10000) + 1000,
+      }));
+      setTopServices(mockTopServices);
+
+      // Generate activities from recent orders
+      const generatedActivities: ActivityItem[] = (orders || []).slice(0, 5).map((order) => ({
+        id: order.id,
+        type: "order" as const,
+        titleAr: `طلب جديد: ${order.title}`,
+        titleEn: `New order: ${order.title}`,
+        time: order.created_at,
+        icon: ShoppingCart,
+        color: "text-blue-500",
+      }));
+      setActivities(generatedActivities);
+
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchStats() {
-      try {
-        // Fetch counts in parallel
-        const [usersRes, ordersRes, servicesRes] = await Promise.all([
-          supabase.from("profiles").select("id", { count: "exact", head: true }),
-          supabase.from("orders").select("id, total_amount", { count: "exact" }),
-          supabase.from("services").select("id", { count: "exact", head: true }),
-        ]);
-
-        // Calculate total revenue from orders
-        const revenue = ordersRes.data?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
-
-        setStats({
-          users: usersRes.count || 0,
-          orders: ordersRes.count || 0,
-          services: servicesRes.count || 0,
-          revenue,
-        });
-
-        // Fetch recent orders
-        const { data: orders } = await supabase
-          .from("orders")
-          .select("id, order_number, title, status, created_at, total_amount")
-          .order("created_at", { ascending: false })
-          .limit(5);
-
-        setRecentOrders(orders || []);
-      } catch (error) {
-        console.error("Error fetching stats:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchStats();
+    fetchData();
   }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    fetchData();
+  };
 
   const statCards: StatCard[] = [
     {
@@ -179,6 +265,23 @@ export function AdminOverview() {
     }).format(date);
   };
 
+  const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 60) {
+      return language === "ar" ? `منذ ${diffMins} دقيقة` : `${diffMins}m ago`;
+    } else if (diffHours < 24) {
+      return language === "ar" ? `منذ ${diffHours} ساعة` : `${diffHours}h ago`;
+    } else {
+      return language === "ar" ? `منذ ${diffDays} يوم` : `${diffDays}d ago`;
+    }
+  };
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return language === "ar" ? "صباح الخير" : "Good Morning";
@@ -186,21 +289,68 @@ export function AdminOverview() {
     return language === "ar" ? "مساء الخير" : "Good Evening";
   };
 
+  const quickActions = [
+    { 
+      titleAr: "إضافة طلب", 
+      titleEn: "Add Order", 
+      icon: Plus, 
+      color: "bg-blue-500 hover:bg-blue-600" 
+    },
+    { 
+      titleAr: "إضافة خدمة", 
+      titleEn: "Add Service", 
+      icon: Package, 
+      color: "bg-emerald-500 hover:bg-emerald-600" 
+    },
+    { 
+      titleAr: "عرض التقارير", 
+      titleEn: "View Reports", 
+      icon: BarChart3, 
+      color: "bg-violet-500 hover:bg-violet-600" 
+    },
+  ];
+
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="animate-fade-in">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-2xl">👋</span>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            {getGreeting()}، {profile?.full_name || profile?.email?.split("@")[0]}
-          </h1>
+      {/* Welcome Section with Quick Actions */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 animate-fade-in">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-2xl">👋</span>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              {getGreeting()}، {profile?.full_name || profile?.email?.split("@")[0]}
+            </h1>
+          </div>
+          <p className="text-muted-foreground">
+            {language === "ar"
+              ? "إليك نظرة عامة على نظامك اليوم"
+              : "Here's an overview of your system today"}
+          </p>
         </div>
-        <p className="text-muted-foreground">
-          {language === "ar"
-            ? "إليك نظرة عامة على نظامك اليوم"
-            : "Here's an overview of your system today"}
-        </p>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="gap-2"
+          >
+            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+            {language === "ar" ? "تحديث" : "Refresh"}
+          </Button>
+          {quickActions.map((action, index) => (
+            <Button
+              key={index}
+              size="sm"
+              className={cn("gap-2 text-white", action.color)}
+            >
+              <action.icon className="h-4 w-4" />
+              <span className="hidden sm:inline">
+                {language === "ar" ? action.titleAr : action.titleEn}
+              </span>
+            </Button>
+          ))}
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -209,14 +359,14 @@ export function AdminOverview() {
           <Card
             key={index}
             className={cn(
-              "relative overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1",
+              "relative overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group cursor-pointer",
               "animate-fade-in"
             )}
             style={{ animationDelay: `${index * 100}ms` }}
           >
             {/* Gradient accent */}
             <div className={cn(
-              "absolute top-0 inset-x-0 h-1 bg-gradient-to-r",
+              "absolute top-0 inset-x-0 h-1 bg-gradient-to-r transition-all duration-300 group-hover:h-1.5",
               stat.gradient
             )} />
             
@@ -224,7 +374,7 @@ export function AdminOverview() {
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {language === "ar" ? stat.titleAr : stat.titleEn}
               </CardTitle>
-              <div className={cn("p-2.5 rounded-xl", stat.iconBg)}>
+              <div className={cn("p-2.5 rounded-xl transition-transform duration-300 group-hover:scale-110", stat.iconBg)}>
                 <stat.icon className="h-5 w-5" />
               </div>
             </CardHeader>
@@ -261,26 +411,142 @@ export function AdminOverview() {
         ))}
       </div>
 
-      {/* Two Column Layout */}
+      {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-7">
-        {/* Recent Orders */}
+        {/* Revenue Chart */}
         <Card 
-          className="lg:col-span-4 animate-fade-in border-0 shadow-lg"
+          className="lg:col-span-5 animate-fade-in border-0 shadow-lg"
           style={{ animationDelay: "400ms" }}
         >
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-primary" />
-                {language === "ar" ? "أحدث الطلبات" : "Recent Orders"}
+                <TrendingUp className="h-5 w-5 text-primary" />
+                {language === "ar" ? "الإيرادات الشهرية" : "Monthly Revenue"}
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
-                {language === "ar" ? "آخر 5 طلبات في النظام" : "Last 5 orders in the system"}
+                {language === "ar" ? "تتبع إيراداتك على مدار الأشهر" : "Track your revenue over months"}
               </p>
             </div>
             <Badge variant="secondary" className="font-normal">
-              {stats.orders} {language === "ar" ? "طلب" : "orders"}
+              {language === "ar" ? "آخر 7 أشهر" : "Last 7 months"}
             </Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={revenueData}>
+                  <defs>
+                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis 
+                    dataKey="month" 
+                    className="text-xs" 
+                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                  <YAxis 
+                    className="text-xs"
+                    tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                    tickFormatter={(value) => `${value / 1000}k`}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }}
+                    formatter={(value: number) => [formatCurrency(value), language === "ar" ? "الإيرادات" : "Revenue"]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth={2}
+                    fillOpacity={1}
+                    fill="url(#colorRevenue)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Order Status Pie Chart */}
+        <Card 
+          className="lg:col-span-2 animate-fade-in border-0 shadow-lg"
+          style={{ animationDelay: "450ms" }}
+        >
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="h-5 w-5 text-primary" />
+              {language === "ar" ? "حالة الطلبات" : "Order Status"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[200px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={orderStatusData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={70}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {orderStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    formatter={(value: number) => [`${value}%`, ""]}
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mt-4">
+              {orderStatusData.map((status, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div 
+                    className="w-3 h-3 rounded-full" 
+                    style={{ backgroundColor: status.color }}
+                  />
+                  <span className="text-xs text-muted-foreground">{status.name}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Three Column Layout */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Recent Orders */}
+        <Card 
+          className="animate-fade-in border-0 shadow-lg"
+          style={{ animationDelay: "500ms" }}
+        >
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 text-primary" />
+                {language === "ar" ? "أحدث الطلبات" : "Recent Orders"}
+              </CardTitle>
+            </div>
+            <Button variant="ghost" size="sm" className="text-primary">
+              <Eye className="h-4 w-4 me-1" />
+              {language === "ar" ? "عرض الكل" : "View All"}
+            </Button>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -296,38 +562,26 @@ export function AdminOverview() {
                 ))}
               </div>
             ) : recentOrders.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {recentOrders.map((order, index) => (
                   <div
                     key={order.id}
                     className={cn(
-                      "flex items-center gap-4 p-3 rounded-xl transition-colors hover:bg-muted/50",
+                      "flex items-center gap-3 p-2.5 rounded-xl transition-colors hover:bg-muted/50",
                       "animate-fade-in"
                     )}
-                    style={{ animationDelay: `${500 + index * 100}ms` }}
+                    style={{ animationDelay: `${550 + index * 50}ms` }}
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/10">
-                      <ShoppingCart className="h-5 w-5 text-primary" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/10">
+                      <ShoppingCart className="h-4 w-4 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{order.title}</p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span className="font-mono text-xs">{order.order_number}</span>
-                        <span>•</span>
-                        <Clock className="h-3 w-3" />
-                        <span>{formatDate(order.created_at)}</span>
-                      </div>
+                      <p className="font-medium text-sm truncate">{order.title}</p>
+                      <p className="text-xs text-muted-foreground">{order.order_number}</p>
                     </div>
-                    <div className="text-left">
-                      <Badge className={cn("font-normal", getStatusColor(order.status))}>
-                        {getStatusText(order.status)}
-                      </Badge>
-                      {order.total_amount && (
-                        <p className="text-sm font-medium mt-1">
-                          {formatCurrency(order.total_amount)}
-                        </p>
-                      )}
-                    </div>
+                    <Badge className={cn("text-xs", getStatusColor(order.status))}>
+                      {getStatusText(order.status)}
+                    </Badge>
                   </div>
                 ))}
               </div>
@@ -344,84 +598,158 @@ export function AdminOverview() {
           </CardContent>
         </Card>
 
-        {/* Quick Stats */}
+        {/* Top Services */}
         <Card 
-          className="lg:col-span-3 animate-fade-in border-0 shadow-lg"
-          style={{ animationDelay: "500ms" }}
+          className="animate-fade-in border-0 shadow-lg"
+          style={{ animationDelay: "550ms" }}
+        >
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Star className="h-5 w-5 text-amber-500" />
+              {language === "ar" ? "أفضل الخدمات" : "Top Services"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {topServices.length > 0 ? (
+              <div className="space-y-4">
+                {topServices.map((service, index) => (
+                  <div
+                    key={service.id}
+                    className="animate-fade-in"
+                    style={{ animationDelay: `${600 + index * 50}ms` }}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium truncate max-w-[150px]">
+                        {language === "ar" ? service.name_ar || service.name : service.name}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {service.orders_count} {language === "ar" ? "طلب" : "orders"}
+                      </span>
+                    </div>
+                    <Progress 
+                      value={(service.orders_count / 50) * 100} 
+                      className="h-2"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {formatCurrency(service.revenue)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="rounded-full bg-muted p-3 mb-3">
+                  <Package className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground">
+                  {language === "ar" ? "لا توجد خدمات" : "No services"}
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Activity Timeline */}
+        <Card 
+          className="animate-fade-in border-0 shadow-lg"
+          style={{ animationDelay: "600ms" }}
         >
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-primary" />
-              {language === "ar" ? "إحصائيات سريعة" : "Quick Stats"}
+              <Zap className="h-5 w-5 text-violet-500" />
+              {language === "ar" ? "النشاط الأخير" : "Recent Activity"}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Order Status Distribution */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">
-                  {language === "ar" ? "الطلبات المكتملة" : "Completed Orders"}
-                </span>
-                <span className="text-sm text-muted-foreground">75%</span>
+          <CardContent>
+            {activities.length > 0 ? (
+              <div className="relative space-y-4">
+                {/* Timeline line */}
+                <div className="absolute start-[18px] top-2 bottom-2 w-px bg-border" />
+                
+                {activities.map((activity, index) => (
+                  <div
+                    key={activity.id}
+                    className="relative flex gap-3 animate-fade-in"
+                    style={{ animationDelay: `${650 + index * 50}ms` }}
+                  >
+                    <div className={cn(
+                      "relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-background border-2 border-border",
+                      activity.color
+                    )}>
+                      <activity.icon className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 min-w-0 pt-1">
+                      <p className="text-sm font-medium truncate">
+                        {language === "ar" ? activity.titleAr : activity.titleEn}
+                      </p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {formatRelativeTime(activity.time)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <Progress value={75} className="h-2" />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">
-                  {language === "ar" ? "رضا العملاء" : "Customer Satisfaction"}
-                </span>
-                <span className="text-sm text-muted-foreground">92%</span>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="rounded-full bg-muted p-3 mb-3">
+                  <Activity className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground">
+                  {language === "ar" ? "لا يوجد نشاط" : "No activity"}
+                </p>
               </div>
-              <Progress value={92} className="h-2" />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">
-                  {language === "ar" ? "معدل الاستجابة" : "Response Rate"}
-                </span>
-                <span className="text-sm text-muted-foreground">88%</span>
-              </div>
-              <Progress value={88} className="h-2" />
-            </div>
-
-            {/* Status Summary */}
-            <div className="pt-4 border-t">
-              <h4 className="text-sm font-medium mb-3">
-                {language === "ar" ? "ملخص الحالات" : "Status Summary"}
-              </h4>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  <span className="text-sm">
-                    {language === "ar" ? "مكتمل" : "Completed"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-                  <Clock className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm">
-                    {language === "ar" ? "قيد التنفيذ" : "In Progress"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20">
-                  <AlertCircle className="h-4 w-4 text-amber-600" />
-                  <span className="text-sm">
-                    {language === "ar" ? "معلق" : "Pending"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-violet-50 dark:bg-violet-900/20">
-                  <TrendingUp className="h-4 w-4 text-violet-600" />
-                  <span className="text-sm">
-                    {language === "ar" ? "نمو" : "Growth"}
-                  </span>
-                </div>
-              </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       </div>
+
+      {/* Quick Stats Footer */}
+      <Card 
+        className="animate-fade-in border-0 shadow-lg bg-gradient-to-r from-primary/5 via-transparent to-primary/5"
+        style={{ animationDelay: "700ms" }}
+      >
+        <CardContent className="py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-2">
+                <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+              </div>
+              <p className="text-2xl font-bold">75%</p>
+              <p className="text-xs text-muted-foreground">
+                {language === "ar" ? "معدل الإكمال" : "Completion Rate"}
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/30 mb-2">
+                <Clock className="h-6 w-6 text-blue-600" />
+              </div>
+              <p className="text-2xl font-bold">2.5h</p>
+              <p className="text-xs text-muted-foreground">
+                {language === "ar" ? "متوسط وقت الاستجابة" : "Avg Response Time"}
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto rounded-full bg-amber-100 dark:bg-amber-900/30 mb-2">
+                <Star className="h-6 w-6 text-amber-600" />
+              </div>
+              <p className="text-2xl font-bold">4.8</p>
+              <p className="text-xs text-muted-foreground">
+                {language === "ar" ? "تقييم العملاء" : "Customer Rating"}
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto rounded-full bg-violet-100 dark:bg-violet-900/30 mb-2">
+                <TrendingUp className="h-6 w-6 text-violet-600" />
+              </div>
+              <p className="text-2xl font-bold">+23%</p>
+              <p className="text-xs text-muted-foreground">
+                {language === "ar" ? "النمو الشهري" : "Monthly Growth"}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
