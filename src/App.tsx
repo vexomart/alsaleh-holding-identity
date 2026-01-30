@@ -310,19 +310,19 @@ const App = () => {
                 <Route path="/ai-services/predictive-analytics" element={<PredictiveAnalytics />} />
                 <Route path="/ai-services/smart-automation" element={<SmartAutomation />} />
                  <Route path="/ai-services/smart-security" element={<SmartSecurity />} />
-                 <Route path="/free-trial" element={<FreeTrial />} />
-                 <Route path="/automation-system" element={<AutomationSystem />} />
-                 <Route path="/pricing" element={<PricingPage />} />
-                 <Route path="/payment-success" element={<PaymentSuccessPage />} />
-                <Route path="/ai-solutions" element={<AIIntelligence />} />
-                <Route path="/iot-solutions" element={<IoTSolutions />} />
-                <Route path="/cloud-solutions" element={<CloudSolutions />} />
-                <Route path="/security-solutions" element={<SecuritySolutions />} />
-                <Route path="/nlp-solutions" element={<NLPSolutions />} />
-                <Route path="/computer-vision" element={<ComputerVisionPage />} />
-                <Route path="/machine-learning" element={<MachineLearning />} />
-                <Route path="/smart-assistants" element={<SmartAssistants />} />
-                <Route path="/smart-analytics" element={<SmartAnalytics />} />
+                 <Route path="/free-trial" element={<Suspense fallback={<PageLoader />}><FreeTrial /></Suspense>} />
+                 <Route path="/automation-system" element={<Suspense fallback={<PageLoader />}><AutomationSystem /></Suspense>} />
+                 <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
+                 <Route path="/payment-success" element={<Suspense fallback={<PageLoader />}><PaymentSuccessPage /></Suspense>} />
+                <Route path="/ai-solutions" element={<Suspense fallback={<PageLoader />}><AIIntelligence /></Suspense>} />
+                <Route path="/iot-solutions" element={<Suspense fallback={<PageLoader />}><IoTSolutions /></Suspense>} />
+                <Route path="/cloud-solutions" element={<Suspense fallback={<PageLoader />}><CloudSolutions /></Suspense>} />
+                <Route path="/security-solutions" element={<Suspense fallback={<PageLoader />}><SecuritySolutions /></Suspense>} />
+                <Route path="/nlp-solutions" element={<Suspense fallback={<PageLoader />}><NLPSolutions /></Suspense>} />
+                <Route path="/computer-vision" element={<Suspense fallback={<PageLoader />}><ComputerVisionPage /></Suspense>} />
+                <Route path="/machine-learning" element={<Suspense fallback={<PageLoader />}><MachineLearning /></Suspense>} />
+                <Route path="/smart-assistants" element={<Suspense fallback={<PageLoader />}><SmartAssistants /></Suspense>} />
+                <Route path="/smart-analytics" element={<Suspense fallback={<PageLoader />}><SmartAnalytics /></Suspense>} />
                 
                 <Route path="/global-presence" element={<GlobalPresence />} />
                 <Route path="/tech-projects" element={<TechProjects />} />
