@@ -4,27 +4,15 @@
  */
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   Package, 
   Plus, 
   Search, 
-  Edit, 
-  Trash2, 
-  MoreVertical,
-  Eye,
-  CheckCircle,
-  XCircle,
   DollarSign,
   Layers,
-  Image,
-  ArrowUpDown,
-  ChevronUp,
-  ChevronDown,
-  Copy,
-  EyeOff,
-  Receipt,
-  GripVertical
+  CheckCircle,
+  XCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,14 +26,6 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
@@ -61,6 +41,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { updateServicesSortOrder } from '@/lib/api/services';
+import { AnimatedServiceList } from './AnimatedServiceList';
 
 interface Service {
   id: string;
@@ -613,112 +594,39 @@ export function ServicesManagement() {
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
-          ) : filteredServices.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
-              <p>لا توجد خدمات</p>
-            </div>
           ) : (
-            <div className="divide-y">
-              <AnimatePresence>
-                {filteredServices.map((service, index) => (
-                  <motion.div
-                    key={service.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="p-4 hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      {/* Image/Icon */}
-                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
-                        {service.image_url ? (
-                          <img 
-                            src={service.image_url} 
-                            alt={service.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <Package className="h-6 w-6 text-primary" />
-                        )}
-                      </div>
-
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-medium text-foreground truncate">
-                            {service.name_ar || service.name}
-                          </h3>
-                          <Badge variant={service.is_active ? 'default' : 'secondary'} className="text-xs">
-                            {service.is_active ? 'نشط' : 'متوقف'}
-                          </Badge>
-                          {service.category && (
-                            <Badge variant="outline" className="text-xs">
-                              {getCategoryLabel(service.category)}
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground truncate mt-1">
-                          {service.description_ar || service.description || 'لا يوجد وصف'}
-                        </p>
-                        {service.price && (
-                          <p className="text-sm font-medium text-primary mt-1">
-                            {service.price} {service.currency || 'SAR'}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Actions */}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="flex-shrink-0">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedService(service);
-                            setViewDialogOpen(true);
-                          }}>
-                            <Eye className="h-4 w-4 ml-2" />
-                            عرض التفاصيل
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => openEditDialog(service)}>
-                            <Edit className="h-4 w-4 ml-2" />
-                            تعديل
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleToggleStatus(service)}>
-                            {service.is_active ? (
-                              <>
-                                <XCircle className="h-4 w-4 ml-2" />
-                                إلغاء التفعيل
-                              </>
-                            ) : (
-                              <>
-                                <CheckCircle className="h-4 w-4 ml-2" />
-                                تفعيل
-                              </>
-                            )}
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem 
-                            onClick={() => {
-                              setSelectedService(service);
-                              setDeleteDialogOpen(true);
-                            }}
-                            className="text-destructive focus:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4 ml-2" />
-                            حذف
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+            <AnimatedServiceList
+              services={filteredServices}
+              onReorder={async (reorderedServices) => {
+                const orders = reorderedServices.map((s, index) => ({
+                  id: s.id,
+                  sort_order: index,
+                }));
+                try {
+                  await updateServicesSortOrder(orders);
+                  toast({ title: 'تم تحديث الترتيب' });
+                } catch (err) {
+                  console.error('Error updating sort order:', err);
+                  toast({ title: 'خطأ في تحديث الترتيب', variant: 'destructive' });
+                }
+              }}
+              onView={(service) => {
+                setSelectedService(service);
+                setViewDialogOpen(true);
+              }}
+              onEdit={openEditDialog}
+              onDelete={(service) => {
+                setSelectedService(service);
+                setDeleteDialogOpen(true);
+              }}
+              onToggleStatus={handleToggleStatus}
+              onToggleVisibility={handleToggleVisibility}
+              onDuplicate={handleDuplicate}
+              onMoveUp={handleMoveUp}
+              onMoveDown={handleMoveDown}
+              getCategoryLabel={getCategoryLabel}
+              isRTL={true}
+            />
           )}
         </CardContent>
       </Card>
