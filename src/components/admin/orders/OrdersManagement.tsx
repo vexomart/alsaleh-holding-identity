@@ -80,6 +80,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { createInvoicePDF, type InvoiceData } from '@/lib/pdf';
 
 interface Order {
   id: string;
@@ -328,6 +329,57 @@ export function OrdersManagement() {
     toast({
       title: isRTL ? 'تم نسخ رقم الطلب' : 'Order number copied',
     });
+  };
+
+  // Handle PDF download
+  const handleDownloadPDF = async (order: Order) => {
+    try {
+      toast({
+        title: isRTL ? 'جاري إنشاء الفاتورة...' : 'Generating invoice...',
+      });
+
+      const invoiceData: InvoiceData = {
+        invoiceNumber: order.order_number,
+        issueDate: order.created_at ? new Date(order.created_at) : new Date(),
+        dueDate: order.due_date ? new Date(order.due_date) : undefined,
+        status: (order.status as 'pending' | 'paid' | 'overdue' | 'cancelled') || 'pending',
+        
+        customer: {
+          name: isRTL ? 'عميل' : 'Customer',
+          email: 'customer@example.com',
+        },
+        
+        items: [{
+          description: isRTL ? (order.title_ar || order.title) : order.title,
+          quantity: 1,
+          unitPrice: order.total_amount || 0,
+          total: order.total_amount || 0,
+        }],
+        
+        subtotal: order.total_amount || 0,
+        taxRate: 15,
+        taxAmount: (order.total_amount || 0) * 0.15,
+        total: (order.total_amount || 0) * 1.15,
+        
+        currency: order.currency || 'SAR',
+        notes: order.description || undefined,
+      };
+
+      await createInvoicePDF(invoiceData, { 
+        download: true, 
+        filename: `invoice-${order.order_number}.pdf` 
+      });
+
+      toast({
+        title: isRTL ? 'تم تحميل الفاتورة بنجاح' : 'Invoice downloaded successfully',
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
+        variant: 'destructive',
+      });
+    }
   };
 
   // Stats cards data
@@ -702,6 +754,13 @@ export function OrdersManagement() {
                                     }}>
                                       <Copy className="h-4 w-4 me-2" />
                                       {isRTL ? 'نسخ الرقم' : 'Copy Number'}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDownloadPDF(order);
+                                    }}>
+                                      <FileText className="h-4 w-4 me-2" />
+                                      {isRTL ? 'تحميل PDF' : 'Download PDF'}
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuLabel className="text-xs text-muted-foreground">
