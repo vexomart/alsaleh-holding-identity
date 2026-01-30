@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import SEO from '@/components/SEO';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -84,7 +84,7 @@ const PaymentSuccessPage = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      let query = supabase
+      let query = db
         .from('subscriptions')
         .select(`
           *,

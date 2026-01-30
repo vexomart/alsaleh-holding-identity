@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { db, supabase } from "@/integrations/supabase/db";
 import { useToast } from "@/hooks/use-toast";
 
 interface EmailOutboxRecord {
@@ -44,13 +44,12 @@ export const useEmailPipeline = () => {
 
   const fetchEmails = async () => {
     try {
-      let query = supabase
+      let query = db
         .from('email_outbox')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(100);
 
-      // تطبيق الفلاتر
       if (filters.search) {
         query = query.or(`to_email.ilike.%${filters.search}%,subject.ilike.%${filters.search}%`);
       }
@@ -85,15 +84,13 @@ export const useEmailPipeline = () => {
     try {
       const today = new Date().toISOString().split('T')[0];
 
-      // إحصائيات اليوم
-      const { data: todayStats, error: todayError } = await supabase
+      const { data: todayStats, error: todayError } = await db
         .from('email_outbox')
         .select('status')
         .gte('created_at', `${today}T00:00:00.000Z`)
         .lte('created_at', `${today}T23:59:59.999Z`);
 
-      // إحصائيات إجمالية
-      const { data: totalStats, error: totalError } = await supabase
+      const { data: totalStats, error: totalError } = await db
         .from('email_outbox')
         .select('status');
 
@@ -102,11 +99,11 @@ export const useEmailPipeline = () => {
         return;
       }
 
-      const todaySent = todayStats?.filter(s => s.status === 'sent').length || 0;
-      const todayFailed = todayStats?.filter(s => s.status === 'failed').length || 0;
-      const pending = totalStats?.filter(s => s.status === 'pending').length || 0;
-      const totalSent = totalStats?.filter(s => s.status === 'sent').length || 0;
-      const totalFailed = totalStats?.filter(s => s.status === 'failed').length || 0;
+      const todaySent = todayStats?.filter((s: any) => s.status === 'sent').length || 0;
+      const todayFailed = todayStats?.filter((s: any) => s.status === 'failed').length || 0;
+      const pending = totalStats?.filter((s: any) => s.status === 'pending').length || 0;
+      const totalSent = totalStats?.filter((s: any) => s.status === 'sent').length || 0;
+      const totalFailed = totalStats?.filter((s: any) => s.status === 'failed').length || 0;
 
       setStats({
         sent_today: todaySent,
@@ -125,8 +122,7 @@ export const useEmailPipeline = () => {
     try {
       console.log(`🔄 Retrying failed email: ${emailId}`);
 
-      // الحصول على تفاصيل الإيميل
-      const { data: email, error: emailError } = await supabase
+      const { data: email, error: emailError } = await db
         .from('email_outbox')
         .select('*')
         .eq('id', emailId)
@@ -141,8 +137,7 @@ export const useEmailPipeline = () => {
         return;
       }
 
-      // إنشاء job جديد في الطابور
-      const { error: jobError } = await supabase
+      const { error: jobError } = await db
         .from('email_jobs')
         .insert({
           job_type: 'email.send',
@@ -167,8 +162,7 @@ export const useEmailPipeline = () => {
         return;
       }
 
-      // تحديث حالة الإيميل الأصلي
-      await supabase
+      await db
         .from('email_outbox')
         .update({
           status: 'pending',
@@ -182,7 +176,6 @@ export const useEmailPipeline = () => {
         description: "تم إعادة جدولة الإيميل للإرسال",
       });
 
-      // تحديث البيانات
       await fetchEmails();
       await fetchStats();
 
@@ -219,7 +212,6 @@ export const useEmailPipeline = () => {
         description: "تم معالجة طابور الإيميلات بنجاح",
       });
 
-      // تحديث البيانات
       await fetchEmails();
       await fetchStats();
 
@@ -252,7 +244,6 @@ export const useEmailPipeline = () => {
         description: `تم إعادة جدولة ${retriedCount} إيميل`,
       });
 
-      // تحديث البيانات
       await fetchEmails();
       await fetchStats();
 
@@ -272,8 +263,7 @@ export const useEmailPipeline = () => {
         return;
       }
 
-      // البحث عن المستخدم
-      const { data: user, error: userError } = await supabase
+      const { data: user, error: userError } = await db
         .from('profiles')
         .select('user_id')
         .eq('email', userEmail)
@@ -319,7 +309,6 @@ export const useEmailPipeline = () => {
         description: "تم إرسال إيميل الاختبار بنجاح",
       });
 
-      // تحديث البيانات
       await fetchEmails();
       await fetchStats();
 
@@ -338,7 +327,6 @@ export const useEmailPipeline = () => {
     loadData();
   }, [filters]);
 
-  // إعداد Real-time subscriptions
   useEffect(() => {
     const emailSubscription = supabase
       .channel('email_outbox_changes')

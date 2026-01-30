@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import { toast } from '@/hooks/use-toast';
 import { 
   Bell, 
@@ -48,7 +48,7 @@ export default function RealtimePaymentNotifications({
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('payment_transactions')
         .select('id, transaction_id, amount, status, payment_method, customer_name, created_at')
         .eq('user_id', userId || user.id)
@@ -57,9 +57,9 @@ export default function RealtimePaymentNotifications({
 
       if (error) throw error;
 
-      const notificationsData: PaymentNotification[] = (data || []).map(payment => ({
+      const notificationsData: PaymentNotification[] = (data || []).map((payment: any) => ({
         ...payment,
-        is_read: false // You can track this in a separate table if needed
+        is_read: false
       }));
 
       setNotifications(notificationsData);
@@ -80,7 +80,7 @@ export default function RealtimePaymentNotifications({
           table: 'payment_transactions',
           filter: userId ? `user_id=eq.${userId}` : undefined
         },
-        (payload) => {
+        (payload: any) => {
           console.log('Payment notification received:', payload);
           
           if (payload.eventType === 'INSERT') {
@@ -98,7 +98,6 @@ export default function RealtimePaymentNotifications({
             setNotifications(prev => [newNotification, ...prev.slice(0, 9)]);
             setUnreadCount(prev => prev + 1);
 
-            // Show toast notification
             toast({
               title: "💳 معاملة دفع جديدة",
               description: `تم إنشاء معاملة بقيمة ${payload.new.amount} ر.س`,
@@ -112,7 +111,6 @@ export default function RealtimePaymentNotifications({
               )
             );
 
-            // Show status update notification
             const statusText = getStatusText(payload.new.status);
             const isSuccess = ['completed', 'success', 'paid'].includes(payload.new.status?.toLowerCase());
             const isFailed = ['failed', 'rejected', 'cancelled'].includes(payload.new.status?.toLowerCase());
@@ -162,7 +160,7 @@ export default function RealtimePaymentNotifications({
       case 'failed':
       case 'rejected':
       case 'cancelled':
-        return <AlertCircle className="w-4 h-4 text-red-600" />;
+        return <AlertCircle className="w-4 h-4 text-destructive" />;
       default:
         return <Clock className="w-4 h-4 text-amber-600" />;
     }
@@ -180,9 +178,9 @@ export default function RealtimePaymentNotifications({
       case 'failed':
       case 'rejected':
       case 'cancelled':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-destructive/10 text-destructive border-destructive/20';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -202,7 +200,6 @@ export default function RealtimePaymentNotifications({
 
   return (
     <div className={`relative ${className}`}>
-      {/* Notification Bell */}
       <Button
         variant="outline"
         size="sm"
@@ -211,16 +208,15 @@ export default function RealtimePaymentNotifications({
       >
         <Bell className="w-4 h-4" />
         {unreadCount > 0 && (
-          <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs">
+          <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-destructive text-destructive-foreground text-xs">
             {unreadCount > 9 ? '9+' : unreadCount}
           </Badge>
         )}
       </Button>
 
-      {/* Notifications Dropdown */}
       {isOpen && (
         <Card className="absolute top-12 right-0 w-96 max-h-96 overflow-hidden shadow-2xl border-2 z-50">
-          <div className="p-4 border-b bg-gradient-to-r from-primary/5 to-primary-variant/5">
+          <div className="p-4 border-b bg-gradient-to-r from-primary/5 to-primary/10">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-lg flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-primary" />

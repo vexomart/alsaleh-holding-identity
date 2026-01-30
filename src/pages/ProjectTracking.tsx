@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, CheckCircle, AlertCircle, Users, Calendar, DollarSign, Plus } from 'lucide-react';
-import { supabase } from "@/integrations/supabase/client";
+import { db, supabase } from "@/integrations/supabase/db";
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
 
@@ -110,7 +110,7 @@ const ProjectTracking = () => {
 
   const fetchProjects = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('projects')
         .select('*')
         .order('created_at', { ascending: false });
@@ -133,7 +133,7 @@ const ProjectTracking = () => {
   const fetchProjectDetails = async (projectId: string) => {
     try {
       // جلب مراحل المشروع
-      const { data: phasesData, error: phasesError } = await supabase
+      const { data: phasesData, error: phasesError } = await db
         .from('project_phases')
         .select('*')
         .eq('project_id', projectId)
@@ -143,7 +143,7 @@ const ProjectTracking = () => {
       setPhases(phasesData || []);
 
       // جلب تحديثات المشروع
-      const { data: timelineData, error: timelineError } = await supabase
+      const { data: timelineData, error: timelineError } = await db
         .from('project_timeline')
         .select('*')
         .eq('project_id', projectId)

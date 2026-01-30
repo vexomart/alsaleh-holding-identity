@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { AuthUser, AuthSession } from '@/auth/new-auth-system';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -39,7 +39,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
-  // استماع لتغييرات جلسات Supabase لعملاء المنصة
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, supaSession) => {
       try {
@@ -66,7 +65,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUser(mappedUser);
           setSession(mappedSession);
         } else {
-          // لا نفرغ جلسة الأدمن إن كانت موجودة محلياً
           const saved = localStorage.getItem('auth_session');
           if (!saved) {
             setUser(null);
@@ -78,7 +76,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     });
 
-    // التهيئة الأولية من جلسة Supabase الحالية
     supabase.auth.getSession().then(({ data: { session: supaSession } }) => {
       if (supaSession?.user) {
         const mappedUser: AuthUser = {
@@ -108,15 +105,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       subscription.unsubscribe();
     };
   }, []);
+
   const initializeAuth = async () => {
     try {
       setIsLoading(true);
-      // التحقق من الجلسة المحفوظة في localStorage
       const savedSession = localStorage.getItem('auth_session');
       if (savedSession) {
         const sessionData = JSON.parse(savedSession);
-        
-        // التحقق من انتهاء صلاحية الجلسة
         const now = new Date().getTime();
         const expiresAt = new Date(sessionData.expires_at).getTime();
         
@@ -124,7 +119,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setSession(sessionData);
           setUser(sessionData.user);
         } else {
-          // حذف الجلسة المنتهية الصلاحية
           localStorage.removeItem('auth_session');
         }
       }
@@ -143,9 +137,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       let userData: AuthUser | null = null;
 
       if (realm === 'admin') {
-        // حاول أولاً عبر دالة قاعدة البيانات إن وُجدت
         try {
-          const { data, error } = await supabase.rpc('check_admin_credentials', {
+          const { data, error } = await db.rpc('check_admin_credentials', {
             email_input: email,
             password_input: password,
           });
@@ -166,10 +159,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             };
           }
         } catch (_) {
-          // تجاهل ونستخدم التحقق المحلي بالأسفل
+          // Fallback to local check
         }
 
-        // تحقق محلي كخطة بديلة
         if (!userData) {
           const expectedEmail = 'admin@alialshehriholding.com';
           const expectedPassword = 'Ali@@#@@1409';
@@ -188,7 +180,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           };
         }
       } else {
-        // تسجيل دخول العملاء عبر Supabase Auth
         const { data, error } = await supabase.auth.signInWithPassword({
           email: email.trim(),
           password,
@@ -209,7 +200,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
       }
 
-      // إنشاء جلسة
       const sessionData: AuthSession = {
         id: crypto.randomUUID(),
         user_id: userData.id,
@@ -231,17 +221,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
-      // تسجيل الخروج من Supabase (لعملاء المنصة)
       await supabase.auth.signOut().catch(() => {});
-
-      // حذف جلسة الأدمن المحلية إن وجدت
       localStorage.removeItem('auth_session');
-      
-      // إعادة تعيين الحالة
       setUser(null);
       setSession(null);
-      
-      // إعادة توجيه للصفحة الرئيسية
       window.location.href = '/';
     } catch (error) {
       console.error('Error during logout:', error);
@@ -249,7 +232,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const refreshSession = async () => {
-    // سيتم تنفيذ منطق تحديث الجلسة هنا
     console.log('Refresh session called');
   };
 

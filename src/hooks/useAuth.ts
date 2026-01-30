@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { db, supabase } from '@/integrations/supabase/db';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -35,14 +35,13 @@ export const useAuth = () => {
   const location = useLocation();
   const { toast } = useToast();
 
-  // تسجيل محاولات الوصول الفاشلة
   const logUnauthorizedAccess = useCallback(async (attempt: SecurityAttempt) => {
     try {
-      await supabase.from('unauthorized_access_logs').insert({
+      await db.from('unauthorized_access_logs').insert({
         user_id: authState.user?.id || null,
         attempted_path: attempt.path,
         blocked_reason: attempt.reason,
-        ip_address: 'unknown', // سيتم تحديدها بواسطة trigger
+        ip_address: 'unknown',
         user_agent: navigator.userAgent,
         session_id: authState.session?.access_token?.substring(0, 10) || null,
         referer: document.referrer || null,
@@ -57,10 +56,9 @@ export const useAuth = () => {
     }
   }, [authState.user?.id, authState.session?.access_token, authState.userRole, authState.isAuthenticated]);
 
-  // جلب دور المستخدم
   const fetchUserRole = useCallback(async (userId: string): Promise<UserRole> => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
@@ -78,11 +76,9 @@ export const useAuth = () => {
     }
   }, []);
 
-  // التحقق من صحة الجلسة
   const validateSession = useCallback(async (session: Session | null): Promise<boolean> => {
     if (!session) return false;
 
-    // التحقق من انتهاء صلاحية التوكن
     const now = new Date().getTime() / 1000;
     if (session.expires_at && session.expires_at < now) {
       toast({
@@ -96,7 +92,6 @@ export const useAuth = () => {
     return true;
   }, [toast]);
 
-  // تسجيل الخروج الآمن
   const secureLogout = useCallback(async () => {
     try {
       await supabase.auth.signOut();
@@ -109,7 +104,6 @@ export const useAuth = () => {
         error: null,
       });
       
-      // مسح التخزين المحلي
       localStorage.clear();
       sessionStorage.clear();
       
@@ -129,7 +123,6 @@ export const useAuth = () => {
     }
   }, [navigate, toast]);
 
-  // التحقق من الصلاحيات
   const hasPermission = useCallback((requiredRole: UserRole, strictMode: boolean = false): boolean => {
     if (!authState.isAuthenticated || !authState.userRole) return false;
 
@@ -151,9 +144,7 @@ export const useAuth = () => {
     return userLevel >= requiredLevel;
   }, [authState.isAuthenticated, authState.userRole]);
 
-  // حماية المسارات
   const checkRouteAccess = useCallback(async (path: string): Promise<boolean> => {
-    // المسارات العامة
     const publicPaths = ['/', '/login', '/about', '/contact', '/services', '/careers', '/ash'];
     const isPublicPath = publicPaths.some(publicPath => 
       path === publicPath || path.startsWith(publicPath + '/')
@@ -161,7 +152,6 @@ export const useAuth = () => {
 
     if (isPublicPath) return true;
 
-    // التحقق من المصادقة
     if (!authState.isAuthenticated) {
       await logUnauthorizedAccess({
         path,
@@ -182,7 +172,6 @@ export const useAuth = () => {
       return false;
     }
 
-    // التحقق من صلاحيات المسارات المحمية
     if (path.startsWith('/admin')) {
       const hasAdminAccess = hasPermission('admin', true);
       if (!hasAdminAccess) {
@@ -205,7 +194,7 @@ export const useAuth = () => {
 
     if (path.startsWith('/client')) {
       if (!authState.userRole || authState.userRole === 'admin') {
-        return true; // الأدمن يمكنه الوصول لكل شيء
+        return true;
       }
       
       const hasClientAccess = hasPermission('user');
@@ -230,16 +219,13 @@ export const useAuth = () => {
     return true;
   }, [authState.isAuthenticated, authState.userRole, hasPermission, logUnauthorizedAccess, navigate, toast]);
 
-  // إعداد مراقب الجلسة
   useEffect(() => {
     let sessionCheckInterval: NodeJS.Timeout;
 
     const setupAuthListener = async () => {
       try {
-        // الحصول على الجلسة الحالية مع معالجة الأخطاء
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
-        // إذا كان هناك خطأ في refresh token، امسح الجلسة المحلية
         if (error && error.message.includes('refresh_token_not_found')) {
           localStorage.clear();
           sessionStorage.clear();
@@ -270,7 +256,6 @@ export const useAuth = () => {
         setAuthState(prev => ({ ...prev, isLoading: false }));
       }
 
-      // مراقب تغيير حالة المصادقة
       const { data: { subscription } } = supabase.auth.onAuthStateChange(
         async (event, session) => {
           if (event === 'SIGNED_IN' && session) {
@@ -304,7 +289,6 @@ export const useAuth = () => {
         }
       );
 
-      // فحص دوري للجلسة كل 5 دقائق
       sessionCheckInterval = setInterval(async () => {
         const { data: { session: currentSession } } = await supabase.auth.getSession();
         const isValid = await validateSession(currentSession);
@@ -326,7 +310,6 @@ export const useAuth = () => {
     };
   }, [validateSession, fetchUserRole, secureLogout, authState.isAuthenticated]);
 
-  // التحقق من الوصول عند تغيير المسار
   useEffect(() => {
     const checkCurrentPath = async () => {
       if (!authState.isLoading && location.pathname !== '/login') {
