@@ -28,6 +28,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
+import { LanguageProvider } from '@/components/dashboard/LanguageProvider';
 import { useTheme } from 'next-themes';
 import { AIInsightsPanel } from '@/components/ai-dashboard/AIInsightsPanel';
 import { PredictiveAnalytics } from '@/components/ai-dashboard/PredictiveAnalytics';
@@ -36,7 +37,7 @@ import { SmartRecommendations } from '@/components/ai-dashboard/SmartRecommendat
 import { LiveDataWidgets } from '@/components/ai-dashboard/LiveDataWidgets';
 import { AutomatedReports } from '@/components/ai-dashboard/AutomatedReports';
 
-const AIAdminDashboard: React.FC = () => {
+const AIAdminDashboardContent: React.FC = () => {
   const { language, setLanguage, t } = useLanguage();
   const { theme, setTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -331,6 +332,14 @@ const AIAdminDashboard: React.FC = () => {
         </div>
       </main>
     </div>
+  );
+};
+
+const AIAdminDashboard: React.FC = () => {
+  return (
+    <LanguageProvider>
+      <AIAdminDashboardContent />
+    </LanguageProvider>
   );
 };
 
