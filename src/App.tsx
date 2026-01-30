@@ -179,6 +179,7 @@ const SocialResponsibility = lazy(() => import("./pages/SocialResponsibility"));
 // NEW DASHBOARDS - Clean Architecture
 const AuthLogin = lazy(() => import("./pages/auth/Login"));
 const AuthForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const AuthResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const CustomerDashboard = lazy(() => import("./pages/app/Dashboard"));
 
@@ -242,6 +243,7 @@ const App = () => {
                       {/* Auth Routes - CLEAN */}
                       <Route path="/auth/login" element={<Suspense fallback={<PageLoader />}><AuthLogin /></Suspense>} />
                       <Route path="/auth/forgot-password" element={<Suspense fallback={<PageLoader />}><AuthForgotPassword /></Suspense>} />
+                      <Route path="/auth/reset-password" element={<Suspense fallback={<PageLoader />}><AuthResetPassword /></Suspense>} />
                       
                       {/* Admin Dashboard - /admin/* */}
                       <Route path="/admin/*" element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>} />
