@@ -595,25 +595,25 @@ export function OrdersManagement() {
               ) : (
                 <>
                   <div className="overflow-x-auto">
-                    <Table>
+                    <Table className="w-full">
                       <TableHeader>
                         <TableRow className="bg-muted/30 hover:bg-muted/30">
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
-                            {isRTL ? 'التاريخ' : 'Date'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
-                            {isRTL ? 'المبلغ' : 'Amount'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
-                            {isRTL ? 'الحالة' : 'Status'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
-                            {isRTL ? 'العنوان' : 'Title'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
                             {isRTL ? 'رقم الطلب' : 'Order #'}
                           </TableHead>
-                          <TableHead className="w-[50px]"></TableHead>
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
+                            {isRTL ? 'العنوان' : 'Title'}
+                          </TableHead>
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
+                            {isRTL ? 'الحالة' : 'Status'}
+                          </TableHead>
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
+                            {isRTL ? 'المبلغ' : 'Amount'}
+                          </TableHead>
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
+                            {isRTL ? 'التاريخ' : 'Date'}
+                          </TableHead>
+                          <TableHead className="w-[60px]"></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -621,9 +621,9 @@ export function OrdersManagement() {
                           {paginatedOrders.map((order, index) => (
                             <motion.tr
                               key={order.id}
-                              initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: isRTL ? -20 : 20 }}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
                               transition={{ delay: index * 0.03 }}
                               className="group hover:bg-muted/50 cursor-pointer border-b last:border-0"
                               onClick={() => {
@@ -631,23 +631,21 @@ export function OrdersManagement() {
                                 setViewDialogOpen(true);
                               }}
                             >
-                              <TableCell className="text-right">
-                                <div className="space-y-0.5">
-                                  <p className="text-sm">{formatDate(order.created_at)}</p>
-                                  <p className="text-xs text-muted-foreground">{formatTime(order.created_at)}</p>
+                              {/* رقم الطلب */}
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <div className="p-1.5 rounded-lg bg-primary/10">
+                                    <Hash className="h-3.5 w-3.5 text-primary" />
+                                  </div>
+                                  <span className="font-mono text-sm font-semibold text-primary">
+                                    {order.order_number}
+                                  </span>
                                 </div>
                               </TableCell>
-                              <TableCell className="text-right">
-                                <span className="font-semibold">
-                                  {formatCurrency(order.total_amount)}
-                                </span>
-                              </TableCell>
-                              <TableCell className="text-right">
-                                {getStatusBadge(order.status)}
-                              </TableCell>
-                              <TableCell className="min-w-[250px] max-w-[350px] text-right">
+                              {/* العنوان */}
+                              <TableCell className="min-w-[200px] max-w-[300px]">
                                 <div className="space-y-0.5">
-                                  <p className="font-medium line-clamp-2">
+                                  <p className="font-medium line-clamp-1">
                                     {isRTL ? order.title_ar || order.title : order.title}
                                   </p>
                                   {order.description && (
@@ -657,17 +655,25 @@ export function OrdersManagement() {
                                   )}
                                 </div>
                               </TableCell>
-                              <TableCell className="text-right">
-                                <div className="flex items-center gap-2 justify-end">
-                                  <span className="font-mono text-sm font-semibold text-primary">
-                                    {order.order_number}
-                                  </span>
-                                  <div className="p-1.5 rounded-lg bg-primary/10">
-                                    <Hash className="h-3.5 w-3.5 text-primary" />
-                                  </div>
+                              {/* الحالة */}
+                              <TableCell>
+                                {getStatusBadge(order.status)}
+                              </TableCell>
+                              {/* المبلغ */}
+                              <TableCell>
+                                <span className="font-semibold text-foreground">
+                                  {formatCurrency(order.total_amount)}
+                                </span>
+                              </TableCell>
+                              {/* التاريخ */}
+                              <TableCell>
+                                <div className="space-y-0.5">
+                                  <p className="text-sm text-foreground">{formatDate(order.created_at)}</p>
+                                  <p className="text-xs text-muted-foreground">{formatTime(order.created_at)}</p>
                                 </div>
                               </TableCell>
-                              <TableCell className="w-[50px]">
+                              {/* الإجراءات */}
+                              <TableCell className="w-[60px]">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                                     <Button 
@@ -678,7 +684,7 @@ export function OrdersManagement() {
                                       <MoreVertical className="h-4 w-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end" className="w-48">
+                                  <DropdownMenuContent align={isRTL ? "start" : "end"} className="w-48">
                                     <DropdownMenuLabel className="text-xs text-muted-foreground">
                                       {isRTL ? 'إجراءات' : 'Actions'}
                                     </DropdownMenuLabel>
