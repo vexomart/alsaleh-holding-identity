@@ -9,6 +9,7 @@ import { Routes, Route } from 'react-router-dom';
 import { AdminLayout } from '@/components/admin';
 import { AdminOverview } from '@/components/admin/AdminOverview';
 import { UsersManagement } from '@/components/admin/users/UsersManagement';
+import { RolesPermissions } from '@/components/admin/roles/RolesPermissions';
 import { Card, CardContent } from '@/components/ui/card';
 
 // Placeholder for other admin pages
@@ -33,7 +34,7 @@ const AdminDashboard = () => {
       <Routes>
         <Route index element={<AdminOverview />} />
         <Route path="users" element={<UsersManagement />} />
-        <Route path="roles" element={<PlaceholderPage title="الأدوار والصلاحيات" />} />
+        <Route path="roles" element={<RolesPermissions />} />
         <Route path="services" element={<PlaceholderPage title="إدارة الخدمات" />} />
         <Route path="orders" element={<PlaceholderPage title="إدارة الطلبات" />} />
         <Route path="cms/*" element={<PlaceholderPage title="إدارة المحتوى" />} />
