@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, Globe } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, Globe, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,13 +17,21 @@ const loginSchema = z.object({
   password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
 });
 
+const signupSchema = z.object({
+  email: z.string().email('البريد الإلكتروني غير صالح'),
+  password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
+  fullName: z.string().min(2, 'الاسم يجب أن يكون حرفين على الأقل'),
+});
+
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signIn, signUp } = useAuth();
   const { language, setLanguage, t, isRTL } = useLanguage();
   
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -31,30 +39,52 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate
-    const result = loginSchema.safeParse({ email, password });
-    if (!result.success) {
-      toast.error(result.error.errors[0].message);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const { error } = await signIn(email, password);
-      
-      if (error) {
-        toast.error(isRTL ? 'بيانات الدخول غير صحيحة' : 'Invalid credentials');
+    if (isSignUp) {
+      const result = signupSchema.safeParse({ email, password, fullName });
+      if (!result.success) {
+        toast.error(result.error.errors[0].message);
         return;
       }
 
-      toast.success(isRTL ? 'تم تسجيل الدخول بنجاح' : 'Login successful');
-      
-      // Redirect based on role (will be determined by the dashboard)
-      navigate('/app');
-    } catch (error) {
-      toast.error(isRTL ? 'حدث خطأ، حاول مرة أخرى' : 'An error occurred');
-    } finally {
-      setIsLoading(false);
+      setIsLoading(true);
+      try {
+        const { error } = await signUp(email, password, fullName);
+        
+        if (error) {
+          toast.error(isRTL ? 'حدث خطأ في التسجيل' : 'Registration failed');
+          return;
+        }
+
+        toast.success(isRTL ? 'تم إنشاء الحساب! تحقق من بريدك الإلكتروني' : 'Account created! Check your email');
+        setIsSignUp(false);
+      } catch (error) {
+        toast.error(isRTL ? 'حدث خطأ، حاول مرة أخرى' : 'An error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      const result = loginSchema.safeParse({ email, password });
+      if (!result.success) {
+        toast.error(result.error.errors[0].message);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const { error } = await signIn(email, password);
+        
+        if (error) {
+          toast.error(isRTL ? 'بيانات الدخول غير صحيحة' : 'Invalid credentials');
+          return;
+        }
+
+        toast.success(isRTL ? 'تم تسجيل الدخول بنجاح' : 'Login successful');
+        navigate('/admin');
+      } catch (error) {
+        toast.error(isRTL ? 'حدث خطأ، حاول مرة أخرى' : 'An error occurred');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -93,18 +123,42 @@ const Login = () => {
             </div>
             <div>
               <CardTitle className="text-2xl font-bold">
-                {isRTL ? 'تسجيل الدخول' : 'Sign In'}
+                {isSignUp 
+                  ? (isRTL ? 'إنشاء حساب' : 'Create Account')
+                  : (isRTL ? 'تسجيل الدخول' : 'Sign In')}
               </CardTitle>
               <CardDescription className="mt-2">
-                {isRTL 
-                  ? 'أدخل بياناتك للوصول إلى لوحة التحكم' 
-                  : 'Enter your credentials to access the dashboard'}
+                {isSignUp
+                  ? (isRTL ? 'أنشئ حسابك للبدء' : 'Create your account to get started')
+                  : (isRTL ? 'أدخل بياناتك للوصول إلى لوحة التحكم' : 'Enter your credentials to access the dashboard')}
               </CardDescription>
             </div>
           </CardHeader>
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Full Name - Only for signup */}
+              {isSignUp && (
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="text-sm font-medium">
+                    {isRTL ? 'الاسم الكامل' : 'Full Name'}
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      type="text"
+                      placeholder={isRTL ? 'أدخل اسمك الكامل' : 'Enter your full name'}
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="ps-10"
+                      required={isSignUp}
+                      disabled={isLoading}
+                    />
+                  </div>
+                </div>
+              )}
+
               {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">
@@ -152,25 +206,27 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 space-x-reverse">
-                  <Checkbox
-                    id="remember"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                  />
-                  <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
-                    {t('auth.remember_me')}
-                  </Label>
+              {/* Remember Me & Forgot Password - Only for login */}
+              {!isSignUp && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 space-x-reverse">
+                    <Checkbox
+                      id="remember"
+                      checked={rememberMe}
+                      onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                    />
+                    <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
+                      {t('auth.remember_me')}
+                    </Label>
+                  </div>
+                  <Link
+                    to="/auth/forgot-password"
+                    className="text-sm text-primary hover:underline"
+                  >
+                    {t('auth.forgot_password')}
+                  </Link>
                 </div>
-                <Link
-                  to="/auth/forgot-password"
-                  className="text-sm text-primary hover:underline"
-                >
-                  {t('auth.forgot_password')}
-                </Link>
-              </div>
+              )}
 
               {/* Submit Button */}
               <Button
@@ -182,11 +238,26 @@ const Login = () => {
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    {t('auth.login')}
+                    {isSignUp 
+                      ? (isRTL ? 'إنشاء حساب' : 'Create Account')
+                      : t('auth.login')}
                     <ArrowRight className={`w-4 h-4 ${isRTL ? 'me-2 rotate-180' : 'ms-2'}`} />
                   </>
                 )}
               </Button>
+
+              {/* Toggle Sign Up / Sign In */}
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="text-sm text-primary hover:underline"
+                >
+                  {isSignUp
+                    ? (isRTL ? 'لديك حساب؟ سجل دخولك' : 'Already have an account? Sign in')
+                    : (isRTL ? 'ليس لديك حساب؟ أنشئ حساباً' : "Don't have an account? Sign up")}
+                </button>
+              </div>
             </form>
 
             {/* Footer */}

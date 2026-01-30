@@ -30,6 +30,7 @@ interface AuthContextType {
   isAdmin: boolean;
   isCustomer: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   hasRole: (role: AppRole) => boolean;
@@ -131,6 +132,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const signUp = async (email: string, password: string, fullName?: string) => {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: {
+            full_name: fullName || email.split('@')[0],
+          },
+        },
+      });
+      return { error: error ? new Error(error.message) : null };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -166,6 +185,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isAdmin,
     isCustomer,
     signIn,
+    signUp,
     signOut,
     resetPassword,
     hasRole,
