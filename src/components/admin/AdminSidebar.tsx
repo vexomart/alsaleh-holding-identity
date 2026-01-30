@@ -64,7 +64,7 @@ const mainNavItems: NavItem[] = [
     titleEn: "Users",
     icon: Users,
     href: ROUTES.ADMIN.USERS,
-    permission: "users.view_all",
+    permission: "users.view",
   },
   {
     titleKey: "roles",
@@ -80,7 +80,7 @@ const mainNavItems: NavItem[] = [
     titleEn: "Services",
     icon: Package,
     href: ROUTES.ADMIN.SERVICES,
-    permission: "services.view_all",
+    permission: "services.view",
   },
   {
     titleKey: "orders",
@@ -88,7 +88,7 @@ const mainNavItems: NavItem[] = [
     titleEn: "Orders",
     icon: ShoppingCart,
     href: ROUTES.ADMIN.ORDERS,
-    permission: "orders.view_all",
+    permission: "orders.view",
   },
 ];
 
@@ -107,7 +107,7 @@ const cmsNavItems: NavItem[] = [
     titleEn: "Menus",
     icon: FileText,
     href: ROUTES.ADMIN.CMS.MENUS,
-    permission: "cms.menus.view",
+    permission: "cms.menus.edit",
   },
   {
     titleKey: "media",
@@ -115,7 +115,7 @@ const cmsNavItems: NavItem[] = [
     titleEn: "Media",
     icon: FileText,
     href: ROUTES.ADMIN.CMS.MEDIA,
-    permission: "cms.media.view",
+    permission: "cms.media.upload",
   },
 ];
 
@@ -134,7 +134,7 @@ const systemNavItems: NavItem[] = [
     titleEn: "Notifications",
     icon: Bell,
     href: ROUTES.ADMIN.NOTIFICATIONS,
-    permission: "notifications.manage",
+    permission: "notifications.view",
   },
   {
     titleKey: "audit",
