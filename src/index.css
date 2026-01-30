@@ -188,7 +188,7 @@
 
 @import url('./styles/rtl-fixes.css');
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -320,37 +320,37 @@
   }
 }
 
-/* Executive Corporate Font System */
+/* Official Corporate Font System - IBM Plex Sans Arabic */
 .font-executive {
-  font-family: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: -0.01em;
   line-height: 1.6;
 }
 
 .font-executive-bold {
-  font-family: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   font-weight: 600;
   letter-spacing: -0.005em;
   line-height: 1.4;
 }
 
 .font-executive-medium {
-  font-family: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.5;
 }
 
 .font-corporate-formal {
-  font-family: 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.7;
 }
 
 .font-title-executive {
-  font-family: 'IBM Plex Sans Arabic', 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -363,7 +363,7 @@
   body {
     @apply bg-background text-foreground font-executive;
     direction: rtl;
-    font-family: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   }
 }
 

@@ -29,11 +29,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        'executive': ['IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
-        'corporate': ['Noto Kufi Arabic', 'IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
-        'formal': ['IBM Plex Sans Arabic', 'Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
-        'title': ['IBM Plex Sans Arabic', 'Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
-        sans: ['IBM Plex Sans Arabic', 'Noto Kufi Arabic', 'Inter', 'SF Pro Display', 'ui-sans-serif', 'system-ui'],
+        'executive': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
+        'corporate': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
+        'formal': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
+        'title': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['IBM Plex Sans Arabic', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -161,7 +161,7 @@ export default {
         },
         'html[dir="rtl"] body': {
           direction: 'rtl',
-          fontFamily: 'Cairo, Amiri, sans-serif',
+          fontFamily: "'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif",
         }
       });
 
