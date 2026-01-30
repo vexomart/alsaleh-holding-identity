@@ -1,35 +1,54 @@
-/* RTL Fixes for Car Rental Website and Other Components */
+/**
+ * RTL Enforcement Stylesheet
+ * 
+ * CHECKLIST STATUS:
+ * ✅ HTML dir="rtl" - Set in index.html
+ * ✅ CSS logical properties - Using margin-inline, padding-inline
+ * ✅ Icons mirrored - Directional icons flip automatically
+ * ✅ Tables RTL aligned - Right-to-left column order
+ * ✅ PDFs match UI - arabic-pdf.ts handles RTL
+ * ✅ No mixed LTR - Controlled exceptions only
+ * 
+ * Arabic is DEFAULT. English switches to LTR cleanly.
+ */
 
-/* إصلاحات عامة للRTL */
+/* ===========================================
+   BASE RTL RULES
+   =========================================== */
+
 [dir="rtl"] {
   text-align: right;
 }
 
 [dir="rtl"] body {
-  font-family: 'Cairo', 'Amiri', sans-serif;
+  /* Official Corporate Font - IBM Plex Sans Arabic */
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   direction: rtl;
 }
 
-/* إصلاحات خاصة بالأزرار */
-[dir="rtl"] .flex {
-  flex-direction: row-reverse;
+[dir="ltr"] body {
+  font-family: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  direction: ltr;
+  text-align: left;
 }
 
-[dir="rtl"] .flex-row {
-  flex-direction: row-reverse;
-}
+/* ===========================================
+   LOGICAL PROPERTY OVERRIDES
+   Convert physical to logical for RTL support
+   =========================================== */
 
-/* إصلاحات التوسيط والهوامش */
+/* Margin Inline Start/End (replaces ml/mr) */
 [dir="rtl"] .ml-auto {
-  margin-left: 0;
-  margin-right: auto;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
 }
 
 [dir="rtl"] .mr-auto {
-  margin-right: 0;
-  margin-left: auto;
+  margin-inline-end: auto;
+  margin-inline-start: 0;
 }
 
+/* Text Alignment - Swap for RTL */
 [dir="rtl"] .text-left {
   text-align: right;
 }
@@ -38,201 +57,251 @@
   text-align: left;
 }
 
-/* إصلاحات خاصة بالكروت والمحتوى */
-[dir="rtl"] .card {
-  text-align: right;
+/* ===========================================
+   FLEXBOX RTL HANDLING
+   Note: Only apply to specific layout containers
+   =========================================== */
+
+/* Navigation and button groups reverse */
+[dir="rtl"] nav .flex:not(.flex-col),
+[dir="rtl"] .btn-group,
+[dir="rtl"] .nav-links {
+  flex-direction: row-reverse;
 }
 
-[dir="rtl"] .grid {
-  direction: rtl;
+/* Preserve flex direction for vertical layouts */
+[dir="rtl"] .flex-col {
+  flex-direction: column;
 }
 
-/* إصلاحات خاصة بالـNavigation */
-[dir="rtl"] nav {
-  direction: rtl;
+/* ===========================================
+   ICON MIRRORING
+   Directional icons should flip in RTL
+   =========================================== */
+
+[dir="rtl"] .icon-mirror,
+[dir="rtl"] [data-icon="arrow-right"],
+[dir="rtl"] [data-icon="arrow-left"],
+[dir="rtl"] [data-icon="chevron-right"],
+[dir="rtl"] [data-icon="chevron-left"] {
+  transform: scaleX(-1);
 }
 
-[dir="rtl"] .navbar {
-  direction: rtl;
+/* Icons with text - adjust spacing */
+[dir="rtl"] .icon-start {
+  margin-inline-end: 0.5rem;
+  margin-inline-start: 0;
 }
 
-/* إصلاحات خاصة بالأيقونات */
-[dir="rtl"] .icon-left {
-  margin-left: 0;
-  margin-right: 0.5rem;
+[dir="rtl"] .icon-end {
+  margin-inline-start: 0.5rem;
+  margin-inline-end: 0;
 }
 
-[dir="rtl"] .icon-right {
-  margin-right: 0;
-  margin-left: 0.5rem;
-}
+/* ===========================================
+   TABLES - RTL ALIGNMENT
+   =========================================== */
 
-/* إصلاحات خاصة بالجداول */
 [dir="rtl"] table {
   direction: rtl;
 }
 
-[dir="rtl"] th, [dir="rtl"] td {
+[dir="rtl"] th,
+[dir="rtl"] td {
   text-align: right;
 }
 
-/* إصلاحات خاصة بالفورمات */
-[dir="rtl"] input, [dir="rtl"] textarea, [dir="rtl"] select {
+/* Table header border adjustment */
+[dir="rtl"] th:first-child {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+[dir="rtl"] th:last-child {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+/* ===========================================
+   FORM CONTROLS
+   =========================================== */
+
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select {
   text-align: right;
   direction: rtl;
 }
 
-[dir="rtl"] .form-control {
+/* Keep numbers LTR within RTL context */
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="tel"] {
+  direction: ltr;
   text-align: right;
 }
 
-/* إصلاحات خاصة بالـDropdown */
-[dir="rtl"] .dropdown-menu {
-  left: auto;
-  right: 0;
+/* ===========================================
+   DROPDOWNS & POPOVERS
+   =========================================== */
+
+[dir="rtl"] .dropdown-menu,
+[dir="rtl"] [role="menu"] {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
 }
 
-/* إصلاحات خاصة بالـModal */
-[dir="rtl"] .modal-content {
+[dir="rtl"] .popover {
   text-align: right;
 }
 
-/* إصلاحات خاصة بالـBreadcrumb */
-[dir="rtl"] .breadcrumb {
+/* ===========================================
+   SIDEBAR
+   =========================================== */
+
+[dir="rtl"] .sidebar,
+[dir="rtl"] [data-sidebar] {
+  inset-inline-end: 0;
+  inset-inline-start: auto;
+}
+
+/* ===========================================
+   SPACING UTILITIES (RTL-aware)
+   =========================================== */
+
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-inline-start: 0.5rem;
+  margin-inline-end: 0;
+}
+
+[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  margin-inline-start: 0.75rem;
+  margin-inline-end: 0;
+}
+
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-inline-start: 1rem;
+  margin-inline-end: 0;
+}
+
+[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-inline-start: 1.5rem;
+  margin-inline-end: 0;
+}
+
+[dir="rtl"] .gap-x-2 {
+  column-gap: 0.5rem;
+}
+
+/* ===========================================
+   EXCEPTIONS - KEEP LTR
+   Elements that should remain LTR in Arabic
+   =========================================== */
+
+/* Phone numbers, emails, URLs always LTR */
+[dir="rtl"] .ltr-content,
+[dir="rtl"] .phone-number,
+[dir="rtl"] .email,
+[dir="rtl"] .url,
+[dir="rtl"] .code,
+[dir="rtl"] code,
+[dir="rtl"] pre {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: embed;
+}
+
+/* Prices - numbers LTR but right-aligned */
+[dir="rtl"] .price,
+[dir="rtl"] [data-price] {
+  direction: ltr;
+  text-align: right;
+  unicode-bidi: embed;
+}
+
+/* Progress bars maintain LTR fill */
+[dir="rtl"] .progress,
+[dir="rtl"] [role="progressbar"] {
+  direction: ltr;
+}
+
+/* Charts and graphs LTR */
+[dir="rtl"] .chart-container,
+[dir="rtl"] .recharts-wrapper {
+  direction: ltr;
+}
+
+/* Loading spinners - preserve rotation */
+[dir="rtl"] .loading-spinner,
+[dir="rtl"] .animate-spin {
+  /* Don't flip rotation */
+}
+
+/* ===========================================
+   COMPONENT-SPECIFIC FIXES
+   =========================================== */
+
+/* Cards */
+[dir="rtl"] .card {
+  text-align: right;
+}
+
+/* Badges */
+[dir="rtl"] .badge {
+  margin-inline-start: 0.25rem;
+  margin-inline-end: 0;
+}
+
+/* Alerts */
+[dir="rtl"] .alert,
+[dir="rtl"] [role="alert"] {
+  text-align: right;
+}
+
+/* Toast notifications */
+[dir="rtl"] .toast,
+[dir="rtl"] [data-sonner-toast] {
+  text-align: right;
+}
+
+/* Tooltips - centered */
+[dir="rtl"] .tooltip,
+[dir="rtl"] [role="tooltip"] {
+  text-align: center;
+}
+
+/* Modals */
+[dir="rtl"] .modal-content,
+[dir="rtl"] [role="dialog"] {
+  text-align: right;
+}
+
+/* Breadcrumbs */
+[dir="rtl"] .breadcrumb,
+[dir="rtl"] nav[aria-label="breadcrumb"] {
   direction: rtl;
 }
 
-/* إصلاحات خاصة بالـPagination */
+/* Pagination */
 [dir="rtl"] .pagination {
   direction: rtl;
 }
 
-/* إصلاحات خاصة بالـSidebar */
-[dir="rtl"] .sidebar {
-  right: 0;
-  left: auto;
-}
-
-/* إصلاحات للأزرار مع الأيقونات */
-[dir="rtl"] .btn .icon {
-  margin-left: 0.5rem;
-  margin-right: 0;
-}
-
-/* إصلاحات للـList Groups */
-[dir="rtl"] .list-group-item {
-  text-align: right;
-}
-
-/* إصلاحات للـBadges */
-[dir="rtl"] .badge {
-  margin-left: 0.25rem;
-  margin-right: 0;
-}
-
-/* إصلاحات للـAlerts */
-[dir="rtl"] .alert {
-  text-align: right;
-}
-
-/* إصلاحات للـToasts */
-[dir="rtl"] .toast {
-  text-align: right;
-}
-
-/* إصلاحات للـProgress bars */
-[dir="rtl"] .progress {
-  direction: ltr; /* النسبة تبقى من اليسار لليمين */
-}
-
-/* إصلاحات للـCarousel */
-[dir="rtl"] .carousel {
-  direction: ltr; /* للحفاظ على الحركة الطبيعية */
-}
-
-[dir="rtl"] .carousel-inner {
+/* Tabs */
+[dir="rtl"] [role="tablist"] {
   direction: rtl;
 }
 
-/* إصلاحات للـTabs */
-[dir="rtl"] .nav-tabs {
+[dir="rtl"] [role="tabpanel"] {
+  text-align: right;
+}
+
+/* ===========================================
+   DASHBOARD-SPECIFIC
+   =========================================== */
+
+[dir="rtl"] .dashboard {
   direction: rtl;
 }
 
-[dir="rtl"] .tab-content {
-  text-align: right;
-}
-
-/* إصلاحات خاصة بموقع تأجير السيارات */
-[dir="rtl"] .car-card {
-  text-align: right;
-}
-
-[dir="rtl"] .feature-list {
-  text-align: right;
-}
-
-[dir="rtl"] .hero-section {
-  text-align: right;
-}
-
-[dir="rtl"] .service-grid {
-  direction: rtl;
-}
-
-/* إصلاحات للـFooter */
-[dir="rtl"] footer {
-  text-align: right;
-}
-
-[dir="rtl"] .footer-links {
-  text-align: right;
-}
-
-/* إصلاحات للـContactUs */
-[dir="rtl"] .contact-info {
-  text-align: right;
-}
-
-/* إصلاحات للعناصر المرنة */
-[dir="rtl"] .flex-row-reverse {
-  flex-direction: row;
-}
-
-[dir="rtl"] .justify-start {
-  justify-content: flex-end;
-}
-
-[dir="rtl"] .justify-end {
-  justify-content: flex-start;
-}
-
-/* إصلاحات للـSpacing */
-[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
-  margin-right: 0.5rem;
-  margin-left: 0;
-}
-
-[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
-  margin-right: 1rem;
-  margin-left: 0;
-}
-
-[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
-  margin-right: 1.5rem;
-  margin-left: 0;
-}
-
-/* إصلاحات للـIcons في الأزرار */
-[dir="rtl"] .btn-icon-left {
-  flex-direction: row-reverse;
-}
-
-[dir="rtl"] .btn-icon-right {
-  flex-direction: row;
-}
-
-/* إصلاحات خاصة بالفواتير */
+/* Invoice tables maintain RTL */
 [dir="rtl"] .invoice {
   text-align: right;
 }
@@ -241,53 +310,112 @@
   direction: rtl;
 }
 
-/* إصلاحات للـLoading states */
-[dir="rtl"] .loading-spinner {
-  direction: ltr; /* للحفاظ على اتجاه الدوران */
+/* ===========================================
+   ANIMATION DIRECTION FIXES
+   Ensure animations respect RTL
+   =========================================== */
+
+[dir="rtl"] .animate-slide-in-right {
+  animation-name: slideInLeft;
 }
 
-/* إصلاحات للـTooltips */
-[dir="rtl"] .tooltip {
-  text-align: center; /* التوسط في التلميحات */
+[dir="rtl"] .animate-slide-in-left {
+  animation-name: slideInRight;
 }
 
-/* إصلاحات للـPopover */
-[dir="rtl"] .popover {
-  text-align: right;
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
-/* استثناءات للعناصر التي يجب أن تبقى LTR */
-[dir="rtl"] .ltr-content {
-  direction: ltr;
-  text-align: left;
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
-[dir="rtl"] .phone-number, 
-[dir="rtl"] .email, 
-[dir="rtl"] .url, 
-[dir="rtl"] .code {
-  direction: ltr;
-  text-align: left;
-}
+/* ===========================================
+   GRID DIRECTION
+   =========================================== */
 
-/* إصلاحات للمنتجات والعروض */
-[dir="rtl"] .product-grid {
+[dir="rtl"] .grid {
   direction: rtl;
 }
 
-[dir="rtl"] .product-card {
-  text-align: right;
-}
-
-[dir="rtl"] .price {
-  direction: ltr; /* الأسعار تبقى من اليسار لليمين */
-}
-
-/* إصلاحات للـDashboard */
-[dir="rtl"] .dashboard {
+/* Product and service grids */
+[dir="rtl"] .product-grid,
+[dir="rtl"] .service-grid {
   direction: rtl;
 }
 
-[dir="rtl"] .chart-container {
-  direction: ltr; /* المخططات تبقى LTR */
+[dir="rtl"] .product-card,
+[dir="rtl"] .service-card {
+  text-align: right;
+}
+
+/* ===========================================
+   FOOTER
+   =========================================== */
+
+[dir="rtl"] footer {
+  text-align: right;
+}
+
+[dir="rtl"] .footer-links {
+  text-align: right;
+}
+
+/* ===========================================
+   LTR MODE RESETS
+   Clean switch to English
+   =========================================== */
+
+[dir="ltr"] .ml-auto {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+[dir="ltr"] .mr-auto {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+[dir="ltr"] .text-left {
+  text-align: left;
+}
+
+[dir="ltr"] .text-right {
+  text-align: right;
+}
+
+[dir="ltr"] nav .flex:not(.flex-col) {
+  flex-direction: row;
+}
+
+[dir="ltr"] table {
+  direction: ltr;
+}
+
+[dir="ltr"] th,
+[dir="ltr"] td {
+  text-align: left;
+}
+
+[dir="ltr"] input,
+[dir="ltr"] textarea,
+[dir="ltr"] select {
+  text-align: left;
+  direction: ltr;
+}
+
+[dir="ltr"] .sidebar {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
 }
