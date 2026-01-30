@@ -214,6 +214,57 @@ export type Database = {
           },
         ]
       }
+      order_events: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          new_value: Json | null
+          order_id: string
+          performed_by: string | null
+          previous_value: Json | null
+          tenant_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          new_value?: Json | null
+          order_id: string
+          performed_by?: string | null
+          previous_value?: Json | null
+          tenant_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          new_value?: Json | null
+          order_id?: string
+          performed_by?: string | null
+          previous_value?: Json | null
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           assigned_to: string | null
@@ -288,6 +339,57 @@ export type Database = {
           },
           {
             foreignKeyName: "orders_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      page_sections: {
+        Row: {
+          content: Json | null
+          created_at: string | null
+          id: string
+          is_visible: boolean | null
+          page_id: string
+          section_type: string
+          sort_order: number | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean | null
+          page_id: string
+          section_type: string
+          sort_order?: number | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean | null
+          page_id?: string
+          section_type?: string
+          sort_order?: number | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_sections_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "page_sections_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
@@ -677,6 +779,10 @@ export type Database = {
     }
     Functions: {
       get_user_tenant_id: { Args: { _user_id: string }; Returns: string }
+      has_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -689,6 +795,7 @@ export type Database = {
         Args: { _tenant_id?: string; _user_id: string }
         Returns: boolean
       }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role:
