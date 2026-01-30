@@ -12,6 +12,8 @@ import { SecurityHeaders } from "@/components/SecurityHeaders";
 import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { TemplateVariableBlocker } from "@/components/TemplateVariableBlocker";
+import { AuthProvider } from "@/hooks/useAuth";
+import { LanguageProvider } from "@/hooks/useLanguage";
 
 import Index from "./pages/Index";
 
@@ -222,8 +224,10 @@ const App = () => {
           <ReCaptchaProvider>
             <MobileOptimizer>
               <BrowserRouter>
-                <div className="min-h-screen bg-background mobile-text">
-                  <div className="relative z-10 mobile-tap mobile-scroll">
+                <AuthProvider>
+                  <LanguageProvider>
+                    <div className="min-h-screen bg-background mobile-text">
+                      <div className="relative z-10 mobile-tap mobile-scroll">
                     <SecurityHeaders />
                     <TemplateVariableBlocker />
                     <AnalyticsProvider />
@@ -436,9 +440,11 @@ const App = () => {
                       
                       {/* 404 */}
                       <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFound /></Suspense>} />
-                    </Routes>
-                  </div>
-                </div>
+                        </Routes>
+                      </div>
+                    </div>
+                  </LanguageProvider>
+                </AuthProvider>
               </BrowserRouter>
             </MobileOptimizer>
           </ReCaptchaProvider>
