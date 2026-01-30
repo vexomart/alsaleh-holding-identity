@@ -42,7 +42,7 @@ import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { updateServicesSortOrder } from '@/lib/api/services';
 import { AnimatedServiceList } from './AnimatedServiceList';
-
+import { useAdminRealtime } from '@/hooks/useAdminRealtime';
 interface Service {
   id: string;
   name: string;
@@ -129,6 +129,16 @@ export function ServicesManagement() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<ServiceFormData>(initialFormData);
   const [saving, setSaving] = useState(false);
+
+  // Real-time sync with delivery confirmations
+  const {
+    isServicesConnected,
+    syncStatus,
+  } = useAdminRealtime({
+    tenantId: undefined, // TODO: Get from context
+    enabled: true,
+    showDeliveryToasts: true,
+  });
 
   // Fetch services
   const fetchServices = async () => {
@@ -445,9 +455,24 @@ export function ServicesManagement() {
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">إدارة الخدمات</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-foreground">إدارة الخدمات</h1>
+            {/* Real-time sync status indicator */}
+            <span 
+              className={cn(
+                "w-2 h-2 rounded-full transition-colors duration-200",
+                isServicesConnected ? "bg-green-500" : "bg-muted"
+              )}
+              title={isServicesConnected ? "متصل في الوقت الفعلي" : "غير متصل"}
+            />
+          </div>
           <p className="text-muted-foreground text-sm mt-1">
             إدارة وتنظيم الخدمات المتاحة
+            {syncStatus.confirmedDeliveries > 0 && (
+              <span className="text-xs text-green-600 mr-2">
+                • {syncStatus.confirmedDeliveries} تسليم مؤكد
+              </span>
+            )}
           </p>
         </div>
         <Button onClick={openAddDialog} className="gap-2">
