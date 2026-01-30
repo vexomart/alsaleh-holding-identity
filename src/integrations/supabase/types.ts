@@ -585,11 +585,15 @@ export type Database = {
           icon: string | null
           id: string
           image_url: string | null
+          include_vat: boolean | null
           is_active: boolean | null
+          is_visible_to_customers: boolean | null
           metadata: Json | null
           name: string
           name_ar: string | null
           price: number | null
+          short_description: string | null
+          short_description_ar: string | null
           sort_order: number | null
           tenant_id: string | null
           updated_at: string | null
@@ -603,11 +607,15 @@ export type Database = {
           icon?: string | null
           id?: string
           image_url?: string | null
+          include_vat?: boolean | null
           is_active?: boolean | null
+          is_visible_to_customers?: boolean | null
           metadata?: Json | null
           name: string
           name_ar?: string | null
           price?: number | null
+          short_description?: string | null
+          short_description_ar?: string | null
           sort_order?: number | null
           tenant_id?: string | null
           updated_at?: string | null
@@ -621,11 +629,15 @@ export type Database = {
           icon?: string | null
           id?: string
           image_url?: string | null
+          include_vat?: boolean | null
           is_active?: boolean | null
+          is_visible_to_customers?: boolean | null
           metadata?: Json | null
           name?: string
           name_ar?: string | null
           price?: number | null
+          short_description?: string | null
+          short_description_ar?: string | null
           sort_order?: number | null
           tenant_id?: string | null
           updated_at?: string | null
@@ -778,6 +790,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_next_service_sort_order: {
+        Args: { p_tenant_id?: string }
+        Returns: number
+      }
+      get_services_by_category: {
+        Args: { p_include_inactive?: boolean; p_tenant_id?: string }
+        Returns: {
+          category: string
+          services: Json
+        }[]
+      }
       get_user_tenant_id: { Args: { _user_id: string }; Returns: string }
       has_permission: {
         Args: { _permission: string; _user_id: string }
@@ -796,6 +819,10 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      update_services_sort_order: {
+        Args: { p_service_orders: Json }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role:
