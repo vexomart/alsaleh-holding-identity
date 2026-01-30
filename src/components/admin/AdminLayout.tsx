@@ -54,9 +54,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className={cn("min-h-screen flex w-full", isRTL && "flex-row-reverse")}>
+      <div className="min-h-screen flex w-full">
         <AdminSidebar />
-        <SidebarInset className="flex flex-col flex-1">
+        <SidebarInset className="flex flex-col flex-1 min-w-0">
           <AdminHeader />
           <main className="flex-1 overflow-auto p-4 md:p-6">
             {children}
