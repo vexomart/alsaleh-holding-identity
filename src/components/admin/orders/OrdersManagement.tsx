@@ -598,22 +598,22 @@ export function OrdersManagement() {
                     <Table>
                       <TableHeader>
                         <TableRow className="bg-muted/30 hover:bg-muted/30">
-                          <TableHead className="w-[50px]"></TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'رقم الطلب' : 'Order #'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'العنوان' : 'Title'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'الحالة' : 'Status'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'المبلغ' : 'Amount'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
                             {isRTL ? 'التاريخ' : 'Date'}
                           </TableHead>
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
+                            {isRTL ? 'المبلغ' : 'Amount'}
+                          </TableHead>
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
+                            {isRTL ? 'الحالة' : 'Status'}
+                          </TableHead>
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
+                            {isRTL ? 'العنوان' : 'Title'}
+                          </TableHead>
+                          <TableHead className="font-semibold text-xs uppercase tracking-wider text-right">
+                            {isRTL ? 'رقم الطلب' : 'Order #'}
+                          </TableHead>
+                          <TableHead className="w-[50px]"></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -631,6 +631,42 @@ export function OrdersManagement() {
                                 setViewDialogOpen(true);
                               }}
                             >
+                              <TableCell className="text-right">
+                                <div className="space-y-0.5">
+                                  <p className="text-sm">{formatDate(order.created_at)}</p>
+                                  <p className="text-xs text-muted-foreground">{formatTime(order.created_at)}</p>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <span className="font-semibold">
+                                  {formatCurrency(order.total_amount)}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {getStatusBadge(order.status)}
+                              </TableCell>
+                              <TableCell className="min-w-[250px] max-w-[350px] text-right">
+                                <div className="space-y-0.5">
+                                  <p className="font-medium line-clamp-2">
+                                    {isRTL ? order.title_ar || order.title : order.title}
+                                  </p>
+                                  {order.description && (
+                                    <p className="text-xs text-muted-foreground line-clamp-1">
+                                      {order.description}
+                                    </p>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex items-center gap-2 justify-end">
+                                  <span className="font-mono text-sm font-semibold text-primary">
+                                    {order.order_number}
+                                  </span>
+                                  <div className="p-1.5 rounded-lg bg-primary/10">
+                                    <Hash className="h-3.5 w-3.5 text-primary" />
+                                  </div>
+                                </div>
+                              </TableCell>
                               <TableCell className="w-[50px]">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
@@ -642,7 +678,7 @@ export function OrdersManagement() {
                                       <MoreVertical className="h-4 w-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent align={isRTL ? "start" : "end"} className="w-48">
+                                  <DropdownMenuContent align="end" className="w-48">
                                     <DropdownMenuLabel className="text-xs text-muted-foreground">
                                       {isRTL ? 'إجراءات' : 'Actions'}
                                     </DropdownMenuLabel>
@@ -682,42 +718,6 @@ export function OrdersManagement() {
                                     ))}
                                   </DropdownMenuContent>
                                 </DropdownMenu>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <div className="p-1.5 rounded-lg bg-primary/10">
-                                    <Hash className="h-3.5 w-3.5 text-primary" />
-                                  </div>
-                                  <span className="font-mono text-sm font-semibold text-primary">
-                                    {order.order_number}
-                                  </span>
-                                </div>
-                              </TableCell>
-                              <TableCell className="min-w-[250px] max-w-[350px]">
-                                <div className="space-y-0.5">
-                                  <p className="font-medium line-clamp-2">
-                                    {isRTL ? order.title_ar || order.title : order.title}
-                                  </p>
-                                  {order.description && (
-                                    <p className="text-xs text-muted-foreground line-clamp-1">
-                                      {order.description}
-                                    </p>
-                                  )}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                {getStatusBadge(order.status)}
-                              </TableCell>
-                              <TableCell>
-                                <span className="font-semibold">
-                                  {formatCurrency(order.total_amount)}
-                                </span>
-                              </TableCell>
-                              <TableCell>
-                                <div className="space-y-0.5">
-                                  <p className="text-sm">{formatDate(order.created_at)}</p>
-                                  <p className="text-xs text-muted-foreground">{formatTime(order.created_at)}</p>
-                                </div>
                               </TableCell>
                             </motion.tr>
                           ))}
