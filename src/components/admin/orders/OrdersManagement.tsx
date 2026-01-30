@@ -414,22 +414,23 @@ export function OrdersManagement() {
             
             <div className="flex items-center gap-3 flex-wrap">
               <Button 
-                className="bg-white text-primary hover:bg-white/90 shadow-lg gap-2"
+                className="bg-white text-primary hover:bg-white/90 shadow-lg gap-2 min-w-fit"
                 size="lg"
               >
-                <Plus className="h-5 w-5" />
-                {isRTL ? 'طلب جديد' : 'New Order'}
+                <Plus className="h-5 w-5 shrink-0" />
+                <span>{isRTL ? 'طلب جديد' : 'New Order'}</span>
               </Button>
               <Button 
                 variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 gap-2"
+                className="border-white/30 bg-white/10 text-white hover:bg-white/20 gap-2 min-w-fit"
               >
-                <Download className="h-4 w-4" />
-                {isRTL ? 'تصدير' : 'Export'}
+                <Download className="h-4 w-4 shrink-0" />
+                <span>{isRTL ? 'تصدير' : 'Export'}</span>
               </Button>
               <Button
                 variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 gap-2"
+                size="icon"
+                className="border-white/30 bg-white/10 text-white hover:bg-white/20"
                 onClick={() => {
                   setRefreshing(true);
                   fetchOrders();
@@ -692,13 +693,13 @@ export function OrdersManagement() {
                                   </span>
                                 </div>
                               </TableCell>
-                              <TableCell>
+                              <TableCell className="min-w-[250px] max-w-[350px]">
                                 <div className="space-y-0.5">
-                                  <p className="font-medium line-clamp-1">
+                                  <p className="font-medium line-clamp-2">
                                     {isRTL ? order.title_ar || order.title : order.title}
                                   </p>
                                   {order.description && (
-                                    <p className="text-xs text-muted-foreground line-clamp-1 max-w-[200px]">
+                                    <p className="text-xs text-muted-foreground line-clamp-1">
                                       {order.description}
                                     </p>
                                   )}
