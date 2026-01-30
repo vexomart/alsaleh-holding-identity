@@ -367,27 +367,27 @@ function ServiceListItem({
           </DropdownMenuTrigger>
           <DropdownMenuContent align={isRTL ? "start" : "end"}>
             <DropdownMenuItem onClick={() => onView(service)}>
-              <Eye className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+              <Eye className="h-4 w-4 me-2" />
               عرض التفاصيل
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onEdit(service)}>
-              <Edit className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+              <Edit className="h-4 w-4 me-2" />
               تعديل
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onDuplicate(service)}>
-              <Copy className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+              <Copy className="h-4 w-4 me-2" />
               نسخ
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onToggleStatus(service)}>
               {service.is_active ? (
                 <>
-                  <XCircle className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+                  <XCircle className="h-4 w-4 me-2" />
                   إلغاء التفعيل
                 </>
               ) : (
                 <>
-                  <CheckCircle className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+                  <CheckCircle className="h-4 w-4 me-2" />
                   تفعيل
                 </>
               )}
@@ -395,12 +395,12 @@ function ServiceListItem({
             <DropdownMenuItem onClick={() => onToggleVisibility(service)}>
               {service.is_visible_to_customers ? (
                 <>
-                  <EyeOff className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+                  <EyeOff className="h-4 w-4 me-2" />
                   إخفاء عن العملاء
                 </>
               ) : (
                 <>
-                  <Eye className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+                  <Eye className="h-4 w-4 me-2" />
                   إظهار للعملاء
                 </>
               )}
@@ -410,7 +410,7 @@ function ServiceListItem({
               onClick={() => onDelete(service)}
               className="text-destructive focus:text-destructive"
             >
-              <Trash2 className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+              <Trash2 className="h-4 w-4 me-2" />
               حذف
             </DropdownMenuItem>
           </DropdownMenuContent>
