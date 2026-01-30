@@ -411,16 +411,16 @@ export function OrdersManagement() {
                   <p>{language === 'ar' ? 'لا توجد طلبات' : 'No orders found'}</p>
                 </div>
               ) : (
-                <div className="rounded-lg border overflow-hidden">
-                  <Table>
+                <div className="rounded-lg border overflow-hidden overflow-x-auto">
+                  <Table className="w-full">
                     <TableHeader>
                       <TableRow className="bg-muted/50">
-                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'رقم الطلب' : 'Order #'}</TableHead>
-                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'العنوان' : 'Title'}</TableHead>
-                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'الحالة' : 'Status'}</TableHead>
-                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'المبلغ' : 'Amount'}</TableHead>
+                        <TableHead className="font-semibold w-[50px] text-center"></TableHead>
                         <TableHead className="font-semibold text-right">{language === 'ar' ? 'التاريخ' : 'Date'}</TableHead>
-                        <TableHead className="font-semibold w-[50px]"></TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'المبلغ' : 'Amount'}</TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'الحالة' : 'Status'}</TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'العنوان' : 'Title'}</TableHead>
+                        <TableHead className="font-semibold text-right">{language === 'ar' ? 'رقم الطلب' : 'Order #'}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -438,23 +438,7 @@ export function OrdersManagement() {
                               setViewDialogOpen(true);
                             }}
                           >
-                            <TableCell className="font-mono text-sm font-medium text-right">
-                              {order.order_number}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div>
-                                <p className="font-medium">{language === 'ar' ? order.title_ar || order.title : order.title}</p>
-                                {order.description && (
-                                  <p className="text-xs text-muted-foreground truncate max-w-[200px]">
-                                    {order.description}
-                                  </p>
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right">{getStatusBadge(order.status)}</TableCell>
-                            <TableCell className="font-medium text-right">{formatCurrency(order.total_amount)}</TableCell>
-                            <TableCell className="text-muted-foreground text-right">{formatDate(order.created_at)}</TableCell>
-                            <TableCell>
+                            <TableCell className="text-center">
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                                   <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -487,6 +471,22 @@ export function OrdersManagement() {
                                   ))}
                                 </DropdownMenuContent>
                               </DropdownMenu>
+                            </TableCell>
+                            <TableCell className="text-muted-foreground text-right">{formatDate(order.created_at)}</TableCell>
+                            <TableCell className="font-medium text-right">{formatCurrency(order.total_amount)}</TableCell>
+                            <TableCell className="text-right">{getStatusBadge(order.status)}</TableCell>
+                            <TableCell className="text-right">
+                              <div>
+                                <p className="font-medium">{language === 'ar' ? order.title_ar || order.title : order.title}</p>
+                                {order.description && (
+                                  <p className="text-xs text-muted-foreground truncate max-w-[200px] mr-auto">
+                                    {order.description}
+                                  </p>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell className="font-mono text-sm font-medium text-right">
+                              {order.order_number}
                             </TableCell>
                           </motion.tr>
                         ))}
