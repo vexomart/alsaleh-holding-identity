@@ -1,6 +1,6 @@
 /**
  * Services Management - Admin Dashboard
- * Full CRUD with animations and RTL support
+ * Full CRUD with animations, RTL support, and advanced features
  */
 
 import { useState, useEffect } from 'react';
@@ -18,7 +18,13 @@ import {
   DollarSign,
   Layers,
   Image,
-  ArrowUpDown
+  ArrowUpDown,
+  ChevronUp,
+  ChevronDown,
+  Copy,
+  EyeOff,
+  Receipt,
+  GripVertical
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,6 +44,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import {
   Select,
@@ -53,6 +60,7 @@ import { db } from '@/integrations/supabase/db';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { updateServicesSortOrder } from '@/lib/api/services';
 
 interface Service {
   id: string;
@@ -60,12 +68,16 @@ interface Service {
   name_ar: string | null;
   description: string | null;
   description_ar: string | null;
+  short_description: string | null;
+  short_description_ar: string | null;
   price: number | null;
   currency: string | null;
+  include_vat: boolean | null;
   category: string | null;
   icon: string | null;
   image_url: string | null;
   is_active: boolean | null;
+  is_visible_to_customers: boolean | null;
   sort_order: number | null;
   tenant_id: string | null;
   created_at: string | null;
@@ -77,12 +89,16 @@ interface ServiceFormData {
   name_ar: string;
   description: string;
   description_ar: string;
+  short_description: string;
+  short_description_ar: string;
   price: string;
   currency: string;
+  include_vat: boolean;
   category: string;
   icon: string;
   image_url: string;
   is_active: boolean;
+  is_visible_to_customers: boolean;
   sort_order: string;
 }
 
@@ -91,12 +107,16 @@ const initialFormData: ServiceFormData = {
   name_ar: '',
   description: '',
   description_ar: '',
+  short_description: '',
+  short_description_ar: '',
   price: '',
   currency: 'SAR',
+  include_vat: false,
   category: '',
   icon: '',
   image_url: '',
   is_active: true,
+  is_visible_to_customers: true,
   sort_order: '0',
 };
 
@@ -106,6 +126,10 @@ const categories = [
   { value: 'technical', label: 'تقني', labelEn: 'Technical' },
   { value: 'financial', label: 'مالي', labelEn: 'Financial' },
   { value: 'marketing', label: 'تسويق', labelEn: 'Marketing' },
+  { value: 'development', label: 'تطوير', labelEn: 'Development' },
+  { value: 'design', label: 'تصميم', labelEn: 'Design' },
+  { value: 'support', label: 'دعم فني', labelEn: 'Support' },
+  { value: 'training', label: 'تدريب', labelEn: 'Training' },
   { value: 'other', label: 'أخرى', labelEn: 'Other' },
 ];
 
@@ -208,12 +232,16 @@ export function ServicesManagement() {
         name_ar: formData.name_ar || null,
         description: formData.description || null,
         description_ar: formData.description_ar || null,
+        short_description: formData.short_description || null,
+        short_description_ar: formData.short_description_ar || null,
         price: formData.price ? parseFloat(formData.price) : null,
         currency: formData.currency || 'SAR',
+        include_vat: formData.include_vat,
         category: formData.category || null,
         icon: formData.icon || null,
         image_url: formData.image_url || null,
         is_active: formData.is_active,
+        is_visible_to_customers: formData.is_visible_to_customers,
         sort_order: parseInt(formData.sort_order) || 0,
       };
 
@@ -295,6 +323,105 @@ export function ServicesManagement() {
     }
   };
 
+  // Handle toggle visibility
+  const handleToggleVisibility = async (service: Service) => {
+    try {
+      const { error } = await db
+        .from('services')
+        .update({ is_visible_to_customers: !service.is_visible_to_customers })
+        .eq('id', service.id);
+
+      if (error) throw error;
+      
+      toast({ 
+        title: service.is_visible_to_customers ? 'تم إخفاء الخدمة عن العملاء' : 'الخدمة مرئية للعملاء الآن' 
+      });
+    } catch (err) {
+      console.error('Error toggling visibility:', err);
+      toast({
+        title: 'خطأ في تغيير الظهور',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  // Handle move up
+  const handleMoveUp = async (service: Service) => {
+    const currentIndex = filteredServices.findIndex(s => s.id === service.id);
+    if (currentIndex <= 0) return;
+
+    const newServices = [...filteredServices];
+    [newServices[currentIndex - 1], newServices[currentIndex]] = 
+      [newServices[currentIndex], newServices[currentIndex - 1]];
+    
+    const orders = newServices.map((s, index) => ({
+      id: s.id,
+      sort_order: index,
+    }));
+
+    try {
+      await updateServicesSortOrder(orders);
+      toast({ title: 'تم تحديث الترتيب' });
+    } catch (err) {
+      console.error('Error updating sort order:', err);
+      toast({ title: 'خطأ في تحديث الترتيب', variant: 'destructive' });
+    }
+  };
+
+  // Handle move down
+  const handleMoveDown = async (service: Service) => {
+    const currentIndex = filteredServices.findIndex(s => s.id === service.id);
+    if (currentIndex < 0 || currentIndex >= filteredServices.length - 1) return;
+
+    const newServices = [...filteredServices];
+    [newServices[currentIndex], newServices[currentIndex + 1]] = 
+      [newServices[currentIndex + 1], newServices[currentIndex]];
+    
+    const orders = newServices.map((s, index) => ({
+      id: s.id,
+      sort_order: index,
+    }));
+
+    try {
+      await updateServicesSortOrder(orders);
+      toast({ title: 'تم تحديث الترتيب' });
+    } catch (err) {
+      console.error('Error updating sort order:', err);
+      toast({ title: 'خطأ في تحديث الترتيب', variant: 'destructive' });
+    }
+  };
+
+  // Handle duplicate service
+  const handleDuplicate = async (service: Service) => {
+    try {
+      const maxSortOrder = Math.max(...services.map(s => s.sort_order || 0), 0) + 1;
+      
+      const { error } = await db
+        .from('services')
+        .insert({
+          name: `${service.name} (نسخة)`,
+          name_ar: service.name_ar ? `${service.name_ar} (نسخة)` : null,
+          description: service.description,
+          description_ar: service.description_ar,
+          price: service.price,
+          currency: service.currency,
+          include_vat: service.include_vat,
+          category: service.category,
+          icon: service.icon,
+          image_url: service.image_url,
+          is_active: false,
+          is_visible_to_customers: service.is_visible_to_customers,
+          sort_order: maxSortOrder,
+        });
+
+      if (error) throw error;
+      toast({ title: 'تم نسخ الخدمة بنجاح' });
+    } catch (err) {
+      console.error('Error duplicating service:', err);
+      toast({ title: 'خطأ في نسخ الخدمة', variant: 'destructive' });
+    }
+  };
+
   // Open edit dialog
   const openEditDialog = (service: Service) => {
     setSelectedService(service);
@@ -303,12 +430,16 @@ export function ServicesManagement() {
       name_ar: service.name_ar || '',
       description: service.description || '',
       description_ar: service.description_ar || '',
+      short_description: service.short_description || '',
+      short_description_ar: service.short_description_ar || '',
       price: service.price?.toString() || '',
       currency: service.currency || 'SAR',
+      include_vat: service.include_vat ?? false,
       category: service.category || '',
       icon: service.icon || '',
       image_url: service.image_url || '',
       is_active: service.is_active ?? true,
+      is_visible_to_customers: service.is_visible_to_customers ?? true,
       sort_order: service.sort_order?.toString() || '0',
     });
     setIsEditing(true);
