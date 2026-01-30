@@ -196,6 +196,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const SocialResponsibility = lazy(() => import("./pages/SocialResponsibility"));
 const CustomerDashboard = lazy(() => import("./pages/CustomerDashboard"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AIAdminDashboard = lazy(() => import("./pages/AIAdminDashboard"));
 
 
 // Loading component for better UX
@@ -449,6 +450,9 @@ const App = () => {
 
               {/* Admin Dashboard */}
               <Route path="/admin-dashboard" element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>} />
+
+              {/* AI Admin Dashboard */}
+              <Route path="/ai-dashboard" element={<Suspense fallback={<PageLoader />}><AIAdminDashboard /></Suspense>} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
