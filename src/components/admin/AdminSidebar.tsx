@@ -1,6 +1,6 @@
 /**
- * Admin Sidebar - Enterprise Grade Design
- * Corporate professional style with micro-interactions
+ * Admin Sidebar - Modern Enterprise Design
+ * Ultra-modern corporate style with smooth animations & full RTL support
  */
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,14 +17,13 @@ import {
   Settings, 
   LogOut,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Building2,
   Image,
   Menu as MenuIcon,
   Sparkles,
-  TrendingUp,
-  Headphones,
-  CreditCard,
-  Wallet
+  X
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -43,6 +42,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -52,7 +52,14 @@ import {
 } from "@/components/ui/collapsible";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface NavItem {
   titleKey: string;
@@ -181,7 +188,7 @@ export function AdminSidebar() {
   const { language, isRTL } = useLanguage();
   const { profile, signOut } = useAuth();
   const { can, isSuperAdmin } = useRBAC();
-  const { state } = useSidebar();
+  const { state, toggleSidebar, setOpenMobile, openMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -208,115 +215,211 @@ export function AdminSidebar() {
     navigate(ROUTES.AUTH.LOGIN);
   };
 
+  const handleNavClick = (href: string) => {
+    navigate(href);
+    // Close mobile sidebar on navigation
+    if (openMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   const NavItem = ({ item, index = 0 }: { item: NavItem; index?: number }) => {
     const isActive = currentPath === item.href;
     const Icon = item.icon;
 
-    return (
-      <SidebarMenuItem>
-        <SidebarMenuButton
-          asChild
-          isActive={isActive}
-          tooltip={isCollapsed ? getTitle(item) : undefined}
-          className="group/item relative"
-        >
-          <motion.a
-            href={item.href}
-            initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className={cn(
-              "flex items-center gap-3 transition-all duration-200 rounded-lg",
-              isActive 
-                ? "bg-primary/10 text-primary font-medium shadow-sm" 
-                : "hover:bg-muted/80"
-            )}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate(item.href);
-            }}
-          >
-            <div className={cn(
-              "flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200",
-              isActive 
-                ? "bg-primary text-primary-foreground shadow-md" 
-                : "bg-muted/50 text-muted-foreground group-hover/item:bg-muted group-hover/item:text-foreground"
+    const itemContent = (
+      <motion.div
+        initial={{ opacity: 0, x: isRTL ? 15 : -15 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: index * 0.03, duration: 0.2 }}
+        onClick={() => handleNavClick(item.href)}
+        className={cn(
+          "group/item relative flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-300",
+          isActive 
+            ? "bg-gradient-to-l from-primary/15 to-primary/5 text-primary shadow-sm border border-primary/20" 
+            : "hover:bg-muted/60 text-muted-foreground hover:text-foreground"
+        )}
+      >
+        {/* Active Indicator Line */}
+        <AnimatePresence>
+          {isActive && (
+            <motion.div
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              exit={{ scaleY: 0 }}
+              className={cn(
+                "absolute top-1/2 -translate-y-1/2 h-6 w-1 rounded-full bg-gradient-to-b from-primary to-primary/60",
+                isRTL ? "-left-1" : "-right-1"
+              )}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Icon Container */}
+        <div className={cn(
+          "flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-300 shrink-0",
+          isActive 
+            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" 
+            : "bg-muted/40 text-muted-foreground group-hover/item:bg-muted group-hover/item:text-foreground group-hover/item:scale-105"
+        )}>
+          <Icon className="h-[18px] w-[18px]" />
+        </div>
+
+        {/* Text & Badge */}
+        {!isCollapsed && (
+          <>
+            <span className={cn(
+              "flex-1 truncate text-sm font-medium transition-colors",
+              isActive && "font-semibold"
             )}>
-              <Icon className="h-4 w-4" />
-            </div>
-            {!isCollapsed && (
-              <span className="flex-1 truncate">{getTitle(item)}</span>
-            )}
-            {!isCollapsed && item.badge && (
+              {getTitle(item)}
+            </span>
+            {item.badge && (
               <Badge 
                 className={cn(
-                  "h-5 min-w-5 rounded-full text-[10px] font-medium text-white px-1.5",
+                  "h-5 min-w-5 rounded-full text-[10px] font-bold text-white px-1.5 shadow-sm",
                   item.badgeColor || "bg-primary"
                 )}
               >
-                {item.badge}
+                {item.badge > 99 ? "99+" : item.badge}
               </Badge>
             )}
-            {isActive && (
-              <motion.div
-                layoutId="activeIndicator"
-                className={cn(
-                  "absolute h-8 w-1 rounded-full bg-primary",
-                  isRTL ? "left-0" : "right-0"
-                )}
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-              />
-            )}
-          </motion.a>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
+          </>
+        )}
+      </motion.div>
     );
+
+    if (isCollapsed) {
+      return (
+        <SidebarMenuItem>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {itemContent}
+              </TooltipTrigger>
+              <TooltipContent 
+                side={isRTL ? "left" : "right"} 
+                className="flex items-center gap-2 font-medium"
+              >
+                {getTitle(item)}
+                {item.badge && (
+                  <Badge className={cn("h-4 text-[10px]", item.badgeColor || "bg-primary")}>
+                    {item.badge}
+                  </Badge>
+                )}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </SidebarMenuItem>
+      );
+    }
+
+    return <SidebarMenuItem>{itemContent}</SidebarMenuItem>;
   };
+
+  const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="text-[11px] font-bold text-muted-foreground/60 uppercase tracking-widest px-3 mb-2"
+    >
+      {children}
+    </motion.div>
+  );
 
   return (
     <Sidebar 
       side={isRTL ? "right" : "left"} 
       collapsible="icon"
-      className="border-sidebar-border bg-gradient-to-b from-background to-muted/20"
+      className={cn(
+        "border-0 bg-gradient-to-b from-card via-card to-muted/30",
+        "shadow-xl shadow-black/5"
+      )}
     >
       {/* Header */}
-      <SidebarHeader className="border-b border-sidebar-border/50">
+      <SidebarHeader className="relative border-b border-border/40 bg-gradient-to-b from-muted/30 to-transparent">
         <div className={cn(
-          "flex items-center gap-3 px-3 py-4",
+          "flex items-center gap-3 px-4 py-5",
           isCollapsed && "justify-center px-2"
         )}>
-          <div className="relative">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/25">
+          {/* Logo */}
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative cursor-pointer"
+            onClick={() => handleNavClick(ROUTES.ADMIN.OVERVIEW)}
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/80 text-primary-foreground shadow-xl shadow-primary/30 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
               <Building2 className="h-6 w-6" />
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 border-2 border-background" />
-          </div>
-          {!isCollapsed && (
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex flex-col overflow-hidden"
-            >
-              <span className="font-bold text-foreground tracking-tight">
-                {language === "ar" ? "الصالح القابضة" : "AlSaleh Holding"}
-              </span>
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <Sparkles className="h-3 w-3 text-primary" />
-                {language === "ar" ? "لوحة الإدارة" : "Admin Console"}
-              </span>
-            </motion.div>
-          )}
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-green-500 border-2 border-card shadow-lg shadow-green-500/50" 
+            />
+          </motion.div>
+
+          {/* Brand Text */}
+          <AnimatePresence>
+            {!isCollapsed && (
+              <motion.div 
+                initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: isRTL ? 10 : -10 }}
+                className="flex flex-col overflow-hidden"
+              >
+                <span className="font-bold text-base text-foreground tracking-tight leading-tight">
+                  {language === "ar" ? "الصالح القابضة" : "AlSaleh Holding"}
+                </span>
+                <span className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                  <Sparkles className="h-3 w-3 text-primary animate-pulse" />
+                  {language === "ar" ? "لوحة الإدارة" : "Admin Console"}
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
+        {/* Collapse Toggle Button */}
+        <motion.div
+          className={cn(
+            "absolute top-1/2 -translate-y-1/2 z-10",
+            isRTL ? "-left-3" : "-right-3"
+          )}
+        >
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleSidebar}
+            className="h-6 w-6 rounded-full border-border/60 bg-card shadow-lg hover:bg-muted hover:scale-110 transition-transform hidden md:flex"
+          >
+            {isRTL ? (
+              isCollapsed ? <ChevronLeft className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />
+            ) : (
+              isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />
+            )}
+          </Button>
+        </motion.div>
+
+        {/* Mobile Close Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setOpenMobile(false)}
+          className="absolute top-3 left-3 h-8 w-8 rounded-lg md:hidden"
+        >
+          <X className="h-4 w-4" />
+        </Button>
       </SidebarHeader>
 
       {/* Content */}
-      <SidebarContent className="px-2">
+      <SidebarContent className="px-3 py-4 custom-scrollbar">
         {/* Main Navigation */}
-        <SidebarGroup className="pt-4">
+        <SidebarGroup>
           {!isCollapsed && (
-            <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider px-3 mb-2">
+            <SectionLabel>
               {language === "ar" ? "الرئيسية" : "Main Menu"}
-            </SidebarGroupLabel>
+            </SectionLabel>
           )}
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
@@ -330,12 +433,12 @@ export function AdminSidebar() {
         {/* Business Navigation */}
         {filteredBusinessNav.length > 0 && (
           <>
-            <SidebarSeparator className="my-4 bg-border/50" />
+            <SidebarSeparator className="my-4 bg-border/30" />
             <SidebarGroup>
               {!isCollapsed && (
-                <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider px-3 mb-2">
+                <SectionLabel>
                   {language === "ar" ? "إدارة الأعمال" : "Business"}
-                </SidebarGroupLabel>
+                </SectionLabel>
               )}
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-1">
@@ -351,16 +454,14 @@ export function AdminSidebar() {
         {/* CMS Navigation */}
         {filteredCmsNav.length > 0 && (
           <>
-            <SidebarSeparator className="my-4 bg-border/50" />
+            <SidebarSeparator className="my-4 bg-border/30" />
             <SidebarGroup>
               {!isCollapsed ? (
                 <Collapsible defaultOpen={isCmsActive} className="group/collapsible">
-                  <SidebarGroupLabel asChild className="px-3 mb-2">
-                    <CollapsibleTrigger className="flex w-full items-center justify-between text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider hover:text-muted-foreground transition-colors">
-                      {language === "ar" ? "إدارة المحتوى" : "Content"}
-                      <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
-                    </CollapsibleTrigger>
-                  </SidebarGroupLabel>
+                  <CollapsibleTrigger className="flex w-full items-center justify-between px-3 mb-2 text-[11px] font-bold text-muted-foreground/60 uppercase tracking-widest hover:text-muted-foreground transition-colors">
+                    <span>{language === "ar" ? "إدارة المحتوى" : "Content"}</span>
+                    <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300 group-data-[state=open]/collapsible:rotate-180" />
+                  </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarGroupContent>
                       <SidebarMenu className="space-y-1">
@@ -387,12 +488,12 @@ export function AdminSidebar() {
         {/* System Navigation */}
         {filteredSystemNav.length > 0 && (
           <>
-            <SidebarSeparator className="my-4 bg-border/50" />
+            <SidebarSeparator className="my-4 bg-border/30" />
             <SidebarGroup>
               {!isCollapsed && (
-                <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider px-3 mb-2">
+                <SectionLabel>
                   {language === "ar" ? "النظام والأدوات" : "System"}
-                </SidebarGroupLabel>
+                </SectionLabel>
               )}
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-1">
@@ -407,49 +508,84 @@ export function AdminSidebar() {
       </SidebarContent>
 
       {/* Footer - User Profile */}
-      <SidebarFooter className="border-t border-sidebar-border/50 p-2">
+      <SidebarFooter className="border-t border-border/40 p-3 bg-gradient-to-t from-muted/30 to-transparent">
         <SidebarMenu>
+          {/* User Card */}
           <SidebarMenuItem>
-            <div className={cn(
-              "flex items-center gap-3 rounded-xl p-3 bg-muted/30 transition-colors hover:bg-muted/50",
-              isCollapsed && "justify-center p-2"
-            )}>
-              <div className="relative">
-                <Avatar className="h-10 w-10 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
+            <motion.div 
+              whileHover={{ scale: isCollapsed ? 1 : 1.01 }}
+              className={cn(
+                "flex items-center gap-3 rounded-xl p-3 bg-gradient-to-l from-muted/50 to-muted/20 border border-border/40 transition-all duration-300 hover:border-border/60 hover:shadow-sm",
+                isCollapsed && "justify-center p-2"
+              )}
+            >
+              <div className="relative shrink-0">
+                <Avatar className="h-10 w-10 ring-2 ring-primary/20 ring-offset-2 ring-offset-card shadow-lg">
                   <AvatarImage src={profile?.avatar_url || undefined} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-medium">
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/70 text-primary-foreground font-bold text-sm">
                     {profile?.full_name?.charAt(0) || profile?.email?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 border-2 border-background" />
+                <motion.div 
+                  animate={{ scale: [1, 1.15, 1] }}
+                  transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
+                  className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 border-2 border-card shadow-lg shadow-green-500/40" 
+                />
               </div>
-              {!isCollapsed && (
-                <div className="flex flex-1 flex-col overflow-hidden">
-                  <span className="truncate text-sm font-semibold text-foreground">
-                    {profile?.full_name || profile?.email}
-                  </span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {isSuperAdmin 
-                      ? (language === "ar" ? "مدير النظام" : "Super Admin")
-                      : (language === "ar" ? "مدير" : "Administrator")}
-                  </span>
-                </div>
-              )}
-            </div>
+              <AnimatePresence>
+                {!isCollapsed && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-1 flex-col overflow-hidden min-w-0"
+                  >
+                    <span className="truncate text-sm font-semibold text-foreground">
+                      {profile?.full_name || profile?.email?.split("@")[0] || "User"}
+                    </span>
+                    <span className="truncate text-[11px] text-muted-foreground font-medium">
+                      {isSuperAdmin 
+                        ? (language === "ar" ? "مدير النظام" : "Super Admin")
+                        : (language === "ar" ? "مدير" : "Administrator")}
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           </SidebarMenuItem>
-          <SidebarMenuItem className="mt-1">
-            <SidebarMenuButton
-              onClick={handleSignOut}
-              tooltip={isCollapsed ? (language === "ar" ? "تسجيل الخروج" : "Sign Out") : undefined}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all duration-200"
-            >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-destructive/10">
-                <LogOut className="h-4 w-4" />
-              </div>
-              {!isCollapsed && (
-                <span className="font-medium">{language === "ar" ? "تسجيل الخروج" : "Sign Out"}</span>
-              )}
-            </SidebarMenuButton>
+
+          {/* Sign Out Button */}
+          <SidebarMenuItem className="mt-2">
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleSignOut}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-300",
+                      "text-destructive/80 hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/20",
+                      isCollapsed && "justify-center px-2"
+                    )}
+                  >
+                    <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-destructive/10 shrink-0">
+                      <LogOut className="h-[18px] w-[18px]" />
+                    </div>
+                    {!isCollapsed && (
+                      <span className="font-medium text-sm">
+                        {language === "ar" ? "تسجيل الخروج" : "Sign Out"}
+                      </span>
+                    )}
+                  </motion.div>
+                </TooltipTrigger>
+                {isCollapsed && (
+                  <TooltipContent side={isRTL ? "left" : "right"}>
+                    {language === "ar" ? "تسجيل الخروج" : "Sign Out"}
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
