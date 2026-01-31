@@ -28,13 +28,13 @@ export async function testArabicPDFRendering(): Promise<{ success: boolean; mess
     const generator = new ArabicPDFGenerator({
       title: 'اختبار عرض النص العربي',
       subject: 'اختبار PDF',
-      fontFamily: 'amiri',
+      fontFamily: 'cairo',
       companyInfo: {
         name: 'ASH Holding',
         nameAr: 'شركة ASH Holding',
         address: 'المملكة العربية السعودية - الرياض',
         phone: '+966 11 123 4567',
-        email: 'info@ashholding.com',
+        email: 'info@ash-holding.sa',
       },
     });
 
@@ -42,7 +42,8 @@ export async function testArabicPDFRendering(): Promise<{ success: boolean; mess
     const content: PDFContent[] = [
       // Title
       {
-        text: 'فاتورة ضريبية',
+        // PROOF OF FIX phrase (must not render as squares)
+        text: 'فاتورة ضريبية - اختبار العربية',
         style: 'title',
         margin: [0, 0, 0, 20],
       },
