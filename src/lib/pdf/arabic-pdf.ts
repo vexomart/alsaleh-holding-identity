@@ -178,9 +178,11 @@ export function createRTLTable(
   const rtlRows = rows.map(row => [...row].reverse());
   const rtlWidths = widths ? [...widths].reverse() : new Array(headers.length).fill('*');
 
+  // IMPORTANT: Explicit font 'Cairo' on every cell to ensure Arabic renders correctly
   const headerCells = rtlHeaders.map(h => ({
     text: h,
     style: 'tableHeader',
+    font: 'Cairo', // FORCE Cairo font
     alignment: 'right' as const,
     ...options?.headerStyle,
   }));
@@ -189,6 +191,7 @@ export function createRTLTable(
     row.map(cell => ({
       text: String(cell),
       style: 'tableCell',
+      font: 'Cairo', // FORCE Cairo font
       alignment: 'right' as const,
       fillColor: options?.alternateRowColor && rowIndex % 2 === 1 ? options.alternateRowColor : undefined,
       ...options?.cellStyle,
@@ -222,9 +225,9 @@ export function createRTLKeyValue(items: { label: string; value: string }[]): PD
         width: '*',
         stack: items.map(item => ({
           columns: [
-            { text: item.value, style: 'value', width: 'auto', alignment: 'left' as const },
-            { text: ':', width: 10, alignment: 'center' as const },
-            { text: item.label, style: 'label', width: 'auto', alignment: 'right' as const },
+            { text: item.value, style: 'value', font: 'Cairo', width: 'auto', alignment: 'left' as const },
+            { text: ':', width: 10, font: 'Cairo', alignment: 'center' as const },
+            { text: item.label, style: 'label', font: 'Cairo', width: 'auto', alignment: 'right' as const },
           ],
           columnGap: 5,
           margin: [0, 3, 0, 3],
