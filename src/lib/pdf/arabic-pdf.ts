@@ -331,16 +331,20 @@ export class ArabicPDFGenerator {
       // Load TTF fonts from local assets and embed into VFS
       const cairo = await loadCairoTTFAsVfs();
 
-      const currentVfs = (pdfMake as unknown as { vfs?: Record<string, string> }).vfs || {};
-      const mergedVfs: Record<string, string> = {
-        ...currentVfs,
-        // Required file names inside pdfmake VFS
-        'Cairo-Regular.ttf': cairo.regular,
-        'Cairo-Bold.ttf': cairo.bold,
+      const pdfMakeAny = pdfMake as unknown as {
+        vfs?: Record<string, string>;
+        fonts?: Record<string, unknown>;
       };
 
+      // IMPORTANT: do NOT replace the VFS object reference.
+      // pdfmake may keep an internal reference to the original object.
+      if (!pdfMakeAny.vfs) pdfMakeAny.vfs = {};
+
       // Code location A) pdfMake.vfs is set here
-      (pdfMake as unknown as { vfs: Record<string, string> }).vfs = mergedVfs;
+      Object.assign(pdfMakeAny.vfs, {
+        'Cairo-Regular.ttf': cairo.regular,
+        'Cairo-Bold.ttf': cairo.bold,
+      });
 
       // Code location B) pdfMake.fonts is set here
       const fonts = {
@@ -352,7 +356,14 @@ export class ArabicPDFGenerator {
         },
       };
 
-      (pdfMake as unknown as { fonts: typeof fonts }).fonts = fonts;
+      // Code location B) pdfMake.fonts is set here
+      // (safe to replace, but keep merge behavior to avoid clobbering others)
+      pdfMakeAny.fonts = { ...(pdfMakeAny.fonts || {}), ...fonts };
+
+      // Sanity check: must exist in VFS before createPdf
+      if (!pdfMakeAny.vfs['Cairo-Bold.ttf']) {
+        throw new Error("Cairo-Bold.ttf missing from pdfMake.vfs after assignment");
+      }
       
       this.fontsLoaded = true;
       console.log('Cairo fonts embedded successfully');
