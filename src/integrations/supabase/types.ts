@@ -67,6 +67,177 @@ export type Database = {
           },
         ]
       }
+      customer_wallets: {
+        Row: {
+          balance: number | null
+          created_at: string | null
+          currency: string | null
+          customer_user_id: string
+          id: string
+          ledger_account_id: string | null
+          metadata: Json | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          wallet_number: string
+        }
+        Insert: {
+          balance?: number | null
+          created_at?: string | null
+          currency?: string | null
+          customer_user_id: string
+          id?: string
+          ledger_account_id?: string | null
+          metadata?: Json | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          wallet_number: string
+        }
+        Update: {
+          balance?: number | null
+          created_at?: string | null
+          currency?: string | null
+          customer_user_id?: string
+          id?: string
+          ledger_account_id?: string | null
+          metadata?: Json | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          wallet_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_wallets_ledger_account_id_fkey"
+            columns: ["ledger_account_id"]
+            isOneToOne: false
+            referencedRelation: "ledger_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_wallets_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financial_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          customer_user_id: string
+          description: string | null
+          description_ar: string | null
+          id: string
+          idempotency_key: string | null
+          journal_entry_id: string | null
+          metadata: Json | null
+          processed_at: string | null
+          provider: string | null
+          provider_reference: string | null
+          provider_response: Json | null
+          related_invoice_id: string | null
+          related_order_id: string | null
+          status:
+            | Database["public"]["Enums"]["financial_transaction_status"]
+            | null
+          tenant_id: string | null
+          transaction_type: Database["public"]["Enums"]["financial_transaction_type"]
+          updated_at: string | null
+          wallet_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          customer_user_id: string
+          description?: string | null
+          description_ar?: string | null
+          id?: string
+          idempotency_key?: string | null
+          journal_entry_id?: string | null
+          metadata?: Json | null
+          processed_at?: string | null
+          provider?: string | null
+          provider_reference?: string | null
+          provider_response?: Json | null
+          related_invoice_id?: string | null
+          related_order_id?: string | null
+          status?:
+            | Database["public"]["Enums"]["financial_transaction_status"]
+            | null
+          tenant_id?: string | null
+          transaction_type: Database["public"]["Enums"]["financial_transaction_type"]
+          updated_at?: string | null
+          wallet_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          customer_user_id?: string
+          description?: string | null
+          description_ar?: string | null
+          id?: string
+          idempotency_key?: string | null
+          journal_entry_id?: string | null
+          metadata?: Json | null
+          processed_at?: string | null
+          provider?: string | null
+          provider_reference?: string | null
+          provider_response?: Json | null
+          related_invoice_id?: string | null
+          related_order_id?: string | null
+          status?:
+            | Database["public"]["Enums"]["financial_transaction_status"]
+            | null
+          tenant_id?: string | null
+          transaction_type?: Database["public"]["Enums"]["financial_transaction_type"]
+          updated_at?: string | null
+          wallet_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_transactions_journal_entry_id_fkey"
+            columns: ["journal_entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_related_invoice_id_fkey"
+            columns: ["related_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_related_order_id_fkey"
+            columns: ["related_order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "customer_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           created_at: string
@@ -138,6 +309,167 @@ export type Database = {
           },
           {
             foreignKeyName: "invoices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_entries: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          description_ar: string | null
+          entry_number: string
+          id: string
+          is_posted: boolean | null
+          posted_at: string | null
+          reference_id: string | null
+          reference_type: string | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          description_ar?: string | null
+          entry_number: string
+          id?: string
+          is_posted?: boolean | null
+          posted_at?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          description_ar?: string | null
+          entry_number?: string
+          id?: string
+          is_posted?: boolean | null
+          posted_at?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entries_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_lines: {
+        Row: {
+          account_id: string
+          created_at: string | null
+          credit: number | null
+          currency: string | null
+          debit: number | null
+          description: string | null
+          entry_id: string
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          account_id: string
+          created_at?: string | null
+          credit?: number | null
+          currency?: string | null
+          debit?: number | null
+          description?: string | null
+          entry_id: string
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          account_id?: string
+          created_at?: string | null
+          credit?: number | null
+          currency?: string | null
+          debit?: number | null
+          description?: string | null
+          entry_id?: string
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_lines_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "ledger_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_lines_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ledger_accounts: {
+        Row: {
+          account_type: Database["public"]["Enums"]["ledger_account_type"]
+          code: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          name_ar: string
+          name_en: string
+          parent_id: string | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_type: Database["public"]["Enums"]["ledger_account_type"]
+          code: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          name_ar: string
+          name_en: string
+          parent_id?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_type?: Database["public"]["Enums"]["ledger_account_type"]
+          code?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          name_ar?: string
+          name_en?: string
+          parent_id?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "ledger_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ledger_accounts_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
@@ -565,6 +897,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string | null
+          customer_uid: string | null
           email: string
           full_name: string | null
           full_name_ar: string | null
@@ -580,6 +913,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string | null
+          customer_uid?: string | null
           email: string
           full_name?: string | null
           full_name_ar?: string | null
@@ -595,6 +929,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string | null
+          customer_uid?: string | null
           email?: string
           full_name?: string | null
           full_name_ar?: string | null
@@ -910,6 +1245,11 @@ export type Database = {
         Args: { p_tenant_id?: string }
         Returns: string
       }
+      generate_journal_entry_number: {
+        Args: { p_tenant_id?: string }
+        Returns: string
+      }
+      get_customer_wallet: { Args: { p_customer_id: string }; Returns: string }
       get_next_service_sort_order: {
         Args: { p_tenant_id?: string }
         Returns: number
@@ -922,6 +1262,7 @@ export type Database = {
         }[]
       }
       get_user_tenant_id: { Args: { _user_id: string }; Returns: string }
+      get_wallet_balance: { Args: { p_wallet_id: string }; Returns: number }
       has_permission: {
         Args: { _permission: string; _user_id: string }
         Returns: boolean
@@ -962,7 +1303,28 @@ export type Database = {
         | "login"
         | "logout"
         | "export"
+      financial_transaction_status:
+        | "pending"
+        | "processing"
+        | "succeeded"
+        | "failed"
+        | "refunded"
+        | "cancelled"
+      financial_transaction_type:
+        | "invoice_payment"
+        | "refund"
+        | "topup"
+        | "withdrawal"
+        | "adjustment"
+        | "transfer"
+        | "fee"
       invoice_status: "draft" | "issued" | "paid" | "cancelled" | "overdue"
+      ledger_account_type:
+        | "asset"
+        | "liability"
+        | "revenue"
+        | "expense"
+        | "equity"
       notification_type: "info" | "warning" | "success" | "error" | "system"
       order_status:
         | "pending"
@@ -1117,7 +1479,31 @@ export const Constants = {
         "logout",
         "export",
       ],
+      financial_transaction_status: [
+        "pending",
+        "processing",
+        "succeeded",
+        "failed",
+        "refunded",
+        "cancelled",
+      ],
+      financial_transaction_type: [
+        "invoice_payment",
+        "refund",
+        "topup",
+        "withdrawal",
+        "adjustment",
+        "transfer",
+        "fee",
+      ],
       invoice_status: ["draft", "issued", "paid", "cancelled", "overdue"],
+      ledger_account_type: [
+        "asset",
+        "liability",
+        "revenue",
+        "expense",
+        "equity",
+      ],
       notification_type: ["info", "warning", "success", "error", "system"],
       order_status: [
         "pending",
