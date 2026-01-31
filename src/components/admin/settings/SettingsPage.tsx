@@ -63,10 +63,10 @@ export function SettingsPage() {
             <TabsTrigger
               key={tab.id}
               value={tab.id}
-              className="flex items-center gap-2 px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-border rounded-lg data-[state=active]:border-primary transition-all"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 px-3 sm:px-4 py-3 sm:py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-border rounded-lg data-[state=active]:border-primary transition-all min-w-[70px] sm:min-w-0"
             >
-              <tab.icon className="h-4 w-4" />
-              <span className="hidden sm:inline">
+              <tab.icon className="h-6 w-6 sm:h-4 sm:w-4" />
+              <span className="text-[10px] sm:text-sm">
                 {isRTL ? tab.labelAr : tab.labelEn}
               </span>
             </TabsTrigger>
