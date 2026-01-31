@@ -13,3 +13,4 @@ export { OrdersManagement } from "./orders/OrdersManagement";
 // System Pages
 export { ReportsPage } from "./reports/ReportsPage";
 export { NotificationsPage } from "./notifications/NotificationsPage";
+export { SettingsPage } from "./settings/SettingsPage";
