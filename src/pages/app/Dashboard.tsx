@@ -11,6 +11,7 @@ import { CustomerOverview } from '@/components/customer/CustomerOverview';
 import { CustomerOrdersList } from '@/components/customer/CustomerOrdersList';
 import { CustomerServices } from '@/components/customer/CustomerServices';
 import { CustomerCategoryServices } from '@/components/customer/CustomerCategoryServices';
+import { CustomerServiceDetails } from '@/components/customer/CustomerServiceDetails';
 import { CustomerNotifications } from '@/components/customer/CustomerNotifications';
 import { CustomerProfile } from '@/components/customer/CustomerProfile';
 
@@ -23,6 +24,7 @@ const CustomerDashboard = () => {
         <Route path="orders" element={<CustomerOrdersList />} />
         <Route path="services" element={<CustomerServices />} />
         <Route path="services/:category" element={<CustomerCategoryServices />} />
+        <Route path="service/:serviceId" element={<CustomerServiceDetails />} />
         <Route path="notifications" element={<CustomerNotifications />} />
         <Route path="profile" element={<CustomerProfile />} />
       </Routes>

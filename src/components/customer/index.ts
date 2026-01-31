@@ -9,5 +9,6 @@ export { CustomerOverview } from './CustomerOverview';
 export { CustomerOrdersList } from './CustomerOrdersList';
 export { CustomerServices } from './CustomerServices';
 export { CustomerCategoryServices } from './CustomerCategoryServices';
+export { CustomerServiceDetails } from './CustomerServiceDetails';
 export { CustomerNotifications } from './CustomerNotifications';
 export { CustomerProfile } from './CustomerProfile';
