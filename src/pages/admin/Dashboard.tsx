@@ -17,6 +17,7 @@ import { ReportsPage } from '@/components/admin/reports/ReportsPage';
 import { NotificationsPage } from '@/components/admin/notifications/NotificationsPage';
 import { SettingsPage } from '@/components/admin/settings/SettingsPage';
 import { AuditLogPage } from '@/components/admin/audit/AuditLogPage';
+import { FinanceCenter } from '@/components/admin/finance';
 import { Card, CardContent } from '@/components/ui/card';
 import { Construction } from 'lucide-react';
 
@@ -52,6 +53,7 @@ const AdminDashboard = () => {
         <Route path="services" element={<ServicesManagement />} />
         <Route path="orders" element={<OrdersManagement />} />
         <Route path="wallets" element={<WalletsManagement />} />
+        <Route path="finance" element={<FinanceCenter />} />
         
         {/* CMS Routes */}
         {/* CMS routes removed - module not implemented */}
