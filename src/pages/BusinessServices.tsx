@@ -246,8 +246,8 @@ const BusinessServices = () => {
   const stats = [
     { number: "500+", label: "مشروع مكتمل", icon: Award },
     { number: "150+", label: "عميل راضي", icon: Users },
-    { number: "98%", label: "معدل النجاح", icon: TrendingUp },
-    { number: "24/7", label: "دعم فني", icon: Clock }
+    { number: "100%", label: "معدل رضا العملاء", icon: TrendingUp },
+    { number: "5/5", label: "التقييم", icon: Star }
   ];
 
   const features = [
