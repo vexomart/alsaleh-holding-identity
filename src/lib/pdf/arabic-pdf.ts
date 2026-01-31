@@ -11,7 +11,7 @@
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { loadArabicFont } from './fonts/amiri-font';
+import { loadCairoTTFAsVfs } from './fonts/cairo-embedded';
 
 // Initialize pdfMake with default fonts (Roboto)
 const pdfFontsModule = pdfFonts as unknown as { pdfMake: { vfs: Record<string, string> } };
@@ -303,8 +303,8 @@ export function createRTLFooter(text: string, pageNumber?: boolean): PDFContent 
   };
 }
 
-// Font name constant
-const ARABIC_FONT_NAME = 'ArabicFont';
+// Font name constant (per requirement)
+const ARABIC_FONT_NAME = 'Cairo';
 
 // Main PDF generator class
 export class ArabicPDFGenerator {
@@ -326,35 +326,36 @@ export class ArabicPDFGenerator {
     if (this.fontsLoaded) return;
 
     try {
-      console.log('Loading Arabic fonts...');
-      
-      // Try loading Arabic font (Amiri, Cairo, or Noto)
-      const arabicFonts = await loadArabicFont(this.config.fontFamily || 'amiri');
-      
-      // Register fonts with pdfmake
-      const pdfMakeVfs: Record<string, string> = {};
-      pdfMakeVfs[`${ARABIC_FONT_NAME}-Regular.ttf`] = arabicFonts.normal;
-      pdfMakeVfs[`${ARABIC_FONT_NAME}-Bold.ttf`] = arabicFonts.bold;
-      pdfMakeVfs[`${ARABIC_FONT_NAME}-Italic.ttf`] = arabicFonts.italics;
-      pdfMakeVfs[`${ARABIC_FONT_NAME}-BoldItalic.ttf`] = arabicFonts.bolditalics;
-      
-      // Set virtual file system
-      (pdfMake as unknown as { vfs: Record<string, string> }).vfs = pdfMakeVfs;
-      
-      // Register font family
+      console.log('Loading Cairo TTF fonts for pdfmake...');
+
+      // Load TTF fonts from local assets and embed into VFS
+      const cairo = await loadCairoTTFAsVfs();
+
+      const currentVfs = (pdfMake as unknown as { vfs?: Record<string, string> }).vfs || {};
+      const mergedVfs: Record<string, string> = {
+        ...currentVfs,
+        // Required file names inside pdfmake VFS
+        'Cairo-Regular.ttf': cairo.regular,
+        'Cairo-Bold.ttf': cairo.bold,
+      };
+
+      // Code location A) pdfMake.vfs is set here
+      (pdfMake as unknown as { vfs: Record<string, string> }).vfs = mergedVfs;
+
+      // Code location B) pdfMake.fonts is set here
       const fonts = {
-        [ARABIC_FONT_NAME]: {
-          normal: `${ARABIC_FONT_NAME}-Regular.ttf`,
-          bold: `${ARABIC_FONT_NAME}-Bold.ttf`,
-          italics: `${ARABIC_FONT_NAME}-Italic.ttf`,
-          bolditalics: `${ARABIC_FONT_NAME}-BoldItalic.ttf`,
+        Cairo: {
+          normal: 'Cairo-Regular.ttf',
+          bold: 'Cairo-Bold.ttf',
+          italics: 'Cairo-Regular.ttf',
+          bolditalics: 'Cairo-Bold.ttf',
         },
       };
-      
+
       (pdfMake as unknown as { fonts: typeof fonts }).fonts = fonts;
       
       this.fontsLoaded = true;
-      console.log('Arabic fonts loaded successfully');
+      console.log('Cairo fonts embedded successfully');
     } catch (error) {
       console.error('Failed to load Arabic fonts, using fallback:', error);
       
@@ -396,7 +397,7 @@ export class ArabicPDFGenerator {
         subject: this.config.subject || '',
       },
 
-      // Use Arabic font as default
+      // Code location C) defaultStyle font is set here
       defaultStyle: {
         font: ARABIC_FONT_NAME,
         fontSize: 11,
