@@ -225,11 +225,11 @@ export function CustomerServices() {
                 </span>
               </motion.div>
               
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
                 {isRTL ? "اكتشف خدماتنا" : "Discover Our Services"}
               </h1>
               
-              <p className="text-sm md:text-base text-muted-foreground max-w-lg">
+              <p className="text-sm md:text-base text-foreground/70 max-w-lg leading-relaxed">
                 {isRTL
                   ? "نقدم لك مجموعة شاملة من الخدمات التقنية والرقمية لتحقيق أهداف أعمالك"
                   : "We offer a comprehensive range of technical and digital services to achieve your business goals"}
@@ -240,12 +240,12 @@ export function CustomerServices() {
             <div className="hidden md:flex items-center gap-6 lg:gap-8">
               <div className="text-center">
                 <div className="text-2xl lg:text-3xl font-bold text-primary">{categories.length}</div>
-                <div className="text-xs text-muted-foreground">{isRTL ? "قسم" : "Sections"}</div>
+                <div className="text-xs font-medium text-foreground/60">{isRTL ? "قسم" : "Sections"}</div>
               </div>
               <div className="w-px h-12 bg-border" />
               <div className="text-center">
                 <div className="text-2xl lg:text-3xl font-bold text-primary">{services.length}</div>
-                <div className="text-xs text-muted-foreground">{isRTL ? "خدمة" : "Services"}</div>
+                <div className="text-xs font-medium text-foreground/60">{isRTL ? "خدمة" : "Services"}</div>
               </div>
             </div>
           </div>
@@ -257,8 +257,8 @@ export function CustomerServices() {
                 <Package className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <div className="text-lg font-bold">{categories.length}</div>
-                <div className="text-xs text-muted-foreground">{isRTL ? "قسم" : "Sections"}</div>
+                <div className="text-lg font-bold text-foreground">{categories.length}</div>
+                <div className="text-xs font-medium text-foreground/60">{isRTL ? "قسم" : "Sections"}</div>
               </div>
             </div>
             <div className="w-px h-10 bg-border" />
@@ -267,8 +267,8 @@ export function CustomerServices() {
                 <CheckCircle2 className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <div className="text-lg font-bold">{services.length}</div>
-                <div className="text-xs text-muted-foreground">{isRTL ? "خدمة" : "Services"}</div>
+                <div className="text-lg font-bold text-foreground">{services.length}</div>
+                <div className="text-xs font-medium text-foreground/60">{isRTL ? "خدمة" : "Services"}</div>
               </div>
             </div>
           </div>
@@ -280,19 +280,19 @@ export function CustomerServices() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-sm text-muted-foreground"
+        className="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-sm"
       >
         <div className="flex items-center gap-1.5">
           <Clock className="h-4 w-4 text-emerald-500" />
-          <span>{isRTL ? "دعم 24/7" : "24/7 Support"}</span>
+          <span className="font-medium text-foreground/70">{isRTL ? "دعم 24/7" : "24/7 Support"}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <Award className="h-4 w-4 text-amber-500" />
-          <span>{isRTL ? "جودة عالية" : "High Quality"}</span>
+          <span className="font-medium text-foreground/70">{isRTL ? "جودة عالية" : "High Quality"}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <Users className="h-4 w-4 text-blue-500" />
-          <span>{isRTL ? "فريق متخصص" : "Expert Team"}</span>
+          <span className="font-medium text-foreground/70">{isRTL ? "فريق متخصص" : "Expert Team"}</span>
         </div>
       </motion.div>
 
@@ -333,10 +333,10 @@ export function CustomerServices() {
 
                   {/* Content */}
                   <div className="flex-1">
-                    <h3 className="font-bold text-sm md:text-base mb-1">
+                    <h3 className="font-bold text-sm md:text-base mb-1 text-foreground">
                       {isRTL ? item.config.nameAr : item.config.nameEn}
                     </h3>
-                    <p className="text-xs text-muted-foreground line-clamp-2">
+                    <p className="text-xs text-foreground/60 line-clamp-2 leading-relaxed">
                       {isRTL ? item.config.descAr : item.config.descEn}
                     </p>
                   </div>
@@ -368,11 +368,11 @@ export function CustomerServices() {
           animate={{ opacity: 1 }}
           className="text-center py-12 md:py-16"
         >
-          <Package className="h-16 w-16 mx-auto mb-4 text-muted-foreground/30" />
-          <h3 className="text-lg font-semibold mb-2">
+          <Package className="h-16 w-16 mx-auto mb-4 text-foreground/20" />
+          <h3 className="text-lg font-semibold mb-2 text-foreground">
             {isRTL ? "لا توجد خدمات حالياً" : "No Services Available"}
           </h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-foreground/60">
             {isRTL ? "سيتم إضافة الخدمات قريباً" : "Services will be added soon"}
           </p>
         </motion.div>
@@ -385,7 +385,7 @@ export function CustomerServices() {
         transition={{ delay: 0.4 }}
         className="text-center pt-4 md:pt-6"
       >
-        <p className="text-sm text-muted-foreground mb-3">
+        <p className="text-sm font-medium text-foreground/60 mb-3">
           {isRTL
             ? "لم تجد ما تبحث عنه؟"
             : "Didn't find what you're looking for?"}
