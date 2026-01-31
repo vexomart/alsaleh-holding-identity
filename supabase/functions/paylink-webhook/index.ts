@@ -134,7 +134,28 @@ serve(async (req) => {
         newStatus = 'pending';
     }
 
-    // Update transaction status
+    // Log webhook_received event
+    await supabase.rpc('log_transaction_event', {
+      p_transaction_id: transaction.id,
+      p_event_type: 'webhook_received',
+      p_previous_status: transaction.status,
+      p_new_status: newStatus,
+      p_metadata: {
+        paylink_status: orderStatus,
+        amount: totalAmount,
+        currency: currency,
+        source: 'paylink_webhook',
+      },
+      p_provider_payload: {
+        transactionNo,
+        orderStatus,
+        amount: totalAmount,
+        // Sanitize - don't store full payload
+      },
+      p_performed_by: null,
+    });
+
+    // Update transaction status (trigger will auto-log status_changed)
     const { error: updateTxnError } = await supabase
       .from('financial_transactions')
       .update({

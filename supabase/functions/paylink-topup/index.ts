@@ -173,7 +173,7 @@ serve(async (req) => {
     console.log('Paylink top-up created:', JSON.stringify(paylinkInvoice));
 
     // Create financial transaction record for top-up
-    const { error: txnError } = await supabase
+    const { data: txnData, error: txnError } = await supabase
       .from('financial_transactions')
       .insert({
         customer_user_id: userId,
@@ -192,10 +192,49 @@ serve(async (req) => {
           topup_order_number: topupOrderNumber,
           paylink_invoice: paylinkInvoice,
         },
-      });
+      })
+      .select()
+      .single();
 
     if (txnError) {
       console.error('Error creating transaction:', txnError);
+    }
+
+    // Log transaction events for timeline
+    if (txnData) {
+      // Log 'created' event
+      await supabase.rpc('log_transaction_event', {
+        p_transaction_id: txnData.id,
+        p_event_type: 'created',
+        p_previous_status: null,
+        p_new_status: 'pending',
+        p_metadata: {
+          amount: amount,
+          currency: 'SAR',
+          transaction_type: 'topup',
+          wallet_id: wallet.id,
+        },
+        p_provider_payload: null,
+        p_performed_by: userId,
+      });
+
+      // Log 'paylink_invoice_created' event
+      await supabase.rpc('log_transaction_event', {
+        p_transaction_id: txnData.id,
+        p_event_type: 'paylink_invoice_created',
+        p_previous_status: 'pending',
+        p_new_status: 'pending',
+        p_metadata: {
+          paylink_transaction_no: paylinkInvoice.transactionNo,
+          payment_url: paylinkInvoice.url,
+          order_number: topupOrderNumber,
+        },
+        p_provider_payload: {
+          transactionNo: paylinkInvoice.transactionNo,
+          url: paylinkInvoice.url,
+        },
+        p_performed_by: null,
+      });
     }
 
     return new Response(
