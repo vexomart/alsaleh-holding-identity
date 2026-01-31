@@ -167,7 +167,7 @@ const mockNotifications: Notification[] = [
 ];
 
 export function NotificationsPage() {
-  const { language } = useLanguage();
+  const { language, isRTL } = useLanguage();
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -329,12 +329,12 @@ export function NotificationsPage() {
 
             <div className="flex items-center gap-2">
               <div className="relative flex-1 md:w-64">
-                <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder={language === 'ar' ? 'بحث...' : 'Search...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pr-10"
+                  className="ps-10"
                 />
               </div>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -400,17 +400,18 @@ export function NotificationsPage() {
                     const config = typeConfig[notif.type || 'info'];
                     const Icon = config.icon;
 
-                    return (
+                      return (
                       <motion.div
                         key={notif.id}
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
+                        exit={{ opacity: 0, x: isRTL ? -20 : 20 }}
                         transition={{ delay: index * 0.02 }}
                         className={cn(
                           "flex items-start gap-4 p-4 hover:bg-muted/50 transition-colors cursor-pointer",
                           !notif.is_read && "bg-primary/5"
                         )}
+                        dir={isRTL ? "rtl" : "ltr"}
                       >
                         <Checkbox
                           checked={selectedIds.includes(notif.id)}
@@ -439,13 +440,13 @@ export function NotificationsPage() {
                               </p>
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
+                              {!notif.is_read && (
+                                <div className="w-2 h-2 rounded-full bg-primary" />
+                              )}
                               <span className="text-xs text-muted-foreground flex items-center gap-1">
                                 <Clock className="h-3 w-3" />
                                 {formatTime(notif.created_at)}
                               </span>
-                              {!notif.is_read && (
-                                <div className="w-2 h-2 rounded-full bg-primary" />
-                              )}
                             </div>
                           </div>
                         </div>
@@ -456,10 +457,10 @@ export function NotificationsPage() {
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent align={isRTL ? "start" : "end"}>
                             {!notif.is_read && (
                               <DropdownMenuItem onClick={() => markAsRead([notif.id])}>
-                                <Check className="h-4 w-4 ml-2" />
+                                <Check className="h-4 w-4 me-2" />
                                 {language === 'ar' ? 'تحديد كمقروء' : 'Mark as read'}
                               </DropdownMenuItem>
                             )}
@@ -467,7 +468,7 @@ export function NotificationsPage() {
                               onClick={() => deleteNotifications([notif.id])}
                               className="text-destructive focus:text-destructive"
                             >
-                              <Trash2 className="h-4 w-4 ml-2" />
+                              <Trash2 className="h-4 w-4 me-2" />
                               {language === 'ar' ? 'حذف' : 'Delete'}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
