@@ -1,9 +1,9 @@
 /**
  * Customer Category Services Page
- * Display services within a specific category with premium design
+ * Display services within a specific category with premium design and pagination
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -27,8 +27,15 @@ import {
   ArrowLeft,
   ArrowRight,
   Star,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+
+// Pagination config
+const ITEMS_PER_PAGE = 10;
 
 // Category configurations
 const CATEGORIES_CONFIG: Record<string, {
@@ -132,10 +139,23 @@ export function CustomerCategoryServices() {
 
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const config = category ? (CATEGORIES_CONFIG[category] || { ...DEFAULT_CATEGORY_CONFIG, nameEn: category }) : DEFAULT_CATEGORY_CONFIG;
   const Icon = config.icon;
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
+
+  // Calculate pagination
+  const totalPages = Math.ceil(services.length / ITEMS_PER_PAGE);
+  const paginatedServices = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return services.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [services, currentPage]);
+
+  // Reset page when category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [category]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -158,6 +178,50 @@ export function CustomerCategoryServices() {
 
   const handleRequestService = (service: Service) => {
     navigate(`/app/service/${service.id}`);
+  };
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of services grid
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+  };
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    // Always show first page
+    pages.push(1);
+
+    if (currentPage > 3) {
+      pages.push('...');
+    }
+
+    // Show pages around current page
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      if (!pages.includes(i)) {
+        pages.push(i);
+      }
+    }
+
+    if (currentPage < totalPages - 2) {
+      pages.push('...');
+    }
+
+    // Always show last page
+    if (!pages.includes(totalPages)) {
+      pages.push(totalPages);
+    }
+
+    return pages;
   };
 
   if (isLoading) {
@@ -246,91 +310,180 @@ export function CustomerCategoryServices() {
           </Button>
         </motion.div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {services.map((service, index) => (
-              <motion.div
-                key={service.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
-                transition={{
-                  delay: index * 0.08,
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 25,
-                }}
-                whileHover={{ y: -8 }}
-                layout
-              >
-                <Card className="h-full flex flex-col overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20">
-                  {/* Service Image/Gradient Header */}
-                  <div className={cn(
-                    "relative h-40 overflow-hidden",
-                    `bg-gradient-to-br ${config.gradient}`
-                  )}>
-                    {service.image_url ? (
-                      <img
-                        src={service.image_url}
-                        alt={service.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <motion.div
-                          initial={{ scale: 0.8, opacity: 0.5 }}
-                          animate={{ scale: 1, opacity: 0.3 }}
-                          transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+        <>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <AnimatePresence mode="popLayout">
+              {paginatedServices.map((service, index) => (
+                <motion.div
+                  key={service.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{
+                    delay: index * 0.08,
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 25,
+                  }}
+                  whileHover={{ y: -8 }}
+                  layout
+                >
+                  <Card className="h-full flex flex-col overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20">
+                    {/* Service Image/Gradient Header */}
+                    <div className={cn(
+                      "relative h-40 overflow-hidden",
+                      `bg-gradient-to-br ${config.gradient}`
+                    )}>
+                      {service.image_url ? (
+                        <img
+                          src={service.image_url}
+                          alt={service.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <motion.div
+                            initial={{ scale: 0.8, opacity: 0.5 }}
+                            animate={{ scale: 1, opacity: 0.3 }}
+                            transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                          >
+                            <Icon className="h-20 w-20 text-white" />
+                          </motion.div>
+                        </div>
+                      )}
+
+                      {/* Overlay Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+
+                      {/* Featured Badge */}
+                      {service.sort_order === 1 && (
+                        <Badge className="absolute top-3 start-3 bg-amber-500 text-white gap-1">
+                          <Star className="h-3 w-3 fill-current" />
+                          {isRTL ? "مميز" : "Featured"}
+                        </Badge>
+                      )}
+                    </div>
+
+                    <CardContent className="flex-1 p-5 flex flex-col">
+                      {/* Title */}
+                      <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                        {isRTL ? service.name_ar || service.name : service.name}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-sm text-muted-foreground line-clamp-3 flex-1 mb-4">
+                        {isRTL
+                          ? service.short_description_ar || service.description_ar || service.description
+                          : service.short_description || service.description}
+                      </p>
+
+                      {/* CTA Button */}
+                      <div className="border-t pt-4">
+                        <Button
+                          onClick={() => handleRequestService(service)}
+                          className={cn(
+                            "w-full gap-2",
+                            `bg-gradient-to-r ${config.gradient} hover:opacity-90`
+                          )}
                         >
-                          <Icon className="h-20 w-20 text-white" />
-                        </motion.div>
+                          <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+                          {isRTL ? "عرض التفاصيل" : "View Details"}
+                        </Button>
                       </div>
-                    )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
 
-                    {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-col items-center gap-4 pt-8"
+            >
+              {/* Page Info */}
+              <p className="text-sm text-muted-foreground">
+                {isRTL 
+                  ? `عرض ${(currentPage - 1) * ITEMS_PER_PAGE + 1} - ${Math.min(currentPage * ITEMS_PER_PAGE, services.length)} من ${services.length} خدمة`
+                  : `Showing ${(currentPage - 1) * ITEMS_PER_PAGE + 1} - ${Math.min(currentPage * ITEMS_PER_PAGE, services.length)} of ${services.length} services`
+                }
+              </p>
 
-                    {/* Featured Badge */}
-                    {service.sort_order === 1 && (
-                      <Badge className="absolute top-3 start-3 bg-amber-500 text-white gap-1">
-                        <Star className="h-3 w-3 fill-current" />
-                        {isRTL ? "مميز" : "Featured"}
-                      </Badge>
-                    )}
-                  </div>
+              {/* Pagination Controls */}
+              <div className="flex items-center gap-1">
+                {/* First Page */}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => goToPage(1)}
+                  disabled={currentPage === 1}
+                  className="h-9 w-9"
+                >
+                  {isRTL ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
+                </Button>
 
-                  <CardContent className="flex-1 p-5 flex flex-col">
-                    {/* Title */}
-                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                      {isRTL ? service.name_ar || service.name : service.name}
-                    </h3>
+                {/* Previous Page */}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="h-9 w-9"
+                >
+                  {isRTL ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+                </Button>
 
-                    {/* Description */}
-                    <p className="text-sm text-muted-foreground line-clamp-3 flex-1 mb-4">
-                      {isRTL
-                        ? service.short_description_ar || service.description_ar || service.description
-                        : service.short_description || service.description}
-                    </p>
-
-                    {/* CTA Button */}
-                    <div className="border-t pt-4">
+                {/* Page Numbers */}
+                <div className="flex items-center gap-1 mx-2">
+                  {getPageNumbers().map((page, index) => (
+                    page === '...' ? (
+                      <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">...</span>
+                    ) : (
                       <Button
-                        onClick={() => handleRequestService(service)}
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => goToPage(page as number)}
                         className={cn(
-                          "w-full gap-2",
-                          `bg-gradient-to-r ${config.gradient} hover:opacity-90`
+                          "h-9 w-9 font-medium",
+                          currentPage === page && "bg-primary text-primary-foreground"
                         )}
                       >
-                        <ArrowRight className="h-4 w-4 rtl:rotate-180" />
-                        {isRTL ? "عرض التفاصيل" : "View Details"}
+                        {page}
                       </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                    )
+                  ))}
+                </div>
+
+                {/* Next Page */}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="h-9 w-9"
+                >
+                  {isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                </Button>
+
+                {/* Last Page */}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => goToPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="h-9 w-9"
+                >
+                  {isRTL ? <ChevronsLeft className="h-4 w-4" /> : <ChevronsRight className="h-4 w-4" />}
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </>
       )}
     </div>
   );
