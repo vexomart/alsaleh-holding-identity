@@ -203,8 +203,8 @@ const FAQ = () => {
                 <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <Phone className="w-6 h-6 text-white" />
                 </div>
-                <div className="text-2xl font-bold text-slate-900 mb-1">98%</div>
-                <div className="text-sm text-slate-600">نسبة الرضا</div>
+                <div className="text-2xl font-bold text-slate-900 mb-1">100%</div>
+                <div className="text-sm text-slate-600">معدل رضا العملاء</div>
               </CardContent>
             </Card>
           </div>
