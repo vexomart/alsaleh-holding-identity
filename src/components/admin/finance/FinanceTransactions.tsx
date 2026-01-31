@@ -1,10 +1,9 @@
 /**
- * Finance Transactions Tab - PHASE FIN-4 Enhanced
- * Full-text search, exports, timeline, and audit trail
+ * Finance Transactions Tab - PHASE FIN-4/5 Enhanced
+ * Full-text search, exports, timeline, audit trail + micro-animations
  */
 
-import { useEffect, useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -48,7 +48,6 @@ import {
   FileText,
   FileSpreadsheet,
   Eye,
-  Filter,
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -110,6 +109,7 @@ const statusOptions = [
 export function FinanceTransactions() {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
+  const prefersReducedMotion = useReducedMotion();
   const [transactions, setTransactions] = useState<EnrichedTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -118,10 +118,42 @@ export function FinanceTransactions() {
   const [selectedTransaction, setSelectedTransaction] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
+  const [highlightedRows, setHighlightedRows] = useState<Set<string>>(new Set());
+  const prevTransactionsRef = useRef<Map<string, TransactionStatus>>(new Map());
 
   useEffect(() => {
     fetchTransactions();
-  }, [statusFilter, typeFilter]);
+    
+    // Subscribe to realtime updates
+    const channel = supabase
+      .channel('finance-transactions-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'financial_transactions' },
+        (payload) => {
+          if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+            const txId = (payload.new as Transaction).id;
+            // Add highlight effect
+            if (!prefersReducedMotion) {
+              setHighlightedRows(prev => new Set([...prev, txId]));
+              setTimeout(() => {
+                setHighlightedRows(prev => {
+                  const next = new Set(prev);
+                  next.delete(txId);
+                  return next;
+                });
+              }, 600);
+            }
+            fetchTransactions();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [statusFilter, typeFilter, prefersReducedMotion]);
 
   const fetchTransactions = async () => {
     setIsLoading(true);
@@ -354,7 +386,7 @@ export function FinanceTransactions() {
   const hasActiveFilters = searchTerm || statusFilter !== 'all' || typeFilter !== 'all';
 
   return (
-    <>
+    <div className={cn(!prefersReducedMotion && 'finance-page-enter')}>
       <Card>
         <CardHeader className="pb-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -494,7 +526,10 @@ export function FinanceTransactions() {
                     filteredTransactions.map((tx) => (
                       <TableRow 
                         key={tx.id} 
-                        className="hover:bg-muted/30 cursor-pointer"
+                        className={cn(
+                          "finance-table-row cursor-pointer",
+                          highlightedRows.has(tx.id) && "finance-row-highlight"
+                        )}
                         onClick={() => setSelectedTransaction(tx.id)}
                       >
                         <TableCell>
@@ -580,6 +615,6 @@ export function FinanceTransactions() {
         }}
         onStatusChange={fetchTransactions}
       />
-    </>
+    </div>
   );
 }

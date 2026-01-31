@@ -1,11 +1,12 @@
 /**
  * Customer Wallet Card Component
  * Displays wallet balance, customer UID, and recent transactions
+ * PHASE FIN-5: Enterprise micro-animations (RTL-safe)
  */
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -25,7 +26,6 @@ import {
   RefreshCw,
   Copy,
   Check,
-  Loader2,
   TrendingUp,
   Receipt,
   Banknote,
@@ -233,11 +233,7 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3 }}
-    >
+    <div className="finance-card-enter">
       <Card className={cn("overflow-hidden", className)}>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center gap-2">
@@ -291,7 +287,7 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
             <div className="flex items-center justify-between mt-3">
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className={cn(
-                  "text-xs",
+                  "text-xs finance-status-badge",
                   wallet?.status === "active" 
                     ? "bg-green-500/10 text-green-600 border-green-500/30"
                     : "bg-amber-500/10 text-amber-600 border-amber-500/30"
@@ -336,13 +332,10 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
             ) : (
               <ScrollArea className="h-[280px] pr-4">
                 <div className="space-y-3">
-                  {transactions.map((tx, index) => (
-                    <motion.div
+                  {transactions.map((tx) => (
+                    <div
                       key={tx.id}
-                      initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                      className="finance-transaction-item flex items-center justify-between p-3 rounded-lg bg-muted/50"
                     >
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-background flex items-center justify-center border">
@@ -371,7 +364,7 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
                           {getStatusBadge(tx.status)}
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </ScrollArea>
@@ -379,6 +372,6 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 }
