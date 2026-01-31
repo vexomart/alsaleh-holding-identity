@@ -1,0 +1,217 @@
+/**
+ * Finance UI Micro-Animations
+ * Enterprise-grade, RTL-safe, accessibility-compliant
+ */
+
+/* ===== Reduced Motion Support ===== */
+@media (prefers-reduced-motion: reduce) {
+  .finance-animate-fade,
+  .finance-animate-row,
+  .finance-row-highlight,
+  .finance-page-enter,
+  .finance-page-exit {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== Page Transitions (150ms) ===== */
+@keyframes financePageEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes financePageExit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.finance-page-enter {
+  animation: financePageEnter 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.finance-page-exit {
+  animation: financePageExit 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ===== Table Row Highlight (Realtime Updates) ===== */
+@keyframes financeRowHighlight {
+  0% {
+    background-color: hsl(var(--primary) / 0.15);
+    box-shadow: inset 0 0 0 1px hsl(var(--primary) / 0.3);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px transparent;
+  }
+}
+
+.finance-row-highlight {
+  animation: financeRowHighlight 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Success highlight variant */
+@keyframes financeRowHighlightSuccess {
+  0% {
+    background-color: hsl(var(--success) / 0.15);
+    box-shadow: inset 0 0 0 1px hsl(var(--success) / 0.3);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px transparent;
+  }
+}
+
+.finance-row-highlight-success {
+  animation: financeRowHighlightSuccess 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Error highlight variant */
+@keyframes financeRowHighlightError {
+  0% {
+    background-color: hsl(var(--destructive) / 0.15);
+    box-shadow: inset 0 0 0 1px hsl(var(--destructive) / 0.3);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px transparent;
+  }
+}
+
+.finance-row-highlight-error {
+  animation: financeRowHighlightError 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ===== Card/Element Fade (RTL-Safe - no directional motion) ===== */
+@keyframes financeCardEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.finance-card-enter {
+  animation: financeCardEnter 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ===== Value Change Animation ===== */
+@keyframes financeValuePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.finance-value-updated {
+  animation: financeValuePulse 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Balance Update Glow ===== */
+@keyframes financeBalanceGlow {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--success) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 12px 2px hsl(var(--success) / 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--success) / 0);
+  }
+}
+
+.finance-balance-updated {
+  animation: financeBalanceGlow 800ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Skeleton Shimmer (Loading State) ===== */
+@keyframes financeShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.finance-skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted-foreground) / 0.1) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: financeShimmer 1.5s ease-in-out infinite;
+}
+
+/* ===== Status Badge Transitions ===== */
+.finance-status-badge {
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+/* ===== Table Row Hover (Enterprise-subtle) ===== */
+.finance-table-row {
+  transition: background-color 100ms ease;
+}
+
+.finance-table-row:hover {
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* ===== Button Loading State ===== */
+.finance-btn-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.finance-btn-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: hsl(var(--background) / 0.5);
+  border-radius: inherit;
+}
+
+/* ===== Transaction List Item ===== */
+.finance-transaction-item {
+  transition: background-color 100ms ease, transform 100ms ease;
+}
+
+.finance-transaction-item:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.finance-transaction-item:active {
+  transform: scale(0.995);
+}
+
+/* ===== Export Button Feedback ===== */
+@keyframes financeExportSuccess {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.finance-export-success {
+  animation: financeExportSuccess 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
