@@ -10,18 +10,14 @@ import {
   Shield, 
   Package, 
   ShoppingCart, 
-  FileText, 
   BarChart3, 
   Bell, 
   ClipboardList, 
   Settings, 
   LogOut,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Building2,
-  Image,
-  Menu as MenuIcon,
   Sparkles,
   X
 } from "lucide-react";
@@ -120,32 +116,8 @@ const businessNavItems: NavItem[] = [
   },
 ];
 
-const cmsNavItems: NavItem[] = [
-  {
-    titleKey: "pages",
-    titleAr: "الصفحات",
-    titleEn: "Pages",
-    icon: FileText,
-    href: ROUTES.ADMIN.CMS.PAGES,
-    permission: "cms.pages.view",
-  },
-  {
-    titleKey: "menus",
-    titleAr: "القوائم",
-    titleEn: "Menus",
-    icon: MenuIcon,
-    href: ROUTES.ADMIN.CMS.MENUS,
-    permission: "cms.menus.edit",
-  },
-  {
-    titleKey: "media",
-    titleAr: "مكتبة الوسائط",
-    titleEn: "Media Library",
-    icon: Image,
-    href: ROUTES.ADMIN.CMS.MEDIA,
-    permission: "cms.media.upload",
-  },
-];
+// CMS module removed - not implemented
+// Will be added back when CMS is fully built
 
 const systemNavItems: NavItem[] = [
   {
@@ -205,10 +177,7 @@ export function AdminSidebar() {
 
   const filteredMainNav = mainNavItems.filter(hasAccess);
   const filteredBusinessNav = businessNavItems.filter(hasAccess);
-  const filteredCmsNav = cmsNavItems.filter(hasAccess);
   const filteredSystemNav = systemNavItems.filter(hasAccess);
-
-  const isCmsActive = cmsNavItems.some(item => currentPath.startsWith(item.href));
 
   const handleSignOut = async () => {
     await signOut();
@@ -451,39 +420,7 @@ export function AdminSidebar() {
           </>
         )}
 
-        {/* CMS Navigation */}
-        {filteredCmsNav.length > 0 && (
-          <>
-            <SidebarSeparator className="my-4 bg-white/10" />
-            <SidebarGroup>
-              {!isCollapsed ? (
-                <Collapsible defaultOpen={isCmsActive} className="group/collapsible text-slate-400">
-                  <CollapsibleTrigger className="flex w-full items-center justify-between px-3 mb-2 text-[11px] font-bold text-slate-500 uppercase tracking-widest hover:text-slate-300 transition-colors">
-                    <span>{language === "ar" ? "إدارة المحتوى" : "Content"}</span>
-                    <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300 group-data-[state=open]/collapsible:rotate-180" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarGroupContent>
-                      <SidebarMenu className="space-y-1">
-                        {filteredCmsNav.map((item, index) => (
-                          <NavItem key={item.titleKey} item={item} index={index} />
-                        ))}
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </CollapsibleContent>
-                </Collapsible>
-              ) : (
-                <SidebarGroupContent>
-                  <SidebarMenu className="space-y-1">
-                    {filteredCmsNav.map((item, index) => (
-                      <NavItem key={item.titleKey} item={item} index={index} />
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              )}
-            </SidebarGroup>
-          </>
-        )}
+        {/* CMS Navigation - Removed (module not implemented) */}
 
         {/* System Navigation */}
         {filteredSystemNav.length > 0 && (
