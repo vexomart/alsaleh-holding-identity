@@ -1,6 +1,6 @@
 /**
  * OrderInvoiceSection - Invoice display/actions for Order Details
- * Used in both Admin and Customer dashboards
+ * Uses html2canvas + jsPDF for proper Arabic RTL PDF generation
  */
 
 import { useState, useEffect } from 'react';
@@ -28,7 +28,7 @@ import {
   type Invoice,
   type InvoiceStatus 
 } from '@/lib/api/invoices';
-import { createInvoicePDF, type InvoiceData } from '@/lib/pdf';
+import { generateInvoicePDFDirect, type InvoiceTemplateData } from '@/components/pdf/InvoicePDFGenerator';
 
 interface OrderInvoiceSectionProps {
   orderId: string;
@@ -166,27 +166,21 @@ export function OrderInvoiceSection({
         currency,
       });
 
-      // Generate PDF
-      // Map invoice status to PDF status type
-      const pdfStatusMap: Record<InvoiceStatus, 'pending' | 'paid' | 'overdue' | 'cancelled'> = {
-        draft: 'pending',
-        issued: 'pending',
-        paid: 'paid',
-        cancelled: 'cancelled',
-        overdue: 'overdue',
-      };
-
-      const invoiceData: InvoiceData = {
+      // Generate PDF using new HTML-based generator
+      const invoiceData: InvoiceTemplateData = {
         invoiceNumber: newInvoice.invoice_number,
+        orderNumber: orderNumber,
         issueDate: new Date(newInvoice.created_at),
         dueDate: dueDate ? new Date(dueDate) : undefined,
-        status: pdfStatusMap[newInvoice.status] || 'pending',
+        status: newInvoice.status,
         customer: {
-          name: isRTL ? 'عميل' : 'Customer',
+          name: 'عميل',
+          nameAr: 'عميل',
           email: 'customer@example.com',
         },
         items: [{
-          description: isRTL ? (orderTitleAr || orderTitle) : orderTitle,
+          description: orderTitle,
+          descriptionAr: orderTitleAr || orderTitle,
           quantity: 1,
           unitPrice: newInvoice.subtotal,
           total: newInvoice.subtotal,
@@ -199,7 +193,7 @@ export function OrderInvoiceSection({
         notes: orderDescription || undefined,
       };
 
-      await createInvoicePDF(invoiceData, { 
+      await generateInvoicePDFDirect(invoiceData, { 
         download: true, 
         filename: `invoice-${newInvoice.invoice_number}.pdf` 
       });
@@ -228,26 +222,21 @@ export function OrderInvoiceSection({
     try {
       setDownloading(true);
 
-      // Map invoice status to PDF status type
-      const pdfStatusMap: Record<InvoiceStatus, 'pending' | 'paid' | 'overdue' | 'cancelled'> = {
-        draft: 'pending',
-        issued: 'pending',
-        paid: 'paid',
-        cancelled: 'cancelled',
-        overdue: 'overdue',
-      };
-
-      const invoiceData: InvoiceData = {
+      // Generate PDF using new HTML-based generator
+      const invoiceData: InvoiceTemplateData = {
         invoiceNumber: invoice.invoice_number,
+        orderNumber: orderNumber,
         issueDate: new Date(invoice.created_at),
         dueDate: invoice.due_date ? new Date(invoice.due_date) : undefined,
-        status: pdfStatusMap[invoice.status] || 'pending',
+        status: invoice.status,
         customer: {
-          name: isRTL ? 'عميل' : 'Customer',
+          name: 'عميل',
+          nameAr: 'عميل',
           email: 'customer@example.com',
         },
         items: [{
-          description: isRTL ? (orderTitleAr || orderTitle) : orderTitle,
+          description: orderTitle,
+          descriptionAr: orderTitleAr || orderTitle,
           quantity: 1,
           unitPrice: invoice.subtotal,
           total: invoice.subtotal,
@@ -260,7 +249,7 @@ export function OrderInvoiceSection({
         notes: orderDescription || undefined,
       };
 
-      await createInvoicePDF(invoiceData, { 
+      await generateInvoicePDFDirect(invoiceData, { 
         download: true, 
         filename: `invoice-${invoice.invoice_number}.pdf` 
       });
