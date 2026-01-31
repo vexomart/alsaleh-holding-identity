@@ -119,6 +119,15 @@ const CATEGORIES_CONFIG: Record<string, {
     gradient: "from-slate-600 to-slate-800",
     bgColor: "bg-slate-500/10",
   },
+  api: {
+    nameAr: "الربط API",
+    nameEn: "API Integration",
+    descriptionAr: "ربط وتكامل الأنظمة والخدمات الخارجية مع منصتك",
+    descriptionEn: "Integrate external systems and services with your platform",
+    icon: Globe,
+    gradient: "from-pink-500 to-rose-500",
+    bgColor: "bg-pink-500/10",
+  },
 };
 
 const DEFAULT_CATEGORY_CONFIG = {
