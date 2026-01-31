@@ -289,5 +289,50 @@ useInvoiceDbRealtime(
 4. **Realtime event** `invoice.generated` emitted to customer channels
 5. **Notification record** created in notifications table
 6. **Customer receives toast** notification instantly
-7. **Customer navigates** to order details via notification link
+7. **Customer navigates** to order details via notification link (`/app/orders/:id`)
 8. **Customer downloads** invoice PDF
+
+---
+
+## UI Components
+
+### OrderInvoiceSection (`src/components/orders/OrderInvoiceSection.tsx`)
+Reusable invoice display component for order details.
+
+**Props:**
+```typescript
+interface OrderInvoiceSectionProps {
+  orderId: string;
+  orderNumber: string;
+  orderTitle: string;
+  orderTitleAr?: string | null;
+  orderDescription?: string | null;
+  totalAmount: number;
+  currency?: string;
+  customerId?: string | null;
+  tenantId?: string | null;
+  createdAt?: string | null;
+  dueDate?: string | null;
+  isAdmin?: boolean;              // Shows "Generate Invoice" button
+  onInvoiceGenerated?: (invoice: Invoice) => void;
+}
+```
+
+**Features:**
+- Shows "لا توجد فاتورة بعد" if no invoice exists
+- Admin: "توليد الفاتورة" button to generate new invoice
+- Shows invoice status with colored badge
+- VAT breakdown: subtotal, VAT rate/amount, total
+- "تحميل الفاتورة PDF" download button
+- RTL support with LTR invoice numbers
+
+### Admin Integration (`/admin/orders/:id` dialog)
+- Added `OrderInvoiceSection` to order details dialog
+- Shows invoice status and VAT breakdown
+- Generate invoice button for orders without invoices
+
+### Customer Page (`/app/orders/:id`)
+- New page: `src/pages/app/OrderDetails.tsx`
+- Shows order information with invoice section
+- Real-time invoice notification via `useInvoiceRealtime`
+- Download invoice PDF button

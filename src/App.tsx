@@ -182,6 +182,7 @@ const AuthForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 const AuthResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const CustomerDashboard = lazy(() => import("./pages/app/Dashboard"));
+const CustomerOrderDetails = lazy(() => import("./pages/app/OrderDetails"));
 
 // Loading component
 const PageLoader = () => (
@@ -249,6 +250,7 @@ const App = () => {
                       <Route path="/admin/*" element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>} />
                       
                       {/* Customer Dashboard - /app/* */}
+                      <Route path="/app/orders/:id" element={<Suspense fallback={<PageLoader />}><CustomerOrderDetails /></Suspense>} />
                       <Route path="/app/*" element={<Suspense fallback={<PageLoader />}><CustomerDashboard /></Suspense>} />
                       
                       {/* Company Pages */}
