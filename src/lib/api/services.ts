@@ -91,13 +91,16 @@ function mapDbRowToService(row: Record<string, unknown>): Service {
 }
 
 /**
- * Fetch all services with optional filters
+ * Fetch all services with optional filters (Admin API)
+ * GET /api/admin/services
+ * Ordered by sort_order ASC, then created_at DESC
  */
 export async function fetchServices(filters?: ServiceFilters): Promise<Service[]> {
   let query = supabase
     .from('services')
     .select('*')
-    .order('sort_order', { ascending: true });
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
 
   if (filters?.category) {
     query = query.eq('category', filters.category);
@@ -126,6 +129,57 @@ export async function fetchServices(filters?: ServiceFilters): Promise<Service[]
 }
 
 /**
+ * Fetch services for customers (public-facing)
+ * GET /api/app/services
+ * Returns only active + visible services, sorted by sort_order ASC
+ */
+export async function fetchCustomerServices(category?: string): Promise<Service[]> {
+  let query = supabase
+    .from('services')
+    .select('*')
+    .eq('is_active', true)
+    .eq('is_visible_to_customers', true)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  if (category) {
+    query = query.eq('category', category);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Error fetching customer services:', error);
+    throw error;
+  }
+
+  return (data || []).map(row => mapDbRowToService(row as unknown as Record<string, unknown>));
+}
+
+/**
+ * Fetch customer services grouped by category
+ * GET /api/app/services/by-category
+ */
+export async function fetchCustomerServicesByCategory(): Promise<ServicesByCategory[]> {
+  const { data, error } = await supabase.rpc('get_services_by_category', {
+    p_tenant_id: null,
+    p_include_inactive: false,
+  });
+
+  if (error) {
+    console.error('Error fetching customer services by category:', error);
+    throw error;
+  }
+
+  return (data || []).map((item: { category: string; services: Json }) => ({
+    category: item.category || 'غير مصنف',
+    services: ((item.services as unknown as Service[]) || []).filter(
+      s => s.is_visible_to_customers !== false
+    ),
+  }));
+}
+
+/**
  * Fetch a single service by ID
  */
 export async function fetchServiceById(id: string): Promise<Service | null> {
@@ -146,7 +200,8 @@ export async function fetchServiceById(id: string): Promise<Service | null> {
 }
 
 /**
- * Fetch services grouped by category
+ * Fetch services grouped by category (Admin API)
+ * GET /api/admin/services/by-category
  */
 export async function fetchServicesByCategory(includeInactive = false): Promise<ServicesByCategory[]> {
   const { data, error } = await supabase.rpc('get_services_by_category', {
@@ -166,7 +221,7 @@ export async function fetchServicesByCategory(includeInactive = false): Promise<
 }
 
 /**
- * Get next available sort order
+ * Get next available sort order (Internal)
  */
 export async function getNextSortOrder(): Promise<number> {
   const { data, error } = await supabase.rpc('get_next_service_sort_order', {
@@ -182,7 +237,8 @@ export async function getNextSortOrder(): Promise<number> {
 }
 
 /**
- * Create a new service
+ * Create a new service (Admin API)
+ * POST /api/admin/services
  */
 export async function createService(request: CreateServiceRequest): Promise<Service> {
   const sortOrder = request.sort_order ?? await getNextSortOrder();
@@ -192,12 +248,16 @@ export async function createService(request: CreateServiceRequest): Promise<Serv
     name_ar: request.name_ar,
     description: request.description,
     description_ar: request.description_ar,
+    short_description: request.short_description,
+    short_description_ar: request.short_description_ar,
     price: request.price,
     currency: request.currency || 'SAR',
+    include_vat: request.include_vat ?? false,
     category: request.category,
     icon: request.icon,
     image_url: request.image_url,
     is_active: request.is_active ?? true,
+    is_visible_to_customers: request.is_visible_to_customers ?? true,
     sort_order: sortOrder,
     metadata: (request.metadata || {}) as Json,
   };
@@ -217,7 +277,8 @@ export async function createService(request: CreateServiceRequest): Promise<Serv
 }
 
 /**
- * Update an existing service
+ * Update an existing service (Admin API)
+ * PATCH /api/admin/services/:id
  */
 export async function updateService(request: UpdateServiceRequest): Promise<Service> {
   const { id, metadata, ...rest } = request;
@@ -247,7 +308,8 @@ export async function updateService(request: UpdateServiceRequest): Promise<Serv
 }
 
 /**
- * Delete a service
+ * Delete a service (Admin API)
+ * DELETE /api/admin/services/:id
  */
 export async function deleteService(id: string): Promise<void> {
   const { error } = await supabase
@@ -262,7 +324,9 @@ export async function deleteService(id: string): Promise<void> {
 }
 
 /**
- * Update sort order for multiple services (drag & drop)
+ * Bulk update sort order for services (Admin API)
+ * PATCH /api/admin/services/reorder
+ * Transaction-like bulk update using RPC
  */
 export async function updateServicesSortOrder(
   orders: { id: string; sort_order: number }[]
