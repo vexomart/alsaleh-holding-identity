@@ -80,19 +80,22 @@ serve(async (req) => {
             name,
             name_ar
           )
-        ),
-        profiles:customer_id (
-          full_name,
-          email,
-          phone
         )
       `)
       .eq('id', invoice_id)
       .single();
 
     if (invoiceError || !invoice) {
+      console.error('Invoice fetch error:', invoiceError);
       throw new Error('Invoice not found');
     }
+
+    // Fetch customer profile separately
+    const { data: customerProfile } = await supabase
+      .from('profiles')
+      .select('full_name, email, phone')
+      .eq('id', invoice.customer_id)
+      .single();
 
     // Check if invoice already has a payment URL
     if (invoice.payment_url && invoice.status !== 'cancelled') {
@@ -163,9 +166,9 @@ serve(async (req) => {
       amount: Number(invoice.total),
       callBackUrl: defaultCallback,
       cancelUrl: `${defaultCallback}?payment=cancelled`,
-      clientEmail: invoice.profiles?.email || '',
-      clientMobile: invoice.profiles?.phone || '',
-      clientName: invoice.profiles?.full_name || 'Customer',
+      clientEmail: customerProfile?.email || '',
+      clientMobile: customerProfile?.phone || '',
+      clientName: customerProfile?.full_name || 'Customer',
       currency: invoice.currency || 'SAR',
       note: `Invoice ${invoice.invoice_number}`,
       orderNumber: invoice.invoice_number,
