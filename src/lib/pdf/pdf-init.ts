@@ -83,40 +83,51 @@ async function initializePdfFonts(): Promise<void> {
     const cairo = await loadCairoTTFAsVfs();
     console.log('[PDF INIT] Cairo fonts loaded (Regular:', cairo.regular.length, 'chars, Bold:', cairo.bold.length, 'chars)');
 
-    const pdfMakeAny = pdfMake as unknown as {
-      vfs?: Record<string, string>;
-      fonts?: Record<string, unknown>;
+    // CRITICAL: Access pdfMake directly (not via type assertion that creates a new reference)
+    const pdfMakeModule = pdfMake as unknown as {
+      vfs: Record<string, string>;
+      fonts: Record<string, unknown>;
     };
 
-    // Ensure VFS exists
-    if (!pdfMakeAny.vfs) {
-      pdfMakeAny.vfs = {};
+    // Ensure VFS exists - if not, get it from vfs_fonts
+    if (!pdfMakeModule.vfs) {
+      const pdfFontsModule = pdfFonts as unknown as { pdfMake: { vfs: Record<string, string> } };
+      pdfMakeModule.vfs = pdfFontsModule.pdfMake?.vfs || {};
     }
 
-    // Register font files in VFS
-    Object.assign(pdfMakeAny.vfs, {
-      'Cairo-Regular.ttf': cairo.regular,
-      'Cairo-Bold.ttf': cairo.bold,
-    });
+    // DIRECT property assignment (not Object.assign which might fail silently)
+    pdfMakeModule.vfs['Cairo-Regular.ttf'] = cairo.regular;
+    pdfMakeModule.vfs['Cairo-Bold.ttf'] = cairo.bold;
+
+    console.log('[PDF INIT] After VFS assignment:');
+    console.log('[PDF INIT]   - Cairo-Regular.ttf in VFS:', 'Cairo-Regular.ttf' in pdfMakeModule.vfs);
+    console.log('[PDF INIT]   - Cairo-Bold.ttf in VFS:', 'Cairo-Bold.ttf' in pdfMakeModule.vfs);
+    console.log('[PDF INIT]   - Cairo-Regular.ttf length:', pdfMakeModule.vfs['Cairo-Regular.ttf']?.length || 0);
+    console.log('[PDF INIT]   - Cairo-Bold.ttf length:', pdfMakeModule.vfs['Cairo-Bold.ttf']?.length || 0);
 
     // Verify registration
-    if (!pdfMakeAny.vfs['Cairo-Regular.ttf'] || !pdfMakeAny.vfs['Cairo-Bold.ttf']) {
+    if (!pdfMakeModule.vfs['Cairo-Regular.ttf'] || !pdfMakeModule.vfs['Cairo-Bold.ttf']) {
       throw new Error('[PDF INIT] Font registration failed — files not in VFS after assignment');
     }
 
-    // Register font family
-    pdfMakeAny.fonts = {
-      ...(pdfMakeAny.fonts || {}),
-      [ARABIC_FONT_NAME]: {
-        normal: 'Cairo-Regular.ttf',
-        bold: 'Cairo-Bold.ttf',
-        italics: 'Cairo-Regular.ttf',
-        bolditalics: 'Cairo-Bold.ttf',
-      },
+    // Register font family with explicit fonts object
+    if (!pdfMakeModule.fonts) {
+      pdfMakeModule.fonts = {};
+    }
+    
+    pdfMakeModule.fonts[ARABIC_FONT_NAME] = {
+      normal: 'Cairo-Regular.ttf',
+      bold: 'Cairo-Bold.ttf',
+      italics: 'Cairo-Regular.ttf',
+      bolditalics: 'Cairo-Bold.ttf',
     };
 
-    console.log('[PDF INIT] VFS keys:', Object.keys(pdfMakeAny.vfs).filter(k => k.includes('Cairo')));
-    console.log('[PDF INIT] Registered fonts:', Object.keys(pdfMakeAny.fonts || {}));
+    console.log('[PDF INIT] VFS Cairo keys:', Object.keys(pdfMakeModule.vfs).filter(k => k.includes('Cairo')));
+    console.log('[PDF INIT] Registered fonts:', Object.keys(pdfMakeModule.fonts));
+
+    // DOUBLE CHECK: Verify the SAME pdfMake instance has the fonts
+    const verifyPdfMake = pdfMake as unknown as { vfs: Record<string, string> };
+    console.log('[PDF INIT] VERIFY - pdfMake.vfs has Cairo-Bold.ttf:', 'Cairo-Bold.ttf' in verifyPdfMake.vfs);
 
     initialized = true;
     console.log('[PDF INIT] ✅ Singleton initialization complete. initialized =', initialized);
