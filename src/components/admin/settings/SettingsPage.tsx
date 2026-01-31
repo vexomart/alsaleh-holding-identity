@@ -57,8 +57,8 @@ export function SettingsPage() {
       </div>
 
       {/* Settings Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 h-auto gap-2 bg-transparent p-0">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6" dir={isRTL ? "rtl" : "ltr"}>
+        <TabsList className="flex flex-wrap w-full h-auto gap-2 bg-transparent p-0">
           {settingsTabs.map((tab) => (
             <TabsTrigger
               key={tab.id}
