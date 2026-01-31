@@ -1,9 +1,10 @@
 /**
  * useRealtime Hook - Phase 0.5
  * Realtime subscriptions for notifications, orders, and security events
+ * Fixed: Uses useState for isConnected to trigger UI updates
  */
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
@@ -49,7 +50,7 @@ export const useRealtime = (options: UseRealtimeOptions): UseRealtimeReturn => {
   } = options;
 
   const channelsRef = useRef<RealtimeChannel[]>([]);
-  const isConnectedRef = useRef(false);
+  const [isConnected, setIsConnected] = useState(false);
 
   const handleNotificationChange = useCallback(
     (payload: RealtimePostgresChangesPayload<{ [key: string]: unknown }>) => {
@@ -102,8 +103,18 @@ export const useRealtime = (options: UseRealtimeOptions): UseRealtimeReturn => {
     });
     channelsRef.current = [];
 
+    let connectedCount = 0;
+    let expectedCount = 0;
+
+    const checkAllConnected = () => {
+      if (connectedCount === expectedCount && expectedCount > 0) {
+        setIsConnected(true);
+      }
+    };
+
     // Subscribe to user notifications
     if (userId && onNotification) {
+      expectedCount++;
       const notificationChannel = supabase
         .channel(`user:${userId}:notifications`)
         .on(
@@ -116,13 +127,19 @@ export const useRealtime = (options: UseRealtimeOptions): UseRealtimeReturn => {
           },
           handleNotificationChange
         )
-        .subscribe();
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            connectedCount++;
+            checkAllConnected();
+          }
+        });
 
       channelsRef.current.push(notificationChannel);
     }
 
     // Subscribe to order events for tenant
     if (tenantId && (onOrderCreated || onOrderStatusChanged || onOrderAssigned)) {
+      expectedCount++;
       const orderEventsChannel = supabase
         .channel(`tenant:${tenantId}:order_events`)
         .on(
@@ -135,13 +152,19 @@ export const useRealtime = (options: UseRealtimeOptions): UseRealtimeReturn => {
           },
           handleOrderEventChange
         )
-        .subscribe();
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            connectedCount++;
+            checkAllConnected();
+          }
+        });
 
       channelsRef.current.push(orderEventsChannel);
     }
 
     // Subscribe to user's own order events
     if (userId && (onOrderStatusChanged || onOrderAssigned)) {
+      expectedCount++;
       const userOrdersChannel = supabase
         .channel(`user:${userId}:orders`)
         .on(
@@ -170,12 +193,20 @@ export const useRealtime = (options: UseRealtimeOptions): UseRealtimeReturn => {
             }
           }
         )
-        .subscribe();
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            connectedCount++;
+            checkAllConnected();
+          }
+        });
 
       channelsRef.current.push(userOrdersChannel);
     }
 
-    isConnectedRef.current = true;
+    // If no subscriptions, set connected to true
+    if (expectedCount === 0) {
+      setIsConnected(true);
+    }
   }, [
     enabled,
     userId,
@@ -193,7 +224,7 @@ export const useRealtime = (options: UseRealtimeOptions): UseRealtimeReturn => {
       supabase.removeChannel(channel);
     });
     channelsRef.current = [];
-    isConnectedRef.current = false;
+    setIsConnected(false);
   }, []);
 
   useEffect(() => {
@@ -205,7 +236,7 @@ export const useRealtime = (options: UseRealtimeOptions): UseRealtimeReturn => {
   }, [subscribe, unsubscribe]);
 
   return {
-    isConnected: isConnectedRef.current,
+    isConnected,
     subscribe,
     unsubscribe,
   };
