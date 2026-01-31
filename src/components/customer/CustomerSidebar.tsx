@@ -118,15 +118,12 @@ export function CustomerSidebar() {
     >
       {/* Header */}
       <SidebarHeader className="border-b border-white/10 p-4">
-        <div className={cn(
-          "flex items-center gap-3",
-          isRTL && "flex-row-reverse"
-        )}>
+        <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg">
             <Building2 className="h-5 w-5 text-white" />
           </div>
           {state === "expanded" && (
-            <div className={cn("flex flex-col", isRTL && "text-end")}>
+            <div className="flex flex-col text-start">
               <span className="font-bold text-sm text-white">
                 ASH
               </span>
