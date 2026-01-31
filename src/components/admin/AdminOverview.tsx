@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAdminAnalytics } from "@/hooks/useAdminAnalytics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -44,146 +44,79 @@ interface StatCard {
   titleAr: string;
   titleEn: string;
   value: number;
-  change: number;
-  changeType: "increase" | "decrease" | "neutral";
   icon: React.ElementType;
   gradient: string;
   iconBg: string;
 }
 
-interface RecentOrder {
-  id: string;
-  order_number: string;
-  title: string;
-  status: string;
-  created_at: string;
-  total_amount: number | null;
-}
-
-interface TopService {
-  id: string;
-  name: string;
-  name_ar: string | null;
-  orders_count: number;
-  revenue: number;
-}
-
-interface ActivityItem {
-  id: string;
-  type: "order" | "user" | "service";
-  titleAr: string;
-  titleEn: string;
-  time: string;
-  icon: React.ElementType;
-  color: string;
-}
-
-const revenueData = [
-  { month: "يناير", revenue: 4500 },
-  { month: "فبراير", revenue: 5200 },
-  { month: "مارس", revenue: 4800 },
-  { month: "أبريل", revenue: 6100 },
-  { month: "مايو", revenue: 5500 },
-  { month: "يونيو", revenue: 7200 },
-  { month: "يوليو", revenue: 6800 },
-];
-
-const orderStatusData = [
-  { name: "مكتمل", value: 45, color: "#10b981" },
-  { name: "قيد التنفيذ", value: 25, color: "#3b82f6" },
-  { name: "معلق", value: 20, color: "#f59e0b" },
-  { name: "ملغي", value: 10, color: "#ef4444" },
-];
-
 export function AdminOverview() {
   const { language } = useLanguage();
   const { profile } = useAuth();
-  const [stats, setStats] = useState({
-    users: 0,
-    orders: 0,
-    services: 0,
-    revenue: 0,
-  });
-  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
-  const [topServices, setTopServices] = useState<TopService[]>([]);
-  const [activities, setActivities] = useState<ActivityItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { analytics, loading: isLoading, refresh: handleRefresh } = useAdminAnalytics();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchData = async () => {
-    try {
-      // Fetch counts in parallel
-      const [usersRes, ordersRes, servicesRes] = await Promise.all([
-        supabase.from("profiles").select("id", { count: "exact", head: true }),
-        supabase.from("orders").select("id, total_amount, created_at, title, status", { count: "exact" }),
-        supabase.from("services").select("id, name, name_ar", { count: "exact" }),
-      ]);
-
-      // Calculate total revenue from orders
-      const revenue = ordersRes.data?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
-
-      setStats({
-        users: usersRes.count || 0,
-        orders: ordersRes.count || 0,
-        services: servicesRes.count || 0,
-        revenue,
-      });
-
-      // Fetch recent orders
-      const { data: orders } = await supabase
-        .from("orders")
-        .select("id, order_number, title, status, created_at, total_amount")
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      setRecentOrders(orders || []);
-
-      // Generate mock top services (since we don't have order-service join data)
-      const mockTopServices: TopService[] = (servicesRes.data || []).slice(0, 4).map((s, i) => ({
-        id: s.id,
-        name: s.name,
-        name_ar: s.name_ar,
-        orders_count: Math.floor(Math.random() * 50) + 10,
-        revenue: Math.floor(Math.random() * 10000) + 1000,
-      }));
-      setTopServices(mockTopServices);
-
-      // Generate activities from recent orders
-      const generatedActivities: ActivityItem[] = (orders || []).slice(0, 5).map((order) => ({
-        id: order.id,
-        type: "order" as const,
-        titleAr: `طلب جديد: ${order.title}`,
-        titleEn: `New order: ${order.title}`,
-        time: order.created_at,
-        icon: ShoppingCart,
-        color: "text-blue-500",
-      }));
-      setActivities(generatedActivities);
-
-    } catch (error) {
-      console.error("Error fetching stats:", error);
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleRefresh = () => {
+  const onRefresh = async () => {
     setIsRefreshing(true);
-    fetchData();
+    await handleRefresh();
+    setIsRefreshing(false);
   };
+
+  // Compute order status data for pie chart from real data
+  const orderStatusData = useMemo(() => {
+    const total = analytics.totalOrders || 1; // Avoid division by zero
+    return [
+      { 
+        name: "مكتمل", 
+        nameEn: "Completed",
+        value: Math.round((analytics.ordersByStatus.completed / total) * 100) || 0, 
+        color: "#10b981" 
+      },
+      { 
+        name: "قيد التنفيذ", 
+        nameEn: "In Progress",
+        value: Math.round(((analytics.ordersByStatus.processing + analytics.ordersByStatus.in_progress) / total) * 100) || 0, 
+        color: "#3b82f6" 
+      },
+      { 
+        name: "معلق", 
+        nameEn: "Pending",
+        value: Math.round((analytics.ordersByStatus.pending / total) * 100) || 0, 
+        color: "#f59e0b" 
+      },
+      { 
+        name: "ملغي", 
+        nameEn: "Cancelled",
+        value: Math.round(((analytics.ordersByStatus.cancelled + analytics.ordersByStatus.refunded) / total) * 100) || 0, 
+        color: "#ef4444" 
+      },
+    ].filter(item => item.value > 0);
+  }, [analytics.ordersByStatus, analytics.totalOrders]);
+
+  // Revenue data for chart from real monthly data
+  const revenueData = useMemo(() => {
+    return analytics.monthlyRevenue.map(item => ({
+      month: language === "ar" ? item.month : item.monthEn,
+      revenue: item.revenue,
+    }));
+  }, [analytics.monthlyRevenue, language]);
+
+  // Calculate completion rate from real data
+  const completionRate = useMemo(() => {
+    const total = analytics.totalOrders || 1;
+    return Math.round((analytics.ordersByStatus.completed / total) * 100);
+  }, [analytics.ordersByStatus.completed, analytics.totalOrders]);
+
+  // Average order value
+  const avgOrderValue = useMemo(() => {
+    if (analytics.totalOrders === 0) return 0;
+    return Math.round(analytics.totalRevenue / analytics.totalOrders);
+  }, [analytics.totalRevenue, analytics.totalOrders]);
 
   const statCards: StatCard[] = [
     {
       titleAr: "إجمالي المستخدمين",
       titleEn: "Total Users",
-      value: stats.users,
-      change: 12.5,
-      changeType: "increase",
+      value: analytics.totalUsers,
       icon: Users,
       gradient: "from-blue-500 to-blue-600",
       iconBg: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
@@ -191,9 +124,7 @@ export function AdminOverview() {
     {
       titleAr: "الطلبات",
       titleEn: "Orders",
-      value: stats.orders,
-      change: 8.2,
-      changeType: "increase",
+      value: analytics.totalOrders,
       icon: ShoppingCart,
       gradient: "from-emerald-500 to-emerald-600",
       iconBg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
@@ -201,9 +132,7 @@ export function AdminOverview() {
     {
       titleAr: "الخدمات النشطة",
       titleEn: "Active Services",
-      value: stats.services,
-      change: 0,
-      changeType: "neutral",
+      value: analytics.totalServices,
       icon: Package,
       gradient: "from-violet-500 to-violet-600",
       iconBg: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
@@ -211,9 +140,7 @@ export function AdminOverview() {
     {
       titleAr: "الإيرادات",
       titleEn: "Revenue",
-      value: stats.revenue,
-      change: 23.1,
-      changeType: "increase",
+      value: analytics.totalRevenue,
       icon: DollarSign,
       gradient: "from-amber-500 to-amber-600",
       iconBg: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
@@ -230,6 +157,7 @@ export function AdminOverview() {
       case "pending":
         return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
       case "cancelled":
+      case "refunded":
         return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
       default:
         return "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400";
@@ -243,6 +171,7 @@ export function AdminOverview() {
       in_progress: { ar: "قيد التنفيذ", en: "In Progress" },
       completed: { ar: "مكتمل", en: "Completed" },
       cancelled: { ar: "ملغي", en: "Cancelled" },
+      refunded: { ar: "مسترد", en: "Refunded" },
     };
     return statusMap[status]?.[language === "ar" ? "ar" : "en"] || status;
   };
@@ -253,16 +182,6 @@ export function AdminOverview() {
       currency: "SAR",
       minimumFractionDigits: 0,
     }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat(language === "ar" ? "ar-SA" : "en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
   };
 
   const formatRelativeTime = (dateString: string) => {
@@ -310,6 +229,19 @@ export function AdminOverview() {
     },
   ];
 
+  // Generate activities from recent orders
+  const activities = useMemo(() => {
+    return analytics.recentOrders.slice(0, 5).map((order) => ({
+      id: order.id,
+      type: "order" as const,
+      titleAr: `طلب جديد: ${order.title}`,
+      titleEn: `New order: ${order.title}`,
+      time: order.created_at,
+      icon: ShoppingCart,
+      color: "text-blue-500",
+    }));
+  }, [analytics.recentOrders]);
+
   return (
     <div className="space-y-4 md:space-y-8">
       {/* Welcome Section with Quick Actions */}
@@ -331,7 +263,7 @@ export function AdminOverview() {
           <Button
             variant="outline"
             size="sm"
-            onClick={handleRefresh}
+            onClick={onRefresh}
             disabled={isRefreshing}
             className="gap-2"
           >
@@ -382,28 +314,12 @@ export function AdminOverview() {
               <div className="flex items-end justify-between">
                 <div>
                   <div className="text-lg md:text-2xl lg:text-3xl font-bold tracking-tight">
-                    {stat.titleEn === "Revenue" 
+                    {isLoading ? (
+                      <div className="h-8 w-20 bg-muted animate-pulse rounded" />
+                    ) : stat.titleEn === "Revenue" 
                       ? formatCurrency(stat.value)
                       : stat.value.toLocaleString()}
                   </div>
-                  {stat.changeType !== "neutral" && (
-                    <div className={cn(
-                      "flex items-center gap-1 mt-1 text-[10px] md:text-xs font-medium",
-                      stat.changeType === "increase" 
-                        ? "text-emerald-600 dark:text-emerald-400" 
-                        : "text-red-600 dark:text-red-400"
-                    )}>
-                      {stat.changeType === "increase" ? (
-                        <ArrowUpRight className="h-3 w-3" />
-                      ) : (
-                        <ArrowDownRight className="h-3 w-3" />
-                      )}
-                      <span>{stat.change}%</span>
-                      <span className="text-muted-foreground hidden sm:inline">
-                        {language === "ar" ? "من الشهر الماضي" : "from last month"}
-                      </span>
-                    </div>
-                  )}
                 </div>
               </div>
             </CardContent>
@@ -425,7 +341,7 @@ export function AdminOverview() {
                 {language === "ar" ? "الإيرادات الشهرية" : "Monthly Revenue"}
               </CardTitle>
               <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                {language === "ar" ? "تتبع إيراداتك على مدار الأشهر" : "Track your revenue over months"}
+                {language === "ar" ? "بيانات حقيقية من قاعدة البيانات" : "Real data from database"}
               </p>
             </div>
             <Badge variant="secondary" className="font-normal text-xs w-fit">
@@ -434,47 +350,59 @@ export function AdminOverview() {
           </CardHeader>
           <CardContent className="p-2 md:p-6 pt-0">
             <div className="h-[200px] md:h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-                  <defs>
-                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis 
-                    dataKey="month" 
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis 
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
-                    tickFormatter={(value) => `${value / 1000}k`}
-                    tickLine={false}
-                    axisLine={false}
-                    width={35}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      fontSize: '12px'
-                    }}
-                    formatter={(value: number) => [formatCurrency(value), language === "ar" ? "الإيرادات" : "Revenue"]}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="revenue"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorRevenue)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              {isLoading ? (
+                <div className="h-full w-full bg-muted/50 animate-pulse rounded flex items-center justify-center">
+                  <span className="text-muted-foreground text-sm">
+                    {language === "ar" ? "جاري التحميل..." : "Loading..."}
+                  </span>
+                </div>
+              ) : revenueData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={revenueData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                    <XAxis 
+                      dataKey="month" 
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis 
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                      tickFormatter={(value) => value >= 1000 ? `${value / 1000}k` : value}
+                      tickLine={false}
+                      axisLine={false}
+                      width={35}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        fontSize: '12px'
+                      }}
+                      formatter={(value: number) => [formatCurrency(value), language === "ar" ? "الإيرادات" : "Revenue"]}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorRevenue)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground">
+                  {language === "ar" ? "لا توجد بيانات إيرادات" : "No revenue data"}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -492,32 +420,43 @@ export function AdminOverview() {
           </CardHeader>
           <CardContent className="p-4 md:p-6 pt-0">
             <div className="h-[150px] md:h-[200px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={orderStatusData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={35}
-                    outerRadius={55}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {orderStatusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    formatter={(value: number) => [`${value}%`, ""]}
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      fontSize: '12px'
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              {isLoading ? (
+                <div className="h-full w-full bg-muted/50 animate-pulse rounded" />
+              ) : orderStatusData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={orderStatusData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={35}
+                      outerRadius={55}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {orderStatusData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value: number, name: string, props: any) => [
+                        `${value}%`, 
+                        language === "ar" ? props.payload.name : props.payload.nameEn
+                      ]}
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        fontSize: '12px'
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                  {language === "ar" ? "لا توجد طلبات" : "No orders"}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-1.5 md:gap-2 mt-2 md:mt-4">
               {orderStatusData.map((status, index) => (
@@ -526,7 +465,10 @@ export function AdminOverview() {
                     className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full flex-shrink-0" 
                     style={{ backgroundColor: status.color }}
                   />
-                  <span className="text-[10px] md:text-xs text-muted-foreground truncate">{status.name}</span>
+                  <span className="text-[10px] md:text-xs text-muted-foreground truncate">
+                    {language === "ar" ? status.name : status.nameEn}
+                  </span>
+                  <span className="text-[10px] md:text-xs font-medium ml-auto">{status.value}%</span>
                 </div>
               ))}
             </div>
@@ -564,9 +506,9 @@ export function AdminOverview() {
                   </div>
                 ))}
               </div>
-            ) : recentOrders.length > 0 ? (
+            ) : analytics.recentOrders.length > 0 ? (
               <div className="space-y-2 md:space-y-3">
-                {recentOrders.map((order, index) => (
+                {analytics.recentOrders.map((order, index) => (
                   <div
                     key={order.id}
                     className={cn(
@@ -613,31 +555,46 @@ export function AdminOverview() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 md:p-6 pt-0">
-            {topServices.length > 0 ? (
-              <div className="space-y-3 md:space-y-4">
-                {topServices.map((service, index) => (
-                  <div
-                    key={service.id}
-                    className="animate-fade-in"
-                    style={{ animationDelay: `${600 + index * 50}ms` }}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs md:text-sm font-medium truncate max-w-[120px] md:max-w-[150px]">
-                        {language === "ar" ? service.name_ar || service.name : service.name}
-                      </span>
-                      <span className="text-[10px] md:text-xs text-muted-foreground">
-                        {service.orders_count} {language === "ar" ? "طلب" : "orders"}
-                      </span>
+            {isLoading ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="flex justify-between mb-1">
+                      <div className="h-4 w-24 bg-muted rounded" />
+                      <div className="h-4 w-12 bg-muted rounded" />
                     </div>
-                    <Progress 
-                      value={(service.orders_count / 50) * 100} 
-                      className="h-1.5 md:h-2"
-                    />
-                    <p className="text-[10px] md:text-xs text-muted-foreground mt-1">
-                      {formatCurrency(service.revenue)}
-                    </p>
+                    <div className="h-2 bg-muted rounded" />
                   </div>
                 ))}
+              </div>
+            ) : analytics.topServices.length > 0 ? (
+              <div className="space-y-3 md:space-y-4">
+                {analytics.topServices.map((service, index) => {
+                  const maxOrders = Math.max(...analytics.topServices.map(s => s.orders_count), 1);
+                  return (
+                    <div
+                      key={service.id}
+                      className="animate-fade-in"
+                      style={{ animationDelay: `${600 + index * 50}ms` }}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs md:text-sm font-medium truncate max-w-[120px] md:max-w-[150px]">
+                          {language === "ar" ? service.name_ar || service.name : service.name}
+                        </span>
+                        <span className="text-[10px] md:text-xs text-muted-foreground">
+                          {service.orders_count} {language === "ar" ? "طلب" : "orders"}
+                        </span>
+                      </div>
+                      <Progress 
+                        value={(service.orders_count / maxOrders) * 100} 
+                        className="h-1.5 md:h-2"
+                      />
+                      <p className="text-[10px] md:text-xs text-muted-foreground mt-1">
+                        {formatCurrency(service.revenue)}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-6 md:py-8 text-center">
@@ -664,7 +621,19 @@ export function AdminOverview() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 md:p-6 pt-0">
-            {activities.length > 0 ? (
+            {isLoading ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex gap-3 animate-pulse">
+                    <div className="h-9 w-9 rounded-full bg-muted" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 w-3/4 bg-muted rounded" />
+                      <div className="h-3 w-1/2 bg-muted rounded" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : activities.length > 0 ? (
               <div className="relative space-y-3 md:space-y-4">
                 {/* Timeline line */}
                 <div className="absolute start-[14px] md:start-[18px] top-2 bottom-2 w-px bg-border" />
@@ -707,7 +676,7 @@ export function AdminOverview() {
         </Card>
       </div>
 
-      {/* Quick Stats Footer */}
+      {/* Quick Stats Footer - Using Real Data */}
       <Card 
         className="animate-fade-in border-0 shadow-lg bg-gradient-to-r from-primary/5 via-transparent to-primary/5"
         style={{ animationDelay: "700ms" }}
@@ -718,36 +687,44 @@ export function AdminOverview() {
               <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-1.5 md:mb-2">
                 <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6 text-emerald-600" />
               </div>
-              <p className="text-lg md:text-2xl font-bold">75%</p>
+              <p className="text-lg md:text-2xl font-bold">
+                {isLoading ? "--" : `${completionRate}%`}
+              </p>
               <p className="text-[10px] md:text-xs text-muted-foreground">
                 {language === "ar" ? "معدل الإكمال" : "Completion Rate"}
               </p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/30 mb-1.5 md:mb-2">
-                <Clock className="h-5 w-5 md:h-6 md:w-6 text-blue-600" />
+                <Users className="h-5 w-5 md:h-6 md:w-6 text-blue-600" />
               </div>
-              <p className="text-lg md:text-2xl font-bold">2.5h</p>
+              <p className="text-lg md:text-2xl font-bold">
+                {isLoading ? "--" : analytics.activeUsers}
+              </p>
               <p className="text-[10px] md:text-xs text-muted-foreground">
-                {language === "ar" ? "متوسط الاستجابة" : "Avg Response"}
+                {language === "ar" ? "المستخدمون النشطون" : "Active Users"}
               </p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-amber-100 dark:bg-amber-900/30 mb-1.5 md:mb-2">
-                <Star className="h-5 w-5 md:h-6 md:w-6 text-amber-600" />
+                <DollarSign className="h-5 w-5 md:h-6 md:w-6 text-amber-600" />
               </div>
-              <p className="text-lg md:text-2xl font-bold">4.8</p>
+              <p className="text-lg md:text-2xl font-bold">
+                {isLoading ? "--" : formatCurrency(avgOrderValue)}
+              </p>
               <p className="text-[10px] md:text-xs text-muted-foreground">
-                {language === "ar" ? "تقييم العملاء" : "Customer Rating"}
+                {language === "ar" ? "متوسط قيمة الطلب" : "Avg Order Value"}
               </p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-violet-100 dark:bg-violet-900/30 mb-1.5 md:mb-2">
-                <TrendingUp className="h-5 w-5 md:h-6 md:w-6 text-violet-600" />
+                <AlertCircle className="h-5 w-5 md:h-6 md:w-6 text-violet-600" />
               </div>
-              <p className="text-lg md:text-2xl font-bold">+23%</p>
+              <p className="text-lg md:text-2xl font-bold">
+                {isLoading ? "--" : analytics.ordersByStatus.pending}
+              </p>
               <p className="text-[10px] md:text-xs text-muted-foreground">
-                {language === "ar" ? "النمو الشهري" : "Monthly Growth"}
+                {language === "ar" ? "طلبات معلقة" : "Pending Orders"}
               </p>
             </div>
           </div>
