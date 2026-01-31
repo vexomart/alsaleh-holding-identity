@@ -733,9 +733,9 @@ const handler = async (req: Request): Promise<Response> => {
     
     // إرسال الإيميل للعميل
     const customerEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <info@alialshehriholding.com>",
+      from: "شركة علي صالح الشهري القابضة <info@ash-holding.sa>",
       to: [customerEmail],
-      bcc: ["info@alialshehriholding.com"], // نسخة للإدارة
+      bcc: ["info@ash-holding.sa"], // نسخة للإدارة
       subject,
       html,
     });

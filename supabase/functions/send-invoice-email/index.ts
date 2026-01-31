@@ -186,8 +186,8 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="company-name">شركة علي صالح الشهري القابضة</div>
             <div class="company-details">
               الرياض، المملكة العربية السعودية<br>
-              هاتف: 0555812567 | إيميل: info@alialshehriholding.com<br>
-              موقع: alialshehriholding.com
+              هاتف: 0555812567 | إيميل: info@ash-holding.sa<br>
+              موقع: ash-holding.sa
             </div>
           </div>
           
@@ -259,9 +259,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال الفاتورة للعميل مع إعدادات محسنة
     const customerEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <info@alialshehriholding.com>",
+      from: "شركة علي صالح الشهري القابضة <info@ash-holding.sa>",
       to: [customerEmail],
-      bcc: ["info@alialshehriholding.com"], // نسخة للإدارة
+      bcc: ["info@ash-holding.sa"], // نسخة للإدارة
       subject: `✅ فاتورة ضريبية رقم ${invoiceNumber} - مدفوعة`,
       html: invoiceHtml,
       headers: {
@@ -278,13 +278,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال نسخة للإدارة
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الفواتير <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
+      from: "نظام الفواتير <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
       subject: `نسخة إدارية - فاتورة رقم ${invoiceNumber} للعميل ${customerName}`,
       html: `
         <div style="direction: rtl; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <img src="https://alialshehriholding.com/favicon.ico" alt="شعار الشركة" style="max-width: 200px; height: auto;" />
+            <img src="https://ash-holding.sa/favicon.ico" alt="شعار الشركة" style="max-width: 200px; height: auto;" />
           </div>
           <h2 style="color: #1e40af; text-align: center;">إشعار فاتورة جديدة</h2>
           <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">

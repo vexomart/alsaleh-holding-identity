@@ -33,8 +33,8 @@ class EmailProvider {
 
   constructor() {
     this.resendApiKey = Deno.env.get('RESEND_API_KEY') || '';
-    this.fromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'no-reply@alialshehriholding.com';
-    this.fromName = Deno.env.get('RESEND_FROM_NAME') || 'Ali Saleh Al Shehri Holding';
+    this.fromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'no-reply@ash-holding.sa';
+    this.fromName = Deno.env.get('RESEND_FROM_NAME') || 'ASH Holding';
   }
 
   async sendViaResend(to: string, subject: string, html: string): Promise<{
@@ -169,7 +169,7 @@ class EmailNotificationService {
         client_name: userProfile.full_name || 'عزيزي العميل',
         company_name: 'Ali Saleh Al Shehri Holding',
         year: new Date().getFullYear().toString(),
-        portal_url: 'https://alialshehriholding.com/client',
+        portal_url: 'https://ash-holding.sa/client',
         date: new Date().toLocaleDateString('ar-SA'),
         ...payload,
       };

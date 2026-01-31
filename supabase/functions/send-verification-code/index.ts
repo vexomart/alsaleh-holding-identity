@@ -140,7 +140,7 @@ const handler = async (req: Request): Promise<Response> => {
     if (resendApiKey) {
       try {
         const emailResponse = await resend.emails.send({
-          from: "نظام الإدارة <security@alialshehriholding.com>",
+          from: "نظام الإدارة <security@ash-holding.sa>",
           to: [email],
           subject: `رمز التحقق - ${type === 'admin' ? 'لوحة الإدارة' : 'حسابك'}`,
           html: `

@@ -87,10 +87,10 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+      from: "ASH Holding <info@ash-holding.sa>",
       to: [to],
-      bcc: ["info@alialshehriholding.com"],
-      reply_to: "info@alialshehriholding.com",
+      bcc: ["info@ash-holding.sa"],
+      reply_to: "info@ash-holding.sa",
       subject,
       html,
     });

@@ -57,9 +57,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال بريد إلكتروني للشركة
     const companyEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
-      bcc: ["info@alialshehriholding.com"],
+      from: "ASH Holding <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
+      bcc: ["info@ash-holding.sa"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -407,9 +407,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال بريد تأكيد للعميل
     const customerEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+      from: "ASH Holding <info@ash-holding.sa>",
       to: [customerInfo.email],
-      bcc: ["info@alialshehriholding.com"],
+      bcc: ["info@ash-holding.sa"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -693,7 +693,7 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="contact-info">
                 <h3>📞 للتواصل السريع معنا</h3>
                 <p><strong>واتساب:</strong> <a href="https://wa.me/966555812567">0555812567</a></p>
-                <p><strong>البريد الإلكتروني:</strong> <a href="mailto:info@alialshehriholding.com">info@alialshehriholding.com</a></p>
+                <p><strong>البريد الإلكتروني:</strong> <a href="mailto:info@ash-holding.sa">info@ash-holding.sa</a></p>
                 <p style="margin-top: 20px; color: #2c5282; font-size: 16px;">
                   💡 <strong>نصيحة:</strong> احتفظ بهذا الإيميل كمرجع لطلبك
                 </p>
