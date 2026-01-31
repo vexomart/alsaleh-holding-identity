@@ -42,12 +42,18 @@ export {
   type ArabicPDFConfig,
 } from './arabic-pdf';
 
-// Invoice generator
+// Invoice generator (VAT compliant)
 export {
   generateInvoiceContent,
   createInvoicePDF,
+  generateInvoicePdf,
+  orderToInvoiceData,
+  calculateVAT,
+  calculateInvoiceTotals,
+  exampleInvoiceInput,
   type InvoiceData,
   type InvoiceItem,
+  type CompanyInfo,
 } from './invoice-generator';
 
 // Report generator
@@ -75,4 +81,5 @@ export {
   generateSampleReport, 
   generateSampleContract,
   testArabicPDFRendering,
+  testArabicTaxInvoice,
 } from './samples';
