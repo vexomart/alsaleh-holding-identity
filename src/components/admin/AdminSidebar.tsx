@@ -19,7 +19,8 @@ import {
   ChevronRight,
   Building2,
   Sparkles,
-  X
+  X,
+  Wallet
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -113,6 +114,14 @@ const businessNavItems: NavItem[] = [
     permission: "orders.view",
     badge: 5,
     badgeColor: "bg-blue-500",
+  },
+  {
+    titleKey: "wallets",
+    titleAr: "إدارة المحافظ",
+    titleEn: "Wallet Management",
+    icon: Wallet,
+    href: ROUTES.ADMIN.WALLETS,
+    permission: "finance.view",
   },
 ];
 

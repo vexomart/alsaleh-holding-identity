@@ -22,6 +22,7 @@ export const ROUTES = {
     ROLES: '/admin/roles',
     SERVICES: '/admin/services',
     ORDERS: '/admin/orders',
+    WALLETS: '/admin/wallets',
     CMS: {
       ROOT: '/admin/cms',
       PAGES: '/admin/cms/pages',
