@@ -1,6 +1,6 @@
 /**
  * Customer Dashboard Sidebar
- * Arabic-first RTL navigation
+ * TRUE RTL - Sidebar on RIGHT in Arabic mode
  */
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -102,25 +102,31 @@ export function CustomerSidebar() {
     navigate('/auth/login');
   };
 
-  const CollapseIcon = isRTL ? ChevronRight : ChevronLeft;
-  const ExpandIcon = isRTL ? ChevronLeft : ChevronRight;
+  // RTL-aware collapse icons
+  const CollapseIcon = isRTL ? ChevronLeft : ChevronRight;
+  const ExpandIcon = isRTL ? ChevronRight : ChevronLeft;
 
   return (
     <Sidebar 
       collapsible="icon"
+      side={isRTL ? "right" : "left"}
       className={cn(
-        "border-e bg-gradient-to-b from-slate-950 to-slate-900 text-white",
-        isRTL && "border-e-0 border-s"
+        "bg-gradient-to-b from-slate-950 to-slate-900 text-white",
+        // Border on the correct side based on RTL
+        isRTL ? "border-s border-e-0" : "border-e border-s-0"
       )}
     >
       {/* Header */}
       <SidebarHeader className="border-b border-white/10 p-4">
-        <div className="flex items-center gap-3">
+        <div className={cn(
+          "flex items-center gap-3",
+          isRTL && "flex-row-reverse"
+        )}>
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg">
             <Building2 className="h-5 w-5 text-white" />
           </div>
           {state === "expanded" && (
-            <div className="flex flex-col">
+            <div className={cn("flex flex-col", isRTL && "text-right")}>
               <span className="font-bold text-sm text-white">
                 {isRTL ? "الشهري القابضة" : "ASH Holding"}
               </span>
@@ -135,7 +141,10 @@ export function CustomerSidebar() {
       {/* Navigation */}
       <SidebarContent className="px-2 py-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-slate-400 text-xs mb-2">
+          <SidebarGroupLabel className={cn(
+            "text-slate-400 text-xs mb-2",
+            isRTL && "text-right"
+          )}>
             {isRTL ? "القائمة الرئيسية" : "Main Menu"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -150,14 +159,18 @@ export function CustomerSidebar() {
                       onClick={() => handleNavigation(item.href)}
                       tooltip={isRTL ? item.titleAr : item.titleEn}
                       className={cn(
-                        "w-full justify-start gap-3 h-11 rounded-lg transition-all duration-200",
+                        "w-full h-11 rounded-lg transition-all duration-200",
+                        isRTL ? "flex-row-reverse justify-end" : "justify-start",
                         active
                           ? "bg-amber-500/20 text-amber-400 font-medium"
                           : "text-slate-300 hover:bg-white/5 hover:text-white"
                       )}
                     >
-                      <Icon className={cn("h-5 w-5", active && "text-amber-400")} />
-                      <span className="flex-1 text-start">
+                      <Icon className={cn("h-5 w-5 shrink-0", active && "text-amber-400")} />
+                      <span className={cn(
+                        "flex-1",
+                        isRTL ? "text-right me-3" : "text-left ms-3"
+                      )}>
                         {isRTL ? item.titleAr : item.titleEn}
                       </span>
                       {item.badge && item.badge > 0 && (
@@ -182,7 +195,8 @@ export function CustomerSidebar() {
         {/* User Info */}
         <div className={cn(
           "flex items-center gap-3 p-2 rounded-lg bg-white/5 mb-2",
-          state === "collapsed" && "justify-center"
+          state === "collapsed" && "justify-center",
+          isRTL && state !== "collapsed" && "flex-row-reverse"
         )}>
           <Avatar className="h-9 w-9 border-2 border-amber-500/30">
             <AvatarImage src={profile?.avatar_url || undefined} />
@@ -191,7 +205,7 @@ export function CustomerSidebar() {
             </AvatarFallback>
           </Avatar>
           {state === "expanded" && (
-            <div className="flex-1 min-w-0">
+            <div className={cn("flex-1 min-w-0", isRTL && "text-right")}>
               <p className="text-sm font-medium text-white truncate">
                 {profile?.full_name || profile?.email?.split("@")[0]}
               </p>
@@ -203,7 +217,7 @@ export function CustomerSidebar() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2">
+        <div className={cn("flex gap-2", isRTL && "flex-row-reverse")}>
           <Button
             variant="ghost"
             size="sm"
@@ -220,11 +234,14 @@ export function CustomerSidebar() {
             variant="ghost"
             size="sm"
             onClick={handleSignOut}
-            className="flex-1 h-9 text-slate-300 hover:text-red-400 hover:bg-red-500/10"
+            className={cn(
+              "flex-1 h-9 text-slate-300 hover:text-red-400 hover:bg-red-500/10",
+              isRTL && "flex-row-reverse"
+            )}
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className={cn("h-4 w-4", isRTL && "scale-x-[-1]")} />
             {state === "expanded" && (
-              <span className="ms-2">{isRTL ? "خروج" : "Logout"}</span>
+              <span className={isRTL ? "me-2" : "ms-2"}>{isRTL ? "خروج" : "Logout"}</span>
             )}
           </Button>
         </div>
