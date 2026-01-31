@@ -15,6 +15,7 @@ import { OrdersManagement } from '@/components/admin/orders/OrdersManagement';
 import { ReportsPage } from '@/components/admin/reports/ReportsPage';
 import { NotificationsPage } from '@/components/admin/notifications/NotificationsPage';
 import { SettingsPage } from '@/components/admin/settings/SettingsPage';
+import { AuditLogPage } from '@/components/admin/audit/AuditLogPage';
 import { Card, CardContent } from '@/components/ui/card';
 import { Construction } from 'lucide-react';
 
@@ -56,7 +57,7 @@ const AdminDashboard = () => {
         {/* System Routes */}
         <Route path="reports" element={<ReportsPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="audit" element={<PlaceholderPage title="سجل النشاط" />} />
+        <Route path="audit" element={<AuditLogPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Routes>
     </AdminLayout>
