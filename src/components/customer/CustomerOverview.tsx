@@ -230,25 +230,35 @@ export function CustomerOverview() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+      <div className="space-y-4 md:space-y-6">
+        <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
             <Card key={i}>
-              <CardContent className="p-6">
+              <CardContent className="p-4 md:p-6">
                 <Skeleton className="h-4 w-24 mb-2" />
-                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-6 md:h-8 w-16" />
               </CardContent>
             </Card>
           ))}
         </div>
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <Skeleton className="h-5 w-32" />
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-2 md:space-y-3 pt-0">
               {[...Array(3)].map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
+                <Skeleton key={i} className="h-14 md:h-16 w-full" />
+              ))}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-3">
+              <Skeleton className="h-5 w-32" />
+            </CardHeader>
+            <CardContent className="space-y-2 md:space-y-3 pt-0">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} className="h-14 md:h-16 w-full" />
               ))}
             </CardContent>
           </Card>
@@ -258,9 +268,9 @@ export function CustomerOverview() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-3">
+    <div className="space-y-4 md:space-y-6">
+      {/* Quick Actions - Hidden on mobile, shown in header */}
+      <div className="hidden sm:flex flex-wrap gap-2 md:gap-3">
         {quickActions.map((action, index) => (
           <motion.div
             key={index}
@@ -268,93 +278,111 @@ export function CustomerOverview() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
           >
-            <Button onClick={action.onClick} className={cn("gap-2", action.color)}>
+            <Button 
+              onClick={action.onClick} 
+              className={cn("gap-2 text-sm", action.color)}
+              size="sm"
+            >
               <action.icon className="h-4 w-4" />
-              {isRTL ? action.titleAr : action.titleEn}
+              <span className="hidden md:inline">{isRTL ? action.titleAr : action.titleEn}</span>
             </Button>
           </motion.div>
         ))}
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+      {/* Stats Grid - 1 col mobile, 2 col tablet, 4 col desktop */}
+      <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
+            transition={{ delay: index * 0.05 }}
           >
             <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-medium text-muted-foreground">
-                    {isRTL ? stat.titleAr : stat.titleEn}
-                  </span>
-                  <div className={cn("p-2 rounded-lg", stat.bg)}>
-                    <stat.icon className={cn("h-4 w-4", stat.color)} />
+              <CardContent className="p-4 md:p-6">
+                <div className={cn(
+                  "flex items-center justify-between gap-3",
+                  isRTL && "flex-row-reverse"
+                )}>
+                  <div className={cn("flex-1", isRTL ? "text-right" : "text-left")}>
+                    <span className="text-xs md:text-sm font-medium text-muted-foreground block mb-1">
+                      {isRTL ? stat.titleAr : stat.titleEn}
+                    </span>
+                    <div className="text-xl md:text-2xl font-bold">{stat.value}</div>
+                  </div>
+                  <div className={cn("p-2 md:p-3 rounded-lg shrink-0", stat.bg)}>
+                    <stat.icon className={cn("h-4 w-4 md:h-5 md:w-5", stat.color)} />
                   </div>
                 </div>
-                <div className="text-2xl font-bold">{stat.value}</div>
               </CardContent>
             </Card>
           </motion.div>
         ))}
       </div>
 
-      {/* Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      {/* Content Grid - Stack on mobile, 2 cols on desktop */}
+      <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
         {/* Recent Orders */}
         <motion.div
-          initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
         >
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">
+            <CardHeader className={cn(
+              "flex flex-row items-center justify-between pb-3",
+              isRTL && "flex-row-reverse"
+            )}>
+              <CardTitle className="text-base md:text-lg">
                 {isRTL ? "أحدث الطلبات" : "Recent Orders"}
               </CardTitle>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/app/orders")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/app/orders")} className="text-xs md:text-sm">
                 {isRTL ? "عرض الكل" : "View All"}
-                <ArrowUpRight className="h-4 w-4 ms-1" />
+                <ArrowUpRight className={cn("h-3 w-3 md:h-4 md:w-4", isRTL ? "me-1" : "ms-1")} />
               </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               {recentOrders.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <ShoppingCart className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>{isRTL ? "لا توجد طلبات حتى الآن" : "No orders yet"}</p>
+                <div className="text-center py-6 md:py-8 text-muted-foreground">
+                  <ShoppingCart className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">{isRTL ? "لا توجد طلبات حتى الآن" : "No orders yet"}</p>
                   <Button
                     variant="link"
                     onClick={() => navigate("/app/services")}
-                    className="mt-2"
+                    className="mt-2 text-sm"
                   >
                     {isRTL ? "تصفح الخدمات" : "Browse Services"}
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {recentOrders.map((order) => {
                     const status = statusConfig[order.status || "pending"] || statusConfig.pending;
                     return (
                       <div
                         key={order.id}
                         onClick={() => navigate(`/app/orders/${order.id}`)}
-                        className="flex items-center justify-between p-3 rounded-lg border hover:bg-accent/50 cursor-pointer transition-colors"
+                        className={cn(
+                          "flex items-center gap-3 p-2 md:p-3 rounded-lg border hover:bg-accent/50 cursor-pointer transition-colors",
+                          isRTL && "flex-row-reverse"
+                        )}
                       >
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{order.title}</p>
+                        <div className={cn("flex-1 min-w-0", isRTL ? "text-right" : "text-left")}>
+                          <p className="font-medium truncate text-sm md:text-base">{order.title}</p>
                           <p className="text-xs text-muted-foreground font-mono" dir="ltr">
                             {order.order_number}
                           </p>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <Badge className={status.color}>
+                        <div className={cn(
+                          "flex items-center gap-2 shrink-0",
+                          isRTL && "flex-row-reverse"
+                        )}>
+                          <Badge className={cn(status.color, "text-xs")}>
                             {isRTL ? status.labelAr : status.labelEn}
                           </Badge>
                           {order.total_amount && (
-                            <span className="text-sm font-medium">
+                            <span className="text-xs md:text-sm font-medium whitespace-nowrap" dir="ltr">
                               {formatCurrency(order.total_amount)}
                             </span>
                           )}
@@ -370,39 +398,45 @@ export function CustomerOverview() {
 
         {/* Recent Notifications */}
         <motion.div
-          initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
         >
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">
+            <CardHeader className={cn(
+              "flex flex-row items-center justify-between pb-3",
+              isRTL && "flex-row-reverse"
+            )}>
+              <CardTitle className="text-base md:text-lg">
                 {isRTL ? "آخر الإشعارات" : "Recent Notifications"}
               </CardTitle>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/app/notifications")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/app/notifications")} className="text-xs md:text-sm">
                 {isRTL ? "عرض الكل" : "View All"}
-                <ArrowUpRight className="h-4 w-4 ms-1" />
+                <ArrowUpRight className={cn("h-3 w-3 md:h-4 md:w-4", isRTL ? "me-1" : "ms-1")} />
               </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               {notifications.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Bell className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>{isRTL ? "لا توجد إشعارات" : "No notifications"}</p>
+                <div className="text-center py-6 md:py-8 text-muted-foreground">
+                  <Bell className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">{isRTL ? "لا توجد إشعارات" : "No notifications"}</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {notifications.map((notif) => (
                     <div
                       key={notif.id}
                       className={cn(
-                        "p-3 rounded-lg border transition-colors",
+                        "p-2 md:p-3 rounded-lg border transition-colors",
                         !notif.is_read && "bg-primary/5 border-primary/20"
                       )}
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <p className={cn("font-medium text-sm", !notif.is_read && "font-semibold")}>
+                      <div className={cn(
+                        "flex items-start justify-between gap-2",
+                        isRTL && "flex-row-reverse"
+                      )}>
+                        <div className={cn("flex-1 min-w-0", isRTL ? "text-right" : "text-left")}>
+                          <p className={cn("font-medium text-xs md:text-sm", !notif.is_read && "font-semibold")}>
                             {isRTL ? notif.title_ar || notif.title : notif.title}
                           </p>
                           {notif.message && (
@@ -411,7 +445,7 @@ export function CustomerOverview() {
                             </p>
                           )}
                         </div>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0">
                           {formatRelativeTime(notif.created_at)}
                         </span>
                       </div>

@@ -77,9 +77,9 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
         )}
       >
         <CustomerSidebar />
-        <SidebarInset className="flex flex-col flex-1 min-w-0">
+        <SidebarInset className="flex flex-col flex-1 min-w-0 overflow-hidden">
           <CustomerHeader />
-          <main className="flex-1 overflow-auto p-4 md:p-6">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto p-3 md:p-4 lg:p-6">
             {children}
           </main>
           

@@ -47,27 +47,30 @@ export function CustomerHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6">
+    <header className={cn(
+      "sticky top-0 z-40 flex h-14 md:h-16 items-center gap-2 md:gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-3 md:px-4 lg:px-6",
+      isRTL && "flex-row-reverse"
+    )}>
       {/* Sidebar Trigger */}
-      <SidebarTrigger className="-ms-2" />
+      <SidebarTrigger className={isRTL ? "-me-1" : "-ms-1"} />
       
-      <Separator orientation="vertical" className="h-6" />
+      <Separator orientation="vertical" className="h-4 md:h-6 hidden sm:block" />
 
       {/* Page Title Area */}
-      <div className="flex-1">
-        <h2 className="text-lg font-semibold text-foreground">
+      <div className={cn("flex-1 min-w-0", isRTL ? "text-right" : "text-left")}>
+        <h2 className="text-sm md:text-lg font-semibold text-foreground truncate">
           {isRTL ? "مرحباً" : "Welcome"}, {profile?.full_name || profile?.email?.split("@")[0]}
         </h2>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-2">
+      <div className={cn("flex items-center gap-1 md:gap-2 shrink-0", isRTL && "flex-row-reverse")}>
         {/* Theme Toggle */}
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="h-9 w-9"
+          className="h-8 w-8 md:h-9 md:w-9"
         >
           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -77,7 +80,7 @@ export function CustomerHeader() {
         {/* Language Toggle */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9">
+            <Button variant="ghost" size="icon" className="h-8 w-8 md:h-9 md:w-9">
               <Globe className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -90,14 +93,14 @@ export function CustomerHeader() {
               onClick={() => setLanguage("ar")}
               className={cn(language === "ar" && "bg-accent")}
             >
-              <span className="me-2">🇸🇦</span>
+              <span className={isRTL ? "ms-2" : "me-2"}>🇸🇦</span>
               العربية
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => setLanguage("en")}
               className={cn(language === "en" && "bg-accent")}
             >
-              <span className="me-2">🇺🇸</span>
+              <span className={isRTL ? "ms-2" : "me-2"}>🇺🇸</span>
               English
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -107,14 +110,14 @@ export function CustomerHeader() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 relative"
+          className="h-8 w-8 md:h-9 md:w-9 relative"
           onClick={() => navigate("/app/notifications")}
         >
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <Badge 
               variant="destructive" 
-              className="absolute -top-1 -end-1 h-5 min-w-5 px-1 text-xs font-bold"
+              className="absolute -top-1 -end-1 h-4 min-w-4 md:h-5 md:min-w-5 px-1 text-[10px] md:text-xs font-bold"
             >
               {unreadCount > 99 ? "99+" : unreadCount}
             </Badge>
@@ -124,10 +127,10 @@ export function CustomerHeader() {
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-              <Avatar className="h-9 w-9">
+            <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 rounded-full">
+              <Avatar className="h-8 w-8 md:h-9 md:w-9">
                 <AvatarImage src={profile?.avatar_url || undefined} />
-                <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
+                <AvatarFallback className="bg-primary/10 text-primary text-xs md:text-sm font-bold">
                   {(profile?.full_name || profile?.email)?.[0]?.toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
