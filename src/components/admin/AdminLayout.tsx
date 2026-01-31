@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useRBAC } from "@/hooks/useRBAC";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAdminRealtime } from "@/hooks/useAdminRealtime";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
@@ -15,12 +16,19 @@ interface AdminLayoutProps {
 }
 
 export function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, profile, isLoading: authLoading } = useAuth();
   const { canAccessAdmin, isLoading: rbacLoading } = useRBAC();
   const { isRTL } = useLanguage();
   const navigate = useNavigate();
 
   const isLoading = authLoading || rbacLoading;
+
+  // Real-time subscriptions for services and delivery confirmations
+  const { isServicesConnected, isDeliveryConnected } = useAdminRealtime({
+    tenantId: profile?.tenant_id || undefined,
+    enabled: !!user && canAccessAdmin,
+    showDeliveryToasts: true,
+  });
 
   useEffect(() => {
     if (!isLoading) {
@@ -61,6 +69,24 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           <main className="flex-1 overflow-auto p-4 md:p-6">
             {children}
           </main>
+          
+          {/* Real-time connection indicators (debug) */}
+          <div className="fixed bottom-4 right-4 flex gap-2 z-50">
+            <div 
+              className={cn(
+                "w-2 h-2 rounded-full transition-colors",
+                isServicesConnected ? "bg-primary" : "bg-muted"
+              )}
+              title={isRTL ? "اتصال الخدمات" : "Services connection"}
+            />
+            <div 
+              className={cn(
+                "w-2 h-2 rounded-full transition-colors",
+                isDeliveryConnected ? "bg-primary" : "bg-muted"
+              )}
+              title={isRTL ? "تأكيدات التسليم" : "Delivery confirmations"}
+            />
+          </div>
         </SidebarInset>
       </div>
     </SidebarProvider>

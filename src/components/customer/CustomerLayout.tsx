@@ -70,14 +70,14 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
             <div 
               className={cn(
                 "w-2 h-2 rounded-full transition-colors",
-                isServicesConnected ? "bg-emerald-500" : "bg-muted"
+                isServicesConnected ? "bg-primary" : "bg-muted"
               )}
               title={isRTL ? "اتصال الخدمات" : "Services connection"}
             />
             <div 
               className={cn(
                 "w-2 h-2 rounded-full transition-colors",
-                isInvoicesConnected ? "bg-emerald-500" : "bg-muted"
+                isInvoicesConnected ? "bg-primary" : "bg-muted"
               )}
               title={isRTL ? "اتصال الفواتير" : "Invoices connection"}
             />
