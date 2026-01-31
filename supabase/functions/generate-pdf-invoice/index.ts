@@ -114,8 +114,8 @@ function generateEnhancedInvoiceHTML(invoice: any, template: string): string {
             <div class="company-details">
               <p>📍 المملكة العربية السعودية - الرياض</p>
               <p>📞 هاتف: +966 11 123 4567</p>
-              <p>✉️ إيميل: info@alialshehriholding.com</p>
-              <p>🌐 الموقع: www.alialshehriholding.com</p>
+              <p>✉️ إيميل: info@ash-holding.sa</p>
+              <p>🌐 الموقع: www.ash-holding.sa</p>
             </div>
           </div>
           <div class="invoice-section">

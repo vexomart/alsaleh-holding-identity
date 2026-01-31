@@ -131,9 +131,9 @@ const getCustomerEmailTemplate = (order: OrderData) => `
             </div>
             
             <div class="contact-info">
-                <div>📧 البريد الإلكتروني: info@alshehriholding.com</div>
-                <div>📱 الهاتف: +966 11 234 5678</div>
-                <div>🌐 الموقع الإلكتروني: www.alshehriholding.com</div>
+                <div>📧 البريد الإلكتروني: info@ash-holding.sa</div>
+                <div>📱 الهاتف: 0555812567</div>
+                <div>🌐 الموقع الإلكتروني: www.ash-holding.sa</div>
                 <div>📍 العنوان: الرياض، المملكة العربية السعودية</div>
             </div>
 
@@ -273,17 +273,17 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <info@alialshehriholding.com>",
+      from: "شركة علي صالح الشهري القابضة <info@ash-holding.sa>",
       to: [orderData.customerEmail],
-      bcc: ["info@alialshehriholding.com"],
+      bcc: ["info@ash-holding.sa"],
       subject: `🎉 تأكيد الطلب ${orderData.orderNumber} - شركة علي صالح الشهري القابضة`,
       html: getCustomerEmailTemplate(formattedOrder),
     });
 
     // Send notification to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام الطلبات <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
+      from: "نظام الطلبات <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
       subject: `🚨 طلب جديد رقم ${orderData.orderNumber} - ${orderData.productName}`,
       html: getAdminEmailTemplate(formattedOrder),
     });

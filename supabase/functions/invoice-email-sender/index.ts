@@ -65,7 +65,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال الإيميل
     const emailResponse = await resend.emails.send({
-      from: "شركة علي صالح الشهري القابضة <invoices@alialshehriholding.com>",
+      from: "شركة علي صالح الشهري القابضة <invoices@ash-holding.sa>",
       to: [invoice.customer_email],
       subject: `فاتورة رقم ${invoice.invoice_number} - شركة علي صالح الشهري القابضة`,
       html: emailTemplate,
@@ -295,7 +295,7 @@ function createInvoiceEmailTemplate(invoice: any): string {
           ` : ''}
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://alialshehriholding.com/payment/${invoice.id}" class="cta-button">
+            <a href="https://ash-holding.sa/payment/${invoice.id}" class="cta-button">
               💰 دفع الفاتورة الآن
             </a>
           </div>
@@ -303,8 +303,8 @@ function createInvoiceEmailTemplate(invoice: any): string {
           <div style="background: #f1f5f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="color: #1e293b; margin: 0 0 15px 0;">📞 معلومات التواصل</h3>
             <p style="margin: 5px 0;"><strong>الهاتف:</strong> +966 11 123 4567</p>
-            <p style="margin: 5px 0;"><strong>البريد الإلكتروني:</strong> support@alialshehriholding.com</p>
-            <p style="margin: 5px 0;"><strong>الموقع الإلكتروني:</strong> www.alialshehriholding.com</p>
+            <p style="margin: 5px 0;"><strong>البريد الإلكتروني:</strong> info@ash-holding.sa</p>
+            <p style="margin: 5px 0;"><strong>الموقع الإلكتروني:</strong> www.ash-holding.sa</p>
           </div>
           
           <p style="color: #6b7280; font-size: 14px; line-height: 1.6;">

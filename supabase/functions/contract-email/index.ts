@@ -83,7 +83,7 @@ serve(async (req) => {
               ${amount ? `<div class="card"><div class="muted small">القيمة</div><div style="font-weight:700">${amount} ${currency}</div></div>` : ''}
             </div>
 
-            <p class="small">في حال وجود أي استفسار، يُرجى الرد على هذا البريد أو التواصل معنا: info@alialshehriholding.com — 0555812567</p>
+            <p class="small">في حال وجود أي استفسار، يُرجى الرد على هذا البريد أو التواصل معنا: info@ash-holding.sa — 0555812567</p>
           </div>
           <div class="footer">
             شركة علي صالح الشهري القابضة • المملكة العربية السعودية
@@ -94,10 +94,10 @@ serve(async (req) => {
     `;
 
     const emailRes = await resend.emails.send({
-      from: 'نظام العقود <info@alialshehriholding.com>',
+      from: 'نظام العقود <info@ash-holding.sa>',
       to: [to],
-      bcc: ['info@alialshehriholding.com'],
-      reply_to: 'info@alialshehriholding.com',
+      bcc: ['info@ash-holding.sa'],
+      reply_to: 'info@ash-holding.sa',
       subject: `العقد الإلكتروني الخاص بك - ${contractNumber}`,
       html,
     });
