@@ -142,6 +142,7 @@ export type Database = {
           provider_response: Json | null
           related_invoice_id: string | null
           related_order_id: string | null
+          search_vector: unknown
           status:
             | Database["public"]["Enums"]["financial_transaction_status"]
             | null
@@ -167,6 +168,7 @@ export type Database = {
           provider_response?: Json | null
           related_invoice_id?: string | null
           related_order_id?: string | null
+          search_vector?: unknown
           status?:
             | Database["public"]["Enums"]["financial_transaction_status"]
             | null
@@ -192,6 +194,7 @@ export type Database = {
           provider_response?: Json | null
           related_invoice_id?: string | null
           related_order_id?: string | null
+          search_vector?: unknown
           status?:
             | Database["public"]["Enums"]["financial_transaction_status"]
             | null
@@ -1207,6 +1210,56 @@ export type Database = {
           },
         ]
       }
+      transaction_events: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          ip_address: unknown
+          metadata: Json | null
+          new_status: string | null
+          performed_by: string | null
+          previous_status: string | null
+          provider_payload: Json | null
+          transaction_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          new_status?: string | null
+          performed_by?: string | null
+          previous_status?: string | null
+          provider_payload?: Json | null
+          transaction_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          new_status?: string | null
+          performed_by?: string | null
+          previous_status?: string | null
+          provider_payload?: Json | null
+          transaction_id?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_events_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "financial_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           expires_at: string | null
@@ -1289,8 +1342,28 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      log_transaction_event: {
+        Args: {
+          p_event_type: string
+          p_metadata?: Json
+          p_new_status?: string
+          p_performed_by?: string
+          p_previous_status?: string
+          p_provider_payload?: Json
+          p_transaction_id: string
+        }
+        Returns: string
+      }
       update_services_sort_order: {
         Args: { p_service_orders: Json }
+        Returns: boolean
+      }
+      validate_transaction_status_transition: {
+        Args: {
+          p_current_status: string
+          p_new_status: string
+          p_transaction_type: string
+        }
         Returns: boolean
       }
     }
