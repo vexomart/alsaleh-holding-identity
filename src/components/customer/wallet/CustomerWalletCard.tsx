@@ -29,9 +29,11 @@ import {
   TrendingUp,
   Receipt,
   Banknote,
+  Plus,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { WalletTopupDialog } from "./WalletTopupDialog";
 import type { CustomerWallet, FinancialTransaction } from "@/types/financial";
 
 interface CustomerWalletCardProps {
@@ -286,22 +288,32 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
                 <TrendingUp className="h-7 w-7 text-green-500" />
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-3">
-              <Badge variant="outline" className={cn(
-                "text-xs",
-                wallet?.status === "active" 
-                  ? "bg-green-500/10 text-green-600 border-green-500/30"
-                  : "bg-amber-500/10 text-amber-600 border-amber-500/30"
-              )}>
-                {wallet?.status === "active" 
-                  ? (isRTL ? "نشطة" : "Active")
-                  : (isRTL ? "معلقة" : "Suspended")}
-              </Badge>
-              {wallet?.wallet_number && (
-                <span className="text-xs text-muted-foreground font-mono">
-                  {wallet.wallet_number}
-                </span>
-              )}
+            <div className="flex items-center justify-between mt-3">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className={cn(
+                  "text-xs",
+                  wallet?.status === "active" 
+                    ? "bg-green-500/10 text-green-600 border-green-500/30"
+                    : "bg-amber-500/10 text-amber-600 border-amber-500/30"
+                )}>
+                  {wallet?.status === "active" 
+                    ? (isRTL ? "نشطة" : "Active")
+                    : (isRTL ? "معلقة" : "Suspended")}
+                </Badge>
+                {wallet?.wallet_number && (
+                  <span className="text-xs text-muted-foreground font-mono">
+                    {wallet.wallet_number}
+                  </span>
+                )}
+              </div>
+              
+              {/* Top-up Button */}
+              <WalletTopupDialog>
+                <Button size="sm" className="gap-1.5 h-8">
+                  <Plus className="h-4 w-4" />
+                  {isRTL ? "شحن" : "Top Up"}
+                </Button>
+              </WalletTopupDialog>
             </div>
           </div>
 
