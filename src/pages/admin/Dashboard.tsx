@@ -12,6 +12,7 @@ import { UsersManagement } from '@/components/admin/users/UsersManagement';
 import { RolesPermissions } from '@/components/admin/roles/RolesPermissions';
 import { ServicesManagement } from '@/components/admin/services/ServicesManagement';
 import { OrdersManagement } from '@/components/admin/orders/OrdersManagement';
+import { WalletsManagement } from '@/components/admin/wallets/WalletsManagement';
 import { ReportsPage } from '@/components/admin/reports/ReportsPage';
 import { NotificationsPage } from '@/components/admin/notifications/NotificationsPage';
 import { SettingsPage } from '@/components/admin/settings/SettingsPage';
@@ -50,6 +51,7 @@ const AdminDashboard = () => {
         {/* Business Routes */}
         <Route path="services" element={<ServicesManagement />} />
         <Route path="orders" element={<OrdersManagement />} />
+        <Route path="wallets" element={<WalletsManagement />} />
         
         {/* CMS Routes */}
         {/* CMS routes removed - module not implemented */}
