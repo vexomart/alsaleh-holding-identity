@@ -368,10 +368,15 @@ export class ArabicPDFGenerator {
       this.fontsLoaded = true;
       console.log('Cairo fonts embedded successfully');
     } catch (error) {
-      console.error('Failed to load Arabic fonts, using fallback:', error);
-      
-      // Fallback: Use pdfMake's built-in Roboto fonts
-      // Arabic text may not render perfectly but PDF will still work
+      // IMPORTANT: If the font loader indicates the file is not a real TTF/OTF,
+      // we MUST block PDF generation (no fallback), otherwise Arabic will render as squares.
+      const msg = error instanceof Error ? error.message : String(error);
+      console.error('Failed to load Arabic fonts:', error);
+      if (msg.includes('Invalid font file (not TTF/OTF)')) {
+        throw error;
+      }
+
+      // Non-signature errors can still fallback to Roboto to keep generation functional.
       this.useFallbackFonts();
       this.fontsLoaded = true;
       console.warn('Using fallback fonts - Arabic text may not render correctly');
