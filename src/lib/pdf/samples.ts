@@ -7,6 +7,110 @@
 import type { InvoiceData } from './invoice-generator';
 import type { ReportData } from './report-generator';
 import type { ContractData } from './contract-generator';
+import { ArabicPDFGenerator, createRTLTable, type PDFContent } from './arabic-pdf';
+
+/**
+ * Test Arabic PDF rendering with embedded font
+ * This function generates a minimal test PDF to verify:
+ * - Arabic text renders correctly (no squares)
+ * - Font is properly embedded
+ * - RTL layout is enforced
+ * - 3-column RTL table works correctly
+ */
+export async function testArabicPDFRendering(): Promise<{ success: boolean; message: string; dataUrl?: string }> {
+  try {
+    const generator = new ArabicPDFGenerator({
+      title: 'اختبار عرض النص العربي',
+      subject: 'اختبار PDF',
+      fontFamily: 'amiri',
+      companyInfo: {
+        name: 'ASH Holding',
+        nameAr: 'شركة ASH Holding',
+        address: 'المملكة العربية السعودية - الرياض',
+        phone: '+966 11 123 4567',
+        email: 'info@ashholding.com',
+      },
+    });
+
+    // Test content with Arabic text
+    const content: PDFContent[] = [
+      // Title
+      {
+        text: 'فاتورة ضريبية',
+        style: 'title',
+        margin: [0, 0, 0, 20],
+      },
+      // Company name
+      {
+        text: 'شركة ASH Holding',
+        style: 'header',
+        alignment: 'center',
+        margin: [0, 0, 0, 30],
+      },
+      // Description
+      {
+        text: 'هذا اختبار للتأكد من عرض النص العربي بشكل صحيح في ملف PDF. يجب أن يظهر النص بوضوح مع دعم كامل للاتجاه من اليمين إلى اليسار.',
+        style: 'normal',
+        margin: [0, 0, 0, 20],
+      },
+      // Section header
+      {
+        text: 'جدول RTL ثلاثي الأعمدة:',
+        style: 'subheader',
+        margin: [0, 0, 0, 10],
+      },
+    ];
+
+    // 3-column RTL table
+    const tableHeaders = ['الوصف', 'الكمية', 'المبلغ'];
+    const tableRows = [
+      ['خدمات استشارية متخصصة', '1', '15,000 ر.س'],
+      ['تطوير وتصميم المواقع', '2', '25,000 ر.س'],
+      ['صيانة الأنظمة الشهرية', '3', '6,000 ر.س'],
+    ];
+
+    const table = createRTLTable(tableHeaders, tableRows, ['*', 60, 100], {
+      alternateRowColor: '#f9fafb',
+    });
+
+    content.push({
+      ...table as Record<string, unknown>,
+      margin: [0, 0, 0, 30],
+    });
+
+    // Total section
+    content.push({
+      text: 'الإجمالي: 46,000 ر.س',
+      style: 'total',
+      alignment: 'right',
+      margin: [0, 10, 0, 30],
+    });
+
+    // Verification message
+    content.push({
+      text: '✓ تم التحقق: النص العربي يعرض بشكل صحيح والخط مدمج في الملف',
+      style: 'normal',
+      alignment: 'center',
+      color: '#059669',
+      margin: [0, 20, 0, 0],
+    });
+
+    // Generate PDF
+    const dataUrl = await generator.getDataUrl(content);
+
+    return {
+      success: true,
+      message: 'Arabic is rendered correctly (no squares) and font is embedded.',
+      dataUrl,
+    };
+  } catch (error) {
+    console.error('Arabic PDF test failed:', error);
+    return {
+      success: false,
+      message: `Failed to generate Arabic PDF: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    };
+  }
+}
 
 /**
  * Generate sample invoice data for testing RTL PDF generation

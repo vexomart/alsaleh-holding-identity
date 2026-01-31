@@ -70,4 +70,9 @@ export {
 } from './contract-generator';
 
 // Sample data generators for testing
-export { generateSampleInvoice, generateSampleReport, generateSampleContract } from './samples';
+export { 
+  generateSampleInvoice, 
+  generateSampleReport, 
+  generateSampleContract,
+  testArabicPDFRendering,
+} from './samples';
