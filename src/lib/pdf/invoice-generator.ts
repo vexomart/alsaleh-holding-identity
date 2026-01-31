@@ -484,8 +484,13 @@ export async function createInvoicePDF(
 
   const content = generateInvoiceContent(invoice, companyInfo, options?.useArabicNumerals);
 
+  // IMPORTANT: avoid pdfmake's .download() since browsers may block it
+  // when triggered after async operations. We always generate a Blob and
+  // download it via a Blob URL.
   if (options?.download) {
-    await generator.download(content, options.filename || `invoice-${invoice.invoiceNumber}.pdf`);
+    const { downloadBlob } = await import('./blob-download');
+    const blob = await generator.getBlob(content);
+    downloadBlob(blob, options.filename || `invoice-${invoice.invoiceNumber}.pdf`);
     return {};
   }
 
