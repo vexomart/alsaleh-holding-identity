@@ -468,9 +468,33 @@ export async function createInvoicePDF(
   }
 ): Promise<{ blob?: Blob; dataUrl?: string }> {
   // CRITICAL: Ensure fonts are initialized BEFORE any PDF generation
-  // This is a singleton — all callers share the same promise.
-  // If initialization fails, this throws and PDF generation is blocked.
   await ensurePdfInitialized();
+
+  // ============================================
+  // HARD ASSERTIONS: Cairo font MUST be registered
+  // ============================================
+  const pdfMakeRef = (await import('pdfmake/build/pdfmake')).default as unknown as {
+    fonts?: Record<string, unknown>;
+    vfs?: Record<string, string>;
+  };
+
+  if (!pdfMakeRef.fonts?.Cairo) {
+    console.error('[INVOICE] pdfMake.fonts:', pdfMakeRef.fonts);
+    throw new Error('Cairo font not registered in pdfMake.fonts');
+  }
+
+  if (!pdfMakeRef.vfs?.['Cairo-Regular.ttf']) {
+    console.error('[INVOICE] pdfMake.vfs keys:', Object.keys(pdfMakeRef.vfs || {}));
+    throw new Error('Cairo-Regular.ttf missing in pdfMake.vfs');
+  }
+
+  if (!pdfMakeRef.vfs?.['Cairo-Bold.ttf']) {
+    console.error('[INVOICE] pdfMake.vfs keys:', Object.keys(pdfMakeRef.vfs || {}));
+    throw new Error('Cairo-Bold.ttf missing in pdfMake.vfs');
+  }
+
+  console.log('[INVOICE] ✅ Cairo font assertions passed');
+  // ============================================
 
   const companyInfo = options?.companyInfo || defaultCompanyInfo;
   
@@ -491,8 +515,6 @@ export async function createInvoicePDF(
   const content = generateInvoiceContent(invoice, companyInfo, options?.useArabicNumerals);
 
   // IMPORTANT: avoid pdfmake's .download() since browsers may block it
-  // when triggered after async operations. We always generate a Blob and
-  // download it via a Blob URL.
   if (options?.download) {
     const { downloadBlob } = await import('./blob-download');
     const blob = await generator.getBlob(content);
