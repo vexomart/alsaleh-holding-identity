@@ -483,7 +483,7 @@ export const arabicPDF = new ArabicPDFGenerator({
     nameAr: 'شركة علي صالح الشهري القابضة',
     address: 'المملكة العربية السعودية - الرياض',
     phone: '+966 11 123 4567',
-    email: 'info@alialshehriholding.com',
+    email: 'info@ash-holding.sa',
     website: 'www.alialshehriholding.com',
   },
 });

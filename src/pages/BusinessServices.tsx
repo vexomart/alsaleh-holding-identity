@@ -475,8 +475,8 @@ const BusinessServices = () => {
           <div className="flex flex-col sm:flex-row gap-8 justify-center items-center text-gray-600">
             <div className="flex items-center gap-2">
               <Mail className="w-5 h-5 text-blue-600" />
-              <a href="mailto:info@alialshehriholding.com" className="hover:text-blue-600">
-                info@alialshehriholding.com
+              <a href="mailto:info@ash-holding.sa" className="hover:text-blue-600">
+                info@ash-holding.sa
               </a>
             </div>
             <div className="flex items-center gap-2">

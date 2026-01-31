@@ -154,7 +154,7 @@ const CarRentalPrivacy = () => {
                     للممارسة أي من حقوقك، يرجى التواصل معنا عبر:
                   </p>
                   <div className="space-y-2">
-                    <p className="text-green-700">📧 البريد الإلكتروني: info@alialshehriholding.com</p>
+                    <p className="text-green-700">📧 البريد الإلكتروني: info@ash-holding.sa</p>
                     <p className="text-green-700">📞 الهاتف: +966 11 123 4567</p>
                   </div>
                 </div>

@@ -330,9 +330,9 @@ const CustomerService: React.FC<CustomerServiceProps> = ({ className }) => {
 • الهاتف: 0555812567
 
 **💌 البريد الإلكتروني:**
-• الإيميل الرئيسي: info@alialshehriholding.com
-• المبيعات: sales@alialshehriholding.com
-• الدعم التقني: support@alialshehriholding.com
+• الإيميل الرئيسي: info@ash-holding.sa
+• المبيعات: sales@ash-holding.sa
+• الدعم التقني: support@ash-holding.sa
 
 **🏢 العنوان:**
 • المقر الرئيسي: المملكة العربية السعودية

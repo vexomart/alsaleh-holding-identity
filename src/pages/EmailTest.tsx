@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 const EmailTest = () => {
-  const [to, setTo] = useState("info@alialshehriholding.com");
+  const [to, setTo] = useState("info@ash-holding.sa");
   const [subject, setSubject] = useState("اختبار التوثيق - Resend");
   const [message, setMessage] = useState("اختبار إرسال من داخل الموقع للتأكد من التوثيق");
   const [loading, setLoading] = useState(false);
@@ -60,7 +60,7 @@ const EmailTest = () => {
             <Button type="submit" disabled={loading}>
               {loading ? "جار الإرسال..." : "إرسال رسالة اختبار"}
             </Button>
-            <span className="text-xs text-muted-foreground">سيتم أيضاً إرسال نسخة BCC إلى info@alialshehriholding.com</span>
+            <span className="text-xs text-muted-foreground">سيتم أيضاً إرسال نسخة BCC إلى info@ash-holding.sa</span>
           </div>
         </form>
         {result && (

@@ -135,10 +135,10 @@ const CarRentalTerms = () => {
                   اتصل بنا: 0555812567
                 </a>
                 <a 
-                  href="mailto:info@alialshehriholding.com" 
+                  href="mailto:info@ash-holding.sa" 
                   className="inline-flex items-center justify-center px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
                 >
-                  info@alialshehriholding.com
+                  info@ash-holding.sa
                 </a>
               </div>
             </CardContent>

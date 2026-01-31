@@ -115,9 +115,9 @@ const Navigation = () => {
             </div>
             
             <div className="flex items-center gap-4">
-              <a href="mailto:info@alialshehriholding.com" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-all duration-300 group">
+              <a href="mailto:info@ash-holding.sa" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-all duration-300 group">
                 <Mail className="w-3 h-3 group-hover:scale-110 transition-transform" />
-                <span className="font-medium text-xs">info@alialshehriholding.com</span>
+                <span className="font-medium text-xs">info@ash-holding.sa</span>
               </a>
               <a href="tel:0555812567" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-all duration-300 group">
                 <Phone className="w-3 h-3 group-hover:scale-110 transition-transform" />
@@ -648,7 +648,7 @@ const Navigation = () => {
                     <span className="font-semibold">0555812567</span>
                   </a>
                   <a 
-                    href="mailto:info@alialshehriholding.com"
+                    href="mailto:info@ash-holding.sa"
                     className="flex items-center gap-3 text-slate-700 hover:text-blue-600 transition-colors touch-manipulation group"
                   >
                     <div className="w-8 h-8 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center transition-all duration-200">

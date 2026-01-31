@@ -435,7 +435,7 @@ const DigitalContracts = () => {
                 <strong>الهاتف:</strong> 0555812567
               </div>
               <div style="display: inline-block;">
-                <strong>البريد الإلكتروني:</strong> info@alialshehriholding.com
+                <strong>البريد الإلكتروني:</strong> info@ash-holding.sa
               </div>
             </div>
           </div>

@@ -443,7 +443,7 @@ const StartWithUs = () => {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="font-medium text-gray-800 text-sm sm:text-base">البريد الإلكتروني</div>
-                    <div className="text-purple-600 font-bold text-xs sm:text-sm break-all">info@alialshehriholding.com</div>
+                    <div className="text-purple-600 font-bold text-xs sm:text-sm break-all">info@ash-holding.sa</div>
                   </div>
                 </div>
 

@@ -81,7 +81,7 @@ const PaymentCancel = () => {
                   تواصل مع الدعم الفني
                 </Button>
                 <div className="flex flex-col sm:flex-row gap-2 text-sm text-muted-foreground justify-center">
-                  <span>📧 info@alialshehriholding.com</span>
+                  <span>📧 info@ash-holding.sa</span>
                   <span>📱 0555812567</span>
                 </div>
               </div>

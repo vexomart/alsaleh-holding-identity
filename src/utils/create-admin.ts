@@ -5,7 +5,7 @@ export const createAdminUser = async () => {
   try {
     const { data, error } = await supabase.functions.invoke('create-admin-user', {
       body: {
-        email: 'info@alialshehriholding.com',
+        email: 'info@ash-holding.sa',
         password: 'Ali@@#@@1409',
         fullName: 'المدير العام'
       }

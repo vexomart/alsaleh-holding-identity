@@ -35,9 +35,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com", "affiliate@alialshehriholding.com"],
-      bcc: ["info@alialshehriholding.com"],
+      from: "Ali AlShehri Holding <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa", "affiliate@ash-holding.sa"],
+      bcc: ["info@ash-holding.sa"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">

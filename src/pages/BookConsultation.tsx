@@ -518,7 +518,7 @@ export default function BookConsultation() {
             </div>
             <div className="flex items-center justify-center space-x-3 space-x-reverse">
               <Mail className="w-5 h-5 text-primary" />
-              <span>info@alialshehriholding.com</span>
+              <span>info@ash-holding.sa</span>
             </div>
             <div className="flex items-center justify-center space-x-3 space-x-reverse">
               <MapPin className="w-5 h-5 text-primary" />

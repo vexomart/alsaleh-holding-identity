@@ -284,7 +284,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoiceData }) => {
               <Text style={styles.companyDetails}>
                 المملكة العربية السعودية - الرياض{'\n'}
                 هاتف: +966 11 123 4567{'\n'}
-                إيميل: info@alialshehriholding.com{'\n'}
+                إيميل: info@ash-holding.sa{'\n'}
                 الموقع: www.alialshehriholding.com
               </Text>
             </View>
@@ -357,7 +357,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoiceData }) => {
         <View style={styles.footer}>
           <Text>شكراً لاختياركم شركة علي صالح الشهري القابضة</Text>
           <Text>هذه فاتورة ضريبية معتمدة صادرة إلكترونياً ولا تحتاج إلى توقيع</Text>
-          <Text>جميع المبالغ بالريال السعودي • في حالة الاستفسار: info@alialshehriholding.com</Text>
+          <Text>جميع المبالغ بالريال السعودي • في حالة الاستفسار: info@ash-holding.sa</Text>
           <Text style={{ marginTop: 8, fontSize: 9, color: '#94a3b8' }}>
             تاريخ الإنشاء: {new Date().toLocaleDateString('ar-SA')} • معرف المعاملة: {invoiceData.transactionId}
           </Text>

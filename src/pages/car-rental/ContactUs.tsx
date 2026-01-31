@@ -51,7 +51,7 @@ const ContactUs = () => {
       title: 'البريد الإلكتروني',
       description: 'راسلنا واحصل على رد سريع',
       icon: Mail,
-      value: 'info@alialshehriholding.com',
+      value: 'info@ash-holding.sa',
       action: 'أرسل إيميل',
       color: 'from-blue-500 to-cyan-500',
       available: 'رد خلال 2-4 ساعات'

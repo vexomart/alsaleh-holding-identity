@@ -361,7 +361,7 @@ const EcommercePDF = ({ className }: EcommercePDFProps) => {
                             padding: 15px; 
                             border-radius: 10px;">
                   <p style="margin: 0 0 8px 0; font-size: 14px; opacity: 0.8;">البريد الإلكتروني</p>
-                  <p style="margin: 0; font-size: 16px; font-weight: bold;">info@alialshehriholding.com</p>
+                  <p style="margin: 0; font-size: 16px; font-weight: bold;">info@ash-holding.sa</p>
                 </div>
               </div>
             </div>

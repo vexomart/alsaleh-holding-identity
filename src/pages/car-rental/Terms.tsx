@@ -271,7 +271,7 @@ const Terms = () => {
               <p>
                 للاستفسارات حول الشروط والأحكام، يرجى التواصل مع فريق خدمة العملاء على الرقم 
                 <strong> 0555812567</strong> أو عبر البريد الإلكتروني 
-                <strong> info@alialshehriholding.com</strong>
+                <strong> info@ash-holding.sa</strong>
               </p>
             </CardContent>
           </Card>

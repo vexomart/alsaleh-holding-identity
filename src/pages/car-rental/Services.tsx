@@ -475,7 +475,7 @@ const Services = () => {
                 </Button>
                 <Button variant="outline" size="lg" className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20">
                   <Mail className="w-5 h-5" />
-                  info@alialshehriholding.com
+                  info@ash-holding.sa
                 </Button>
               </div>
             </CardContent>
