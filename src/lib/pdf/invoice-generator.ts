@@ -18,6 +18,7 @@ import {
   toArabicNumerals,
   type PDFContent,
 } from './arabic-pdf';
+import { ensurePdfInitialized } from './pdf-init';
 
 // Invoice item structure
 export interface InvoiceItem {
@@ -466,6 +467,11 @@ export async function createInvoicePDF(
     companyInfo?: CompanyInfo;
   }
 ): Promise<{ blob?: Blob; dataUrl?: string }> {
+  // CRITICAL: Ensure fonts are initialized BEFORE any PDF generation
+  // This is a singleton — all callers share the same promise.
+  // If initialization fails, this throws and PDF generation is blocked.
+  await ensurePdfInitialized();
+
   const companyInfo = options?.companyInfo || defaultCompanyInfo;
   
   const generator = new ArabicPDFGenerator({

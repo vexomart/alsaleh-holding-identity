@@ -321,66 +321,15 @@ export class ArabicPDFGenerator {
     };
   }
 
-  // Initialize Arabic fonts (must be called before generating PDFs)
+  // Initialize Arabic fonts (DEPRECATED: use ensurePdfInitialized() from pdf-init.ts)
+  // This method now delegates to the singleton initializer for backward compatibility.
   async initializeFonts(): Promise<void> {
     if (this.fontsLoaded) return;
 
-    try {
-      console.log('Loading Cairo TTF fonts for pdfmake...');
-
-      // Load TTF fonts from local assets and embed into VFS
-      const cairo = await loadCairoTTFAsVfs();
-
-      const pdfMakeAny = pdfMake as unknown as {
-        vfs?: Record<string, string>;
-        fonts?: Record<string, unknown>;
-      };
-
-      // IMPORTANT: do NOT replace the VFS object reference.
-      // pdfmake may keep an internal reference to the original object.
-      if (!pdfMakeAny.vfs) pdfMakeAny.vfs = {};
-
-      // Code location A) pdfMake.vfs is set here
-      Object.assign(pdfMakeAny.vfs, {
-        'Cairo-Regular.ttf': cairo.regular,
-        'Cairo-Bold.ttf': cairo.bold,
-      });
-
-      // Code location B) pdfMake.fonts is set here
-      const fonts = {
-        Cairo: {
-          normal: 'Cairo-Regular.ttf',
-          bold: 'Cairo-Bold.ttf',
-          italics: 'Cairo-Regular.ttf',
-          bolditalics: 'Cairo-Bold.ttf',
-        },
-      };
-
-      // Code location B) pdfMake.fonts is set here
-      // (safe to replace, but keep merge behavior to avoid clobbering others)
-      pdfMakeAny.fonts = { ...(pdfMakeAny.fonts || {}), ...fonts };
-
-      // Sanity check: must exist in VFS before createPdf
-      if (!pdfMakeAny.vfs['Cairo-Bold.ttf']) {
-        throw new Error("Cairo-Bold.ttf missing from pdfMake.vfs after assignment");
-      }
-      
-      this.fontsLoaded = true;
-      console.log('Cairo fonts embedded successfully');
-    } catch (error) {
-      // IMPORTANT: If the font loader indicates the file is not a real TTF/OTF,
-      // we MUST block PDF generation (no fallback), otherwise Arabic will render as squares.
-      const msg = error instanceof Error ? error.message : String(error);
-      console.error('Failed to load Arabic fonts:', error);
-      if (msg.includes('Invalid font file (not TTF/OTF)')) {
-        throw error;
-      }
-
-      // Non-signature errors can still fallback to Roboto to keep generation functional.
-      this.useFallbackFonts();
-      this.fontsLoaded = true;
-      console.warn('Using fallback fonts - Arabic text may not render correctly');
-    }
+    // Delegate to singleton initializer
+    const { ensurePdfInitialized } = await import('./pdf-init');
+    await ensurePdfInitialized();
+    this.fontsLoaded = true;
   }
 
   // Use fallback fonts when Arabic fonts fail to load
