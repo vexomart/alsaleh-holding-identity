@@ -20,7 +20,8 @@ import {
   Building2,
   Sparkles,
   X,
-  Wallet
+  Wallet,
+  Landmark
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -121,6 +122,14 @@ const businessNavItems: NavItem[] = [
     titleEn: "Wallet Management",
     icon: Wallet,
     href: ROUTES.ADMIN.WALLETS,
+  },
+  {
+    titleKey: "finance",
+    titleAr: "المركز المالي",
+    titleEn: "Finance Center",
+    icon: Landmark,
+    href: ROUTES.ADMIN.FINANCE,
+    permission: "finance.view",
   },
 ];
 

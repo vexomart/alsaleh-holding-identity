@@ -23,6 +23,7 @@ export const ROUTES = {
     SERVICES: '/admin/services',
     ORDERS: '/admin/orders',
     WALLETS: '/admin/wallets',
+    FINANCE: '/admin/finance',
     CMS: {
       ROOT: '/admin/cms',
       PAGES: '/admin/cms/pages',
