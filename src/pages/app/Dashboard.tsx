@@ -14,6 +14,7 @@ import { CustomerCategoryServices } from '@/components/customer/CustomerCategory
 import { CustomerServiceDetails } from '@/components/customer/CustomerServiceDetails';
 import { CustomerNotifications } from '@/components/customer/CustomerNotifications';
 import { CustomerProfile } from '@/components/customer/CustomerProfile';
+import { CustomerWallet } from '@/components/customer/CustomerWallet';
 
 const CustomerDashboard = () => {
   return (
@@ -25,6 +26,7 @@ const CustomerDashboard = () => {
         <Route path="services" element={<CustomerServices />} />
         <Route path="services/:category" element={<CustomerCategoryServices />} />
         <Route path="service/:serviceId" element={<CustomerServiceDetails />} />
+        <Route path="wallet" element={<CustomerWallet />} />
         <Route path="notifications" element={<CustomerNotifications />} />
         <Route path="profile" element={<CustomerProfile />} />
       </Routes>
