@@ -1,7 +1,8 @@
-# Invoices API Contracts (Phase INVOICE-REALTIME-1)
+# Invoices API Contracts (Phase INVOICE-REALTIME-1 + FIN-2)
 
 ## Overview
-Real-time invoice delivery system that notifies customers instantly when invoices are generated.
+Real-time invoice delivery system with integrated Paylink payment gateway.
+Customers receive instant notifications when invoices are generated and can pay seamlessly.
 
 ---
 
@@ -31,11 +32,13 @@ POST /api/admin/orders/:id/invoice
 
 **Response:** `Invoice`
 
-**Side Effects:**
+**Side Effects (Automatic):**
 1. Generates unique invoice number via `generate_invoice_number()` RPC
 2. Calculates VAT amount and total
-3. Emits `invoice.generated` to customer channels
-4. Creates notification record for customer
+3. **Creates Paylink invoice** via edge function → stores `payment_url`
+4. **Creates `financial_transaction`** with status=pending
+5. Emits `invoice.generated` to customer channels
+6. Creates notification record for customer
 
 ---
 
@@ -122,8 +125,8 @@ GET /api/app/invoices
 ### Customer Channels (Tenant Isolated)
 | Channel | Events | Purpose |
 |---------|--------|---------|
-| `user:{customer_id}:invoices` | invoice.generated, invoice.status_changed | Invoice updates |
-| `user:{customer_id}:notifications` | invoice.generated | Notification delivery |
+| `user:{customer_id}:invoices` | invoice.generated, invoice.paid, payment.failed | Invoice & payment updates |
+| `user:{customer_id}:notifications` | invoice.generated, invoice.paid, payment.failed | Notification delivery |
 
 ### Admin Channels
 | Channel | Events | Purpose |
@@ -137,7 +140,7 @@ GET /api/app/invoices
 ### InvoiceRealtimePayload
 ```typescript
 interface InvoiceRealtimePayload {
-  event: 'invoice.generated' | 'invoice.status_changed';
+  event: 'invoice.generated' | 'invoice.status_changed' | 'invoice.paid' | 'payment.failed';
   invoice_id: string;
   invoice_number: string;
   order_id: string;

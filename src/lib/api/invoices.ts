@@ -115,8 +115,12 @@ export async function generateInvoiceNumber(tenantId?: string): Promise<string> 
 }
 
 /**
- * Create a new invoice (Admin API)
+ * Create a new invoice with Paylink integration (Admin API)
  * POST /api/admin/orders/:id/invoice
+ * - Creates invoice in database
+ * - Creates financial_transaction with status=pending
+ * - Calls Paylink to create payment invoice and get paymentUrl
+ * - Emits realtime events
  */
 export async function createInvoice(request: CreateInvoiceRequest): Promise<Invoice> {
   const invoiceNumber = await generateInvoiceNumber(request.tenant_id);
@@ -153,7 +157,22 @@ export async function createInvoice(request: CreateInvoiceRequest): Promise<Invo
     throw error;
   }
 
-  const invoice = mapDbRowToInvoice(data as unknown as Record<string, unknown>);
+  let invoice = mapDbRowToInvoice(data as unknown as Record<string, unknown>);
+  
+  // Create Paylink invoice and get payment URL
+  try {
+    const paylinkResult = await createPaylinkInvoice(invoice.id);
+    if (paylinkResult.success && paylinkResult.payment_url) {
+      // Refetch invoice with updated payment_url
+      const updatedInvoice = await getInvoiceById(invoice.id);
+      if (updatedInvoice) {
+        invoice = updatedInvoice;
+      }
+    }
+  } catch (paylinkError) {
+    console.error('Error creating Paylink invoice:', paylinkError);
+    // Continue without payment URL - admin can retry later
+  }
   
   // Emit realtime event to customer channel
   await emitInvoiceEvent('invoice.generated', invoice);
@@ -162,6 +181,32 @@ export async function createInvoice(request: CreateInvoiceRequest): Promise<Invo
   await createInvoiceNotification(invoice);
 
   return invoice;
+}
+
+/**
+ * Call Paylink edge function to create payment invoice
+ */
+async function createPaylinkInvoice(invoiceId: string): Promise<{
+  success: boolean;
+  payment_url?: string;
+  provider_invoice_id?: string;
+  error?: string;
+}> {
+  try {
+    const { data, error } = await supabase.functions.invoke('paylink-create-invoice', {
+      body: { invoice_id: invoiceId },
+    });
+
+    if (error) {
+      console.error('Paylink function error:', error);
+      return { success: false, error: error.message };
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error calling Paylink function:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
 }
 
 /**

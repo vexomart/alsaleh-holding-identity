@@ -165,7 +165,7 @@ serve(async (req) => {
           console.error('Error updating invoice:', invoiceError);
         }
 
-        // Get invoice details for journal entry
+        // Get invoice details for journal entry and realtime events
         const { data: invoice } = await supabase
           .from('invoices')
           .select('*')
@@ -184,6 +184,19 @@ serve(async (req) => {
             tenantId: invoice.tenant_id,
             customerId: invoice.customer_id,
             transactionNo,
+          });
+
+          // Emit invoice.paid realtime event
+          await emitRealtimeEvent(supabase, 'invoice.paid', {
+            invoice_id: invoice.id,
+            invoice_number: invoice.invoice_number,
+            order_id: invoice.order_id,
+            customer_id: invoice.customer_id,
+            status: 'paid',
+            total: Number(invoice.total),
+            currency: invoice.currency,
+            pdf_url: invoice.pdf_url,
+            paid_at: new Date().toISOString(),
           });
         }
       }
@@ -214,6 +227,44 @@ serve(async (req) => {
           title_ar: 'تم الدفع بنجاح',
           message: `Your payment of ${transaction.amount} ${transaction.currency} has been received.`,
           message_ar: `تم استلام دفعتك بمبلغ ${transaction.amount} ${transaction.currency}.`,
+          link: `/app/orders/${transaction.related_order_id}`,
+        });
+      }
+    }
+
+    // If payment failed, emit event
+    if (newStatus === 'failed' || newStatus === 'cancelled') {
+      if (transaction.related_invoice_id) {
+        const { data: invoice } = await supabase
+          .from('invoices')
+          .select('*')
+          .eq('id', transaction.related_invoice_id)
+          .single();
+
+        if (invoice) {
+          await emitRealtimeEvent(supabase, 'payment.failed', {
+            invoice_id: invoice.id,
+            invoice_number: invoice.invoice_number,
+            order_id: invoice.order_id,
+            customer_id: invoice.customer_id,
+            status: newStatus,
+            total: Number(invoice.total),
+            currency: invoice.currency,
+            error: orderStatus,
+          });
+        }
+      }
+
+      // Create notification for failed payment
+      if (transaction.customer_user_id) {
+        await supabase.from('notifications').insert({
+          user_id: transaction.customer_user_id,
+          tenant_id: transaction.tenant_id,
+          type: 'error',
+          title: newStatus === 'cancelled' ? 'Payment Cancelled' : 'Payment Failed',
+          title_ar: newStatus === 'cancelled' ? 'تم إلغاء الدفع' : 'فشل الدفع',
+          message: `Your payment could not be processed. Please try again.`,
+          message_ar: `لم تتم معالجة الدفع. يرجى المحاولة مرة أخرى.`,
           link: `/app/orders/${transaction.related_order_id}`,
         });
       }
@@ -370,5 +421,53 @@ async function createJournalEntry(
 
   } catch (error) {
     console.error('Error in createJournalEntry:', error);
+  }
+}
+
+/**
+ * Emit realtime event to customer channels
+ */
+async function emitRealtimeEvent(
+  supabase: ReturnType<typeof createClient>,
+  event: 'invoice.paid' | 'payment.failed',
+  payload: {
+    invoice_id: string;
+    invoice_number: string;
+    order_id: string;
+    customer_id: string;
+    status: string;
+    total: number;
+    currency: string;
+    pdf_url?: string | null;
+    paid_at?: string;
+    error?: string;
+  }
+) {
+  try {
+    const eventPayload = {
+      event,
+      ...payload,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Emit to customer-specific invoice channel
+    const customerInvoiceChannel = supabase.channel(`user:${payload.customer_id}:invoices`);
+    await customerInvoiceChannel.send({
+      type: 'broadcast',
+      event: event,
+      payload: eventPayload,
+    });
+
+    // Emit to customer notification channel
+    const customerNotificationChannel = supabase.channel(`user:${payload.customer_id}:notifications`);
+    await customerNotificationChannel.send({
+      type: 'broadcast',
+      event: event,
+      payload: eventPayload,
+    });
+
+    console.log(`Realtime event emitted: ${event} for customer ${payload.customer_id}`);
+  } catch (error) {
+    console.error('Error emitting realtime event:', error);
   }
 }
