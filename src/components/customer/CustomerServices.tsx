@@ -116,6 +116,15 @@ const CATEGORIES: Record<string, {
     color: "#64748B",
     bgClass: "from-slate-500/20 to-slate-600/5",
   },
+  api: {
+    nameAr: "الربط API",
+    nameEn: "API Integration",
+    descAr: "ربط وتكامل الأنظمة والخدمات",
+    descEn: "System and service integration",
+    icon: Globe,
+    color: "#EC4899",
+    bgClass: "from-pink-500/20 to-pink-600/5",
+  },
 };
 
 const DEFAULT_CATEGORY = {
