@@ -1,21 +1,19 @@
 /**
  * Reports & Analytics Page - Enterprise Grade Design
- * Advanced data visualization and insights
+ * Real data from database
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   BarChart3, 
   TrendingUp,
-  TrendingDown,
   Users,
   ShoppingCart,
   Package,
   DollarSign,
   Calendar,
   Download,
-  Filter,
   RefreshCw,
   ArrowUpRight,
   ArrowDownRight,
@@ -25,7 +23,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -33,8 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { db } from '@/integrations/supabase/db';
+import { useAdminAnalytics } from '@/hooks/useAdminAnalytics';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { 
@@ -50,49 +46,20 @@ import {
   Cell,
   BarChart,
   Bar,
-  LineChart,
-  Line,
   Legend
 } from 'recharts';
 
-const revenueData = [
-  { month: 'يناير', revenue: 45000, orders: 120, target: 40000 },
-  { month: 'فبراير', revenue: 52000, orders: 145, target: 45000 },
-  { month: 'مارس', revenue: 48000, orders: 130, target: 50000 },
-  { month: 'أبريل', revenue: 61000, orders: 165, target: 55000 },
-  { month: 'مايو', revenue: 55000, orders: 150, target: 55000 },
-  { month: 'يونيو', revenue: 72000, orders: 190, target: 60000 },
-  { month: 'يوليو', revenue: 68000, orders: 180, target: 65000 },
-];
-
-const orderStatusData = [
-  { name: 'مكتمل', nameEn: 'Completed', value: 45, color: '#10b981' },
-  { name: 'قيد التنفيذ', nameEn: 'In Progress', value: 25, color: '#3b82f6' },
-  { name: 'معلق', nameEn: 'Pending', value: 20, color: '#f59e0b' },
-  { name: 'ملغي', nameEn: 'Cancelled', value: 10, color: '#ef4444' },
-];
-
-const servicePerformance = [
-  { name: 'استشارات قانونية', orders: 85, revenue: 25000 },
-  { name: 'تسجيل الشركات', orders: 65, revenue: 19500 },
-  { name: 'تراخيص تجارية', orders: 45, revenue: 13500 },
-  { name: 'خدمات محاسبية', orders: 35, revenue: 10500 },
-  { name: 'استشارات ضريبية', orders: 25, revenue: 7500 },
-];
-
 export function ReportsPage() {
   const { language } = useLanguage();
-  const [loading, setLoading] = useState(false);
-  const [timeRange, setTimeRange] = useState('7days');
-  const [stats, setStats] = useState({
-    totalRevenue: 401000,
-    totalOrders: 1080,
-    totalUsers: 256,
-    avgOrderValue: 371,
-    revenueGrowth: 12.5,
-    ordersGrowth: 8.2,
-    usersGrowth: 15.3,
-  });
+  const { analytics, loading, refresh } = useAdminAnalytics();
+  const [timeRange, setTimeRange] = useState('7months');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await refresh();
+    setIsRefreshing(false);
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat(language === 'ar' ? 'ar-SA' : 'en-US', {
@@ -103,32 +70,83 @@ export function ReportsPage() {
     }).format(amount);
   };
 
+  // Compute average order value
+  const avgOrderValue = useMemo(() => {
+    if (analytics.totalOrders === 0) return 0;
+    return Math.round(analytics.totalRevenue / analytics.totalOrders);
+  }, [analytics.totalRevenue, analytics.totalOrders]);
+
+  // Order status data for pie chart
+  const orderStatusData = useMemo(() => {
+    const total = analytics.totalOrders || 1;
+    return [
+      { 
+        name: 'مكتمل', 
+        nameEn: 'Completed', 
+        value: Math.round((analytics.ordersByStatus.completed / total) * 100) || 0, 
+        color: '#10b981' 
+      },
+      { 
+        name: 'قيد التنفيذ', 
+        nameEn: 'In Progress', 
+        value: Math.round(((analytics.ordersByStatus.processing + analytics.ordersByStatus.in_progress) / total) * 100) || 0, 
+        color: '#3b82f6' 
+      },
+      { 
+        name: 'معلق', 
+        nameEn: 'Pending', 
+        value: Math.round((analytics.ordersByStatus.pending / total) * 100) || 0, 
+        color: '#f59e0b' 
+      },
+      { 
+        name: 'ملغي', 
+        nameEn: 'Cancelled', 
+        value: Math.round(((analytics.ordersByStatus.cancelled + analytics.ordersByStatus.refunded) / total) * 100) || 0, 
+        color: '#ef4444' 
+      },
+    ].filter(item => item.value > 0);
+  }, [analytics.ordersByStatus, analytics.totalOrders]);
+
+  // Revenue data for charts
+  const revenueData = useMemo(() => {
+    return analytics.monthlyRevenue.map(item => ({
+      month: language === 'ar' ? item.month : item.monthEn,
+      revenue: item.revenue,
+      orders: item.orders,
+    }));
+  }, [analytics.monthlyRevenue, language]);
+
+  // Top services for bar chart
+  const servicePerformance = useMemo(() => {
+    return analytics.topServices.map(service => ({
+      name: language === 'ar' ? (service.name_ar || service.name) : service.name,
+      orders: service.orders_count,
+      revenue: service.revenue,
+    }));
+  }, [analytics.topServices, language]);
+
   const kpiCards = [
     {
       title: language === 'ar' ? 'إجمالي الإيرادات' : 'Total Revenue',
-      value: formatCurrency(stats.totalRevenue),
-      change: stats.revenueGrowth,
+      value: formatCurrency(analytics.totalRevenue),
       icon: DollarSign,
       color: 'emerald',
     },
     {
       title: language === 'ar' ? 'إجمالي الطلبات' : 'Total Orders',
-      value: stats.totalOrders.toLocaleString(),
-      change: stats.ordersGrowth,
+      value: analytics.totalOrders.toLocaleString(),
       icon: ShoppingCart,
       color: 'blue',
     },
     {
       title: language === 'ar' ? 'إجمالي العملاء' : 'Total Customers',
-      value: stats.totalUsers.toLocaleString(),
-      change: stats.usersGrowth,
+      value: analytics.totalUsers.toLocaleString(),
       icon: Users,
       color: 'violet',
     },
     {
       title: language === 'ar' ? 'متوسط قيمة الطلب' : 'Avg Order Value',
-      value: formatCurrency(stats.avgOrderValue),
-      change: 5.2,
+      value: formatCurrency(avgOrderValue),
       icon: Activity,
       color: 'amber',
     },
@@ -144,26 +162,29 @@ export function ReportsPage() {
             {language === 'ar' ? 'التقارير والتحليلات' : 'Reports & Analytics'}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {language === 'ar' ? 'تحليلات متقدمة ورؤى الأعمال' : 'Advanced analytics and business insights'}
+            {language === 'ar' ? 'بيانات حقيقية من قاعدة البيانات' : 'Real data from database'}
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2"
+            onClick={onRefresh}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+            {language === 'ar' ? 'تحديث' : 'Refresh'}
+          </Button>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger className="w-[160px]">
               <Calendar className="h-4 w-4 ml-2" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="7days">{language === 'ar' ? 'آخر 7 أيام' : 'Last 7 days'}</SelectItem>
-              <SelectItem value="30days">{language === 'ar' ? 'آخر 30 يوم' : 'Last 30 days'}</SelectItem>
-              <SelectItem value="90days">{language === 'ar' ? 'آخر 90 يوم' : 'Last 90 days'}</SelectItem>
-              <SelectItem value="year">{language === 'ar' ? 'هذه السنة' : 'This year'}</SelectItem>
+              <SelectItem value="7months">{language === 'ar' ? 'آخر 7 أشهر' : 'Last 7 months'}</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Download className="h-4 w-4" />
-            {language === 'ar' ? 'تصدير' : 'Export'}
-          </Button>
         </div>
       </div>
 
@@ -195,18 +216,14 @@ export function ReportsPage() {
                   )}>
                     <kpi.icon className="h-5 w-5" />
                   </div>
-                  <Badge 
-                    variant="secondary" 
-                    className={cn(
-                      "gap-1 text-xs",
-                      kpi.change > 0 ? "text-emerald-600 bg-emerald-100" : "text-red-600 bg-red-100"
-                    )}
-                  >
-                    {kpi.change > 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                    {Math.abs(kpi.change)}%
-                  </Badge>
                 </div>
-                <p className="text-2xl font-bold">{kpi.value}</p>
+                <p className="text-2xl font-bold">
+                  {loading ? (
+                    <span className="inline-block h-8 w-24 bg-muted animate-pulse rounded" />
+                  ) : (
+                    kpi.value
+                  )}
+                </p>
                 <p className="text-sm text-muted-foreground mt-1">{kpi.title}</p>
               </CardContent>
             </Card>
@@ -226,73 +243,71 @@ export function ReportsPage() {
                   {language === 'ar' ? 'الإيرادات والطلبات' : 'Revenue & Orders'}
                 </CardTitle>
                 <CardDescription>
-                  {language === 'ar' ? 'مقارنة الأداء مع الأهداف' : 'Performance vs targets'}
+                  {language === 'ar' ? 'بيانات حقيقية من قاعدة البيانات' : 'Real data from database'}
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="h-[350px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorTarget" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis 
-                    dataKey="month" 
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis 
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                    tickFormatter={(value) => `${value / 1000}k`}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                    }}
-                    formatter={(value: number, name: string) => [
-                      formatCurrency(value), 
-                      name === 'revenue' 
-                        ? (language === 'ar' ? 'الإيرادات' : 'Revenue')
-                        : (language === 'ar' ? 'الهدف' : 'Target')
-                    ]}
-                  />
-                  <Legend />
-                  <Area
-                    type="monotone"
-                    dataKey="revenue"
-                    name={language === 'ar' ? 'الإيرادات' : 'Revenue'}
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorRevenue)"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="target"
-                    name={language === 'ar' ? 'الهدف' : 'Target'}
-                    stroke="#f59e0b"
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                    fillOpacity={1}
-                    fill="url(#colorTarget)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              {loading ? (
+                <div className="h-full w-full bg-muted/50 animate-pulse rounded flex items-center justify-center">
+                  <span className="text-muted-foreground">
+                    {language === 'ar' ? 'جاري التحميل...' : 'Loading...'}
+                  </span>
+                </div>
+              ) : revenueData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorRevenueReport" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                    <XAxis 
+                      dataKey="month" 
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis 
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                      tickFormatter={(value) => value >= 1000 ? `${value / 1000}k` : value}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                      }}
+                      formatter={(value: number, name: string) => [
+                        name === 'revenue' ? formatCurrency(value) : value, 
+                        name === 'revenue' 
+                          ? (language === 'ar' ? 'الإيرادات' : 'Revenue')
+                          : (language === 'ar' ? 'الطلبات' : 'Orders')
+                      ]}
+                    />
+                    <Legend />
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      name={language === 'ar' ? 'الإيرادات' : 'Revenue'}
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorRevenueReport)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground">
+                  {language === 'ar' ? 'لا توجد بيانات' : 'No data available'}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -307,29 +322,37 @@ export function ReportsPage() {
           </CardHeader>
           <CardContent>
             <div className="h-[200px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={orderStatusData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {orderStatusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    formatter={(value: number, name: string, props: any) => [
-                      `${value}%`,
-                      language === 'ar' ? props.payload.name : props.payload.nameEn
-                    ]}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              {loading ? (
+                <div className="h-full w-full bg-muted/50 animate-pulse rounded" />
+              ) : orderStatusData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={orderStatusData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {orderStatusData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      formatter={(value: number, name: string, props: any) => [
+                        `${value}%`,
+                        language === 'ar' ? props.payload.name : props.payload.nameEn
+                      ]}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                  {language === 'ar' ? 'لا توجد طلبات' : 'No orders'}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-2 mt-4">
               {orderStatusData.map((status, index) => (
@@ -359,39 +382,55 @@ export function ReportsPage() {
                 {language === 'ar' ? 'أداء الخدمات' : 'Service Performance'}
               </CardTitle>
               <CardDescription>
-                {language === 'ar' ? 'أفضل الخدمات حسب الطلبات والإيرادات' : 'Top services by orders and revenue'}
+                {language === 'ar' ? 'أفضل الخدمات حسب عدد الطلبات' : 'Top services by order count'}
               </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={servicePerformance} layout="vertical" margin={{ top: 0, right: 30, left: 100, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
-                <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
-                <YAxis 
-                  type="category" 
-                  dataKey="name" 
-                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                  width={100}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                  }}
-                />
-                <Legend />
-                <Bar 
-                  dataKey="orders" 
-                  name={language === 'ar' ? 'الطلبات' : 'Orders'} 
-                  fill="hsl(var(--primary))" 
-                  radius={[0, 4, 4, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            {loading ? (
+              <div className="h-full w-full bg-muted/50 animate-pulse rounded flex items-center justify-center">
+                <span className="text-muted-foreground">
+                  {language === 'ar' ? 'جاري التحميل...' : 'Loading...'}
+                </span>
+              </div>
+            ) : servicePerformance.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={servicePerformance} layout="vertical" margin={{ top: 0, right: 30, left: 100, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" horizontal={false} />
+                  <XAxis type="number" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+                  <YAxis 
+                    type="category" 
+                    dataKey="name" 
+                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                    width={100}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px',
+                    }}
+                    formatter={(value: number, name: string) => [
+                      name === 'orders' ? value : formatCurrency(value),
+                      name === 'orders' ? (language === 'ar' ? 'الطلبات' : 'Orders') : (language === 'ar' ? 'الإيرادات' : 'Revenue')
+                    ]}
+                  />
+                  <Legend />
+                  <Bar 
+                    dataKey="orders" 
+                    name={language === 'ar' ? 'الطلبات' : 'Orders'} 
+                    fill="hsl(var(--primary))" 
+                    radius={[0, 4, 4, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-muted-foreground">
+                {language === 'ar' ? 'لا توجد بيانات خدمات' : 'No service data available'}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
