@@ -34,6 +34,7 @@ import {
   Building2,
   ChevronLeft,
   ChevronRight,
+  Wallet,
 } from "lucide-react";
 
 interface NavItem {
@@ -70,6 +71,12 @@ export function CustomerSidebar() {
       titleEn: "Services",
       icon: Package,
       href: "/app/services",
+    },
+    {
+      titleAr: "المحفظة",
+      titleEn: "Wallet",
+      icon: Wallet,
+      href: "/app/wallet",
     },
     {
       titleAr: "الإشعارات",

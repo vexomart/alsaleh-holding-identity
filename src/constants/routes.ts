@@ -42,6 +42,7 @@ export const ROUTES = {
     ORDERS: '/app/orders',
     ORDER_DETAIL: (id: string) => `/app/orders/${id}`,
     SERVICES: '/app/services',
+    WALLET: '/app/wallet',
     PROFILE: '/app/profile',
     NOTIFICATIONS: '/app/notifications',
     SUPPORT: '/app/support',
