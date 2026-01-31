@@ -8,6 +8,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { fetchCustomerServices, type Service } from "@/lib/api/services";
+import { ComingSoonInfrastructure } from "./ComingSoonInfrastructure";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -542,6 +543,11 @@ export function CustomerCategoryServices() {
         </div>
       </div>
     );
+  }
+
+  // Show Coming Soon page for Infrastructure category
+  if (category === "infrastructure") {
+    return <ComingSoonInfrastructure />;
   }
 
   return (
