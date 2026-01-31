@@ -81,6 +81,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { createInvoicePDF, type InvoiceData } from '@/lib/pdf';
+import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
 
 interface Order {
   id: string;
@@ -1013,6 +1014,22 @@ export function OrdersManagement() {
                     </p>
                   </div>
                 )}
+
+                {/* Invoice Section */}
+                <OrderInvoiceSection
+                  orderId={selectedOrder.id}
+                  orderNumber={selectedOrder.order_number}
+                  orderTitle={selectedOrder.title}
+                  orderTitleAr={selectedOrder.title_ar}
+                  orderDescription={selectedOrder.description}
+                  totalAmount={selectedOrder.total_amount || 0}
+                  currency={selectedOrder.currency || 'SAR'}
+                  customerId={selectedOrder.customer_id}
+                  tenantId={null}
+                  createdAt={selectedOrder.created_at}
+                  dueDate={selectedOrder.due_date}
+                  isAdmin={true}
+                />
 
                 {/* Actions */}
                 <div className="flex items-center gap-3 pt-2">
