@@ -25,6 +25,10 @@ export interface Invoice {
   notes: string | null;
   due_date: string | null;
   paid_at: string | null;
+  // Paylink payment fields
+  payment_url: string | null;
+  provider: string | null;
+  provider_invoice_id: string | null;
   metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
@@ -84,6 +88,10 @@ function mapDbRowToInvoice(row: Record<string, unknown>): Invoice {
     notes: row.notes as string | null,
     due_date: row.due_date as string | null,
     paid_at: row.paid_at as string | null,
+    // Paylink payment fields
+    payment_url: row.payment_url as string | null,
+    provider: row.provider as string | null,
+    provider_invoice_id: row.provider_invoice_id as string | null,
     metadata: (row.metadata as Record<string, unknown>) || {},
     created_at: row.created_at as string,
     updated_at: row.updated_at as string,

@@ -1,6 +1,7 @@
 /**
  * OrderInvoiceSection - Invoice display/actions for Order Details
  * Uses html2canvas + jsPDF for proper Arabic RTL PDF generation
+ * Includes Paylink payment integration
  */
 
 import { useState, useEffect } from 'react';
@@ -13,7 +14,9 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-  AlertCircle
+  AlertCircle,
+  CreditCard,
+  ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +32,7 @@ import {
   type InvoiceStatus 
 } from '@/lib/api/invoices';
 import { createInvoicePDF, type InvoiceData } from '@/lib/pdf';
+import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 
 interface OrderInvoiceSectionProps {
   orderId: string;
@@ -113,6 +117,9 @@ export function OrderInvoiceSection({
   const [generating, setGenerating] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
+  // Paylink payment hook
+  const { createPayment, isCreatingPayment, redirectToPayment } = usePaylinkPayment();
+
   // Fetch invoice on mount
   useEffect(() => {
     const fetchInvoice = async () => {
@@ -129,6 +136,16 @@ export function OrderInvoiceSection({
 
     fetchInvoice();
   }, [orderId]);
+
+  // Refetch invoice when needed
+  const refetchInvoice = async () => {
+    try {
+      const data = await getInvoiceByOrderId(orderId);
+      setInvoice(data);
+    } catch (err) {
+      console.error('Error refetching invoice:', err);
+    }
+  };
 
   // Format currency
   const formatCurrency = (amount: number) => {
@@ -280,6 +297,32 @@ export function OrderInvoiceSection({
     }
   };
 
+  // Handle Pay Now - Create Paylink invoice and redirect
+  const handlePayNow = async () => {
+    if (!invoice) return;
+
+    try {
+      const result = await createPayment.mutateAsync(invoice.id);
+      
+      if (result.success && result.payment_url) {
+        toast({
+          title: isRTL ? 'جاري التوجيه إلى صفحة الدفع...' : 'Redirecting to payment page...',
+        });
+        // Redirect to Paylink payment page
+        redirectToPayment(result.payment_url);
+      } else {
+        throw new Error(result.error || 'Failed to create payment');
+      }
+    } catch (err) {
+      console.error('Error initiating payment:', err);
+      toast({
+        title: isRTL ? 'خطأ في بدء عملية الدفع' : 'Error initiating payment',
+        description: err instanceof Error ? err.message : undefined,
+        variant: 'destructive',
+      });
+    }
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -416,8 +459,31 @@ export function OrderInvoiceSection({
         </div>
       </div>
 
-      {/* Download Button */}
-      <div className="mt-4 pt-4 border-t">
+      {/* Action Buttons */}
+      <div className="mt-4 pt-4 border-t space-y-3">
+        {/* Pay Now Button - Show only for unpaid invoices (not admin view) */}
+        {!isAdmin && invoice.status !== 'paid' && invoice.status !== 'cancelled' && (
+          <Button
+            onClick={handlePayNow}
+            disabled={isCreatingPayment}
+            className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700"
+          >
+            {isCreatingPayment ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {isRTL ? 'جاري التحضير...' : 'Preparing...'}
+              </>
+            ) : (
+              <>
+                <CreditCard className="h-4 w-4" />
+                {isRTL ? 'ادفع الآن' : 'Pay Now'}
+                <ExternalLink className="h-3 w-3 ms-1 opacity-70" />
+              </>
+            )}
+          </Button>
+        )}
+
+        {/* Download Button */}
         <Button
           onClick={handleDownloadPDF}
           disabled={downloading}
