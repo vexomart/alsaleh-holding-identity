@@ -165,8 +165,13 @@ const AboutUs = () => {
             </div>
 
             <div className="text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <div className="text-4xl font-bold text-green-600 mb-2">98%</div>
-              <div className="text-lg text-gray-700 font-semibold">نسبة الرضا</div>
+              <div className="text-4xl font-bold text-green-600 mb-2">100%</div>
+              <div className="text-lg text-gray-700 font-semibold">معدل رضا العملاء</div>
+            </div>
+
+            <div className="text-center p-8 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+              <div className="text-4xl font-bold text-amber-600 mb-2">5/5</div>
+              <div className="text-lg text-gray-700 font-semibold">التقييم</div>
             </div>
 
             <div className="text-center p-8 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.6s' }}>
