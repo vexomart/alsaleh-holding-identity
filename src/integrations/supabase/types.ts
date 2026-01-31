@@ -67,6 +67,84 @@ export type Database = {
           },
         ]
       }
+      invoices: {
+        Row: {
+          created_at: string
+          currency: string
+          customer_id: string
+          due_date: string | null
+          id: string
+          invoice_number: string
+          metadata: Json | null
+          notes: string | null
+          order_id: string
+          paid_at: string | null
+          pdf_url: string | null
+          status: Database["public"]["Enums"]["invoice_status"]
+          subtotal: number
+          tenant_id: string | null
+          total: number
+          updated_at: string
+          vat_amount: number
+          vat_rate: number
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          customer_id: string
+          due_date?: string | null
+          id?: string
+          invoice_number: string
+          metadata?: Json | null
+          notes?: string | null
+          order_id: string
+          paid_at?: string | null
+          pdf_url?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          subtotal?: number
+          tenant_id?: string | null
+          total?: number
+          updated_at?: string
+          vat_amount?: number
+          vat_rate?: number
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          customer_id?: string
+          due_date?: string | null
+          id?: string
+          invoice_number?: string
+          metadata?: Json | null
+          notes?: string | null
+          order_id?: string
+          paid_at?: string | null
+          pdf_url?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          subtotal?: number
+          tenant_id?: string | null
+          total?: number
+          updated_at?: string
+          vat_amount?: number
+          vat_rate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       media: {
         Row: {
           alt_text: string | null
@@ -828,6 +906,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_invoice_number: {
+        Args: { p_tenant_id?: string }
+        Returns: string
+      }
       get_next_service_sort_order: {
         Args: { p_tenant_id?: string }
         Returns: number
@@ -880,6 +962,7 @@ export type Database = {
         | "login"
         | "logout"
         | "export"
+      invoice_status: "draft" | "issued" | "paid" | "cancelled" | "overdue"
       notification_type: "info" | "warning" | "success" | "error" | "system"
       order_status:
         | "pending"
@@ -1034,6 +1117,7 @@ export const Constants = {
         "logout",
         "export",
       ],
+      invoice_status: ["draft", "issued", "paid", "cancelled", "overdue"],
       notification_type: ["info", "warning", "success", "error", "system"],
       order_status: [
         "pending",
