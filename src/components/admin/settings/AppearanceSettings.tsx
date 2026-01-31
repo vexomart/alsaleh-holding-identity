@@ -3,9 +3,10 @@
  * Theme and visual customization
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "next-themes";
+import { useSystemSettings, AppearanceSettings as AppearanceSettingsType } from "@/hooks/useSystemSettings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -13,8 +14,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Palette, Sun, Moon, Monitor, Save, Type, Sparkles } from "lucide-react";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Palette, Sun, Moon, Monitor, Save, Type, Sparkles, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const colorSchemes = [
@@ -32,30 +33,51 @@ const fontOptions = [
   { id: "ibm-plex", name: "IBM Plex", nameAr: "IBM Plex" },
 ];
 
+const defaultSettings: AppearanceSettingsType = {
+  colorScheme: "amber",
+  fontSize: 16,
+  fontFamily: "cairo",
+  enableAnimations: true,
+  compactMode: false,
+  highContrast: false,
+};
+
 export function AppearanceSettings() {
   const { isRTL } = useLanguage();
   const { theme, setTheme } = useTheme();
-  const [isLoading, setIsLoading] = useState(false);
-  const [settings, setSettings] = useState({
-    colorScheme: "amber",
-    fontSize: [16],
-    fontFamily: "cairo",
-    enableAnimations: true,
-    compactMode: false,
-    highContrast: false,
-  });
+  const { settings: dbSettings, isLoading, isSaving, saveSettings } = useSystemSettings("appearance");
+  const [settings, setSettings] = useState<AppearanceSettingsType>(defaultSettings);
+
+  useEffect(() => {
+    if (dbSettings) {
+      setSettings({ ...defaultSettings, ...dbSettings });
+    }
+  }, [dbSettings]);
 
   const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast.success(isRTL ? "تم حفظ إعدادات المظهر" : "Appearance settings saved");
-    } catch (error) {
-      toast.error(isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings");
-    } finally {
-      setIsLoading(false);
-    }
+    await saveSettings(settings, {
+      successMessage: isRTL ? "تم حفظ إعدادات المظهر" : "Appearance settings saved",
+      errorMessage: isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings",
+    });
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3].map((i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-72" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-24 w-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -198,11 +220,11 @@ export function AppearanceSettings() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>{isRTL ? "حجم الخط الأساسي" : "Base Font Size"}</Label>
-              <span className="text-sm text-muted-foreground">{settings.fontSize[0]}px</span>
+              <span className="text-sm text-muted-foreground">{settings.fontSize}px</span>
             </div>
             <Slider
-              value={settings.fontSize}
-              onValueChange={(value) => setSettings({ ...settings, fontSize: value })}
+              value={[settings.fontSize]}
+              onValueChange={(value) => setSettings({ ...settings, fontSize: value[0] })}
               min={12}
               max={20}
               step={1}
@@ -277,9 +299,13 @@ export function AppearanceSettings() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isLoading} size="lg">
-          <Save className="h-4 w-4 me-2" />
-          {isLoading 
+        <Button onClick={handleSave} disabled={isSaving} size="lg">
+          {isSaving ? (
+            <Loader2 className="h-4 w-4 me-2 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4 me-2" />
+          )}
+          {isSaving 
             ? (isRTL ? "جاري الحفظ..." : "Saving...") 
             : (isRTL ? "حفظ الإعدادات" : "Save Settings")}
         </Button>

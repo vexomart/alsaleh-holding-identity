@@ -3,16 +3,17 @@
  * Language, timezone, and regional settings
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage, Language } from "@/hooks/useLanguage";
+import { useSystemSettings, LocalizationSettings as LocalizationSettingsType } from "@/hooks/useSystemSettings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Globe, Save, Clock, Calendar, Languages, DollarSign } from "lucide-react";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Globe, Save, Clock, Calendar, Languages, DollarSign, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const languages = [
@@ -47,32 +48,56 @@ const calendarTypes = [
   { value: "both", labelAr: "كلاهما", labelEn: "Both" },
 ];
 
+const defaultSettings: LocalizationSettingsType = {
+  defaultLanguage: "ar",
+  allowLanguageSwitching: true,
+  timezone: "Asia/Riyadh",
+  currency: "SAR",
+  dateFormat: "DD/MM/YYYY",
+  calendarType: "both",
+  use24HourFormat: false,
+  showHijriDate: true,
+};
+
 export function LocalizationSettings() {
-  const { isRTL, language, setLanguage } = useLanguage();
-  const [isLoading, setIsLoading] = useState(false);
-  const [settings, setSettings] = useState({
-    defaultLanguage: language,
-    allowLanguageSwitching: true,
-    timezone: "Asia/Riyadh",
-    currency: "SAR",
-    dateFormat: "DD/MM/YYYY",
-    calendarType: "both",
-    use24HourFormat: false,
-    showHijriDate: true,
-  });
+  const { isRTL, setLanguage } = useLanguage();
+  const { settings: dbSettings, isLoading, isSaving, saveSettings } = useSystemSettings("localization");
+  const [settings, setSettings] = useState<LocalizationSettingsType>(defaultSettings);
+
+  useEffect(() => {
+    if (dbSettings) {
+      setSettings({ ...defaultSettings, ...dbSettings });
+    }
+  }, [dbSettings]);
 
   const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    const success = await saveSettings(settings, {
+      successMessage: isRTL ? "تم حفظ إعدادات اللغة والمنطقة" : "Localization settings saved",
+      errorMessage: isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings",
+    });
+    
+    if (success) {
       setLanguage(settings.defaultLanguage as Language);
-      toast.success(isRTL ? "تم حفظ إعدادات اللغة والمنطقة" : "Localization settings saved");
-    } catch (error) {
-      toast.error(isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings");
-    } finally {
-      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3, 4].map((i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-72" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-24 w-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -94,13 +119,13 @@ export function LocalizationSettings() {
             <Label>{isRTL ? "اللغة الافتراضية" : "Default Language"}</Label>
             <RadioGroup
               value={settings.defaultLanguage}
-              onValueChange={(value) => setSettings({ ...settings, defaultLanguage: value as Language })}
+              onValueChange={(value) => setSettings({ ...settings, defaultLanguage: value })}
               className="flex gap-4"
             >
               {languages.map((lang) => (
                 <Label
                   key={lang.code}
-                  htmlFor={lang.code}
+                  htmlFor={`lang-${lang.code}`}
                   className={cn(
                     "flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all flex-1",
                     settings.defaultLanguage === lang.code 
@@ -108,7 +133,7 @@ export function LocalizationSettings() {
                       : "border-border hover:border-primary/50"
                   )}
                 >
-                  <RadioGroupItem value={lang.code} id={lang.code} className="sr-only" />
+                  <RadioGroupItem value={lang.code} id={`lang-${lang.code}`} className="sr-only" />
                   <span className="text-2xl">{lang.flag}</span>
                   <div>
                     <p className="font-medium">{lang.name}</p>
@@ -279,7 +304,7 @@ export function LocalizationSettings() {
               {currencies.map((currency) => (
                 <Label
                   key={currency.code}
-                  htmlFor={currency.code}
+                  htmlFor={`currency-${currency.code}`}
                   className={cn(
                     "flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-all",
                     settings.currency === currency.code 
@@ -287,7 +312,7 @@ export function LocalizationSettings() {
                       : "border-border hover:border-primary/50"
                   )}
                 >
-                  <RadioGroupItem value={currency.code} id={currency.code} className="sr-only" />
+                  <RadioGroupItem value={currency.code} id={`currency-${currency.code}`} className="sr-only" />
                   <span className="text-2xl font-bold text-primary">{currency.symbol}</span>
                   <div className="text-center">
                     <p className="font-medium">{currency.code}</p>
@@ -304,9 +329,13 @@ export function LocalizationSettings() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isLoading} size="lg">
-          <Save className="h-4 w-4 me-2" />
-          {isLoading 
+        <Button onClick={handleSave} disabled={isSaving} size="lg">
+          {isSaving ? (
+            <Loader2 className="h-4 w-4 me-2 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4 me-2" />
+          )}
+          {isSaving 
             ? (isRTL ? "جاري الحفظ..." : "Saving...") 
             : (isRTL ? "حفظ الإعدادات" : "Save Settings")}
         </Button>

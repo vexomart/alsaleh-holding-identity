@@ -3,8 +3,9 @@
  * Email configuration and templates
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSystemSettings, EmailSettings as EmailSettingsType } from "@/hooks/useSystemSettings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Save, Send, Server, Shield, FileText, CheckCircle2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Mail, Save, Send, Server, FileText, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const emailTemplates = [
@@ -23,32 +25,35 @@ const emailTemplates = [
   { id: "notification", nameAr: "الإشعارات", nameEn: "Notification", status: "draft" },
 ];
 
+const defaultSettings: EmailSettingsType = {
+  senderName: "ASH Holding",
+  senderEmail: "info@ash-holding.sa",
+  replyToEmail: "support@ash-holding.sa",
+  smtpProvider: "resend",
+  enableEmailNotifications: true,
+  enableOrderEmails: true,
+  enableMarketingEmails: false,
+  bccAdmin: true,
+  bccEmail: "admin@ash-holding.sa",
+};
+
 export function EmailSettings() {
   const { isRTL } = useLanguage();
-  const [isLoading, setIsLoading] = useState(false);
+  const { settings: dbSettings, isLoading, isSaving, saveSettings } = useSystemSettings("email");
+  const [settings, setSettings] = useState<EmailSettingsType>(defaultSettings);
   const [testEmailLoading, setTestEmailLoading] = useState(false);
-  const [settings, setSettings] = useState({
-    senderName: "ASH Holding",
-    senderEmail: "info@ash-holding.sa",
-    replyToEmail: "support@ash-holding.sa",
-    smtpProvider: "resend",
-    enableEmailNotifications: true,
-    enableOrderEmails: true,
-    enableMarketingEmails: false,
-    bccAdmin: true,
-    bccEmail: "admin@ash-holding.sa",
-  });
+
+  useEffect(() => {
+    if (dbSettings) {
+      setSettings({ ...defaultSettings, ...dbSettings });
+    }
+  }, [dbSettings]);
 
   const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast.success(isRTL ? "تم حفظ إعدادات البريد" : "Email settings saved");
-    } catch (error) {
-      toast.error(isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings");
-    } finally {
-      setIsLoading(false);
-    }
+    await saveSettings(settings, {
+      successMessage: isRTL ? "تم حفظ إعدادات البريد" : "Email settings saved",
+      errorMessage: isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings",
+    });
   };
 
   const handleTestEmail = async () => {
@@ -62,6 +67,24 @@ export function EmailSettings() {
       setTestEmailLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3].map((i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-72" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-24 w-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -132,7 +155,11 @@ export function EmailSettings() {
               onClick={handleTestEmail} 
               disabled={testEmailLoading}
             >
-              <Send className="h-4 w-4 me-2" />
+              {testEmailLoading ? (
+                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4 me-2" />
+              )}
               {testEmailLoading 
                 ? (isRTL ? "جاري الإرسال..." : "Sending...") 
                 : (isRTL ? "إرسال بريد اختبار" : "Send Test Email")}
@@ -285,9 +312,13 @@ export function EmailSettings() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isLoading} size="lg">
-          <Save className="h-4 w-4 me-2" />
-          {isLoading 
+        <Button onClick={handleSave} disabled={isSaving} size="lg">
+          {isSaving ? (
+            <Loader2 className="h-4 w-4 me-2 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4 me-2" />
+          )}
+          {isSaving 
             ? (isRTL ? "جاري الحفظ..." : "Saving...") 
             : (isRTL ? "حفظ الإعدادات" : "Save Settings")}
         </Button>

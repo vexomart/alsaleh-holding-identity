@@ -3,47 +3,70 @@
  * Company information and basic configurations
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSystemSettings, GeneralSettings as GeneralSettingsType } from "@/hooks/useSystemSettings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Building2, Save, Upload, Globe, Phone, Mail, MapPin } from "lucide-react";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Building2, Save, Upload, Globe, Phone, Mail, MapPin, Loader2 } from "lucide-react";
+
+const defaultSettings: GeneralSettingsType = {
+  companyName: "ASH Holding",
+  companyNameAr: "علي الشهري القابضة",
+  tagline: "Your Business Partner",
+  taglineAr: "شريكك في النجاح",
+  email: "info@ash-holding.sa",
+  phone: "+966 50 000 0000",
+  address: "Riyadh, Saudi Arabia",
+  addressAr: "الرياض، المملكة العربية السعودية",
+  website: "https://ash-holding.sa",
+  vatNumber: "300000000000003",
+  crNumber: "1010000000",
+  maintenanceMode: false,
+};
 
 export function GeneralSettings() {
   const { isRTL } = useLanguage();
-  const [isLoading, setIsLoading] = useState(false);
-  const [settings, setSettings] = useState({
-    companyName: "ASH Holding",
-    companyNameAr: "علي الشهري القابضة",
-    tagline: "Your Business Partner",
-    taglineAr: "شريكك في النجاح",
-    email: "info@ash-holding.sa",
-    phone: "+966 50 000 0000",
-    address: "Riyadh, Saudi Arabia",
-    addressAr: "الرياض، المملكة العربية السعودية",
-    website: "https://ash-holding.sa",
-    vatNumber: "300000000000003",
-    crNumber: "1010000000",
-    maintenanceMode: false,
-  });
+  const { settings: dbSettings, isLoading, isSaving, saveSettings } = useSystemSettings("general");
+  const [settings, setSettings] = useState<GeneralSettingsType>(defaultSettings);
+
+  useEffect(() => {
+    if (dbSettings) {
+      setSettings({ ...defaultSettings, ...dbSettings });
+    }
+  }, [dbSettings]);
 
   const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast.success(isRTL ? "تم حفظ الإعدادات بنجاح" : "Settings saved successfully");
-    } catch (error) {
-      toast.error(isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings");
-    } finally {
-      setIsLoading(false);
-    }
+    await saveSettings(settings, {
+      successMessage: isRTL ? "تم حفظ الإعدادات بنجاح" : "Settings saved successfully",
+      errorMessage: isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings",
+    });
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3].map((i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-72" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -249,9 +272,13 @@ export function GeneralSettings() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isLoading} size="lg">
-          <Save className="h-4 w-4 me-2" />
-          {isLoading 
+        <Button onClick={handleSave} disabled={isSaving} size="lg">
+          {isSaving ? (
+            <Loader2 className="h-4 w-4 me-2 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4 me-2" />
+          )}
+          {isSaving 
             ? (isRTL ? "جاري الحفظ..." : "Saving...") 
             : (isRTL ? "حفظ الإعدادات" : "Save Settings")}
         </Button>

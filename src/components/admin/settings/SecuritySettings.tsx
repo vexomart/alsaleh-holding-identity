@@ -3,58 +3,70 @@
  * Security and authentication configurations
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSystemSettings, SecuritySettings as SecuritySettingsType } from "@/hooks/useSystemSettings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Shield, Save, Key, Lock, UserCheck, AlertTriangle, Clock, Fingerprint } from "lucide-react";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Shield, Save, Key, Lock, Clock, Fingerprint, Loader2 } from "lucide-react";
+
+const defaultSettings: SecuritySettingsType = {
+  minPasswordLength: 8,
+  requireUppercase: true,
+  requireNumbers: true,
+  requireSpecialChars: true,
+  passwordExpiry: "90",
+  sessionTimeout: "30",
+  maxSessions: "3",
+  enable2FA: false,
+  enforce2FAForAdmin: true,
+  maxLoginAttempts: "5",
+  lockoutDuration: "15",
+  enableCaptcha: true,
+  enableAuditLog: true,
+  auditRetentionDays: "365",
+};
 
 export function SecuritySettings() {
   const { isRTL } = useLanguage();
-  const [isLoading, setIsLoading] = useState(false);
-  const [settings, setSettings] = useState({
-    // Password Policy
-    minPasswordLength: 8,
-    requireUppercase: true,
-    requireNumbers: true,
-    requireSpecialChars: true,
-    passwordExpiry: "90",
-    
-    // Session
-    sessionTimeout: "30",
-    maxSessions: "3",
-    
-    // 2FA
-    enable2FA: false,
-    enforce2FAForAdmin: true,
-    
-    // Login
-    maxLoginAttempts: "5",
-    lockoutDuration: "15",
-    enableCaptcha: true,
-    
-    // Audit
-    enableAuditLog: true,
-    auditRetentionDays: "365",
-  });
+  const { settings: dbSettings, isLoading, isSaving, saveSettings } = useSystemSettings("security");
+  const [settings, setSettings] = useState<SecuritySettingsType>(defaultSettings);
+
+  useEffect(() => {
+    if (dbSettings) {
+      setSettings({ ...defaultSettings, ...dbSettings });
+    }
+  }, [dbSettings]);
 
   const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast.success(isRTL ? "تم حفظ إعدادات الأمان" : "Security settings saved");
-    } catch (error) {
-      toast.error(isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings");
-    } finally {
-      setIsLoading(false);
-    }
+    await saveSettings(settings, {
+      successMessage: isRTL ? "تم حفظ إعدادات الأمان" : "Security settings saved",
+      errorMessage: isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings",
+    });
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3, 4].map((i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-72" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-24 w-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -348,9 +360,13 @@ export function SecuritySettings() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isLoading} size="lg">
-          <Save className="h-4 w-4 me-2" />
-          {isLoading 
+        <Button onClick={handleSave} disabled={isSaving} size="lg">
+          {isSaving ? (
+            <Loader2 className="h-4 w-4 me-2 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4 me-2" />
+          )}
+          {isSaving 
             ? (isRTL ? "جاري الحفظ..." : "Saving...") 
             : (isRTL ? "حفظ الإعدادات" : "Save Settings")}
         </Button>
