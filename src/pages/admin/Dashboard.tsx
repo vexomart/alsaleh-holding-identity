@@ -52,7 +52,7 @@ const AdminDashboard = () => {
         <Route path="orders" element={<OrdersManagement />} />
         
         {/* CMS Routes */}
-        <Route path="cms/*" element={<PlaceholderPage title="إدارة المحتوى" />} />
+        {/* CMS routes removed - module not implemented */}
         
         {/* System Routes */}
         <Route path="reports" element={<ReportsPage />} />
