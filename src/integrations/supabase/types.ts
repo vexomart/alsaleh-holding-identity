@@ -250,7 +250,10 @@ export type Database = {
           notes: string | null
           order_id: string
           paid_at: string | null
+          payment_url: string | null
           pdf_url: string | null
+          provider: string | null
+          provider_invoice_id: string | null
           status: Database["public"]["Enums"]["invoice_status"]
           subtotal: number
           tenant_id: string | null
@@ -270,7 +273,10 @@ export type Database = {
           notes?: string | null
           order_id: string
           paid_at?: string | null
+          payment_url?: string | null
           pdf_url?: string | null
+          provider?: string | null
+          provider_invoice_id?: string | null
           status?: Database["public"]["Enums"]["invoice_status"]
           subtotal?: number
           tenant_id?: string | null
@@ -290,7 +296,10 @@ export type Database = {
           notes?: string | null
           order_id?: string
           paid_at?: string | null
+          payment_url?: string | null
           pdf_url?: string | null
+          provider?: string | null
+          provider_invoice_id?: string | null
           status?: Database["public"]["Enums"]["invoice_status"]
           subtotal?: number
           tenant_id?: string | null

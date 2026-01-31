@@ -1,10 +1,11 @@
 /**
  * Customer Order Details Page
  * Shows order information with invoice section
+ * Handles Paylink payment redirect verification
  */
 
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -31,6 +32,7 @@ import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
 import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
+import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 
 interface Order {
   id: string;
@@ -103,12 +105,17 @@ const statusConfig: Record<string, {
 export default function CustomerOrderDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { language } = useLanguage();
   const isRTL = language === 'ar';
   const { user, isLoading: authLoading } = useAuth();
   
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const [verifyingPayment, setVerifyingPayment] = useState(false);
+
+  // Paylink payment verification
+  const { verifyPayment } = usePaylinkPayment();
 
   // Real-time invoice updates
   useInvoiceRealtime({
@@ -124,6 +131,77 @@ export default function CustomerOrderDetails() {
     },
   });
 
+  // Handle payment redirect verification
+  useEffect(() => {
+    const paymentParam = searchParams.get('payment');
+    
+    if (paymentParam && id) {
+      // Clean up URL first
+      searchParams.delete('payment');
+      setSearchParams(searchParams, { replace: true });
+
+      // Verify payment server-side
+      const verifyAndNotify = async () => {
+        setVerifyingPayment(true);
+        try {
+          // Get invoice ID for this order
+          const { data: invoice } = await supabase
+            .from('invoices')
+            .select('id, provider_invoice_id')
+            .eq('order_id', id)
+            .single();
+
+          if (invoice?.provider_invoice_id) {
+            const result = await verifyPayment.mutateAsync({
+              transactionNo: invoice.provider_invoice_id,
+            });
+
+            if (result.status === 'succeeded') {
+              toast({
+                title: isRTL ? 'تم الدفع بنجاح!' : 'Payment Successful!',
+                description: isRTL 
+                  ? 'شكراً لك، تم استلام دفعتك بنجاح.' 
+                  : 'Thank you, your payment has been received.',
+              });
+              // Refresh order data
+              fetchOrder();
+            } else if (result.status === 'failed' || result.status === 'cancelled') {
+              toast({
+                title: isRTL ? 'فشل الدفع' : 'Payment Failed',
+                description: isRTL 
+                  ? 'لم يتم إتمام عملية الدفع. يرجى المحاولة مرة أخرى.' 
+                  : 'Payment was not completed. Please try again.',
+                variant: 'destructive',
+              });
+            } else {
+              toast({
+                title: isRTL ? 'الدفع قيد المعالجة' : 'Payment Processing',
+                description: isRTL 
+                  ? 'يتم معالجة دفعتك. ستصلك إشعار عند الانتهاء.' 
+                  : 'Your payment is being processed. You will be notified when complete.',
+              });
+            }
+          }
+        } catch (err) {
+          console.error('Error verifying payment:', err);
+          // Show message based on URL param since verification failed
+          if (paymentParam === 'success') {
+            toast({
+              title: isRTL ? 'الدفع قيد التأكيد' : 'Payment Pending Confirmation',
+              description: isRTL 
+                ? 'يتم التحقق من عملية الدفع الخاصة بك.' 
+                : 'Your payment is being verified.',
+            });
+          }
+        } finally {
+          setVerifyingPayment(false);
+        }
+      };
+
+      verifyAndNotify();
+    }
+  }, [searchParams, id]);
+
   // Auth guard
   useEffect(() => {
     if (!authLoading && !user) {
@@ -131,36 +209,37 @@ export default function CustomerOrderDetails() {
     }
   }, [user, authLoading, navigate]);
 
-  // Fetch order
+  // Fetch order function
+  const fetchOrder = async () => {
+    if (!id || !user) return;
+
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', id)
+        .eq('customer_id', user.id)
+        .single();
+
+      if (error) throw error;
+      setOrder(data as Order);
+    } catch (err) {
+      console.error('Error fetching order:', err);
+      toast({
+        title: isRTL ? 'خطأ في جلب الطلب' : 'Error fetching order',
+        variant: 'destructive',
+      });
+      navigate('/app');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch order on mount
   useEffect(() => {
-    const fetchOrder = async () => {
-      if (!id || !user) return;
-
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('orders')
-          .select('*')
-          .eq('id', id)
-          .eq('customer_id', user.id)
-          .single();
-
-        if (error) throw error;
-        setOrder(data as Order);
-      } catch (err) {
-        console.error('Error fetching order:', err);
-        toast({
-          title: isRTL ? 'خطأ في جلب الطلب' : 'Error fetching order',
-          variant: 'destructive',
-        });
-        navigate('/app');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchOrder();
-  }, [id, user, isRTL, navigate]);
+  }, [id, user]);
 
   // Format helpers
   const formatCurrency = (amount: number | null) => {
