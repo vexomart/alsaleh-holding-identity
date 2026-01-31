@@ -3,57 +3,70 @@
  * System notification preferences
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSystemSettings, NotificationSettings as NotificationSettingsType } from "@/hooks/useSystemSettings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Bell, Save, Mail, MessageSquare, Smartphone, Volume2 } from "lucide-react";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Bell, Save, Mail, MessageSquare, Smartphone, Volume2, Loader2 } from "lucide-react";
+
+const defaultSettings: NotificationSettingsType = {
+  emailNewOrder: true,
+  emailOrderStatus: true,
+  emailNewUser: true,
+  emailSystemAlerts: true,
+  pushEnabled: true,
+  pushNewOrder: true,
+  pushUrgentOnly: false,
+  inAppEnabled: true,
+  inAppSound: true,
+  inAppDesktop: false,
+  digestEnabled: true,
+  digestFrequency: "daily",
+  quietHoursEnabled: false,
+  quietHoursStart: "22:00",
+  quietHoursEnd: "08:00",
+};
 
 export function NotificationSettings() {
   const { isRTL } = useLanguage();
-  const [isLoading, setIsLoading] = useState(false);
-  const [settings, setSettings] = useState({
-    // Email Notifications
-    emailNewOrder: true,
-    emailOrderStatus: true,
-    emailNewUser: true,
-    emailSystemAlerts: true,
-    
-    // Push Notifications
-    pushEnabled: true,
-    pushNewOrder: true,
-    pushUrgentOnly: false,
-    
-    // In-App Notifications
-    inAppEnabled: true,
-    inAppSound: true,
-    inAppDesktop: false,
-    
-    // Digest
-    digestEnabled: true,
-    digestFrequency: "daily",
-    
-    // Quiet Hours
-    quietHoursEnabled: false,
-    quietHoursStart: "22:00",
-    quietHoursEnd: "08:00",
-  });
+  const { settings: dbSettings, isLoading, isSaving, saveSettings } = useSystemSettings("notifications");
+  const [settings, setSettings] = useState<NotificationSettingsType>(defaultSettings);
+
+  useEffect(() => {
+    if (dbSettings) {
+      setSettings({ ...defaultSettings, ...dbSettings });
+    }
+  }, [dbSettings]);
 
   const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast.success(isRTL ? "تم حفظ إعدادات الإشعارات" : "Notification settings saved");
-    } catch (error) {
-      toast.error(isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings");
-    } finally {
-      setIsLoading(false);
-    }
+    await saveSettings(settings, {
+      successMessage: isRTL ? "تم حفظ إعدادات الإشعارات" : "Notification settings saved",
+      errorMessage: isRTL ? "حدث خطأ أثناء الحفظ" : "Error saving settings",
+    });
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-72" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-24 w-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -361,9 +374,13 @@ export function NotificationSettings() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isLoading} size="lg">
-          <Save className="h-4 w-4 me-2" />
-          {isLoading 
+        <Button onClick={handleSave} disabled={isSaving} size="lg">
+          {isSaving ? (
+            <Loader2 className="h-4 w-4 me-2 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4 me-2" />
+          )}
+          {isSaving 
             ? (isRTL ? "جاري الحفظ..." : "Saving...") 
             : (isRTL ? "حفظ الإعدادات" : "Save Settings")}
         </Button>
