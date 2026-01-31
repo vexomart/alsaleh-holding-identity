@@ -121,7 +121,6 @@ const businessNavItems: NavItem[] = [
     titleEn: "Wallet Management",
     icon: Wallet,
     href: ROUTES.ADMIN.WALLETS,
-    permission: "finance.view",
   },
 ];
 
