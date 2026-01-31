@@ -14,9 +14,10 @@ const corsHeaders = {
 
 // Ledger account codes
 const LEDGER_ACCOUNTS = {
-  CASH_BANK: '1000',        // Cash and Banks (asset)
-  SERVICE_REVENUE: '4000',  // Service Revenue (revenue)
-  VAT_PAYABLE: '2100',      // VAT Payable (liability)
+  CASH_BANK: '1000',           // Cash and Banks (asset)
+  CUSTOMER_DEPOSITS: '2200',   // Customer Deposits/Wallets (liability)
+  SERVICE_REVENUE: '4000',     // Service Revenue (revenue)
+  VAT_PAYABLE: '2100',         // VAT Payable (liability)
 };
 
 interface PaylinkWebhookPayload {
@@ -150,7 +151,73 @@ serve(async (req) => {
 
     // If payment succeeded, process the payment
     if (newStatus === 'succeeded') {
-      // Update invoice status
+      // Handle wallet top-up
+      if (transaction.transaction_type === 'topup' && transaction.wallet_id) {
+        console.log('Processing wallet top-up:', transaction.wallet_id);
+        
+        // Credit wallet balance
+        const { error: walletError } = await supabase.rpc('credit_wallet_balance', {
+          p_wallet_id: transaction.wallet_id,
+          p_amount: Number(transaction.amount),
+        });
+
+        if (walletError) {
+          console.error('Error crediting wallet:', walletError);
+          // Fallback: direct update
+          const { data: currentWallet } = await supabase
+            .from('customer_wallets')
+            .select('balance')
+            .eq('id', transaction.wallet_id)
+            .single();
+
+          if (currentWallet) {
+            await supabase
+              .from('customer_wallets')
+              .update({
+                balance: Number(currentWallet.balance) + Number(transaction.amount),
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', transaction.wallet_id);
+          }
+        }
+
+        // Create journal entry for top-up
+        await createTopupJournalEntry(supabase, {
+          walletId: transaction.wallet_id,
+          amount: Number(transaction.amount),
+          currency: transaction.currency || 'SAR',
+          tenantId: transaction.tenant_id,
+          customerId: transaction.customer_user_id,
+          transactionNo,
+        });
+
+        // Create notification for customer
+        await supabase.from('notifications').insert({
+          user_id: transaction.customer_user_id,
+          tenant_id: transaction.tenant_id,
+          type: 'success',
+          title: 'Wallet Top-up Successful',
+          title_ar: 'تم شحن المحفظة بنجاح',
+          message: `Your wallet has been credited with ${transaction.amount} ${transaction.currency}.`,
+          message_ar: `تم إضافة ${transaction.amount} ${transaction.currency} إلى محفظتك.`,
+          link: '/app/wallet',
+        });
+
+        // Emit realtime event for wallet update
+        await emitRealtimeEvent(supabase, 'wallet.topup', {
+          invoice_id: '',
+          invoice_number: '',
+          order_id: '',
+          customer_id: transaction.customer_user_id,
+          status: 'succeeded',
+          total: Number(transaction.amount),
+          currency: transaction.currency || 'SAR',
+        });
+
+        console.log('Wallet top-up processed successfully');
+      }
+
+      // Update invoice status (existing logic)
       if (transaction.related_invoice_id) {
         const { error: invoiceError } = await supabase
           .from('invoices')
@@ -217,8 +284,8 @@ serve(async (req) => {
         }
       }
 
-      // Create notification for customer
-      if (transaction.customer_user_id) {
+      // Create notification for invoice payment (only if not a topup)
+      if (transaction.customer_user_id && transaction.transaction_type !== 'topup') {
         await supabase.from('notifications').insert({
           user_id: transaction.customer_user_id,
           tenant_id: transaction.tenant_id,
@@ -429,7 +496,7 @@ async function createJournalEntry(
  */
 async function emitRealtimeEvent(
   supabase: ReturnType<typeof createClient>,
-  event: 'invoice.paid' | 'payment.failed',
+  event: 'invoice.paid' | 'payment.failed' | 'wallet.topup',
   payload: {
     invoice_id: string;
     invoice_number: string;
@@ -450,9 +517,10 @@ async function emitRealtimeEvent(
       timestamp: new Date().toISOString(),
     };
 
-    // Emit to customer-specific invoice channel
-    const customerInvoiceChannel = supabase.channel(`user:${payload.customer_id}:invoices`);
-    await customerInvoiceChannel.send({
+    // Emit to customer-specific channel based on event type
+    const channelType = event === 'wallet.topup' ? 'wallet' : 'invoices';
+    const customerChannel = supabase.channel(`user:${payload.customer_id}:${channelType}`);
+    await customerChannel.send({
       type: 'broadcast',
       event: event,
       payload: eventPayload,
@@ -469,5 +537,137 @@ async function emitRealtimeEvent(
     console.log(`Realtime event emitted: ${event} for customer ${payload.customer_id}`);
   } catch (error) {
     console.error('Error emitting realtime event:', error);
+  }
+}
+
+/**
+ * Create journal entry for wallet top-up
+ * Debit: Cash/Bank
+ * Credit: Customer Deposits (liability - we owe the customer)
+ */
+async function createTopupJournalEntry(
+  supabase: ReturnType<typeof createClient>,
+  params: {
+    walletId: string;
+    amount: number;
+    currency: string;
+    tenantId: string | null;
+    customerId: string;
+    transactionNo: string;
+  }
+) {
+  try {
+    // Get ledger account IDs
+    const { data: accounts } = await supabase
+      .from('ledger_accounts')
+      .select('id, code')
+      .in('code', [LEDGER_ACCOUNTS.CASH_BANK, LEDGER_ACCOUNTS.CUSTOMER_DEPOSITS]);
+
+    if (!accounts || accounts.length < 2) {
+      console.log('Creating missing ledger account for customer deposits');
+      // Create customer deposits account if missing
+      const { data: existingAccounts } = await supabase
+        .from('ledger_accounts')
+        .select('id, code')
+        .eq('code', LEDGER_ACCOUNTS.CASH_BANK);
+
+      if (!existingAccounts?.length) {
+        console.error('Cash/Bank ledger account not found');
+        return;
+      }
+
+      // Try to get or create customer deposits account
+      const { data: depositsAccount } = await supabase
+        .from('ledger_accounts')
+        .select('id, code')
+        .eq('code', LEDGER_ACCOUNTS.CUSTOMER_DEPOSITS)
+        .maybeSingle();
+
+      if (!depositsAccount) {
+        // Account doesn't exist, skip journal entry for now
+        console.log('Customer deposits account not found, skipping journal entry');
+        return;
+      }
+    }
+
+    const accountMap = (accounts || []).reduce((acc, a) => {
+      acc[a.code] = a.id;
+      return acc;
+    }, {} as Record<string, string>);
+
+    if (!accountMap[LEDGER_ACCOUNTS.CASH_BANK] || !accountMap[LEDGER_ACCOUNTS.CUSTOMER_DEPOSITS]) {
+      console.log('Required accounts not available for top-up journal entry');
+      return;
+    }
+
+    // Generate journal entry number
+    const { data: entryNumber } = await supabase.rpc('generate_journal_entry_number', {
+      p_tenant_id: params.tenantId,
+    });
+
+    // Create journal entry
+    const { data: journalEntry, error: journalError } = await supabase
+      .from('journal_entries')
+      .insert({
+        entry_number: entryNumber || `JE-${Date.now()}`,
+        tenant_id: params.tenantId,
+        reference_type: 'wallet_topup',
+        reference_id: params.walletId,
+        description: `Wallet top-up received - ${params.transactionNo}`,
+        description_ar: `شحن رصيد المحفظة - ${params.transactionNo}`,
+        is_posted: false,
+      })
+      .select()
+      .single();
+
+    if (journalError || !journalEntry) {
+      console.error('Error creating top-up journal entry:', journalError);
+      return;
+    }
+
+    // Create journal lines (double-entry)
+    const journalLines = [
+      // Debit: Cash/Bank (asset increases with debit)
+      {
+        entry_id: journalEntry.id,
+        account_id: accountMap[LEDGER_ACCOUNTS.CASH_BANK],
+        debit: params.amount,
+        credit: 0,
+        currency: params.currency,
+        description: `Top-up payment received - ${params.transactionNo}`,
+      },
+      // Credit: Customer Deposits (liability increases with credit)
+      {
+        entry_id: journalEntry.id,
+        account_id: accountMap[LEDGER_ACCOUNTS.CUSTOMER_DEPOSITS],
+        debit: 0,
+        credit: params.amount,
+        currency: params.currency,
+        description: `Customer wallet credit - ${params.customerId}`,
+      },
+    ];
+
+    const { error: linesError } = await supabase
+      .from('journal_lines')
+      .insert(journalLines);
+
+    if (linesError) {
+      console.error('Error creating top-up journal lines:', linesError);
+      return;
+    }
+
+    // Post the journal entry
+    await supabase
+      .from('journal_entries')
+      .update({
+        is_posted: true,
+        posted_at: new Date().toISOString(),
+      })
+      .eq('id', journalEntry.id);
+
+    console.log('Top-up journal entry created:', journalEntry.entry_number);
+
+  } catch (error) {
+    console.error('Error in createTopupJournalEntry:', error);
   }
 }
