@@ -4,7 +4,13 @@
  * Used for testing and demonstration purposes
  */
 
-import type { InvoiceData } from './invoice-generator';
+import { 
+  type InvoiceData, 
+  createInvoicePDF, 
+  orderToInvoiceData, 
+  calculateInvoiceTotals,
+  exampleInvoiceInput,
+} from './invoice-generator';
 import type { ReportData } from './report-generator';
 import type { ContractData } from './contract-generator';
 import { ArabicPDFGenerator, createRTLTable, type PDFContent } from './arabic-pdf';
@@ -113,9 +119,89 @@ export async function testArabicPDFRendering(): Promise<{ success: boolean; mess
 }
 
 /**
+ * Generate and validate Arabic Tax Invoice PDF
+ * Uses the example input with 2 services
+ */
+export async function testArabicTaxInvoice(): Promise<{ 
+  success: boolean; 
+  message: string; 
+  dataUrl?: string;
+  invoiceData?: InvoiceData;
+}> {
+  try {
+    // Transform example order data to invoice format
+    const invoiceData = orderToInvoiceData(
+      exampleInvoiceInput.order,
+      exampleInvoiceInput.customer,
+      exampleInvoiceInput.services,
+      exampleInvoiceInput.taxRate
+    );
+
+    console.log('Invoice data generated:', {
+      invoiceNumber: invoiceData.invoiceNumber,
+      subtotal: invoiceData.subtotal,
+      taxAmount: invoiceData.taxAmount,
+      total: invoiceData.total,
+      itemCount: invoiceData.items.length,
+    });
+
+    // Generate PDF
+    const { dataUrl } = await createInvoicePDF(invoiceData, {
+      useArabicNumerals: false,
+    });
+
+    return {
+      success: true,
+      message: 'Arabic Tax Invoice generated successfully with RTL layout and VAT calculations.',
+      dataUrl,
+      invoiceData,
+    };
+  } catch (error) {
+    console.error('Arabic Tax Invoice test failed:', error);
+    return {
+      success: false,
+      message: `Failed to generate Arabic Tax Invoice: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    };
+  }
+}
+
+/**
  * Generate sample invoice data for testing RTL PDF generation
  */
 export function generateSampleInvoice(): InvoiceData {
+  const items = [
+    {
+      description: 'Business Development Consulting',
+      descriptionAr: 'خدمات استشارية - تطوير الأعمال',
+      quantity: 1,
+      unitPrice: 15000,
+      total: 15000,
+    },
+    {
+      description: 'Website Design & Development',
+      descriptionAr: 'تصميم وتطوير موقع إلكتروني',
+      quantity: 1,
+      unitPrice: 25000,
+      total: 25000,
+    },
+    {
+      description: 'Monthly System Maintenance',
+      descriptionAr: 'صيانة شهرية للأنظمة',
+      quantity: 3,
+      unitPrice: 2000,
+      total: 6000,
+    },
+    {
+      description: 'Staff Training on New System',
+      descriptionAr: 'تدريب الموظفين على النظام الجديد',
+      quantity: 2,
+      unitPrice: 5000,
+      total: 10000,
+    },
+  ];
+
+  const { subtotal, taxAmount, total } = calculateInvoiceTotals(items, 15, 1000);
+
   return {
     invoiceNumber: 'INV-2026-0001',
     issueDate: new Date(),
@@ -123,45 +209,21 @@ export function generateSampleInvoice(): InvoiceData {
     status: 'pending',
     
     customer: {
-      name: 'محمد أحمد الشمري',
+      name: 'Mohammed Ahmed Al-Shamri',
+      nameAr: 'محمد أحمد الشمري',
       email: 'mohammed@example.com',
       phone: '+966 55 123 4567',
       address: 'الرياض، حي النرجس، شارع الأمير سلطان',
       taxNumber: '300123456789012',
     },
     
-    items: [
-      {
-        description: 'خدمات استشارية - تطوير الأعمال',
-        quantity: 1,
-        unitPrice: 15000,
-        total: 15000,
-      },
-      {
-        description: 'تصميم وتطوير موقع إلكتروني',
-        quantity: 1,
-        unitPrice: 25000,
-        total: 25000,
-      },
-      {
-        description: 'صيانة شهرية للأنظمة',
-        quantity: 3,
-        unitPrice: 2000,
-        total: 6000,
-      },
-      {
-        description: 'تدريب الموظفين على النظام الجديد',
-        quantity: 2,
-        unitPrice: 5000,
-        total: 10000,
-      },
-    ],
+    items,
     
-    subtotal: 56000,
+    subtotal,
     taxRate: 15,
-    taxAmount: 8400,
+    taxAmount,
     discount: 1000,
-    total: 63400,
+    total,
     
     currency: 'SAR',
     
