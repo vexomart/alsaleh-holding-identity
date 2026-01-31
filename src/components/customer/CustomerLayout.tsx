@@ -70,23 +70,19 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
       {/* ROOT RTL CONTAINER - dir attribute enforced here */}
       <div 
         dir={isRTL ? 'rtl' : 'ltr'}
-        className={cn(
-          "min-h-screen flex w-full bg-background",
-          // Sidebar position: RIGHT in RTL, LEFT in LTR
-          isRTL ? "flex-row-reverse" : "flex-row"
-        )}
+        className="min-h-screen flex w-full bg-background"
       >
         <CustomerSidebar />
-        <SidebarInset className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <SidebarInset className="flex flex-col flex-1 min-w-0">
           <CustomerHeader />
-          <main className="flex-1 overflow-x-hidden overflow-y-auto p-3 md:p-4 lg:p-6">
+          <main className="flex-1 overflow-auto p-3 md:p-4 lg:p-6">
             {children}
           </main>
           
           {/* Real-time connection indicators (debug) */}
           <div className={cn(
             "fixed bottom-4 flex gap-2 z-50",
-            isRTL ? "right-4" : "left-4"
+            isRTL ? "left-4" : "left-4"
           )}>
             <div 
               className={cn(
