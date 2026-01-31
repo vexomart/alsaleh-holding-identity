@@ -10,14 +10,8 @@
  */
 
 import pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { loadCairoTTFAsVfs } from './fonts/cairo-embedded';
-
-// Initialize pdfMake with default fonts (Roboto)
-const pdfFontsModule = pdfFonts as unknown as { pdfMake: { vfs: Record<string, string> } };
-if (pdfFontsModule.pdfMake?.vfs) {
-  (pdfMake as unknown as { vfs: Record<string, string> }).vfs = pdfFontsModule.pdfMake.vfs;
-}
+// NOTE: VFS initialization is now handled ONLY by pdf-init.ts singleton
+// Do NOT initialize vfs_fonts here to avoid conflicts
 
 // Type definitions for pdfmake content
 export type PDFContent = Record<string, unknown> | string | Array<Record<string, unknown> | string>;
