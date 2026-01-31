@@ -159,18 +159,14 @@ export function CustomerSidebar() {
                       onClick={() => handleNavigation(item.href)}
                       tooltip={isRTL ? item.titleAr : item.titleEn}
                       className={cn(
-                        "w-full h-11 rounded-lg transition-all duration-200",
-                        isRTL ? "flex-row-reverse justify-end" : "justify-start",
+                        "w-full h-11 rounded-lg transition-all duration-200 gap-3",
                         active
                           ? "bg-amber-500/20 text-amber-400 font-medium"
                           : "text-slate-300 hover:bg-white/5 hover:text-white"
                       )}
                     >
                       <Icon className={cn("h-5 w-5 shrink-0", active && "text-amber-400")} />
-                      <span className={cn(
-                        "flex-1",
-                        isRTL ? "text-right me-3" : "text-left ms-3"
-                      )}>
+                      <span className="flex-1 text-start">
                         {isRTL ? item.titleAr : item.titleEn}
                       </span>
                       {item.badge && item.badge > 0 && (
