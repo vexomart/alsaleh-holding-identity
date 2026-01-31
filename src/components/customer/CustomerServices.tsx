@@ -336,7 +336,7 @@ export function CustomerServices() {
                     <h3 className="font-bold text-sm md:text-base mb-1 text-foreground">
                       {isRTL ? item.config.nameAr : item.config.nameEn}
                     </h3>
-                    <p className="text-xs text-foreground/60 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-foreground/75 line-clamp-2 leading-relaxed">
                       {isRTL ? item.config.descAr : item.config.descEn}
                     </p>
                   </div>
@@ -345,12 +345,12 @@ export function CustomerServices() {
                   <div className="flex items-center justify-between mt-3 md:mt-4 pt-3 border-t border-border/50">
                     <Badge
                       variant="secondary"
-                      className="text-[10px] md:text-xs px-2 py-0.5 bg-background/50"
+                      className="text-[10px] md:text-xs px-2 py-0.5 bg-background/70 text-foreground/80 border border-border/60"
                     >
                       {item.services.length} {isRTL ? "خدمة" : "services"}
                     </Badge>
                     <NavIcon
-                      className="h-4 w-4 text-muted-foreground"
+                      className="h-4 w-4 text-foreground/70"
                       style={{ color: item.config.color }}
                     />
                   </div>
