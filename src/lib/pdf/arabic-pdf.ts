@@ -10,7 +10,14 @@
  */
 
 import pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { loadArabicFont } from './fonts/amiri-font';
+
+// Initialize pdfMake with default fonts (Roboto)
+const pdfFontsModule = pdfFonts as unknown as { pdfMake: { vfs: Record<string, string> } };
+if (pdfFontsModule.pdfMake?.vfs) {
+  (pdfMake as unknown as { vfs: Record<string, string> }).vfs = pdfFontsModule.pdfMake.vfs;
+}
 
 // Type definitions for pdfmake content
 export type PDFContent = Record<string, unknown> | string | Array<Record<string, unknown> | string>;
@@ -321,7 +328,7 @@ export class ArabicPDFGenerator {
     try {
       console.log('Loading Arabic fonts...');
       
-      // Load Arabic font (Amiri, Cairo, or Noto)
+      // Try loading Arabic font (Amiri, Cairo, or Noto)
       const arabicFonts = await loadArabicFont(this.config.fontFamily || 'amiri');
       
       // Register fonts with pdfmake
@@ -349,9 +356,29 @@ export class ArabicPDFGenerator {
       this.fontsLoaded = true;
       console.log('Arabic fonts loaded successfully');
     } catch (error) {
-      console.error('Failed to load Arabic fonts:', error);
-      throw new Error('Failed to load Arabic fonts for PDF generation');
+      console.error('Failed to load Arabic fonts, using fallback:', error);
+      
+      // Fallback: Use pdfMake's built-in Roboto fonts
+      // Arabic text may not render perfectly but PDF will still work
+      this.useFallbackFonts();
+      this.fontsLoaded = true;
+      console.warn('Using fallback fonts - Arabic text may not render correctly');
     }
+  }
+
+  // Use fallback fonts when Arabic fonts fail to load
+  private useFallbackFonts(): void {
+    // pdfMake has Roboto built-in, we just need to set it as default
+    const fonts = {
+      [ARABIC_FONT_NAME]: {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-MediumItalic.ttf',
+      },
+    };
+    
+    (pdfMake as unknown as { fonts: typeof fonts }).fonts = fonts;
   }
 
   // Generate PDF document definition
