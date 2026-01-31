@@ -3,13 +3,14 @@
  * 
  * Features:
  * - 100% RTL layout (text direction, alignment, margins)
- * - Proper Arabic shaping and ligatures
+ * - Proper Arabic shaping and ligatures via embedded Arabic font
  * - Arabic/Hindi numerals support
  * - RTL tables with correct column order
  * - RTL headers and footers
  */
 
 import pdfMake from 'pdfmake/build/pdfmake';
+import { loadArabicFont } from './fonts/amiri-font';
 
 // Type definitions for pdfmake content
 export type PDFContent = Record<string, unknown> | string | Array<Record<string, unknown> | string>;
@@ -60,7 +61,7 @@ export function formatArabicDate(date: Date | string, format: 'full' | 'short' |
   return d.toLocaleDateString('ar-SA', options);
 }
 
-// RTL-aware styles
+// RTL-aware styles with Arabic font
 export const rtlStyles: PDFStyleDictionary = {
   header: {
     fontSize: 24,
@@ -131,6 +132,11 @@ export const rtlStyles: PDFStyleDictionary = {
     color: '#6b7280',
     margin: [0, 5, 0, 5],
   },
+  // LTR style for numbers and emails
+  ltr: {
+    fontSize: 11,
+    alignment: 'left',
+  },
 };
 
 // PDF Document configuration for RTL
@@ -141,6 +147,7 @@ export interface ArabicPDFConfig {
   useArabicNumerals?: boolean;
   pageSize?: 'A4' | 'A3' | 'LETTER' | 'LEGAL';
   pageOrientation?: 'portrait' | 'landscape';
+  fontFamily?: 'amiri' | 'cairo' | 'noto';
   companyInfo?: {
     name: string;
     nameAr?: string;
@@ -153,7 +160,7 @@ export interface ArabicPDFConfig {
   watermark?: string;
 }
 
-// Create RTL table with correct column order
+// Create RTL table with correct column order (columns reversed for RTL)
 export function createRTLTable(
   headers: string[],
   rows: (string | number)[][],
@@ -173,6 +180,7 @@ export function createRTLTable(
   const headerCells = rtlHeaders.map(h => ({
     text: h,
     style: 'tableHeader',
+    alignment: 'right' as const,
     ...options?.headerStyle,
   }));
 
@@ -180,6 +188,7 @@ export function createRTLTable(
     row.map(cell => ({
       text: String(cell),
       style: 'tableCell',
+      alignment: 'right' as const,
       fillColor: options?.alternateRowColor && rowIndex % 2 === 1 ? options.alternateRowColor : undefined,
       ...options?.cellStyle,
     }))
@@ -212,9 +221,9 @@ export function createRTLKeyValue(items: { label: string; value: string }[]): PD
         width: '*',
         stack: items.map(item => ({
           columns: [
-            { text: item.value, style: 'value', width: 'auto' },
-            { text: ':', width: 10, alignment: 'center' },
-            { text: item.label, style: 'label', width: 'auto' },
+            { text: item.value, style: 'value', width: 'auto', alignment: 'left' as const },
+            { text: ':', width: 10, alignment: 'center' as const },
+            { text: item.label, style: 'label', width: 'auto', alignment: 'right' as const },
           ],
           columnGap: 5,
           margin: [0, 3, 0, 3],
@@ -287,6 +296,9 @@ export function createRTLFooter(text: string, pageNumber?: boolean): PDFContent 
   };
 }
 
+// Font name constant
+const ARABIC_FONT_NAME = 'ArabicFont';
+
 // Main PDF generator class
 export class ArabicPDFGenerator {
   private config: ArabicPDFConfig;
@@ -297,26 +309,49 @@ export class ArabicPDFGenerator {
       pageSize: 'A4',
       pageOrientation: 'portrait',
       useArabicNumerals: false,
+      fontFamily: 'amiri',
       ...config,
     };
   }
 
-  // Initialize fonts (must be called before generating PDFs)
+  // Initialize Arabic fonts (must be called before generating PDFs)
   async initializeFonts(): Promise<void> {
     if (this.fontsLoaded) return;
 
-    // Use Roboto as fallback (built into pdfmake) + set RTL-compatible configuration
-    const fonts = {
-      Roboto: {
-        normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/fonts/Roboto/Roboto-Regular.ttf',
-        bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/fonts/Roboto/Roboto-Medium.ttf',
-        italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/fonts/Roboto/Roboto-Italic.ttf',
-        bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/fonts/Roboto/Roboto-MediumItalic.ttf',
-      },
-    };
-
-    (pdfMake as unknown as { fonts: typeof fonts }).fonts = fonts;
-    this.fontsLoaded = true;
+    try {
+      console.log('Loading Arabic fonts...');
+      
+      // Load Arabic font (Amiri, Cairo, or Noto)
+      const arabicFonts = await loadArabicFont(this.config.fontFamily || 'amiri');
+      
+      // Register fonts with pdfmake
+      const pdfMakeVfs: Record<string, string> = {};
+      pdfMakeVfs[`${ARABIC_FONT_NAME}-Regular.ttf`] = arabicFonts.normal;
+      pdfMakeVfs[`${ARABIC_FONT_NAME}-Bold.ttf`] = arabicFonts.bold;
+      pdfMakeVfs[`${ARABIC_FONT_NAME}-Italic.ttf`] = arabicFonts.italics;
+      pdfMakeVfs[`${ARABIC_FONT_NAME}-BoldItalic.ttf`] = arabicFonts.bolditalics;
+      
+      // Set virtual file system
+      (pdfMake as unknown as { vfs: Record<string, string> }).vfs = pdfMakeVfs;
+      
+      // Register font family
+      const fonts = {
+        [ARABIC_FONT_NAME]: {
+          normal: `${ARABIC_FONT_NAME}-Regular.ttf`,
+          bold: `${ARABIC_FONT_NAME}-Bold.ttf`,
+          italics: `${ARABIC_FONT_NAME}-Italic.ttf`,
+          bolditalics: `${ARABIC_FONT_NAME}-BoldItalic.ttf`,
+        },
+      };
+      
+      (pdfMake as unknown as { fonts: typeof fonts }).fonts = fonts;
+      
+      this.fontsLoaded = true;
+      console.log('Arabic fonts loaded successfully');
+    } catch (error) {
+      console.error('Failed to load Arabic fonts:', error);
+      throw new Error('Failed to load Arabic fonts for PDF generation');
+    }
   }
 
   // Generate PDF document definition
@@ -334,17 +369,33 @@ export class ArabicPDFGenerator {
         subject: this.config.subject || '',
       },
 
+      // Use Arabic font as default
       defaultStyle: {
-        font: 'Roboto',
+        font: ARABIC_FONT_NAME,
         fontSize: 11,
         alignment: 'right',
         lineHeight: 1.4,
       },
 
-      styles: rtlStyles,
+      styles: {
+        ...rtlStyles,
+        // Override all styles to use Arabic font
+        header: { ...rtlStyles.header, font: ARABIC_FONT_NAME },
+        subheader: { ...rtlStyles.subheader, font: ARABIC_FONT_NAME },
+        normal: { ...rtlStyles.normal, font: ARABIC_FONT_NAME },
+        tableHeader: { ...rtlStyles.tableHeader, font: ARABIC_FONT_NAME },
+        tableCell: { ...rtlStyles.tableCell, font: ARABIC_FONT_NAME },
+        footer: { ...rtlStyles.footer, font: ARABIC_FONT_NAME },
+        title: { ...rtlStyles.title, font: ARABIC_FONT_NAME },
+        label: { ...rtlStyles.label, font: ARABIC_FONT_NAME },
+        value: { ...rtlStyles.value, font: ARABIC_FONT_NAME },
+        total: { ...rtlStyles.total, font: ARABIC_FONT_NAME },
+        note: { ...rtlStyles.note, font: ARABIC_FONT_NAME },
+      },
 
       header: (currentPage: number, pageCount: number) => ({
         text: this.config.title || '',
+        font: ARABIC_FONT_NAME,
         alignment: 'center',
         fontSize: 9,
         color: '#9ca3af',
@@ -353,7 +404,13 @@ export class ArabicPDFGenerator {
 
       footer: (currentPage: number, pageCount: number) => ({
         columns: [
-          { text: `${currentPage} / ${pageCount}`, alignment: 'center', fontSize: 9, color: '#9ca3af' },
+          { 
+            text: `${currentPage} / ${pageCount}`, 
+            font: ARABIC_FONT_NAME,
+            alignment: 'center', 
+            fontSize: 9, 
+            color: '#9ca3af' 
+          },
         ],
         margin: [40, 0, 40, 20],
       }),
@@ -420,6 +477,7 @@ export class ArabicPDFGenerator {
 
 // Export singleton instance with default config
 export const arabicPDF = new ArabicPDFGenerator({
+  fontFamily: 'amiri',
   companyInfo: {
     name: 'Ali Saleh Al-Shehri Holding Company',
     nameAr: 'شركة علي صالح الشهري القابضة',
