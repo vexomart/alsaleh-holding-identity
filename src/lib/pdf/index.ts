@@ -83,3 +83,6 @@ export {
   testArabicPDFRendering,
   testArabicTaxInvoice,
 } from './samples';
+
+// Debug utility
+export { debugPDFArabic } from './debug-pdf';
