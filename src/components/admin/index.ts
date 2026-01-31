@@ -14,3 +14,4 @@ export { OrdersManagement } from "./orders/OrdersManagement";
 export { ReportsPage } from "./reports/ReportsPage";
 export { NotificationsPage } from "./notifications/NotificationsPage";
 export { SettingsPage } from "./settings/SettingsPage";
+export { AuditLogPage } from "./audit/AuditLogPage";
