@@ -106,7 +106,7 @@ const defaultCompanyInfo: CompanyInfo = {
   address: 'Riyadh, Kingdom of Saudi Arabia',
   addressAr: 'الرياض، المملكة العربية السعودية',
   phone: '+966 11 123 4567',
-  email: 'info@alialshehriholding.com',
+  email: 'info@ash-holding.sa',
   website: 'www.alialshehriholding.com',
 };
 

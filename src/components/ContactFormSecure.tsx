@@ -124,7 +124,7 @@ ${sanitizedData.message}
 التاريخ: ${new Date().toLocaleString('ar-SA')}
       `.trim();
 
-      const mailtoLink = `mailto:info@alialshehriholding.com?subject=${encodeURIComponent(sanitizedData.subject)}&body=${encodeURIComponent(emailBody)}`;
+      const mailtoLink = `mailto:info@ash-holding.sa?subject=${encodeURIComponent(sanitizedData.subject)}&body=${encodeURIComponent(emailBody)}`;
       
       // حفظ في localStorage كنسخة احتياطية
       const submissions = JSON.parse(localStorage.getItem('contact_submissions') || '[]');
@@ -385,8 +385,8 @@ ${sanitizedData.message}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Mail className="w-4 h-4" />
-            <a href="mailto:info@alialshehriholding.com" className="hover:text-primary">
-              info@alialshehriholding.com
+            <a href="mailto:info@ash-holding.sa" className="hover:text-primary">
+              info@ash-holding.sa
             </a>
           </div>
           <div className="flex items-center gap-2">

@@ -388,7 +388,7 @@ const createWelcomeEmailTemplate = (clientName: string, clientId?: string, secto
         <div class="footer">
           <div class="contact-info">
             <div class="contact-item">
-              📧 info@alialshehriholding.com
+              📧 info@ash-holding.sa
             </div>
             <div class="contact-item">
               📱 +966 50 123 4567
@@ -430,7 +430,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailHTML = createWelcomeEmailTemplate(clientName, clientId, sector);
 
     const emailResponse = await resend.emails.send({
-      from: "شركة علي الشهري <info@alialshehriholding.com>",
+      from: "شركة علي الشهري <info@ash-holding.sa>",
       to: [clientEmail],
       subject: `🎉 مرحباً بك ${clientName} في عائلة شركة علي الشهري القابضة`,
       html: emailHTML,
@@ -438,8 +438,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إشعار للإدارة
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام العملاء <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
+      from: "نظام العملاء <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
       subject: `🆕 عميل جديد: ${clientName}`,
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">

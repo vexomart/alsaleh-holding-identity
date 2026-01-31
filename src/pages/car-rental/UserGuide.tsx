@@ -180,7 +180,7 @@ const UserGuide = () => {
           content: 'كيفية الوصول لفريق دعم العملاء',
           steps: [
             'الاتصال على الرقم المجاني: 0555812567',
-            'إرسال بريد إلكتروني: info@alialshehriholding.com',
+            'إرسال بريد إلكتروني: info@ash-holding.sa',
             'استخدام الدردشة المباشرة في الموقع',
             'زيارة أحد فروعنا المتاحة',
             'استخدام نظام التذاكر في التطبيق'
@@ -406,7 +406,7 @@ const UserGuide = () => {
                 </Button>
                 <Button variant="outline" size="lg" className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20">
                   <Mail className="w-5 h-5" />
-                  info@alialshehriholding.com
+                  info@ash-holding.sa
                 </Button>
               </div>
             </CardContent>

@@ -494,7 +494,7 @@ const Contracts = () => {
               <div className="flex flex-col items-center">
                 <Mail className="w-8 h-8 text-blue-300 mb-2" />
                 <p className="text-blue-100">بريد إلكتروني</p>
-                <p className="text-white font-semibold">info@alialshehriholding.com</p>
+                <p className="text-white font-semibold">info@ash-holding.sa</p>
               </div>
               <div className="flex flex-col items-center">
                 <MessageSquare className="w-8 h-8 text-blue-300 mb-2" />

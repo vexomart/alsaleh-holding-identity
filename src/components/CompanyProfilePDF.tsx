@@ -393,7 +393,7 @@ const PageFooter = () => (
   <View style={styles.pageFooter}>
     <Text style={styles.footerText}>شركة علي صالح الشهري القابضة</Text>
     <Text style={[styles.footerText, { fontSize: 9, marginTop: 2 }]}>
-      info@alialshehriholding.com | المملكة العربية السعودية | {new Date().getFullYear()}
+      info@ash-holding.sa | المملكة العربية السعودية | {new Date().getFullYear()}
     </Text>
   </View>
 );

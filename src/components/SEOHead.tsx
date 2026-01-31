@@ -124,7 +124,7 @@ export const SEOHead = ({
       <meta name="business:contact_data:postal_code" content="11564" />
       <meta name="business:contact_data:country_name" content="السعودية" />
       <meta name="business:contact_data:phone_number" content="+966555812567" />
-      <meta name="business:contact_data:email" content="info@alialshehriholding.com" />
+      <meta name="business:contact_data:email" content="info@ash-holding.sa" />
       
       {/* Structured Data - Organization */}
       {organizationSchema && (

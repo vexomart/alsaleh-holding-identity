@@ -257,7 +257,7 @@ const ServicesCatalog = () => {
                   className="w-full border-white/30 text-white hover:bg-white/10" 
                   asChild
                 >
-                  <a href="mailto:info@alialshehriholding.com">
+                  <a href="mailto:info@ash-holding.sa">
                     <Mail className="w-4 h-4 ml-2" />
                     راسلنا
                   </a>
