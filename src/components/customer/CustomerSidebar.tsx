@@ -126,9 +126,9 @@ export function CustomerSidebar() {
             <Building2 className="h-5 w-5 text-white" />
           </div>
           {state === "expanded" && (
-            <div className={cn("flex flex-col", isRTL && "text-right")}>
+            <div className={cn("flex flex-col", isRTL && "text-end")}>
               <span className="font-bold text-sm text-white">
-                {isRTL ? "الشهري القابضة" : "ASH Holding"}
+                ASH
               </span>
               <span className="text-xs text-slate-400">
                 {isRTL ? "بوابة العميل" : "Customer Portal"}
