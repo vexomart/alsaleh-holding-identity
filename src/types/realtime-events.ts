@@ -29,6 +29,7 @@ export type InvoiceEventType =
   | 'invoice.generated'
   | 'invoice.status_changed'
   | 'invoice.paid'
+  | 'payment.failed'
   | 'invoice.cancelled';
 
 export interface InvoiceEventPayload {

@@ -1,10 +1,10 @@
 /**
  * OrderInvoiceSection - Invoice display/actions for Order Details
  * Uses html2canvas + jsPDF for proper Arabic RTL PDF generation
- * Includes Paylink payment integration
+ * Includes Paylink payment integration with realtime status updates
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { 
   FileText, 
@@ -17,6 +17,7 @@ import {
   AlertCircle,
   CreditCard,
   ExternalLink,
+  RefreshCw,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +34,7 @@ import {
 } from '@/lib/api/invoices';
 import { createInvoicePDF, type InvoiceData } from '@/lib/pdf';
 import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
+import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
 
 interface OrderInvoiceSectionProps {
   orderId: string;
@@ -120,6 +122,36 @@ export function OrderInvoiceSection({
   // Paylink payment hook
   const { createPayment, isCreatingPayment, redirectToPayment } = usePaylinkPayment();
 
+  // Refetch invoice when needed
+  const refetchInvoice = useCallback(async () => {
+    try {
+      const data = await getInvoiceByOrderId(orderId);
+      setInvoice(data);
+    } catch (err) {
+      console.error('Error refetching invoice:', err);
+    }
+  }, [orderId]);
+
+  // Subscribe to realtime invoice events (for customer view)
+  useInvoiceRealtime({
+    onInvoiceGenerated: (payload) => {
+      if (payload.order_id === orderId) {
+        refetchInvoice();
+      }
+    },
+    onInvoicePaid: (payload) => {
+      if (payload.order_id === orderId) {
+        refetchInvoice();
+      }
+    },
+    onPaymentFailed: (payload) => {
+      if (payload.order_id === orderId) {
+        refetchInvoice();
+      }
+    },
+    showToast: !isAdmin, // Only show toasts for customers
+  });
+
   // Fetch invoice on mount
   useEffect(() => {
     const fetchInvoice = async () => {
@@ -136,16 +168,6 @@ export function OrderInvoiceSection({
 
     fetchInvoice();
   }, [orderId]);
-
-  // Refetch invoice when needed
-  const refetchInvoice = async () => {
-    try {
-      const data = await getInvoiceByOrderId(orderId);
-      setInvoice(data);
-    } catch (err) {
-      console.error('Error refetching invoice:', err);
-    }
-  };
 
   // Format currency
   const formatCurrency = (amount: number) => {

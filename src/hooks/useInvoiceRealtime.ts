@@ -11,9 +11,16 @@ import { toast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
 import type { InvoiceRealtimePayload } from '@/lib/api/invoices';
 
+interface ExtendedInvoicePayload extends InvoiceRealtimePayload {
+  paid_at?: string;
+  error?: string;
+}
+
 interface UseInvoiceRealtimeOptions {
   onInvoiceGenerated?: (payload: InvoiceRealtimePayload) => void;
   onInvoiceStatusChanged?: (payload: InvoiceRealtimePayload) => void;
+  onInvoicePaid?: (payload: ExtendedInvoicePayload) => void;
+  onPaymentFailed?: (payload: ExtendedInvoicePayload) => void;
   showToast?: boolean;
 }
 
@@ -21,7 +28,13 @@ export function useInvoiceRealtime(options: UseInvoiceRealtimeOptions = {}) {
   const { user } = useAuth();
   const { language } = useLanguage();
   const isRTL = language === 'ar';
-  const { onInvoiceGenerated, onInvoiceStatusChanged, showToast = true } = options;
+  const { 
+    onInvoiceGenerated, 
+    onInvoiceStatusChanged, 
+    onInvoicePaid,
+    onPaymentFailed,
+    showToast = true 
+  } = options;
 
   const handleInvoiceGenerated = useCallback(
     (payload: InvoiceRealtimePayload) => {
@@ -63,6 +76,37 @@ export function useInvoiceRealtime(options: UseInvoiceRealtimeOptions = {}) {
     [isRTL, showToast, onInvoiceStatusChanged]
   );
 
+  const handleInvoicePaid = useCallback(
+    (payload: ExtendedInvoicePayload) => {
+      if (showToast) {
+        toast({
+          title: isRTL ? 'تم الدفع بنجاح ✓' : 'Payment Successful ✓',
+          description: isRTL
+            ? `تم دفع فاتورة رقم ${payload.invoice_number} بقيمة ${payload.total.toFixed(2)} ${payload.currency}`
+            : `Invoice ${payload.invoice_number} paid - ${payload.total.toFixed(2)} ${payload.currency}`,
+        });
+      }
+      onInvoicePaid?.(payload);
+    },
+    [isRTL, showToast, onInvoicePaid]
+  );
+
+  const handlePaymentFailed = useCallback(
+    (payload: ExtendedInvoicePayload) => {
+      if (showToast) {
+        toast({
+          title: isRTL ? 'فشل الدفع' : 'Payment Failed',
+          description: isRTL
+            ? `فشل دفع فاتورة رقم ${payload.invoice_number}. يرجى المحاولة مرة أخرى.`
+            : `Payment for invoice ${payload.invoice_number} failed. Please try again.`,
+          variant: 'destructive',
+        });
+      }
+      onPaymentFailed?.(payload);
+    },
+    [isRTL, showToast, onPaymentFailed]
+  );
+
   useEffect(() => {
     if (!user?.id) return;
 
@@ -77,14 +121,25 @@ export function useInvoiceRealtime(options: UseInvoiceRealtimeOptions = {}) {
       .on('broadcast', { event: 'invoice.status_changed' }, ({ payload }) => {
         handleInvoiceStatusChanged(payload as InvoiceRealtimePayload);
       })
+      .on('broadcast', { event: 'invoice.paid' }, ({ payload }) => {
+        handleInvoicePaid(payload as ExtendedInvoicePayload);
+      })
+      .on('broadcast', { event: 'payment.failed' }, ({ payload }) => {
+        handlePaymentFailed(payload as ExtendedInvoicePayload);
+      })
       .subscribe();
 
     // Subscribe to user-specific notification channel for invoice events
     const notificationChannel = supabase
       .channel(`user:${userId}:notifications`)
       .on('broadcast', { event: 'invoice.generated' }, ({ payload }) => {
-        // Already handled by invoice channel, but can be used for notification-specific logic
         console.log('Invoice notification received:', payload);
+      })
+      .on('broadcast', { event: 'invoice.paid' }, ({ payload }) => {
+        console.log('Payment success notification received:', payload);
+      })
+      .on('broadcast', { event: 'payment.failed' }, ({ payload }) => {
+        console.log('Payment failed notification received:', payload);
       })
       .subscribe();
 
@@ -93,7 +148,7 @@ export function useInvoiceRealtime(options: UseInvoiceRealtimeOptions = {}) {
       supabase.removeChannel(invoiceChannel);
       supabase.removeChannel(notificationChannel);
     };
-  }, [user?.id, handleInvoiceGenerated, handleInvoiceStatusChanged]);
+  }, [user?.id, handleInvoiceGenerated, handleInvoiceStatusChanged, handleInvoicePaid, handlePaymentFailed]);
 
   return null;
 }
