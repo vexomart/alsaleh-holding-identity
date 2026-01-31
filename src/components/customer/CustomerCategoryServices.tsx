@@ -24,14 +24,8 @@ import {
   Smartphone,
   Globe,
   Shield,
-  ShoppingCart,
-  ChevronLeft,
-  ChevronRight,
   ArrowLeft,
   ArrowRight,
-  Tag,
-  CheckCircle,
-  Sparkles,
   Star,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -162,23 +156,8 @@ export function CustomerCategoryServices() {
     fetchData();
   }, [category, isRTL]);
 
-  const formatCurrency = (amount: number | null, currency: string | null) => {
-    if (!amount) return isRTL ? "اتصل للسعر" : "Contact for price";
-    return new Intl.NumberFormat(isRTL ? "ar-SA" : "en-US", {
-      style: "currency",
-      currency: currency || "SAR",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
   const handleRequestService = (service: Service) => {
-    toast({
-      title: isRTL ? "طلب الخدمة" : "Request Service",
-      description: isRTL
-        ? `تم اختيار خدمة: ${service.name_ar || service.name}`
-        : `Selected service: ${service.name}`,
-    });
-    navigate("/app/orders");
+    navigate(`/app/service/${service.id}`);
   };
 
   if (isLoading) {
@@ -333,33 +312,8 @@ export function CustomerCategoryServices() {
                         : service.short_description || service.description}
                     </p>
 
-                    {/* Price Section */}
-                    <div className="border-t pt-4 space-y-3">
-                      <div className="flex items-baseline justify-between">
-                        <p className={cn(
-                          "text-2xl font-bold",
-                          `bg-gradient-to-r ${config.gradient} bg-clip-text text-transparent`
-                        )}>
-                          {formatCurrency(service.price, service.currency)}
-                        </p>
-                        {service.price && (
-                          <div className="text-xs text-muted-foreground">
-                            {service.include_vat ? (
-                              <span className="flex items-center gap-1 text-emerald-600">
-                                <CheckCircle className="h-3 w-3" />
-                                {isRTL ? "شامل الضريبة" : "VAT Inc."}
-                              </span>
-                            ) : (
-                              <span className="flex items-center gap-1">
-                                <Tag className="h-3 w-3" />
-                                {isRTL ? "+ 15% ضريبة" : "+ 15% VAT"}
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* CTA Button */}
+                    {/* CTA Button */}
+                    <div className="border-t pt-4">
                       <Button
                         onClick={() => handleRequestService(service)}
                         className={cn(
@@ -367,8 +321,8 @@ export function CustomerCategoryServices() {
                           `bg-gradient-to-r ${config.gradient} hover:opacity-90`
                         )}
                       >
-                        <ShoppingCart className="h-4 w-4" />
-                        {isRTL ? "اطلب الخدمة" : "Request Service"}
+                        <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+                        {isRTL ? "عرض التفاصيل" : "View Details"}
                       </Button>
                     </div>
                   </CardContent>
