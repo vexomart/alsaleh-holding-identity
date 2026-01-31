@@ -86,3 +86,11 @@ export {
 
 // Debug utility
 export { debugPDFArabic } from './debug-pdf';
+
+// Singleton PDF initialization
+export {
+  ensurePdfInitialized,
+  isPdfInitialized,
+  getPdfInitError,
+  resetPdfInit,
+} from './pdf-init';
