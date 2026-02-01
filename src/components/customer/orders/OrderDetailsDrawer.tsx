@@ -78,9 +78,13 @@ export function OrderDetailsDrawer({
   const handleDownloadInvoice = async () => {
     if (!order) return;
     
+    console.log('[Invoice Download] Starting invoice generation for order:', order.order_number);
     setGeneratingInvoice(true);
+    
     try {
+      console.log('[Invoice Download] Ensuring PDF system is ready...');
       await ensurePDFReady();
+      console.log('[Invoice Download] PDF system ready');
       
       // Build invoice data from order
       const metadata = (order as any).metadata || {};
@@ -97,6 +101,7 @@ export function OrderDetailsDrawer({
         quantity: 1,
       }];
       
+      console.log('[Invoice Download] Building invoice data...');
       const invoiceData = orderToInvoiceData(
         {
           order_number: order.order_number,
@@ -108,11 +113,13 @@ export function OrderDetailsDrawer({
         services
       );
       
+      console.log('[Invoice Download] Creating PDF...');
       await createInvoicePDF(invoiceData, { download: true });
+      console.log('[Invoice Download] ✅ PDF created successfully');
       
       toast.success(isRTL ? 'تم تحميل الفاتورة' : 'Invoice downloaded');
     } catch (error) {
-      console.error('Error generating invoice:', error);
+      console.error('[Invoice Download] ❌ Error generating invoice:', error);
       toast.error(isRTL ? 'حدث خطأ في إنشاء الفاتورة' : 'Error generating invoice');
     } finally {
       setGeneratingInvoice(false);
