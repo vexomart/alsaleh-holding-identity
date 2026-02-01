@@ -11,6 +11,12 @@ export { useInvoicesRealtime } from '../useInvoicesRealtime';
 export { useAdminDeliveryConfirmation, sendDeliveryConfirmation } from '../useAdminDeliveryConfirmation';
 export { useCustomerRealtime } from '../useCustomerRealtime';
 export { useAdminRealtime } from '../useAdminRealtime';
+export { 
+  useWalletRealtime, 
+  broadcastWalletEvent, 
+  broadcastTransactionEvent, 
+  broadcastBankTransferEvent 
+} from '../useWalletRealtime';
 
 export type {
   ServiceEventType,
@@ -20,5 +26,11 @@ export type {
   CustomerNotificationEvent,
   CustomerNotificationPayload,
   DeliveryConfirmation,
+  WalletEventType,
+  WalletEventPayload,
+  TransactionEventType,
+  TransactionEventPayload,
+  BankTransferEventType,
+  BankTransferEventPayload,
   RealtimeEventType,
 } from '@/types/realtime-events';
