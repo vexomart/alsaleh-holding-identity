@@ -1,8 +1,7 @@
 /**
- * Customer Wallet Card Component
+ * Customer Wallet Card Component - Premium Bank-Grade Design
  * Displays wallet balance, customer UID, and recent transactions
- * PHASE FIN-5: Enterprise micro-animations (RTL-safe)
- * PHASE WALLET-1: Realtime updates
+ * Modern glassmorphism with RTL support
  */
 
 import { useState, useEffect } from "react";
@@ -10,12 +9,13 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useWalletRealtime } from "@/hooks/useWalletRealtime";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 import {
   Wallet,
   CreditCard,
@@ -32,6 +32,11 @@ import {
   Banknote,
   Plus,
   Wifi,
+  WifiOff,
+  Fingerprint,
+  Eye,
+  EyeOff,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -52,14 +57,14 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
   const [customerUid, setCustomerUid] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedUid, setCopiedUid] = useState(false);
+  const [showBalance, setShowBalance] = useState(true);
 
-  // Realtime updates for wallet (PHASE WALLET-1)
+  // Realtime updates for wallet
   const { isConnected, lastWalletEvent, lastTransactionEvent } = useWalletRealtime({
     userId: user?.id,
     tenantId: profile?.tenant_id || undefined,
     enabled: !!user?.id,
     onWalletUpdated: (event) => {
-      // Update wallet balance on realtime event
       if (wallet && event.balance !== undefined) {
         setWallet(prev => prev ? { ...prev, balance: event.balance! } : prev);
         toast({
@@ -71,12 +76,10 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
       }
     },
     onTransactionCreated: () => {
-      // Refetch transactions on new transaction
       fetchTransactions();
     },
   });
 
-  // Fetch transactions helper
   const fetchTransactions = async () => {
     if (!user?.id) return;
     const { data: transData } = await supabase
@@ -91,14 +94,12 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     }
   };
 
-  // Fetch wallet and transactions
   useEffect(() => {
     if (!user?.id) return;
 
     const fetchWalletData = async () => {
       setIsLoading(true);
       try {
-        // Fetch customer UID
         const { data: profileData } = await supabase
           .from("profiles")
           .select("customer_uid")
@@ -109,7 +110,6 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
           setCustomerUid(profileData.customer_uid);
         }
 
-        // Fetch or create wallet
         const { data: walletData, error: walletError } = await supabase
           .from("customer_wallets" as never)
           .select("*")
@@ -119,7 +119,6 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
         if (walletData) {
           setWallet(walletData as CustomerWallet);
         } else if (!walletError || walletError.code === "PGRST116") {
-          // Create wallet if not exists
           const { data: newWallet } = await supabase
             .from("customer_wallets" as never)
             .insert({
@@ -137,7 +136,6 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
           }
         }
 
-        // Fetch transactions
         const { data: transData } = await supabase
           .from("financial_transactions" as never)
           .select("*")
@@ -158,7 +156,6 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     fetchWalletData();
   }, [user?.id, profile?.tenant_id]);
 
-  // Copy UID to clipboard
   const copyUidToClipboard = async () => {
     if (!customerUid) return;
     try {
@@ -174,7 +171,6 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     }
   };
 
-  // Get transaction icon
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case "topup":
@@ -190,44 +186,38 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     }
   };
 
-  // Get status badge
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "succeeded":
         return (
-          <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">
-            <CheckCircle2 className="h-3 w-3 mr-1" />
-            {isRTL ? "مكتمل" : "Completed"}
+          <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30 text-xs">
+            <CheckCircle2 className="h-3 w-3 me-1" />
+            {isRTL ? "مكتمل" : "Done"}
           </Badge>
         );
       case "pending":
         return (
-          <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30">
-            <Clock className="h-3 w-3 mr-1" />
-            {isRTL ? "قيد الانتظار" : "Pending"}
+          <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-xs">
+            <Clock className="h-3 w-3 me-1" />
+            {isRTL ? "انتظار" : "Pending"}
           </Badge>
         );
       case "failed":
         return (
-          <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30">
-            <XCircle className="h-3 w-3 mr-1" />
+          <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30 text-xs">
+            <XCircle className="h-3 w-3 me-1" />
             {isRTL ? "فشل" : "Failed"}
           </Badge>
         );
       default:
-        return (
-          <Badge variant="outline">
-            {status}
-          </Badge>
-        );
+        return <Badge variant="outline" className="text-xs">{status}</Badge>;
     }
   };
 
-  // Get transaction type label
   const getTransactionTypeLabel = (type: string) => {
     const labels: Record<string, { ar: string; en: string }> = {
       topup: { ar: "شحن رصيد", en: "Top Up" },
-      invoice_payment: { ar: "دفع فاتورة", en: "Invoice Payment" },
+      invoice_payment: { ar: "دفع فاتورة", en: "Payment" },
       refund: { ar: "استرداد", en: "Refund" },
       withdrawal: { ar: "سحب", en: "Withdrawal" },
       adjustment: { ar: "تعديل", en: "Adjustment" },
@@ -237,7 +227,6 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     return labels[type]?.[isRTL ? "ar" : "en"] || type;
   };
 
-  // Format date
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return new Intl.DateTimeFormat(isRTL ? "ar-SA" : "en-US", {
@@ -248,7 +237,6 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     }).format(date);
   };
 
-  // Format currency
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat(isRTL ? "ar-SA" : "en-US", {
       style: "currency",
@@ -259,147 +247,218 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
 
   if (isLoading) {
     return (
-      <Card className={className}>
-        <CardHeader>
-          <Skeleton className="h-6 w-32" />
-          <Skeleton className="h-4 w-48" />
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-32 w-full" />
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-4">
+          <Skeleton className="h-48 w-full rounded-2xl" />
+          <Skeleton className="h-24 w-full rounded-xl" />
+        </div>
+        <Skeleton className="h-[400px] w-full rounded-2xl" />
+      </div>
     );
   }
 
   return (
-    <div className="finance-card-enter">
-      <Card className={cn("overflow-hidden", className)}>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Wallet className="h-5 w-5 text-primary" />
-              {isRTL ? "المحفظة الرقمية" : "Digital Wallet"}
-            </CardTitle>
-            {/* Realtime connection indicator */}
-            <div className="flex items-center gap-1.5">
-              <Wifi className={cn(
-                "h-3.5 w-3.5",
-                isConnected ? "text-primary" : "text-muted-foreground"
-              )} />
-              <span className={cn(
-                "text-xs",
-                isConnected ? "text-primary" : "text-muted-foreground"
-              )}>
-                {isConnected 
-                  ? (isRTL ? "مباشر" : "Live") 
-                  : (isRTL ? "غير متصل" : "Offline")}
-              </span>
-            </div>
-          </div>
-          <CardDescription>
-            {isRTL ? "رصيدك ومعاملاتك المالية" : "Your balance and transactions"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Customer UID Card */}
-          <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg p-4 border border-primary/20">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-muted-foreground font-medium">
-                {isRTL ? "رقم العميل" : "Customer ID"}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2"
-                onClick={copyUidToClipboard}
-              >
-                {copiedUid ? (
-                  <Check className="h-3.5 w-3.5 text-green-500" />
-                ) : (
-                  <Copy className="h-3.5 w-3.5" />
-                )}
-              </Button>
-            </div>
-            <div className="font-mono text-lg font-bold tracking-wider text-primary">
-              {customerUid || "---"}
-            </div>
-          </div>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Wallet Section */}
+      <div className="lg:col-span-2 space-y-4">
+        {/* Balance Card - Premium Design */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card className="overflow-hidden border-0 shadow-xl bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 text-white">
+            <CardContent className="p-6 md:p-8 relative">
+              {/* Background pattern */}
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-1/2 -right-1/4 w-72 h-72 rounded-full bg-white/5 blur-3xl" />
+                <div className="absolute -bottom-1/2 -left-1/4 w-72 h-72 rounded-full bg-white/10 blur-3xl" />
+              </div>
 
-          {/* Balance Card */}
-          <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-lg p-4 border border-green-500/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xs text-muted-foreground font-medium block mb-1">
-                  {isRTL ? "الرصيد المتاح" : "Available Balance"}
-                </span>
-                <div className="text-3xl font-bold text-green-600">
-                  {formatCurrency(wallet?.balance || 0)}
+              <div className="relative z-10">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="h-12 w-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                      <Wallet className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-white/70 text-sm">
+                        {isRTL ? "الرصيد المتاح" : "Available Balance"}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 text-white/70 hover:text-white hover:bg-white/10"
+                          onClick={() => setShowBalance(!showBalance)}
+                        >
+                          {showBalance ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Connection status */}
+                  <div className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm",
+                    isConnected ? "bg-white/20" : "bg-red-500/30"
+                  )}>
+                    {isConnected ? (
+                      <Wifi className="h-3.5 w-3.5" />
+                    ) : (
+                      <WifiOff className="h-3.5 w-3.5" />
+                    )}
+                    <span className="text-xs font-medium">
+                      {isConnected 
+                        ? (isRTL ? "مباشر" : "Live") 
+                        : (isRTL ? "غير متصل" : "Offline")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Balance Amount */}
+                <div className="mb-6">
+                  <div className="text-4xl md:text-5xl font-bold tracking-tight">
+                    {showBalance ? formatCurrency(wallet?.balance || 0) : "••••••"}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <WalletTopupDialog>
+                    <Button 
+                      className="gap-2 bg-white text-green-600 hover:bg-white/90 shadow-lg"
+                    >
+                      <Plus className="h-4 w-4" />
+                      {isRTL ? "شحن الرصيد" : "Top Up"}
+                    </Button>
+                  </WalletTopupDialog>
+                  
+                  <Badge 
+                    variant="outline" 
+                    className={cn(
+                      "border-white/30 text-white bg-white/10",
+                      wallet?.status === "active" ? "" : "bg-amber-500/30 border-amber-500/50"
+                    )}
+                  >
+                    <Sparkles className="h-3 w-3 me-1" />
+                    {wallet?.status === "active" 
+                      ? (isRTL ? "نشطة" : "Active")
+                      : (isRTL ? "معلقة" : "Suspended")}
+                  </Badge>
                 </div>
               </div>
-              <div className="h-14 w-14 rounded-full bg-green-500/20 flex items-center justify-center">
-                <TrendingUp className="h-7 w-7 text-green-500" />
-              </div>
-            </div>
-            <div className="flex items-center justify-between mt-3">
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className={cn(
-                  "text-xs finance-status-badge",
-                  wallet?.status === "active" 
-                    ? "bg-green-500/10 text-green-600 border-green-500/30"
-                    : "bg-amber-500/10 text-amber-600 border-amber-500/30"
-                )}>
-                  {wallet?.status === "active" 
-                    ? (isRTL ? "نشطة" : "Active")
-                    : (isRTL ? "معلقة" : "Suspended")}
-                </Badge>
-                {wallet?.wallet_number && (
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {wallet.wallet_number}
-                  </span>
-                )}
-              </div>
-              
-              {/* Top-up Button */}
-              <WalletTopupDialog>
-                <Button size="sm" className="gap-1.5 h-8">
-                  <Plus className="h-4 w-4" />
-                  {isRTL ? "شحن" : "Top Up"}
-                </Button>
-              </WalletTopupDialog>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-          <Separator />
+        {/* Customer ID & Wallet Number */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
+            <CardContent className="p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Customer ID */}
+                <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/10">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Fingerprint className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        {isRTL ? "رقم العميل" : "Customer ID"}
+                      </p>
+                      <p className="font-mono font-bold text-foreground tracking-wider">
+                        {customerUid || "---"}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={copyUidToClipboard}
+                  >
+                    {copiedUid ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
 
-          {/* Transactions */}
-          <div>
-            <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <CreditCard className="h-4 w-4" />
+                {/* Wallet Number */}
+                <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50 border border-border/50">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
+                      <CreditCard className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        {isRTL ? "رقم المحفظة" : "Wallet Number"}
+                      </p>
+                      <p className="font-mono font-medium text-foreground text-sm">
+                        {wallet?.wallet_number || "---"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Transactions Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+        className="lg:col-span-1"
+      >
+        <Card className="h-full border border-border/50 bg-card/50 backdrop-blur-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <Receipt className="h-4 w-4 text-blue-500" />
+              </div>
               {isRTL ? "آخر المعاملات" : "Recent Transactions"}
-            </h4>
-            
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
             {transactions.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Receipt className="h-10 w-10 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">
+              <div className="text-center py-12 text-muted-foreground">
+                <div className="h-16 w-16 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-4">
+                  <Receipt className="h-8 w-8 opacity-50" />
+                </div>
+                <p className="text-sm font-medium">
                   {isRTL ? "لا توجد معاملات بعد" : "No transactions yet"}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {isRTL ? "ستظهر معاملاتك هنا" : "Your transactions will appear here"}
                 </p>
               </div>
             ) : (
-              <ScrollArea className="h-[280px] pr-4">
-                <div className="space-y-3">
-                  {transactions.map((tx) => (
-                    <div
+              <ScrollArea className="h-[380px]">
+                <div className="space-y-2 pe-2">
+                  {transactions.map((tx, index) => (
+                    <motion.div
                       key={tx.id}
-                      className="finance-transaction-item flex items-center justify-between p-3 rounded-lg bg-muted/50"
+                      initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.2, delay: index * 0.05 }}
+                      className="flex items-center justify-between p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-background flex items-center justify-center border">
+                        <div className="h-10 w-10 rounded-xl bg-background flex items-center justify-center border border-border/50 shadow-sm">
                           {getTransactionIcon(tx.transaction_type)}
                         </div>
                         <div>
-                          <p className="text-sm font-medium">
+                          <p className="text-sm font-medium text-foreground">
                             {getTransactionTypeLabel(tx.transaction_type)}
                           </p>
                           <p className="text-xs text-muted-foreground">
@@ -414,21 +473,23 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
                             ? "text-green-600"
                             : "text-foreground"
                         )}>
-                          {tx.transaction_type === "topup" || tx.transaction_type === "refund" ? "+" : "-"}
-                          {formatCurrency(Number(tx.amount))}
+                          <span dir="ltr">
+                            {tx.transaction_type === "topup" || tx.transaction_type === "refund" ? "+" : "-"}
+                            {formatCurrency(Number(tx.amount))}
+                          </span>
                         </p>
                         <div className="flex justify-end mt-1">
                           {getStatusBadge(tx.status)}
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </ScrollArea>
             )}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }
