@@ -65,7 +65,7 @@ export function FinanceCenter() {
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="flex items-center gap-2 px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                className={`flex items-center gap-2 px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm ${isRTL ? "flex-row-reverse" : ""}`}
               >
                 <Icon className="h-4 w-4" />
                 <span className="whitespace-nowrap">
