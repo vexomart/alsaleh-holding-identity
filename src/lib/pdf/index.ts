@@ -134,6 +134,36 @@ export {
   type PDFVerificationReport,
 } from './core/verify';
 
+// Brand system
+export {
+  brand,
+  colors,
+  typography,
+  spacing,
+  components,
+  companyInfo,
+  stylesDictionary,
+  getStatusColors,
+  allowedColors,
+} from './core/brand';
+
+// Shared sections
+export {
+  buildPdfHeader,
+  buildPdfFooter,
+  buildInfoCard,
+  buildTotalsBox,
+  buildBadge,
+  buildSectionTitle,
+  buildDivider,
+  buildSignatureBlock as buildSharedSignatureBlock,
+  buildClause,
+} from './core/shared-sections';
+
+// Debug/Golden pack
+export { generateGoldenPack, printVisualChecklist } from './debug/golden-pack';
+export { verifyBrandCompliance, validateDocDefinition } from './debug/brand-verify';
+
 // Low-level (internal use)
 export { ARABIC_FONT_NAME } from './core/fonts';
 export { DEFAULT_COMPANY_INFO } from './core/pdf-core';

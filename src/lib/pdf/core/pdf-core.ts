@@ -138,16 +138,19 @@ export function isPDFReady(): boolean {
 
 /**
  * Default company information for ASH Holding
+ * Now imports from brand system for single source of truth
  */
+import { companyInfo as brandCompanyInfo } from './brand';
+
 export const DEFAULT_COMPANY_INFO = {
-  nameAr: 'شركة علي صالح الشهري القابضة',
-  nameEn: 'Ali Saleh Al-Shehri Holding Company',
-  vatNumber: '300000000000003',
-  crNumber: '1010000000',
-  addressAr: 'الرياض، المملكة العربية السعودية',
-  phone: '+966 11 123 4567',
-  email: 'info@ash-holding.sa',
-  website: 'www.alialshehriholding.com',
+  nameAr: brandCompanyInfo.nameAr,
+  nameEn: brandCompanyInfo.nameEn,
+  vatNumber: brandCompanyInfo.vatNumber,
+  crNumber: brandCompanyInfo.crNumber,
+  addressAr: brandCompanyInfo.addressAr,
+  phone: brandCompanyInfo.phone,
+  email: brandCompanyInfo.email,
+  website: brandCompanyInfo.website,
 };
 
 /**

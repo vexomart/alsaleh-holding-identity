@@ -485,3 +485,95 @@ export function createPageFooter(documentTitle?: string): (currentPage: number, 
     margin: [40, 0, 40, 20],
   });
 }
+
+// ============================================
+// ENHANCED RTL TABLE BUILDER (Brand-aware)
+// ============================================
+
+import { colors, components, typography, spacing } from './brand';
+import { ltr } from './arabic';
+
+export interface BuildRtlTableOptions {
+  headersAr: string[];
+  headersEn?: string[];
+  rows: (string | number)[][];
+  widths?: (string | number)[];
+  numericCols?: number[]; // Column indices containing numbers (will use ltr())
+  zebraRows?: boolean;
+  headerStyle?: 'brand' | 'minimal';
+}
+
+/**
+ * Build RTL table with brand styling
+ * - RTL: headers/rows order reversed automatically
+ * - Numeric columns use ltr() and align left within RTL context
+ * - Uses brand tokens for colors, spacing, fonts
+ */
+export function buildRtlTable(options: BuildRtlTableOptions): PDFContent {
+  const {
+    headersAr,
+    rows,
+    widths,
+    numericCols = [],
+    zebraRows = true,
+    headerStyle = 'brand',
+  } = options;
+  
+  const colCount = headersAr.length;
+  
+  // Reverse for RTL display
+  const rtlHeaders = [...headersAr].reverse();
+  const rtlRows = rows.map(row => [...row].reverse());
+  const rtlWidths = widths ? [...widths].reverse() : new Array(colCount).fill('*');
+  
+  // Map numeric columns to reversed indices
+  const rtlNumericCols = numericCols.map(i => colCount - 1 - i);
+  
+  // Build header row with brand styling
+  const headerCells = rtlHeaders.map((h, colIndex) => ({
+    text: h,
+    font: typography.fontFamily,
+    fontSize: components.table.header.fontSize,
+    bold: components.table.header.bold,
+    alignment: rtlNumericCols.includes(colIndex) ? 'left' as const : 'right' as const,
+    color: headerStyle === 'brand' ? components.table.header.textColor : colors.text.primary,
+    fillColor: headerStyle === 'brand' ? components.table.header.background : colors.background.section,
+    margin: components.table.header.padding,
+  }));
+  
+  // Build body rows
+  const bodyCells = rtlRows.map((row, rowIndex) =>
+    row.map((cell, colIndex) => {
+      const isNumeric = rtlNumericCols.includes(colIndex);
+      const cellValue = isNumeric && typeof cell !== 'undefined' ? ltr(String(cell)) : String(cell);
+      
+      return {
+        text: cellValue,
+        font: typography.fontFamily,
+        fontSize: components.table.cell.fontSize,
+        alignment: isNumeric ? 'left' as const : 'right' as const,
+        color: components.table.cell.textColor,
+        fillColor: zebraRows && rowIndex % 2 === 1 ? components.table.zebraRow : undefined,
+        margin: components.table.cell.padding,
+      };
+    })
+  );
+  
+  return {
+    table: {
+      headerRows: 1,
+      widths: rtlWidths,
+      body: [headerCells, ...bodyCells],
+    },
+    layout: {
+      hLineColor: () => components.table.border,
+      vLineColor: () => components.table.border,
+      hLineWidth: () => components.table.borderWidth,
+      vLineWidth: () => components.table.borderWidth,
+      paddingLeft: () => spacing.sm,
+      paddingRight: () => spacing.sm,
+      paddingTop: () => spacing.sm,
+      paddingBottom: () => spacing.sm,
+    },
+  };
+}
