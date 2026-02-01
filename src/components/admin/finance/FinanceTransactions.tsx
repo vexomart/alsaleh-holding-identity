@@ -347,9 +347,9 @@ export function FinanceTransactions() {
   const handleExportPDF = useCallback(async () => {
     setIsExporting(true);
     try {
-      // Use existing PDF initialization
-      const { ensurePdfInitialized } = await import('@/lib/pdf/pdf-init');
-      await ensurePdfInitialized();
+      // Use unified PDF system
+      const { ensurePDFReady } = await import('@/lib/pdf');
+      await ensurePDFReady();
       
       const pdfMake = (await import('pdfmake/build/pdfmake')).default;
 

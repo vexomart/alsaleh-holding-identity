@@ -141,54 +141,10 @@ export {
 } from './templates/contract.template';
 
 // ============================================
-// LEGACY COMPATIBILITY (deprecated, will be removed)
+// LEGACY COMPATIBILITY ALIASES
 // ============================================
 
-// Re-export old names for backward compatibility
+// Re-export with legacy names for backward compatibility
 export { createInvoicePDF as generateInvoicePdf } from './templates/invoice.template';
 export { formatCurrency as formatArabicCurrency } from './core/arabic-utils';
 export { corporateStyles as rtlStyles } from './core/layout';
-
-// Legacy class (deprecated)
-export { ArabicPDFGenerator, arabicPDF } from './arabic-pdf';
-
-// Legacy init (deprecated - use ensurePDFReady instead)
-export { 
-  ensurePdfInitialized, 
-  isPdfInitialized, 
-  getPdfInitError, 
-  resetPdfInit 
-} from './pdf-init';
-
-// Sample generators (for testing)
-export { 
-  generateSampleInvoice, 
-  generateSampleReport, 
-  generateSampleContract,
-  testArabicPDFRendering,
-  testArabicTaxInvoice,
-} from './samples';
-
-// Report generator (legacy)
-export {
-  generateReportContent,
-  createReportPDF,
-  type ReportData,
-  type ReportSection,
-  type ReportTable,
-  type ReportChart,
-} from './report-generator';
-
-// Old contract generator (deprecated - use createContractPDF from templates)
-export { 
-  generateContractContent as generateLegacyContractContent,
-  createContractPDF as createLegacyContractPDF,
-} from './contract-generator';
-
-// Old invoice generator exports (deprecated)
-export { 
-  exampleInvoiceInput,
-} from './invoice-generator';
-
-// Old debug (deprecated - use debugPDFArabic from core/verify)
-export { debugPDFArabic as debugPDFArabicLegacy } from './debug-pdf';
