@@ -46,10 +46,11 @@ export { initPdf, ensurePDFReady } from './core/pdf-core';
 export { debugPDFArabic } from './core/verify';
 
 // 3. Invoice generator
-export { createInvoicePDF } from './templates/invoice.template';
+export { createInvoicePDF, createContractPDF, uploadPdf } from './create';
 
-// 4. Contract generator
-export { createContractPDF } from './templates/contract.template';
+// Local-only generators (Blob-only)
+export { createInvoicePDFLocal } from './templates/invoice.template';
+export { createContractPDFLocal } from './templates/contract.template';
 
 // ============================================
 // ARABIC CORRECTNESS LAYER

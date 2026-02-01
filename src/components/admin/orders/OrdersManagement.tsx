@@ -80,7 +80,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { createInvoicePDF, type InvoiceData } from '@/lib/pdf';
+import { type InvoiceData } from '@/lib/pdf';
+import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
 import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
 
 interface Order {
@@ -335,6 +336,7 @@ export function OrdersManagement() {
   // Handle PDF download
   const handleDownloadPDF = async (order: Order) => {
     try {
+      console.log('[PDF] Download clicked', { kind: 'invoice', id: order.id });
       toast({
         title: isRTL ? 'جاري إنشاء الفاتورة...' : 'Generating invoice...',
       });
@@ -366,10 +368,16 @@ export function OrdersManagement() {
         notes: order.description || undefined,
       };
 
-      await createInvoicePDF(invoiceData, { 
-        download: true, 
-        filename: `invoice-${order.order_number}.pdf` 
-      });
+      const report = await runPdfDiagnostics('invoice', invoiceData);
+
+      if (!report.ok) {
+        toast({
+          title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
+          description: report.error,
+          variant: 'destructive',
+        });
+        return;
+      }
 
       toast({
         title: isRTL ? 'تم تحميل الفاتورة بنجاح' : 'Invoice downloaded successfully',
@@ -378,6 +386,7 @@ export function OrdersManagement() {
       console.error('Error generating PDF:', error);
       toast({
         title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
+        description: error instanceof Error ? error.message : String(error),
         variant: 'destructive',
       });
     }

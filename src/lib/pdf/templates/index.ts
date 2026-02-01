@@ -7,6 +7,7 @@
 // Invoice template
 export {
   createInvoicePDF,
+  createInvoicePDFLocal,
   generateInvoiceContent,
   calculateVAT,
   calculateInvoiceTotals,
@@ -24,6 +25,7 @@ export {
 // Contract template
 export {
   createContractPDF,
+  createContractPDFLocal,
   generateContractContent,
   dbContractToContractData,
   defaultContractClauses,

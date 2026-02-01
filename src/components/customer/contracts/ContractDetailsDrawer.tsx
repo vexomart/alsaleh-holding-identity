@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import {
   Sheet,
   SheetContent,
@@ -34,7 +35,8 @@ import {
 } from 'lucide-react';
 import { CustomerContract, CONTRACT_STATUS_CONFIG } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
-import { createContractPDF, ensurePDFReady, type ContractData } from '@/lib/pdf';
+import { type ContractData } from '@/lib/pdf';
+import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
 
 interface ContractDetailsDrawerProps {
   contract: CustomerContract | null;
@@ -126,10 +128,10 @@ export function ContractDetailsDrawer({
   const handleDownloadPdf = async () => {
     if (!contract || contract.status !== 'signed') return;
 
+    console.log('[PDF] Download clicked', { kind: 'contract', id: contract.id });
+
     setIsGeneratingPdf(true);
     try {
-      await ensurePDFReady();
-
       const contractData: ContractData = {
         contractNumber: contract.contract_number,
         contractType: 'عقد تقديم خدمات',
@@ -174,12 +176,14 @@ export function ContractDetailsDrawer({
         },
       };
 
-      await createContractPDF(contractData, {
-        filename: `contract-${contract.contract_number}.pdf`,
-        download: true,
-      });
+      const report = await runPdfDiagnostics('contract', contractData);
+
+      if (report.ok) {
+        toast.success(isRTL ? 'تم تحميل العقد' : 'Contract downloaded');
+      }
     } catch (err) {
       console.error('Error generating PDF:', err);
+      toast.error(isRTL ? 'فشل تحميل العقد' : 'Contract download failed');
     } finally {
       setIsGeneratingPdf(false);
     }

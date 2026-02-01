@@ -230,7 +230,7 @@ export function assertFontsReady(): void {
   }
 
   if (errors.length > 0) {
-    const message = `[PDF FONTS] ASSERTION FAILED:\n- ${errors.join('\n- ')}`;
+    const message = `Cairo fonts missing from VFS\n- ${errors.join('\n- ')}`;
     console.error(message);
     throw new Error(message);
   }

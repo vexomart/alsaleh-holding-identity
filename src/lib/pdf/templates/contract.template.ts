@@ -1111,24 +1111,34 @@ export function generateContractContent(
 export interface CreateContractPDFOptions {
   filename?: string;
   download?: boolean;
+  /** Optional upload path used by higher-level wrapper; ignored here */
+  uploadPath?: string;
+}
+
+export async function createContractPDFLocal(
+  contract: ContractData,
+  options: CreateContractPDFOptions = {}
+): Promise<{ blob: Blob; filename: string } > {
+  // Initialize PDF system (throws if Cairo not loaded)
+  await initPdf();
+
+  const content = generateContractContent(contract);
+  const blob = await generatePDFBlob(content, {
+    title: `${contract.contractType || 'عقد'} - ${contract.contractNumber}`,
+    subject: 'عقد تقديم خدمات',
+  });
+
+  const filename = options.filename || `contract-${contract.contractNumber}.pdf`;
+  return { blob, filename };
 }
 
 export async function createContractPDF(
   contract: ContractData,
   options: CreateContractPDFOptions = {}
 ): Promise<{ blob?: Blob; dataUrl?: string }> {
-  // Initialize PDF system (throws if Cairo not loaded)
-  await initPdf();
-
-  const content = generateContractContent(contract);
-
-  const blob = await generatePDFBlob(content, {
-    title: `${contract.contractType || 'عقد'} - ${contract.contractNumber}`,
-    subject: 'عقد تقديم خدمات',
-  });
+  const { blob, filename } = await createContractPDFLocal(contract, options);
 
   if (options.download) {
-    const filename = options.filename || `contract-${contract.contractNumber}.pdf`;
     downloadBlob(blob, filename);
     return { blob };
   }

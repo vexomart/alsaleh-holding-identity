@@ -40,7 +40,8 @@ import {
 } from 'lucide-react';
 import { CustomerOrder, OrderEvent } from './types';
 import { OrderStatusBadge } from './OrderStatusBadge';
-import { createInvoicePDF, orderToInvoiceData, ensurePDFReady } from '@/lib/pdf';
+import { orderToInvoiceData } from '@/lib/pdf';
+import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
 
 interface OrderDetailsDrawerProps {
   order: CustomerOrder | null;
@@ -77,15 +78,12 @@ export function OrderDetailsDrawer({
   // Handle invoice download
   const handleDownloadInvoice = async () => {
     if (!order) return;
+
+    console.log('[PDF] Download clicked', { kind: 'invoice', id: order.id });
     
-    console.log('[Invoice Download] Starting invoice generation for order:', order.order_number);
     setGeneratingInvoice(true);
     
     try {
-      console.log('[Invoice Download] Ensuring PDF system is ready...');
-      await ensurePDFReady();
-      console.log('[Invoice Download] PDF system ready');
-      
       // Build invoice data from order
       const metadata = (order as any).metadata || {};
       const customer = {
@@ -113,14 +111,11 @@ export function OrderDetailsDrawer({
         services
       );
       
-      console.log('[Invoice Download] Creating PDF...');
-      await createInvoicePDF(invoiceData, { download: true });
-      console.log('[Invoice Download] ✅ PDF created successfully');
-      
-      toast.success(isRTL ? 'تم تحميل الفاتورة' : 'Invoice downloaded');
+      const report = await runPdfDiagnostics('invoice', invoiceData);
+      if (report.ok) toast.success(isRTL ? 'تم تحميل الفاتورة' : 'Invoice downloaded');
     } catch (error) {
       console.error('[Invoice Download] ❌ Error generating invoice:', error);
-      toast.error(isRTL ? 'حدث خطأ في إنشاء الفاتورة' : 'Error generating invoice');
+      toast.error(isRTL ? 'فشل التحميل' : 'Download failed');
     } finally {
       setGeneratingInvoice(false);
     }
