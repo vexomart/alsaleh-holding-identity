@@ -246,6 +246,12 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     }).format(amount);
   };
 
+  const formatWalletNumber = (walletNumber: string) => {
+    // Format as XXXX XXXX XXXX XXXX
+    const digits = walletNumber.replace(/\D/g, '').padStart(16, '0');
+    return `${digits.slice(0, 4)} ${digits.slice(4, 8)} ${digits.slice(8, 12)} ${digits.slice(12, 16)}`;
+  };
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -262,99 +268,107 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Main Wallet Section */}
       <div className="lg:col-span-2 space-y-4">
-        {/* Balance Card - Premium Design */}
+        {/* Premium Bank Card Design */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="overflow-hidden border-0 shadow-xl bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 text-white">
-            <CardContent className="p-6 md:p-8 relative">
-              {/* Background pattern */}
-              <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-1/2 -right-1/4 w-72 h-72 rounded-full bg-white/5 blur-3xl" />
-                <div className="absolute -bottom-1/2 -left-1/4 w-72 h-72 rounded-full bg-white/10 blur-3xl" />
+          <div className="relative aspect-[1.586/1] max-w-md mx-auto lg:mx-0">
+            {/* Card Background with Gradient */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 shadow-2xl overflow-hidden">
+              {/* Holographic pattern */}
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.1)_50%,transparent_75%)] bg-[length:250px_250px]" />
               </div>
+              {/* Decorative circles */}
+              <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-br from-emerald-500/20 to-transparent blur-2xl" />
+              <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-500/20 to-transparent blur-2xl" />
+            </div>
 
-              <div className="relative z-10">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <Wallet className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <p className="text-white/70 text-sm">
-                        {isRTL ? "الرصيد المتاح" : "Available Balance"}
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0 text-white/70 hover:text-white hover:bg-white/10"
-                          onClick={() => setShowBalance(!showBalance)}
-                        >
-                          {showBalance ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                        </Button>
-                      </div>
+            {/* Card Content */}
+            <div className="relative h-full p-6 flex flex-col justify-between text-white">
+              {/* Top Row - Logo & Status */}
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-10 w-12 rounded bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center">
+                    <div className="grid grid-cols-3 gap-0.5">
+                      {[...Array(6)].map((_, i) => (
+                        <div key={i} className="w-1.5 h-1.5 rounded-sm bg-amber-700/50" />
+                      ))}
                     </div>
                   </div>
-                  
-                  {/* Connection status */}
                   <div className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-sm",
-                    isConnected ? "bg-white/20" : "bg-red-500/30"
+                    "flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium",
+                    isConnected ? "bg-emerald-500/30 text-emerald-300" : "bg-red-500/30 text-red-300"
                   )}>
-                    {isConnected ? (
-                      <Wifi className="h-3.5 w-3.5" />
-                    ) : (
-                      <WifiOff className="h-3.5 w-3.5" />
-                    )}
-                    <span className="text-xs font-medium">
-                      {isConnected 
-                        ? (isRTL ? "مباشر" : "Live") 
-                        : (isRTL ? "غير متصل" : "Offline")}
-                    </span>
+                    {isConnected ? <Wifi className="h-2.5 w-2.5" /> : <WifiOff className="h-2.5 w-2.5" />}
+                    {isConnected ? (isRTL ? "متصل" : "Live") : (isRTL ? "غير متصل" : "Offline")}
                   </div>
                 </div>
-
-                {/* Balance Amount */}
-                <div className="mb-6">
-                  <div className="text-4xl md:text-5xl font-bold tracking-tight">
-                    {showBalance ? formatCurrency(wallet?.balance || 0) : "••••••"}
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-wrap items-center gap-3">
-                  <WalletTopupDialog>
-                    <Button 
-                      className="gap-2 bg-white text-green-600 hover:bg-white/90 shadow-lg"
-                    >
-                      <Plus className="h-4 w-4" />
-                      {isRTL ? "شحن الرصيد" : "Top Up"}
-                    </Button>
-                  </WalletTopupDialog>
-                  
+                <div className="text-right">
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider">
+                    {isRTL ? "محفظة الصالح" : "AlSaleh Wallet"}
+                  </p>
                   <Badge 
                     variant="outline" 
                     className={cn(
-                      "border-white/30 text-white bg-white/10",
-                      wallet?.status === "active" ? "" : "bg-amber-500/30 border-amber-500/50"
+                      "mt-1 text-[10px] border-0",
+                      wallet?.status === "active" 
+                        ? "bg-emerald-500/20 text-emerald-300" 
+                        : "bg-amber-500/20 text-amber-300"
                     )}
                   >
-                    <Sparkles className="h-3 w-3 me-1" />
-                    {wallet?.status === "active" 
-                      ? (isRTL ? "نشطة" : "Active")
-                      : (isRTL ? "معلقة" : "Suspended")}
+                    {wallet?.status === "active" ? (isRTL ? "نشطة" : "Active") : (isRTL ? "معلقة" : "Suspended")}
                   </Badge>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+
+              {/* Middle - Card Number */}
+              <div className="space-y-1">
+                <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                  {isRTL ? "رقم المحفظة" : "Wallet Number"}
+                </p>
+                <p className="font-mono text-xl md:text-2xl tracking-[0.2em] text-white/90">
+                  {formatWalletNumber(wallet?.wallet_number || "0000000000000000")}
+                </p>
+              </div>
+
+              {/* Bottom Row - Balance & Actions */}
+              <div className="flex items-end justify-between">
+                <div>
+                  <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                    {isRTL ? "الرصيد المتاح" : "Available Balance"}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl md:text-3xl font-bold tracking-tight">
+                      {showBalance ? formatCurrency(wallet?.balance || 0) : "•••••"}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-white/50 hover:text-white hover:bg-white/10 rounded-full"
+                      onClick={() => setShowBalance(!showBalance)}
+                    >
+                      {showBalance ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+                    </Button>
+                  </div>
+                </div>
+                <WalletTopupDialog>
+                  <Button 
+                    size="sm"
+                    className="gap-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-sm"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    {isRTL ? "شحن" : "Top Up"}
+                  </Button>
+                </WalletTopupDialog>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
-        {/* Customer ID & Wallet Number */}
+        {/* Customer ID Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -362,52 +376,32 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
         >
           <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
             <CardContent className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Customer ID */}
-                <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/10">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <Fingerprint className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">
-                        {isRTL ? "رقم العميل" : "Customer ID"}
-                      </p>
-                      <p className="font-mono font-bold text-foreground tracking-wider">
-                        {customerUid || "---"}
-                      </p>
-                    </div>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/10">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Fingerprint className="h-5 w-5 text-primary" />
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                    onClick={copyUidToClipboard}
-                  >
-                    {copiedUid ? (
-                      <Check className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-
-                {/* Wallet Number */}
-                <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50 border border-border/50">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
-                      <CreditCard className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">
-                        {isRTL ? "رقم المحفظة" : "Wallet Number"}
-                      </p>
-                      <p className="font-mono font-medium text-foreground text-sm">
-                        {wallet?.wallet_number || "---"}
-                      </p>
-                    </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      {isRTL ? "رقم العميل" : "Customer ID"}
+                    </p>
+                    <p className="font-mono font-bold text-foreground tracking-wider">
+                      {customerUid || "---"}
+                    </p>
                   </div>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={copyUidToClipboard}
+                >
+                  {copiedUid ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
             </CardContent>
           </Card>
