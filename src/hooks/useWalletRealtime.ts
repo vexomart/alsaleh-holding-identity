@@ -146,8 +146,18 @@ export function useWalletRealtime(options: UseWalletRealtimeOptions): UseWalletR
 
     const channelName = `wallet-realtime-${userId}`;
     
+    // Clean up existing channel first
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
+    
     const channel = supabase
-      .channel(channelName)
+      .channel(channelName, {
+        config: {
+          broadcast: { self: true },
+        },
+      })
       .on(
         'postgres_changes',
         {
@@ -178,8 +188,19 @@ export function useWalletRealtime(options: UseWalletRealtimeOptions): UseWalletR
         },
         handleBankTransferChange
       )
-      .subscribe((status) => {
-        setIsConnected(status === 'SUBSCRIBED');
+      .subscribe((status, err) => {
+        console.log('Wallet realtime status:', status, err);
+        if (status === 'SUBSCRIBED') {
+          setIsConnected(true);
+        } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          setIsConnected(false);
+          // Retry connection after 3 seconds
+          setTimeout(() => {
+            channel.subscribe();
+          }, 3000);
+        } else {
+          setIsConnected(false);
+        }
       });
 
     channelRef.current = channel;
@@ -188,6 +209,7 @@ export function useWalletRealtime(options: UseWalletRealtimeOptions): UseWalletR
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;
+        setIsConnected(false);
       }
     };
   }, [userId, enabled, handleWalletChange, handleTransactionChange, handleBankTransferChange]);
