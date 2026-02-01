@@ -9,7 +9,8 @@
  */
 
 import { toast } from 'sonner';
-import { downloadBlob, blobToDataUrl } from './core/download';
+import { blobToDataUrl } from './core/download';
+import { downloadPdfGuaranteed } from './download-engine';
 import { uploadPdf as uploadPdfImpl } from './core/upload';
 import {
   createInvoicePDFLocal,
@@ -28,11 +29,21 @@ export async function createInvoicePDF(
 ): Promise<{ blob?: Blob; dataUrl?: string }> {
   const { blob, filename } = await createInvoicePDFLocal(invoice, options);
 
+  let downloadOk = false;
   if (options.download) {
-    downloadBlob(blob, filename);
+    const normalized = blob.type === 'application/pdf' ? blob : new Blob([blob], { type: 'application/pdf' });
+    if (normalized.type !== 'application/pdf' || normalized.size <= 10_000) {
+      throw new Error('PDF blob invalid: type/size');
+    }
+    const result = downloadPdfGuaranteed({ blob: normalized, filename });
+    if (result.ok === false) {
+      console.error('[PDF] Download failed:', result.error);
+      throw new Error('DOWNLOAD failed');
+    }
+    downloadOk = true;
   }
 
-  if (options.uploadPath) {
+  if (options.uploadPath && (!options.download || downloadOk)) {
     // Non-blocking best-effort upload
     uploadPdfImpl(blob, options.uploadPath)
       .then(({ url }) => {
@@ -58,11 +69,21 @@ export async function createContractPDF(
 ): Promise<{ blob?: Blob; dataUrl?: string }> {
   const { blob, filename } = await createContractPDFLocal(contract, options);
 
+  let downloadOk = false;
   if (options.download) {
-    downloadBlob(blob, filename);
+    const normalized = blob.type === 'application/pdf' ? blob : new Blob([blob], { type: 'application/pdf' });
+    if (normalized.type !== 'application/pdf' || normalized.size <= 10_000) {
+      throw new Error('PDF blob invalid: type/size');
+    }
+    const result = downloadPdfGuaranteed({ blob: normalized, filename });
+    if (result.ok === false) {
+      console.error('[PDF] Download failed:', result.error);
+      throw new Error('DOWNLOAD failed');
+    }
+    downloadOk = true;
   }
 
-  if (options.uploadPath) {
+  if (options.uploadPath && (!options.download || downloadOk)) {
     uploadPdfImpl(blob, options.uploadPath)
       .then(({ url }) => {
         console.log('[PDF] Upload OK:', url);
@@ -82,3 +103,4 @@ export async function createContractPDF(
 }
 
 export { uploadPdfImpl as uploadPdf };
+

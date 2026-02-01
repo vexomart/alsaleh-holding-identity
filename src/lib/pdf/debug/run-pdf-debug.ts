@@ -17,13 +17,14 @@ import {
   initPdf,
   areFontsInitialized,
   getFontDiagnostics,
-  downloadBlob,
 } from '@/lib/pdf/core';
 import {
   createInvoicePDFLocal,
   createContractPDFLocal,
   uploadPdf,
 } from '@/lib/pdf';
+
+import { downloadPdfGuaranteed } from '@/lib/pdf/download-engine';
 
 export type PdfDebugKind = 'invoice' | 'contract';
 
@@ -58,6 +59,11 @@ function normalizePdfBlob(blob: Blob): Blob {
   // pdfmake should return application/pdf, لكن نُطبِّع للاحتياط
   if (blob.type === 'application/pdf') return blob;
   return new Blob([blob], { type: 'application/pdf' });
+}
+
+function assertValidPdfBlob(blob: Blob): void {
+  if (blob.type !== 'application/pdf') throw new Error(`PDF blob invalid: type (${blob.type || 'empty'})`);
+  if (blob.size <= 10_000) throw new Error(`PDF blob invalid: size (${blob.size})`);
 }
 
 export async function runPdfDebug(
@@ -103,13 +109,14 @@ export async function runPdfDebug(
 
     stage = 'getBlob';
     const blob = normalizePdfBlob(local.blob);
+    assertValidPdfBlob(blob);
     const filename = local.filename;
     console.log('local generation OK:', { filename, blobType: blob.type, blobSize: blob.size });
 
     stage = 'download';
-    // anchor + objectURL method (downloadBlob already implements this pattern)
-    downloadBlob(blob, filename);
-    console.log('download triggered');
+    const dl = downloadPdfGuaranteed({ blob, filename });
+    if (dl.ok === false) throw dl.error;
+    console.log('download triggered via:', dl.method);
 
     // Optional upload must never block download
     if (options?.uploadPath) {
@@ -135,3 +142,4 @@ export async function runPdfDebug(
     return { ok: false, stage, error: message };
   }
 }
+

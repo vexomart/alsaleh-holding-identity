@@ -27,7 +27,7 @@ import { CustomerInvoice, SortField } from './types';
 
 // PDF imports
 import { type InvoiceData } from '@/lib/pdf';
-import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
+import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
 
 export function CustomerInvoicesCenter() {
   const { language } = useLanguage();
@@ -80,7 +80,8 @@ export function CustomerInvoicesCenter() {
   };
 
   const handleDownload = async (invoice: CustomerInvoice) => {
-    console.log('[PDF] clicked', { kind: 'invoice', id: invoice.id });
+    console.log('[PDF] CLICK', { kind: 'invoice', id: invoice.id });
+    const toastId = toast.loading('جاري تجهيز الملف...');
 
     try {
       const invoiceData: InvoiceData = {
@@ -111,13 +112,12 @@ export function CustomerInvoicesCenter() {
         notes: invoice.notes || undefined,
       };
 
-      const report = await runPdfDebug('invoice', invoiceData);
-      if (report.ok) {
-        toast.success(isRTL ? 'تم تحميل الفاتورة' : 'Invoice downloaded');
-      }
+      const report = await runDownloadAudit('invoice', invoiceData);
+      if (report.ok === false) throw report.error;
+      toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
     } catch (err) {
       console.error('Error downloading PDF:', err);
-      toast.error(isRTL ? 'فشل تحميل الفاتورة' : 'Failed to download invoice');
+      toast.error(isRTL ? 'فشل تنزيل الملف' : 'Download failed', { id: toastId });
     }
   };
 
@@ -311,3 +311,4 @@ export function CustomerInvoicesCenter() {
     </div>
   );
 }
+

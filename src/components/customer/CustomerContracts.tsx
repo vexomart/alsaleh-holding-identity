@@ -32,6 +32,10 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { type ContractData } from '@/lib/pdf';
+import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
 
 // Updated status configuration with new statuses
 const statusConfig: Record<ContractStatus, {
@@ -116,6 +120,58 @@ export function CustomerContracts() {
     return format(date, 'dd MMM yyyy', { locale: isRTL ? ar : enUS });
   };
 
+  const handleDownloadContract = async (contract: typeof contracts[0]) => {
+    console.log('[PDF] CLICK', { kind: 'contract', id: contract.id });
+    const toastId = toast.loading('جاري تجهيز الملف...');
+    try {
+      const { data: sig } = await supabase
+        .from('contract_signatures')
+        .select('signer_name, signer_national_id, signer_phone')
+        .eq('contract_id', contract.id)
+        .maybeSingle();
+
+      const pricing: any = (contract as any).pricing_json || {};
+      const contractData: ContractData = {
+        contractNumber: contract.contract_number,
+        contractType: 'عقد تقديم خدمات',
+        date: new Date(contract.created_at),
+        firstParty: {
+          name: 'شركة علي صالح الشهري القابضة',
+          title: 'Ali Saleh Al-Shehri Holding Company',
+          address: 'المملكة العربية السعودية - الرياض',
+        },
+        secondParty: {
+          name: sig?.signer_name || '',
+          idNumber: sig?.signer_national_id || undefined,
+          phone: sig?.signer_phone || undefined,
+        },
+        preamble: contract.scope_summary_ar || contract.scope_summary || undefined,
+        clauses: [
+          {
+            title: 'نطاق العمل',
+            content: contract.service
+              ? `تقديم خدمة ${contract.service.name_ar || contract.service.name} وفقاً للمواصفات المتفق عليها.`
+              : 'تقديم الخدمات المتفق عليها وفقاً للمواصفات.',
+          },
+        ],
+        pricing: {
+          subtotal: pricing.subtotal || 0,
+          vatRate: pricing.vat_rate || 15,
+          vatAmount: pricing.vat_amount || 0,
+          total: pricing.total || 0,
+          currency: pricing.currency || 'SAR',
+        },
+      };
+
+      const report = await runDownloadAudit('contract', contractData);
+      if (report.ok === false) throw report.error;
+      toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
+    } catch (err) {
+      console.error('[Contract Download] ❌ Error:', err);
+      toast.error(isRTL ? 'فشل تنزيل الملف' : 'Download failed', { id: toastId });
+    }
+  };
+
   // Get appropriate action button based on status
   const getActionButton = (contract: typeof contracts[0]) => {
     const status = contract.status;
@@ -139,7 +195,7 @@ export function CustomerContracts() {
         <Button
           variant="default"
           size="sm"
-          onClick={() => navigate(`/app/contracts/${contract.id}?download=true`)}
+          onClick={() => handleDownloadContract(contract)}
           className={cn("w-full gap-2", rtlRow)}
         >
           <Download className="h-4 w-4" />
