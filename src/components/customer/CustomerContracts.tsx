@@ -1,7 +1,7 @@
 /**
  * Customer Contracts List - My Contracts Module
  * RTL-first design with Arabic default
- * Full RTL enforcement using document flow
+ * Updated for pre-approval flow with new statuses
  */
 
 import { useNavigate } from 'react-router-dom';
@@ -23,12 +23,15 @@ import {
   AlertCircle,
   FileSignature,
   ChevronLeft,
+  ThumbsUp,
+  UserCheck,
+  Hourglass,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 
-// Status configuration
+// Updated status configuration with new statuses
 const statusConfig: Record<ContractStatus, {
   labelAr: string;
   labelEn: string;
@@ -45,6 +48,22 @@ const statusConfig: Record<ContractStatus, {
     bgColor: 'bg-muted',
     textColor: 'text-muted-foreground',
   },
+  pre_approved_by_customer: {
+    labelAr: 'موافقة مبدئية',
+    labelEn: 'Pre-Approved',
+    variant: 'secondary',
+    icon: ThumbsUp,
+    bgColor: 'bg-blue-100',
+    textColor: 'text-blue-700',
+  },
+  pending_admin_approval: {
+    labelAr: 'بانتظار موافقة الإدارة',
+    labelEn: 'Pending Admin Approval',
+    variant: 'secondary',
+    icon: Hourglass,
+    bgColor: 'bg-amber-100',
+    textColor: 'text-amber-700',
+  },
   pending_signature: {
     labelAr: 'بانتظار التوقيع',
     labelEn: 'Pending Signature',
@@ -58,8 +77,8 @@ const statusConfig: Record<ContractStatus, {
     labelEn: 'Signed',
     variant: 'outline',
     icon: CheckCircle2,
-    bgColor: 'bg-primary/10',
-    textColor: 'text-primary',
+    bgColor: 'bg-green-100',
+    textColor: 'text-green-700',
   },
   cancelled: {
     labelAr: 'ملغي',
@@ -87,6 +106,72 @@ export function CustomerContracts() {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return format(date, 'dd MMM yyyy', { locale: language === 'ar' ? ar : enUS });
+  };
+
+  // Get appropriate action button based on status
+  const getActionButton = (contract: typeof contracts[0]) => {
+    const status = contract.status;
+
+    if (status === 'pending_signature') {
+      return (
+        <Button
+          variant="default"
+          size="sm"
+          onClick={() => navigate(`/app/contracts/${contract.id}`)}
+          className="w-full gap-2"
+        >
+          <FileSignature className="h-4 w-4" />
+          توقيع العقد
+        </Button>
+      );
+    }
+
+    if (status === 'signed') {
+      return (
+        <Button
+          variant="default"
+          size="sm"
+          onClick={() => navigate(`/app/contracts/${contract.id}?download=true`)}
+          className="w-full gap-2"
+        >
+          <Download className="h-4 w-4" />
+          تحميل PDF
+        </Button>
+      );
+    }
+
+    if (status === 'pre_approved_by_customer' || status === 'pending_admin_approval') {
+      return (
+        <div className="text-center p-2 rounded-lg bg-muted/50">
+          <Hourglass className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
+          <p className="text-xs text-muted-foreground">
+            بانتظار مراجعة الإدارة
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  // Get status description
+  const getStatusDescription = (status: ContractStatus): string => {
+    switch (status) {
+      case 'draft':
+        return 'العقد في مرحلة الإعداد';
+      case 'pre_approved_by_customer':
+        return 'تم تقديم الموافقة المبدئية - بانتظار مراجعة الإدارة';
+      case 'pending_admin_approval':
+        return 'يتم مراجعة العقد من قبل الإدارة';
+      case 'pending_signature':
+        return 'العقد جاهز للتوقيع الرسمي';
+      case 'signed':
+        return 'تم التوقيع - العقد ساري المفعول';
+      case 'cancelled':
+        return 'تم إلغاء العقد';
+      default:
+        return '';
+    }
   };
 
   if (isLoading) {
@@ -167,9 +252,12 @@ export function CustomerContracts() {
                       لا توجد عقود
                     </p>
                     <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                      ستظهر العقود هنا عند إنشائها من قبل الإدارة. يمكنك توقيع العقود وتحميلها بصيغة PDF بعد التوقيع.
+                      ستظهر العقود هنا عند طلب خدمة تتطلب عقدًا. يمكنك توقيع العقود وتحميلها بصيغة PDF بعد التوقيع.
                     </p>
                   </div>
+                  <Button onClick={() => navigate('/app/services')} className="mt-4">
+                    تصفح الخدمات
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -191,7 +279,7 @@ export function CustomerContracts() {
                           {/* Main Content */}
                           <div className="flex-1 p-5 lg:p-6">
                             {/* Status & Contract Number Row */}
-                            <div className="flex items-center gap-3 mb-4">
+                            <div className="flex items-center gap-3 mb-4 flex-wrap">
                               <Badge 
                                 variant={status.variant} 
                                 className={cn(
@@ -218,11 +306,18 @@ export function CustomerContracts() {
                                 : 'عقد تقديم خدمات'}
                             </h3>
 
-                            {/* Scope Summary */}
-                            {contract.scope_summary_ar && (
-                              <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                                {contract.scope_summary_ar}
-                              </p>
+                            {/* Status Description */}
+                            <p className="text-sm text-muted-foreground mb-4">
+                              {getStatusDescription(contract.status)}
+                            </p>
+
+                            {/* Rejection Reason if cancelled */}
+                            {contract.status === 'cancelled' && contract.admin_rejection_reason && (
+                              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 mb-4">
+                                <p className="text-sm text-destructive">
+                                  <strong>سبب الرفض:</strong> {contract.admin_rejection_reason}
+                                </p>
+                              </div>
                             )}
 
                             {/* Meta Info Row */}
@@ -231,6 +326,18 @@ export function CustomerContracts() {
                                 <Calendar className="h-3.5 w-3.5" />
                                 <span>تاريخ الإنشاء: {formatDate(contract.created_at)}</span>
                               </div>
+                              {contract.pre_approval_timestamp && (
+                                <div className="flex items-center gap-1.5 text-blue-600">
+                                  <ThumbsUp className="h-3.5 w-3.5" />
+                                  <span>موافقة مبدئية: {formatDate(contract.pre_approval_timestamp)}</span>
+                                </div>
+                              )}
+                              {contract.admin_approved_at && (
+                                <div className="flex items-center gap-1.5 text-green-600">
+                                  <UserCheck className="h-3.5 w-3.5" />
+                                  <span>موافقة الإدارة: {formatDate(contract.admin_approved_at)}</span>
+                                </div>
+                              )}
                               {contract.signed_at && (
                                 <div className="flex items-center gap-1.5 text-primary">
                                   <CheckCircle2 className="h-3.5 w-3.5" />
@@ -270,29 +377,7 @@ export function CustomerContracts() {
                                 <ChevronLeft className="h-4 w-4 transition-transform group-hover/btn:-translate-x-1 rtl:rotate-180 rtl:group-hover/btn:translate-x-1" />
                               </Button>
                               
-                              {contract.status === 'signed' && (
-                                <Button
-                                  variant="default"
-                                  size="sm"
-                                  onClick={() => navigate(`/app/contracts/${contract.id}?download=true`)}
-                                  className="w-full gap-2"
-                                >
-                                  <Download className="h-4 w-4" />
-                                  تحميل PDF
-                                </Button>
-                              )}
-
-                              {contract.status === 'pending_signature' && (
-                                <Button
-                                  variant="default"
-                                  size="sm"
-                                  onClick={() => navigate(`/app/contracts/${contract.id}`)}
-                                  className="w-full gap-2"
-                                >
-                                  <FileSignature className="h-4 w-4" />
-                                  توقيع العقد
-                                </Button>
-                              )}
+                              {getActionButton(contract)}
                             </div>
                           </div>
                         </div>

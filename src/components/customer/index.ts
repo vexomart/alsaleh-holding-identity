@@ -12,6 +12,7 @@ export { CustomerCategoryServices } from './CustomerCategoryServices';
 export { CustomerServiceDetails } from './CustomerServiceDetails';
 export { CustomerContracts } from './CustomerContracts';
 export { CustomerContractDetails } from './CustomerContractDetails';
+export { ContractPreviewStep } from './ContractPreviewStep';
 export { CustomerNotifications } from './CustomerNotifications';
 export { CustomerProfile } from './CustomerProfile';
 export { CustomerWallet } from './CustomerWallet';

@@ -46,7 +46,9 @@ import { ar, enUS } from 'date-fns/locale';
 import { createContractPDF, type ContractData } from '@/lib/pdf/contract-generator';
 import { ensurePdfInitialized } from '@/lib/pdf/pdf-init';
 
-// Status configuration
+import { ThumbsUp, Hourglass } from 'lucide-react';
+
+// Status configuration - includes all pre-approval states
 const statusConfig: Record<ContractStatus, {
   labelAr: string;
   labelEn: string;
@@ -60,6 +62,20 @@ const statusConfig: Record<ContractStatus, {
     variant: 'secondary',
     icon: FileText,
     color: 'text-muted-foreground',
+  },
+  pre_approved_by_customer: {
+    labelAr: 'موافقة مبدئية',
+    labelEn: 'Pre-Approved',
+    variant: 'secondary',
+    icon: ThumbsUp,
+    color: 'text-blue-600',
+  },
+  pending_admin_approval: {
+    labelAr: 'بانتظار موافقة الإدارة',
+    labelEn: 'Pending Admin Approval',
+    variant: 'secondary',
+    icon: Hourglass,
+    color: 'text-amber-600',
   },
   pending_signature: {
     labelAr: 'بانتظار التوقيع',

@@ -302,12 +302,20 @@ export type Database = {
       }
       contracts: {
         Row: {
+          admin_approval_notes: string | null
+          admin_approved_at: string | null
+          admin_approved_by: string | null
+          admin_rejection_reason: string | null
           contract_number: string
           created_at: string | null
+          customer_pre_approval: boolean | null
           customer_user_id: string
           id: string
           locale: string | null
           order_id: string | null
+          pre_approval_ip: unknown
+          pre_approval_metadata: Json | null
+          pre_approval_timestamp: string | null
           pricing_json: Json | null
           scope_summary: string | null
           scope_summary_ar: string | null
@@ -321,12 +329,20 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          admin_approval_notes?: string | null
+          admin_approved_at?: string | null
+          admin_approved_by?: string | null
+          admin_rejection_reason?: string | null
           contract_number: string
           created_at?: string | null
+          customer_pre_approval?: boolean | null
           customer_user_id: string
           id?: string
           locale?: string | null
           order_id?: string | null
+          pre_approval_ip?: unknown
+          pre_approval_metadata?: Json | null
+          pre_approval_timestamp?: string | null
           pricing_json?: Json | null
           scope_summary?: string | null
           scope_summary_ar?: string | null
@@ -340,12 +356,20 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          admin_approval_notes?: string | null
+          admin_approved_at?: string | null
+          admin_approved_by?: string | null
+          admin_rejection_reason?: string | null
           contract_number?: string
           created_at?: string | null
+          customer_pre_approval?: boolean | null
           customer_user_id?: string
           id?: string
           locale?: string | null
           order_id?: string | null
+          pre_approval_ip?: unknown
+          pre_approval_metadata?: Json | null
+          pre_approval_timestamp?: string | null
           pricing_json?: Json | null
           scope_summary?: string | null
           scope_summary_ar?: string | null
@@ -1084,6 +1108,8 @@ export type Database = {
         Row: {
           assigned_to: string | null
           attachments: Json | null
+          contract_id: string | null
+          contract_pre_approved: boolean | null
           created_at: string | null
           currency: string | null
           customer_id: string | null
@@ -1094,6 +1120,7 @@ export type Database = {
           notes: Json | null
           order_number: string
           priority: number | null
+          requires_contract: boolean | null
           service_id: string | null
           status: Database["public"]["Enums"]["order_status"] | null
           tenant_id: string | null
@@ -1105,6 +1132,8 @@ export type Database = {
         Insert: {
           assigned_to?: string | null
           attachments?: Json | null
+          contract_id?: string | null
+          contract_pre_approved?: boolean | null
           created_at?: string | null
           currency?: string | null
           customer_id?: string | null
@@ -1115,6 +1144,7 @@ export type Database = {
           notes?: Json | null
           order_number: string
           priority?: number | null
+          requires_contract?: boolean | null
           service_id?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           tenant_id?: string | null
@@ -1126,6 +1156,8 @@ export type Database = {
         Update: {
           assigned_to?: string | null
           attachments?: Json | null
+          contract_id?: string | null
+          contract_pre_approved?: boolean | null
           created_at?: string | null
           currency?: string | null
           customer_id?: string | null
@@ -1136,6 +1168,7 @@ export type Database = {
           notes?: Json | null
           order_number?: string
           priority?: number | null
+          requires_contract?: boolean | null
           service_id?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           tenant_id?: string | null
@@ -1145,6 +1178,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "orders_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_service_id_fkey"
             columns: ["service_id"]
@@ -1460,6 +1500,7 @@ export type Database = {
           category: string | null
           created_at: string | null
           currency: string | null
+          default_contract_template_id: string | null
           description: string | null
           description_ar: string | null
           icon: string | null
@@ -1482,6 +1523,7 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           currency?: string | null
+          default_contract_template_id?: string | null
           description?: string | null
           description_ar?: string | null
           icon?: string | null
@@ -1504,6 +1546,7 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           currency?: string | null
+          default_contract_template_id?: string | null
           description?: string | null
           description_ar?: string | null
           icon?: string | null
@@ -1523,6 +1566,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "services_default_contract_template_id_fkey"
+            columns: ["default_contract_template_id"]
+            isOneToOne: false
+            referencedRelation: "contract_templates"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "services_tenant_id_fkey"
             columns: ["tenant_id"]
@@ -1758,7 +1808,31 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_approve_contract: {
+        Args: {
+          p_admin_id: string
+          p_contract_id: string
+          p_modified_pricing?: Json
+          p_notes?: string
+        }
+        Returns: boolean
+      }
+      admin_reject_contract: {
+        Args: { p_admin_id: string; p_contract_id: string; p_reason: string }
+        Returns: boolean
+      }
       cleanup_expired_nafath_states: { Args: never; Returns: undefined }
+      create_pre_approved_contract: {
+        Args: {
+          p_customer_id: string
+          p_ip_address?: unknown
+          p_order_id?: string
+          p_service_id: string
+          p_tenant_id?: string
+          p_user_agent?: string
+        }
+        Returns: string
+      }
       generate_bank_transfer_reference: { Args: never; Returns: string }
       generate_contract_number: {
         Args: { p_tenant_id?: string }
@@ -1823,6 +1897,10 @@ export type Database = {
         Args: { p_notes?: string; p_reviewer_id: string; p_transfer_id: string }
         Returns: Json
       }
+      service_requires_contract: {
+        Args: { p_service_id: string }
+        Returns: boolean
+      }
       update_services_sort_order: {
         Args: { p_service_orders: Json }
         Returns: boolean
@@ -1854,7 +1932,13 @@ export type Database = {
         | "login"
         | "logout"
         | "export"
-      contract_status: "draft" | "pending_signature" | "signed" | "cancelled"
+      contract_status:
+        | "draft"
+        | "pre_approved_by_customer"
+        | "pending_admin_approval"
+        | "pending_signature"
+        | "signed"
+        | "cancelled"
       financial_transaction_status:
         | "pending"
         | "processing"
@@ -2032,7 +2116,14 @@ export const Constants = {
         "logout",
         "export",
       ],
-      contract_status: ["draft", "pending_signature", "signed", "cancelled"],
+      contract_status: [
+        "draft",
+        "pre_approved_by_customer",
+        "pending_admin_approval",
+        "pending_signature",
+        "signed",
+        "cancelled",
+      ],
       financial_transaction_status: [
         "pending",
         "processing",
