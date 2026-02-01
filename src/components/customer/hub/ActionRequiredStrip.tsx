@@ -1,12 +1,11 @@
 /**
  * Action Required Strip - Smart Priority Actions
- * Compact cards with urgency indicators
+ * TRUE RTL: Cards flow start → end, icons on start
  */
 
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -17,7 +16,6 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
-  CheckCircle2,
   Sparkles,
 } from "lucide-react";
 import type { ActionItem } from "../ClientHub";
@@ -77,6 +75,7 @@ export function ActionRequiredStrip({ items, isRTL }: ActionRequiredStripProps) 
     },
   };
 
+  // RTL-safe animation: only animate y, not x
   const item = {
     hidden: reducedMotion ? {} : { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0 },
@@ -95,7 +94,7 @@ export function ActionRequiredStrip({ items, isRTL }: ActionRequiredStripProps) 
         </Badge>
       </div>
 
-      {/* Action Cards */}
+      {/* Action Cards - Grid respects RTL via dir attribute */}
       <motion.div
         variants={container}
         initial="hidden"
@@ -111,16 +110,16 @@ export function ActionRequiredStrip({ items, isRTL }: ActionRequiredStripProps) 
               <Card
                 onClick={() => navigate(actionItem.link)}
                 className={cn(
-                  "group cursor-pointer transition-all duration-200 rounded-xl",
+                  "group cursor-pointer transition-all duration-200 rounded-xl min-h-[80px]",
                   "hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]",
                   "border",
                   actionItem.priority === "high" &&
-                    "border-red-200 dark:border-red-800/50 bg-red-50/30 dark:bg-red-900/10"
+                    "border-destructive/30 bg-destructive/5"
                 )}
               >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
-                    {/* Icon */}
+                    {/* Icon - on start (right in RTL) */}
                     <div className={cn("p-2.5 rounded-xl shrink-0", colors.bg)}>
                       <TypeIcon className={cn("h-5 w-5", colors.text)} />
                     </div>
@@ -132,20 +131,20 @@ export function ActionRequiredStrip({ items, isRTL }: ActionRequiredStripProps) 
                           {isRTL ? actionItem.titleAr : actionItem.titleEn}
                         </h3>
                         {actionItem.priority === "high" && (
-                          <Sparkles className="h-3.5 w-3.5 text-red-500 shrink-0" />
+                          <Sparkles className="h-3.5 w-3.5 text-destructive shrink-0" />
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground line-clamp-1">
                         {isRTL ? actionItem.descriptionAr : actionItem.descriptionEn}
                       </p>
                       {actionItem.metadata?.invoiceNumber && (
-                        <p className="text-xs text-muted-foreground mt-1 font-mono" dir="ltr">
+                        <p dir="ltr" className="text-xs text-muted-foreground mt-1 font-mono tabular-nums">
                           {actionItem.metadata.invoiceNumber}
                         </p>
                       )}
                     </div>
 
-                    {/* Arrow */}
+                    {/* Arrow - on end */}
                     <ArrowIcon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0 mt-1" />
                   </div>
                 </CardContent>

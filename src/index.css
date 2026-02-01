@@ -1,4 +1,31 @@
-/* PWA and Mobile-First Responsive Additions */
+/* ===========================================
+   RTL ROOT BOUNDARY - Hard RTL Isolation
+   =========================================== */
+.rtl-root {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+.rtl-root[dir="ltr"] {
+  direction: ltr;
+}
+
+/* Logical properties for RTL-safe spacing */
+.rtl-root .ms-auto { margin-inline-start: auto; }
+.rtl-root .me-auto { margin-inline-end: auto; }
+.rtl-root .ps-4 { padding-inline-start: 1rem; }
+.rtl-root .pe-4 { padding-inline-end: 1rem; }
+.rtl-root .start-0 { inset-inline-start: 0; }
+.rtl-root .end-0 { inset-inline-end: 0; }
+
+/* Prevent horizontal overflow in RTL */
+.rtl-root {
+  overflow-x: hidden;
+}
+
+/* ===========================================
+   PWA and Mobile-First Responsive Additions 
+   =========================================== */
 @supports (padding: max(0px)) {
   .pt-safe {
     padding-top: max(1rem, env(safe-area-inset-top));
@@ -11,6 +38,12 @@
   }
   .pr-safe {
     padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  .ps-safe {
+    padding-inline-start: max(1rem, env(safe-area-inset-left));
+  }
+  .pe-safe {
+    padding-inline-end: max(1rem, env(safe-area-inset-right));
   }
 }
 

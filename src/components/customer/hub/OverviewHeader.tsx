@@ -1,12 +1,11 @@
 /**
  * Overview Header - Premium App-like Sticky Header
- * Mobile-first, RTL-first with smooth animations
+ * TRUE RTL: Content flows from start, Client ID card on end
  */
 
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
@@ -55,14 +54,15 @@ export function OverviewHeader({
       transition={{ duration: 0.3 }}
       className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
-      {/* Decorative gradients */}
+      {/* Decorative gradients - use logical positioning */}
       <div className="absolute top-0 end-0 w-72 h-72 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 start-0 w-56 h-56 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 p-5 md:p-8">
-        {/* Top Row: Portal Badge + Client ID */}
+        {/* Content flows naturally with RTL - flex handles order */}
         <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div className="space-y-2">
+          {/* Main greeting - appears on start side */}
+          <div className="space-y-2 flex-1 min-w-[200px]">
             {/* Portal Badge */}
             <motion.div
               initial={reducedMotion ? {} : { opacity: 0, scale: 0.95 }}
@@ -98,12 +98,12 @@ export function OverviewHeader({
             </motion.p>
           </div>
 
-          {/* Client ID Card */}
+          {/* Client ID Card - appears on end side */}
           <motion.div
             initial={reducedMotion ? {} : { opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.25 }}
-            className="bg-white/10 backdrop-blur-md rounded-xl p-4 min-w-[180px] border border-white/10"
+            className="bg-white/10 backdrop-blur-md rounded-xl p-4 min-w-[180px] border border-white/10 shrink-0"
           >
             <div className="flex items-center gap-2 mb-2">
               <Shield className="h-4 w-4 text-slate-400" />
@@ -112,14 +112,15 @@ export function OverviewHeader({
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-white text-sm tracking-wide" dir="ltr">
+              {/* Client ID ALWAYS LTR */}
+              <span dir="ltr" className="font-mono text-white text-sm tracking-wide tabular-nums">
                 {customerId || "---"}
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={copyClientId}
-                className="h-7 w-7 p-0 text-slate-400 hover:text-white hover:bg-white/10"
+                className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-white/10 min-h-[44px]"
               >
                 {copiedId ? (
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
