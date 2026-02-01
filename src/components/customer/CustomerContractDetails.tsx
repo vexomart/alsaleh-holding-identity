@@ -43,7 +43,8 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
-import { createContractPDF, ensurePDFReady, type ContractData } from '@/lib/pdf';
+import { type ContractData } from '@/lib/pdf';
+import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
 
 import { ThumbsUp, Hourglass } from 'lucide-react';
 
@@ -177,12 +178,11 @@ export function CustomerContractDetails() {
       return;
     }
 
+    console.log('[PDF] Download clicked', { kind: 'contract', id: contract.id });
+
     setIsGeneratingPdf(true);
 
     try {
-      // Ensure PDF fonts are loaded
-      await ensurePDFReady();
-
       // Build contract data for PDF
       const contractData: ContractData = {
         contractNumber: contract.contract_number,
@@ -244,12 +244,8 @@ export function CustomerContractDetails() {
         });
       }
 
-      await createContractPDF(contractData, {
-        filename: `contract-${contract.contract_number}.pdf`,
-        download: true,
-      });
-
-      toast.success('تم تحميل العقد بنجاح');
+      const report = await runPdfDiagnostics('contract', contractData);
+      if (report.ok) toast.success('تم تحميل العقد بنجاح');
     } catch (err) {
       console.error('Error generating PDF:', err);
       toast.error('فشل في تحميل العقد');

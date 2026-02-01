@@ -589,6 +589,28 @@ export interface CreateInvoicePDFOptions {
   filename?: string;
   download?: boolean;
   companyInfo?: CompanyInfo;
+  /** Optional upload path used by higher-level wrapper; ignored here */
+  uploadPath?: string;
+}
+
+export async function createInvoicePDFLocal(
+  invoice: InvoiceData,
+  options: CreateInvoicePDFOptions = {}
+): Promise<{ blob: Blob; filename: string } > {
+  console.log('[Invoice Template] Starting LOCAL PDF generation for:', invoice.invoiceNumber);
+
+  // Initialize PDF system (throws if Cairo not loaded)
+  await initPdf();
+
+  const companyInfo = options.companyInfo || (DEFAULT_COMPANY_INFO as CompanyInfo);
+  const content = generateInvoiceContent(invoice, companyInfo);
+  const blob = await generatePDFBlob(content, {
+    title: `فاتورة ضريبية - ${invoice.invoiceNumber}`,
+    subject: 'فاتورة ضريبية',
+  });
+
+  const filename = options.filename || `invoice-${invoice.invoiceNumber}.pdf`;
+  return { blob, filename };
 }
 
 export async function createInvoicePDF(
@@ -598,26 +620,10 @@ export async function createInvoicePDF(
   console.log('[Invoice Template] Starting PDF generation for:', invoice.invoiceNumber);
   
   try {
-    // Initialize PDF system (throws if Cairo not loaded)
-    console.log('[Invoice Template] Initializing PDF system...');
-    await initPdf();
-    console.log('[Invoice Template] PDF system initialized');
-
-    const companyInfo = options.companyInfo || DEFAULT_COMPANY_INFO as CompanyInfo;
-    
-    console.log('[Invoice Template] Generating content...');
-    const content = generateInvoiceContent(invoice, companyInfo);
-    console.log('[Invoice Template] Content generated, creating blob...');
-
-    const blob = await generatePDFBlob(content, {
-      title: `فاتورة ضريبية - ${invoice.invoiceNumber}`,
-      subject: 'فاتورة ضريبية',
-    });
-    
+    const { blob, filename } = await createInvoicePDFLocal(invoice, options);
     console.log('[Invoice Template] Blob created, size:', blob.size);
 
     if (options.download) {
-      const filename = options.filename || `invoice-${invoice.invoiceNumber}.pdf`;
       console.log('[Invoice Template] Downloading as:', filename);
       downloadBlob(blob, filename);
       return { blob };

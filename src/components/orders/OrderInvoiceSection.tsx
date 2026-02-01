@@ -32,7 +32,8 @@ import {
   type Invoice,
   type InvoiceStatus 
 } from '@/lib/api/invoices';
-import { createInvoicePDF, type InvoiceData } from '@/lib/pdf';
+import { type InvoiceData } from '@/lib/pdf';
+import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
 import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
 
@@ -238,10 +239,16 @@ export function OrderInvoiceSection({
         notes: orderDescription || undefined,
       };
 
-      await createInvoicePDF(invoiceData, {
-        download: true,
-        filename: `invoice-${newInvoice.invoice_number}.pdf`,
-      });
+      console.log('[PDF] Download clicked', { kind: 'invoice', id: newInvoice.id });
+      const report = await runPdfDiagnostics('invoice', invoiceData);
+      if (!report.ok) {
+        toast({
+          title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
+          description: report.error,
+          variant: 'destructive',
+        });
+        return;
+      }
 
       setInvoice(newInvoice);
       onInvoiceGenerated?.(newInvoice);
@@ -266,6 +273,8 @@ export function OrderInvoiceSection({
 
     try {
       setDownloading(true);
+
+      console.log('[PDF] Download clicked', { kind: 'invoice', id: invoice.id });
 
       // Map invoice status to PDF status type
       const pdfStatusMap: Record<InvoiceStatus, 'pending' | 'paid' | 'overdue' | 'cancelled'> = {
@@ -300,10 +309,15 @@ export function OrderInvoiceSection({
         notes: orderDescription || undefined,
       };
 
-      await createInvoicePDF(invoiceData, {
-        download: true,
-        filename: `invoice-${invoice.invoice_number}.pdf`,
-      });
+      const report = await runPdfDiagnostics('invoice', invoiceData);
+      if (!report.ok) {
+        toast({
+          title: isRTL ? 'خطأ في تحميل الفاتورة' : 'Error downloading invoice',
+          description: report.error,
+          variant: 'destructive',
+        });
+        return;
+      }
 
       toast({
         title: isRTL ? 'تم تحميل الفاتورة' : 'Invoice downloaded',
@@ -312,6 +326,7 @@ export function OrderInvoiceSection({
       console.error('Error downloading PDF:', err);
       toast({
         title: isRTL ? 'خطأ في تحميل الفاتورة' : 'Error downloading invoice',
+        description: err instanceof Error ? err.message : String(err),
         variant: 'destructive',
       });
     } finally {
