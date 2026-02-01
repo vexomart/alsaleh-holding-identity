@@ -43,8 +43,7 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
-import { createContractPDF, type ContractData } from '@/lib/pdf/contract-generator';
-import { ensurePdfInitialized } from '@/lib/pdf/pdf-init';
+import { createContractPDF, ensurePDFReady, type ContractData } from '@/lib/pdf';
 
 import { ThumbsUp, Hourglass } from 'lucide-react';
 
@@ -182,7 +181,7 @@ export function CustomerContractDetails() {
 
     try {
       // Ensure PDF fonts are loaded
-      await ensurePdfInitialized();
+      await ensurePDFReady();
 
       // Build contract data for PDF
       const contractData: ContractData = {
@@ -227,8 +226,11 @@ export function CustomerContractDetails() {
             content: 'في حال نشوء أي خلاف، يتم حله ودياً، وإلا تختص محاكم المملكة العربية السعودية بالفصل فيه.',
           },
         ],
-        value: {
-          amount: contract.pricing_json?.total || 0,
+        pricing: {
+          subtotal: contract.pricing_json?.subtotal || 0,
+          vatRate: contract.pricing_json?.vat_rate || 15,
+          vatAmount: contract.pricing_json?.vat_amount || 0,
+          total: contract.pricing_json?.total || 0,
           currency: contract.pricing_json?.currency || 'SAR',
           paymentTerms: 'الدفع عند التوقيع أو وفق جدول الدفع المتفق عليه',
         },

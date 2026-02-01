@@ -34,8 +34,7 @@ import {
 } from 'lucide-react';
 import { CustomerContract, CONTRACT_STATUS_CONFIG } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
-import { createContractPDF, type ContractData } from '@/lib/pdf/contract-generator';
-import { ensurePdfInitialized } from '@/lib/pdf/pdf-init';
+import { createContractPDF, ensurePDFReady, type ContractData } from '@/lib/pdf';
 
 interface ContractDetailsDrawerProps {
   contract: CustomerContract | null;
@@ -129,7 +128,7 @@ export function ContractDetailsDrawer({
 
     setIsGeneratingPdf(true);
     try {
-      await ensurePdfInitialized();
+      await ensurePDFReady();
 
       const contractData: ContractData = {
         contractNumber: contract.contract_number,
@@ -166,8 +165,11 @@ export function ContractDetailsDrawer({
             content: 'يتعهد الطرفان بالحفاظ على سرية المعلومات المتبادلة.',
           },
         ],
-        value: {
-          amount: contract.pricing_json?.total || 0,
+        pricing: {
+          subtotal: contract.pricing_json?.subtotal || 0,
+          vatRate: contract.pricing_json?.vat_rate || 15,
+          vatAmount: contract.pricing_json?.vat_amount || 0,
+          total: contract.pricing_json?.total || 0,
           currency: contract.pricing_json?.currency || 'SAR',
         },
       };
