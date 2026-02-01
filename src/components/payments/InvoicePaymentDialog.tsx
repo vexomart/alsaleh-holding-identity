@@ -3,8 +3,13 @@
  * Dialog for paying an invoice with method selection
  */
 
+/**
+ * Invoice Payment Dialog - PHASE WALLET-1
+ * Dialog for paying an invoice with method selection
+ * Supports: Card/Mada (Paylink), Wallet Balance, Bank Transfer
+ */
+
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePaylinkPayment } from "@/hooks/usePaylinkPayment";
+import { useWalletPayment } from "@/hooks/useWalletPayment";
 import { PaymentMethodSelector } from "./PaymentMethodSelector";
 import { BankTransferDialog } from "@/components/customer/wallet/BankTransferDialog";
 import type { PaymentMethodType } from "@/lib/payments";
@@ -26,7 +32,8 @@ import {
   Receipt, 
   ExternalLink,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Wallet
 } from "lucide-react";
 
 interface Invoice {
@@ -56,12 +63,15 @@ export function InvoicePaymentDialog({
   const { language } = useLanguage();
   const isRTL = language === "ar";
   const { createPayment, openPaymentUrl, isCreatingPayment } = usePaylinkPayment();
+  const { payFromWallet, isProcessing: isWalletProcessing } = useWalletPayment();
   
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | undefined>();
   const [bankTransferOpen, setBankTransferOpen] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
   if (!invoice) return null;
+
+  const isProcessing = isCreatingPayment || isWalletProcessing;
 
   const handleProceed = async () => {
     if (!selectedMethod) return;
@@ -76,10 +86,15 @@ export function InvoicePaymentDialog({
 
     // Handle wallet payment
     if (selectedMethod === 'wallet') {
-      // TODO: Implement wallet payment
-      setPaymentError(isRTL 
-        ? "الدفع من المحفظة قيد التطوير" 
-        : "Wallet payment coming soon");
+      try {
+        const result = await payFromWallet.mutateAsync({ invoiceId: invoice.id });
+        if (result.success) {
+          onOpenChange(false);
+          onPaymentSuccess?.();
+        }
+      } catch (error) {
+        console.error('Wallet payment error:', error);
+      }
       return;
     }
 
@@ -189,17 +204,22 @@ export function InvoicePaymentDialog({
                 </Button>
                 <Button
                   onClick={handleProceed}
-                  disabled={!selectedMethod || isCreatingPayment}
+                  disabled={!selectedMethod || isProcessing}
                   className="flex-1"
                 >
-                  {isCreatingPayment ? (
+                  {isProcessing ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin me-2" />
-                      {isRTL ? "جاري التحميل..." : "Loading..."}
+                      {isRTL ? "جاري المعالجة..." : "Processing..."}
                     </>
                   ) : selectedMethod === 'bank_transfer' ? (
                     <>
                       {isRTL ? "متابعة للتحويل" : "Continue to Transfer"}
+                    </>
+                  ) : selectedMethod === 'wallet' ? (
+                    <>
+                      <Wallet className="h-4 w-4 me-2" />
+                      {isRTL ? "ادفع من المحفظة" : "Pay from Wallet"}
                     </>
                   ) : (
                     <>

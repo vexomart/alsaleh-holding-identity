@@ -1567,6 +1567,10 @@ export type Database = {
         }
         Returns: string
       }
+      pay_invoice_from_wallet: {
+        Args: { p_customer_id: string; p_invoice_id: string }
+        Returns: Json
+      }
       process_bank_transfer_approval: {
         Args: { p_notes?: string; p_reviewer_id: string; p_transfer_id: string }
         Returns: Json
