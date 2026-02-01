@@ -1,6 +1,6 @@
 /**
- * Customer Contracts List - My Contracts Module
- * RTL-first design with Arabic default
+ * Customer Contracts Hub - Premium Contracts Management
+ * Full RTL/LTR support with bilingual UI
  * Updated for pre-approval flow with new statuses
  */
 
@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useContracts, ContractStatus } from '@/hooks/useContracts';
 import { AnimatedContainer, AnimatedList } from '@/components/ui/animated-container';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,9 +23,11 @@ import {
   AlertCircle,
   FileSignature,
   ChevronLeft,
+  ChevronRight,
   ThumbsUp,
   UserCheck,
   Hourglass,
+  RefreshCw,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -53,16 +55,16 @@ const statusConfig: Record<ContractStatus, {
     labelEn: 'Pre-Approved',
     variant: 'secondary',
     icon: ThumbsUp,
-    bgColor: 'bg-blue-100',
-    textColor: 'text-blue-700',
+    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+    textColor: 'text-blue-700 dark:text-blue-400',
   },
   pending_admin_approval: {
     labelAr: 'بانتظار موافقة الإدارة',
     labelEn: 'Pending Admin Approval',
     variant: 'secondary',
     icon: Hourglass,
-    bgColor: 'bg-amber-100',
-    textColor: 'text-amber-700',
+    bgColor: 'bg-amber-100 dark:bg-amber-900/30',
+    textColor: 'text-amber-700 dark:text-amber-400',
   },
   pending_signature: {
     labelAr: 'بانتظار التوقيع',
@@ -77,8 +79,8 @@ const statusConfig: Record<ContractStatus, {
     labelEn: 'Signed',
     variant: 'outline',
     icon: CheckCircle2,
-    bgColor: 'bg-green-100',
-    textColor: 'text-green-700',
+    bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
+    textColor: 'text-emerald-700 dark:text-emerald-400',
   },
   cancelled: {
     labelAr: 'ملغي',
@@ -93,10 +95,16 @@ const statusConfig: Record<ContractStatus, {
 export function CustomerContracts() {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const { contracts, isLoading, error } = useContracts();
+  const isRTL = language === 'ar';
+  const { contracts, isLoading, error, refetch } = useContracts();
+
+  // RTL helpers
+  const rtlRow = isRTL ? 'flex-row-reverse' : 'flex-row';
+  const rtlText = isRTL ? 'text-right' : 'text-left';
+  const ArrowIcon = isRTL ? ChevronLeft : ChevronRight;
 
   const formatCurrency = (amount: number, currency: string = 'SAR') => {
-    return new Intl.NumberFormat('ar-SA', {
+    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-US', {
       style: 'currency',
       currency,
       minimumFractionDigits: 2,
@@ -105,7 +113,7 @@ export function CustomerContracts() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return format(date, 'dd MMM yyyy', { locale: language === 'ar' ? ar : enUS });
+    return format(date, 'dd MMM yyyy', { locale: isRTL ? ar : enUS });
   };
 
   // Get appropriate action button based on status
@@ -118,10 +126,10 @@ export function CustomerContracts() {
           variant="default"
           size="sm"
           onClick={() => navigate(`/app/contracts/${contract.id}`)}
-          className="w-full gap-2"
+          className={cn("w-full gap-2", rtlRow)}
         >
           <FileSignature className="h-4 w-4" />
-          توقيع العقد
+          {isRTL ? 'توقيع العقد' : 'Sign Contract'}
         </Button>
       );
     }
@@ -132,10 +140,10 @@ export function CustomerContracts() {
           variant="default"
           size="sm"
           onClick={() => navigate(`/app/contracts/${contract.id}?download=true`)}
-          className="w-full gap-2"
+          className={cn("w-full gap-2", rtlRow)}
         >
           <Download className="h-4 w-4" />
-          تحميل PDF
+          {isRTL ? 'تحميل PDF' : 'Download PDF'}
         </Button>
       );
     }
@@ -145,7 +153,7 @@ export function CustomerContracts() {
         <div className="text-center p-2 rounded-lg bg-muted/50">
           <Hourglass className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
           <p className="text-xs text-muted-foreground">
-            بانتظار مراجعة الإدارة
+            {isRTL ? 'بانتظار مراجعة الإدارة' : 'Awaiting Admin Review'}
           </p>
         </div>
       );
@@ -156,28 +164,21 @@ export function CustomerContracts() {
 
   // Get status description
   const getStatusDescription = (status: ContractStatus): string => {
-    switch (status) {
-      case 'draft':
-        return 'العقد في مرحلة الإعداد';
-      case 'pre_approved_by_customer':
-        return 'تم تقديم الموافقة المبدئية - بانتظار مراجعة الإدارة';
-      case 'pending_admin_approval':
-        return 'يتم مراجعة العقد من قبل الإدارة';
-      case 'pending_signature':
-        return 'العقد جاهز للتوقيع الرسمي';
-      case 'signed':
-        return 'تم التوقيع - العقد ساري المفعول';
-      case 'cancelled':
-        return 'تم إلغاء العقد';
-      default:
-        return '';
-    }
+    const descriptions: Record<ContractStatus, { ar: string; en: string }> = {
+      draft: { ar: 'العقد في مرحلة الإعداد', en: 'Contract is being prepared' },
+      pre_approved_by_customer: { ar: 'تم تقديم الموافقة المبدئية - بانتظار مراجعة الإدارة', en: 'Pre-approval submitted - awaiting admin review' },
+      pending_admin_approval: { ar: 'يتم مراجعة العقد من قبل الإدارة', en: 'Contract under admin review' },
+      pending_signature: { ar: 'العقد جاهز للتوقيع الرسمي', en: 'Contract ready for official signature' },
+      signed: { ar: 'تم التوقيع - العقد ساري المفعول', en: 'Signed - Contract in effect' },
+      cancelled: { ar: 'تم إلغاء العقد', en: 'Contract cancelled' },
+    };
+    return isRTL ? descriptions[status]?.ar || '' : descriptions[status]?.en || '';
   };
 
   if (isLoading) {
     return (
-      <div className="space-y-6" dir="rtl">
-        <div className="flex items-center gap-4">
+      <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className={cn("flex items-center gap-4", rtlRow)}>
           <Skeleton className="h-12 w-12 rounded-xl" />
           <div className="space-y-2">
             <Skeleton className="h-6 w-32" />
@@ -193,7 +194,7 @@ export function CustomerContracts() {
 
   if (error) {
     return (
-      <div dir="rtl">
+      <div dir={isRTL ? 'rtl' : 'ltr'}>
         <Card className="border-destructive/50">
           <CardContent className="pt-8 pb-8">
             <div className="flex flex-col items-center gap-4 text-center">
@@ -202,16 +203,17 @@ export function CustomerContracts() {
               </div>
               <div>
                 <p className="font-bold text-lg text-destructive">
-                  خطأ في تحميل العقود
+                  {isRTL ? 'خطأ في تحميل العقود' : 'Error Loading Contracts'}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">{error}</p>
               </div>
               <Button 
                 variant="outline" 
-                onClick={() => window.location.reload()}
-                className="mt-2"
+                onClick={() => refetch?.()}
+                className="mt-2 gap-2"
               >
-                إعادة المحاولة
+                <RefreshCw className="h-4 w-4" />
+                {isRTL ? 'إعادة المحاولة' : 'Retry'}
               </Button>
             </div>
           </CardContent>
@@ -221,20 +223,20 @@ export function CustomerContracts() {
   }
 
   return (
-    <div dir="rtl" className="min-h-full">
+    <div dir={isRTL ? 'rtl' : 'ltr'} className={cn("min-h-full", rtlText)}>
       <AnimatedContainer direction="fade">
         <div className="space-y-8">
           {/* Page Header */}
-          <div className="flex items-center gap-4">
+          <div className={cn("flex items-center gap-4", rtlRow)}>
             <div className="p-3 rounded-xl bg-primary/10 shrink-0">
               <FileSignature className="h-7 w-7 text-primary" />
             </div>
-            <div className="text-start">
+            <div className={rtlText}>
               <h1 className="text-2xl font-bold tracking-tight">
-                عقودي
+                {isRTL ? 'عقودي' : 'My Contracts'}
               </h1>
               <p className="text-sm text-muted-foreground mt-0.5">
-                عرض وإدارة العقود الخاصة بك
+                {isRTL ? 'عرض وإدارة العقود الخاصة بك' : 'View and manage your contracts'}
               </p>
             </div>
           </div>
@@ -249,14 +251,17 @@ export function CustomerContracts() {
                   </div>
                   <div className="space-y-2">
                     <p className="font-bold text-xl">
-                      لا توجد عقود
+                      {isRTL ? 'لا توجد عقود' : 'No Contracts'}
                     </p>
                     <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                      ستظهر العقود هنا عند طلب خدمة تتطلب عقدًا. يمكنك توقيع العقود وتحميلها بصيغة PDF بعد التوقيع.
+                      {isRTL 
+                        ? 'ستظهر العقود هنا عند طلب خدمة تتطلب عقدًا. يمكنك توقيع العقود وتحميلها بصيغة PDF بعد التوقيع.'
+                        : 'Contracts will appear here when you request a service that requires one. You can sign and download PDF after signing.'
+                      }
                     </p>
                   </div>
                   <Button onClick={() => navigate('/app/services')} className="mt-4">
-                    تصفح الخدمات
+                    {isRTL ? 'تصفح الخدمات' : 'Browse Services'}
                   </Button>
                 </div>
               </CardContent>
@@ -279,17 +284,18 @@ export function CustomerContracts() {
                           {/* Main Content */}
                           <div className="flex-1 p-5 lg:p-6">
                             {/* Status & Contract Number Row */}
-                            <div className="flex items-center gap-3 mb-4 flex-wrap">
+                            <div className={cn("flex items-center gap-3 mb-4 flex-wrap", rtlRow)}>
                               <Badge 
                                 variant={status.variant} 
                                 className={cn(
                                   "gap-1.5 px-3 py-1 font-medium",
                                   status.bgColor,
-                                  status.textColor
+                                  status.textColor,
+                                  rtlRow
                                 )}
                               >
                                 <StatusIcon className="h-3.5 w-3.5" />
-                                {status.labelAr}
+                                {isRTL ? status.labelAr : status.labelEn}
                               </Badge>
                               <span 
                                 className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded"
@@ -302,8 +308,8 @@ export function CustomerContracts() {
                             {/* Service Title */}
                             <h3 className="font-bold text-lg mb-2 line-clamp-1">
                               {contract.service 
-                                ? (contract.service.name_ar || contract.service.name)
-                                : 'عقد تقديم خدمات'}
+                                ? (isRTL ? contract.service.name_ar || contract.service.name : contract.service.name)
+                                : (isRTL ? 'عقد تقديم خدمات' : 'Service Contract')}
                             </h3>
 
                             {/* Status Description */}
@@ -315,50 +321,53 @@ export function CustomerContracts() {
                             {contract.status === 'cancelled' && contract.admin_rejection_reason && (
                               <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 mb-4">
                                 <p className="text-sm text-destructive">
-                                  <strong>سبب الرفض:</strong> {contract.admin_rejection_reason}
+                                  <strong>{isRTL ? 'سبب الرفض:' : 'Rejection Reason:'}</strong> {contract.admin_rejection_reason}
                                 </p>
                               </div>
                             )}
 
                             {/* Meta Info Row */}
-                            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-                              <div className="flex items-center gap-1.5">
+                            <div className={cn("flex flex-wrap items-center gap-4 text-xs text-muted-foreground", rtlRow)}>
+                              <div className={cn("flex items-center gap-1.5", rtlRow)}>
                                 <Calendar className="h-3.5 w-3.5" />
-                                <span>تاريخ الإنشاء: {formatDate(contract.created_at)}</span>
+                                <span>{isRTL ? 'تاريخ الإنشاء:' : 'Created:'} {formatDate(contract.created_at)}</span>
                               </div>
                               {contract.pre_approval_timestamp && (
-                                <div className="flex items-center gap-1.5 text-blue-600">
+                                <div className={cn("flex items-center gap-1.5 text-blue-600", rtlRow)}>
                                   <ThumbsUp className="h-3.5 w-3.5" />
-                                  <span>موافقة مبدئية: {formatDate(contract.pre_approval_timestamp)}</span>
+                                  <span>{isRTL ? 'موافقة مبدئية:' : 'Pre-approved:'} {formatDate(contract.pre_approval_timestamp)}</span>
                                 </div>
                               )}
                               {contract.admin_approved_at && (
-                                <div className="flex items-center gap-1.5 text-green-600">
+                                <div className={cn("flex items-center gap-1.5 text-emerald-600", rtlRow)}>
                                   <UserCheck className="h-3.5 w-3.5" />
-                                  <span>موافقة الإدارة: {formatDate(contract.admin_approved_at)}</span>
+                                  <span>{isRTL ? 'موافقة الإدارة:' : 'Admin approved:'} {formatDate(contract.admin_approved_at)}</span>
                                 </div>
                               )}
                               {contract.signed_at && (
-                                <div className="flex items-center gap-1.5 text-primary">
+                                <div className={cn("flex items-center gap-1.5 text-primary", rtlRow)}>
                                   <CheckCircle2 className="h-3.5 w-3.5" />
-                                  <span>تم التوقيع: {formatDate(contract.signed_at)}</span>
+                                  <span>{isRTL ? 'تم التوقيع:' : 'Signed:'} {formatDate(contract.signed_at)}</span>
                                 </div>
                               )}
                             </div>
                           </div>
 
                           {/* Price & Actions Panel */}
-                          <div className="lg:w-64 bg-muted/30 p-5 lg:p-6 flex flex-col justify-between gap-4 border-t lg:border-t-0 lg:border-s">
+                          <div className={cn(
+                            "lg:w-64 bg-muted/30 p-5 lg:p-6 flex flex-col justify-between gap-4 border-t lg:border-t-0",
+                            isRTL ? "lg:border-e" : "lg:border-s"
+                          )}>
                             {/* Price */}
-                            <div className="text-start">
-                              <p className="text-2xl lg:text-3xl font-bold text-primary" dir="ltr">
+                            <div className={rtlText}>
+                              <p className="text-2xl lg:text-3xl font-bold text-primary font-mono" dir="ltr">
                                 {formatCurrency(
                                   contract.pricing_json?.total || 0,
                                   contract.pricing_json?.currency || 'SAR'
                                 )}
                               </p>
                               <p className="text-xs text-muted-foreground mt-1">
-                                شامل ضريبة القيمة المضافة
+                                {isRTL ? 'شامل ضريبة القيمة المضافة' : 'Including VAT'}
                               </p>
                             </div>
 
@@ -368,13 +377,13 @@ export function CustomerContracts() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => navigate(`/app/contracts/${contract.id}`)}
-                                className="w-full justify-between group/btn"
+                                className={cn("w-full justify-between group/btn", rtlRow)}
                               >
-                                <span className="flex items-center gap-2">
+                                <span className={cn("flex items-center gap-2", rtlRow)}>
                                   <Eye className="h-4 w-4" />
-                                  عرض التفاصيل
+                                  {isRTL ? 'عرض التفاصيل' : 'View Details'}
                                 </span>
-                                <ChevronLeft className="h-4 w-4 transition-transform group-hover/btn:-translate-x-1 rtl:rotate-180 rtl:group-hover/btn:translate-x-1" />
+                                <ArrowIcon className="h-4 w-4 transition-transform group-hover/btn:-translate-x-1 rtl:group-hover/btn:translate-x-1" />
                               </Button>
                               
                               {getActionButton(contract)}

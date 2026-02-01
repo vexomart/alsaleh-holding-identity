@@ -1,13 +1,13 @@
 /**
- * Customer Dashboard - Complete Implementation
+ * Customer Dashboard - World-Class Client Hub
  * 
  * STATUS: IMPLEMENTED
- * PHASE: MVP
+ * PHASE: MVP - Premium Experience
  */
 
 import { Routes, Route } from 'react-router-dom';
 import { CustomerLayout } from '@/components/customer/CustomerLayout';
-import { CustomerOverview } from '@/components/customer/CustomerOverview';
+import { ClientHub } from '@/components/customer/ClientHub';
 import { CustomerOrdersList } from '@/components/customer/CustomerOrdersList';
 import { CustomerServices } from '@/components/customer/CustomerServices';
 import { CustomerCategoryServices } from '@/components/customer/CustomerCategoryServices';
@@ -24,7 +24,7 @@ const CustomerDashboard = () => {
     <CustomerLayout>
       <Routes>
         {/* Main Routes */}
-        <Route index element={<CustomerOverview />} />
+        <Route index element={<ClientHub />} />
         <Route path="orders" element={<CustomerOrdersList />} />
         <Route path="services" element={<CustomerServices />} />
         <Route path="services/:category" element={<CustomerCategoryServices />} />

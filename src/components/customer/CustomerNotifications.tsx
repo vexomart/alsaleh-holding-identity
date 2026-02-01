@@ -1,6 +1,6 @@
 /**
- * Customer Notifications Page
- * Notifications list with mark read functionality
+ * Customer Notifications Center - Premium Notifications Hub
+ * Full RTL/LTR support with bilingual UI
  */
 
 import { useState } from "react";
@@ -27,6 +27,7 @@ import {
   XCircle,
   Settings,
   ExternalLink,
+  RefreshCw,
 } from "lucide-react";
 import type { NotificationType } from "@/types/notifications";
 
@@ -78,6 +79,10 @@ export function CustomerNotifications() {
   } = useNotifications({ userId: user?.id });
 
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
+
+  // RTL helpers
+  const rtlRow = isRTL ? "flex-row-reverse" : "flex-row";
+  const rtlText = isRTL ? "text-right" : "text-left";
 
   const handleMarkAsRead = async (id: string) => {
     setProcessingIds((prev) => new Set(prev).add(id));
@@ -170,8 +175,8 @@ export function CustomerNotifications() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="space-y-6" dir={isRTL ? "rtl" : "ltr"}>
+        <div className={cn("flex items-center justify-between", rtlRow)}>
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-10 w-32" />
         </div>
@@ -185,43 +190,55 @@ export function CustomerNotifications() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn("space-y-6", rtlText)} dir={isRTL ? "rtl" : "ltr"}>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-3">
-            <Bell className="h-7 w-7 text-primary" />
-            {isRTL ? "الإشعارات" : "Notifications"}
-          </h1>
+      <div className={cn("flex items-center justify-between flex-wrap gap-4", rtlRow)}>
+        <div className={cn("flex items-center gap-3", rtlRow)}>
+          <div className="p-2.5 rounded-xl bg-primary/10">
+            <Bell className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">
+              {isRTL ? "الإشعارات" : "Notifications"}
+            </h1>
+            {unreadCount > 0 && (
+              <p className="text-sm text-muted-foreground mt-0.5">
+                {isRTL
+                  ? `${unreadCount} إشعار غير مقروء`
+                  : `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}`}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className={cn("flex items-center gap-2", rtlRow)}>
           {unreadCount > 0 && (
-            <p className="text-sm text-muted-foreground mt-1">
-              {isRTL
-                ? `${unreadCount} إشعار غير مقروء`
-                : `${unreadCount} unread notifications`}
-            </p>
+            <Button onClick={handleMarkAllAsRead} variant="outline" size="sm" className={cn("gap-2", rtlRow)}>
+              <CheckCheck className="h-4 w-4" />
+              {isRTL ? "قراءة الكل" : "Mark All Read"}
+            </Button>
           )}
         </div>
-        {unreadCount > 0 && (
-          <Button onClick={handleMarkAllAsRead} variant="outline" className="gap-2">
-            <CheckCheck className="h-4 w-4" />
-            {isRTL ? "قراءة الكل" : "Mark All Read"}
-          </Button>
-        )}
       </div>
 
       {/* Notifications List */}
       {notifications.length === 0 ? (
-        <Card>
-          <CardContent className="py-12 text-center">
-            <BellOff className="h-16 w-16 mx-auto mb-4 text-muted-foreground/50" />
-            <h3 className="text-lg font-medium mb-2">
-              {isRTL ? "لا توجد إشعارات" : "No Notifications"}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {isRTL
-                ? "ستظهر الإشعارات الجديدة هنا"
-                : "New notifications will appear here"}
-            </p>
+        <Card className="border-dashed">
+          <CardContent className="py-16">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="p-4 rounded-full bg-muted">
+                <BellOff className="h-12 w-12 text-muted-foreground" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-semibold">
+                  {isRTL ? "لا توجد إشعارات" : "No Notifications"}
+                </h3>
+                <p className="text-sm text-muted-foreground max-w-sm">
+                  {isRTL
+                    ? "ستظهر الإشعارات الجديدة هنا عند توفرها"
+                    : "New notifications will appear here when available"}
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       ) : (
@@ -252,7 +269,7 @@ export function CustomerNotifications() {
                   }
                 >
                   <CardContent className="p-4">
-                    <div className="flex items-start gap-4">
+                    <div className={cn("flex items-start gap-4", rtlRow)}>
                       {/* Icon */}
                       <div className={cn("p-2.5 rounded-lg shrink-0", typeInfo.bg)}>
                         <TypeIcon className={cn("h-5 w-5", typeInfo.color)} />
@@ -260,8 +277,8 @@ export function CustomerNotifications() {
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
+                        <div className={cn("flex items-start justify-between gap-2", rtlRow)}>
+                          <div className={rtlText}>
                             <h3
                               className={cn(
                                 "font-medium",
@@ -286,7 +303,7 @@ export function CustomerNotifications() {
                         </div>
 
                         {/* Actions */}
-                        <div className="flex items-center gap-2 mt-3">
+                        <div className={cn("flex items-center gap-2 mt-3 flex-wrap", rtlRow)}>
                           {!notification.is_read && (
                             <Button
                               variant="ghost"
@@ -296,30 +313,32 @@ export function CustomerNotifications() {
                                 handleMarkAsRead(notification.id);
                               }}
                               disabled={isProcessing}
-                              className="h-8 text-xs gap-1"
+                              className={cn("h-8 text-xs gap-1", rtlRow)}
                             >
                               <Check className="h-3.5 w-3.5" />
                               {isRTL ? "تم القراءة" : "Mark Read"}
                             </Button>
                           )}
                           {notification.link && (
-                            <Badge variant="secondary" className="gap-1 text-xs">
+                            <Badge variant="secondary" className={cn("gap-1 text-xs", rtlRow)}>
                               <ExternalLink className="h-3 w-3" />
                               {isRTL ? "عرض التفاصيل" : "View Details"}
                             </Badge>
                           )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(notification.id);
-                            }}
-                            disabled={isProcessing}
-                            className="h-8 text-xs gap-1 text-destructive hover:text-destructive ms-auto"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                          <div className={isRTL ? "me-auto" : "ms-auto"}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(notification.id);
+                              }}
+                              disabled={isProcessing}
+                              className="h-8 text-xs gap-1 text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
 
