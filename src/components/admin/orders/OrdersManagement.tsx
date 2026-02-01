@@ -81,7 +81,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { type InvoiceData } from '@/lib/pdf';
-import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
+import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
 import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
 
 interface Order {
@@ -336,7 +336,7 @@ export function OrdersManagement() {
   // Handle PDF download
   const handleDownloadPDF = async (order: Order) => {
     try {
-      console.log('[PDF] Download clicked', { kind: 'invoice', id: order.id });
+      console.log('[PDF] clicked', { kind: 'invoice', id: order.id });
       toast({
         title: isRTL ? 'جاري إنشاء الفاتورة...' : 'Generating invoice...',
       });
@@ -368,7 +368,7 @@ export function OrdersManagement() {
         notes: order.description || undefined,
       };
 
-      const report = await runPdfDiagnostics('invoice', invoiceData);
+      const report = await runPdfDebug('invoice', invoiceData);
 
       if (!report.ok) {
         toast({

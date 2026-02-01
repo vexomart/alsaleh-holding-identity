@@ -33,7 +33,7 @@ import {
   type InvoiceStatus 
 } from '@/lib/api/invoices';
 import { type InvoiceData } from '@/lib/pdf';
-import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
+import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
 import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
 
@@ -239,8 +239,8 @@ export function OrderInvoiceSection({
         notes: orderDescription || undefined,
       };
 
-      console.log('[PDF] Download clicked', { kind: 'invoice', id: newInvoice.id });
-      const report = await runPdfDiagnostics('invoice', invoiceData);
+      console.log('[PDF] clicked', { kind: 'invoice', id: newInvoice.id });
+      const report = await runPdfDebug('invoice', invoiceData);
       if (!report.ok) {
         toast({
           title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
@@ -274,7 +274,7 @@ export function OrderInvoiceSection({
     try {
       setDownloading(true);
 
-      console.log('[PDF] Download clicked', { kind: 'invoice', id: invoice.id });
+      console.log('[PDF] clicked', { kind: 'invoice', id: invoice.id });
 
       // Map invoice status to PDF status type
       const pdfStatusMap: Record<InvoiceStatus, 'pending' | 'paid' | 'overdue' | 'cancelled'> = {
@@ -309,7 +309,7 @@ export function OrderInvoiceSection({
         notes: orderDescription || undefined,
       };
 
-      const report = await runPdfDiagnostics('invoice', invoiceData);
+      const report = await runPdfDebug('invoice', invoiceData);
       if (!report.ok) {
         toast({
           title: isRTL ? 'خطأ في تحميل الفاتورة' : 'Error downloading invoice',

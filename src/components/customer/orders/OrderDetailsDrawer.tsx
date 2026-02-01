@@ -43,7 +43,7 @@ import {
 import { CustomerOrder, OrderEvent } from './types';
 import { OrderStatusBadge } from './OrderStatusBadge';
 import { orderToInvoiceData } from '@/lib/pdf';
-import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
+import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
 
 interface OrderDetailsDrawerProps {
   order: CustomerOrder | null;
@@ -80,7 +80,7 @@ export function OrderDetailsDrawer({
   const handleDownloadInvoice = async () => {
     if (!order) return;
 
-    console.log('[PDF] Download clicked', { kind: 'invoice', id: order.id });
+    console.log('[PDF] clicked', { kind: 'invoice', id: order.id });
     
     setGeneratingInvoice(true);
     
@@ -110,7 +110,7 @@ export function OrderDetailsDrawer({
         services
       );
       
-      const report = await runPdfDiagnostics('invoice', invoiceData);
+      const report = await runPdfDebug('invoice', invoiceData);
       if (report.ok) {
         toast.success(isRTL ? 'تم تحميل الفاتورة' : 'Invoice downloaded');
       }
