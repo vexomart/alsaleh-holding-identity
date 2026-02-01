@@ -1,11 +1,12 @@
 /**
  * Customer Dashboard Layout
- * TRUE RTL-first with Arabic default
- * dir="rtl" enforced at root level
+ * HARD RTL BOUNDARY for /app routes ONLY
+ * Uses CSS Grid for sidebar placement (no flex hacks)
+ * Isolated from /admin - only sets document.dir when on /app/*
  */
 
 import { ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCustomerRealtime } from "@/hooks/useCustomerRealtime";
@@ -23,6 +24,7 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
   const { user, profile, isLoading } = useAuth();
   const { isRTL, language } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Real-time subscriptions for services and invoices
   const { isServicesConnected, isInvoicesConnected } = useCustomerRealtime({
@@ -31,13 +33,31 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
     enabled: !!user,
   });
 
-  // CRITICAL: Sync document direction with language - SINGLE SOURCE OF TRUTH
+  /**
+   * CRITICAL: Set document direction ONLY when on /app/* routes
+   * This creates an isolated RTL boundary that doesn't affect /admin
+   */
   useEffect(() => {
-    const dir = isRTL ? 'rtl' : 'ltr';
-    document.documentElement.dir = dir;
-    document.documentElement.lang = language;
-    document.body.dir = dir; // Also set on body for full coverage
-  }, [isRTL, language]);
+    const isCustomerRoute = location.pathname.startsWith('/app');
+    
+    if (isCustomerRoute) {
+      const dir = isRTL ? 'rtl' : 'ltr';
+      const lang = isRTL ? 'ar' : 'en';
+      document.documentElement.dir = dir;
+      document.documentElement.lang = lang;
+      document.body.dir = dir;
+    }
+    
+    // Cleanup: Reset to LTR when leaving /app routes
+    return () => {
+      const stillOnCustomerRoute = window.location.pathname.startsWith('/app');
+      if (!stillOnCustomerRoute) {
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = 'en';
+        document.body.dir = 'ltr';
+      }
+    };
+  }, [isRTL, language, location.pathname]);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -69,22 +89,38 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      {/* ROOT RTL CONTAINER - dir attribute enforced here */}
-      <section 
+      {/* 
+        HARD RTL BOUNDARY - dir attribute at root level
+        Uses CSS Grid for proper sidebar placement without flex hacks
+      */}
+      <div 
         dir={isRTL ? 'rtl' : 'ltr'}
         className={cn(
-          "min-h-screen flex w-full bg-background",
-          isRTL ? "text-right" : "text-left",
-          // RTL: Sidebar appears RIGHT, content flows right-to-left
-          isRTL ? "flex-row-reverse" : "flex-row"
+          "min-h-screen w-full bg-background",
+          // CSS Grid layout: sidebar + content
+          // Grid automatically respects dir attribute for column order
+          "grid",
+          isRTL ? "text-right" : "text-left"
         )}
+        style={{
+          // CSS Grid with logical placement respects dir attribute
+          gridTemplateColumns: "auto 1fr",
+          gridTemplateAreas: '"sidebar content"'
+        }}
       >
-        <CustomerSidebar />
-        <SidebarInset className="flex flex-col flex-1 min-w-0">
+        {/* Sidebar - Grid placement respects RTL automatically */}
+        <div style={{ gridArea: 'sidebar' }}>
+          <CustomerSidebar />
+        </div>
+        
+        {/* Main Content Area */}
+        <SidebarInset 
+          className="flex flex-col min-w-0"
+          style={{ gridArea: 'content' }}
+        >
           <CustomerHeader />
           <main 
             className="flex-1 overflow-auto p-3 md:p-4 lg:p-6"
-            dir={isRTL ? 'rtl' : 'ltr'}
           >
             {children}
           </main>
@@ -92,7 +128,7 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
           {/* Real-time connection indicators (debug) */}
           <div className={cn(
             "fixed bottom-4 flex gap-2 z-50",
-            isRTL ? "start-4" : "start-4"
+            isRTL ? "left-4" : "left-4"
           )}>
             <div 
               className={cn(
@@ -110,7 +146,7 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
             />
           </div>
         </SidebarInset>
-      </section>
+      </div>
     </SidebarProvider>
   );
 }

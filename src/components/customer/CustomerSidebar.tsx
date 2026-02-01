@@ -116,9 +116,9 @@ export function CustomerSidebar() {
     navigate('/auth/login');
   };
 
-  // RTL-aware collapse icons
-  const CollapseIcon = isRTL ? ChevronLeft : ChevronRight;
-  const ExpandIcon = isRTL ? ChevronRight : ChevronLeft;
+  // RTL-aware collapse icons - flip direction
+  const CollapseIcon = isRTL ? ChevronRight : ChevronLeft;
+  const ExpandIcon = isRTL ? ChevronLeft : ChevronRight;
 
   return (
     <Sidebar 
@@ -126,8 +126,8 @@ export function CustomerSidebar() {
       side={isRTL ? "right" : "left"}
       className={cn(
         "bg-gradient-to-b from-slate-950 to-slate-900 text-white",
-        // Border on the correct side based on RTL - use logical properties
-        "border-e"
+        // Logical border - end side
+        "border-e border-white/10"
       )}
     >
       {/* Header */}
@@ -199,11 +199,10 @@ export function CustomerSidebar() {
 
       {/* Footer */}
       <SidebarFooter className="border-t border-white/10 p-3">
-        {/* User Info */}
+        {/* User Info - No flex-row-reverse needed, dir handles it */}
         <div className={cn(
           "flex items-center gap-3 p-2 rounded-lg bg-white/5 mb-2",
-          state === "collapsed" && "justify-center",
-          isRTL && state !== "collapsed" && "flex-row-reverse"
+          state === "collapsed" && "justify-center"
         )}>
           <Avatar className="h-9 w-9 border-2 border-amber-500/30">
             <AvatarImage src={profile?.avatar_url || undefined} />
@@ -212,19 +211,19 @@ export function CustomerSidebar() {
             </AvatarFallback>
           </Avatar>
           {state === "expanded" && (
-            <div className={cn("flex-1 min-w-0", isRTL && "text-right")}>
+            <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">
                 {profile?.full_name || profile?.email?.split("@")[0]}
               </p>
-              <p className="text-xs text-slate-400 truncate">
+              <p className="text-xs text-slate-400 truncate" dir="ltr">
                 {profile?.email}
               </p>
             </div>
           )}
         </div>
 
-        {/* Actions */}
-        <div className={cn("flex gap-2", isRTL && "flex-row-reverse")}>
+        {/* Actions - dir handles order */}
+        <div className="flex gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -241,14 +240,11 @@ export function CustomerSidebar() {
             variant="ghost"
             size="sm"
             onClick={handleSignOut}
-            className={cn(
-              "flex-1 h-9 text-slate-300 hover:text-red-400 hover:bg-red-500/10",
-              isRTL && "flex-row-reverse"
-            )}
+            className="flex-1 h-9 text-slate-300 hover:text-red-400 hover:bg-red-500/10"
           >
             <LogOut className={cn("h-4 w-4", isRTL && "scale-x-[-1]")} />
             {state === "expanded" && (
-              <span className={isRTL ? "me-2" : "ms-2"}>{isRTL ? "خروج" : "Logout"}</span>
+              <span className="ms-2">{isRTL ? "خروج" : "Logout"}</span>
             )}
           </Button>
         </div>

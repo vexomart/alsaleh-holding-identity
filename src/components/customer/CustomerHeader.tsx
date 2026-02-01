@@ -47,19 +47,14 @@ export function CustomerHeader() {
   const userName = profile?.full_name || profile?.email?.split("@")[0] || "User";
   const userInitial = userName[0]?.toUpperCase() || "U";
 
-  // RTL helpers
-  const rtlRow = isRTL ? "flex-row-reverse" : "flex-row";
+  // No flex-row-reverse needed - parent dir handles RTL flow
 
   return (
     <header 
-      className={cn(
-        "sticky top-0 z-40 flex h-14 md:h-16 items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-3 md:px-4 lg:px-6",
-        rtlRow
-      )}
-      dir={isRTL ? "rtl" : "ltr"}
+      className="sticky top-0 z-40 flex h-14 md:h-16 items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-3 md:px-4 lg:px-6"
     >
-      {/* Start Section: Sidebar Trigger */}
-      <div className={cn("flex items-center gap-2 md:gap-3", rtlRow)}>
+      {/* Start Section: Sidebar Trigger - dir handles order */}
+      <div className="flex items-center gap-2 md:gap-3">
         <SidebarTrigger className="shrink-0" />
         <Separator orientation="vertical" className="h-5 md:h-6 hidden sm:block" />
       </div>
@@ -71,8 +66,8 @@ export function CustomerHeader() {
         </h2>
       </div>
 
-      {/* End Section: Actions */}
-      <div className={cn("flex items-center gap-1 md:gap-1.5 shrink-0", rtlRow)}>
+      {/* End Section: Actions - dir handles order */}
+      <div className="flex items-center gap-1 md:gap-1.5 shrink-0">
         {/* Theme Toggle */}
         <Button
           variant="ghost"
