@@ -1,12 +1,8 @@
 /**
  * Invoice Payment Dialog - PHASE WALLET-1
  * Dialog for paying an invoice with method selection
- */
-
-/**
- * Invoice Payment Dialog - PHASE WALLET-1
- * Dialog for paying an invoice with method selection
  * Supports: Card/Mada (Paylink), Wallet Balance, Bank Transfer
+ * Includes wallet payment confirmation
  */
 
 import { useState } from "react";
@@ -24,6 +20,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { usePaylinkPayment } from "@/hooks/usePaylinkPayment";
 import { useWalletPayment } from "@/hooks/useWalletPayment";
 import { PaymentMethodSelector } from "./PaymentMethodSelector";
+import { WalletPaymentConfirmDialog } from "./WalletPaymentConfirmDialog";
 import { BankTransferDialog } from "@/components/customer/wallet/BankTransferDialog";
 import type { PaymentMethodType } from "@/lib/payments";
 import { 
@@ -67,11 +64,27 @@ export function InvoicePaymentDialog({
   
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType | undefined>();
   const [bankTransferOpen, setBankTransferOpen] = useState(false);
+  const [walletConfirmOpen, setWalletConfirmOpen] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
   if (!invoice) return null;
 
   const isProcessing = isCreatingPayment || isWalletProcessing;
+
+  // Handle wallet payment after confirmation
+  const handleWalletPaymentConfirmed = async () => {
+    try {
+      const result = await payFromWallet.mutateAsync({ invoiceId: invoice.id });
+      if (result.success) {
+        setWalletConfirmOpen(false);
+        onOpenChange(false);
+        onPaymentSuccess?.();
+      }
+    } catch (error) {
+      console.error('Wallet payment error:', error);
+      setWalletConfirmOpen(false);
+    }
+  };
 
   const handleProceed = async () => {
     if (!selectedMethod) return;
@@ -84,17 +97,9 @@ export function InvoicePaymentDialog({
       return;
     }
 
-    // Handle wallet payment
+    // Handle wallet payment - show confirmation dialog first
     if (selectedMethod === 'wallet') {
-      try {
-        const result = await payFromWallet.mutateAsync({ invoiceId: invoice.id });
-        if (result.success) {
-          onOpenChange(false);
-          onPaymentSuccess?.();
-        }
-      } catch (error) {
-        console.error('Wallet payment error:', error);
-      }
+      setWalletConfirmOpen(true);
       return;
     }
 
@@ -239,6 +244,18 @@ export function InvoicePaymentDialog({
       <BankTransferDialog 
         open={bankTransferOpen} 
         onOpenChange={setBankTransferOpen} 
+      />
+
+      {/* Wallet Payment Confirmation Dialog */}
+      <WalletPaymentConfirmDialog
+        open={walletConfirmOpen}
+        onOpenChange={setWalletConfirmOpen}
+        onConfirm={handleWalletPaymentConfirmed}
+        invoiceNumber={invoice.invoice_number}
+        amount={invoice.total}
+        currency={invoice.currency}
+        walletBalance={walletBalance}
+        isProcessing={isWalletProcessing}
       />
     </>
   );
