@@ -47,13 +47,19 @@ export function CustomerHeader() {
   const userName = profile?.full_name || profile?.email?.split("@")[0] || "User";
   const userInitial = userName[0]?.toUpperCase() || "U";
 
+  // RTL helpers
+  const rtlRow = isRTL ? "flex-row-reverse" : "flex-row";
+
   return (
     <header 
-      className="sticky top-0 z-40 flex h-14 md:h-16 items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-3 md:px-4 lg:px-6"
+      className={cn(
+        "sticky top-0 z-40 flex h-14 md:h-16 items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-3 md:px-4 lg:px-6",
+        rtlRow
+      )}
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Start Section: Sidebar Trigger */}
-      <div className="flex items-center gap-2 md:gap-3">
+      <div className={cn("flex items-center gap-2 md:gap-3", rtlRow)}>
         <SidebarTrigger className="shrink-0" />
         <Separator orientation="vertical" className="h-5 md:h-6 hidden sm:block" />
       </div>
@@ -66,7 +72,7 @@ export function CustomerHeader() {
       </div>
 
       {/* End Section: Actions */}
-      <div className="flex items-center gap-1 md:gap-1.5 shrink-0">
+      <div className={cn("flex items-center gap-1 md:gap-1.5 shrink-0", rtlRow)}>
         {/* Theme Toggle */}
         <Button
           variant="ghost"

@@ -31,10 +31,12 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
     enabled: !!user,
   });
 
-  // Sync document direction with language
+  // CRITICAL: Sync document direction with language - SINGLE SOURCE OF TRUTH
   useEffect(() => {
-    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    const dir = isRTL ? 'rtl' : 'ltr';
+    document.documentElement.dir = dir;
     document.documentElement.lang = language;
+    document.body.dir = dir; // Also set on body for full coverage
   }, [isRTL, language]);
 
   useEffect(() => {
@@ -68,21 +70,29 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
   return (
     <SidebarProvider defaultOpen={true}>
       {/* ROOT RTL CONTAINER - dir attribute enforced here */}
-      <div 
+      <section 
         dir={isRTL ? 'rtl' : 'ltr'}
-        className="min-h-screen flex w-full bg-background"
+        className={cn(
+          "min-h-screen flex w-full bg-background",
+          isRTL ? "text-right" : "text-left",
+          // RTL: Sidebar appears RIGHT, content flows right-to-left
+          isRTL ? "flex-row-reverse" : "flex-row"
+        )}
       >
         <CustomerSidebar />
         <SidebarInset className="flex flex-col flex-1 min-w-0">
           <CustomerHeader />
-          <main className="flex-1 overflow-auto p-3 md:p-4 lg:p-6">
+          <main 
+            className="flex-1 overflow-auto p-3 md:p-4 lg:p-6"
+            dir={isRTL ? 'rtl' : 'ltr'}
+          >
             {children}
           </main>
           
           {/* Real-time connection indicators (debug) */}
           <div className={cn(
             "fixed bottom-4 flex gap-2 z-50",
-            isRTL ? "left-4" : "left-4"
+            isRTL ? "start-4" : "start-4"
           )}>
             <div 
               className={cn(
@@ -100,7 +110,7 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
             />
           </div>
         </SidebarInset>
-      </div>
+      </section>
     </SidebarProvider>
   );
 }

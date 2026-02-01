@@ -126,8 +126,8 @@ export function CustomerSidebar() {
       side={isRTL ? "right" : "left"}
       className={cn(
         "bg-gradient-to-b from-slate-950 to-slate-900 text-white",
-        // Border on the correct side based on RTL
-        isRTL ? "border-s border-e-0" : "border-e border-s-0"
+        // Border on the correct side based on RTL - use logical properties
+        "border-e"
       )}
     >
       {/* Header */}
