@@ -1,6 +1,7 @@
 /**
  * Contracts Hook - Customer Contracts Management
  * Handles fetching and managing customer contracts with full RTL support
+ * Updated for pre-approval flow
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -8,7 +9,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-export type ContractStatus = 'draft' | 'pending_signature' | 'signed' | 'cancelled';
+// Updated status type to include new states
+export type ContractStatus = 
+  | 'draft' 
+  | 'pre_approved_by_customer' 
+  | 'pending_admin_approval' 
+  | 'pending_signature' 
+  | 'signed' 
+  | 'cancelled';
 
 export interface ContractPricing {
   subtotal: number;
@@ -44,6 +52,12 @@ export interface Contract {
   updated_at: string;
   tenant_id: string | null;
   service?: ContractService | null;
+  // Pre-approval fields
+  customer_pre_approval?: boolean;
+  pre_approval_timestamp?: string | null;
+  admin_approval_notes?: string | null;
+  admin_rejection_reason?: string | null;
+  admin_approved_at?: string | null;
 }
 
 export interface ContractSignature {
@@ -68,6 +82,19 @@ export interface ContractFile {
   pdf_hash_sha256: string;
   generated_at: string | null;
   created_at: string;
+}
+
+export interface ContractTemplate {
+  id: string;
+  title_ar: string;
+  title_en: string | null;
+  body_ar: string;
+  body_en: string | null;
+  service_id: string | null;
+  tenant_id: string | null;
+  version: number;
+  is_active: boolean;
+  metadata: Record<string, unknown> | null;
 }
 
 /**
@@ -296,4 +323,101 @@ export function useContract(contractId: string | undefined) {
     signContract,
     refetch: fetchContract,
   };
+}
+
+/**
+ * Hook to check if a service requires contract pre-approval
+ */
+export function useServiceContract(serviceId: string | undefined) {
+  const [template, setTemplate] = useState<ContractTemplate | null>(null);
+  const [requiresContract, setRequiresContract] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkServiceContract = async () => {
+      if (!serviceId) {
+        setRequiresContract(false);
+        setTemplate(null);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Check if service has a default contract template
+        const { data: serviceData, error: serviceError } = await supabase
+          .from('services')
+          .select('default_contract_template_id')
+          .eq('id', serviceId)
+          .single();
+
+        if (serviceError || !serviceData?.default_contract_template_id) {
+          setRequiresContract(false);
+          setTemplate(null);
+          setIsLoading(false);
+          return;
+        }
+
+        // Fetch the template
+        const { data: templateData, error: templateError } = await supabase
+          .from('contract_templates')
+          .select('*')
+          .eq('id', serviceData.default_contract_template_id)
+          .eq('is_active', true)
+          .single();
+
+        if (templateError || !templateData) {
+          setRequiresContract(false);
+          setTemplate(null);
+        } else {
+          setRequiresContract(true);
+          setTemplate({
+            ...templateData,
+            metadata: templateData.metadata as Record<string, unknown> | null,
+          });
+        }
+      } catch (err) {
+        console.error('Error checking service contract:', err);
+        setRequiresContract(false);
+        setTemplate(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkServiceContract();
+  }, [serviceId]);
+
+  return {
+    requiresContract,
+    template,
+    isLoading,
+  };
+}
+
+/**
+ * Create pre-approved contract during service request
+ */
+export async function createPreApprovedContract(
+  customerId: string,
+  serviceId: string,
+  orderId?: string
+): Promise<{ contractId: string | null; error: string | null }> {
+  try {
+    const { data, error } = await supabase.rpc('create_pre_approved_contract', {
+      p_customer_id: customerId,
+      p_service_id: serviceId,
+      p_order_id: orderId || null,
+      p_user_agent: navigator.userAgent,
+    });
+
+    if (error) throw error;
+
+    return { contractId: data as string, error: null };
+  } catch (err) {
+    console.error('Error creating pre-approved contract:', err);
+    return { 
+      contractId: null, 
+      error: err instanceof Error ? err.message : 'فشل في إنشاء العقد' 
+    };
+  }
 }

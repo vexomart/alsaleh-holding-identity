@@ -1,6 +1,6 @@
 /**
  * Service Details Page - Premium Edition
- * Individual service page with request form and animations
+ * Individual service page with request form and contract pre-approval flow
  */
 
 import { useEffect, useState } from "react";
@@ -13,6 +13,8 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { type Service } from "@/lib/api/services";
+import { useServiceContract, createPreApprovedContract } from "@/hooks/useContracts";
+import { ContractPreviewStep } from "./ContractPreviewStep";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,26 +38,21 @@ import {
   Loader2,
   Package,
   Send,
-  Sparkles,
   Star,
   User,
   Phone,
   Mail,
   MessageSquare,
   Shield,
-  Zap,
   Award,
   HeartHandshake,
   Rocket,
   Code2,
-  Palette,
-  Globe,
   Settings,
-  Users,
-  TrendingUp,
   Lock,
   RefreshCw,
   Headphones,
+  FileSignature,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
@@ -72,9 +69,12 @@ const requestFormSchema = z.object({
 
 type RequestFormData = z.infer<typeof requestFormSchema>;
 
+// Flow steps
+type FlowStep = 'form' | 'contract_preview';
+
 // Service-specific content mapping
 const serviceContentMap: Record<string, {
-  highlights: { icon: any; textAr: string; textEn: string }[];
+  highlights: { icon: React.ElementType; textAr: string; textEn: string }[];
   benefits: { titleAr: string; titleEn: string; descAr: string; descEn: string }[];
   processSteps: { titleAr: string; titleEn: string }[];
 }> = {
@@ -139,7 +139,11 @@ export function CustomerServiceDetails() {
   const [service, setService] = useState<Service | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState<FlowStep>('form');
+  const [pendingFormData, setPendingFormData] = useState<RequestFormData | null>(null);
+
+  // Check if service requires contract
+  const { requiresContract, template, isLoading: isLoadingContract } = useServiceContract(serviceId);
 
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
 
@@ -201,8 +205,23 @@ export function CustomerServiceDetails() {
     return `ORD-${timestamp}-${random}`;
   };
 
-  // Submit order
-  const onSubmit = async (data: RequestFormData) => {
+  // Handle form submission - check if contract is required
+  const onFormSubmit = async (data: RequestFormData) => {
+    if (!user || !service) return;
+
+    // If service requires contract, show preview first
+    if (requiresContract && template) {
+      setPendingFormData(data);
+      setCurrentStep('contract_preview');
+      return;
+    }
+
+    // Otherwise, submit directly
+    await submitOrder(data);
+  };
+
+  // Submit order with optional contract pre-approval
+  const submitOrder = async (data: RequestFormData, withContract: boolean = false) => {
     if (!user || !service) return;
 
     setIsSubmitting(true);
@@ -210,34 +229,68 @@ export function CustomerServiceDetails() {
     try {
       const orderNumber = generateOrderNumber();
       
-      const { error } = await supabase.from("orders").insert({
-        order_number: orderNumber,
-        customer_id: user.id,
-        service_id: service.id,
-        title: service.name,
-        title_ar: service.name_ar,
-        description: data.description,
-        status: "pending",
-        metadata: {
-          customer_name: data.fullName,
-          customer_email: data.email,
-          customer_phone: data.phone,
-          project_type: data.projectType,
-          budget: data.budget,
-          timeline: data.timeline,
-          service_name: service.name,
-          service_name_ar: service.name_ar,
-        },
-      });
+      // Create order
+      const { data: orderData, error: orderError } = await supabase
+        .from("orders")
+        .insert({
+          order_number: orderNumber,
+          customer_id: user.id,
+          service_id: service.id,
+          title: service.name,
+          title_ar: service.name_ar,
+          description: data.description,
+          status: "pending",
+          requires_contract: withContract,
+          contract_pre_approved: withContract,
+          metadata: {
+            customer_name: data.fullName,
+            customer_email: data.email,
+            customer_phone: data.phone,
+            project_type: data.projectType,
+            budget: data.budget,
+            timeline: data.timeline,
+            service_name: service.name,
+            service_name_ar: service.name_ar,
+          },
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (orderError) throw orderError;
 
-      toast({
-        title: isRTL ? "تم إرسال طلبك بنجاح! 🎉" : "Your request has been submitted! 🎉",
-        description: isRTL
-          ? `رقم الطلب: ${orderNumber}`
-          : `Order number: ${orderNumber}`,
-      });
+      // If contract is required, create pre-approved contract
+      if (withContract && requiresContract) {
+        const { contractId, error: contractError } = await createPreApprovedContract(
+          user.id,
+          service.id,
+          orderData.id
+        );
+
+        if (contractError) {
+          console.error('Error creating contract:', contractError);
+          // Don't fail the whole request, just log
+          toast({
+            title: isRTL ? "تم إرسال الطلب مع ملاحظة" : "Request submitted with note",
+            description: isRTL 
+              ? "تم إرسال طلبك ولكن حدث خطأ في إنشاء العقد المبدئي" 
+              : "Your request was submitted but there was an error creating the preliminary contract",
+          });
+        } else {
+          toast({
+            title: isRTL ? "تم إرسال طلبك بنجاح! 🎉" : "Your request has been submitted! 🎉",
+            description: isRTL
+              ? `رقم الطلب: ${orderNumber} - تم إنشاء العقد المبدئي`
+              : `Order number: ${orderNumber} - Preliminary contract created`,
+          });
+        }
+      } else {
+        toast({
+          title: isRTL ? "تم إرسال طلبك بنجاح! 🎉" : "Your request has been submitted! 🎉",
+          description: isRTL
+            ? `رقم الطلب: ${orderNumber}`
+            : `Order number: ${orderNumber}`,
+        });
+      }
 
       navigate("/app/orders");
     } catch (error) {
@@ -251,9 +304,21 @@ export function CustomerServiceDetails() {
     }
   };
 
+  // Handle contract acceptance
+  const handleContractAccept = async () => {
+    if (!pendingFormData) return;
+    await submitOrder(pendingFormData, true);
+  };
+
+  // Handle back from contract preview
+  const handleContractBack = () => {
+    setCurrentStep('form');
+    setPendingFormData(null);
+  };
+
   const serviceContent = serviceContentMap.default;
 
-  if (isLoading) {
+  if (isLoading || isLoadingContract) {
     return (
       <div className="space-y-6 max-w-7xl mx-auto px-4">
         <Skeleton className="h-10 w-32" />
@@ -285,6 +350,24 @@ export function CustomerServiceDetails() {
           {isRTL ? "العودة للخدمات" : "Back to Services"}
         </Button>
       </motion.div>
+    );
+  }
+
+  // Show contract preview step
+  if (currentStep === 'contract_preview' && template) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <ContractPreviewStep
+          template={template}
+          serviceName={service.name}
+          serviceNameAr={service.name_ar}
+          price={service.price}
+          currency={service.currency || 'SAR'}
+          onAccept={handleContractAccept}
+          onBack={handleContractBack}
+          isLoading={isSubmitting}
+        />
+      </div>
     );
   }
 
@@ -332,9 +415,17 @@ export function CustomerServiceDetails() {
               )}
               
               {/* Category Badge */}
-              <Badge className="absolute top-4 start-4 bg-primary text-primary-foreground px-4 py-1.5 text-sm font-medium">
-                {isRTL ? "تطوير برمجي" : "Development"}
-              </Badge>
+              <div className="absolute top-4 start-4 flex items-center gap-2">
+                <Badge className="bg-primary text-primary-foreground px-4 py-1.5 text-sm font-medium">
+                  {isRTL ? "تطوير برمجي" : "Development"}
+                </Badge>
+                {requiresContract && (
+                  <Badge variant="outline" className="bg-background/80 gap-1.5">
+                    <FileSignature className="h-3.5 w-3.5" />
+                    {isRTL ? "يتطلب عقد" : "Contract Required"}
+                  </Badge>
+                )}
+              </div>
 
               {/* Service Title Overlay */}
               <div className="absolute bottom-0 start-0 end-0 p-6">
@@ -474,15 +565,21 @@ export function CustomerServiceDetails() {
                   {isRTL ? "طلب الخدمة" : "Request Service"}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground mt-2">
-                  {isRTL
-                    ? "املأ النموذج وسيتواصل معك فريقنا خلال 24 ساعة"
-                    : "Fill out the form and our team will contact you within 24 hours"}
+                  {requiresContract 
+                    ? (isRTL ? "هذه الخدمة تتطلب موافقة مبدئية على العقد" : "This service requires preliminary contract approval")
+                    : (isRTL ? "املأ النموذج وسيتواصل معك فريقنا خلال 24 ساعة" : "Fill out the form and our team will contact you within 24 hours")}
                 </p>
+                {requiresContract && (
+                  <Badge variant="outline" className="w-fit mt-2 gap-1.5 bg-amber-50 text-amber-700 border-amber-200">
+                    <FileSignature className="h-3.5 w-3.5" />
+                    {isRTL ? "يتطلب عقد مبدئي" : "Requires Preliminary Contract"}
+                  </Badge>
+                )}
               </CardHeader>
 
               <CardContent className="p-6">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                  <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-5">
                     {/* Personal Info Section */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
@@ -665,6 +762,11 @@ export function CustomerServiceDetails() {
                           <>
                             <Loader2 className="h-5 w-5 animate-spin" />
                             {isRTL ? "جاري الإرسال..." : "Submitting..."}
+                          </>
+                        ) : requiresContract ? (
+                          <>
+                            <FileSignature className="h-5 w-5" />
+                            {isRTL ? "متابعة لمراجعة العقد" : "Continue to Review Contract"}
                           </>
                         ) : (
                           <>
