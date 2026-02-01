@@ -93,7 +93,8 @@ export function ClientQuickStats({ data, isRTL, formatCurrency }: ClientQuickSta
             onClick={stat.onClick}
           >
             <CardContent className="p-4">
-              <div className={cn("flex items-start justify-between", rtlRow)}>
+              {/* dir from parent handles RTL - no flex-row-reverse */}
+              <div className="flex items-start justify-between">
                 <div className={cn("p-2.5 rounded-xl", stat.bgColor)}>
                   <stat.icon className={cn("h-5 w-5", stat.color)} />
                 </div>
