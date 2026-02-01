@@ -1,6 +1,6 @@
 /**
  * useCustomerContracts - Data fetching hook for customer contracts
- * With realtime subscription and filtering
+ * With realtime subscription, filtering, and KPI stats
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
@@ -14,6 +14,7 @@ import {
   ContractsSort, 
   CONTRACT_STATUS_CONFIG,
   ContractStatus,
+  ContractsKPIData,
 } from './types';
 
 const DEFAULT_FILTERS: ContractFilters = {
@@ -27,6 +28,16 @@ const DEFAULT_SORT: ContractsSort = {
   direction: 'desc',
 };
 
+const DEFAULT_KPI: ContractsKPIData = {
+  total: 0,
+  draft: 0,
+  pre_approved: 0,
+  pending_admin: 0,
+  pending_signature: 0,
+  signed: 0,
+  cancelled: 0,
+};
+
 export function useCustomerContracts() {
   const { user } = useAuth();
   const [contracts, setContracts] = useState<CustomerContract[]>([]);
@@ -37,8 +48,37 @@ export function useCustomerContracts() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
+  const [kpiData, setKpiData] = useState<ContractsKPIData>(DEFAULT_KPI);
 
   const debouncedSearch = useDebounce(filters.search, 300);
+
+  // Fetch KPI stats (unfiltered totals)
+  const fetchKPIStats = useCallback(async () => {
+    if (!user) return;
+
+    try {
+      const { data, error: queryError } = await supabase
+        .from('contracts')
+        .select('status')
+        .eq('customer_user_id', user.id);
+
+      if (queryError) throw queryError;
+
+      const stats: ContractsKPIData = {
+        total: data?.length || 0,
+        draft: data?.filter(c => c.status === 'draft').length || 0,
+        pre_approved: data?.filter(c => c.status === 'pre_approved_by_customer').length || 0,
+        pending_admin: data?.filter(c => c.status === 'pending_admin_approval').length || 0,
+        pending_signature: data?.filter(c => c.status === 'pending_signature').length || 0,
+        signed: data?.filter(c => c.status === 'signed').length || 0,
+        cancelled: data?.filter(c => c.status === 'cancelled').length || 0,
+      };
+
+      setKpiData(stats);
+    } catch (err) {
+      console.error('Error fetching KPI stats:', err);
+    }
+  }, [user]);
 
   const fetchContracts = useCallback(async () => {
     if (!user) return;
@@ -51,7 +91,8 @@ export function useCustomerContracts() {
         .from('contracts')
         .select(`
           *,
-          service:services(id, name, name_ar, description, description_ar)
+          service:services(id, name, name_ar, description, description_ar),
+          order:orders(id, order_number, title, title_ar)
         `, { count: 'exact' })
         .eq('customer_user_id', user.id);
 
@@ -97,6 +138,11 @@ export function useCustomerContracts() {
         }
       }
 
+      // Apply service filter
+      if (filters.serviceId) {
+        query = query.eq('service_id', filters.serviceId);
+      }
+
       // Apply sorting
       if (sort.field === 'pricing') {
         // JSON field sorting not directly supported, sort client-side
@@ -125,6 +171,7 @@ export function useCustomerContracts() {
           pricing_json: contract.pricing_json as unknown as CustomerContract['pricing_json'],
           terms_snapshot_json: contract.terms_snapshot_json as unknown as Record<string, unknown> | null,
           service: contract.service as unknown as CustomerContract['service'],
+          order: contract.order as unknown as CustomerContract['order'],
           status_label_ar: statusConfig.labelAr,
           status_label_en: statusConfig.labelEn,
           status_color: statusConfig.color,
@@ -148,12 +195,13 @@ export function useCustomerContracts() {
     } finally {
       setIsLoading(false);
     }
-  }, [user, filters.status, debouncedSearch, filters.dateRange, filters.startDate, filters.endDate, sort, page, pageSize]);
+  }, [user, filters.status, debouncedSearch, filters.dateRange, filters.startDate, filters.endDate, filters.serviceId, sort, page, pageSize]);
 
   // Initial fetch
   useEffect(() => {
     fetchContracts();
-  }, [fetchContracts]);
+    fetchKPIStats();
+  }, [fetchContracts, fetchKPIStats]);
 
   // Realtime subscription
   useEffect(() => {
@@ -177,6 +225,7 @@ export function useCustomerContracts() {
               description: 'تم إضافة عقد جديد',
             });
             fetchContracts();
+            fetchKPIStats();
           } else if (payload.eventType === 'UPDATE') {
             const newRecord = payload.new as CustomerContract;
             const oldRecord = payload.old as CustomerContract;
@@ -202,8 +251,10 @@ export function useCustomerContracts() {
                   } 
                 : contract
             ));
+            fetchKPIStats();
           } else if (payload.eventType === 'DELETE') {
             setContracts(prev => prev.filter(contract => contract.id !== (payload.old as CustomerContract).id));
+            fetchKPIStats();
           }
         }
       )
@@ -212,7 +263,7 @@ export function useCustomerContracts() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, fetchContracts]);
+  }, [user, fetchContracts, fetchKPIStats]);
 
   // Filter handlers
   const updateFilters = useCallback((newFilters: Partial<ContractFilters>) => {
@@ -237,7 +288,7 @@ export function useCustomerContracts() {
   const totalPages = useMemo(() => Math.ceil(totalCount / pageSize), [totalCount, pageSize]);
 
   const hasActiveFilters = useMemo(() => {
-    return filters.search !== '' || filters.status !== 'all' || filters.dateRange !== 'all';
+    return filters.search !== '' || filters.status !== 'all' || filters.dateRange !== 'all' || !!filters.serviceId;
   }, [filters]);
 
   return {
@@ -251,6 +302,7 @@ export function useCustomerContracts() {
     totalCount,
     totalPages,
     hasActiveFilters,
+    kpiData,
     updateFilters,
     clearFilters,
     updateSort,

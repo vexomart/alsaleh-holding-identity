@@ -1,11 +1,11 @@
 /**
- * ContractsFilters - Premium filter bar for contracts
- * RTL-first with animations
+ * ContractsFilters - Enhanced filter bar for contracts
+ * RTL-first with animations and mobile sheet
  */
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Input } from '@/components/ui/input';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -15,8 +15,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { Search, X, Filter } from 'lucide-react';
+import { X, Filter, Calendar, FileCheck } from 'lucide-react';
 import { ContractFilters, ContractStatus, CONTRACT_STATUS_CONFIG } from './types';
 
 interface ContractsFiltersProps {
@@ -25,6 +32,8 @@ interface ContractsFiltersProps {
   onClearFilters: () => void;
   hasActiveFilters: boolean;
   totalCount: number;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function ContractsFilters({
@@ -33,9 +42,12 @@ export function ContractsFilters({
   onClearFilters,
   hasActiveFilters,
   totalCount,
+  isOpen,
+  onOpenChange,
 }: ContractsFiltersProps) {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
+  const isMobile = useIsMobile();
 
   const statusOptions: { value: ContractStatus | 'all'; labelAr: string; labelEn: string }[] = [
     { value: 'all', labelAr: 'جميع الحالات', labelEn: 'All Statuses' },
@@ -53,6 +65,94 @@ export function ContractsFilters({
     { value: '90d', labelAr: 'آخر 90 يوم', labelEn: 'Last 90 Days' },
   ];
 
+  const activeFiltersCount = [
+    filters.status !== 'all',
+    filters.dateRange !== 'all',
+    !!filters.serviceId,
+  ].filter(Boolean).length;
+
+  const FiltersContent = () => (
+    <div className={cn("space-y-4", isMobile && "pt-4")}>
+      {/* Status Filter */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium flex items-center gap-2">
+          <FileCheck className="h-4 w-4 text-muted-foreground" />
+          {isRTL ? 'الحالة' : 'Status'}
+        </label>
+        <Select
+          value={filters.status}
+          onValueChange={(value) => onFilterChange({ status: value as ContractStatus | 'all' })}
+        >
+          <SelectTrigger className="w-full h-10">
+            <SelectValue placeholder={isRTL ? 'اختر الحالة' : 'Select status'} />
+          </SelectTrigger>
+          <SelectContent>
+            {statusOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {isRTL ? option.labelAr : option.labelEn}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Date Range Filter */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-muted-foreground" />
+          {isRTL ? 'الفترة الزمنية' : 'Date Range'}
+        </label>
+        <Select
+          value={filters.dateRange}
+          onValueChange={(value) => onFilterChange({ dateRange: value as ContractFilters['dateRange'] })}
+        >
+          <SelectTrigger className="w-full h-10">
+            <SelectValue placeholder={isRTL ? 'اختر الفترة' : 'Select period'} />
+          </SelectTrigger>
+          <SelectContent>
+            {dateOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {isRTL ? option.labelAr : option.labelEn}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Clear Filters */}
+      {hasActiveFilters && (
+        <Button
+          variant="outline"
+          className="w-full gap-2 mt-4"
+          onClick={() => {
+            onClearFilters();
+            onOpenChange?.(false);
+          }}
+        >
+          <X className="h-4 w-4" />
+          {isRTL ? 'مسح جميع الفلاتر' : 'Clear All Filters'}
+        </Button>
+      )}
+    </div>
+  );
+
+  // Mobile: Sheet
+  if (isMobile) {
+    return (
+      <Sheet open={isOpen} onOpenChange={onOpenChange}>
+        <SheetContent side={isRTL ? 'right' : 'left'} className="w-80">
+          <SheetHeader>
+            <SheetTitle className={isRTL ? 'text-right' : 'text-left'}>
+              {isRTL ? 'تصفية العقود' : 'Filter Contracts'}
+            </SheetTitle>
+          </SheetHeader>
+          <FiltersContent />
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  // Desktop: Inline filters
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -62,25 +162,12 @@ export function ContractsFilters({
     >
       {/* Filters Row */}
       <div className={cn(
-        "flex flex-col sm:flex-row gap-3",
-        isRTL && "sm:flex-row-reverse"
+        "flex flex-wrap items-center gap-3 p-4 rounded-xl border bg-card/50",
+        isRTL && "flex-row-reverse"
       )}>
-        {/* Search Input */}
-        <div className="relative flex-1 max-w-md">
-          <Search className={cn(
-            "absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none",
-            isRTL ? "right-3" : "left-3"
-          )} />
-          <Input
-            type="text"
-            placeholder={isRTL ? 'بحث برقم العقد...' : 'Search by contract number...'}
-            value={filters.search}
-            onChange={(e) => onFilterChange({ search: e.target.value })}
-            className={cn(
-              "h-10",
-              isRTL ? "pr-10 text-right" : "pl-10"
-            )}
-          />
+        <div className={cn("flex items-center gap-2 text-sm font-medium", isRTL && "flex-row-reverse")}>
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          {isRTL ? 'تصفية:' : 'Filters:'}
         </div>
 
         {/* Status Filter */}
@@ -88,8 +175,7 @@ export function ContractsFilters({
           value={filters.status}
           onValueChange={(value) => onFilterChange({ status: value as ContractStatus | 'all' })}
         >
-          <SelectTrigger className="w-full sm:w-[180px] h-10">
-            <Filter className="h-4 w-4 me-2 text-muted-foreground" />
+          <SelectTrigger className="w-[160px] h-9">
             <SelectValue placeholder={isRTL ? 'الحالة' : 'Status'} />
           </SelectTrigger>
           <SelectContent>
@@ -106,7 +192,7 @@ export function ContractsFilters({
           value={filters.dateRange}
           onValueChange={(value) => onFilterChange({ dateRange: value as ContractFilters['dateRange'] })}
         >
-          <SelectTrigger className="w-full sm:w-[160px] h-10">
+          <SelectTrigger className="w-[150px] h-9">
             <SelectValue placeholder={isRTL ? 'الفترة' : 'Period'} />
           </SelectTrigger>
           <SelectContent>
@@ -124,24 +210,20 @@ export function ContractsFilters({
             variant="ghost"
             size="sm"
             onClick={onClearFilters}
-            className="gap-2 h-10"
+            className="gap-2 h-9 text-destructive hover:text-destructive"
           >
             <X className="h-4 w-4" />
-            {isRTL ? 'مسح الفلاتر' : 'Clear'}
+            {isRTL ? 'مسح' : 'Clear'}
           </Button>
         )}
-      </div>
 
-      {/* Results Count */}
-      <div className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Results Count */}
         <Badge variant="secondary" className="font-normal">
           {totalCount} {isRTL ? 'عقد' : 'contracts'}
         </Badge>
-        {hasActiveFilters && (
-          <span className="text-sm text-muted-foreground">
-            {isRTL ? '(نتائج مفلترة)' : '(filtered results)'}
-          </span>
-        )}
       </div>
     </motion.div>
   );
