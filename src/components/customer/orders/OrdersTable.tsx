@@ -1,10 +1,11 @@
 /**
  * OrdersTable - Enterprise data table for desktop view
- * RTL-first with proper column ordering
+ * RTL-strict with proper column ordering, LTR spans for IDs/amounts
  */
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import {
   Table,
   TableBody,
@@ -42,20 +43,6 @@ interface OrdersTableProps {
   selectedOrderId?: string;
 }
 
-// Table row animation variants
-const rowVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.03,
-      duration: 0.15,
-      ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
-    },
-  }),
-};
-
 export function OrdersTable({
   orders,
   isLoading,
@@ -66,13 +53,28 @@ export function OrdersTable({
 }: OrdersTableProps) {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
+  const reducedMotion = useReducedMotion();
+
+  // Row animation variants
+  const rowVariants = {
+    hidden: { opacity: 0, y: 8 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: reducedMotion ? 0 : i * 0.025,
+        duration: reducedMotion ? 0 : 0.15,
+        ease: [0.25, 0.1, 0.25, 1] as const,
+      },
+    }),
+  };
 
   const formatCurrency = (amount: number | null, currency: string | null) => {
     if (!amount) return '-';
-    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-US', {
-      style: 'currency',
-      currency: currency || 'SAR',
+    return new Intl.NumberFormat('en-US', {
+      style: 'decimal',
       minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -102,8 +104,8 @@ export function OrdersTable({
     <button
       onClick={() => onSort(field)}
       className={cn(
-        'flex items-center gap-1 hover:text-foreground transition-colors',
-        sort.field === field ? 'text-foreground' : 'text-muted-foreground'
+        'flex items-center gap-1 hover:text-foreground transition-colors whitespace-nowrap',
+        sort.field === field ? 'text-foreground font-semibold' : 'text-muted-foreground'
       )}
     >
       {children}
@@ -111,31 +113,26 @@ export function OrdersTable({
     </button>
   );
 
-  if (isLoading) {
+  if (isLoading && orders.length === 0) {
     return <OrdersTableSkeleton />;
   }
 
   return (
-    <div className="rounded-xl border bg-card overflow-hidden">
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="rounded-xl border bg-card overflow-hidden shadow-sm">
       <Table>
-        <TableHeader className="bg-muted/30 sticky top-0 z-10">
-          <TableRow className="hover:bg-transparent">
-            {/* RTL Column Order: Order# (far right) - Service - Status - Amount - Created - Updated - Actions (far left) */}
-            <TableHead className={cn("w-[160px]", isRTL && "text-right")}>
-              {isRTL ? 'رقم الطلب' : 'Order #'}
-            </TableHead>
-            <TableHead className={cn("min-w-[180px]", isRTL && "text-right")}>
-              {isRTL ? 'اسم الخدمة' : 'Service Name'}
-            </TableHead>
-            <TableHead className={cn("w-[120px]", isRTL && "text-right")}>
+        <TableHeader className="bg-muted/40 sticky top-0 z-10">
+          <TableRow className="hover:bg-transparent border-b-2">
+            {/* RTL Column Order: الحالة - الخدمة - رقم الطلب - تاريخ الإنشاء - آخر تحديث - المبلغ - إجراء */}
+            <TableHead className={cn("w-[130px]", isRTL && "text-right")}>
               <SortableHeader field="status">
                 {isRTL ? 'الحالة' : 'Status'}
               </SortableHeader>
             </TableHead>
-            <TableHead className={cn("w-[120px]", isRTL && "text-right")}>
-              <SortableHeader field="total_amount">
-                {isRTL ? 'المبلغ' : 'Amount'}
-              </SortableHeader>
+            <TableHead className={cn("min-w-[200px]", isRTL && "text-right")}>
+              {isRTL ? 'الخدمة' : 'Service'}
+            </TableHead>
+            <TableHead className={cn("w-[150px]", isRTL && "text-right")}>
+              {isRTL ? 'رقم الطلب' : 'Order #'}
             </TableHead>
             <TableHead className={cn("w-[130px]", isRTL && "text-right")}>
               <SortableHeader field="created_at">
@@ -147,9 +144,14 @@ export function OrdersTable({
                 {isRTL ? 'آخر تحديث' : 'Updated'}
               </SortableHeader>
             </TableHead>
-            {/* Actions column - Always on far left in RTL (industry standard) */}
+            <TableHead className={cn("w-[130px]", isRTL && "text-right")}>
+              <SortableHeader field="total_amount">
+                {isRTL ? 'المبلغ (ر.س)' : 'Amount'}
+              </SortableHeader>
+            </TableHead>
+            {/* Actions column - Always on far left in RTL */}
             <TableHead className={cn("w-[80px]", isRTL ? "text-left" : "text-right")}>
-              {isRTL ? 'إجراءات' : 'Actions'}
+              {isRTL ? 'إجراء' : 'Action'}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -163,39 +165,32 @@ export function OrdersTable({
               variants={rowVariants}
               onClick={() => onRowClick(order)}
               className={cn(
-                'cursor-pointer transition-colors border-b',
-                'hover:bg-muted/50',
-                selectedOrderId === order.id && 'bg-primary/5 hover:bg-primary/10'
+                'cursor-pointer transition-all duration-150 border-b group',
+                'hover:bg-muted/50 hover:shadow-sm',
+                selectedOrderId === order.id && 'bg-primary/5 hover:bg-primary/10 ring-1 ring-inset ring-primary/20'
               )}
             >
-              {/* Order Number - Always LTR (far right in RTL) */}
+              {/* Status */}
               <TableCell className={cn(isRTL && "text-right")}>
-                <span 
-                  dir="ltr" 
-                  className="font-mono text-sm text-muted-foreground tabular-nums"
-                >
-                  {order.order_number}
-                </span>
+                <OrderStatusBadge status={order.status} size="sm" />
               </TableCell>
               
               {/* Service Name */}
               <TableCell className={cn(isRTL && "text-right")}>
-                <span className="font-medium truncate block max-w-[200px]">
+                <span className="font-medium truncate block max-w-[220px]">
                   {isRTL 
                     ? (order.service?.name_ar || order.title_ar || order.title)
                     : (order.service?.name || order.title)}
                 </span>
               </TableCell>
               
-              {/* Status */}
+              {/* Order Number - Always LTR */}
               <TableCell className={cn(isRTL && "text-right")}>
-                <OrderStatusBadge status={order.status} size="sm" />
-              </TableCell>
-              
-              {/* Amount - LTR for numbers */}
-              <TableCell className={cn(isRTL && "text-right")}>
-                <span dir="ltr" className="font-semibold tabular-nums">
-                  {formatCurrency(order.total_amount, order.currency)}
+                <span 
+                  dir="ltr" 
+                  className="font-mono text-sm text-muted-foreground tabular-nums inline-block bg-muted/50 px-2 py-0.5 rounded"
+                >
+                  {order.order_number}
                 </span>
               </TableCell>
               
@@ -209,6 +204,18 @@ export function OrdersTable({
                 {formatDate(order.updated_at)}
               </TableCell>
               
+              {/* Amount - LTR for numbers */}
+              <TableCell className={cn(isRTL && "text-right")}>
+                {order.total_amount ? (
+                  <span dir="ltr" className="font-semibold tabular-nums inline-flex items-center gap-1">
+                    <span className="text-muted-foreground text-xs">SAR</span>
+                    {formatCurrency(order.total_amount, order.currency)}
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                )}
+              </TableCell>
+              
               {/* Actions */}
               <TableCell className={cn(isRTL ? "text-left" : "text-right")}>
                 <DropdownMenu>
@@ -216,13 +223,13 @@ export function OrdersTable({
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="h-8 w-8"
+                      className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align={isRTL ? "start" : "end"}>
+                  <DropdownMenuContent align={isRTL ? "start" : "end"} className="w-40">
                     <DropdownMenuItem onClick={() => onRowClick(order)}>
                       <Eye className="h-4 w-4 me-2" />
                       {isRTL ? 'عرض التفاصيل' : 'View Details'}
@@ -251,11 +258,11 @@ export function OrdersTable({
 // Skeleton loader for table
 function OrdersTableSkeleton() {
   return (
-    <div className="rounded-xl border bg-card overflow-hidden">
+    <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
       <div className="p-4 space-y-4">
         {/* Header skeleton */}
-        <div className="flex gap-4">
-          <Skeleton className="h-8 w-24" />
+        <div className="flex gap-4 border-b pb-4">
+          <Skeleton className="h-8 w-28" />
           <Skeleton className="h-8 flex-1" />
           <Skeleton className="h-8 w-32" />
           <Skeleton className="h-8 w-28" />
@@ -265,8 +272,8 @@ function OrdersTableSkeleton() {
         </div>
         {/* Row skeletons */}
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="flex gap-4 py-3">
-            <Skeleton className="h-6 w-24" />
+          <div key={i} className="flex gap-4 py-3 animate-pulse" style={{ animationDelay: `${i * 100}ms` }}>
+            <Skeleton className="h-6 w-28" />
             <Skeleton className="h-6 flex-1" />
             <Skeleton className="h-6 w-32" />
             <Skeleton className="h-6 w-28" />

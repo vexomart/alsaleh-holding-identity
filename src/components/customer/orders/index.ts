@@ -3,6 +3,7 @@
  */
 
 export { CustomerOrdersCenter } from './CustomerOrdersCenter';
+export { OrdersKPIStrip } from './OrdersKPIStrip';
 export { OrdersFilters } from './OrdersFilters';
 export { OrdersTable } from './OrdersTable';
 export { OrdersCardList } from './OrdersCardList';
