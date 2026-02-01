@@ -7,6 +7,41 @@
 // Main PDF Core
 export * from './pdf-core';
 
+// Brand Design System (SINGLE SOURCE OF TRUTH)
+export {
+  brand,
+  page,
+  spacing,
+  typography,
+  colors,
+  components,
+  companyInfo,
+  stylesDictionary,
+  getStatusColors,
+  margin,
+  allowedColors,
+} from './brand';
+
+// Shared Sections (Headers, Footers, Cards)
+export {
+  buildPdfHeader,
+  buildPdfFooter,
+  buildInfoCard,
+  buildTotalsBox,
+  buildBadge,
+  buildSectionTitle,
+  buildDivider,
+  buildSignatureBlock,
+  buildClause,
+  type PdfHeaderOptions,
+  type PdfFooterOptions,
+  type InfoCardOptions,
+  type TotalsBoxOptions,
+  type BadgeVariant,
+  type SignatureParty,
+  type ClauseContent,
+} from './shared-sections';
+
 // Arabic correctness layer (NEW)
 export {
   rtl,
@@ -55,6 +90,7 @@ export {
   createSeparator,
   createSignatureBlock,
   createPageFooter,
+  buildRtlTable,
   type PDFContent,
   type PDFStyle,
   type PDFStyleDictionary,
