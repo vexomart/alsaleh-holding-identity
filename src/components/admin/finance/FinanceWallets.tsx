@@ -11,6 +11,7 @@ import { toast } from "@/hooks/use-toast";
 import { WalletStatsCards } from "./wallet/WalletStatsCards";
 import { WalletCustomersTable } from "./wallet/WalletCustomersTable";
 import { WalletDetailDrawer } from "./wallet/WalletDetailDrawer";
+import { WalletAnalyticsCharts } from "./wallet/WalletAnalyticsCharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Download, Wallet } from "lucide-react";
@@ -232,6 +233,9 @@ export function FinanceWallets() {
 
       {/* Stats Cards */}
       <WalletStatsCards stats={stats} isLoading={isLoading} />
+
+      {/* Analytics Charts */}
+      <WalletAnalyticsCharts />
 
       {/* Customers Table */}
       <WalletCustomersTable
