@@ -1,6 +1,6 @@
 /**
- * ContractDetailsDrawer - Side panel for contract details
- * RTL-first with timeline preview
+ * ContractDetailsDrawer - Premium side panel for contract details
+ * RTL-first with timeline, copy button, and guaranteed PDF download
  */
 
 import { useState, useEffect } from 'react';
@@ -16,7 +16,6 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -32,6 +31,10 @@ import {
   ThumbsUp,
   UserCheck,
   Loader2,
+  Copy,
+  Check,
+  ExternalLink,
+  Receipt,
 } from 'lucide-react';
 import { CustomerContract, CONTRACT_STATUS_CONFIG } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
@@ -64,6 +67,7 @@ export function ContractDetailsDrawer({
   const [signature, setSignature] = useState<ContractSignature | null>(null);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Fetch signature details
   useEffect(() => {
@@ -125,11 +129,23 @@ export function ContractDetailsDrawer({
     }).format(new Date(dateString));
   };
 
+  const handleCopyContractNumber = async () => {
+    if (!contract?.contract_number) return;
+    try {
+      await navigator.clipboard.writeText(contract.contract_number);
+      setCopied(true);
+      toast.success(isRTL ? 'تم نسخ رقم العقد' : 'Contract number copied');
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error(isRTL ? 'فشل النسخ' : 'Copy failed');
+    }
+  };
+
   const handleDownloadPdf = async () => {
     if (!contract || contract.status !== 'signed') return;
 
     console.log('[PDF] CLICK', { kind: 'contract', id: contract.id });
-    const toastId = toast.loading('جاري تجهيز الملف...');
+    const toastId = toast.loading(isRTL ? 'جاري تجهيز الملف...' : 'Preparing file...');
 
     setIsGeneratingPdf(true);
     try {
@@ -201,6 +217,7 @@ export function ContractDetailsDrawer({
       labelEn: 'Contract Created',
       date: contract.created_at,
       color: 'text-slate-600',
+      bgColor: 'bg-slate-100 dark:bg-slate-800',
     });
     
     // Pre-approval
@@ -211,6 +228,7 @@ export function ContractDetailsDrawer({
         labelEn: 'Customer Pre-approval',
         date: contract.pre_approval_timestamp,
         color: 'text-blue-600',
+        bgColor: 'bg-blue-100 dark:bg-blue-900/50',
       });
     }
     
@@ -222,6 +240,7 @@ export function ContractDetailsDrawer({
         labelEn: 'Admin Approval',
         date: contract.admin_approved_at,
         color: 'text-emerald-600',
+        bgColor: 'bg-emerald-100 dark:bg-emerald-900/50',
       });
     }
     
@@ -233,6 +252,7 @@ export function ContractDetailsDrawer({
         labelEn: 'Contract Signed',
         date: contract.signed_at,
         color: 'text-primary',
+        bgColor: 'bg-primary/10',
       });
     }
     
@@ -257,7 +277,7 @@ export function ContractDetailsDrawer({
               transition={{ duration: 0.2 }}
               className="space-y-6"
             >
-              <SheetHeader className="text-start">
+              <SheetHeader className={cn("text-start", isRTL && "text-right")}>
                 <div className="flex items-center gap-3 mb-2">
                   <ContractStatusBadge status={contract.status} size="md" />
                 </div>
@@ -268,51 +288,114 @@ export function ContractDetailsDrawer({
                         : contract.service.name)
                     : (isRTL ? 'عقد تقديم خدمات' : 'Service Contract')}
                 </SheetTitle>
-                <p 
-                  dir="ltr" 
-                  className="text-sm text-muted-foreground font-mono"
-                >
-                  {contract.contract_number}
-                </p>
+                
+                {/* Contract Number with Copy */}
+                <div className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
+                  <span 
+                    dir="ltr" 
+                    className="text-sm text-muted-foreground font-mono tabular-nums"
+                  >
+                    {contract.contract_number}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={handleCopyContractNumber}
+                  >
+                  {copied ? (
+                      <Check className="h-3 w-3 text-primary" />
+                    ) : (
+                      <Copy className="h-3 w-3" />
+                    )}
+                  </Button>
+                </div>
               </SheetHeader>
 
-              {/* Pricing */}
-              <div className="p-4 rounded-lg bg-primary/5 border border-primary/10">
+              {/* Pricing Card */}
+              <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10">
                 <p className="text-sm text-muted-foreground mb-1">
                   {isRTL ? 'إجمالي العقد' : 'Contract Total'}
                 </p>
                 <p dir="ltr" className="text-2xl font-bold text-primary tabular-nums">
                   {formatCurrency(contract.pricing_json?.total || null, contract.pricing_json?.currency || 'SAR')}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  {isRTL ? 'شامل ضريبة القيمة المضافة' : 'Including VAT'}
-                </p>
+                <div className={cn("flex items-center gap-4 mt-2 text-xs text-muted-foreground", isRTL && "flex-row-reverse")}>
+                  <span>{isRTL ? 'شامل ضريبة القيمة المضافة' : 'Including VAT'}</span>
+                  {contract.pricing_json?.vat_amount && (
+                    <span dir="ltr" className="font-mono tabular-nums">
+                      ({formatCurrency(contract.pricing_json.vat_amount, contract.pricing_json.currency)} VAT)
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* Parties */}
+              {/* Key Info */}
               <div className="space-y-3">
-                <div className="flex items-start gap-3">
+                {/* Order Reference */}
+                {contract.order && (
+                  <div className={cn("flex items-start gap-3", isRTL && "flex-row-reverse")}>
+                    <div className="p-2 rounded-lg bg-muted">
+                      <Receipt className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <div className={cn(isRTL ? "text-right" : "text-start")}>
+                      <p className="text-xs text-muted-foreground">
+                        {isRTL ? 'الطلب المرتبط' : 'Related Order'}
+                      </p>
+                      <button
+                        onClick={() => {
+                          onClose();
+                          navigate(`/app/orders/${contract.order!.id}`);
+                        }}
+                        className="font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span dir="ltr" className="font-mono tabular-nums">
+                          {contract.order.order_number}
+                        </span>
+                        <ExternalLink className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* First Party */}
+                <div className={cn("flex items-start gap-3", isRTL && "flex-row-reverse")}>
                   <div className="p-2 rounded-lg bg-muted">
                     <Building2 className="h-4 w-4 text-muted-foreground" />
                   </div>
-                  <div className="text-start">
+                  <div className={cn(isRTL ? "text-right" : "text-start")}>
                     <p className="text-xs text-muted-foreground">
                       {isRTL ? 'الطرف الأول' : 'First Party'}
                     </p>
                     <p className="font-medium">شركة علي صالح الشهري القابضة</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
+
+                {/* Second Party */}
+                <div className={cn("flex items-start gap-3", isRTL && "flex-row-reverse")}>
                   <div className="p-2 rounded-lg bg-muted">
                     <User className="h-4 w-4 text-muted-foreground" />
                   </div>
-                  <div className="text-start">
+                  <div className={cn(isRTL ? "text-right" : "text-start")}>
                     <p className="text-xs text-muted-foreground">
                       {isRTL ? 'الطرف الثاني' : 'Second Party'}
                     </p>
                     <p className="font-medium">
                       {signature?.signer_name || (isRTL ? 'أنت' : 'You')}
                     </p>
+                  </div>
+                </div>
+
+                {/* Dates */}
+                <div className={cn("flex items-start gap-3", isRTL && "flex-row-reverse")}>
+                  <div className="p-2 rounded-lg bg-muted">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <div className={cn(isRTL ? "text-right" : "text-start")}>
+                    <p className="text-xs text-muted-foreground">
+                      {isRTL ? 'تاريخ الإنشاء' : 'Created Date'}
+                    </p>
+                    <p className="font-medium">{formatDate(contract.created_at)}</p>
                   </div>
                 </div>
               </div>
@@ -322,16 +405,22 @@ export function ContractDetailsDrawer({
               {/* Timeline */}
               {timeline.length > 0 && (
                 <div className="space-y-3">
-                  <h4 className="font-medium text-sm">
+                  <h4 className={cn("font-semibold text-sm", isRTL && "text-right")}>
                     {isRTL ? 'سجل الأحداث' : 'Timeline'}
                   </h4>
                   <div className="space-y-3">
                     {timeline.slice(0, 5).map((event, index) => (
-                      <div key={index} className="flex items-start gap-3">
-                        <div className={cn("p-1.5 rounded-full bg-muted", event.color)}>
+                      <motion.div 
+                        key={index} 
+                        initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className={cn("flex items-start gap-3", isRTL && "flex-row-reverse")}
+                      >
+                        <div className={cn("p-1.5 rounded-full", event.bgColor, event.color)}>
                           <event.icon className="h-3.5 w-3.5" />
                         </div>
-                        <div className="flex-1 text-start">
+                        <div className={cn("flex-1", isRTL ? "text-right" : "text-start")}>
                           <p className="text-sm font-medium">
                             {isRTL ? event.labelAr : event.labelEn}
                           </p>
@@ -339,7 +428,7 @@ export function ContractDetailsDrawer({
                             {formatDateTime(event.date)}
                           </p>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
@@ -362,7 +451,7 @@ export function ContractDetailsDrawer({
                 
                 {contract.status === 'pending_signature' && (
                   <Button 
-                    variant="outline"
+                    variant="default"
                     className="w-full gap-2" 
                     onClick={() => {
                       onClose();
@@ -370,7 +459,7 @@ export function ContractDetailsDrawer({
                     }}
                   >
                     <FileSignature className="h-4 w-4" />
-                    {isRTL ? 'توقيع العقد' : 'Sign Contract'}
+                    {isRTL ? 'توقيع العقد الآن' : 'Sign Contract Now'}
                   </Button>
                 )}
                 
@@ -389,10 +478,39 @@ export function ContractDetailsDrawer({
                     {isRTL ? 'تحميل العقد PDF' : 'Download PDF'}
                   </Button>
                 )}
+
+                {contract.order && (
+                  <Button 
+                    variant="ghost"
+                    className="w-full gap-2" 
+                    onClick={() => {
+                      onClose();
+                      navigate(`/app/orders/${contract.order!.id}`);
+                    }}
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    {isRTL ? 'عرض الطلب المرتبط' : 'View Related Order'}
+                  </Button>
+                )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Loading State */}
+        {isLoadingDetails && (
+          <div className="space-y-4 pt-4">
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-24 w-full rounded-xl" />
+            <div className="space-y-3">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

@@ -27,6 +27,13 @@ export interface ContractService {
   description_ar: string | null;
 }
 
+export interface ContractOrder {
+  id: string;
+  order_number: string;
+  title: string;
+  title_ar: string | null;
+}
+
 export interface CustomerContract {
   id: string;
   contract_number: string;
@@ -45,6 +52,7 @@ export interface CustomerContract {
   updated_at: string;
   tenant_id: string | null;
   service?: ContractService | null;
+  order?: ContractOrder | null;
   // Pre-approval fields
   customer_pre_approval?: boolean;
   pre_approval_timestamp?: string | null;
@@ -63,6 +71,7 @@ export interface ContractFilters {
   dateRange: 'all' | '7d' | '30d' | '90d' | 'custom';
   startDate?: Date;
   endDate?: Date;
+  serviceId?: string;
 }
 
 export type SortField = 'created_at' | 'updated_at' | 'status' | 'pricing';
@@ -73,12 +82,23 @@ export interface ContractsSort {
   direction: SortDirection;
 }
 
+export interface ContractsKPIData {
+  total: number;
+  draft: number;
+  pre_approved: number;
+  pending_admin: number;
+  pending_signature: number;
+  signed: number;
+  cancelled: number;
+}
+
 export const CONTRACT_STATUS_CONFIG: Record<ContractStatus, {
   labelAr: string;
   labelEn: string;
   color: string;
   bgColor: string;
   borderColor: string;
+  priority: number;
 }> = {
   draft: {
     labelAr: 'مسودة',
@@ -86,6 +106,7 @@ export const CONTRACT_STATUS_CONFIG: Record<ContractStatus, {
     color: 'text-slate-700 dark:text-slate-400',
     bgColor: 'bg-slate-100 dark:bg-slate-900/30',
     borderColor: 'border-slate-200 dark:border-slate-800',
+    priority: 5,
   },
   pre_approved_by_customer: {
     labelAr: 'موافقة مبدئية',
@@ -93,6 +114,7 @@ export const CONTRACT_STATUS_CONFIG: Record<ContractStatus, {
     color: 'text-blue-700 dark:text-blue-400',
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
     borderColor: 'border-blue-200 dark:border-blue-800',
+    priority: 4,
   },
   pending_admin_approval: {
     labelAr: 'بانتظار الإدارة',
@@ -100,13 +122,15 @@ export const CONTRACT_STATUS_CONFIG: Record<ContractStatus, {
     color: 'text-amber-700 dark:text-amber-400',
     bgColor: 'bg-amber-100 dark:bg-amber-900/30',
     borderColor: 'border-amber-200 dark:border-amber-800',
+    priority: 3,
   },
   pending_signature: {
     labelAr: 'بانتظار التوقيع',
-    labelEn: 'Pending Signature',
+    labelEn: 'Awaiting Signature',
     color: 'text-indigo-700 dark:text-indigo-400',
     bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
     borderColor: 'border-indigo-200 dark:border-indigo-800',
+    priority: 1,
   },
   signed: {
     labelAr: 'موقّع',
@@ -114,6 +138,7 @@ export const CONTRACT_STATUS_CONFIG: Record<ContractStatus, {
     color: 'text-emerald-700 dark:text-emerald-400',
     bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
     borderColor: 'border-emerald-200 dark:border-emerald-800',
+    priority: 2,
   },
   cancelled: {
     labelAr: 'ملغي',
@@ -121,5 +146,6 @@ export const CONTRACT_STATUS_CONFIG: Record<ContractStatus, {
     color: 'text-red-700 dark:text-red-400',
     bgColor: 'bg-red-100 dark:bg-red-900/30',
     borderColor: 'border-red-200 dark:border-red-800',
+    priority: 6,
   },
 };
