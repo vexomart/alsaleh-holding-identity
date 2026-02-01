@@ -120,17 +120,22 @@ export function OrdersTable({
       <Table>
         <TableHeader className="bg-muted/30 sticky top-0 z-10">
           <TableRow className="hover:bg-transparent">
-            {/* RTL Column Order: Status - Service - Order# - Created - Updated - Amount - Actions */}
+            {/* RTL Column Order: Order# (far right) - Service - Status - Amount - Created - Updated - Actions (far left) */}
+            <TableHead className={cn("w-[160px]", isRTL && "text-right")}>
+              {isRTL ? 'رقم الطلب' : 'Order #'}
+            </TableHead>
+            <TableHead className={cn("min-w-[180px]", isRTL && "text-right")}>
+              {isRTL ? 'اسم الخدمة' : 'Service Name'}
+            </TableHead>
             <TableHead className={cn("w-[120px]", isRTL && "text-right")}>
               <SortableHeader field="status">
                 {isRTL ? 'الحالة' : 'Status'}
               </SortableHeader>
             </TableHead>
-            <TableHead className={cn("min-w-[180px]", isRTL && "text-right")}>
-              {isRTL ? 'اسم الخدمة' : 'Service Name'}
-            </TableHead>
-            <TableHead className={cn("w-[160px]", isRTL && "text-right")}>
-              {isRTL ? 'رقم الطلب' : 'Order #'}
+            <TableHead className={cn("w-[120px]", isRTL && "text-right")}>
+              <SortableHeader field="total_amount">
+                {isRTL ? 'المبلغ' : 'Amount'}
+              </SortableHeader>
             </TableHead>
             <TableHead className={cn("w-[130px]", isRTL && "text-right")}>
               <SortableHeader field="created_at">
@@ -140,11 +145,6 @@ export function OrdersTable({
             <TableHead className={cn("w-[130px]", isRTL && "text-right")}>
               <SortableHeader field="updated_at">
                 {isRTL ? 'آخر تحديث' : 'Updated'}
-              </SortableHeader>
-            </TableHead>
-            <TableHead className={cn("w-[120px]", isRTL && "text-right")}>
-              <SortableHeader field="total_amount">
-                {isRTL ? 'المبلغ' : 'Amount'}
               </SortableHeader>
             </TableHead>
             {/* Actions column - Always on far left in RTL (industry standard) */}
@@ -168,9 +168,14 @@ export function OrdersTable({
                 selectedOrderId === order.id && 'bg-primary/5 hover:bg-primary/10'
               )}
             >
-              {/* Status */}
+              {/* Order Number - Always LTR (far right in RTL) */}
               <TableCell className={cn(isRTL && "text-right")}>
-                <OrderStatusBadge status={order.status} size="sm" />
+                <span 
+                  dir="ltr" 
+                  className="font-mono text-sm text-muted-foreground tabular-nums"
+                >
+                  {order.order_number}
+                </span>
               </TableCell>
               
               {/* Service Name */}
@@ -182,13 +187,15 @@ export function OrdersTable({
                 </span>
               </TableCell>
               
-              {/* Order Number - Always LTR */}
+              {/* Status */}
               <TableCell className={cn(isRTL && "text-right")}>
-                <span 
-                  dir="ltr" 
-                  className="font-mono text-sm text-muted-foreground tabular-nums"
-                >
-                  {order.order_number}
+                <OrderStatusBadge status={order.status} size="sm" />
+              </TableCell>
+              
+              {/* Amount - LTR for numbers */}
+              <TableCell className={cn(isRTL && "text-right")}>
+                <span dir="ltr" className="font-semibold tabular-nums">
+                  {formatCurrency(order.total_amount, order.currency)}
                 </span>
               </TableCell>
               
@@ -200,13 +207,6 @@ export function OrdersTable({
               {/* Updated Date */}
               <TableCell className={cn("text-sm text-muted-foreground", isRTL && "text-right")}>
                 {formatDate(order.updated_at)}
-              </TableCell>
-              
-              {/* Amount - LTR for numbers */}
-              <TableCell className={cn(isRTL && "text-right")}>
-                <span dir="ltr" className="font-semibold tabular-nums">
-                  {formatCurrency(order.total_amount, order.currency)}
-                </span>
               </TableCell>
               
               {/* Actions */}
