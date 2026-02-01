@@ -6,3 +6,4 @@
 export { WalletStatsCards } from "./WalletStatsCards";
 export { WalletCustomersTable } from "./WalletCustomersTable";
 export { WalletDetailDrawer } from "./WalletDetailDrawer";
+export { WalletAnalyticsCharts } from "./WalletAnalyticsCharts";
