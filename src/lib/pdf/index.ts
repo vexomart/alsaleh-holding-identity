@@ -88,6 +88,7 @@ export type {
   ContractParty,
   ContractClause,
   ContractPricing,
+  ContractSignatureStatus,
   CreateContractPDFOptions,
 } from './templates/contract.template';
 
@@ -111,6 +112,9 @@ export {
   dbContractToContractData,
   defaultContractClauses,
   generateContractContent,
+  // Sample contracts for testing
+  sampleContractShort,
+  sampleContractLong,
 } from './templates/contract.template';
 
 // Arabic text utilities (legacy)

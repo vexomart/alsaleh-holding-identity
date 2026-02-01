@@ -11,6 +11,9 @@ export {
   calculateVAT,
   calculateInvoiceTotals,
   orderToInvoiceData,
+  // Sample data
+  sampleInvoiceArabicOnly,
+  sampleInvoiceMixed,
   type InvoiceData,
   type InvoiceItem,
   type InvoiceCustomer,
@@ -24,9 +27,13 @@ export {
   generateContractContent,
   dbContractToContractData,
   defaultContractClauses,
+  // Sample data
+  sampleContractShort,
+  sampleContractLong,
   type ContractData,
   type ContractParty,
   type ContractClause,
   type ContractPricing,
+  type ContractSignatureStatus,
   type CreateContractPDFOptions,
 } from './contract.template';
