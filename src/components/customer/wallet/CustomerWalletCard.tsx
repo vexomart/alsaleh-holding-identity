@@ -41,6 +41,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { WalletTopupDialog } from "./WalletTopupDialog";
+import { CustomerWalletCharts } from "./CustomerWalletCharts";
 import type { CustomerWallet, FinancialTransaction } from "@/types/financial";
 
 interface CustomerWalletCardProps {
@@ -490,6 +491,11 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Analytics Charts - Full Width */}
+      <div className="lg:col-span-3">
+        <CustomerWalletCharts />
+      </div>
     </div>
   );
 }
