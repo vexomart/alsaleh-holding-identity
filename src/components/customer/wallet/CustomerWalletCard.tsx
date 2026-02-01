@@ -2,12 +2,14 @@
  * Customer Wallet Card Component - Premium Bank-Grade Design
  * Displays wallet balance, customer UID, and recent transactions
  * Modern glassmorphism with RTL support
+ * PHASE WALLET-4: Enterprise animations (RTL-safe, accessible)
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useWalletRealtime } from "@/hooks/useWalletRealtime";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AnimatedNumber } from "@/components/ui/animated-number";
 import { motion } from "framer-motion";
 import {
   Wallet,
@@ -60,6 +63,9 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
   const [copiedUid, setCopiedUid] = useState(false);
   const [copiedWallet, setCopiedWallet] = useState(false);
   const [showBalance, setShowBalance] = useState(true);
+  const [newTransactionIds, setNewTransactionIds] = useState<Set<string>>(new Set());
+  const reducedMotion = useReducedMotion();
+  const previousTransactionIds = useRef<Set<string>>(new Set());
 
   // Realtime updates for wallet
   const { isConnected, lastWalletEvent, lastTransactionEvent } = useWalletRealtime({
@@ -77,12 +83,19 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
         });
       }
     },
-    onTransactionCreated: () => {
+    onTransactionCreated: (event) => {
       fetchTransactions();
+      // Show toast for new transaction with animation
+      toast({
+        title: isRTL ? "معاملة جديدة" : "New Transaction",
+        description: isRTL 
+          ? `تم إضافة معاملة بقيمة ${event.amount?.toLocaleString('ar-SA')} ر.س`
+          : `Transaction of ${event.amount?.toLocaleString('en-US')} SAR added`,
+      });
     },
   });
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (isInitialLoad = false) => {
     if (!user?.id) return;
     const { data: transData } = await supabase
       .from("financial_transactions" as never)
@@ -92,7 +105,26 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
       .limit(10);
 
     if (transData) {
-      setTransactions(transData as FinancialTransaction[]);
+      const newTxs = transData as FinancialTransaction[];
+      
+      // Track new transactions for highlight animation
+      if (!isInitialLoad && previousTransactionIds.current.size > 0) {
+        const newIds = new Set<string>();
+        newTxs.forEach(tx => {
+          if (!previousTransactionIds.current.has(tx.id)) {
+            newIds.add(tx.id);
+          }
+        });
+        if (newIds.size > 0) {
+          setNewTransactionIds(newIds);
+          // Clear highlight after animation
+          setTimeout(() => setNewTransactionIds(new Set()), 2000);
+        }
+      }
+      
+      // Update previous IDs reference
+      previousTransactionIds.current = new Set(newTxs.map(tx => tx.id));
+      setTransactions(newTxs);
     }
   };
 
@@ -146,7 +178,9 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
           .limit(10);
 
         if (transData) {
-          setTransactions(transData as FinancialTransaction[]);
+          const txs = transData as FinancialTransaction[];
+          previousTransactionIds.current = new Set(txs.map(tx => tx.id));
+          setTransactions(txs);
         }
       } catch (error) {
         console.error("Error fetching wallet data:", error);
@@ -368,7 +402,18 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
                   </p>
                   <div className="flex items-center gap-2">
                     <span className="text-2xl md:text-3xl font-bold tracking-tight">
-                      {showBalance ? formatCurrency(wallet?.balance || 0) : "•••••"}
+                      {showBalance ? (
+                        <AnimatedNumber
+                          value={wallet?.balance || 0}
+                          locale={isRTL ? "ar-SA" : "en-US"}
+                          formatOptions={{
+                            style: "currency",
+                            currency: "SAR",
+                            minimumFractionDigits: 2,
+                          }}
+                          className="text-white"
+                        />
+                      ) : "•••••"}
                     </span>
                     <Button
                       variant="ghost"
@@ -466,45 +511,62 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
             ) : (
               <ScrollArea className="h-[380px]">
                 <div className="space-y-2 pe-2">
-                  {transactions.map((tx, index) => (
-                    <motion.div
-                      key={tx.id}
-                      initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.2, delay: index * 0.05 }}
-                      className="flex items-center justify-between p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-background flex items-center justify-center border border-border/50 shadow-sm">
-                          {getTransactionIcon(tx.transaction_type)}
+                  {transactions.map((tx, index) => {
+                    const isNewTransaction = newTransactionIds.has(tx.id);
+                    return (
+                      <motion.div
+                        key={tx.id}
+                        initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ 
+                          duration: 0.15, // 150ms max for finance modules
+                          delay: reducedMotion ? 0 : index * 0.03,
+                          ease: [0.25, 0.1, 0.25, 1],
+                        }}
+                        className={cn(
+                          "flex items-center justify-between p-3 rounded-xl transition-all duration-150",
+                          isNewTransaction 
+                            ? "bg-primary/10 ring-2 ring-primary/30 animate-pulse" 
+                            : "bg-muted/30 hover:bg-muted/50"
+                        )}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={cn(
+                            "h-10 w-10 rounded-xl flex items-center justify-center border shadow-sm transition-colors",
+                            isNewTransaction 
+                              ? "bg-primary/10 border-primary/30" 
+                              : "bg-background border-border/50"
+                          )}>
+                            {getTransactionIcon(tx.transaction_type)}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {getTransactionTypeLabel(tx.transaction_type)}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {formatDate(tx.created_at)}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            {getTransactionTypeLabel(tx.transaction_type)}
+                        <div className="text-left">
+                          <p className={cn(
+                            "text-sm font-bold",
+                            tx.transaction_type === "topup" || tx.transaction_type === "refund"
+                              ? "text-green-600"
+                              : "text-foreground"
+                          )}>
+                            <span dir="ltr">
+                              {tx.transaction_type === "topup" || tx.transaction_type === "refund" ? "+" : "-"}
+                              {formatCurrency(Number(tx.amount))}
+                            </span>
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            {formatDate(tx.created_at)}
-                          </p>
+                          <div className="flex justify-end mt-1">
+                            {getStatusBadge(tx.status)}
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-left">
-                        <p className={cn(
-                          "text-sm font-bold",
-                          tx.transaction_type === "topup" || tx.transaction_type === "refund"
-                            ? "text-green-600"
-                            : "text-foreground"
-                        )}>
-                          <span dir="ltr">
-                            {tx.transaction_type === "topup" || tx.transaction_type === "refund" ? "+" : "-"}
-                            {formatCurrency(Number(tx.amount))}
-                          </span>
-                        </p>
-                        <div className="flex justify-end mt-1">
-                          {getStatusBadge(tx.status)}
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </ScrollArea>
             )}
