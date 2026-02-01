@@ -1,6 +1,6 @@
 /**
  * Customer Notifications Center - Premium Notifications Hub
- * Full RTL/LTR support with bilingual UI
+ * Full RTL/LTR support with bilingual UI and realtime updates
  */
 
 import { useState } from "react";
@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
-import { useNotifications } from "@/hooks/useNotifications";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useProactiveNotifications } from "@/hooks/useProactiveNotifications";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,39 +28,45 @@ import {
   Settings,
   ExternalLink,
   RefreshCw,
+  Receipt,
+  CreditCard,
+  Wallet,
+  Package,
+  Clock,
+  FileSignature,
+  FileCheck,
+  FileX,
+  MessageSquare,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
-import type { NotificationType } from "@/types/notifications";
+import type { NotificationType, NotificationSeverity } from "@/types/notifications";
 
 const typeConfig: Record<NotificationType, {
   icon: React.ElementType;
   color: string;
   bg: string;
 }> = {
-  info: {
-    icon: Info,
-    color: "text-blue-600 dark:text-blue-400",
-    bg: "bg-blue-100 dark:bg-blue-900/30",
-  },
-  warning: {
-    icon: AlertTriangle,
-    color: "text-amber-600 dark:text-amber-400",
-    bg: "bg-amber-100 dark:bg-amber-900/30",
-  },
-  success: {
-    icon: CheckCircle,
-    color: "text-emerald-600 dark:text-emerald-400",
-    bg: "bg-emerald-100 dark:bg-emerald-900/30",
-  },
-  error: {
-    icon: XCircle,
-    color: "text-red-600 dark:text-red-400",
-    bg: "bg-red-100 dark:bg-red-900/30",
-  },
-  system: {
-    icon: Settings,
-    color: "text-purple-600 dark:text-purple-400",
-    bg: "bg-purple-100 dark:bg-purple-900/30",
-  },
+  info: { icon: Info, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-100 dark:bg-blue-900/30" },
+  warning: { icon: AlertTriangle, color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-100 dark:bg-amber-900/30" },
+  success: { icon: CheckCircle, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
+  error: { icon: XCircle, color: "text-red-600 dark:text-red-400", bg: "bg-red-100 dark:bg-red-900/30" },
+  system: { icon: Settings, color: "text-purple-600 dark:text-purple-400", bg: "bg-purple-100 dark:bg-purple-900/30" },
+  invoice_due: { icon: Receipt, color: "text-orange-600 dark:text-orange-400", bg: "bg-orange-100 dark:bg-orange-900/30" },
+  payment_failed: { icon: CreditCard, color: "text-red-600 dark:text-red-400", bg: "bg-red-100 dark:bg-red-900/30" },
+  low_wallet_balance: { icon: Wallet, color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-100 dark:bg-amber-900/30" },
+  order_status_changed: { icon: Package, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-100 dark:bg-blue-900/30" },
+  order_delayed: { icon: Clock, color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-100 dark:bg-amber-900/30" },
+  contract_pending_signature: { icon: FileSignature, color: "text-indigo-600 dark:text-indigo-400", bg: "bg-indigo-100 dark:bg-indigo-900/30" },
+  contract_signed: { icon: FileCheck, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
+  contract_expired: { icon: FileX, color: "text-red-600 dark:text-red-400", bg: "bg-red-100 dark:bg-red-900/30" },
+  admin_message: { icon: MessageSquare, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-100 dark:bg-blue-900/30" },
+};
+
+const severityStyles: Record<NotificationSeverity, string> = {
+  info: "border-blue-200 dark:border-blue-800",
+  warning: "border-amber-200 dark:border-amber-800",
+  critical: "border-red-300 dark:border-red-800 bg-red-50/50 dark:bg-red-950/20",
 };
 
 export function CustomerNotifications() {
@@ -73,14 +79,21 @@ export function CustomerNotifications() {
     notifications,
     unreadCount,
     isLoading,
+    isConnected,
     markAsRead,
     markAllAsRead,
     deleteNotification,
-  } = useNotifications({ userId: user?.id });
+    refetch,
+  } = useProactiveNotifications({
+    userId: user?.id,
+    roleTarget: 'customer',
+    limit: 50,
+    enableRealtime: true,
+    showToasts: true,
+  });
 
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
 
-  // RTL helpers
   const rtlRow = isRTL ? "flex-row-reverse" : "flex-row";
   const rtlText = isRTL ? "text-right" : "text-left";
 
@@ -198,9 +211,21 @@ export function CustomerNotifications() {
             <Bell className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">
-              {isRTL ? "الإشعارات" : "Notifications"}
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold">
+                {isRTL ? "الإشعارات" : "Notifications"}
+              </h1>
+              {isConnected ? (
+                <Badge variant="outline" className="gap-1 text-green-600 border-green-600">
+                  <Wifi className="h-3 w-3" />
+                  {isRTL ? 'مباشر' : 'Live'}
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="gap-1 text-muted-foreground">
+                  <WifiOff className="h-3 w-3" />
+                </Badge>
+              )}
+            </div>
             {unreadCount > 0 && (
               <p className="text-sm text-muted-foreground mt-0.5">
                 {isRTL
@@ -211,6 +236,10 @@ export function CustomerNotifications() {
           </div>
         </div>
         <div className={cn("flex items-center gap-2", rtlRow)}>
+          <Button onClick={refetch} variant="outline" size="sm" className={cn("gap-2", rtlRow)}>
+            <RefreshCw className="h-4 w-4" />
+            {isRTL ? "تحديث" : "Refresh"}
+          </Button>
           {unreadCount > 0 && (
             <Button onClick={handleMarkAllAsRead} variant="outline" size="sm" className={cn("gap-2", rtlRow)}>
               <CheckCheck className="h-4 w-4" />
@@ -247,6 +276,7 @@ export function CustomerNotifications() {
             const typeInfo = typeConfig[notification.type] || typeConfig.info;
             const TypeIcon = typeInfo.icon;
             const isProcessing = processingIds.has(notification.id);
+            const severityStyle = severityStyles[notification.severity || 'info'];
 
             return (
               <motion.div
@@ -258,7 +288,8 @@ export function CustomerNotifications() {
                 <Card
                   className={cn(
                     "transition-all cursor-pointer hover:shadow-md",
-                    !notification.is_read && "border-primary/30 bg-primary/5"
+                    !notification.is_read && "border-primary/30 bg-primary/5",
+                    notification.severity === 'critical' && severityStyle
                   )}
                   onClick={() =>
                     handleNotificationClick(
@@ -279,21 +310,28 @@ export function CustomerNotifications() {
                       <div className="flex-1 min-w-0">
                         <div className={cn("flex items-start justify-between gap-2", rtlRow)}>
                           <div className={rtlText}>
-                            <h3
-                              className={cn(
-                                "font-medium",
-                                !notification.is_read && "font-semibold"
+                            <div className="flex items-center gap-2">
+                              <h3 className={cn("font-medium", !notification.is_read && "font-semibold")}>
+                                {isRTL
+                                  ? notification.title_ar || notification.title
+                                  : notification.title}
+                              </h3>
+                              {notification.severity === 'critical' && (
+                                <Badge variant="destructive" className="text-xs">
+                                  {isRTL ? 'حرج' : 'Critical'}
+                                </Badge>
                               )}
-                            >
-                              {isRTL
-                                ? notification.title_ar || notification.title
-                                : notification.title}
-                            </h3>
-                            {(notification.message || notification.message_ar) && (
+                              {notification.severity === 'warning' && (
+                                <Badge variant="outline" className="text-xs text-amber-600 border-amber-600">
+                                  {isRTL ? 'تحذير' : 'Warning'}
+                                </Badge>
+                              )}
+                            </div>
+                            {(notification.body_ar || notification.body_en || notification.message) && (
                               <p className="text-sm text-muted-foreground mt-1">
                                 {isRTL
-                                  ? notification.message_ar || notification.message
-                                  : notification.message}
+                                  ? notification.body_ar || notification.message_ar || notification.message
+                                  : notification.body_en || notification.message}
                               </p>
                             )}
                           </div>

@@ -6,7 +6,6 @@
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
-import { useNotifications } from "@/hooks/useNotifications";
 import { cn } from "@/lib/utils";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -31,11 +30,11 @@ import {
   Sun,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { NotificationBell } from "@/components/notifications";
 
 export function CustomerHeader() {
   const { language, setLanguage, isRTL } = useLanguage();
   const { user, profile, signOut } = useAuth();
-  const { unreadCount } = useNotifications({ userId: user?.id });
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -114,26 +113,17 @@ export function CustomerHeader() {
               <span>English</span>
               {language === "en" && <span className="ms-auto text-primary">✓</span>}
             </DropdownMenuItem>
-          </DropdownMenuContent>
+        </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Notifications */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-9 w-9 rounded-full hover:bg-muted relative"
-          onClick={() => navigate("/app/notifications")}
-        >
-          <Bell className="h-[18px] w-[18px]" />
-          {unreadCount > 0 && (
-            <Badge 
-              variant="destructive" 
-              className="absolute -top-0.5 -end-0.5 h-[18px] min-w-[18px] px-1 text-[10px] font-bold flex items-center justify-center"
-            >
-              {unreadCount > 99 ? "99+" : unreadCount}
-            </Badge>
-          )}
-        </Button>
+        {/* Notifications Bell with Dropdown */}
+        <NotificationBell
+          userId={user?.id}
+          roleTarget="customer"
+          isRTL={isRTL}
+          notificationsPageUrl="/app/notifications"
+          maxItems={5}
+        />
 
         <Separator orientation="vertical" className="h-5 mx-1 hidden sm:block" />
 
@@ -187,11 +177,6 @@ export function CustomerHeader() {
             >
               <Bell className="h-4 w-4" />
               {isRTL ? "الإشعارات" : "Notifications"}
-              {unreadCount > 0 && (
-                <Badge variant="secondary" className="ms-auto text-xs">
-                  {unreadCount}
-                </Badge>
-              )}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem 

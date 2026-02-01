@@ -999,47 +999,80 @@ export type Database = {
       }
       notifications: {
         Row: {
+          body_ar: string | null
+          body_en: string | null
           created_at: string | null
           id: string
+          idempotency_key: string | null
           is_read: boolean | null
           link: string | null
           message: string | null
           message_ar: string | null
           metadata: Json | null
           read_at: string | null
+          role_target:
+            | Database["public"]["Enums"]["notification_role_target"]
+            | null
+          scheduled_for: string | null
+          severity: Database["public"]["Enums"]["notification_severity"] | null
+          source_id: string | null
+          source_type: string | null
           tenant_id: string | null
           title: string
           title_ar: string | null
+          title_en: string | null
           type: Database["public"]["Enums"]["notification_type"] | null
           user_id: string | null
         }
         Insert: {
+          body_ar?: string | null
+          body_en?: string | null
           created_at?: string | null
           id?: string
+          idempotency_key?: string | null
           is_read?: boolean | null
           link?: string | null
           message?: string | null
           message_ar?: string | null
           metadata?: Json | null
           read_at?: string | null
+          role_target?:
+            | Database["public"]["Enums"]["notification_role_target"]
+            | null
+          scheduled_for?: string | null
+          severity?: Database["public"]["Enums"]["notification_severity"] | null
+          source_id?: string | null
+          source_type?: string | null
           tenant_id?: string | null
           title: string
           title_ar?: string | null
+          title_en?: string | null
           type?: Database["public"]["Enums"]["notification_type"] | null
           user_id?: string | null
         }
         Update: {
+          body_ar?: string | null
+          body_en?: string | null
           created_at?: string | null
           id?: string
+          idempotency_key?: string | null
           is_read?: boolean | null
           link?: string | null
           message?: string | null
           message_ar?: string | null
           metadata?: Json | null
           read_at?: string | null
+          role_target?:
+            | Database["public"]["Enums"]["notification_role_target"]
+            | null
+          scheduled_for?: string | null
+          severity?: Database["public"]["Enums"]["notification_severity"] | null
+          source_id?: string | null
+          source_type?: string | null
           tenant_id?: string | null
           title?: string
           title_ar?: string | null
+          title_en?: string | null
           type?: Database["public"]["Enums"]["notification_type"] | null
           user_id?: string | null
         }
@@ -1833,6 +1866,25 @@ export type Database = {
         }
         Returns: string
       }
+      create_proactive_notification: {
+        Args: {
+          p_body_ar?: string
+          p_body_en?: string
+          p_idempotency_key?: string
+          p_link?: string
+          p_role_target: Database["public"]["Enums"]["notification_role_target"]
+          p_scheduled_for?: string
+          p_severity: Database["public"]["Enums"]["notification_severity"]
+          p_source_id?: string
+          p_source_type?: string
+          p_tenant_id: string
+          p_title_ar: string
+          p_title_en: string
+          p_type: Database["public"]["Enums"]["notification_type"]
+          p_user_id: string
+        }
+        Returns: string
+      }
       generate_bank_transfer_reference: { Args: never; Returns: string }
       generate_contract_number: {
         Args: { p_tenant_id?: string }
@@ -1847,6 +1899,41 @@ export type Database = {
         Returns: string
       }
       get_customer_wallet: { Args: { p_customer_id: string }; Returns: string }
+      get_delayed_orders: {
+        Args: { p_hours_threshold?: number }
+        Returns: {
+          customer_id: string
+          hours_since_update: number
+          last_updated: string
+          order_id: string
+          order_number: string
+          status: Database["public"]["Enums"]["order_status"]
+          tenant_id: string
+        }[]
+      }
+      get_expiring_contracts: {
+        Args: { p_days_threshold?: number }
+        Returns: {
+          contract_id: string
+          contract_number: string
+          created_at: string
+          customer_user_id: string
+          status: Database["public"]["Enums"]["contract_status"]
+          tenant_id: string
+        }[]
+      }
+      get_invoices_needing_reminders: {
+        Args: never
+        Returns: {
+          customer_id: string
+          due_date: string
+          hours_until_due: number
+          invoice_id: string
+          invoice_number: string
+          tenant_id: string
+          total: number
+        }[]
+      }
       get_next_service_sort_order: {
         Args: { p_tenant_id?: string }
         Returns: number
@@ -1860,6 +1947,16 @@ export type Database = {
       }
       get_user_tenant_id: { Args: { _user_id: string }; Returns: string }
       get_wallet_balance: { Args: { p_wallet_id: string }; Returns: number }
+      get_wallets_with_low_balance: {
+        Args: { p_threshold?: number }
+        Returns: {
+          balance: number
+          currency: string
+          customer_user_id: string
+          tenant_id: string
+          wallet_id: string
+        }[]
+      }
       has_permission: {
         Args: { _permission: string; _user_id: string }
         Returns: boolean
@@ -1961,7 +2058,23 @@ export type Database = {
         | "revenue"
         | "expense"
         | "equity"
-      notification_type: "info" | "warning" | "success" | "error" | "system"
+      notification_role_target: "admin" | "customer" | "all"
+      notification_severity: "info" | "warning" | "critical"
+      notification_type:
+        | "info"
+        | "warning"
+        | "success"
+        | "error"
+        | "system"
+        | "invoice_due"
+        | "payment_failed"
+        | "low_wallet_balance"
+        | "order_status_changed"
+        | "order_delayed"
+        | "contract_pending_signature"
+        | "contract_signed"
+        | "contract_expired"
+        | "admin_message"
       order_status:
         | "pending"
         | "processing"
@@ -2149,7 +2262,24 @@ export const Constants = {
         "expense",
         "equity",
       ],
-      notification_type: ["info", "warning", "success", "error", "system"],
+      notification_role_target: ["admin", "customer", "all"],
+      notification_severity: ["info", "warning", "critical"],
+      notification_type: [
+        "info",
+        "warning",
+        "success",
+        "error",
+        "system",
+        "invoice_due",
+        "payment_failed",
+        "low_wallet_balance",
+        "order_status_changed",
+        "order_delayed",
+        "contract_pending_signature",
+        "contract_signed",
+        "contract_expired",
+        "admin_message",
+      ],
       order_status: [
         "pending",
         "processing",
