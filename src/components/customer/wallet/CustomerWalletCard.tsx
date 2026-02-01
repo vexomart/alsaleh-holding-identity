@@ -173,6 +173,21 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     }
   };
 
+  const copyWalletToClipboard = async () => {
+    if (!wallet?.wallet_number) return;
+    try {
+      await navigator.clipboard.writeText(wallet.wallet_number);
+      setCopiedWallet(true);
+      toast({
+        title: isRTL ? "تم النسخ" : "Copied",
+        description: isRTL ? "تم نسخ رقم المحفظة" : "Wallet number copied",
+      });
+      setTimeout(() => setCopiedWallet(false), 2000);
+    } catch (error) {
+      console.error("Failed to copy:", error);
+    }
+  };
+
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case "topup":
@@ -330,9 +345,19 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
                 <p className="text-[10px] text-white/40 uppercase tracking-wider">
                   {isRTL ? "رقم المحفظة" : "Wallet Number"}
                 </p>
-                <p className="font-mono text-xl md:text-2xl tracking-[0.2em] text-white/90">
-                  {formatWalletNumber(wallet?.wallet_number || "0000000000000000")}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="font-mono text-xl md:text-2xl tracking-[0.2em] text-white/90">
+                    {formatWalletNumber(wallet?.wallet_number || "0000000000000000")}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 text-white/40 hover:text-white hover:bg-white/10 rounded-full"
+                    onClick={copyWalletToClipboard}
+                  >
+                    {copiedWallet ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                  </Button>
+                </div>
               </div>
 
               {/* Bottom Row - Balance & Actions */}
