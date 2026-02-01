@@ -16,6 +16,8 @@ import { CustomerNotifications } from '@/components/customer/CustomerNotificatio
 import { CustomerProfile } from '@/components/customer/CustomerProfile';
 import { CustomerWallet } from '@/components/customer/CustomerWallet';
 import { CustomerTransactions } from '@/components/customer/CustomerTransactions';
+import { CustomerContracts } from '@/components/customer/CustomerContracts';
+import { CustomerContractDetails } from '@/components/customer/CustomerContractDetails';
 
 const CustomerDashboard = () => {
   return (
@@ -27,6 +29,8 @@ const CustomerDashboard = () => {
         <Route path="services" element={<CustomerServices />} />
         <Route path="services/:category" element={<CustomerCategoryServices />} />
         <Route path="service/:serviceId" element={<CustomerServiceDetails />} />
+        <Route path="contracts" element={<CustomerContracts />} />
+        <Route path="contracts/:id" element={<CustomerContractDetails />} />
         <Route path="wallet" element={<CustomerWallet />} />
         <Route path="transactions" element={<CustomerTransactions />} />
         <Route path="notifications" element={<CustomerNotifications />} />
