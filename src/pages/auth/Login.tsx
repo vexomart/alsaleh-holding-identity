@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, Globe, User } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, Globe, User, Shield } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,6 +26,7 @@ const signupSchema = z.object({
 
 const Login = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { signIn, signUp } = useAuth();
   const { language, setLanguage, t, isRTL } = useLanguage();
   
@@ -35,6 +37,80 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [nafathLoading, setNafathLoading] = useState(false);
+  const [nafathProcessing, setNafathProcessing] = useState(false);
+
+  // Handle Nafath callback
+  useEffect(() => {
+    const provider = searchParams.get('provider');
+    if (provider === 'nafath') {
+      handleNafathCallback();
+    }
+  }, [searchParams]);
+
+  const handleNafathCallback = async () => {
+    setNafathProcessing(true);
+    try {
+      const state = searchParams.get('state');
+      const code = searchParams.get('code');
+      const session_id = searchParams.get('session_id');
+
+      if (!state) {
+        toast.error('فشل التحقق عبر نفاذ: معلومات ناقصة');
+        setNafathProcessing(false);
+        return;
+      }
+
+      const response = await supabase.functions.invoke('nafath-callback', {
+        body: { state, code, session_id }
+      });
+
+      if (response.error || !response.data?.success) {
+        toast.error(response.data?.message || 'فشل التحقق عبر نفاذ، حاول مرة أخرى');
+        setNafathProcessing(false);
+        // Clear URL params
+        window.history.replaceState({}, '', '/auth/login');
+        return;
+      }
+
+      toast.success('تم تسجيل الدخول بنجاح');
+      
+      // Route based on role
+      const role = response.data.role;
+      if (role === 'admin' || role === 'super_admin') {
+        navigate('/admin');
+      } else {
+        navigate('/app');
+      }
+    } catch (error) {
+      console.error('Nafath callback error:', error);
+      toast.error('فشل التحقق عبر نفاذ، حاول مرة أخرى');
+      setNafathProcessing(false);
+      window.history.replaceState({}, '', '/auth/login');
+    }
+  };
+
+  const handleNafathLogin = async () => {
+    setNafathLoading(true);
+    try {
+      const response = await supabase.functions.invoke('nafath-start', {
+        body: { callback_url: `${window.location.origin}/auth/login?provider=nafath` }
+      });
+
+      if (response.error || !response.data?.success) {
+        toast.error(response.data?.message || 'فشل الاتصال بخدمة نفاذ');
+        setNafathLoading(false);
+        return;
+      }
+
+      // Redirect to Nafath
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error('Nafath start error:', error);
+      toast.error('فشل الاتصال بخدمة نفاذ، حاول مرة أخرى');
+      setNafathLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,9 +164,27 @@ const Login = () => {
     }
   };
 
+  // Show processing screen while handling Nafath callback
+  if (nafathProcessing) {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted to-background p-4"
+        dir="rtl"
+      >
+        <Card className="border-border/50 bg-card/95 backdrop-blur-xl shadow-2xl w-full max-w-md">
+          <CardContent className="py-12 text-center">
+            <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary mb-4" />
+            <p className="text-lg font-medium">جارِ التحقق عبر نفاذ...</p>
+            <p className="text-muted-foreground text-sm mt-2">يرجى الانتظار</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div 
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted to-background p-4"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Background Pattern */}
@@ -246,8 +340,42 @@ const Login = () => {
                 )}
               </Button>
 
+              {/* Divider */}
+              {!isSignUp && (
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-border" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">
+                      {isRTL ? 'أو' : 'or'}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Nafath Login Button - Only for login */}
+              {!isSignUp && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-11 text-base font-medium border-2 border-primary/30 hover:border-primary hover:bg-primary/5"
+                  onClick={handleNafathLogin}
+                  disabled={nafathLoading || isLoading}
+                >
+                  {nafathLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      <Shield className="w-5 h-5 text-primary" />
+                      <span className="ms-2">{isRTL ? 'الدخول عبر نفاذ' : 'Sign in with Nafath'}</span>
+                    </>
+                  )}
+                </Button>
+              )}
+
               {/* Toggle Sign Up / Sign In */}
-              <div className="text-center">
+              <div className="text-center mt-4">
                 <button
                   type="button"
                   onClick={() => setIsSignUp(!isSignUp)}
