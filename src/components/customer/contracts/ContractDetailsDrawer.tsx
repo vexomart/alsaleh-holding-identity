@@ -36,7 +36,7 @@ import {
 import { CustomerContract, CONTRACT_STATUS_CONFIG } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
 import { type ContractData } from '@/lib/pdf';
-import { runPdfDiagnostics } from '@/lib/pdf/debug/download-diagnostics';
+import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
 
 interface ContractDetailsDrawerProps {
   contract: CustomerContract | null;
@@ -128,7 +128,7 @@ export function ContractDetailsDrawer({
   const handleDownloadPdf = async () => {
     if (!contract || contract.status !== 'signed') return;
 
-    console.log('[PDF] Download clicked', { kind: 'contract', id: contract.id });
+    console.log('[PDF] clicked', { kind: 'contract', id: contract.id });
 
     setIsGeneratingPdf(true);
     try {
@@ -176,7 +176,7 @@ export function ContractDetailsDrawer({
         },
       };
 
-      const report = await runPdfDiagnostics('contract', contractData);
+      const report = await runPdfDebug('contract', contractData);
 
       if (report.ok) {
         toast.success(isRTL ? 'تم تحميل العقد' : 'Contract downloaded');

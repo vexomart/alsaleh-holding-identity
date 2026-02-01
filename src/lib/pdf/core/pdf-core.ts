@@ -265,17 +265,43 @@ export async function generatePDFBlob(
   }
 
   return new Promise((resolve, reject) => {
+    let settled = false;
+
+    // pdfmake أحياناً يرمي الخطأ عبر unhandledrejection (بدون callback)،
+    // مما يؤدي إلى timeout بدل رفض واضح. نلتقطه أثناء getBlob فقط.
+    const onUnhandledRejection = (event: PromiseRejectionEvent) => {
+      const reason = event.reason as any;
+      const message = (reason?.message || String(reason || '')).toString();
+      if (!message) return;
+
+      // نركز على أخطاء الخطوط/VFS لأنها الأكثر شيوعاً وتسبب التعليق.
+      if (message.includes('virtual file system') || message.includes('Cairo')) {
+        event.preventDefault?.();
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
+        reject(reason instanceof Error ? reason : new Error(message));
+      }
+    };
+
     // Set a timeout to catch hanging blob generation
     const timeout = setTimeout(() => {
       console.error('[PDF CORE] PDF generation timed out after 30 seconds');
+      if (settled) return;
+      settled = true;
+      window.removeEventListener('unhandledrejection', onUnhandledRejection);
       reject(new Error('PDF generation timed out'));
     }, 30000);
     
     console.log('[PDF CORE] Calling getBlob...');
     
     try {
+      window.addEventListener('unhandledrejection', onUnhandledRejection);
       pdfDoc.getBlob((blob: Blob) => {
+        if (settled) return;
+        settled = true;
         clearTimeout(timeout);
+        window.removeEventListener('unhandledrejection', onUnhandledRejection);
         if (blob) {
           console.log('[PDF CORE] ✅ PDF blob generated, size:', blob.size, 'bytes');
           resolve(blob);
@@ -285,7 +311,10 @@ export async function generatePDFBlob(
         }
       });
     } catch (getBlobError) {
+      if (settled) return;
+      settled = true;
       clearTimeout(timeout);
+      window.removeEventListener('unhandledrejection', onUnhandledRejection);
       console.error('[PDF CORE] ❌ Error in getBlob:', getBlobError);
       reject(getBlobError);
     }

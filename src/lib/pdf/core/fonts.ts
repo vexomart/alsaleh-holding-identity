@@ -278,9 +278,9 @@ export function assertFontsReady(): void {
   }
 
   if (errors.length > 0) {
-    const message = `Cairo fonts missing from VFS\n- ${errors.join('\n- ')}`;
-    console.error(message);
-    throw new Error(message);
+    // تفاصيل تقنية للكونسول + رسالة عربية واضحة للمستخدم (مطلوب)
+    console.error('[PDF FONTS] Cairo fonts missing from VFS:', errors);
+    throw new Error('خط Cairo غير محمّل — لا يمكن توليد PDF');
   }
 
   console.log('[PDF FONTS] ✅ Font assertions passed');
