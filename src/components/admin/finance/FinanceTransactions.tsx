@@ -385,12 +385,22 @@ export function FinanceTransactions() {
 
   const hasActiveFilters = searchTerm || statusFilter !== 'all' || typeFilter !== 'all';
 
+  // RTL helpers
+  const rtlRow = isRTL ? "flex-row-reverse" : "flex-row";
+  const rtlText = isRTL ? "text-right" : "text-left";
+
   return (
-    <div className={cn(!prefersReducedMotion && 'finance-page-enter')}>
+    <div 
+      dir={isRTL ? "rtl" : "ltr"}
+      className={cn("w-full", rtlText, !prefersReducedMotion && 'finance-page-enter')}
+    >
       <Card>
         <CardHeader className="pb-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
+          <div className={cn(
+            "flex flex-col md:flex-row md:items-center gap-4",
+            isRTL ? "md:flex-row-reverse" : ""
+          )}>
+            <div className="flex-1">
               <CardTitle className="text-lg">
                 {isRTL ? 'سجل المعاملات المالية' : 'Financial Transactions Log'}
               </CardTitle>
@@ -406,28 +416,24 @@ export function FinanceTransactions() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" disabled={isExporting || filteredTransactions.length === 0}>
-                  {isExporting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Download className="h-4 w-4" />
-                  )}
-                  <span className={cn(isRTL ? 'mr-2' : 'ml-2')}>
-                    {isRTL ? 'تصدير' : 'Export'}
+                  <span className={cn("inline-flex items-center gap-2", rtlRow)}>
+                    {isExporting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Download className="h-4 w-4" />
+                    )}
+                    <span>{isRTL ? 'تصدير' : 'Export'}</span>
                   </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
-                <DropdownMenuItem onClick={handleExportCSV}>
+                <DropdownMenuItem onClick={handleExportCSV} className={rtlRow}>
                   <FileSpreadsheet className="h-4 w-4" />
-                  <span className={cn(isRTL ? 'mr-2' : 'ml-2')}>
-                    {isRTL ? 'تصدير CSV' : 'Export CSV'}
-                  </span>
+                  <span className="mx-2">{isRTL ? 'تصدير CSV' : 'Export CSV'}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExportPDF}>
+                <DropdownMenuItem onClick={handleExportPDF} className={rtlRow}>
                   <FileText className="h-4 w-4" />
-                  <span className={cn(isRTL ? 'mr-2' : 'ml-2')}>
-                    {isRTL ? 'تقرير PDF' : 'PDF Report'}
-                  </span>
+                  <span className="mx-2">{isRTL ? 'تقرير PDF' : 'PDF Report'}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -435,8 +441,11 @@ export function FinanceTransactions() {
         </CardHeader>
         <CardContent>
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
+          <div className={cn(
+            "flex flex-col md:flex-row gap-4 mb-6 flex-wrap items-stretch",
+            isRTL ? "md:flex-row-reverse" : ""
+          )}>
+            <div className="relative flex-1 min-w-[200px]">
               <Search className={cn(
                 'absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground',
                 isRTL ? 'right-3' : 'left-3'
@@ -448,7 +457,7 @@ export function FinanceTransactions() {
                 }
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={isRTL ? 'pr-10' : 'pl-10'}
+                className={cn(isRTL ? 'pr-10 text-right' : 'pl-10')}
               />
             </div>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -490,26 +499,26 @@ export function FinanceTransactions() {
               ))}
             </div>
           ) : (
-            <div className="rounded-lg border overflow-hidden">
+            <div className="rounded-lg border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
-                    <TableHead className={isRTL ? 'text-right' : 'text-left'}>
+                    <TableHead className={rtlText}>
                       {isRTL ? 'المرجع' : 'Reference'}
                     </TableHead>
-                    <TableHead className={isRTL ? 'text-right' : 'text-left'}>
+                    <TableHead className={rtlText}>
                       {isRTL ? 'العميل' : 'Customer'}
                     </TableHead>
-                    <TableHead className={isRTL ? 'text-right' : 'text-left'}>
+                    <TableHead className={rtlText}>
                       {isRTL ? 'النوع' : 'Type'}
                     </TableHead>
-                    <TableHead className={isRTL ? 'text-right' : 'text-left'}>
+                    <TableHead className={rtlText}>
                       {isRTL ? 'المبلغ' : 'Amount'}
                     </TableHead>
-                    <TableHead className={isRTL ? 'text-right' : 'text-left'}>
+                    <TableHead className={rtlText}>
                       {isRTL ? 'الحالة' : 'Status'}
                     </TableHead>
-                    <TableHead className={isRTL ? 'text-right' : 'text-left'}>
+                    <TableHead className={rtlText}>
                       {isRTL ? 'التاريخ' : 'Date'}
                     </TableHead>
                     <TableHead className="w-[60px]"></TableHead>
@@ -532,30 +541,30 @@ export function FinanceTransactions() {
                         )}
                         onClick={() => setSelectedTransaction(tx.id)}
                       >
-                        <TableCell>
-                          <div className="flex items-center gap-2">
+                        <TableCell className={rtlText}>
+                          <div className={cn("flex items-center gap-2", rtlRow)}>
                             {getTypeIcon(tx.transaction_type)}
                             <div>
-                              <span className="font-mono text-sm" dir="ltr">
+                              <span className="font-mono text-sm tabular-nums" dir="ltr">
                                 {tx.provider_reference || tx.id.slice(0, 8)}
                               </span>
                               {tx.invoice_number && (
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-xs text-muted-foreground font-mono" dir="ltr">
                                   {tx.invoice_number}
                                 </p>
                               )}
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={rtlText}>
                           <div>
                             <p className="text-sm font-medium">{tx.customer_name || '-'}</p>
-                            <p className="text-xs text-muted-foreground font-mono" dir="ltr">
+                            <p className="text-xs text-muted-foreground font-mono tabular-nums" dir="ltr">
                               {tx.customer_uid}
                             </p>
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={rtlText}>
                           <span className="text-sm">
                             {isRTL 
                               ? TYPE_LABELS[tx.transaction_type]?.ar 
@@ -563,10 +572,10 @@ export function FinanceTransactions() {
                             }
                           </span>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={rtlText}>
                           <span
                             className={cn(
-                              'font-semibold',
+                              'font-semibold tabular-nums',
                               tx.transaction_type === 'topup' || tx.transaction_type === 'refund'
                                 ? 'text-green-600'
                                 : 'text-foreground'
@@ -577,10 +586,10 @@ export function FinanceTransactions() {
                             {formatCurrency(Number(tx.amount), tx.currency)}
                           </span>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={rtlText}>
                           {getStatusBadge(tx.status)}
                         </TableCell>
-                        <TableCell className="text-muted-foreground text-sm">
+                        <TableCell className={cn("text-muted-foreground text-sm", rtlText)}>
                           {formatDate(tx.created_at)}
                         </TableCell>
                         <TableCell>
