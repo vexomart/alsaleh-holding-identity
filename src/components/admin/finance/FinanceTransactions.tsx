@@ -57,7 +57,6 @@ import {
   exportTransactionsToCSV, 
   downloadCSV, 
   calculateTransactionSummary, 
-  generateTransactionReportDefinition,
   type ExportTransaction,
 } from '@/lib/financial/export-utils';
 import { STATUS_LABELS, TYPE_LABELS } from '@/lib/financial/status-machine';
@@ -348,11 +347,8 @@ export function FinanceTransactions() {
     setIsExporting(true);
     try {
       // Use unified PDF system
-      const { ensurePDFReady } = await import('@/lib/pdf');
-      await ensurePDFReady();
+      const { createTransactionReportPDF } = await import('@/lib/pdf/templates/transaction-report.template');
       
-      const pdfMake = (await import('pdfmake/build/pdfmake')).default;
-
       const exportData: ExportTransaction[] = filteredTransactions.map(tx => ({
         ...tx,
         transaction_type: tx.transaction_type,
@@ -360,13 +356,11 @@ export function FinanceTransactions() {
       }));
 
       const summary = calculateTransactionSummary(exportData);
-      const docDefinition = generateTransactionReportDefinition(summary, { 
-        language: language as 'ar' | 'en' 
+      
+      await createTransactionReportPDF(summary, {
+        language: language as 'ar' | 'en',
+        download: true,
       });
-
-      pdfMake.createPdf(docDefinition as never).download(
-        `transactions_report_${new Date().toISOString().split('T')[0]}.pdf`
-      );
       
       toast.success(isRTL ? 'تم تصدير PDF بنجاح' : 'PDF exported successfully');
     } catch (error) {

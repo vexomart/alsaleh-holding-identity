@@ -10,7 +10,7 @@
  */
 
 import {
-  ensurePDFReady,
+  initPdf,
   generatePDFBlob,
   downloadBlob,
   blobToDataUrl,
@@ -613,8 +613,8 @@ export async function createContractPDF(
   contract: ContractData,
   options: CreateContractPDFOptions = {}
 ): Promise<{ blob?: Blob; dataUrl?: string }> {
-  // Ensure PDF system is ready (with hard assertions)
-  await ensurePDFReady();
+  // Initialize PDF system (throws if Cairo not loaded)
+  await initPdf();
 
   const content = generateContractContent(contract);
 

@@ -3,16 +3,16 @@
  * 
  * This is the ONLY module that should be imported for PDF generation.
  * It provides:
- * - Singleton font initialization
+ * - Singleton font initialization (initPdf)
  * - Strict verification before generation
  * - Invoice and contract generation functions
  * 
  * USAGE:
  * ```typescript
- * import { createInvoicePDF, createContractPDF, ensurePDFReady } from '@/lib/pdf';
+ * import { createInvoicePDF, createContractPDF, initPdf } from '@/lib/pdf';
  * 
- * // Ensure system is ready (call once at app start or before first PDF)
- * await ensurePDFReady();
+ * // Initialize (auto-called by generators)
+ * await initPdf();
  * 
  * // Generate PDFs
  * await createInvoicePDF(invoiceData, { download: true });
@@ -80,12 +80,13 @@ export {
 } from './arabic-utils';
 
 /**
- * Ensure PDF system is ready for generation
- * This MUST be called before any PDF generation
+ * Initialize PDF system (singleton)
+ * MUST be called before any PDF generation.
+ * Auto-called by createInvoicePDF/createContractPDF.
  * 
- * @throws Error if initialization fails
+ * @throws Error if Cairo fonts cannot be loaded
  */
-export async function ensurePDFReady(): Promise<void> {
+export async function initPdf(): Promise<void> {
   if (areFontsInitialized()) {
     // Double-check with assertions
     assertFontsReady();
@@ -96,11 +97,31 @@ export async function ensurePDFReady(): Promise<void> {
   
   await initializeFonts();
   
-  // Run assertions after initialization
+  // Run assertions after initialization - throws if Cairo missing
   assertFontsReady();
   
-  console.log('[PDF CORE] ✅ PDF system ready');
+  // Dev mode diagnostics
+  if (import.meta.env.DEV) {
+    const diag = getFontDiagnostics();
+    console.log('═══════════════════════════════════════════');
+    console.log('[PDF CORE] ✅ INITIALIZATION COMPLETE');
+    console.log('───────────────────────────────────────────');
+    console.log('Engine:         pdfmake');
+    console.log('Font:           Cairo (Arabic RTL)');
+    console.log('VFS Keys:       ' + diag.vfsKeys.length);
+    console.log('Registered:     ' + diag.registeredFonts.join(', '));
+    console.log('Cairo Regular:  ' + (diag.cairoRegularSize / 1024).toFixed(1) + ' KB');
+    console.log('Cairo Bold:     ' + (diag.cairoBoldSize / 1024).toFixed(1) + ' KB');
+    console.log('═══════════════════════════════════════════');
+  } else {
+    console.log('[PDF CORE] ✅ PDF system ready');
+  }
 }
+
+/**
+ * @deprecated Use initPdf() instead
+ */
+export const ensurePDFReady = initPdf;
 
 /**
  * Check if PDF system is ready (without throwing)
@@ -216,8 +237,8 @@ export async function generatePDFBlob(
   content: PDFContent[],
   options: PDFDocumentOptions = {}
 ): Promise<Blob> {
-  // Ensure system is ready
-  await ensurePDFReady();
+  // Initialize PDF system (auto-init)
+  await initPdf();
 
   const docDefinition = createDocumentDefinition(content, options);
   const pdfDoc = pdfMake.createPdf(docDefinition as never);
