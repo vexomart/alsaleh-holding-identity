@@ -7,6 +7,10 @@
  * - Parties section
  * - Payment terms with VAT
  * - Signature blocks
+ * 
+ * Uses Arabic correctness layer for proper bidi handling:
+ * - ltr() for contract numbers, ID numbers, amounts
+ * - rtl() for Arabic labels and content
  */
 
 import {
@@ -20,6 +24,7 @@ import {
   formatCurrency,
   formatArabicDate,
   toArabicNumerals,
+  ltr,
   DEFAULT_COMPANY_INFO,
   ARABIC_FONT_NAME,
   type PDFContent,
@@ -166,7 +171,7 @@ function buildPartyBlock(party: ContractParty, label: string): PDFContent {
 
   if (party.idNumber) {
     stack.push({
-      text: `رقم الهوية/السجل: ${party.idNumber}`,
+      text: `رقم الهوية/السجل: ${ltr(party.idNumber)}`,
       font: ARABIC_FONT_NAME,
       fontSize: 10,
       color: '#475569',
@@ -188,7 +193,7 @@ function buildPartyBlock(party: ContractParty, label: string): PDFContent {
 
   if (party.phone) {
     stack.push({
-      text: `الهاتف: ${party.phone}`,
+      text: `الهاتف: ${ltr(party.phone)}`,
       font: ARABIC_FONT_NAME,
       fontSize: 10,
       color: '#475569',
@@ -247,7 +252,7 @@ export function generateContractContent(
 
   // === CONTRACT NUMBER & DATE ===
   content.push({
-    text: `رقم العقد: ${contract.contractNumber}`,
+    text: `رقم العقد: ${ltr(contract.contractNumber)}`,
     font: ARABIC_FONT_NAME,
     fontSize: 12,
     alignment: 'center',

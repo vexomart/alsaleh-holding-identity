@@ -7,6 +7,10 @@
  * - Company and customer blocks
  * - RTL services table
  * - Payment information
+ * 
+ * Uses Arabic correctness layer for proper bidi handling:
+ * - ltr() for invoice numbers, VAT numbers, amounts, IBAN
+ * - rtl() for Arabic labels and content
  */
 
 import {
@@ -20,7 +24,7 @@ import {
   createSeparator,
   formatCurrency,
   formatArabicDate,
-  ltrToken,
+  ltr,
   DEFAULT_COMPANY_INFO,
   ARABIC_FONT_NAME,
   type PDFContent,
@@ -389,13 +393,13 @@ export function generateInvoiceContent(
                   margin: [0, 3, 0, 3],
                 }] : []),
                 ...(invoice.paymentInfo.accountNumber ? [{
-                  text: `رقم الحساب: ${invoice.paymentInfo.accountNumber}`,
+                  text: `رقم الحساب: ${ltr(invoice.paymentInfo.accountNumber)}`,
                   font: ARABIC_FONT_NAME,
                   fontSize: 11,
                   margin: [0, 3, 0, 3],
                 }] : []),
                 ...(invoice.paymentInfo.iban ? [{
-                  text: `الآيبان (IBAN): ${invoice.paymentInfo.iban}`,
+                  text: `الآيبان (IBAN): ${ltr(invoice.paymentInfo.iban)}`,
                   font: ARABIC_FONT_NAME,
                   fontSize: 11,
                   margin: [0, 3, 0, 3],

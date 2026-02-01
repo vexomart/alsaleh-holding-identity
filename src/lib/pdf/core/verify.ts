@@ -326,19 +326,279 @@ export async function generateTestPDF(download: boolean = false): Promise<{
 
 /**
  * Debug function for console testing
- * Exposed to window for easy debugging
+ * ALWAYS generates and downloads a test PDF with Arabic correctness checks
  */
 export async function debugPDFArabic(): Promise<PDFVerificationReport> {
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('[DEBUG PDF] Starting Arabic PDF Verification...');
+  console.log('═══════════════════════════════════════════════════════════');
+  
   const report = await verifyPDFSystem();
   
-  // Generate test PDF if verification passed
-  if (report.allChecksPassed) {
-    const testResult = await generateTestPDF(true);
-    report.testPdfGenerated = testResult.success;
-    report.testPdfError = testResult.error || null;
+  // Import arabic helpers for testing
+  const { verifyArabicRendering, mix, ltr, rtl, ARABIC_TEST_STRING } = await import('./arabic');
+  
+  // Run Arabic correctness checks
+  const arabicCheck = verifyArabicRendering();
+  console.log('[DEBUG PDF] Arabic Correctness Check:');
+  console.log('  Test String:     ', arabicCheck.testString);
+  console.log('  Contains Arabic: ', arabicCheck.containsArabicCheck ? '✅' : '❌');
+  console.log('  Is RTL:          ', arabicCheck.isRtlCheck ? '✅' : '❌');
+  console.log('  LTR Isolation:   ', arabicCheck.hasLtrIsolation ? '✅' : '❌');
+  
+  // Always generate test PDF
+  console.log('[DEBUG PDF] Generating comprehensive test PDF...');
+  
+  try {
+    assertFontsReady();
+    
+    const docDefinition = {
+      pageSize: 'A4' as const,
+      pageMargins: [40, 60, 40, 60],
+      defaultStyle: {
+        font: ARABIC_FONT_NAME,
+        fontSize: 11,
+        alignment: 'right' as const,
+      },
+      styles: corporateStyles,
+      content: [
+        // Title
+        {
+          text: 'اختبار نظام PDF العربي',
+          style: 'documentTitle',
+          margin: [0, 0, 0, 5],
+        },
+        {
+          text: 'Arabic PDF System Test',
+          font: ARABIC_FONT_NAME,
+          fontSize: 12,
+          color: '#64748b',
+          alignment: 'center' as const,
+          margin: [0, 0, 0, 30],
+        },
+
+        // === CRITICAL TEST: Mixed Content ===
+        {
+          table: {
+            widths: ['*'],
+            body: [[{
+              stack: [
+                {
+                  text: 'اختبار المحتوى المختلط (Critical Test)',
+                  font: ARABIC_FONT_NAME,
+                  fontSize: 14,
+                  bold: true,
+                  color: '#dc2626',
+                  alignment: 'center' as const,
+                  margin: [0, 0, 0, 15],
+                },
+                {
+                  text: mix(ARABIC_TEST_STRING),
+                  font: ARABIC_FONT_NAME,
+                  fontSize: 16,
+                  bold: true,
+                  alignment: 'center' as const,
+                  margin: [0, 0, 0, 10],
+                },
+                {
+                  text: 'إذا ظهر النص أعلاه بشكل صحيح (الأرقام من اليسار، العربي من اليمين)، فإن النظام يعمل',
+                  font: ARABIC_FONT_NAME,
+                  fontSize: 10,
+                  color: '#64748b',
+                  alignment: 'center' as const,
+                },
+              ],
+              margin: [20, 20, 20, 20],
+            }]],
+          },
+          layout: {
+            fillColor: () => '#fef3c7',
+            hLineColor: () => '#fcd34d',
+            vLineColor: () => '#fcd34d',
+          },
+          margin: [0, 0, 0, 30],
+        },
+
+        // === Invoice Number Test ===
+        {
+          text: 'اختبار أرقام الفواتير',
+          style: 'sectionHeader',
+        },
+        {
+          table: {
+            widths: [150, '*'],
+            body: [
+              [
+                { text: ltr('INV-2026-0001'), font: ARABIC_FONT_NAME, alignment: 'left' as const, margin: [8, 8, 8, 8] },
+                { text: 'رقم الفاتورة', font: ARABIC_FONT_NAME, alignment: 'right' as const, bold: true, margin: [8, 8, 8, 8] },
+              ],
+              [
+                { text: ltr('ORD-2026-0001'), font: ARABIC_FONT_NAME, alignment: 'left' as const, margin: [8, 8, 8, 8] },
+                { text: 'رقم الطلب', font: ARABIC_FONT_NAME, alignment: 'right' as const, bold: true, margin: [8, 8, 8, 8] },
+              ],
+              [
+                { text: ltr('300000000000003'), font: ARABIC_FONT_NAME, alignment: 'left' as const, margin: [8, 8, 8, 8] },
+                { text: 'الرقم الضريبي', font: ARABIC_FONT_NAME, alignment: 'right' as const, bold: true, margin: [8, 8, 8, 8] },
+              ],
+              [
+                { text: ltr('SA0380000000608010167519'), font: ARABIC_FONT_NAME, alignment: 'left' as const, margin: [8, 8, 8, 8] },
+                { text: 'الآيبان', font: ARABIC_FONT_NAME, alignment: 'right' as const, bold: true, margin: [8, 8, 8, 8] },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#e2e8f0',
+            vLineColor: () => '#e2e8f0',
+          },
+          margin: [0, 0, 0, 30],
+        },
+
+        // === Currency Test ===
+        {
+          text: 'اختبار العملات والمبالغ',
+          style: 'sectionHeader',
+        },
+        {
+          table: {
+            widths: [120, '*'],
+            body: [
+              [
+                { text: `${ltr('5,000.00')} ر.س`, font: ARABIC_FONT_NAME, alignment: 'left' as const, margin: [8, 8, 8, 8] },
+                { text: 'المبلغ الفرعي', font: ARABIC_FONT_NAME, alignment: 'right' as const, margin: [8, 8, 8, 8] },
+              ],
+              [
+                { text: `${ltr('750.00')} ر.س`, font: ARABIC_FONT_NAME, alignment: 'left' as const, margin: [8, 8, 8, 8] },
+                { text: 'ضريبة القيمة المضافة (15%)', font: ARABIC_FONT_NAME, alignment: 'right' as const, margin: [8, 8, 8, 8] },
+              ],
+              [
+                { text: `${ltr('5,750.00')} ر.س`, font: ARABIC_FONT_NAME, alignment: 'left' as const, bold: true, fontSize: 14, color: '#0369a1', margin: [8, 12, 8, 12] },
+                { text: 'الإجمالي المستحق', font: ARABIC_FONT_NAME, alignment: 'right' as const, bold: true, fontSize: 14, margin: [8, 12, 8, 12] },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#e2e8f0',
+            vLineColor: () => '#e2e8f0',
+            fillColor: (i: number, node: { table: { body: unknown[] } }) =>
+              i === node.table.body.length - 1 ? '#f0f9ff' : undefined,
+          },
+          margin: [0, 0, 0, 30],
+        },
+
+        // === RTL Table Test ===
+        {
+          text: 'اختبار الجداول RTL',
+          style: 'sectionHeader',
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: [100, 60, '*'],
+            body: [
+              [
+                { text: 'الإجمالي', font: ARABIC_FONT_NAME, bold: true, alignment: 'left' as const, fillColor: '#f1f5f9', margin: [8, 10, 8, 10] },
+                { text: 'الكمية', font: ARABIC_FONT_NAME, bold: true, alignment: 'right' as const, fillColor: '#f1f5f9', margin: [8, 10, 8, 10] },
+                { text: 'الوصف', font: ARABIC_FONT_NAME, bold: true, alignment: 'right' as const, fillColor: '#f1f5f9', margin: [8, 10, 8, 10] },
+              ],
+              [
+                { text: `${ltr('15,000.00')} ر.س`, font: ARABIC_FONT_NAME, alignment: 'left' as const, margin: [8, 8, 8, 8] },
+                { text: '1', font: ARABIC_FONT_NAME, alignment: 'right' as const, margin: [8, 8, 8, 8] },
+                { text: 'خدمات استشارية قانونية', font: ARABIC_FONT_NAME, alignment: 'right' as const, margin: [8, 8, 8, 8] },
+              ],
+              [
+                { text: `${ltr('25,000.00')} ر.س`, font: ARABIC_FONT_NAME, alignment: 'left' as const, margin: [8, 8, 8, 8] },
+                { text: '2', font: ARABIC_FONT_NAME, alignment: 'right' as const, margin: [8, 8, 8, 8] },
+                { text: 'تطوير البرمجيات', font: ARABIC_FONT_NAME, alignment: 'right' as const, fillColor: '#fafafa', margin: [8, 8, 8, 8] },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#e2e8f0',
+            vLineColor: () => '#e2e8f0',
+          },
+          margin: [0, 0, 0, 30],
+        },
+
+        // === Success Indicator ===
+        {
+          table: {
+            widths: ['*'],
+            body: [[{
+              stack: [
+                {
+                  text: '✓ اختبار النظام مكتمل',
+                  font: ARABIC_FONT_NAME,
+                  fontSize: 16,
+                  bold: true,
+                  color: '#059669',
+                  alignment: 'center' as const,
+                  margin: [0, 0, 0, 10],
+                },
+                {
+                  text: 'System Test Complete',
+                  font: ARABIC_FONT_NAME,
+                  fontSize: 12,
+                  color: '#64748b',
+                  alignment: 'center' as const,
+                },
+              ],
+              margin: [20, 20, 20, 20],
+            }]],
+          },
+          layout: {
+            fillColor: () => '#f0fdf4',
+            hLineColor: () => '#bbf7d0',
+            vLineColor: () => '#bbf7d0',
+          },
+          margin: [0, 20, 0, 0],
+        },
+
+        // Timestamp
+        {
+          text: `تم التحقق: ${new Date().toLocaleString('ar-SA')}`,
+          font: ARABIC_FONT_NAME,
+          fontSize: 9,
+          color: '#94a3b8',
+          alignment: 'center' as const,
+          margin: [0, 30, 0, 0],
+        },
+      ],
+
+      footer: (currentPage: number, pageCount: number) => ({
+        text: `صفحة ${currentPage} من ${pageCount}`,
+        font: ARABIC_FONT_NAME,
+        fontSize: 9,
+        color: '#94a3b8',
+        alignment: 'center' as const,
+        margin: [40, 0, 40, 20],
+      }),
+    };
+
+    const pdfDoc = pdfMake.createPdf(docDefinition as never);
+    
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      try {
+        (pdfDoc as { getBlob: (cb: (blob: Blob) => void) => void }).getBlob(resolve);
+      } catch (e) {
+        reject(e);
+      }
+    });
+
+    // Always download
+    downloadBlob(blob, 'arabic-pdf-test.pdf');
+    
+    report.testPdfGenerated = true;
+    console.log('[DEBUG PDF] ✅ Test PDF generated and downloaded');
+    
+  } catch (error) {
+    report.testPdfGenerated = false;
+    report.testPdfError = error instanceof Error ? error.message : String(error);
+    console.error('[DEBUG PDF] ❌ Test PDF generation failed:', report.testPdfError);
   }
 
-  console.log('=== FULL DEBUG REPORT ===');
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('[DEBUG PDF] VERIFICATION COMPLETE');
+  console.log('═══════════════════════════════════════════════════════════');
   console.log(JSON.stringify(report, null, 2));
 
   return report;
