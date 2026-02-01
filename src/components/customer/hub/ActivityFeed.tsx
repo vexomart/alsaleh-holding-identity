@@ -1,6 +1,6 @@
 /**
  * Activity Feed - Global SaaS Style Timeline
- * Clean activity list with status icons
+ * TRUE RTL: Icon on start, text aligned to start, badge on end
  */
 
 import { useNavigate } from "react-router-dom";
@@ -22,20 +22,7 @@ import {
   Truck,
   ChevronLeft,
   ChevronRight,
-  FileSignature,
-  Receipt,
-  Wallet,
 } from "lucide-react";
-
-interface ActivityItem {
-  id: string;
-  type: "order" | "contract" | "invoice" | "payment";
-  title: string;
-  titleAr?: string;
-  status: string;
-  reference: string;
-  timestamp: string;
-}
 
 interface ActivityFeedProps {
   orders: any[];
@@ -77,7 +64,7 @@ const statusConfig: Record<string, {
     labelAr: "ملغي",
     labelEn: "Cancelled",
     icon: XCircle,
-    color: "text-red-500",
+    color: "text-destructive",
   },
 };
 
@@ -103,9 +90,10 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
     },
   };
 
+  // RTL-safe animation: only animate y, not x
   const item = {
-    hidden: reducedMotion ? {} : { opacity: 0, x: isRTL ? 10 : -10 },
-    show: { opacity: 1, x: 0 },
+    hidden: reducedMotion ? {} : { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0 },
   };
 
   if (isLoading) {
@@ -117,7 +105,7 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
         <CardContent className="pt-0 space-y-3">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-lg" />
+              <Skeleton className="h-10 w-10 rounded-lg shrink-0" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-3 w-1/2" />
@@ -150,7 +138,7 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
               variant="outline"
               size="sm"
               onClick={() => navigate("/app/services")}
-              className="mt-2"
+              className="mt-2 min-h-[44px]"
             >
               {isRTL ? "تصفح الخدمات" : "Browse Services"}
             </Button>
@@ -172,7 +160,7 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
             variant="ghost"
             size="sm"
             onClick={() => navigate("/app/orders")}
-            className="gap-1 text-xs h-8"
+            className="gap-1 text-xs h-9 min-h-[44px] px-3"
           >
             {isRTL ? "عرض الكل" : "View All"}
             <ArrowIcon className="h-3.5 w-3.5" />
@@ -197,22 +185,23 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
                 variants={item}
                 onClick={() => navigate("/app/orders")}
                 className={cn(
-                  "group flex items-center gap-3 p-3 rounded-xl",
+                  "group flex items-center gap-3 p-3 rounded-xl min-h-[56px]",
                   "hover:bg-muted/50 cursor-pointer transition-colors"
                 )}
               >
-                {/* Icon */}
+                {/* Icon - appears on start (right in RTL, left in LTR) */}
                 <div className="p-2 rounded-lg bg-muted shrink-0">
                   <StatusIcon className={cn("h-4 w-4", status.color)} />
                 </div>
 
-                {/* Content */}
+                {/* Content - flex-1 fills middle */}
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm truncate">
                     {isRTL ? order.title_ar || order.title : order.title}
                   </p>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-xs text-muted-foreground font-mono" dir="ltr">
+                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                    {/* Order number ALWAYS LTR */}
+                    <span dir="ltr" className="text-xs text-muted-foreground font-mono tabular-nums">
                       {order.order_number}
                     </span>
                     <span className="text-xs text-muted-foreground">•</span>
@@ -222,7 +211,7 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
                   </div>
                 </div>
 
-                {/* Status Badge */}
+                {/* Status Badge - appears on end */}
                 <Badge
                   variant="secondary"
                   className={cn("text-xs shrink-0 font-medium", status.color)}

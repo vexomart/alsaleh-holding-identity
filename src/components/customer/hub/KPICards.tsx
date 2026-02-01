@@ -1,6 +1,6 @@
 /**
  * KPI Cards - Premium Animated Stats
- * Mobile-first responsive grid with count-up animations
+ * TRUE RTL: Cards flow RIGHT → LEFT, icons on logical end
  */
 
 import { useNavigate } from "react-router-dom";
@@ -15,8 +15,6 @@ import {
   FileSignature,
   Receipt,
   Wallet,
-  TrendingUp,
-  TrendingDown,
   LucideIcon,
 } from "lucide-react";
 
@@ -43,7 +41,6 @@ interface KPIConfig {
   iconColor: string;
   path: string;
   isAmount?: boolean;
-  showTrend?: boolean;
   highlightWhen?: (value: number) => boolean;
 }
 
@@ -102,12 +99,12 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
     },
   };
 
+  // RTL-safe animation: only animate y, not x
   const item = {
-    hidden: reducedMotion ? {} : { opacity: 0, y: 20, scale: 0.95 },
+    hidden: reducedMotion ? {} : { opacity: 0, y: 20 },
     show: { 
       opacity: 1, 
       y: 0, 
-      scale: 1,
       transition: { duration: 0.3, ease: "easeOut" as const }
     },
   };
@@ -152,11 +149,12 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
                 "rounded-2xl cursor-pointer transition-all duration-200",
                 "hover:shadow-lg hover:shadow-black/5 hover:-translate-y-0.5",
                 "active:scale-[0.98]",
-                "border",
+                "border min-h-[120px]",
                 isHighlighted && "border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-900/10"
               )}
             >
               <CardContent className="p-4 md:p-5">
+                {/* Icon Row - flex respects RTL dir automatically */}
                 <div className="flex items-start justify-between">
                   <div className={cn("p-2.5 md:p-3 rounded-xl", kpi.iconBg)}>
                     <kpi.icon className={cn("h-5 w-5 md:h-6 md:w-6", kpi.iconColor)} />
@@ -166,30 +164,31 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
                   )}
                 </div>
 
+                {/* Content */}
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground font-medium">
                     {isRTL ? kpi.titleAr : kpi.titleEn}
                   </p>
                   <div className="mt-1">
-                    {kpi.isAmount ? (
-                      <AnimatedNumber
-                        value={value}
-                        duration={150}
-                        formatOptions={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
-                        className="text-2xl md:text-3xl font-bold"
-                        suffix=" SAR"
-                      />
-                    ) : (
-                      <p className="text-2xl md:text-3xl font-bold tabular-nums">
-                        {reducedMotion ? value : (
+                    {/* Numbers ALWAYS LTR for readability */}
+                    <span dir="ltr" className="inline-block text-2xl md:text-3xl font-bold tabular-nums font-mono">
+                      {kpi.isAmount ? (
+                        <AnimatedNumber
+                          value={value}
+                          duration={150}
+                          formatOptions={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
+                          suffix=" SAR"
+                        />
+                      ) : (
+                        reducedMotion ? value : (
                           <AnimatedNumber
                             value={value}
                             duration={150}
                             formatOptions={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
                           />
-                        )}
-                      </p>
-                    )}
+                        )
+                      )}
+                    </span>
                   </div>
                 </div>
               </CardContent>

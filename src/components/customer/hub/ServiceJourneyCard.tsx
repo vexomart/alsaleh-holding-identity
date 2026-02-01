@@ -1,6 +1,6 @@
 /**
  * Service Journey Card - Visual Order Progress
- * RTL-aware stepper with animated progress
+ * TRUE RTL: Progress fills RIGHT → LEFT, steps ordered RTL
  */
 
 import { useState } from "react";
@@ -124,18 +124,26 @@ export function ServiceJourneyCard({ orders, isLoading, isRTL }: ServiceJourneyC
           const progress = calculateProgress(order);
           const currentStage = getCurrentStage(order);
 
-          const visibleStages = journeyStages.filter((stage) => {
+          // Filter visible stages
+          let visibleStages = journeyStages.filter((stage) => {
             if (stage.conditional && stage.id === "contract") {
               return order.requires_contract;
             }
             return true;
           });
 
+          // CRITICAL: Reverse stages array in RTL for proper visual flow
+          const displayStages = isRTL ? [...visibleStages].reverse() : visibleStages;
+          // Adjust current stage index for RTL
+          const displayCurrentStage = isRTL 
+            ? visibleStages.length - 1 - currentStage 
+            : currentStage;
+
           return (
             <div key={order.id} className="border rounded-xl overflow-hidden">
               {/* Order Header */}
               <div
-                className="flex items-center gap-4 p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                className="flex items-center gap-4 p-4 cursor-pointer hover:bg-muted/50 transition-colors min-h-[72px]"
                 onClick={() => setExpandedId(isExpanded ? null : order.id)}
               >
                 <div className="p-2 rounded-lg bg-primary/10 shrink-0">
@@ -147,7 +155,8 @@ export function ServiceJourneyCard({ orders, isLoading, isRTL }: ServiceJourneyC
                     <h4 className="font-medium text-sm truncate">
                       {isRTL ? order.title_ar || order.title : order.title}
                     </h4>
-                    <span className="text-xs text-muted-foreground font-mono" dir="ltr">
+                    {/* Order number ALWAYS LTR */}
+                    <span dir="ltr" className="text-xs text-muted-foreground font-mono tabular-nums">
                       {order.order_number}
                     </span>
                   </div>
@@ -158,15 +167,25 @@ export function ServiceJourneyCard({ orders, isLoading, isRTL }: ServiceJourneyC
                       <span className="text-xs text-muted-foreground">
                         {isRTL ? "التقدم" : "Progress"}
                       </span>
-                      <span className="text-xs font-medium" dir="ltr">
+                      <span dir="ltr" className="text-xs font-medium tabular-nums">
                         {progress}%
                       </span>
                     </div>
-                    <Progress value={progress} className="h-1.5" />
+                    {/* Progress bar with RTL transform */}
+                    <div className="relative h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                      <div 
+                        className="absolute h-full bg-primary rounded-full transition-all duration-300"
+                        style={{
+                          width: `${progress}%`,
+                          // In RTL, progress fills from right
+                          ...(isRTL ? { right: 0 } : { left: 0 })
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <Button variant="ghost" size="sm" className="shrink-0 h-8 w-8 p-0">
+                <Button variant="ghost" size="sm" className="shrink-0 h-10 w-10 p-0 min-h-[44px]">
                   {isExpanded ? (
                     <ChevronUp className="h-4 w-4" />
                   ) : (
@@ -185,30 +204,38 @@ export function ServiceJourneyCard({ orders, isLoading, isRTL }: ServiceJourneyC
                     transition={{ duration: 0.2 }}
                   >
                     <div className="px-4 pb-4 pt-2 border-t bg-muted/30">
-                      {/* Timeline Stepper */}
-                      <div className="relative py-4">
-                        {/* Connecting Line */}
+                      {/* Timeline Stepper - TRUE RTL */}
+                      <div className="relative py-4 overflow-x-auto">
+                        {/* Background Line */}
                         <div className="absolute h-0.5 bg-muted top-[calc(50%-12px)] inset-x-4" />
+                        
+                        {/* Progress Line - respects RTL via CSS */}
                         <div
-                          className={cn(
-                            "absolute h-0.5 bg-primary top-[calc(50%-12px)] transition-all",
-                            isRTL ? "right-4" : "left-4"
-                          )}
+                          className="absolute h-0.5 bg-primary top-[calc(50%-12px)] transition-all duration-300"
                           style={{
                             width: `${Math.min((currentStage / (visibleStages.length - 1)) * 100, 100)}%`,
                             maxWidth: "calc(100% - 32px)",
+                            // RTL: anchor to right, LTR: anchor to left
+                            ...(isRTL 
+                              ? { right: '16px', left: 'auto' }
+                              : { left: '16px', right: 'auto' }
+                            )
                           }}
                         />
 
-                        {/* Stages */}
-                        <div className="flex justify-between relative z-10">
-                          {visibleStages.map((stage, index) => {
+                        {/* Stages - use displayStages (reversed in RTL) */}
+                        <div className="flex justify-between relative z-10 min-w-[280px]">
+                          {displayStages.map((stage, displayIndex) => {
                             const StageIcon = stage.icon;
-                            const isActive = index <= currentStage;
-                            const isCurrent = index === currentStage;
+                            // Calculate actual stage index
+                            const actualIndex = isRTL 
+                              ? visibleStages.length - 1 - displayIndex 
+                              : displayIndex;
+                            const isActive = actualIndex <= currentStage;
+                            const isCurrent = actualIndex === currentStage;
 
                             return (
-                              <div key={stage.id} className="flex flex-col items-center">
+                              <div key={stage.id} className="flex flex-col items-center shrink-0">
                                 <div
                                   className={cn(
                                     "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all",
@@ -243,7 +270,7 @@ export function ServiceJourneyCard({ orders, isLoading, isRTL }: ServiceJourneyC
                             e.stopPropagation();
                             navigate("/app/orders");
                           }}
-                          className="gap-1.5 h-9"
+                          className="gap-1.5 h-10 min-h-[44px]"
                         >
                           {isRTL ? "عرض التفاصيل" : "View Details"}
                           <ArrowIcon className="h-3.5 w-3.5" />

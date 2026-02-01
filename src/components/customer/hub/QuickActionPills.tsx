@@ -1,6 +1,6 @@
 /**
  * Quick Action Pills - Mobile App-like Shortcuts
- * Touch-friendly, RTL-aware pill buttons
+ * TRUE RTL: Pills flow from start, icon AFTER text visually
  */
 
 import { motion } from "framer-motion";
@@ -13,7 +13,6 @@ import {
   Package,
   FileSignature,
   Wallet,
-  Receipt,
   LucideIcon,
 } from "lucide-react";
 
@@ -22,7 +21,7 @@ interface QuickAction {
   titleEn: string;
   icon: LucideIcon;
   path: string;
-  variant: "primary" | "blue" | "emerald" | "purple" | "amber";
+  variant: "primary" | "blue" | "emerald" | "purple";
 }
 
 const actions: QuickAction[] = [
@@ -61,7 +60,6 @@ const variantStyles: Record<QuickAction["variant"], string> = {
   blue: "bg-blue-600 hover:bg-blue-700 text-white",
   emerald: "bg-emerald-600 hover:bg-emerald-700 text-white",
   purple: "bg-purple-600 hover:bg-purple-700 text-white",
-  amber: "bg-amber-600 hover:bg-amber-700 text-white",
 };
 
 interface QuickActionPillsProps {
@@ -82,6 +80,7 @@ export function QuickActionPills({ isRTL }: QuickActionPillsProps) {
     },
   };
 
+  // RTL-safe animation: only animate y, not x
   const item = {
     hidden: reducedMotion ? {} : { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0 },
@@ -94,18 +93,23 @@ export function QuickActionPills({ isRTL }: QuickActionPillsProps) {
       animate="show"
       className="flex flex-wrap gap-2 md:gap-3"
     >
-      {actions.map((action, index) => (
+      {actions.map((action) => (
         <motion.div key={action.path} variants={item}>
           <Button
             onClick={() => navigate(action.path)}
             className={cn(
-              "h-11 px-4 rounded-full gap-2 font-medium shadow-lg shadow-black/10",
+              "h-11 min-h-[44px] px-4 rounded-full gap-2 font-medium shadow-lg shadow-black/10",
               "transition-transform duration-150 active:scale-95",
+              "flex items-center",
               variantStyles[action.variant]
             )}
           >
-            <action.icon className="h-4 w-4" />
-            <span>{isRTL ? action.titleAr : action.titleEn}</span>
+            {/* In RTL, icon appears AFTER text (visually on the left) */}
+            {/* Using flex-row-reverse to swap icon/text order in RTL */}
+            <span className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
+              <action.icon className="h-4 w-4 shrink-0" />
+              <span>{isRTL ? action.titleAr : action.titleEn}</span>
+            </span>
           </Button>
         </motion.div>
       ))}
