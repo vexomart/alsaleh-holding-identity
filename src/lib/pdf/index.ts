@@ -1,150 +1,115 @@
 /**
  * Unified Arabic RTL PDF System
  * 
- * A complete, enterprise-grade PDF generation solution with:
- * - 100% RTL layout (text direction, alignment, margins)
- * - Proper Arabic shaping via embedded Cairo TTF font
- * - Strict font verification (hard-fail if fonts missing)
- * - Corporate-grade invoice and contract templates
+ * STRICT SINGLETON ARCHITECTURE
+ * ═════════════════════════════════════════════════════════════════
+ * 
+ * This module is the ONLY entry point for PDF generation.
+ * All PDF operations MUST go through these 4 functions:
+ * 
+ *   1. initPdf()           - Initialize fonts (auto-called by generators)
+ *   2. debugPDFArabic()    - Debug & verify system
+ *   3. createInvoicePDF()  - Generate tax invoice
+ *   4. createContractPDF() - Generate contract document
  * 
  * USAGE:
  * ```typescript
- * import { 
- *   ensurePDFReady, 
- *   createInvoicePDF, 
- *   createContractPDF,
- *   debugPDFArabic 
- * } from '@/lib/pdf';
+ * import { initPdf, createInvoicePDF, createContractPDF, debugPDFArabic } from '@/lib/pdf';
  * 
- * // Initialize once at app start (optional, auto-called on first PDF)
- * await ensurePDFReady();
+ * // Optional: Pre-initialize (auto-called on first PDF)
+ * await initPdf();
  * 
- * // Generate Invoice PDF
+ * // Generate PDFs
  * await createInvoicePDF(invoiceData, { download: true });
- * 
- * // Generate Contract PDF
  * await createContractPDF(contractData, { download: true });
  * 
- * // Debug & verify PDF system
+ * // Debug
  * await debugPDFArabic();
  * ```
  * 
- * ARCHITECTURE:
- * - core/           - Shared PDF utilities (fonts, layout, arabic, verify)
- * - templates/      - Invoice and Contract document builders
- * - fonts/          - Cairo TTF font loader
+ * STRICT RULES:
+ * - NO direct pdfmake imports outside src/lib/pdf/*
+ * - NO fallback fonts - Cairo MUST load or throw
+ * - ALL PDF generation goes through this module
+ * 
+ * ═════════════════════════════════════════════════════════════════
  */
 
 // ============================================
-// CORE EXPORTS
+// PRIMARY EXPORTS (4 FUNCTIONS ONLY)
 // ============================================
 
-// Main initialization and generation
-export {
-  ensurePDFReady,
-  isPDFReady,
-  generatePDFBlob,
-  generateAndDownloadPDF,
-  generateAndOpenPDF,
-  generatePDFDataUrl,
-  generatePDFBase64,
-  createDocumentDefinition,
-  DEFAULT_COMPANY_INFO,
-  type PDFDocumentOptions,
-} from './core/pdf-core';
+// 1. Initialize PDF system
+export { initPdf, ensurePDFReady } from './core/pdf-core';
 
-// Font management
-export {
-  ARABIC_FONT_NAME,
-  FONT_FILES,
-  initializeFonts,
-  areFontsInitialized,
-  getFontInitError,
-  resetFontInit,
-  assertFontsReady,
-  getFontDiagnostics,
-} from './core/fonts';
+// 2. Debug & verify
+export { debugPDFArabic } from './core/verify';
 
-// Arabic text utilities
-export {
-  toArabicNumerals,
-  toWesternNumerals,
-  formatCurrency,
-  formatArabicDate,
-  ltrToken,
-  rtlToken,
-  preprocessArabic,
-  containsArabic,
-  isRTL,
-  toArabicOrdinal,
-} from './core/arabic-utils';
+// 3. Invoice generator
+export { createInvoicePDF } from './templates/invoice.template';
 
-// Layout utilities
-export {
-  corporateStyles,
-  createRTLTable,
-  createRTLKeyValue,
-  createCompanyHeader,
-  createSeparator,
-  createSignatureBlock,
-  createPageFooter,
-  type PDFContent,
-  type PDFStyle,
-  type PDFStyleDictionary,
-} from './core/layout';
-
-// Download utilities
-export {
-  downloadBlob,
-  openBlobInNewTab,
-  blobToDataUrl,
-  blobToBase64,
-} from './core/download';
-
-// Verification and debugging
-export {
-  verifyPDFSystem,
-  generateTestPDF,
-  debugPDFArabic,
-  type PDFVerificationReport,
-} from './core/verify';
+// 4. Contract generator
+export { createContractPDF } from './templates/contract.template';
 
 // ============================================
-// TEMPLATE EXPORTS
+// SUPPORTING TYPES (for type-safe usage)
 // ============================================
 
-// Invoice template
-export {
-  createInvoicePDF,
-  generateInvoiceContent,
-  calculateVAT,
-  calculateInvoiceTotals,
-  orderToInvoiceData,
-  type InvoiceData,
-  type InvoiceItem,
-  type InvoiceCustomer,
-  type CompanyInfo,
-  type CreateInvoicePDFOptions,
+// Invoice types
+export type {
+  InvoiceData,
+  InvoiceItem,
+  InvoiceCustomer,
+  CompanyInfo,
+  CreateInvoicePDFOptions,
 } from './templates/invoice.template';
 
-// Contract template
-export {
-  createContractPDF,
-  generateContractContent,
-  dbContractToContractData,
-  defaultContractClauses,
-  type ContractData,
-  type ContractParty,
-  type ContractClause,
-  type ContractPricing,
-  type CreateContractPDFOptions,
+// Contract types
+export type {
+  ContractData,
+  ContractParty,
+  ContractClause,
+  ContractPricing,
+  CreateContractPDFOptions,
 } from './templates/contract.template';
 
 // ============================================
-// LEGACY COMPATIBILITY ALIASES
+// UTILITY EXPORTS (for advanced usage)
 // ============================================
 
-// Re-export with legacy names for backward compatibility
-export { createInvoicePDF as generateInvoicePdf } from './templates/invoice.template';
-export { formatCurrency as formatArabicCurrency } from './core/arabic-utils';
-export { corporateStyles as rtlStyles } from './core/layout';
+// Invoice utilities
+export {
+  orderToInvoiceData,
+  calculateVAT,
+  calculateInvoiceTotals,
+  generateInvoiceContent,
+} from './templates/invoice.template';
+
+// Contract utilities
+export {
+  dbContractToContractData,
+  defaultContractClauses,
+  generateContractContent,
+} from './templates/contract.template';
+
+// Arabic text utilities
+export {
+  formatCurrency,
+  formatArabicDate,
+  toArabicNumerals,
+  toWesternNumerals,
+  toArabicOrdinal,
+  containsArabic,
+  isRTL,
+} from './core/arabic-utils';
+
+// PDF verification (for diagnostics)
+export {
+  verifyPDFSystem,
+  generateTestPDF,
+  type PDFVerificationReport,
+} from './core/verify';
+
+// Low-level (internal use)
+export { ARABIC_FONT_NAME } from './core/fonts';
+export { DEFAULT_COMPANY_INFO } from './core/pdf-core';

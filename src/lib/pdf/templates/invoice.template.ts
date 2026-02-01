@@ -10,7 +10,7 @@
  */
 
 import {
-  ensurePDFReady,
+  initPdf,
   generatePDFBlob,
   downloadBlob,
   blobToDataUrl,
@@ -519,8 +519,8 @@ export async function createInvoicePDF(
   invoice: InvoiceData,
   options: CreateInvoicePDFOptions = {}
 ): Promise<{ blob?: Blob; dataUrl?: string }> {
-  // Ensure PDF system is ready (with hard assertions)
-  await ensurePDFReady();
+  // Initialize PDF system (throws if Cairo not loaded)
+  await initPdf();
 
   const companyInfo = options.companyInfo || DEFAULT_COMPANY_INFO as CompanyInfo;
   const content = generateInvoiceContent(invoice, companyInfo);
