@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import {
   Drawer,
   DrawerContent,
@@ -25,7 +26,6 @@ import {
   Eye, 
   FileText, 
   ScrollText,
-  Calendar,
   Clock,
   X,
   ArrowLeft,
@@ -35,9 +35,12 @@ import {
   Truck,
   CreditCard,
   XCircle,
+  Download,
+  Loader2,
 } from 'lucide-react';
-import { CustomerOrder, OrderEvent, ORDER_STATUS_CONFIG } from './types';
+import { CustomerOrder, OrderEvent } from './types';
 import { OrderStatusBadge } from './OrderStatusBadge';
+import { createInvoicePDF, orderToInvoiceData, ensurePDFReady } from '@/lib/pdf';
 
 interface OrderDetailsDrawerProps {
   order: CustomerOrder | null;
@@ -67,8 +70,61 @@ export function OrderDetailsDrawer({
 
   const [events, setEvents] = useState<OrderEvent[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(false);
+  const [generatingInvoice, setGeneratingInvoice] = useState(false);
 
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
+
+  // Handle invoice download
+  const handleDownloadInvoice = async () => {
+    if (!order) return;
+    
+    setGeneratingInvoice(true);
+    try {
+      await ensurePDFReady();
+      
+      // Build invoice data from order
+      const metadata = (order as any).metadata || {};
+      const customer = {
+        full_name: metadata.customer_name || 'Customer',
+        email: metadata.customer_email || '',
+        phone: metadata.customer_phone,
+      };
+      
+      const services = [{
+        name: order.service?.name || order.title,
+        name_ar: order.service?.name_ar || order.title_ar || order.title,
+        price: order.total_amount || 0,
+        quantity: 1,
+      }];
+      
+      const invoiceData = orderToInvoiceData(
+        {
+          order_number: order.order_number,
+          created_at: order.created_at || new Date().toISOString(),
+          total_amount: order.total_amount || 0,
+          currency: order.currency || 'SAR',
+        },
+        customer,
+        services
+      );
+      
+      await createInvoicePDF(invoiceData, { download: true });
+      
+      toast.success(isRTL ? 'تم تحميل الفاتورة' : 'Invoice downloaded');
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      toast.error(isRTL ? 'حدث خطأ في إنشاء الفاتورة' : 'Error generating invoice');
+    } finally {
+      setGeneratingInvoice(false);
+    }
+  };
+
+  // Handle contract view
+  const handleViewContract = () => {
+    if (!order?.contract_id) return;
+    onClose();
+    navigate(`/app/contracts/${order.contract_id}`);
+  };
 
   // Fetch order events when order changes
   useEffect(() => {
@@ -298,12 +354,14 @@ export function OrderDetailsDrawer({
               <Button 
                 variant="outline" 
                 className="gap-2"
-                onClick={() => {
-                  onClose();
-                  navigate(`/app/invoices?order=${order.id}`);
-                }}
+                onClick={handleDownloadInvoice}
+                disabled={generatingInvoice}
               >
-                <FileText className="h-4 w-4" />
+                {generatingInvoice ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
                 {isRTL ? 'الفاتورة' : 'Invoice'}
               </Button>
             </div>
@@ -311,10 +369,7 @@ export function OrderDetailsDrawer({
               <Button 
                 variant="outline" 
                 className="w-full gap-2"
-                onClick={() => {
-                  onClose();
-                  navigate(`/app/contracts?id=${order.contract_id}`);
-                }}
+                onClick={handleViewContract}
               >
                 <ScrollText className="h-4 w-4" />
                 {isRTL ? 'عرض العقد' : 'View Contract'}
