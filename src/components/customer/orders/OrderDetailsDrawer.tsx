@@ -43,7 +43,7 @@ import {
 import { CustomerOrder, OrderEvent } from './types';
 import { OrderStatusBadge } from './OrderStatusBadge';
 import { orderToInvoiceData } from '@/lib/pdf';
-import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
+import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
 
 interface OrderDetailsDrawerProps {
   order: CustomerOrder | null;
@@ -80,7 +80,8 @@ export function OrderDetailsDrawer({
   const handleDownloadInvoice = async () => {
     if (!order) return;
 
-    console.log('[PDF] clicked', { kind: 'invoice', id: order.id });
+    console.log('[PDF] CLICK', { kind: 'invoice', id: order.id });
+    const toastId = toast.loading('جاري تجهيز الملف...');
     
     setGeneratingInvoice(true);
     
@@ -110,13 +111,12 @@ export function OrderDetailsDrawer({
         services
       );
       
-      const report = await runPdfDebug('invoice', invoiceData);
-      if (report.ok) {
-        toast.success(isRTL ? 'تم تحميل الفاتورة' : 'Invoice downloaded');
-      }
+      const report = await runDownloadAudit('invoice', invoiceData);
+      if (report.ok === false) throw report.error;
+      toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
     } catch (error) {
       console.error('[Invoice Download] ❌ Error:', error);
-      toast.error(isRTL ? 'فشل التحميل' : 'Download failed');
+      toast.error(isRTL ? 'فشل تنزيل الملف' : 'Download failed', { id: toastId });
     } finally {
       setGeneratingInvoice(false);
     }
@@ -433,3 +433,4 @@ export function OrderDetailsDrawer({
     </Sheet>
   );
 }
+

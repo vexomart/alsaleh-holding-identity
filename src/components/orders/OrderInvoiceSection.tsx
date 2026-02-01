@@ -33,7 +33,7 @@ import {
   type InvoiceStatus 
 } from '@/lib/api/invoices';
 import { type InvoiceData } from '@/lib/pdf';
-import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
+import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
 import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
 
@@ -239,12 +239,13 @@ export function OrderInvoiceSection({
         notes: orderDescription || undefined,
       };
 
-      console.log('[PDF] clicked', { kind: 'invoice', id: newInvoice.id });
-      const report = await runPdfDebug('invoice', invoiceData);
-      if (!report.ok) {
+      console.log('[PDF] CLICK', { kind: 'invoice', id: newInvoice.id });
+      const report = await runDownloadAudit('invoice', invoiceData);
+      if (report.ok === false) {
+        const msg = report.error instanceof Error ? report.error.message : String(report.error);
         toast({
           title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
-          description: report.error,
+          description: msg,
           variant: 'destructive',
         });
         return;
@@ -274,7 +275,7 @@ export function OrderInvoiceSection({
     try {
       setDownloading(true);
 
-      console.log('[PDF] clicked', { kind: 'invoice', id: invoice.id });
+      console.log('[PDF] CLICK', { kind: 'invoice', id: invoice.id });
 
       // Map invoice status to PDF status type
       const pdfStatusMap: Record<InvoiceStatus, 'pending' | 'paid' | 'overdue' | 'cancelled'> = {
@@ -309,11 +310,12 @@ export function OrderInvoiceSection({
         notes: orderDescription || undefined,
       };
 
-      const report = await runPdfDebug('invoice', invoiceData);
-      if (!report.ok) {
+      const report = await runDownloadAudit('invoice', invoiceData);
+      if (report.ok === false) {
+        const msg = report.error instanceof Error ? report.error.message : String(report.error);
         toast({
           title: isRTL ? 'خطأ في تحميل الفاتورة' : 'Error downloading invoice',
-          description: report.error,
+          description: msg,
           variant: 'destructive',
         });
         return;
@@ -543,3 +545,4 @@ export function OrderInvoiceSection({
     </motion.div>
   );
 }
+

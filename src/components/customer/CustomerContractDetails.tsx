@@ -44,7 +44,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { type ContractData } from '@/lib/pdf';
-import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
+import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
 
 import { ThumbsUp, Hourglass } from 'lucide-react';
 
@@ -178,7 +178,8 @@ export function CustomerContractDetails() {
       return;
     }
 
-    console.log('[PDF] clicked', { kind: 'contract', id: contract.id });
+    console.log('[PDF] CLICK', { kind: 'contract', id: contract.id });
+    const toastId = toast.loading('جاري تجهيز الملف...');
 
     setIsGeneratingPdf(true);
 
@@ -244,11 +245,12 @@ export function CustomerContractDetails() {
         });
       }
 
-      const report = await runPdfDebug('contract', contractData);
-      if (report.ok) toast.success('تم تحميل العقد بنجاح');
+      const report = await runDownloadAudit('contract', contractData);
+      if (report.ok === false) throw report.error;
+      toast.success('تم تنزيل الملف', { id: toastId });
     } catch (err) {
       console.error('Error generating PDF:', err);
-      toast.error('فشل في تحميل العقد');
+      toast.error('فشل تنزيل الملف', { id: toastId });
     } finally {
       setIsGeneratingPdf(false);
     }

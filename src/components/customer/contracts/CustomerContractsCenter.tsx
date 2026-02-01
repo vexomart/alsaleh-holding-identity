@@ -12,6 +12,8 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { RefreshCw, ShoppingBag, LayoutGrid, Table as TableIcon } from 'lucide-react';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 // Local components
 import { useCustomerContracts } from './useCustomerContracts';
@@ -22,6 +24,9 @@ import { ContractsPagination } from './ContractsPagination';
 import { ContractDetailsDrawer } from './ContractDetailsDrawer';
 import { ContractsEmptyState, ContractsErrorState } from './ContractsEmptyState';
 import { CustomerContract, SortField } from './types';
+
+import { type ContractData } from '@/lib/pdf';
+import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
 
 export function CustomerContractsCenter() {
   const { language } = useLanguage();
@@ -77,7 +82,59 @@ export function CustomerContractsCenter() {
   };
 
   const handleDownload = (contract: CustomerContract) => {
-    navigate(`/app/contracts/${contract.id}?download=true`);
+    // Bypass storage URL download completely: always generate locally.
+    (async () => {
+      console.log('[PDF] CLICK', { kind: 'contract', id: contract.id });
+      const toastId = toast.loading('جاري تجهيز الملف...');
+      try {
+        const { data: sig } = await supabase
+          .from('contract_signatures')
+          .select('signer_name, signer_national_id, signer_phone')
+          .eq('contract_id', contract.id)
+          .maybeSingle();
+
+        const pricing: any = (contract as any).pricing_json || {};
+
+        const contractData: ContractData = {
+          contractNumber: contract.contract_number,
+          contractType: 'عقد تقديم خدمات',
+          date: new Date(contract.created_at),
+          firstParty: {
+            name: 'شركة علي صالح الشهري القابضة',
+            title: 'Ali Saleh Al-Shehri Holding Company',
+            address: 'المملكة العربية السعودية - الرياض',
+          },
+          secondParty: {
+            name: sig?.signer_name || '',
+            idNumber: sig?.signer_national_id || undefined,
+            phone: sig?.signer_phone || undefined,
+          },
+          preamble: contract.scope_summary_ar || contract.scope_summary || undefined,
+          clauses: [
+            {
+              title: 'نطاق العمل',
+              content: contract.service
+                ? `تقديم خدمة ${contract.service.name_ar || contract.service.name} وفقاً للمواصفات المتفق عليها.`
+                : 'تقديم الخدمات المتفق عليها وفقاً للمواصفات.',
+            },
+          ],
+          pricing: {
+            subtotal: pricing.subtotal || 0,
+            vatRate: pricing.vat_rate || 15,
+            vatAmount: pricing.vat_amount || 0,
+            total: pricing.total || 0,
+            currency: pricing.currency || 'SAR',
+          },
+        };
+
+        const report = await runDownloadAudit('contract', contractData);
+        if (report.ok === false) throw report.error;
+        toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
+      } catch (err) {
+        console.error('[Contract Download] ❌ Error:', err);
+        toast.error(isRTL ? 'فشل تنزيل الملف' : 'Download failed', { id: toastId });
+      }
+    })();
   };
 
   // Animation wrapper

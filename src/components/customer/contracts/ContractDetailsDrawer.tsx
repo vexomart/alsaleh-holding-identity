@@ -36,7 +36,7 @@ import {
 import { CustomerContract, CONTRACT_STATUS_CONFIG } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
 import { type ContractData } from '@/lib/pdf';
-import { runPdfDebug } from '@/lib/pdf/debug/run-pdf-debug';
+import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
 
 interface ContractDetailsDrawerProps {
   contract: CustomerContract | null;
@@ -128,7 +128,8 @@ export function ContractDetailsDrawer({
   const handleDownloadPdf = async () => {
     if (!contract || contract.status !== 'signed') return;
 
-    console.log('[PDF] clicked', { kind: 'contract', id: contract.id });
+    console.log('[PDF] CLICK', { kind: 'contract', id: contract.id });
+    const toastId = toast.loading('جاري تجهيز الملف...');
 
     setIsGeneratingPdf(true);
     try {
@@ -176,14 +177,12 @@ export function ContractDetailsDrawer({
         },
       };
 
-      const report = await runPdfDebug('contract', contractData);
-
-      if (report.ok) {
-        toast.success(isRTL ? 'تم تحميل العقد' : 'Contract downloaded');
-      }
+      const report = await runDownloadAudit('contract', contractData);
+      if (report.ok === false) throw report.error;
+      toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
     } catch (err) {
       console.error('Error generating PDF:', err);
-      toast.error(isRTL ? 'فشل تحميل العقد' : 'Contract download failed');
+      toast.error(isRTL ? 'فشل تنزيل الملف' : 'Download failed', { id: toastId });
     } finally {
       setIsGeneratingPdf(false);
     }
