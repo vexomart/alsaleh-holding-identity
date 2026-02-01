@@ -1,7 +1,7 @@
 /**
  * Admin Finance Center - Enterprise Grade Financial Management
  * 
- * Tabs: Overview, Transactions, Invoices, Wallets, Ledger
+ * Tabs: Overview, Transactions, Invoices, Wallets, Bank Transfers, Ledger
  * Full RTL support with Arabic-first design
  */
 
@@ -15,18 +15,21 @@ import {
   Receipt,
   Wallet,
   BookOpen,
+  Building2,
 } from "lucide-react";
 import { FinanceOverview } from "./FinanceOverview";
 import { FinanceTransactions } from "./FinanceTransactions";
 import { FinanceInvoices } from "./FinanceInvoices";
 import { FinanceWallets } from "./FinanceWallets";
 import { FinanceLedger } from "./FinanceLedger";
+import { BankTransfersManagement } from "./BankTransfersManagement";
 
 const tabs = [
   { id: "overview", icon: LayoutDashboard, labelAr: "نظرة عامة", labelEn: "Overview" },
   { id: "transactions", icon: ArrowLeftRight, labelAr: "المعاملات", labelEn: "Transactions" },
   { id: "invoices", icon: Receipt, labelAr: "الفواتير", labelEn: "Invoices" },
   { id: "wallets", icon: Wallet, labelAr: "المحافظ", labelEn: "Wallets" },
+  { id: "bank-transfers", icon: Building2, labelAr: "التحويلات البنكية", labelEn: "Bank Transfers" },
   { id: "ledger", icon: BookOpen, labelAr: "دفتر الأستاذ", labelEn: "Ledger" },
 ];
 
@@ -88,6 +91,10 @@ export function FinanceCenter() {
           
           <TabsContent value="wallets" className="m-0">
             <FinanceWallets />
+          </TabsContent>
+          
+          <TabsContent value="bank-transfers" className="m-0">
+            <BankTransfersManagement />
           </TabsContent>
           
           <TabsContent value="ledger" className="m-0">

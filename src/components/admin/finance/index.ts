@@ -6,3 +6,4 @@ export { FinanceWallets } from "./FinanceWallets";
 export { FinanceLedger } from "./FinanceLedger";
 export { TransactionTimeline } from "./TransactionTimeline";
 export { TransactionDetailDialog } from "./TransactionDetailDialog";
+export { BankTransfersManagement } from "./BankTransfersManagement";
