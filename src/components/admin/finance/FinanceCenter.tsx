@@ -56,35 +56,38 @@ export function FinanceCenter() {
         </p>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" dir={isRTL ? "rtl" : "ltr"}>
-        <TabsList 
-          className={`
-            w-full flex bg-muted/50 p-1 rounded-lg 
-            overflow-x-auto whitespace-nowrap scrollbar-hide
-            ${isRTL ? "flex-row-reverse justify-end" : "justify-start"}
-          `}
-        >
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <TabsTrigger
-                key={tab.id}
-                value={tab.id}
-                className={`
-                  flex items-center gap-2 px-4 py-2 
-                  data-[state=active]:bg-background data-[state=active]:shadow-sm
-                  ${isRTL ? "flex-row-reverse text-right" : "text-left"}
-                `}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                <span className="whitespace-nowrap">
-                  {isRTL ? tab.labelAr : tab.labelEn}
-                </span>
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+      {/* Tabs - RTL handled via dir attribute and array reversal */}
+      <div dir={isRTL ? "rtl" : "ltr"} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList 
+            className={`
+              w-full flex bg-muted/50 p-1 rounded-lg 
+              overflow-x-auto whitespace-nowrap
+              ${isRTL ? "justify-end" : "justify-start"}
+            `}
+          >
+            {(isRTL ? [...tabs].reverse() : tabs).map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className={`
+                    flex items-center gap-2 px-4 py-2 rounded-md
+                    data-[state=active]:bg-background 
+                    data-[state=active]:text-foreground 
+                    data-[state=active]:shadow-sm
+                    ${isRTL ? "flex-row-reverse" : ""}
+                  `}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="whitespace-nowrap">
+                    {isRTL ? tab.labelAr : tab.labelEn}
+                  </span>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
 
         <div className="mt-6">
           <TabsContent value="overview" className="m-0">
@@ -111,7 +114,8 @@ export function FinanceCenter() {
             <FinanceLedger />
           </TabsContent>
         </div>
-      </Tabs>
+        </Tabs>
+      </div>
     </motion.div>
   );
 }
