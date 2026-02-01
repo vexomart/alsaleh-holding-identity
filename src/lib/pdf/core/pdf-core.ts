@@ -242,15 +242,48 @@ export async function generatePDFBlob(
 ): Promise<Blob> {
   // Initialize PDF system (auto-init)
   await initPdf();
+  
+  console.log('[PDF CORE] Generating PDF blob...');
 
   const docDefinition = createDocumentDefinition(content, options);
-  const pdfDoc = pdfMakeInstance.createPdf(docDefinition);
+  
+  console.log('[PDF CORE] Document definition created');
+  console.log('[PDF CORE] Creating PDF document...');
+  
+  let pdfDoc: ReturnType<typeof pdfMakeInstance.createPdf>;
+  
+  try {
+    pdfDoc = pdfMakeInstance.createPdf(docDefinition);
+    console.log('[PDF CORE] PDF document created successfully');
+  } catch (createError) {
+    console.error('[PDF CORE] ❌ Failed to create PDF document:', createError);
+    throw createError;
+  }
 
   return new Promise((resolve, reject) => {
+    // Set a timeout to catch hanging blob generation
+    const timeout = setTimeout(() => {
+      console.error('[PDF CORE] PDF generation timed out after 30 seconds');
+      reject(new Error('PDF generation timed out'));
+    }, 30000);
+    
+    console.log('[PDF CORE] Calling getBlob...');
+    
     try {
-      pdfDoc.getBlob(resolve);
-    } catch (error) {
-      reject(error);
+      pdfDoc.getBlob((blob: Blob) => {
+        clearTimeout(timeout);
+        if (blob) {
+          console.log('[PDF CORE] ✅ PDF blob generated, size:', blob.size, 'bytes');
+          resolve(blob);
+        } else {
+          console.error('[PDF CORE] ❌ getBlob returned null/undefined');
+          reject(new Error('PDF generation returned empty blob'));
+        }
+      });
+    } catch (getBlobError) {
+      clearTimeout(timeout);
+      console.error('[PDF CORE] ❌ Error in getBlob:', getBlobError);
+      reject(getBlobError);
     }
   });
 }

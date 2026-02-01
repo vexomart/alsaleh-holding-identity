@@ -595,25 +595,41 @@ export async function createInvoicePDF(
   invoice: InvoiceData,
   options: CreateInvoicePDFOptions = {}
 ): Promise<{ blob?: Blob; dataUrl?: string }> {
-  // Initialize PDF system (throws if Cairo not loaded)
-  await initPdf();
+  console.log('[Invoice Template] Starting PDF generation for:', invoice.invoiceNumber);
+  
+  try {
+    // Initialize PDF system (throws if Cairo not loaded)
+    console.log('[Invoice Template] Initializing PDF system...');
+    await initPdf();
+    console.log('[Invoice Template] PDF system initialized');
 
-  const companyInfo = options.companyInfo || DEFAULT_COMPANY_INFO as CompanyInfo;
-  const content = generateInvoiceContent(invoice, companyInfo);
+    const companyInfo = options.companyInfo || DEFAULT_COMPANY_INFO as CompanyInfo;
+    
+    console.log('[Invoice Template] Generating content...');
+    const content = generateInvoiceContent(invoice, companyInfo);
+    console.log('[Invoice Template] Content generated, creating blob...');
 
-  const blob = await generatePDFBlob(content, {
-    title: `فاتورة ضريبية - ${invoice.invoiceNumber}`,
-    subject: 'فاتورة ضريبية',
-  });
+    const blob = await generatePDFBlob(content, {
+      title: `فاتورة ضريبية - ${invoice.invoiceNumber}`,
+      subject: 'فاتورة ضريبية',
+    });
+    
+    console.log('[Invoice Template] Blob created, size:', blob.size);
 
-  if (options.download) {
-    const filename = options.filename || `invoice-${invoice.invoiceNumber}.pdf`;
-    downloadBlob(blob, filename);
-    return { blob };
+    if (options.download) {
+      const filename = options.filename || `invoice-${invoice.invoiceNumber}.pdf`;
+      console.log('[Invoice Template] Downloading as:', filename);
+      downloadBlob(blob, filename);
+      return { blob };
+    }
+
+    const dataUrl = await blobToDataUrl(blob);
+    return { blob, dataUrl };
+    
+  } catch (error) {
+    console.error('[Invoice Template] ❌ PDF generation failed:', error);
+    throw error;
   }
-
-  const dataUrl = await blobToDataUrl(blob);
-  return { blob, dataUrl };
 }
 
 // ============================================
