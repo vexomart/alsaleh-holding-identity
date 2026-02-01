@@ -44,6 +44,36 @@ export const pdfMakeInstance = pdfMake as unknown as {
   };
 };
 
+function getGlobalPdfMake(): any {
+  return (globalThis as any).pdfMake;
+}
+
+function syncToGlobalPdfMake(): void {
+  // Some builds attach pdfMake to window/global; if another copy is used internally,
+  // keep it aligned with our singleton to prevent VFS/font drift.
+  const g = getGlobalPdfMake();
+  if (!g) {
+    (globalThis as any).pdfMake = pdfMakeInstance;
+    return;
+  }
+
+  // If global points elsewhere, merge state both ways.
+  try {
+    if (g !== pdfMakeInstance) {
+      g.vfs = { ...(g.vfs || {}), ...(pdfMakeInstance.vfs || {}) };
+      g.fonts = { ...(g.fonts || {}), ...(pdfMakeInstance.fonts || {}) };
+
+      pdfMakeInstance.vfs = { ...(g.vfs || {}), ...(pdfMakeInstance.vfs || {}) };
+      pdfMakeInstance.fonts = { ...(g.fonts || {}), ...(pdfMakeInstance.fonts || {}) };
+
+      // Prefer our instance as the global singleton
+      (globalThis as any).pdfMake = pdfMakeInstance;
+    }
+  } catch (e) {
+    console.warn('[PDF FONTS] Could not sync global pdfMake (non-fatal):', e);
+  }
+}
+
 /**
  * Initialize default VFS from pdfmake bundle
  */
@@ -68,6 +98,9 @@ function initDefaultVfs(): void {
   if (!pdfMakeInstance.fonts) {
     pdfMakeInstance.fonts = {};
   }
+
+  // Ensure global singleton alignment early
+  syncToGlobalPdfMake();
 }
 
 /**
@@ -105,6 +138,31 @@ function patchVfsToPreserveRegisteredFonts(): void {
     // If defineProperty fails for any reason, we still keep the merged initDefaultVfs behavior.
     console.warn('[PDF FONTS] Could not patch pdfMake.vfs setter (non-fatal):', e);
   }
+
+  // Also try to patch the global pdfMake if it's a different object.
+  // This covers cases where some code path uses window.pdfMake directly.
+  try {
+    const g = getGlobalPdfMake();
+    if (g && g !== pdfMakeInstance) {
+      let gStore: Record<string, string> = g.vfs || {};
+      g.vfs = gStore;
+      Object.defineProperty(g, 'vfs', {
+        configurable: true,
+        enumerable: true,
+        get() {
+          return gStore;
+        },
+        set(next: Record<string, string>) {
+          gStore = {
+            ...(next || {}),
+            ...gStore,
+          };
+        },
+      });
+    }
+  } catch (e) {
+    console.warn('[PDF FONTS] Could not patch global pdfMake.vfs (non-fatal):', e);
+  }
 }
 
 // Initialize default VFS immediately on module load
@@ -134,6 +192,9 @@ async function loadCairoFonts(): Promise<void> {
     pdfMakeInstance.vfs[FONT_FILES.regular] = cairo.regular;
     pdfMakeInstance.vfs[FONT_FILES.bold] = cairo.bold;
 
+    // Keep any global pdfMake instance in sync as well
+    syncToGlobalPdfMake();
+
     // Verify VFS registration immediately
     if (!pdfMakeInstance.vfs[FONT_FILES.regular]) {
       throw new Error(`Failed to register ${FONT_FILES.regular} in VFS`);
@@ -160,9 +221,18 @@ async function loadCairoFonts(): Promise<void> {
       throw new Error(`Failed to register ${ARABIC_FONT_NAME} font family`);
     }
 
+    syncToGlobalPdfMake();
+
     console.log('[PDF FONTS] ✅ Cairo fonts registered successfully');
     console.log('[PDF FONTS] VFS keys:', Object.keys(pdfMakeInstance.vfs).filter(k => k.includes('Cairo') || k.includes('.ttf')));
     console.log('[PDF FONTS] Font families:', Object.keys(pdfMakeInstance.fonts));
+
+    const g = getGlobalPdfMake();
+    console.log('[PDF FONTS] globalThis.pdfMake aligned:', {
+      hasGlobal: !!g,
+      sameInstance: g === pdfMakeInstance,
+      globalHasCairoBold: !!g?.vfs?.[FONT_FILES.bold],
+    });
     
   } catch (error) {
     console.error('[PDF FONTS] ❌ Font loading failed:', error);
