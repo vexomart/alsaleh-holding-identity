@@ -145,6 +145,250 @@ export type Database = {
           },
         ]
       }
+      contract_files: {
+        Row: {
+          contract_id: string
+          created_at: string | null
+          generated_at: string | null
+          id: string
+          pdf_hash_sha256: string
+          pdf_url: string
+          tenant_id: string | null
+        }
+        Insert: {
+          contract_id: string
+          created_at?: string | null
+          generated_at?: string | null
+          id?: string
+          pdf_hash_sha256: string
+          pdf_url: string
+          tenant_id?: string | null
+        }
+        Update: {
+          contract_id?: string
+          created_at?: string | null
+          generated_at?: string | null
+          id?: string
+          pdf_hash_sha256?: string
+          pdf_url?: string
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_files_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_files_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_signatures: {
+        Row: {
+          contract_id: string
+          created_at: string | null
+          id: string
+          ip_address: unknown
+          signature_data_json: Json | null
+          signature_method: Database["public"]["Enums"]["signature_method"]
+          signer_name: string
+          signer_national_id: string | null
+          signer_phone: string | null
+          signer_user_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          contract_id: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown
+          signature_data_json?: Json | null
+          signature_method?: Database["public"]["Enums"]["signature_method"]
+          signer_name: string
+          signer_national_id?: string | null
+          signer_phone?: string | null
+          signer_user_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          contract_id?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown
+          signature_data_json?: Json | null
+          signature_method?: Database["public"]["Enums"]["signature_method"]
+          signer_name?: string
+          signer_national_id?: string | null
+          signer_phone?: string | null
+          signer_user_id?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_signatures_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_templates: {
+        Row: {
+          body_ar: string
+          body_en: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          service_id: string | null
+          tenant_id: string | null
+          title_ar: string
+          title_en: string | null
+          updated_at: string | null
+          version: number
+        }
+        Insert: {
+          body_ar: string
+          body_en?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          service_id?: string | null
+          tenant_id?: string | null
+          title_ar: string
+          title_en?: string | null
+          updated_at?: string | null
+          version?: number
+        }
+        Update: {
+          body_ar?: string
+          body_en?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          service_id?: string | null
+          tenant_id?: string | null
+          title_ar?: string
+          title_en?: string | null
+          updated_at?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_templates_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contract_templates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contracts: {
+        Row: {
+          contract_number: string
+          created_at: string | null
+          customer_user_id: string
+          id: string
+          locale: string | null
+          order_id: string | null
+          pricing_json: Json | null
+          scope_summary: string | null
+          scope_summary_ar: string | null
+          service_id: string | null
+          signed_at: string | null
+          signed_by_user_id: string | null
+          status: Database["public"]["Enums"]["contract_status"]
+          template_id: string | null
+          tenant_id: string | null
+          terms_snapshot_json: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          contract_number: string
+          created_at?: string | null
+          customer_user_id: string
+          id?: string
+          locale?: string | null
+          order_id?: string | null
+          pricing_json?: Json | null
+          scope_summary?: string | null
+          scope_summary_ar?: string | null
+          service_id?: string | null
+          signed_at?: string | null
+          signed_by_user_id?: string | null
+          status?: Database["public"]["Enums"]["contract_status"]
+          template_id?: string | null
+          tenant_id?: string | null
+          terms_snapshot_json?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          contract_number?: string
+          created_at?: string | null
+          customer_user_id?: string
+          id?: string
+          locale?: string | null
+          order_id?: string | null
+          pricing_json?: Json | null
+          scope_summary?: string | null
+          scope_summary_ar?: string | null
+          service_id?: string | null
+          signed_at?: string | null
+          signed_by_user_id?: string | null
+          status?: Database["public"]["Enums"]["contract_status"]
+          template_id?: string | null
+          tenant_id?: string | null
+          terms_snapshot_json?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "contract_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_wallets: {
         Row: {
           balance: number | null
@@ -1516,6 +1760,10 @@ export type Database = {
     Functions: {
       cleanup_expired_nafath_states: { Args: never; Returns: undefined }
       generate_bank_transfer_reference: { Args: never; Returns: string }
+      generate_contract_number: {
+        Args: { p_tenant_id?: string }
+        Returns: string
+      }
       generate_invoice_number: {
         Args: { p_tenant_id?: string }
         Returns: string
@@ -1606,6 +1854,7 @@ export type Database = {
         | "login"
         | "logout"
         | "export"
+      contract_status: "draft" | "pending_signature" | "signed" | "cancelled"
       financial_transaction_status:
         | "pending"
         | "processing"
@@ -1636,6 +1885,7 @@ export type Database = {
         | "completed"
         | "cancelled"
         | "refunded"
+      signature_method: "checkbox" | "drawn" | "nafath_verified"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1782,6 +2032,7 @@ export const Constants = {
         "logout",
         "export",
       ],
+      contract_status: ["draft", "pending_signature", "signed", "cancelled"],
       financial_transaction_status: [
         "pending",
         "processing",
@@ -1816,6 +2067,7 @@ export const Constants = {
         "cancelled",
         "refunded",
       ],
+      signature_method: ["checkbox", "drawn", "nafath_verified"],
     },
   },
 } as const
