@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { 
   Building2, 
   Wallet, 
@@ -27,12 +28,17 @@ export function CustomerWallet() {
   const isRTL = language === "ar";
   const [showBankTransfer, setShowBankTransfer] = useState(false);
 
+  // RTL helpers
+  const rtlRow = isRTL ? "flex-row-reverse" : "flex-row";
+  const rtlText = isRTL ? "text-right" : "text-left";
+  const rtlJustify = isRTL ? "justify-end" : "justify-start";
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="space-y-6 w-full min-h-screen"
+      className={cn("space-y-6 w-full min-h-screen", rtlText)}
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Hero Header with Gradient Background */}
@@ -45,9 +51,9 @@ export function CustomerWallet() {
         </div>
         
         <div className="relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className={cn("flex flex-col md:flex-row md:items-center justify-between gap-4", isRTL && "md:flex-row-reverse")}>
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
+              <div className={cn("flex items-center gap-2", rtlRow)}>
                 <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
                   <Wallet className="h-5 w-5 text-white" />
                 </div>
@@ -63,26 +69,26 @@ export function CustomerWallet() {
               </p>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className={cn("flex items-center gap-3", rtlRow)}>
               <Button 
                 onClick={() => setShowBankTransfer(true)} 
                 variant="secondary"
-                className="gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+                className={cn("gap-2 bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm", rtlRow)}
               >
                 <Building2 className="h-4 w-4" />
                 {isRTL ? "تحويل بنكي" : "Bank Transfer"}
-                <ArrowUpRight className="h-3.5 w-3.5" />
+                <ArrowUpRight className={cn("h-3.5 w-3.5", isRTL && "scale-x-[-1]")} />
               </Button>
             </div>
           </div>
 
           {/* Trust badges */}
-          <div className="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-white/10">
-            <div className="flex items-center gap-2 text-white/70 text-xs">
+          <div className={cn("flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-white/10", rtlRow)}>
+            <div className={cn("flex items-center gap-2 text-white/70 text-xs", rtlRow)}>
               <Shield className="h-4 w-4" />
               <span>{isRTL ? "حماية بنكية" : "Bank-grade Security"}</span>
             </div>
-            <div className="flex items-center gap-2 text-white/70 text-xs">
+            <div className={cn("flex items-center gap-2 text-white/70 text-xs", rtlRow)}>
               <Sparkles className="h-4 w-4" />
               <span>{isRTL ? "تحديثات فورية" : "Real-time Updates"}</span>
             </div>
@@ -90,22 +96,28 @@ export function CustomerWallet() {
         </div>
       </div>
 
-      {/* Tabs - Modern Design */}
+      {/* Tabs - Modern Design with RTL Support */}
       <Tabs defaultValue="wallet" className="space-y-6 w-full" dir={isRTL ? "rtl" : "ltr"}>
-        <TabsList className="w-full md:w-auto bg-muted/50 p-1 rounded-xl border border-border/50">
+        <TabsList className={cn("w-full md:w-auto bg-muted/50 p-1 rounded-xl border border-border/50", isRTL && "justify-end")}>
           <TabsTrigger 
             value="wallet" 
-            className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-6"
+            className={cn(
+              "gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-6",
+              rtlRow
+            )}
           >
-            <Wallet className="h-4 w-4" />
-            {isRTL ? "المحفظة" : "Wallet"}
+            <Wallet className="h-4 w-4 shrink-0" />
+            <span>{isRTL ? "المحفظة" : "Wallet"}</span>
           </TabsTrigger>
           <TabsTrigger 
             value="bank-transfers" 
-            className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-6"
+            className={cn(
+              "gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-6",
+              rtlRow
+            )}
           >
-            <Building2 className="h-4 w-4" />
-            {isRTL ? "التحويلات البنكية" : "Bank Transfers"}
+            <Building2 className="h-4 w-4 shrink-0" />
+            <span>{isRTL ? "التحويلات البنكية" : "Bank Transfers"}</span>
           </TabsTrigger>
         </TabsList>
 
