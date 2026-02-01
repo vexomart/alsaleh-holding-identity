@@ -9,6 +9,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/hooks/useLanguage";
+import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -57,14 +58,14 @@ export function FinanceCenter() {
       </div>
 
       {/* Tabs - RTL handled via dir attribute and array reversal */}
-      <div dir={isRTL ? "rtl" : "ltr"} className="w-full">
+      <section dir={isRTL ? "rtl" : "ltr"} className="w-full">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList 
-            className={`
-              w-full flex bg-muted/50 p-1 rounded-lg 
-              overflow-x-auto whitespace-nowrap
-              ${isRTL ? "justify-end" : "justify-start"}
-            `}
+            className={cn(
+              "w-full flex bg-muted/50 p-1 rounded-lg gap-1",
+              "overflow-x-auto whitespace-nowrap scrollbar-hide",
+              isRTL ? "justify-end" : "justify-start"
+            )}
           >
             {(isRTL ? [...tabs].reverse() : tabs).map((tab) => {
               const Icon = tab.icon;
@@ -72,13 +73,13 @@ export function FinanceCenter() {
                 <TabsTrigger
                   key={tab.id}
                   value={tab.id}
-                  className={`
-                    flex items-center gap-2 px-4 py-2 rounded-md
-                    data-[state=active]:bg-background 
-                    data-[state=active]:text-foreground 
-                    data-[state=active]:shadow-sm
-                    ${isRTL ? "flex-row-reverse" : ""}
-                  `}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-md shrink-0",
+                    "data-[state=active]:bg-background",
+                    "data-[state=active]:text-foreground",
+                    "data-[state=active]:shadow-sm",
+                    isRTL ? "flex-row-reverse text-right" : "text-left"
+                  )}
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   <span className="whitespace-nowrap">
@@ -89,33 +90,33 @@ export function FinanceCenter() {
             })}
           </TabsList>
 
-        <div className="mt-6">
-          <TabsContent value="overview" className="m-0">
-            <FinanceOverview />
-          </TabsContent>
-          
-          <TabsContent value="transactions" className="m-0">
-            <FinanceTransactions />
-          </TabsContent>
-          
-          <TabsContent value="invoices" className="m-0">
-            <FinanceInvoices />
-          </TabsContent>
-          
-          <TabsContent value="wallets" className="m-0">
-            <FinanceWallets />
-          </TabsContent>
-          
-          <TabsContent value="bank-transfers" className="m-0">
-            <BankTransfersManagement />
-          </TabsContent>
-          
-          <TabsContent value="ledger" className="m-0">
-            <FinanceLedger />
-          </TabsContent>
-        </div>
+          <div className="mt-6">
+            <TabsContent value="overview" className="m-0">
+              <FinanceOverview />
+            </TabsContent>
+            
+            <TabsContent value="transactions" className="m-0">
+              <FinanceTransactions />
+            </TabsContent>
+            
+            <TabsContent value="invoices" className="m-0">
+              <FinanceInvoices />
+            </TabsContent>
+            
+            <TabsContent value="wallets" className="m-0">
+              <FinanceWallets />
+            </TabsContent>
+            
+            <TabsContent value="bank-transfers" className="m-0">
+              <BankTransfersManagement />
+            </TabsContent>
+            
+            <TabsContent value="ledger" className="m-0">
+              <FinanceLedger />
+            </TabsContent>
+          </div>
         </Tabs>
-      </div>
+      </section>
     </motion.div>
   );
 }

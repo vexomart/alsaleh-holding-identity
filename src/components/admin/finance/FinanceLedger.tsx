@@ -182,12 +182,15 @@ export function FinanceLedger() {
   const postedEntries = entries.filter((e) => e.is_posted).length;
 
   return (
-    <div className="space-y-6">
+    <div className={cn("space-y-6", isRTL ? "text-right" : "text-left")}>
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="border-primary/20">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
+            <div className={cn(
+              "flex items-center justify-between",
+              isRTL && "flex-row-reverse"
+            )}>
               <div>
                 <span className="text-sm text-muted-foreground">
                   {isRTL ? "إجمالي القيود" : "Total Entries"}
@@ -202,7 +205,10 @@ export function FinanceLedger() {
         </Card>
         <Card className="border-green-500/20">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
+            <div className={cn(
+              "flex items-center justify-between",
+              isRTL && "flex-row-reverse"
+            )}>
               <div>
                 <span className="text-sm text-muted-foreground">
                   {isRTL ? "القيود المرحّلة" : "Posted Entries"}
@@ -236,7 +242,7 @@ export function FinanceLedger() {
                 placeholder={isRTL ? "بحث برقم القيد أو الوصف..." : "Search by entry number or description..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={isRTL ? "pr-10" : "pl-10"}
+                className={cn(isRTL ? "pr-10 text-right" : "pl-10")}
               />
             </div>
           </div>
@@ -263,9 +269,15 @@ export function FinanceLedger() {
                   >
                     <div className="rounded-lg border overflow-hidden">
                       <CollapsibleTrigger asChild>
-                        <div className="flex items-center justify-between p-4 hover:bg-muted/30 cursor-pointer">
-                          <div className="flex items-center gap-4">
-                            <div>
+                        <div className={cn(
+                          "flex items-center justify-between p-4 hover:bg-muted/30 cursor-pointer",
+                          isRTL && "flex-row-reverse"
+                        )}>
+                          <div className={cn(
+                            "flex items-center gap-4",
+                            isRTL && "flex-row-reverse"
+                          )}>
+                            <div className={isRTL ? "text-right" : "text-left"}>
                               <span className="font-mono text-sm font-semibold" dir="ltr">
                                 {entry.entry_number}
                               </span>
@@ -274,7 +286,10 @@ export function FinanceLedger() {
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-4">
+                          <div className={cn(
+                            "flex items-center gap-4",
+                            isRTL && "flex-row-reverse"
+                          )}>
                             <Badge
                               variant="outline"
                               className={cn(
@@ -299,7 +314,7 @@ export function FinanceLedger() {
                         </div>
                       </CollapsibleTrigger>
                       <CollapsibleContent>
-                        <div className="border-t bg-muted/20 p-4">
+                        <div dir={isRTL ? "rtl" : "ltr"} className="border-t bg-muted/20 p-4 overflow-x-auto">
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -319,8 +334,11 @@ export function FinanceLedger() {
                                 const account = accounts.get(line.account_id);
                                 return (
                                   <TableRow key={line.id}>
-                                    <TableCell>
-                                      <div className="flex items-center gap-2">
+                                    <TableCell className={isRTL ? "text-right" : "text-left"}>
+                                      <div className={cn(
+                                        "flex items-center gap-2",
+                                        isRTL && "flex-row-reverse"
+                                      )}>
                                         <span className="font-mono text-xs text-muted-foreground" dir="ltr">
                                           {account?.code || "-"}
                                         </span>
@@ -329,14 +347,14 @@ export function FinanceLedger() {
                                         </span>
                                       </div>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className={isRTL ? "text-right" : "text-left"}>
                                       {Number(line.debit) > 0 && (
                                         <span className="font-semibold text-red-600" dir="ltr">
                                           {formatCurrency(Number(line.debit), line.currency)}
                                         </span>
                                       )}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className={isRTL ? "text-right" : "text-left"}>
                                       {Number(line.credit) > 0 && (
                                         <span className="font-semibold text-green-600" dir="ltr">
                                           {formatCurrency(Number(line.credit), line.currency)}
@@ -348,18 +366,22 @@ export function FinanceLedger() {
                               })}
                               {/* Totals Row */}
                               <TableRow className="bg-muted/30 font-semibold">
-                                <TableCell>
+                                <TableCell className={isRTL ? "text-right" : "text-left"}>
                                   {isRTL ? "المجموع" : "Total"}
                                 </TableCell>
-                                <TableCell dir="ltr">
-                                  {formatCurrency(
-                                    entry.lines?.reduce((sum, l) => sum + Number(l.debit), 0) || 0
-                                  )}
+                                <TableCell className={isRTL ? "text-right" : "text-left"}>
+                                  <span dir="ltr">
+                                    {formatCurrency(
+                                      entry.lines?.reduce((sum, l) => sum + Number(l.debit), 0) || 0
+                                    )}
+                                  </span>
                                 </TableCell>
-                                <TableCell dir="ltr">
-                                  {formatCurrency(
-                                    entry.lines?.reduce((sum, l) => sum + Number(l.credit), 0) || 0
-                                  )}
+                                <TableCell className={isRTL ? "text-right" : "text-left"}>
+                                  <span dir="ltr">
+                                    {formatCurrency(
+                                      entry.lines?.reduce((sum, l) => sum + Number(l.credit), 0) || 0
+                                    )}
+                                  </span>
                                 </TableCell>
                               </TableRow>
                             </TableBody>

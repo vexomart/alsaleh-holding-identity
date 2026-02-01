@@ -152,7 +152,7 @@ export function FinanceOverview() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn("space-y-6", isRTL ? "text-right" : "text-left")}>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card, index) => {
@@ -166,7 +166,10 @@ export function FinanceOverview() {
             >
               <Card className={cn("border", card.borderColor)}>
                 <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className={cn(
+                    "flex items-center justify-between mb-4",
+                    isRTL && "flex-row-reverse"
+                  )}>
                     <span className="text-sm text-muted-foreground font-medium">
                       {card.title}
                     </span>
@@ -193,7 +196,10 @@ export function FinanceOverview() {
         >
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
+              <CardTitle className={cn(
+                "text-base flex items-center gap-2",
+                isRTL && "flex-row-reverse"
+              )}>
                 <CreditCard className="h-4 w-4 text-primary" />
                 {isRTL ? "إحصائيات المعاملات" : "Transaction Stats"}
               </CardTitle>
@@ -228,7 +234,10 @@ export function FinanceOverview() {
         >
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
+              <CardTitle className={cn(
+                "text-base flex items-center gap-2",
+                isRTL && "flex-row-reverse"
+              )}>
                 <Banknote className="h-4 w-4 text-primary" />
                 {isRTL ? "صافي الإيرادات" : "Net Revenue"}
               </CardTitle>

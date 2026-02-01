@@ -223,10 +223,13 @@ export function BankTransfersManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn("space-y-6", isRTL ? "text-right" : "text-left")}>
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className={cn(
+            "flex items-center gap-2",
+            isRTL && "flex-row-reverse"
+          )}>
             <Building2 className="h-5 w-5 text-primary" />
             {isRTL ? "إدارة التحويلات البنكية" : "Bank Transfers Management"}
           </CardTitle>
@@ -238,7 +241,10 @@ export function BankTransfersManagement() {
         </CardHeader>
         <CardContent>
           {/* Filters */}
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
+          <div className={cn(
+            "flex flex-col md:flex-row items-start md:items-center gap-4 mb-6",
+            isRTL && "md:flex-row-reverse"
+          )}>
             <div className="relative flex-1 w-full md:w-auto">
               <Search className={cn(
                 "absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground",
@@ -248,10 +254,13 @@ export function BankTransfersManagement() {
                 placeholder={isRTL ? "بحث بالاسم، البريد، رقم العميل..." : "Search by name, email, customer ID..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={cn("w-full", isRTL ? "pr-10" : "pl-10")}
+                className={cn("w-full", isRTL ? "pr-10 text-right" : "pl-10")}
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className={cn(
+              "flex items-center gap-2",
+              isRTL && "flex-row-reverse"
+            )}>
               <Filter className="h-4 w-4 text-muted-foreground" />
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[180px]">
@@ -270,28 +279,31 @@ export function BankTransfersManagement() {
 
           {/* Table */}
           {filteredTransfers.length > 0 ? (
-            <div className="rounded-md border">
+            <div dir={isRTL ? "rtl" : "ltr"} className="rounded-md border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{isRTL ? "العميل" : "Customer"}</TableHead>
-                    <TableHead>{isRTL ? "الرقم المرجعي" : "Reference"}</TableHead>
-                    <TableHead>{isRTL ? "المبلغ" : "Amount"}</TableHead>
-                    <TableHead>{isRTL ? "البنك" : "Bank"}</TableHead>
-                    <TableHead>{isRTL ? "الحالة" : "Status"}</TableHead>
-                    <TableHead>{isRTL ? "التاريخ" : "Date"}</TableHead>
-                    <TableHead>{isRTL ? "الإجراءات" : "Actions"}</TableHead>
+                    <TableHead className={isRTL ? "text-right" : "text-left"}>{isRTL ? "العميل" : "Customer"}</TableHead>
+                    <TableHead className={isRTL ? "text-right" : "text-left"}>{isRTL ? "الرقم المرجعي" : "Reference"}</TableHead>
+                    <TableHead className={isRTL ? "text-right" : "text-left"}>{isRTL ? "المبلغ" : "Amount"}</TableHead>
+                    <TableHead className={isRTL ? "text-right" : "text-left"}>{isRTL ? "البنك" : "Bank"}</TableHead>
+                    <TableHead className={isRTL ? "text-right" : "text-left"}>{isRTL ? "الحالة" : "Status"}</TableHead>
+                    <TableHead className={isRTL ? "text-right" : "text-left"}>{isRTL ? "التاريخ" : "Date"}</TableHead>
+                    <TableHead className={isRTL ? "text-right" : "text-left"}>{isRTL ? "الإجراءات" : "Actions"}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredTransfers.map((transfer) => (
                     <TableRow key={transfer.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center">
+                      <TableCell className={isRTL ? "text-right" : "text-left"}>
+                        <div className={cn(
+                          "flex items-center gap-3",
+                          isRTL && "flex-row-reverse"
+                        )}>
+                          <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
                             <User className="h-4 w-4 text-muted-foreground" />
                           </div>
-                          <div>
+                          <div className={isRTL ? "text-right" : "text-left"}>
                             <div className="font-medium text-sm">
                               {transfer.profile?.full_name || (isRTL ? "عميل" : "Customer")}
                             </div>
@@ -301,14 +313,14 @@ export function BankTransfersManagement() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="font-mono text-sm">
-                        {transfer.reference_code}
+                      <TableCell className={cn("font-mono text-sm", isRTL ? "text-right" : "text-left")}>
+                        <span dir="ltr">{transfer.reference_code}</span>
                       </TableCell>
-                      <TableCell className="font-semibold">
-                        {transfer.amount.toLocaleString()} {isRTL ? "ر.س" : "SAR"}
+                      <TableCell className={cn("font-semibold", isRTL ? "text-right" : "text-left")}>
+                        <span dir="ltr">{transfer.amount.toLocaleString()} {isRTL ? "ر.س" : "SAR"}</span>
                       </TableCell>
-                      <TableCell className="text-sm">{getBankName(transfer.bank_name)}</TableCell>
-                      <TableCell>
+                      <TableCell className={cn("text-sm", isRTL ? "text-right" : "text-left")}>{getBankName(transfer.bank_name)}</TableCell>
+                      <TableCell className={isRTL ? "text-right" : "text-left"}>
                         <Badge variant={getStatusVariant(transfer.status)}>
                           {getStatusIcon(transfer.status)}
                           <span className="ms-1">
@@ -316,13 +328,16 @@ export function BankTransfersManagement() {
                           </span>
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell className={cn("text-sm text-muted-foreground", isRTL ? "text-right" : "text-left")}>
                         {format(new Date(transfer.created_at), "PP", {
                           locale: isRTL ? ar : enUS,
                         })}
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
+                      <TableCell className={isRTL ? "text-right" : "text-left"}>
+                        <div className={cn(
+                          "flex items-center gap-2",
+                          isRTL && "flex-row-reverse"
+                        )}>
                           {/* View Details */}
                           <Button
                             size="sm"

@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { WalletStatsCards } from "./wallet/WalletStatsCards";
 import { WalletCustomersTable } from "./wallet/WalletCustomersTable";
 import { WalletDetailDrawer } from "./wallet/WalletDetailDrawer";
@@ -204,12 +205,18 @@ export function FinanceWallets() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-6"
+      className={cn("space-y-6", isRTL ? "text-right" : "text-left")}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className={cn(
+        "flex flex-col sm:flex-row sm:items-center justify-between gap-4",
+        isRTL && "sm:flex-row-reverse"
+      )}>
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-3">
+          <h1 className={cn(
+            "text-2xl font-bold flex items-center gap-3",
+            isRTL && "flex-row-reverse"
+          )}>
             <Wallet className="h-7 w-7 text-primary" />
             {isRTL ? "إدارة المحافظ" : "Wallet Management"}
           </h1>
@@ -219,13 +226,22 @@ export function FinanceWallets() {
               : "Manage customer wallets, balances and transactions"}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleRefresh} disabled={isRefreshing}>
-            <RefreshCw className={`h-4 w-4 me-2 ${isRefreshing ? "animate-spin" : ""}`} />
+        <div className={cn(
+          "flex items-center gap-2",
+          isRTL && "flex-row-reverse"
+        )}>
+          <Button variant="outline" onClick={handleRefresh} disabled={isRefreshing} className={cn(
+            "flex items-center gap-2",
+            isRTL && "flex-row-reverse"
+          )}>
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
             {isRTL ? "تحديث" : "Refresh"}
           </Button>
-          <Button variant="outline">
-            <Download className="h-4 w-4 me-2" />
+          <Button variant="outline" className={cn(
+            "flex items-center gap-2",
+            isRTL && "flex-row-reverse"
+          )}>
+            <Download className="h-4 w-4" />
             {isRTL ? "تصدير" : "Export"}
           </Button>
         </div>

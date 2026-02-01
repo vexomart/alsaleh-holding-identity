@@ -191,12 +191,15 @@ export function FinanceInvoices() {
   const unpaidTotal = invoices.filter((i) => i.status !== "paid" && i.status !== "cancelled").reduce((sum, i) => sum + Number(i.total), 0);
 
   return (
-    <div className="space-y-6">
+    <div className={cn("space-y-6", isRTL ? "text-right" : "text-left")}>
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="border-green-500/20">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
+            <div className={cn(
+              "flex items-center justify-between",
+              isRTL && "flex-row-reverse"
+            )}>
               <div>
                 <span className="text-sm text-muted-foreground">
                   {isRTL ? "الفواتير المدفوعة" : "Paid Invoices"}
@@ -211,7 +214,10 @@ export function FinanceInvoices() {
         </Card>
         <Card className="border-amber-500/20">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
+            <div className={cn(
+              "flex items-center justify-between",
+              isRTL && "flex-row-reverse"
+            )}>
               <div>
                 <span className="text-sm text-muted-foreground">
                   {isRTL ? "مستحقات غير مدفوعة" : "Unpaid Amount"}
@@ -229,19 +235,28 @@ export function FinanceInvoices() {
       {/* Main Card */}
       <Card>
         <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
+          <div className={cn(
+            "flex items-center justify-between",
+            isRTL && "flex-row-reverse"
+          )}>
             <CardTitle className="text-lg">
               {isRTL ? "سجل الفواتير" : "Invoices Log"}
             </CardTitle>
-            <Button variant="outline" size="sm" onClick={exportToCSV}>
-              <Download className="h-4 w-4 me-2" />
+            <Button variant="outline" size="sm" onClick={exportToCSV} className={cn(
+              "flex items-center gap-2",
+              isRTL && "flex-row-reverse"
+            )}>
+              <Download className="h-4 w-4" />
               {isRTL ? "تصدير CSV" : "Export CSV"}
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className={cn(
+            "flex flex-col md:flex-row gap-4 mb-6",
+            isRTL && "md:flex-row-reverse"
+          )}>
             <div className="relative flex-1">
               <Search className={cn(
                 "absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground",
@@ -251,7 +266,7 @@ export function FinanceInvoices() {
                 placeholder={isRTL ? "بحث برقم الفاتورة..." : "Search by invoice number..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={isRTL ? "pr-10" : "pl-10"}
+                className={isRTL ? "pr-10 text-right" : "pl-10"}
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -276,7 +291,7 @@ export function FinanceInvoices() {
               ))}
             </div>
           ) : (
-            <div className="rounded-lg border overflow-hidden">
+            <div dir={isRTL ? "rtl" : "ltr"} className="rounded-lg border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
@@ -310,26 +325,29 @@ export function FinanceInvoices() {
                   ) : (
                     filteredInvoices.map((inv) => (
                       <TableRow key={inv.id} className="hover:bg-muted/30">
-                        <TableCell>
+                        <TableCell className={isRTL ? "text-right" : "text-left"}>
                           <span className="font-mono text-sm font-medium" dir="ltr">
                             {inv.invoice_number}
                           </span>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={isRTL ? "text-right" : "text-left"}>
                           {getStatusBadge(inv.status)}
                         </TableCell>
-                        <TableCell dir="ltr">
-                          {formatCurrency(Number(inv.subtotal), inv.currency)}
+                        <TableCell className={isRTL ? "text-right" : "text-left"}>
+                          <span dir="ltr">{formatCurrency(Number(inv.subtotal), inv.currency)}</span>
                         </TableCell>
-                        <TableCell dir="ltr">
-                          {formatCurrency(Number(inv.vat_amount), inv.currency)}
+                        <TableCell className={isRTL ? "text-right" : "text-left"}>
+                          <span dir="ltr">{formatCurrency(Number(inv.vat_amount), inv.currency)}</span>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={isRTL ? "text-right" : "text-left"}>
                           <span className="font-semibold" dir="ltr">
                             {formatCurrency(Number(inv.total), inv.currency)}
                           </span>
                         </TableCell>
-                        <TableCell className="text-muted-foreground text-sm">
+                        <TableCell className={cn(
+                          "text-muted-foreground text-sm",
+                          isRTL ? "text-right" : "text-left"
+                        )}>
                           {formatDate(inv.created_at)}
                         </TableCell>
                       </TableRow>
