@@ -242,6 +242,10 @@ export async function generatePDFBlob(
 ): Promise<Blob> {
   // Initialize PDF system (auto-init)
   await initPdf();
+
+  // Final hard-assert immediately before createPdf/getBlob.
+  // This protects against rare VFS resets (e.g. HMR/module side-effects) between init and generation.
+  assertFontsReady();
   
   console.log('[PDF CORE] Generating PDF blob...');
 

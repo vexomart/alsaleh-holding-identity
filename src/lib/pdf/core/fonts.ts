@@ -23,6 +23,9 @@ let fontsInitialized = false;
 let initializationError: Error | null = null;
 let initPromise: Promise<void> | null = null;
 
+// Guard to ensure we only patch pdfMakeInstance once (important in dev/HMR)
+let vfsPatched = false;
+
 // Singleton pdfMake reference to prevent module reload issues
 // EXPORTED so all PDF modules use the SAME instance
 export const pdfMakeInstance = pdfMake as unknown as {
@@ -47,11 +50,18 @@ export const pdfMakeInstance = pdfMake as unknown as {
 function initDefaultVfs(): void {
   const pdfFontsModule = pdfFonts as unknown as { pdfMake: { vfs: Record<string, string> } };
   
-  // Only set if VFS doesn't exist yet
-  if (!pdfMakeInstance.vfs && pdfFontsModule.pdfMake?.vfs) {
-    pdfMakeInstance.vfs = { ...pdfFontsModule.pdfMake.vfs };
-  } else if (!pdfMakeInstance.vfs) {
+  // Always ensure VFS exists
+  if (!pdfMakeInstance.vfs) {
     pdfMakeInstance.vfs = {};
+  }
+
+  // Merge default VFS from bundle (Roboto) instead of replacing.
+  // This prevents losing custom fonts (Cairo) if another module re-sets VFS.
+  if (pdfFontsModule.pdfMake?.vfs) {
+    pdfMakeInstance.vfs = {
+      ...pdfFontsModule.pdfMake.vfs,
+      ...pdfMakeInstance.vfs,
+    };
   }
   
   // Ensure fonts object exists
@@ -60,8 +70,46 @@ function initDefaultVfs(): void {
   }
 }
 
+/**
+ * Hard guard against VFS resets.
+ *
+ * In some bundler/HMR scenarios, pdfmake's bundled vfs_fonts can re-assign pdfMake.vfs,
+ * which would wipe Cairo after we've registered it. We patch the vfs property so that
+ * any future assignment MERGES instead of REPLACING, preserving already-registered keys.
+ */
+function patchVfsToPreserveRegisteredFonts(): void {
+  if (vfsPatched) return;
+  vfsPatched = true;
+
+  // Ensure we start with a real object
+  let vfsStore: Record<string, string> = pdfMakeInstance.vfs || {};
+  pdfMakeInstance.vfs = vfsStore;
+
+  try {
+    Object.defineProperty(pdfMakeInstance, 'vfs', {
+      configurable: true,
+      enumerable: true,
+      get() {
+        return vfsStore;
+      },
+      set(next: Record<string, string>) {
+        // Merge (do NOT replace) to avoid losing Cairo keys.
+        // Keep existing keys as the source of truth.
+        vfsStore = {
+          ...(next || {}),
+          ...vfsStore,
+        };
+      },
+    });
+  } catch (e) {
+    // If defineProperty fails for any reason, we still keep the merged initDefaultVfs behavior.
+    console.warn('[PDF FONTS] Could not patch pdfMake.vfs setter (non-fatal):', e);
+  }
+}
+
 // Initialize default VFS immediately on module load
 initDefaultVfs();
+patchVfsToPreserveRegisteredFonts();
 
 /**
  * Load and register Cairo fonts into pdfMake
