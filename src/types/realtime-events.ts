@@ -69,8 +69,65 @@ export interface DeliveryConfirmation {
   acknowledged: boolean;
 }
 
+// Wallet Events (PHASE WALLET-1)
+export type WalletEventType =
+  | 'wallet.created'
+  | 'wallet.updated'
+  | 'wallet.balance_changed';
+
+export interface WalletEventPayload {
+  event: WalletEventType;
+  wallet_id: string;
+  user_id: string;
+  tenant_id?: string;
+  timestamp: string;
+  balance?: number;
+  previous_balance?: number;
+}
+
+// Transaction Events (PHASE WALLET-1)
+export type TransactionEventType =
+  | 'transaction.created'
+  | 'transaction.updated'
+  | 'transaction.succeeded'
+  | 'transaction.failed';
+
+export interface TransactionEventPayload {
+  event: TransactionEventType;
+  transaction_id: string;
+  user_id: string;
+  tenant_id?: string;
+  timestamp: string;
+  amount?: number;
+  status?: string;
+  previous_status?: string;
+}
+
+// Bank Transfer Events (PHASE WALLET-1)
+export type BankTransferEventType =
+  | 'bank_transfer.submitted'
+  | 'bank_transfer.under_review'
+  | 'bank_transfer.approved'
+  | 'bank_transfer.rejected';
+
+export interface BankTransferEventPayload {
+  event: BankTransferEventType;
+  transfer_id: string;
+  user_id: string;
+  tenant_id?: string;
+  timestamp: string;
+  amount?: number;
+  status?: string;
+}
+
 // Combined Event Types
-export type RealtimeEventType = ServiceEventType | InvoiceEventType | CustomerNotificationEvent;
+export type RealtimeEventType = 
+  | ServiceEventType 
+  | InvoiceEventType 
+  | CustomerNotificationEvent
+  | WalletEventType
+  | TransactionEventType
+  | BankTransferEventType;
 
 export interface RealtimeEvent<T = unknown> {
   type: RealtimeEventType;
