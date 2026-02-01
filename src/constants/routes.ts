@@ -22,6 +22,7 @@ export const ROUTES = {
     ROLES: '/admin/roles',
     SERVICES: '/admin/services',
     ORDERS: '/admin/orders',
+    CONTRACTS: '/admin/contracts',
     WALLETS: '/admin/wallets',
     FINANCE: '/admin/finance',
     CMS: {
