@@ -2,12 +2,13 @@
  * Customer Wallet Card Component
  * Displays wallet balance, customer UID, and recent transactions
  * PHASE FIN-5: Enterprise micro-animations (RTL-safe)
+ * PHASE WALLET-1: Realtime updates
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useAuth } from "@/hooks/useAuth";
+import { useWalletRealtime } from "@/hooks/useWalletRealtime";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ import {
   Receipt,
   Banknote,
   Plus,
+  Wifi,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -50,6 +52,44 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
   const [customerUid, setCustomerUid] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedUid, setCopiedUid] = useState(false);
+
+  // Realtime updates for wallet (PHASE WALLET-1)
+  const { isConnected, lastWalletEvent, lastTransactionEvent } = useWalletRealtime({
+    userId: user?.id,
+    tenantId: profile?.tenant_id || undefined,
+    enabled: !!user?.id,
+    onWalletUpdated: (event) => {
+      // Update wallet balance on realtime event
+      if (wallet && event.balance !== undefined) {
+        setWallet(prev => prev ? { ...prev, balance: event.balance! } : prev);
+        toast({
+          title: isRTL ? "تم تحديث الرصيد" : "Balance Updated",
+          description: isRTL 
+            ? `الرصيد الجديد: ${event.balance?.toLocaleString('ar-SA')} ر.س`
+            : `New balance: ${event.balance?.toLocaleString('en-US')} SAR`,
+        });
+      }
+    },
+    onTransactionCreated: () => {
+      // Refetch transactions on new transaction
+      fetchTransactions();
+    },
+  });
+
+  // Fetch transactions helper
+  const fetchTransactions = async () => {
+    if (!user?.id) return;
+    const { data: transData } = await supabase
+      .from("financial_transactions" as never)
+      .select("*")
+      .eq("customer_user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (transData) {
+      setTransactions(transData as FinancialTransaction[]);
+    }
+  };
 
   // Fetch wallet and transactions
   useEffect(() => {
@@ -236,10 +276,27 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
     <div className="finance-card-enter">
       <Card className={cn("overflow-hidden", className)}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-primary" />
-            {isRTL ? "المحفظة الرقمية" : "Digital Wallet"}
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-primary" />
+              {isRTL ? "المحفظة الرقمية" : "Digital Wallet"}
+            </CardTitle>
+            {/* Realtime connection indicator */}
+            <div className="flex items-center gap-1.5">
+              <Wifi className={cn(
+                "h-3.5 w-3.5",
+                isConnected ? "text-primary" : "text-muted-foreground"
+              )} />
+              <span className={cn(
+                "text-xs",
+                isConnected ? "text-primary" : "text-muted-foreground"
+              )}>
+                {isConnected 
+                  ? (isRTL ? "مباشر" : "Live") 
+                  : (isRTL ? "غير متصل" : "Offline")}
+              </span>
+            </div>
+          </div>
           <CardDescription>
             {isRTL ? "رصيدك ومعاملاتك المالية" : "Your balance and transactions"}
           </CardDescription>
