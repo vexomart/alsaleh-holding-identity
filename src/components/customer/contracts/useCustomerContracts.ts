@@ -91,8 +91,8 @@ export function useCustomerContracts() {
         .from('contracts')
         .select(`
           *,
-          service:services(id, name, name_ar, description, description_ar),
-          order:orders(id, order_number, title, title_ar)
+          service:services!contracts_service_id_fkey(id, name, name_ar, description, description_ar),
+          order:orders!contracts_order_id_fkey(id, order_number, title, title_ar)
         `, { count: 'exact' })
         .eq('customer_user_id', user.id);
 
