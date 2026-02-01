@@ -36,6 +36,7 @@ import {
   ChevronRight,
   Wallet,
   FileSignature,
+  Receipt,
 } from "lucide-react";
 
 interface NavItem {
@@ -78,6 +79,12 @@ export function CustomerSidebar() {
       titleEn: "My Contracts",
       icon: FileSignature,
       href: "/app/contracts",
+    },
+    {
+      titleAr: "فواتيري",
+      titleEn: "My Invoices",
+      icon: Receipt,
+      href: "/app/invoices",
     },
     {
       titleAr: "المحفظة",
