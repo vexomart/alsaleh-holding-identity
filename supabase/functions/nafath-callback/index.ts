@@ -27,17 +27,53 @@ interface NafathClaims {
   [key: string]: unknown;
 }
 
+// Helper function to log audit events
+async function logAudit(
+  action: 'create' | 'login' | 'read' | 'update' | 'delete' | 'logout' | 'export',
+  userId: string | null,
+  metadata: Record<string, unknown>,
+  req: Request
+) {
+  try {
+    const userAgent = req.headers.get('user-agent') || 'unknown';
+    const forwardedFor = req.headers.get('x-forwarded-for');
+    const realIp = req.headers.get('x-real-ip');
+    const ipAddress = forwardedFor?.split(',')[0] || realIp || '0.0.0.0';
+
+    await supabase.from('audit_logs').insert({
+      user_id: userId,
+      action,
+      table_name: 'nafath_auth',
+      metadata: {
+        ...metadata,
+        event_source: 'nafath-callback'
+      },
+      user_agent: userAgent,
+      ip_address: ipAddress
+    });
+  } catch (error) {
+    console.error('Audit log error:', error);
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let parsedState: string | null = null;
+
   try {
     const { state, code, session_id, ...otherParams } = await req.json();
+    parsedState = state;
     console.log('📥 Nafath callback received:', { state: state?.substring(0, 8), code: !!code, session_id: !!session_id });
 
     // 1. Verify state token (CSRF protection)
     if (!state) {
+      await logAudit('login', null, {
+        event: 'nafath.callback.failure',
+        reason: 'missing_state'
+      }, req);
       throw new Error('رمز الحالة مفقود');
     }
 
@@ -51,14 +87,44 @@ serve(async (req) => {
 
     if (stateError || !stateRecord) {
       console.error('State verification failed:', stateError);
+      
+      // Check if state was already used (replay attack)
+      const { data: usedState } = await supabase
+        .from('nafath_states')
+        .select('used, used_at')
+        .eq('state_token', state)
+        .maybeSingle();
+
+      if (usedState?.used) {
+        await logAudit('login', null, {
+          event: 'nafath.callback.failure',
+          reason: 'replay_attack_detected',
+          state_used_at: usedState.used_at
+        }, req);
+        throw new Error('تم استخدام رمز الحالة مسبقاً - محاولة إعادة استخدام مرفوضة');
+      }
+
+      await logAudit('login', null, {
+        event: 'nafath.callback.failure',
+        reason: 'invalid_or_expired_state'
+      }, req);
       throw new Error('رمز الحالة غير صالح أو منتهي الصلاحية');
     }
 
-    // 2. Mark state as used
-    await supabase
+    // 2. Mark state as used IMMEDIATELY (prevents race conditions)
+    const { error: updateError } = await supabase
       .from('nafath_states')
       .update({ used: true, used_at: new Date().toISOString() })
-      .eq('id', stateRecord.id);
+      .eq('id', stateRecord.id)
+      .eq('used', false); // Double-check to prevent race condition
+
+    if (updateError) {
+      await logAudit('login', null, {
+        event: 'nafath.callback.failure',
+        reason: 'state_race_condition'
+      }, req);
+      throw new Error('خطأ في معالجة الطلب، حاول مرة أخرى');
+    }
 
     // 3. Exchange code/session for JWT token
     const jwtResponse = await fetch(`${RABET_BASE_URL}/api/v2/oidc/jwt`, {
@@ -79,11 +145,16 @@ serve(async (req) => {
     if (!jwtResponse.ok) {
       const errorText = await jwtResponse.text();
       console.error('JWT exchange error:', jwtResponse.status, errorText);
+      await logAudit('login', null, {
+        event: 'nafath.token.invalid',
+        reason: 'jwt_exchange_failed',
+        status: jwtResponse.status
+      }, req);
       throw new Error('فشل في التحقق من الهوية');
     }
 
     const jwtData = await jwtResponse.json();
-    console.log('JWT exchange response:', JSON.stringify(jwtData));
+    console.log('JWT exchange response received');
 
     // 4. Validate the JWT token
     const validationResponse = await fetch(`${RABET_BASE_URL}/api/v2/oidc/jwt/valid`, {
@@ -108,15 +179,21 @@ serve(async (req) => {
       // If validation endpoint fails, try to decode the JWT payload
       const token = jwtData.token || jwtData.access_token || jwtData.id_token;
       if (token) {
-        const payloadB64 = token.split('.')[1];
-        const payloadJson = atob(payloadB64);
-        claims = JSON.parse(payloadJson);
+        try {
+          const payloadB64 = token.split('.')[1];
+          const payloadJson = atob(payloadB64);
+          claims = JSON.parse(payloadJson);
+        } catch {
+          await logAudit('login', null, {
+            event: 'nafath.token.invalid',
+            reason: 'jwt_decode_failed'
+          }, req);
+          throw new Error('فشل في قراءة بيانات التوكن');
+        }
       } else {
         claims = jwtData.user || jwtData.claims || jwtData;
       }
     }
-
-    console.log('Nafath claims:', JSON.stringify(claims));
 
     // 5. Extract identity fields
     const nafathSub = claims.sub || claims.national_id || claims.iqama_id;
@@ -126,6 +203,10 @@ serve(async (req) => {
 
     if (!nafathSub || !nationalId) {
       console.error('Missing identity fields:', claims);
+      await logAudit('login', null, {
+        event: 'nafath.token.invalid',
+        reason: 'missing_identity_fields'
+      }, req);
       throw new Error('لم يتم الحصول على بيانات الهوية المطلوبة');
     }
 
@@ -138,6 +219,7 @@ serve(async (req) => {
 
     let userId: string;
     let isNewUser = false;
+    let userRole = 'customer';
 
     if (existingIdentity) {
       // User exists - link and login
@@ -152,6 +234,17 @@ serve(async (req) => {
           verified_at: new Date().toISOString()
         })
         .eq('id', existingIdentity.id);
+
+      // Get user's role
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (roleData) {
+        userRole = roleData.role;
+      }
 
     } else {
       // New user - create Supabase Auth user
@@ -175,6 +268,11 @@ serve(async (req) => {
 
       if (authError) {
         console.error('Auth user creation error:', authError);
+        await logAudit('create', null, {
+          event: 'nafath.callback.failure',
+          reason: 'user_creation_failed',
+          error: authError.message
+        }, req);
         throw new Error('فشل في إنشاء الحساب');
       }
 
@@ -195,6 +293,16 @@ serve(async (req) => {
       if (identityError) {
         console.error('Identity creation error:', identityError);
       }
+
+      // Assign customer role for new users (NEVER admin via Nafath)
+      await supabase
+        .from('user_roles')
+        .insert({
+          user_id: userId,
+          role: 'customer'
+        });
+
+      userRole = 'customer';
     }
 
     // 7. Update profile with KYC info
@@ -217,52 +325,66 @@ serve(async (req) => {
       console.error('Profile update error:', profileError);
     }
 
-    // 8. Assign customer role if new user
-    if (isNewUser) {
-      await supabase
-        .from('user_roles')
-        .insert({
-          user_id: userId,
-          role: 'customer'
-        });
+    // 8. Log successful authentication
+    await logAudit(isNewUser ? 'create' : 'login', userId, {
+      event: 'nafath.callback.success',
+      is_new_user: isNewUser,
+      national_id_masked: `${nationalId.substring(0, 2)}****${nationalId.slice(-2)}`,
+      role: userRole
+    }, req);
+
+    // 9. Determine redirect based on role
+    // SECURITY: Nafath users can ONLY access customer routes
+    // Admin roles must be explicitly granted through admin panel
+    let redirectUrl = '/app';
+    
+    // Only allow admin access if user has admin role AND it was NOT created via Nafath
+    if (!isNewUser && (userRole === 'admin' || userRole === 'super_admin')) {
+      // Check if this admin was created via email (not Nafath)
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('id', userId)
+        .single();
+
+      // If email is a synthetic Nafath email, block admin access
+      if (profile?.email?.includes('@ash.local')) {
+        redirectUrl = '/app';
+        console.log('⚠️ Nafath user attempted admin access - blocked');
+        await logAudit('login', userId, {
+          event: 'nafath.admin_access_blocked',
+          reason: 'nafath_users_cannot_access_admin'
+        }, req);
+      } else {
+        // Real admin with real email - allow
+        redirectUrl = '/admin';
+      }
     }
 
-    // 9. Create audit log
-    await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: userId,
-        action: isNewUser ? 'create' : 'login',
-        table_name: 'nafath_auth',
-        metadata: {
-          provider: 'nafath',
-          national_id: nationalId,
-          is_new_user: isNewUser
-        }
-      });
-
-    // 10. Generate session token for the user
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
-      type: 'magiclink',
-      email: (await supabase.from('profiles').select('email').eq('id', userId).single()).data?.email || `nafath_${nationalId}@ash.local`
-    });
-
-    console.log(`✅ Nafath authentication successful for user: ${userId}`);
+    console.log(`✅ Nafath authentication successful for user: ${userId}, redirect: ${redirectUrl}`);
 
     return new Response(JSON.stringify({
       success: true,
       message: isNewUser ? 'تم إنشاء حسابك وتفعيله بنجاح' : 'تم تسجيل الدخول بنجاح',
       user_id: userId,
       is_new_user: isNewUser,
-      redirect_url: '/client/dashboard',
-      // Include magic link for auto-login
-      magic_link: sessionData?.properties?.action_link
+      role: userRole,
+      redirect_url: redirectUrl
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
 
   } catch (error: any) {
     console.error('❌ Nafath Callback Error:', error);
+
+    // Log failure if not already logged
+    if (parsedState) {
+      await logAudit('login', null, {
+        event: 'nafath.callback.failure',
+        reason: 'unhandled_error',
+        error_message: error.message
+      }, req);
+    }
     
     return new Response(JSON.stringify({
       success: false,

@@ -23,6 +23,35 @@ function generateSecureState(): string {
   return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
 }
 
+// Helper function to log audit events
+async function logAudit(
+  action: 'create' | 'login' | 'read' | 'update' | 'delete' | 'logout' | 'export',
+  userId: string | null,
+  metadata: Record<string, unknown>,
+  req: Request
+) {
+  try {
+    const userAgent = req.headers.get('user-agent') || 'unknown';
+    const forwardedFor = req.headers.get('x-forwarded-for');
+    const realIp = req.headers.get('x-real-ip');
+    const ipAddress = forwardedFor?.split(',')[0] || realIp || '0.0.0.0';
+
+    await supabase.from('audit_logs').insert({
+      user_id: userId,
+      action,
+      table_name: 'nafath_auth',
+      metadata: {
+        ...metadata,
+        event_source: 'nafath-start'
+      },
+      user_agent: userAgent,
+      ip_address: ipAddress
+    });
+  } catch (error) {
+    console.error('Audit log error:', error);
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -45,6 +74,10 @@ serve(async (req) => {
 
     if (stateError) {
       console.error('State storage error:', stateError);
+      await logAudit('login', null, {
+        event: 'nafath.start.failure',
+        reason: 'state_storage_failed'
+      }, req);
       throw new Error('فشل في إنشاء جلسة آمنة');
     }
 
@@ -65,18 +98,26 @@ serve(async (req) => {
     if (!rabetResponse.ok) {
       const errorText = await rabetResponse.text();
       console.error('Rabet API error:', rabetResponse.status, errorText);
+      await logAudit('login', null, {
+        event: 'nafath.start.failure',
+        reason: 'rabet_api_error',
+        status: rabetResponse.status
+      }, req);
       throw new Error('فشل في الاتصال بخدمة نفاذ');
     }
 
     const rabetData = await rabetResponse.json();
-    console.log('Rabet session response:', JSON.stringify(rabetData));
+    console.log('Rabet session response received');
 
     // 5. Construct the final Nafath URL with state
-    // The exact URL format depends on Rabet's response structure
     let nafathUrl = rabetData.url || rabetData.redirect_url || rabetData.login_url;
     
     if (!nafathUrl) {
       console.error('No URL in Rabet response:', rabetData);
+      await logAudit('login', null, {
+        event: 'nafath.start.failure',
+        reason: 'no_nafath_url'
+      }, req);
       throw new Error('لم يتم الحصول على رابط نفاذ');
     }
 
@@ -88,6 +129,12 @@ serve(async (req) => {
       urlObj.searchParams.set('redirect_uri', finalCallbackUrl);
     }
     nafathUrl = urlObj.toString();
+
+    // 6. Log successful start
+    await logAudit('login', null, {
+      event: 'nafath.start',
+      state_prefix: stateToken.substring(0, 8)
+    }, req);
 
     console.log(`✅ Nafath session created with state: ${stateToken.substring(0, 8)}...`);
 
