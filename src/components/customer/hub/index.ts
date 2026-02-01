@@ -1,8 +1,18 @@
 /**
- * Client Hub Components Index
+ * Hub Components Index
+ * Export all client hub components
  */
 
-export { ClientActionItems } from './ClientActionItems';
-export { ClientQuickStats } from './ClientQuickStats';
-export { ClientRecentActivity } from './ClientRecentActivity';
-export { ServiceJourneyTimeline } from './ServiceJourneyTimeline';
+// New redesigned components
+export { OverviewHeader } from "./OverviewHeader";
+export { QuickActionPills } from "./QuickActionPills";
+export { KPICards } from "./KPICards";
+export { ActionRequiredStrip } from "./ActionRequiredStrip";
+export { ActivityFeed } from "./ActivityFeed";
+export { ServiceJourneyCard } from "./ServiceJourneyCard";
+
+// Legacy exports (for backward compatibility)
+export { ClientActionItems } from "./ClientActionItems";
+export { ClientQuickStats } from "./ClientQuickStats";
+export { ClientRecentActivity } from "./ClientRecentActivity";
+export { ServiceJourneyTimeline } from "./ServiceJourneyTimeline";
