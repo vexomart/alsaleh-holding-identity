@@ -580,6 +580,74 @@ export type Database = {
           },
         ]
       }
+      nafath_identities: {
+        Row: {
+          created_at: string
+          id: string
+          nafath_sub: string
+          national_id: string
+          raw_claims_json: Json | null
+          tenant_id: string | null
+          user_id: string | null
+          verified_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nafath_sub: string
+          national_id: string
+          raw_claims_json?: Json | null
+          tenant_id?: string | null
+          user_id?: string | null
+          verified_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nafath_sub?: string
+          national_id?: string
+          raw_claims_json?: Json | null
+          tenant_id?: string | null
+          user_id?: string | null
+          verified_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nafath_identities_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nafath_states: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          state_token: string
+          used: boolean | null
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          state_token: string
+          used?: boolean | null
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          state_token?: string
+          used?: boolean | null
+          used_at?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string | null
@@ -915,8 +983,12 @@ export type Database = {
           full_name_ar: string | null
           id: string
           is_active: boolean | null
+          is_kyc_verified: boolean | null
+          kyc_provider: string | null
+          kyc_verified_at: string | null
           last_login_at: string | null
           metadata: Json | null
+          national_id: string | null
           phone: string | null
           preferred_language: string | null
           tenant_id: string | null
@@ -931,8 +1003,12 @@ export type Database = {
           full_name_ar?: string | null
           id: string
           is_active?: boolean | null
+          is_kyc_verified?: boolean | null
+          kyc_provider?: string | null
+          kyc_verified_at?: string | null
           last_login_at?: string | null
           metadata?: Json | null
+          national_id?: string | null
           phone?: string | null
           preferred_language?: string | null
           tenant_id?: string | null
@@ -947,8 +1023,12 @@ export type Database = {
           full_name_ar?: string | null
           id?: string
           is_active?: boolean | null
+          is_kyc_verified?: boolean | null
+          kyc_provider?: string | null
+          kyc_verified_at?: string | null
           last_login_at?: string | null
           metadata?: Json | null
+          national_id?: string | null
           phone?: string | null
           preferred_language?: string | null
           tenant_id?: string | null
@@ -1303,6 +1383,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_nafath_states: { Args: never; Returns: undefined }
       generate_invoice_number: {
         Args: { p_tenant_id?: string }
         Returns: string
