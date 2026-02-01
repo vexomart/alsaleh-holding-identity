@@ -6,15 +6,17 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const RABET_APP_ID = Deno.env.get('RABET_APP_ID')!;
-const RABET_APP_KEY = Deno.env.get('RABET_APP_KEY')!;
-const RABET_BASE_URL = 'https://api.rfrsh.com';
+// Load environment variables - NEVER expose to client
+const RABET_APP_ID = Deno.env.get('RABET_APP_ID');
+const RABET_APP_KEY = Deno.env.get('RABET_APP_KEY');
+const RABET_BASE_URL = Deno.env.get('RABET_BASE_URL');
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 console.log('🔐 Nafath Callback function initialized');
+console.log(`📡 Using Rabet Base URL: ${RABET_BASE_URL || 'NOT_SET'}`);
 
 interface NafathClaims {
   sub?: string;
@@ -64,6 +66,17 @@ serve(async (req) => {
   let parsedState: string | null = null;
 
   try {
+    // Validate required environment variables
+    if (!RABET_BASE_URL) {
+      console.error('❌ RABET_BASE_URL is not configured');
+      throw new Error('خدمة نفاذ غير مهيأة بشكل صحيح');
+    }
+
+    if (!RABET_APP_ID || !RABET_APP_KEY) {
+      console.error('❌ RABET_APP_ID or RABET_APP_KEY is not configured');
+      throw new Error('بيانات اعتماد خدمة نفاذ غير مكتملة');
+    }
+
     const { state, code, session_id, ...otherParams } = await req.json();
     parsedState = state;
     console.log('📥 Nafath callback received:', { state: state?.substring(0, 8), code: !!code, session_id: !!session_id });
@@ -116,7 +129,7 @@ serve(async (req) => {
       .from('nafath_states')
       .update({ used: true, used_at: new Date().toISOString() })
       .eq('id', stateRecord.id)
-      .eq('used', false); // Double-check to prevent race condition
+      .eq('used', false);
 
     if (updateError) {
       await logAudit('login', null, {
@@ -126,13 +139,16 @@ serve(async (req) => {
       throw new Error('خطأ في معالجة الطلب، حاول مرة أخرى');
     }
 
-    // 3. Exchange code/session for JWT token
-    const jwtResponse = await fetch(`${RABET_BASE_URL}/api/v2/oidc/jwt`, {
+    // 3. Exchange code/session for JWT token (SERVER-SIDE ONLY)
+    const jwtUrl = `${RABET_BASE_URL}/api/v2/oidc/jwt`;
+    console.log(`📡 Calling Rabet JWT API: ${jwtUrl}`);
+
+    const jwtResponse = await fetch(jwtUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-App-ID': RABET_APP_ID,
-        'X-App-Key': RABET_APP_KEY,
+        'app_id': RABET_APP_ID,
+        'app_key': RABET_APP_KEY,
         'Accept': 'application/json'
       },
       body: JSON.stringify({
@@ -156,13 +172,14 @@ serve(async (req) => {
     const jwtData = await jwtResponse.json();
     console.log('JWT exchange response received');
 
-    // 4. Validate the JWT token
-    const validationResponse = await fetch(`${RABET_BASE_URL}/api/v2/oidc/jwt/valid`, {
+    // 4. Validate the JWT token (SERVER-SIDE ONLY)
+    const validationUrl = `${RABET_BASE_URL}/api/v2/oidc/jwt/valid`;
+    const validationResponse = await fetch(validationUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-App-ID': RABET_APP_ID,
-        'X-App-Key': RABET_APP_KEY,
+        'app_id': RABET_APP_ID,
+        'app_key': RABET_APP_KEY,
         'Accept': 'application/json'
       },
       body: JSON.stringify({
@@ -222,11 +239,9 @@ serve(async (req) => {
     let userRole = 'customer';
 
     if (existingIdentity) {
-      // User exists - link and login
       userId = existingIdentity.user_id;
       console.log(`✅ Existing user found: ${userId}`);
 
-      // Update the raw claims
       await supabase
         .from('nafath_identities')
         .update({
@@ -235,7 +250,6 @@ serve(async (req) => {
         })
         .eq('id', existingIdentity.id);
 
-      // Get user's role
       const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
@@ -247,14 +261,11 @@ serve(async (req) => {
       }
 
     } else {
-      // New user - create Supabase Auth user
       isNewUser = true;
       
-      // Create synthetic email for users without email
       const syntheticEmail = `nafath_${nationalId}@ash.local`;
       const randomPassword = crypto.randomUUID() + crypto.randomUUID();
 
-      // Create user in Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.admin.createUser({
         email: syntheticEmail,
         password: randomPassword,
@@ -279,8 +290,7 @@ serve(async (req) => {
       userId = authData.user.id;
       console.log(`✅ New user created: ${userId}`);
 
-      // Create nafath_identities record
-      const { error: identityError } = await supabase
+      await supabase
         .from('nafath_identities')
         .insert({
           user_id: userId,
@@ -290,11 +300,6 @@ serve(async (req) => {
           verified_at: new Date().toISOString()
         });
 
-      if (identityError) {
-        console.error('Identity creation error:', identityError);
-      }
-
-      // Assign customer role for new users (NEVER admin via Nafath)
       await supabase
         .from('user_roles')
         .insert({
@@ -306,7 +311,7 @@ serve(async (req) => {
     }
 
     // 7. Update profile with KYC info
-    const { error: profileError } = await supabase
+    await supabase
       .from('profiles')
       .update({
         full_name: fullNameAr,
@@ -321,10 +326,6 @@ serve(async (req) => {
       })
       .eq('id', userId);
 
-    if (profileError) {
-      console.error('Profile update error:', profileError);
-    }
-
     // 8. Log successful authentication
     await logAudit(isNewUser ? 'create' : 'login', userId, {
       event: 'nafath.callback.success',
@@ -334,20 +335,15 @@ serve(async (req) => {
     }, req);
 
     // 9. Determine redirect based on role
-    // SECURITY: Nafath users can ONLY access customer routes
-    // Admin roles must be explicitly granted through admin panel
     let redirectUrl = '/app';
     
-    // Only allow admin access if user has admin role AND it was NOT created via Nafath
     if (!isNewUser && (userRole === 'admin' || userRole === 'super_admin')) {
-      // Check if this admin was created via email (not Nafath)
       const { data: profile } = await supabase
         .from('profiles')
         .select('email')
         .eq('id', userId)
         .single();
 
-      // If email is a synthetic Nafath email, block admin access
       if (profile?.email?.includes('@ash.local')) {
         redirectUrl = '/app';
         console.log('⚠️ Nafath user attempted admin access - blocked');
@@ -356,7 +352,6 @@ serve(async (req) => {
           reason: 'nafath_users_cannot_access_admin'
         }, req);
       } else {
-        // Real admin with real email - allow
         redirectUrl = '/admin';
       }
     }
@@ -375,9 +370,8 @@ serve(async (req) => {
     });
 
   } catch (error: any) {
-    console.error('❌ Nafath Callback Error:', error);
+    console.error('❌ Nafath Callback Error:', error.message);
 
-    // Log failure if not already logged
     if (parsedState) {
       await logAudit('login', null, {
         event: 'nafath.callback.failure',
