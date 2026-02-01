@@ -20,13 +20,13 @@
  * ```
  */
 
-import pdfMake from 'pdfmake/build/pdfmake';
 import { 
   initializeFonts, 
   assertFontsReady, 
   areFontsInitialized,
   getFontDiagnostics,
   ARABIC_FONT_NAME,
+  pdfMakeInstance, // Use singleton instance
 } from './fonts';
 import { corporateStyles, createPageFooter, type PDFContent } from './layout';
 import { downloadBlob, openBlobInNewTab, blobToDataUrl, blobToBase64 } from './download';
@@ -241,11 +241,11 @@ export async function generatePDFBlob(
   await initPdf();
 
   const docDefinition = createDocumentDefinition(content, options);
-  const pdfDoc = pdfMake.createPdf(docDefinition as never);
+  const pdfDoc = pdfMakeInstance.createPdf(docDefinition);
 
   return new Promise((resolve, reject) => {
     try {
-      (pdfDoc as { getBlob: (cb: (blob: Blob) => void) => void }).getBlob(resolve);
+      pdfDoc.getBlob(resolve);
     } catch (error) {
       reject(error);
     }

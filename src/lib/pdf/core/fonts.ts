@@ -3,6 +3,8 @@
  * 
  * Handles Cairo TTF font loading and registration into pdfMake VFS.
  * This module MUST be initialized before any PDF generation.
+ * 
+ * CRITICAL: Uses singleton pdfMake module reference to avoid VFS reset issues.
  */
 
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -21,19 +23,44 @@ let fontsInitialized = false;
 let initializationError: Error | null = null;
 let initPromise: Promise<void> | null = null;
 
+// Singleton pdfMake reference to prevent module reload issues
+// EXPORTED so all PDF modules use the SAME instance
+export const pdfMakeInstance = pdfMake as unknown as {
+  vfs: Record<string, string>;
+  fonts: Record<string, {
+    normal: string;
+    bold: string;
+    italics: string;
+    bolditalics: string;
+  }>;
+  // Include createPdf method for PDF generation
+  createPdf: (docDefinition: unknown) => {
+    getBlob: (callback: (blob: Blob) => void) => void;
+    download: (filename: string) => void;
+    open: () => void;
+  };
+};
+
 /**
  * Initialize default VFS from pdfmake bundle
  */
 function initDefaultVfs(): void {
   const pdfFontsModule = pdfFonts as unknown as { pdfMake: { vfs: Record<string, string> } };
-  const pdfMakeAny = pdfMake as unknown as { vfs?: Record<string, string> };
   
-  if (pdfFontsModule.pdfMake?.vfs && !pdfMakeAny.vfs) {
-    pdfMakeAny.vfs = pdfFontsModule.pdfMake.vfs;
+  // Only set if VFS doesn't exist yet
+  if (!pdfMakeInstance.vfs && pdfFontsModule.pdfMake?.vfs) {
+    pdfMakeInstance.vfs = { ...pdfFontsModule.pdfMake.vfs };
+  } else if (!pdfMakeInstance.vfs) {
+    pdfMakeInstance.vfs = {};
+  }
+  
+  // Ensure fonts object exists
+  if (!pdfMakeInstance.fonts) {
+    pdfMakeInstance.fonts = {};
   }
 }
 
-// Initialize default VFS immediately
+// Initialize default VFS immediately on module load
 initDefaultVfs();
 
 /**
@@ -42,47 +69,57 @@ initDefaultVfs();
 async function loadCairoFonts(): Promise<void> {
   console.log('[PDF FONTS] Loading Cairo TTF fonts...');
 
-  const cairo = await loadCairoTTFAsVfs();
-  
-  console.log('[PDF FONTS] Cairo fonts loaded:', {
-    regularLength: cairo.regular.length,
-    boldLength: cairo.bold.length,
-  });
+  try {
+    const cairo = await loadCairoTTFAsVfs();
+    
+    console.log('[PDF FONTS] Cairo fonts loaded:', {
+      regularLength: cairo.regular.length,
+      boldLength: cairo.bold.length,
+    });
 
-  // Access pdfMake directly
-  const pdfMakeModule = pdfMake as unknown as {
-    vfs: Record<string, string>;
-    fonts: Record<string, unknown>;
-  };
+    // Ensure VFS exists before registration
+    if (!pdfMakeInstance.vfs) {
+      pdfMakeInstance.vfs = {};
+    }
 
-  // Ensure VFS exists
-  if (!pdfMakeModule.vfs) {
-    const pdfFontsModule = pdfFonts as unknown as { pdfMake: { vfs: Record<string, string> } };
-    pdfMakeModule.vfs = pdfFontsModule.pdfMake?.vfs || {};
+    // Register font files in VFS - MUST use exact filenames
+    pdfMakeInstance.vfs[FONT_FILES.regular] = cairo.regular;
+    pdfMakeInstance.vfs[FONT_FILES.bold] = cairo.bold;
+
+    // Verify VFS registration immediately
+    if (!pdfMakeInstance.vfs[FONT_FILES.regular]) {
+      throw new Error(`Failed to register ${FONT_FILES.regular} in VFS`);
+    }
+    if (!pdfMakeInstance.vfs[FONT_FILES.bold]) {
+      throw new Error(`Failed to register ${FONT_FILES.bold} in VFS`);
+    }
+
+    // Ensure fonts object exists
+    if (!pdfMakeInstance.fonts) {
+      pdfMakeInstance.fonts = {};
+    }
+
+    // Register font family mapping
+    pdfMakeInstance.fonts[ARABIC_FONT_NAME] = {
+      normal: FONT_FILES.regular,
+      bold: FONT_FILES.bold,
+      italics: FONT_FILES.regular,
+      bolditalics: FONT_FILES.bold,
+    };
+
+    // Verify font family registration
+    if (!pdfMakeInstance.fonts[ARABIC_FONT_NAME]) {
+      throw new Error(`Failed to register ${ARABIC_FONT_NAME} font family`);
+    }
+
+    console.log('[PDF FONTS] ✅ Cairo fonts registered successfully');
+    console.log('[PDF FONTS] VFS keys:', Object.keys(pdfMakeInstance.vfs).filter(k => k.includes('Cairo') || k.includes('.ttf')));
+    console.log('[PDF FONTS] Font families:', Object.keys(pdfMakeInstance.fonts));
+    
+  } catch (error) {
+    console.error('[PDF FONTS] ❌ Font loading failed:', error);
+    throw error;
   }
-
-  // Register font files in VFS
-  pdfMakeModule.vfs[FONT_FILES.regular] = cairo.regular;
-  pdfMakeModule.vfs[FONT_FILES.bold] = cairo.bold;
-
-  // Verify registration
-  if (!pdfMakeModule.vfs[FONT_FILES.regular] || !pdfMakeModule.vfs[FONT_FILES.bold]) {
-    throw new Error('[PDF FONTS] Font registration failed - files not in VFS');
-  }
-
-  // Register font family
-  if (!pdfMakeModule.fonts) {
-    pdfMakeModule.fonts = {};
-  }
-
-  pdfMakeModule.fonts[ARABIC_FONT_NAME] = {
-    normal: FONT_FILES.regular,
-    bold: FONT_FILES.bold,
-    italics: FONT_FILES.regular,
-    bolditalics: FONT_FILES.bold,
-  };
-
-  console.log('[PDF FONTS] ✅ Cairo fonts registered successfully');
 }
 
 /**
@@ -95,9 +132,16 @@ export function initializeFonts(): Promise<void> {
     return Promise.reject(initializationError);
   }
 
-  // Already initialized
+  // Already initialized - double-check VFS still has fonts
   if (fontsInitialized) {
-    return Promise.resolve();
+    // Verify fonts are still in VFS (might have been cleared)
+    if (pdfMakeInstance.vfs?.[FONT_FILES.regular] && pdfMakeInstance.vfs?.[FONT_FILES.bold]) {
+      return Promise.resolve();
+    }
+    // Fonts were cleared, need to reload
+    console.warn('[PDF FONTS] Fonts were cleared from VFS, reloading...');
+    fontsInitialized = false;
+    initPromise = null;
   }
 
   // In progress
@@ -124,7 +168,10 @@ export function initializeFonts(): Promise<void> {
  * Check if fonts are initialized
  */
 export function areFontsInitialized(): boolean {
-  return fontsInitialized;
+  // Also check if VFS still contains fonts
+  return fontsInitialized && 
+    !!pdfMakeInstance.vfs?.[FONT_FILES.regular] && 
+    !!pdfMakeInstance.vfs?.[FONT_FILES.bold];
 }
 
 /**
@@ -149,11 +196,6 @@ export function resetFontInit(): void {
  * Throws if fonts are not available
  */
 export function assertFontsReady(): void {
-  const pdfMakeRef = pdfMake as unknown as {
-    fonts?: Record<string, unknown>;
-    vfs?: Record<string, string>;
-  };
-
   const errors: string[] = [];
 
   // Check initialization state
@@ -162,22 +204,22 @@ export function assertFontsReady(): void {
   }
 
   // Check font family registration
-  if (!pdfMakeRef.fonts?.[ARABIC_FONT_NAME]) {
+  if (!pdfMakeInstance.fonts?.[ARABIC_FONT_NAME]) {
     errors.push(`${ARABIC_FONT_NAME} font family not registered in pdfMake.fonts`);
   }
 
   // Check VFS files
-  if (!pdfMakeRef.vfs?.[FONT_FILES.regular]) {
+  if (!pdfMakeInstance.vfs?.[FONT_FILES.regular]) {
     errors.push(`${FONT_FILES.regular} missing from pdfMake.vfs`);
   }
 
-  if (!pdfMakeRef.vfs?.[FONT_FILES.bold]) {
+  if (!pdfMakeInstance.vfs?.[FONT_FILES.bold]) {
     errors.push(`${FONT_FILES.bold} missing from pdfMake.vfs`);
   }
 
   // Verify file sizes (empty files are invalid)
-  const regularSize = pdfMakeRef.vfs?.[FONT_FILES.regular]?.length || 0;
-  const boldSize = pdfMakeRef.vfs?.[FONT_FILES.bold]?.length || 0;
+  const regularSize = pdfMakeInstance.vfs?.[FONT_FILES.regular]?.length || 0;
+  const boldSize = pdfMakeInstance.vfs?.[FONT_FILES.bold]?.length || 0;
 
   if (regularSize < 10000) {
     errors.push(`${FONT_FILES.regular} appears invalid (size: ${regularSize})`);
@@ -207,17 +249,12 @@ export function getFontDiagnostics(): {
   cairoRegularSize: number;
   cairoBoldSize: number;
 } {
-  const pdfMakeRef = pdfMake as unknown as {
-    fonts?: Record<string, unknown>;
-    vfs?: Record<string, string>;
-  };
-
   return {
     initialized: fontsInitialized,
     error: initializationError?.message || null,
-    vfsKeys: Object.keys(pdfMakeRef.vfs || {}).filter(k => k.includes('Cairo') || k.includes('ttf')),
-    registeredFonts: Object.keys(pdfMakeRef.fonts || {}),
-    cairoRegularSize: pdfMakeRef.vfs?.[FONT_FILES.regular]?.length || 0,
-    cairoBoldSize: pdfMakeRef.vfs?.[FONT_FILES.bold]?.length || 0,
+    vfsKeys: Object.keys(pdfMakeInstance.vfs || {}).filter(k => k.includes('Cairo') || k.includes('ttf')),
+    registeredFonts: Object.keys(pdfMakeInstance.fonts || {}),
+    cairoRegularSize: pdfMakeInstance.vfs?.[FONT_FILES.regular]?.length || 0,
+    cairoBoldSize: pdfMakeInstance.vfs?.[FONT_FILES.bold]?.length || 0,
   };
 }

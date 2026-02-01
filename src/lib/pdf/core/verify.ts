@@ -5,8 +5,7 @@
  * All PDF generation MUST pass verification before proceeding.
  */
 
-import pdfMake from 'pdfmake/build/pdfmake';
-import { ARABIC_FONT_NAME, FONT_FILES, getFontDiagnostics, assertFontsReady } from './fonts';
+import { ARABIC_FONT_NAME, FONT_FILES, getFontDiagnostics, assertFontsReady, pdfMakeInstance } from './fonts';
 import { corporateStyles } from './layout';
 import { downloadBlob } from './download';
 
@@ -75,16 +74,11 @@ export async function verifyPDFSystem(): Promise<PDFVerificationReport> {
     report.cairoRegularSize = diagnostics.cairoRegularSize;
     report.cairoBoldSize = diagnostics.cairoBoldSize;
 
-    // Check VFS
-    const pdfMakeRef = pdfMake as unknown as {
-      vfs?: Record<string, string>;
-      fonts?: Record<string, unknown>;
-    };
-
-    report.vfsExists = !!pdfMakeRef.vfs;
-    report.cairoRegularInVfs = !!pdfMakeRef.vfs?.[FONT_FILES.regular];
-    report.cairoBoldInVfs = !!pdfMakeRef.vfs?.[FONT_FILES.bold];
-    report.fontFamilyRegistered = !!pdfMakeRef.fonts?.[ARABIC_FONT_NAME];
+    // Check VFS using singleton instance
+    report.vfsExists = !!pdfMakeInstance.vfs;
+    report.cairoRegularInVfs = !!pdfMakeInstance.vfs?.[FONT_FILES.regular];
+    report.cairoBoldInVfs = !!pdfMakeInstance.vfs?.[FONT_FILES.bold];
+    report.fontFamilyRegistered = !!pdfMakeInstance.fonts?.[ARABIC_FONT_NAME];
 
     console.log('[VERIFY] Diagnostics:', {
       initialized: report.fontsInitialized,
@@ -299,11 +293,11 @@ export async function generateTestPDF(download: boolean = false): Promise<{
       }),
     };
 
-    const pdfDoc = pdfMake.createPdf(docDefinition as never);
+    const pdfDoc = pdfMakeInstance.createPdf(docDefinition);
 
     const blob = await new Promise<Blob>((resolve, reject) => {
       try {
-        (pdfDoc as { getBlob: (cb: (blob: Blob) => void) => void }).getBlob(resolve);
+        pdfDoc.getBlob(resolve);
       } catch (e) {
         reject(e);
       }
@@ -574,11 +568,11 @@ export async function debugPDFArabic(): Promise<PDFVerificationReport> {
       }),
     };
 
-    const pdfDoc = pdfMake.createPdf(docDefinition as never);
+    const pdfDoc = pdfMakeInstance.createPdf(docDefinition);
     
     const blob = await new Promise<Blob>((resolve, reject) => {
       try {
-        (pdfDoc as { getBlob: (cb: (blob: Blob) => void) => void }).getBlob(resolve);
+        pdfDoc.getBlob(resolve);
       } catch (e) {
         reject(e);
       }

@@ -101,6 +101,9 @@ export {
   calculateVAT,
   calculateInvoiceTotals,
   generateInvoiceContent,
+  // Sample data for testing
+  sampleInvoiceArabicOnly,
+  sampleInvoiceMixed,
 } from './templates/invoice.template';
 
 // Contract utilities
