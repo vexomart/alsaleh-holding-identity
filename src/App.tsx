@@ -13,7 +13,8 @@ import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { TemplateVariableBlocker } from "@/components/TemplateVariableBlocker";
 import { AuthProvider } from "@/hooks/useAuth";
-import { LanguageProvider } from "@/hooks/useLanguage";
+import { LanguageProvider, useLanguage } from "@/hooks/useLanguage";
+import { cn } from "@/lib/utils";
 
 import Index from "./pages/Index";
 
@@ -194,6 +195,29 @@ const PageLoader = () => (
   </div>
 );
 
+/**
+ * RTL-Aware App Shell
+ * Applies direction from language context to the root wrapper
+ * This is the SINGLE SOURCE OF TRUTH for app-level direction
+ */
+const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
+  const { isRTL } = useLanguage();
+  
+  return (
+    <div 
+      dir={isRTL ? 'rtl' : 'ltr'}
+      className={cn(
+        "min-h-screen bg-background mobile-text",
+        isRTL ? "text-right" : "text-left"
+      )}
+    >
+      <div className="relative z-10 mobile-tap mobile-scroll">
+        {children}
+      </div>
+    </div>
+  );
+};
+
 const App = () => {
   const queryClientRef = useRef<QueryClient | null>(null);
   if (!queryClientRef.current) {
@@ -228,14 +252,13 @@ const App = () => {
               <BrowserRouter>
                 <AuthProvider>
                   <LanguageProvider>
-                    <div className="min-h-screen bg-background mobile-text">
-                      <div className="relative z-10 mobile-tap mobile-scroll">
-                    <SecurityHeaders />
-                    <TemplateVariableBlocker />
-                    <AnalyticsProvider />
-                    <ScrollToTop />
-                    <Toaster />
-                    <Sonner />
+                    <RTLAppShell>
+                      <SecurityHeaders />
+                      <TemplateVariableBlocker />
+                      <AnalyticsProvider />
+                      <ScrollToTop />
+                      <Toaster />
+                      <Sonner />
                     
                     <Routes>
                       {/* Public Website */}
@@ -444,9 +467,8 @@ const App = () => {
                       
                       {/* 404 */}
                       <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFound /></Suspense>} />
-                        </Routes>
-                      </div>
-                    </div>
+                    </Routes>
+                    </RTLAppShell>
                   </LanguageProvider>
                 </AuthProvider>
               </BrowserRouter>

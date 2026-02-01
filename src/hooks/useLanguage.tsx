@@ -162,11 +162,21 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return 'ar';
   });
 
+  /**
+   * SINGLE SOURCE OF TRUTH: Apply direction at document level
+   * This is the ONLY place where document.dir should be set
+   */
+  const applyDirection = (lang: Language) => {
+    const dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = dir;
+    document.documentElement.lang = lang;
+    document.body.dir = dir; // Also body for full coverage
+  };
+
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('ash_language', lang);
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
+    applyDirection(lang);
   };
 
   const t = (key: string): string => {
@@ -176,10 +186,10 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const dir: 'rtl' | 'ltr' = language === 'ar' ? 'rtl' : 'ltr';
   const isRTL = language === 'ar';
 
+  // Apply direction on mount and language change
   useEffect(() => {
-    document.documentElement.dir = dir;
-    document.documentElement.lang = language;
-  }, [language, dir]);
+    applyDirection(language);
+  }, [language]);
 
   const value: LanguageContextType = { language, setLanguage, t, dir, isRTL };
 
