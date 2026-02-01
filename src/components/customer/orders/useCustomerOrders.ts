@@ -1,13 +1,14 @@
 /**
- * useCustomerOrders - Data fetching hook for customer orders
- * With realtime subscription and filtering
+ * useCustomerOrders - Enterprise data fetching hook for customer orders
+ * With realtime subscription, filtering, and connection status
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useLanguage } from '@/hooks/useLanguage';
 import { 
   CustomerOrder, 
   OrderFilters, 
@@ -29,7 +30,12 @@ const DEFAULT_SORT: OrdersSort = {
 
 export function useCustomerOrders() {
   const { user } = useAuth();
+  const { language } = useLanguage();
+  const isRTL = language === 'ar';
+
+  // State
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
+  const [allOrders, setAllOrders] = useState<CustomerOrder[]>([]); // For KPI calculations
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [filters, setFilters] = useState<OrderFilters>(DEFAULT_FILTERS);
@@ -37,9 +43,44 @@ export function useCustomerOrders() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
+  const [isConnected, setIsConnected] = useState(false);
 
   const debouncedSearch = useDebounce(filters.search, 300);
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
+  // Enrich order with computed fields
+  const enrichOrder = useCallback((order: any): CustomerOrder => {
+    const status = (order.status as OrderStatus) || 'pending';
+    const statusConfig = ORDER_STATUS_CONFIG[status] || ORDER_STATUS_CONFIG.pending;
+    
+    return {
+      ...order,
+      status: status,
+      status_label_ar: statusConfig.labelAr,
+      status_label_en: statusConfig.labelEn,
+      status_color: statusConfig.color,
+    };
+  }, []);
+
+  // Fetch all orders (for KPI)
+  const fetchAllOrders = useCallback(async () => {
+    if (!user) return;
+
+    try {
+      const { data, error: queryError } = await supabase
+        .from('orders')
+        .select('id, status')
+        .eq('customer_id', user.id);
+
+      if (queryError) throw queryError;
+
+      setAllOrders((data || []).map(enrichOrder));
+    } catch (err) {
+      console.error('Error fetching all orders:', err);
+    }
+  }, [user, enrichOrder]);
+
+  // Fetch paginated/filtered orders
   const fetchOrders = useCallback(async () => {
     if (!user) return;
 
@@ -72,13 +113,13 @@ export function useCustomerOrders() {
         
         switch (filters.dateRange) {
           case '7d':
-            startDate = new Date(now.setDate(now.getDate() - 7));
+            startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
             break;
           case '30d':
-            startDate = new Date(now.setDate(now.getDate() - 30));
+            startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
             break;
           case '90d':
-            startDate = new Date(now.setDate(now.getDate() - 90));
+            startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
             break;
           case 'custom':
             if (filters.startDate) {
@@ -87,12 +128,13 @@ export function useCustomerOrders() {
             if (filters.endDate) {
               query = query.lte('created_at', filters.endDate.toISOString());
             }
+            startDate = new Date(0);
             break;
           default:
             startDate = new Date(0);
         }
         
-        if (filters.dateRange !== 'custom') {
+        if (filters.dateRange !== 'custom' && startDate) {
           query = query.gte('created_at', startDate.toISOString());
         }
       }
@@ -109,20 +151,7 @@ export function useCustomerOrders() {
 
       if (queryError) throw queryError;
 
-      // Enrich orders with computed fields
-      const enrichedOrders: CustomerOrder[] = (data || []).map((order) => {
-        const status = (order.status as OrderStatus) || 'pending';
-        const statusConfig = ORDER_STATUS_CONFIG[status] || ORDER_STATUS_CONFIG.pending;
-        
-        return {
-          ...order,
-          status: status,
-          status_label_ar: statusConfig.labelAr,
-          status_label_en: statusConfig.labelEn,
-          status_color: statusConfig.color,
-        };
-      });
-
+      const enrichedOrders = (data || []).map(enrichOrder);
       setOrders(enrichedOrders);
       setTotalCount(count || 0);
     } catch (err) {
@@ -131,19 +160,25 @@ export function useCustomerOrders() {
     } finally {
       setIsLoading(false);
     }
-  }, [user, filters.status, debouncedSearch, filters.dateRange, filters.startDate, filters.endDate, sort, page, pageSize]);
+  }, [user, filters.status, debouncedSearch, filters.dateRange, filters.startDate, filters.endDate, sort, page, pageSize, enrichOrder]);
 
   // Initial fetch
   useEffect(() => {
     fetchOrders();
-  }, [fetchOrders]);
+    fetchAllOrders();
+  }, [fetchOrders, fetchAllOrders]);
 
-  // Realtime subscription
+  // Realtime subscription with connection status
   useEffect(() => {
     if (!user) return;
 
+    // Cleanup previous channel
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+    }
+
     const channel = supabase
-      .channel(`customer-orders-${user.id}`)
+      .channel(`customer-orders-${user.id}-${Date.now()}`)
       .on(
         'postgres_changes',
         {
@@ -155,10 +190,19 @@ export function useCustomerOrders() {
         (payload) => {
           // Handle realtime updates
           if (payload.eventType === 'INSERT') {
+            const newOrder = enrichOrder(payload.new);
+            
             toast({
-              title: 'طلب جديد',
-              description: 'تم إضافة طلب جديد',
+              title: isRTL ? 'طلب جديد' : 'New Order',
+              description: isRTL 
+                ? `تم إضافة طلب جديد: ${newOrder.order_number}`
+                : `New order added: ${newOrder.order_number}`,
             });
+            
+            // Add to all orders for KPI
+            setAllOrders(prev => [newOrder, ...prev]);
+            
+            // Refetch to get proper pagination
             fetchOrders();
           } else if (payload.eventType === 'UPDATE') {
             const newRecord = payload.new as CustomerOrder;
@@ -168,34 +212,42 @@ export function useCustomerOrders() {
             if (newRecord.status !== oldRecord.status) {
               const statusConfig = ORDER_STATUS_CONFIG[newRecord.status || 'pending'];
               toast({
-                title: 'تم تحديث حالة طلبك',
-                description: statusConfig?.labelAr || 'تم التحديث',
+                title: isRTL ? 'تم تحديث حالة طلبك' : 'Order Status Updated',
+                description: isRTL ? statusConfig?.labelAr : statusConfig?.labelEn,
               });
             }
             
-            // Update local state
+            // Update local state with enriched data
+            const enrichedUpdate = enrichOrder(newRecord);
+            
             setOrders(prev => prev.map(order => 
-              order.id === newRecord.id 
-                ? { 
-                    ...order, 
-                    ...newRecord,
-                    status_label_ar: ORDER_STATUS_CONFIG[newRecord.status || 'pending']?.labelAr,
-                    status_label_en: ORDER_STATUS_CONFIG[newRecord.status || 'pending']?.labelEn,
-                    status_color: ORDER_STATUS_CONFIG[newRecord.status || 'pending']?.color,
-                  } 
-                : order
+              order.id === newRecord.id ? enrichedUpdate : order
+            ));
+            
+            setAllOrders(prev => prev.map(order =>
+              order.id === newRecord.id ? enrichedUpdate : order
             ));
           } else if (payload.eventType === 'DELETE') {
-            setOrders(prev => prev.filter(order => order.id !== (payload.old as CustomerOrder).id));
+            const deletedId = (payload.old as CustomerOrder).id;
+            setOrders(prev => prev.filter(order => order.id !== deletedId));
+            setAllOrders(prev => prev.filter(order => order.id !== deletedId));
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        setIsConnected(status === 'SUBSCRIBED');
+      });
+
+    channelRef.current = channel;
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
+      setIsConnected(false);
     };
-  }, [user, fetchOrders]);
+  }, [user, isRTL, enrichOrder, fetchOrders]);
 
   // Filter handlers
   const updateFilters = useCallback((newFilters: Partial<OrderFilters>) => {
@@ -225,6 +277,7 @@ export function useCustomerOrders() {
 
   return {
     orders,
+    allOrders,
     isLoading,
     error,
     filters,
@@ -240,5 +293,6 @@ export function useCustomerOrders() {
     setPage,
     setPageSize,
     refetch: fetchOrders,
+    isConnected,
   };
 }
