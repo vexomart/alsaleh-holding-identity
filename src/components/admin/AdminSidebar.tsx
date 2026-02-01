@@ -21,7 +21,8 @@ import {
   Sparkles,
   X,
   Wallet,
-  Landmark
+  Landmark,
+  FileText
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -115,6 +116,14 @@ const businessNavItems: NavItem[] = [
     permission: "orders.view",
     badge: 5,
     badgeColor: "bg-blue-500",
+  },
+  {
+    titleKey: "contracts",
+    titleAr: "إدارة العقود",
+    titleEn: "Contracts Management",
+    icon: FileText,
+    href: ROUTES.ADMIN.CONTRACTS,
+    permission: "contracts.view",
   },
   {
     titleKey: "wallets",

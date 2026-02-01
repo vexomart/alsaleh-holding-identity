@@ -9,6 +9,7 @@ export { UsersManagement } from "./users/UsersManagement";
 export { RolesPermissions } from "./roles/RolesPermissions";
 export { ServicesManagement } from "./services/ServicesManagement";
 export { OrdersManagement } from "./orders/OrdersManagement";
+export { ContractsManagement } from "./contracts/ContractsManagement";
 
 // System Pages
 export { ReportsPage } from "./reports/ReportsPage";
