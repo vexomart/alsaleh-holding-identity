@@ -286,19 +286,36 @@ export function OrderDetailsDrawer({
           <DrawerFooter className="pt-2">
             <div className="grid grid-cols-2 gap-2">
               <Button
-                onClick={() => navigate(`/app/orders/${order.id}`)}
+                onClick={() => {
+                  onClose();
+                  navigate(`/app/orders/${order.id}`);
+                }}
                 className="gap-2"
               >
                 <Eye className="h-4 w-4" />
                 {isRTL ? 'عرض الكامل' : 'Full Details'}
               </Button>
-              <Button variant="outline" className="gap-2">
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={() => {
+                  onClose();
+                  navigate(`/app/invoices?order=${order.id}`);
+                }}
+              >
                 <FileText className="h-4 w-4" />
                 {isRTL ? 'الفاتورة' : 'Invoice'}
               </Button>
             </div>
             {order.contract_id && (
-              <Button variant="outline" className="w-full gap-2">
+              <Button 
+                variant="outline" 
+                className="w-full gap-2"
+                onClick={() => {
+                  onClose();
+                  navigate(`/app/contracts?id=${order.contract_id}`);
+                }}
+              >
                 <ScrollText className="h-4 w-4" />
                 {isRTL ? 'عرض العقد' : 'View Contract'}
               </Button>
