@@ -67,6 +67,84 @@ export type Database = {
           },
         ]
       }
+      bank_transfer_requests: {
+        Row: {
+          account_holder_name: string | null
+          amount: number
+          bank_name: string
+          created_at: string | null
+          currency: string | null
+          iban: string
+          id: string
+          processed_at: string | null
+          receipt_media_url: string | null
+          reference_code: string | null
+          rejection_reason: string | null
+          reviewer_notes: string | null
+          reviewer_user_id: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string
+          wallet_id: string | null
+        }
+        Insert: {
+          account_holder_name?: string | null
+          amount: number
+          bank_name: string
+          created_at?: string | null
+          currency?: string | null
+          iban: string
+          id?: string
+          processed_at?: string | null
+          receipt_media_url?: string | null
+          reference_code?: string | null
+          rejection_reason?: string | null
+          reviewer_notes?: string | null
+          reviewer_user_id?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id: string
+          wallet_id?: string | null
+        }
+        Update: {
+          account_holder_name?: string | null
+          amount?: number
+          bank_name?: string
+          created_at?: string | null
+          currency?: string | null
+          iban?: string
+          id?: string
+          processed_at?: string | null
+          receipt_media_url?: string | null
+          reference_code?: string | null
+          rejection_reason?: string | null
+          reviewer_notes?: string | null
+          reviewer_user_id?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+          wallet_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_transfer_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bank_transfer_requests_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "customer_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_wallets: {
         Row: {
           balance: number | null
@@ -76,6 +154,7 @@ export type Database = {
           id: string
           ledger_account_id: string | null
           metadata: Json | null
+          reserved_balance: number | null
           status: string | null
           tenant_id: string | null
           updated_at: string | null
@@ -89,6 +168,7 @@ export type Database = {
           id?: string
           ledger_account_id?: string | null
           metadata?: Json | null
+          reserved_balance?: number | null
           status?: string | null
           tenant_id?: string | null
           updated_at?: string | null
@@ -102,6 +182,7 @@ export type Database = {
           id?: string
           ledger_account_id?: string | null
           metadata?: Json | null
+          reserved_balance?: number | null
           status?: string | null
           tenant_id?: string | null
           updated_at?: string | null
@@ -946,6 +1027,56 @@ export type Database = {
           },
         ]
       }
+      payment_methods: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_default: boolean | null
+          is_enabled: boolean | null
+          label_ar: string
+          label_en: string
+          metadata: Json | null
+          tenant_id: string | null
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          is_enabled?: boolean | null
+          label_ar: string
+          label_en: string
+          metadata?: Json | null
+          tenant_id?: string | null
+          type: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          is_enabled?: boolean | null
+          label_ar?: string
+          label_en?: string
+          metadata?: Json | null
+          tenant_id?: string | null
+          type?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_methods_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       permissions: {
         Row: {
           created_at: string | null
@@ -1384,6 +1515,7 @@ export type Database = {
     }
     Functions: {
       cleanup_expired_nafath_states: { Args: never; Returns: undefined }
+      generate_bank_transfer_reference: { Args: never; Returns: string }
       generate_invoice_number: {
         Args: { p_tenant_id?: string }
         Returns: string
@@ -1434,6 +1566,10 @@ export type Database = {
           p_transaction_id: string
         }
         Returns: string
+      }
+      process_bank_transfer_approval: {
+        Args: { p_notes?: string; p_reviewer_id: string; p_transfer_id: string }
+        Returns: Json
       }
       update_services_sort_order: {
         Args: { p_service_orders: Json }
