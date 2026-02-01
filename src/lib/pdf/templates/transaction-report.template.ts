@@ -4,9 +4,8 @@
  * Uses the unified PDF core for generating financial transaction reports.
  */
 
-import pdfMake from 'pdfmake/build/pdfmake';
 import { initPdf } from '../core/pdf-core';
-import { ARABIC_FONT_NAME } from '../core/fonts';
+import { ARABIC_FONT_NAME, pdfMakeInstance } from '../core/fonts';
 import { downloadBlob } from '../core/download';
 import { formatCurrency } from '../core/arabic-utils';
 
@@ -179,7 +178,7 @@ export async function createTransactionReportPDF(
     ],
   };
 
-  const pdfDoc = pdfMake.createPdf(docDefinition as never);
+  const pdfDoc = pdfMakeInstance.createPdf(docDefinition as never);
 
   const blob = await new Promise<Blob>((resolve, reject) => {
     try {

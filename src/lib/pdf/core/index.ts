@@ -73,5 +73,6 @@ export {
   verifyPDFSystem,
   generateTestPDF,
   debugPDFArabic,
+  runFinalQAGate,
   type PDFVerificationReport,
 } from './verify';

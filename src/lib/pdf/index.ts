@@ -130,6 +130,7 @@ export {
 export {
   verifyPDFSystem,
   generateTestPDF,
+  runFinalQAGate,
   type PDFVerificationReport,
 } from './core/verify';
 
