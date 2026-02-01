@@ -272,7 +272,7 @@ export function ClientHub() {
       variants={pageVariants}
       initial="hidden"
       animate="show"
-      className="space-y-6 pb-8"
+      className="space-y-4 pb-6"
     >
       {/* 1. Header Section */}
       <motion.div variants={sectionVariants}>
@@ -290,14 +290,7 @@ export function ClientHub() {
         <QuickActionPills isRTL={isRTL} />
       </motion.div>
 
-      {/* 3. Action Required Strip (conditional) */}
-      {data && data.actionItems.length > 0 && (
-        <motion.div variants={sectionVariants}>
-          <ActionRequiredStrip items={data.actionItems} isRTL={isRTL} />
-        </motion.div>
-      )}
-
-      {/* 4. KPI Cards */}
+      {/* 3. KPI Cards */}
       <motion.div variants={sectionVariants}>
         <KPICards
           data={data}
@@ -307,20 +300,27 @@ export function ClientHub() {
         />
       </motion.div>
 
-      {/* 5. Main Content Grid: Activity Feed + Service Journey */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Activity Feed */}
+      {/* 4. Action Required Strip (conditional) */}
+      {data && data.actionItems.length > 0 && (
+        <motion.div variants={sectionVariants}>
+          <ActionRequiredStrip items={data.actionItems} isRTL={isRTL} />
+        </motion.div>
+      )}
+
+      {/* 5. Main Content Grid: Service Journey + Activity Feed */}
+      <div className="grid gap-4 lg:grid-cols-5">
+        {/* Service Journey - compact sidebar */}
         <motion.div variants={sectionVariants} className="lg:col-span-2">
-          <ActivityFeed
+          <ServiceJourneyCard
             orders={data?.recentOrders || []}
             isLoading={false}
             isRTL={isRTL}
           />
         </motion.div>
 
-        {/* Service Journey (if active orders) */}
-        <motion.div variants={sectionVariants}>
-          <ServiceJourneyCard
+        {/* Activity Feed - main area */}
+        <motion.div variants={sectionVariants} className="lg:col-span-3">
+          <ActivityFeed
             orders={data?.recentOrders || []}
             isLoading={false}
             isRTL={isRTL}
