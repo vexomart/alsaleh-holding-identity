@@ -14,6 +14,9 @@ interface UserProfile {
   preferred_language: string;
   tenant_id: string | null;
   is_active: boolean;
+  customer_uid: string | null;
+  is_kyc_verified: boolean | null;
+  national_id: string | null;
 }
 
 interface UserRole {
