@@ -1,6 +1,7 @@
 /**
  * Customer Wallet Page
  * Full wallet view with balance, transaction history, and bank transfers
+ * Full RTL support
  */
 
 import { useState } from "react";
@@ -11,7 +12,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building2, Wallet, Plus } from "lucide-react";
+import { Building2, Wallet } from "lucide-react";
 
 export function CustomerWallet() {
   const { language } = useLanguage();
@@ -23,11 +24,12 @@ export function CustomerWallet() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="space-y-6"
+      className="space-y-6 w-full"
+      dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Page Header */}
-      <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
-        <div className={isRTL ? "text-right" : "text-left"}>
+      <div className="flex items-center justify-between">
+        <div>
           <h1 className="text-2xl font-bold text-foreground">
             {isRTL ? "المحفظة الرقمية" : "Digital Wallet"}
           </h1>
@@ -44,9 +46,9 @@ export function CustomerWallet() {
         </Button>
       </div>
 
-      {/* Tabs */}
-      <Tabs defaultValue="wallet" className="space-y-4">
-        <TabsList>
+      {/* Tabs - RTL aligned */}
+      <Tabs defaultValue="wallet" className="space-y-4 w-full" dir={isRTL ? "rtl" : "ltr"}>
+        <TabsList className="w-full justify-start">
           <TabsTrigger value="wallet" className="gap-2">
             <Wallet className="h-4 w-4" />
             {isRTL ? "المحفظة" : "Wallet"}
@@ -57,11 +59,11 @@ export function CustomerWallet() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="wallet">
+        <TabsContent value="wallet" className="mt-4">
           <CustomerWalletCard />
         </TabsContent>
 
-        <TabsContent value="bank-transfers">
+        <TabsContent value="bank-transfers" className="mt-4">
           <BankTransferList />
         </TabsContent>
       </Tabs>
