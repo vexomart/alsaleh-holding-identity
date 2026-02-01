@@ -6,15 +6,17 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const RABET_APP_ID = Deno.env.get('RABET_APP_ID')!;
-const RABET_APP_KEY = Deno.env.get('RABET_APP_KEY')!;
-const RABET_BASE_URL = 'https://api.rfrsh.com';
+// Load environment variables - NEVER expose to client
+const RABET_APP_ID = Deno.env.get('RABET_APP_ID');
+const RABET_APP_KEY = Deno.env.get('RABET_APP_KEY');
+const RABET_BASE_URL = Deno.env.get('RABET_BASE_URL');
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 console.log('🔐 Nafath Start function initialized');
+console.log(`📡 Using Rabet Base URL: ${RABET_BASE_URL || 'NOT_SET'}`);
 
 // Generate secure random state token
 function generateSecureState(): string {
@@ -58,6 +60,17 @@ serve(async (req) => {
   }
 
   try {
+    // Validate required environment variables
+    if (!RABET_BASE_URL) {
+      console.error('❌ RABET_BASE_URL is not configured');
+      throw new Error('خدمة نفاذ غير مهيأة بشكل صحيح');
+    }
+
+    if (!RABET_APP_ID || !RABET_APP_KEY) {
+      console.error('❌ RABET_APP_ID or RABET_APP_KEY is not configured');
+      throw new Error('بيانات اعتماد خدمة نفاذ غير مكتملة');
+    }
+
     const { callback_url } = await req.json();
     
     // 1. Generate secure state token
@@ -84,39 +97,59 @@ serve(async (req) => {
     // 3. Determine callback URL
     const finalCallbackUrl = callback_url || `${req.headers.get('origin')}/auth/login?provider=nafath`;
 
-    // 4. Call Rabet OIDC session endpoint to get Nafath login URL
-    const rabetResponse = await fetch(`${RABET_BASE_URL}/api/v2/oidc/session`, {
+    // 4. Call Rabet OIDC session endpoint (SERVER-SIDE ONLY)
+    const rabetUrl = `${RABET_BASE_URL}/api/v2/oidc/session`;
+    console.log(`📡 Calling Rabet API: ${rabetUrl}`);
+
+    const rabetResponse = await fetch(rabetUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-App-ID': RABET_APP_ID,
-        'X-App-Key': RABET_APP_KEY,
+        'app_id': RABET_APP_ID,
+        'app_key': RABET_APP_KEY,
         'Accept': 'application/json'
       }
     });
 
+    const responseText = await rabetResponse.text();
+    console.log(`📡 Rabet response status: ${rabetResponse.status}`);
+
     if (!rabetResponse.ok) {
-      const errorText = await rabetResponse.text();
-      console.error('Rabet API error:', rabetResponse.status, errorText);
+      console.error('Rabet API error:', rabetResponse.status, responseText);
       await logAudit('login', null, {
         event: 'nafath.start.failure',
         reason: 'rabet_api_error',
-        status: rabetResponse.status
+        status: rabetResponse.status,
+        base_url: RABET_BASE_URL
       }, req);
+      
+      // Check for DNS/network errors
+      if (responseText.includes('Name or service not known') || responseText.includes('ENOTFOUND')) {
+        throw new Error('تعذر الاتصال بخدمة نفاذ. تحقق من إعدادات الرابط (Base URL) أو الشبكة.');
+      }
+      
       throw new Error('فشل في الاتصال بخدمة نفاذ');
     }
 
-    const rabetData = await rabetResponse.json();
+    let rabetData;
+    try {
+      rabetData = JSON.parse(responseText);
+    } catch {
+      console.error('Failed to parse Rabet response:', responseText);
+      throw new Error('استجابة غير صالحة من خدمة نفاذ');
+    }
+
     console.log('Rabet session response received');
 
     // 5. Construct the final Nafath URL with state
-    let nafathUrl = rabetData.url || rabetData.redirect_url || rabetData.login_url;
+    let nafathUrl = rabetData.url || rabetData.redirect_url || rabetData.login_url || rabetData.authorization_url;
     
     if (!nafathUrl) {
-      console.error('No URL in Rabet response:', rabetData);
+      console.error('No URL in Rabet response:', JSON.stringify(rabetData));
       await logAudit('login', null, {
         event: 'nafath.start.failure',
-        reason: 'no_nafath_url'
+        reason: 'no_nafath_url',
+        response_keys: Object.keys(rabetData)
       }, req);
       throw new Error('لم يتم الحصول على رابط نفاذ');
     }
@@ -124,7 +157,6 @@ serve(async (req) => {
     // Append state parameter for CSRF protection
     const urlObj = new URL(nafathUrl);
     urlObj.searchParams.set('state', stateToken);
-    // Set the callback URL if supported
     if (finalCallbackUrl) {
       urlObj.searchParams.set('redirect_uri', finalCallbackUrl);
     }
@@ -133,7 +165,8 @@ serve(async (req) => {
     // 6. Log successful start
     await logAudit('login', null, {
       event: 'nafath.start',
-      state_prefix: stateToken.substring(0, 8)
+      state_prefix: stateToken.substring(0, 8),
+      base_url_used: RABET_BASE_URL
     }, req);
 
     console.log(`✅ Nafath session created with state: ${stateToken.substring(0, 8)}...`);
@@ -148,11 +181,11 @@ serve(async (req) => {
     });
 
   } catch (error: any) {
-    console.error('❌ Nafath Start Error:', error);
+    console.error('❌ Nafath Start Error:', error.message);
     
     return new Response(JSON.stringify({
       success: false,
-      message: error.message || 'حدث خطأ غير متوقع'
+      message: error.message || 'تعذر الاتصال بخدمة نفاذ. تحقق من إعدادات الرابط (Base URL) أو الشبكة.'
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
