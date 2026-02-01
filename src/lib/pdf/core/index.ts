@@ -7,8 +7,32 @@
 // Main PDF Core
 export * from './pdf-core';
 
-// Arabic utilities
-export * from './arabic-utils';
+// Arabic correctness layer (NEW)
+export {
+  rtl,
+  ltr,
+  mix,
+  currency,
+  rtlTable,
+  rtlKeyValue,
+  rtlDocumentStyle,
+  containsArabic,
+  isRTL,
+  verifyArabicRendering,
+  ARABIC_TEST_STRING,
+} from './arabic';
+
+// Arabic utilities (legacy - kept for compatibility)
+export {
+  toArabicNumerals,
+  toWesternNumerals,
+  formatCurrency,
+  formatArabicDate,
+  ltrToken,
+  rtlToken,
+  preprocessArabic,
+  toArabicOrdinal,
+} from './arabic-utils';
 
 // Font management
 export {

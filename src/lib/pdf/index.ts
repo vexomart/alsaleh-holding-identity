@@ -27,10 +27,10 @@
  * await debugPDFArabic();
  * ```
  * 
- * STRICT RULES:
- * - NO direct pdfmake imports outside src/lib/pdf/*
- * - NO fallback fonts - Cairo MUST load or throw
- * - ALL PDF generation goes through this module
+ * ARABIC CORRECTNESS LAYER:
+ * - rtl(text)  - Wrap Arabic text with RTL markers
+ * - ltr(text)  - Wrap LTR content (IDs, numbers) with isolation markers
+ * - mix(text)  - Handle mixed Arabic + LTR content automatically
  * 
  * ═════════════════════════════════════════════════════════════════
  */
@@ -50,6 +50,24 @@ export { createInvoicePDF } from './templates/invoice.template';
 
 // 4. Contract generator
 export { createContractPDF } from './templates/contract.template';
+
+// ============================================
+// ARABIC CORRECTNESS LAYER
+// ============================================
+
+export {
+  rtl,
+  ltr,
+  mix,
+  currency,
+  rtlTable,
+  rtlKeyValue,
+  rtlDocumentStyle,
+  containsArabic,
+  isRTL,
+  verifyArabicRendering,
+  ARABIC_TEST_STRING,
+} from './core/arabic';
 
 // ============================================
 // SUPPORTING TYPES (for type-safe usage)
@@ -92,15 +110,13 @@ export {
   generateContractContent,
 } from './templates/contract.template';
 
-// Arabic text utilities
+// Arabic text utilities (legacy)
 export {
   formatCurrency,
   formatArabicDate,
   toArabicNumerals,
   toWesternNumerals,
   toArabicOrdinal,
-  containsArabic,
-  isRTL,
 } from './core/arabic-utils';
 
 // PDF verification (for diagnostics)
