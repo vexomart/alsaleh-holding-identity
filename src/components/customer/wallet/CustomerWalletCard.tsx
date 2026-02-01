@@ -58,6 +58,7 @@ export function CustomerWalletCard({ className }: CustomerWalletCardProps) {
   const [customerUid, setCustomerUid] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedUid, setCopiedUid] = useState(false);
+  const [copiedWallet, setCopiedWallet] = useState(false);
   const [showBalance, setShowBalance] = useState(true);
 
   // Realtime updates for wallet
