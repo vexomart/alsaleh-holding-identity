@@ -84,6 +84,7 @@ export function FinanceContractView({
 }: FinanceContractViewProps) {
   const [agreed, setAgreed] = useState(false);
   const [signing, setSigning] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const statusConfig = CONTRACT_STATUS_CONFIG[contract.status];
   const isSigned = ["signed_by_customer", "approved_by_admin", "active", "closed"].includes(
@@ -103,9 +104,47 @@ export function FinanceContractView({
     }
   };
 
-  const handleDownloadPdf = () => {
-    // TODO: Implement PDF generation
-    toast.info("جارٍ تحضير ملف PDF...");
+  const handleDownloadPdf = async () => {
+    setDownloading(true);
+    try {
+      const { downloadFinanceContractPdf } = await import('@/lib/invoices/generateContractPdf');
+      
+      const contractData = {
+        contract_number: contract.contract_number,
+        signed_at: contract.signed_at,
+        entity: {
+          legal_name_ar: entity.legal_name_ar,
+          entity_type: entity.entity_type,
+          national_id: entity.national_id,
+          cr_number: entity.cr_number,
+          phone: entity.phone,
+          email: entity.email,
+          address_ar: entity.address_ar,
+        },
+        application: {
+          amount_sar: application.amount_sar,
+          tenor_months: application.tenor_months,
+        },
+        offer: {
+          apr_percent: offer.apr_percent,
+          fees_sar: offer.fees_sar,
+          monthly_payment_sar: offer.monthly_payment_sar,
+          total_payable_sar: offer.total_payable_sar,
+        },
+      };
+      
+      const success = await downloadFinanceContractPdf(contractData);
+      if (success) {
+        toast.success("تم تحميل العقد بنجاح");
+      } else {
+        toast.error("فشل في تحميل العقد");
+      }
+    } catch (error) {
+      console.error("PDF download error:", error);
+      toast.error("حدث خطأ أثناء تحميل العقد");
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const getEntityIcon = () => {
@@ -386,10 +425,20 @@ export function FinanceContractView({
               <Button
                 variant="outline"
                 onClick={handleDownloadPdf}
+                disabled={downloading}
                 className="flex-1 h-12"
               >
-                <Download className="h-5 w-5 ml-2" />
-                تحميل نسخة PDF من العقد
+                {downloading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 ml-2 animate-spin" />
+                    جارٍ التحميل...
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-5 w-5 ml-2" />
+                    تحميل نسخة PDF من العقد
+                  </>
+                )}
               </Button>
             </div>
           )}
