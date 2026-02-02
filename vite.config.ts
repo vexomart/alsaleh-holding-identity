@@ -24,7 +24,11 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     // Keep default Vite/Node resolution for React to avoid splitting across different entrypoints.
     // We only alias our app path prefix.
-    alias: [{ find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" }],
+    alias: [
+      { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
+      // Fix ESM default-import expectations for base64-js in some PDF-related deps
+      { find: /^base64-js$/, replacement: path.resolve(__dirname, "./src/shims/base64-js.ts") },
+    ],
 
     // Be explicit (even though it's the default) so symlinked deps don't create duplicate React copies.
     preserveSymlinks: false,
