@@ -26,10 +26,6 @@ export default defineConfig(({ mode }) => ({
     // We only alias our app path prefix.
     alias: [
       { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
-      // Pin React to a single physical *package directory*.
-      // Pointing to index.js can cause ESM/CJS split and still yield duplicate React instances.
-      { find: /^react$/, replacement: path.resolve(__dirname, "./node_modules/react") },
-      { find: /^react-dom$/, replacement: path.resolve(__dirname, "./node_modules/react-dom") },
       // Fix ESM default-import expectations for base64-js in some PDF-related deps
       { find: /^base64-js$/, replacement: path.resolve(__dirname, "./src/shims/base64-js.ts") },
       // Fix ESM default-import expectations for unicode-trie in some PDF/font deps
