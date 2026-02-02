@@ -12,6 +12,12 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   FileText,
   Download,
   CheckCircle,
@@ -28,6 +34,9 @@ import {
   Receipt,
   Info,
   CreditCard,
+  Wallet,
+  Banknote,
+  ChevronDown,
 } from "lucide-react";
 import { DisbursementVoucherButton } from "@/components/finance/shared/DisbursementVoucherButton";
 import type { DisbursementVoucherData } from "@/lib/finance/disbursement-voucher/types";
@@ -85,6 +94,8 @@ interface FinanceContractViewProps {
   canSign?: boolean;
   onSign?: () => Promise<void>;
   isLoading?: boolean;
+  /** إظهار أدوات الإدارة (زر السداد) */
+  isAdmin?: boolean;
 }
 
 export function FinanceContractView({
@@ -97,14 +108,24 @@ export function FinanceContractView({
   canSign = false,
   onSign,
   isLoading = false,
+  isAdmin = false,
 }: FinanceContractViewProps) {
   const [agreed, setAgreed] = useState(false);
   const [signing, setSigning] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [payingInstallment, setPayingInstallment] = useState<number | null>(null);
 
+  type PaymentMethod = 'wallet' | 'bank_transfer' | 'mada' | 'visa';
+  
+  const PAYMENT_METHODS: { value: PaymentMethod; label: string; icon: typeof Wallet }[] = [
+    { value: 'wallet', label: 'المحفظة', icon: Wallet },
+    { value: 'bank_transfer', label: 'تحويل بنكي', icon: Banknote },
+    { value: 'mada', label: 'مدى', icon: CreditCard },
+    { value: 'visa', label: 'فيزا/ماستركارد', icon: CreditCard },
+  ];
+
   // دالة سداد القسط
-  const handlePayInstallment = async (payment: FinancePayment) => {
+  const handlePayInstallment = async (payment: FinancePayment, method: PaymentMethod = 'wallet') => {
     if (payment.status === 'paid') return;
     
     setPayingInstallment(payment.installment_no);
@@ -114,13 +135,14 @@ export function FinanceContractView({
         .update({
           status: 'paid',
           paid_at: new Date().toISOString(),
-          method: 'wallet',
+          method: method,
         })
         .eq('id', payment.id);
 
       if (error) throw error;
 
-      toast.success(`تم سداد القسط رقم ${payment.installment_no} بنجاح`);
+      const methodLabel = PAYMENT_METHODS.find(m => m.value === method)?.label || method;
+      toast.success(`تم سداد القسط رقم ${payment.installment_no} بنجاح (${methodLabel})`);
       onPaymentSuccess?.();
     } catch (error) {
       console.error('Payment error:', error);
@@ -706,26 +728,42 @@ export function FinanceContractView({
                           </Badge>
                         </div>
                         <div className="text-center">
-                          {payment && canPay ? (
-                            <Button
-                              size="sm"
-                              variant={isOverdue ? "destructive" : "default"}
-                              className={cn(
-                                "h-8 text-xs px-3",
-                                !isOverdue && "bg-green-600 hover:bg-green-700"
-                              )}
-                              disabled={payingInstallment === payment.installment_no}
-                              onClick={() => handlePayInstallment(payment)}
-                            >
-                              {payingInstallment === payment.installment_no ? (
-                                <Loader2 className="h-3 w-3 animate-spin" />
-                              ) : (
-                                <>
-                                  <CheckCircle className="h-3 w-3 ml-1" />
-                                  سداد
-                                </>
-                              )}
-                            </Button>
+                          {isAdmin && payment && canPay ? (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  size="sm"
+                                  variant={isOverdue ? "destructive" : "default"}
+                                  className={cn(
+                                    "h-8 text-xs px-3",
+                                    !isOverdue && "bg-green-600 hover:bg-green-700"
+                                  )}
+                                  disabled={payingInstallment === payment.installment_no}
+                                >
+                                  {payingInstallment === payment.installment_no ? (
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                  ) : (
+                                    <>
+                                      <CheckCircle className="h-3 w-3 ml-1" />
+                                      سداد
+                                      <ChevronDown className="h-3 w-3 mr-1" />
+                                    </>
+                                  )}
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-40">
+                                {PAYMENT_METHODS.map((method) => (
+                                  <DropdownMenuItem
+                                    key={method.value}
+                                    onClick={() => handlePayInstallment(payment, method.value)}
+                                    className="gap-2 cursor-pointer"
+                                  >
+                                    <method.icon className="h-4 w-4" />
+                                    {method.label}
+                                  </DropdownMenuItem>
+                                ))}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           ) : isPaid ? (
                             <span className="text-green-600 text-xs">
                               {payment?.paid_at && new Date(payment.paid_at).toLocaleDateString('ar-SA')}
