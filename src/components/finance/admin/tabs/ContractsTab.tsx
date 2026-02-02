@@ -60,6 +60,7 @@ interface Contract {
   application?: {
     application_number: string;
     amount_sar: number;
+    tenor_months?: number;
     entity?: {
       legal_name_ar: string;
     };
@@ -85,6 +86,7 @@ export function ContractsTab() {
           application:finance_applications(
             application_number,
             amount_sar,
+            tenor_months,
             entity:entities(legal_name_ar)
           )
         `)
@@ -101,9 +103,15 @@ export function ContractsTab() {
   });
 
   const approveMutation = useMutation({
-    mutationFn: async (contractId: string) => {
+    mutationFn: async (contract: Contract) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("غير مصرح");
+
+      const amountSar = contract.application?.amount_sar;
+      const tenorMonths = contract.application?.tenor_months;
+      if (!amountSar || !tenorMonths) {
+        throw new Error("بيانات العقد غير مكتملة (المبلغ/المدة)");
+      }
 
       const { error } = await supabase
         .from("finance_contracts")
@@ -112,8 +120,21 @@ export function ContractsTab() {
           admin_approved_at: new Date().toISOString(),
           admin_approved_by: user.id
         })
-        .eq("id", contractId);
+        .eq("id", contract.id);
       if (error) throw error;
+
+      // Generate installments immediately (creates rows in finance_payments)
+      const startDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      const { error: installmentsError } = await supabase.rpc(
+        "generate_finance_installments" as never,
+        {
+          p_amount_sar: amountSar,
+          p_contract_id: contract.id,
+          p_tenor_months: tenorMonths,
+          p_start_date: startDate,
+        } as never
+      );
+      if (installmentsError) throw installmentsError;
     },
     onSuccess: () => {
       toast.success("تمت الموافقة على العقد وتفعيله");
@@ -123,6 +144,7 @@ export function ContractsTab() {
       queryClient.invalidateQueries({ queryKey: ["admin-finance-payments"], refetchType: 'active' });
       queryClient.invalidateQueries({ queryKey: ["finance-applications"], refetchType: 'active' });
       queryClient.invalidateQueries({ queryKey: ["finance-contracts"], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ["my-upcoming-payments"], refetchType: 'active' });
       setShowApproveDialog(false);
       setSelectedContract(null);
     },
@@ -407,7 +429,7 @@ export function ContractsTab() {
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-row-reverse gap-2">
             <AlertDialogAction
-              onClick={() => selectedContract && approveMutation.mutate(selectedContract.id)}
+              onClick={() => selectedContract && approveMutation.mutate(selectedContract)}
               disabled={approveMutation.isPending}
               className="bg-green-600 hover:bg-green-700"
             >
