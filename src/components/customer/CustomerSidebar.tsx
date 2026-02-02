@@ -37,6 +37,7 @@ import {
   Wallet,
   FileSignature,
   Receipt,
+  Landmark,
 } from "lucide-react";
 
 interface NavItem {
@@ -91,6 +92,12 @@ export function CustomerSidebar() {
       titleEn: "Wallet",
       icon: Wallet,
       href: "/app/wallet",
+    },
+    {
+      titleAr: "التمويل",
+      titleEn: "Finance",
+      icon: Landmark,
+      href: "/app/finance",
     },
     {
       titleAr: "الإشعارات",
