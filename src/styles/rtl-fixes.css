@@ -1,16 +1,37 @@
 /**
- * RTL Enforcement Stylesheet
+ * RTL Enforcement Stylesheet - HARD MODE
  * 
  * CHECKLIST STATUS:
- * ✅ HTML dir="rtl" - Set in index.html
- * ✅ CSS logical properties - Using margin-inline, padding-inline
+ * ✅ HTML dir="rtl" + lang="ar" - Set at document level
+ * ✅ Body dir="rtl" - Secondary enforcement
+ * ✅ CSS logical properties - margin-inline, padding-inline, inset-inline
  * ✅ Icons mirrored - Directional icons flip automatically
  * ✅ Tables RTL aligned - Right-to-left column order
+ * ✅ Tabs RTL - TabsList starts from right
+ * ✅ Popovers/Dropdowns - Align correctly in RTL
+ * ✅ Sidebars - Use side={isRTL ? "right" : "left"}
  * ✅ PDFs match UI - arabic-pdf.ts handles RTL
- * ✅ No mixed LTR - Controlled exceptions only
+ * ✅ No mixed LTR - Controlled exceptions only via BidiNumber
  * 
  * Arabic is DEFAULT. English switches to LTR cleanly.
  */
+
+/* ===========================================
+   UNICODE BIDI ISOLATION
+   Critical for proper text embedding
+   =========================================== */
+
+.unicode-bidi-isolate {
+  unicode-bidi: isolate;
+}
+
+.unicode-bidi-embed {
+  unicode-bidi: embed;
+}
+
+.unicode-bidi-plaintext {
+  unicode-bidi: plaintext;
+}
 
 /* ===========================================
    BASE RTL RULES
@@ -18,6 +39,7 @@
 
 [dir="rtl"] {
   text-align: right;
+  direction: rtl;
 }
 
 [dir="rtl"] body {
@@ -418,4 +440,334 @@
 [dir="ltr"] .sidebar {
   inset-inline-start: 0;
   inset-inline-end: auto;
+}
+
+/* ===========================================
+   ENHANCED TABS RTL SUPPORT
+   TabsList must start from the right in RTL
+   =========================================== */
+
+[dir="rtl"] [role="tablist"] {
+  direction: rtl;
+  /* Ensure tabs flow from right to left */
+}
+
+[dir="rtl"] [role="tablist"][data-orientation="horizontal"] {
+  /* Horizontal scrolling respects RTL */
+  direction: rtl;
+}
+
+/* Scrollable tabs - ensure scroll starts from right */
+[dir="rtl"] .tabs-scroll-container,
+[dir="rtl"] [data-radix-scroll-area-viewport] {
+  direction: rtl;
+}
+
+/* Tab active indicator positioning */
+[dir="rtl"] [data-state="active"]::before {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+/* Tab panel content */
+[dir="rtl"] [role="tabpanel"] {
+  text-align: right;
+  direction: rtl;
+}
+
+/* ===========================================
+   SHADCN UI COMPONENT RTL FIXES
+   =========================================== */
+
+/* Select component */
+[dir="rtl"] [data-radix-select-trigger] {
+  text-align: right;
+}
+
+[dir="rtl"] [data-radix-select-content] {
+  text-align: right;
+}
+
+[dir="rtl"] [data-radix-select-item] {
+  padding-inline-start: 2rem;
+  padding-inline-end: 0.5rem;
+}
+
+/* Checkbox indicator positioning */
+[dir="rtl"] [data-radix-checkbox-indicator] {
+  /* Indicator stays centered */
+}
+
+/* Dropdown menu */
+[dir="rtl"] [data-radix-dropdown-menu-content] {
+  text-align: right;
+}
+
+[dir="rtl"] [data-radix-dropdown-menu-item] {
+  flex-direction: row;
+}
+
+/* Context menu */
+[dir="rtl"] [data-radix-context-menu-content] {
+  text-align: right;
+}
+
+/* Dialog/Modal */
+[dir="rtl"] [data-radix-dialog-content] {
+  text-align: right;
+}
+
+/* Alert Dialog */
+[dir="rtl"] [data-radix-alert-dialog-content] {
+  text-align: right;
+}
+
+/* Sheet/Drawer from right side in RTL */
+[dir="rtl"] [data-radix-dialog-content][data-side="right"] {
+  inset-inline-end: 0;
+  inset-inline-start: auto;
+}
+
+[dir="rtl"] [data-radix-dialog-content][data-side="left"] {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+}
+
+/* Popover */
+[dir="rtl"] [data-radix-popover-content] {
+  text-align: right;
+}
+
+/* Command (cmdk) palette */
+[dir="rtl"] [cmdk-root] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] [cmdk-input] {
+  text-align: right;
+}
+
+[dir="rtl"] [cmdk-item] {
+  flex-direction: row;
+}
+
+/* Sonner toasts - RTL positioning */
+[dir="rtl"] [data-sonner-toaster] {
+  direction: rtl;
+}
+
+[dir="rtl"] [data-sonner-toast] {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Accordion */
+[dir="rtl"] [data-radix-accordion-header] {
+  text-align: right;
+}
+
+[dir="rtl"] [data-radix-accordion-trigger] {
+  flex-direction: row;
+}
+
+[dir="rtl"] [data-radix-accordion-content] {
+  text-align: right;
+}
+
+/* Collapsible */
+[dir="rtl"] [data-radix-collapsible-trigger] {
+  text-align: right;
+}
+
+/* Navigation menu */
+[dir="rtl"] [data-radix-navigation-menu-root] {
+  direction: rtl;
+}
+
+[dir="rtl"] [data-radix-navigation-menu-item] {
+  text-align: right;
+}
+
+/* ===========================================
+   RECHARTS / CHARTS RTL
+   Charts remain LTR for readability
+   =========================================== */
+
+[dir="rtl"] .recharts-wrapper {
+  direction: ltr;
+}
+
+[dir="rtl"] .recharts-legend-wrapper {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .recharts-tooltip-wrapper {
+  direction: rtl;
+  text-align: right;
+}
+
+/* ===========================================
+   SCROLL AREA RTL
+   =========================================== */
+
+[dir="rtl"] [data-radix-scroll-area-root] {
+  direction: rtl;
+}
+
+/* Scrollbar on left side in RTL */
+[dir="rtl"] [data-radix-scroll-area-scrollbar][data-orientation="vertical"] {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+}
+
+/* ===========================================
+   PAGINATION RTL
+   =========================================== */
+
+[dir="rtl"] .pagination,
+[dir="rtl"] nav[aria-label="pagination"] {
+  direction: rtl;
+}
+
+/* Flip pagination arrows in RTL */
+[dir="rtl"] .pagination-prev svg,
+[dir="rtl"] .pagination-next svg {
+  transform: scaleX(-1);
+}
+
+/* ===========================================
+   SIDEBAR SPECIFIC RTL
+   =========================================== */
+
+/* Ensure sidebar content aligns properly */
+[dir="rtl"] [data-sidebar="sidebar"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Sidebar menu items */
+[dir="rtl"] [data-sidebar="menu-item"] {
+  text-align: right;
+}
+
+/* Sidebar trigger position */
+[dir="rtl"] [data-sidebar="trigger"] {
+  inset-inline-end: auto;
+  inset-inline-start: 0;
+}
+
+/* ===========================================
+   INPUT ICONS RTL
+   =========================================== */
+
+/* Search input icon positioning */
+[dir="rtl"] .input-icon-start {
+  inset-inline-start: 0.75rem;
+  inset-inline-end: auto;
+}
+
+[dir="rtl"] .input-icon-end {
+  inset-inline-end: 0.75rem;
+  inset-inline-start: auto;
+}
+
+/* Password visibility toggle */
+[dir="rtl"] .input-password-toggle {
+  inset-inline-end: 0.75rem;
+  inset-inline-start: auto;
+}
+
+/* ===========================================
+   DATE PICKER RTL
+   =========================================== */
+
+[dir="rtl"] .rdp {
+  direction: rtl;
+}
+
+[dir="rtl"] .rdp-nav {
+  direction: ltr; /* Navigation buttons stay LTR */
+}
+
+[dir="rtl"] .rdp-caption_label {
+  text-align: center;
+}
+
+/* ===========================================
+   UTILITY HELPERS
+   =========================================== */
+
+/* Force LTR - use for IDs, numbers, technical values */
+.force-ltr,
+.ltr-value {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  text-align: inherit;
+}
+
+/* Force RTL - use when embedding RTL in LTR context */
+.force-rtl,
+.rtl-value {
+  direction: rtl !important;
+  unicode-bidi: isolate !important;
+  text-align: inherit;
+}
+
+/* Text start/end alignment (logical) */
+.text-start {
+  text-align: start;
+}
+
+.text-end {
+  text-align: end;
+}
+
+/* Inset logical properties */
+.inset-inline-start-0 {
+  inset-inline-start: 0;
+}
+
+.inset-inline-end-0 {
+  inset-inline-end: 0;
+}
+
+/* ===========================================
+   PREVENT OVERFLOW
+   Critical for RTL layouts
+   =========================================== */
+
+[dir="rtl"] {
+  overflow-x: hidden;
+}
+
+[dir="rtl"] .overflow-x-auto {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+/* Tables with horizontal scroll */
+[dir="rtl"] .table-scroll-container {
+  overflow-x: auto;
+  direction: rtl;
+}
+
+[dir="rtl"] .table-scroll-container > table {
+  min-width: max-content;
+}
+
+/* ===========================================
+   PRINT STYLES RTL
+   =========================================== */
+
+@media print {
+  [dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  [dir="rtl"] table {
+    direction: rtl;
+  }
 }

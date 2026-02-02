@@ -21,7 +21,7 @@ interface CustomerLayoutProps {
 
 export function CustomerLayout({ children }: CustomerLayoutProps) {
   const { user, profile, isLoading } = useAuth();
-  const { isRTL, language } = useLanguage();
+  const { isRTL } = useLanguage();
   const navigate = useNavigate();
 
   // Real-time subscriptions for services and invoices
@@ -30,24 +30,6 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
     tenantId: profile?.tenant_id || undefined,
     enabled: !!user,
   });
-
-  // Sync document direction for /app routes only
-  useEffect(() => {
-    const dir = isRTL ? 'rtl' : 'ltr';
-    const lang = isRTL ? 'ar' : 'en';
-    document.documentElement.dir = dir;
-    document.documentElement.lang = lang;
-    document.body.dir = dir;
-    
-    return () => {
-      // Reset on unmount if navigating away from /app
-      if (!window.location.pathname.startsWith('/app')) {
-        document.documentElement.dir = 'ltr';
-        document.documentElement.lang = 'en';
-        document.body.dir = 'ltr';
-      }
-    };
-  }, [isRTL]);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -60,7 +42,6 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
     return (
       <section 
         dir={isRTL ? 'rtl' : 'ltr'}
-        lang={isRTL ? 'ar' : 'en'}
         className="rtl-root min-h-screen flex items-center justify-center bg-background"
       >
         <div className="flex flex-col items-center gap-4">
@@ -88,7 +69,6 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
       */}
       <section 
         dir={isRTL ? 'rtl' : 'ltr'}
-        lang={isRTL ? 'ar' : 'en'}
         className={cn(
           "rtl-root min-h-screen w-full bg-background overflow-x-hidden",
           "grid"

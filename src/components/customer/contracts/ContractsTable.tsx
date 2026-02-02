@@ -1,6 +1,7 @@
 /**
  * ContractsTable - Enterprise data table for desktop view
  * RTL-first with proper column ordering and order reference
+ * Uses BidiNumber for LTR numeric values in RTL context
  */
 
 import { motion } from 'framer-motion';
@@ -15,6 +16,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { BidiNumber } from '@/components/ui/bidi-number';
 import {
   Tooltip,
   TooltipContent,
@@ -196,17 +198,16 @@ export function ContractsTable({
                   </span>
                 </TableCell>
                 
-                {/* Contract Number - Always LTR */}
+                {/* Contract Number - Always LTR using BidiNumber */}
                 <TableCell className={cn(isRTL && "text-right")}>
-                  <span 
-                    dir="ltr" 
-                    className="font-mono text-sm text-muted-foreground tabular-nums"
-                  >
-                    {contract.contract_number}
-                  </span>
+                  <BidiNumber 
+                    value={contract.contract_number}
+                    variant="code"
+                    className="text-muted-foreground"
+                  />
                 </TableCell>
                 
-                {/* Order Reference - LTR */}
+                {/* Order Reference - LTR using BidiNumber */}
                 <TableCell className={cn(isRTL && "text-right")}>
                   {contract.order ? (
                     <Tooltip>
@@ -218,9 +219,10 @@ export function ContractsTable({
                           }}
                           className="inline-flex items-center gap-1 text-primary hover:underline"
                         >
-                          <span dir="ltr" className="font-mono text-sm tabular-nums">
-                            {contract.order.order_number}
-                          </span>
+                          <BidiNumber 
+                            value={contract.order.order_number}
+                            className="text-sm"
+                          />
                           <ExternalLink className="h-3 w-3" />
                         </button>
                       </TooltipTrigger>

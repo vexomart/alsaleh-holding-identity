@@ -164,13 +164,42 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   /**
    * SINGLE SOURCE OF TRUTH: Apply direction at document level
-   * This is the ONLY place where document.dir should be set
+   * This is the ONLY place where document direction should be set.
+   * 
+   * RTL HARD MODE:
+   * - Sets dir on both html and body
+   * - Sets lang attribute
+   * - Adds RTL class for CSS targeting
    */
   const applyDirection = (lang: Language) => {
     const dir = lang === 'ar' ? 'rtl' : 'ltr';
+    
+    // Primary: document root
     document.documentElement.dir = dir;
     document.documentElement.lang = lang;
-    document.body.dir = dir; // Also body for full coverage
+    document.documentElement.setAttribute('data-direction', dir);
+    
+    // Secondary: body for full coverage
+    document.body.dir = dir;
+    document.body.setAttribute('data-lang', lang);
+    
+    // Add/remove RTL class for CSS targeting
+    if (lang === 'ar') {
+      document.documentElement.classList.add('rtl');
+      document.documentElement.classList.remove('ltr');
+      document.body.classList.add('rtl');
+      document.body.classList.remove('ltr');
+    } else {
+      document.documentElement.classList.add('ltr');
+      document.documentElement.classList.remove('rtl');
+      document.body.classList.add('ltr');
+      document.body.classList.remove('rtl');
+    }
+    
+    // Debug log in development
+    if (import.meta.env.DEV) {
+      console.log(`[RTL] Direction applied: ${dir}, Language: ${lang}`);
+    }
   };
 
   const setLanguage = (lang: Language) => {
@@ -203,6 +232,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (!context) {
+    // Safe fallback for components outside provider
     return {
       language: 'ar' as Language,
       setLanguage: () => {},
