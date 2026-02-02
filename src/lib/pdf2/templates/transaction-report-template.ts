@@ -1,26 +1,21 @@
 /**
- * TRANSACTION REPORT PDF TEMPLATE — Arabic RTL Corporate
+ * TRANSACTION REPORT PDF TEMPLATE
  * 
- * Returns a pdfmake document definition ONLY.
- * Does NOT call createPdf — that's done in render.ts.
+ * Arabic RTL financial transactions report
  */
 
-import { FONT_NAME } from '../init';
-import { rtl, ltr, formatCurrency, createRtlTable, arabicDefaultStyles } from '../arabic';
-import type { DocDefinition } from '../render';
+import { 
+  type DocDefinition,
+  arabicDocumentStyles,
+  rtl, 
+  ltr, 
+  formatCurrency,
+  createRtlTable,
+  PDF_COLORS,
+  PDF_SPACING,
+} from '../core';
 
 // Transaction report types
-export interface TransactionSummary {
-  startDate: string;
-  endDate: string;
-  totalTransactions: number;
-  totalIncome: number;
-  totalExpense: number;
-  netAmount: number;
-  currency: string;
-  transactions: TransactionItem[];
-}
-
 export interface TransactionItem {
   id: string;
   date: string;
@@ -33,18 +28,33 @@ export interface TransactionItem {
   statusAr: string;
 }
 
+export interface TransactionSummary {
+  startDate: string;
+  endDate: string;
+  totalTransactions: number;
+  totalIncome: number;
+  totalExpense: number;
+  netAmount: number;
+  currency: string;
+  transactions: TransactionItem[];
+}
+
+export interface TransactionReportOptions {
+  language?: 'ar' | 'en';
+}
+
 /**
  * Build transaction report document definition
  */
-export function buildTransactionReportDocDefinition(
+export function buildTransactionReportDoc(
   summary: TransactionSummary,
-  options?: { language?: 'ar' | 'en' }
+  options: TransactionReportOptions = {}
 ): DocDefinition {
-  const lang = options?.language || 'ar';
+  const lang = options.language || 'ar';
   const isAr = lang === 'ar';
   const currency = summary.currency || 'SAR';
   
-  // Transaction table
+  // Table configuration
   const headers = isAr 
     ? ['الحالة', 'المبلغ', 'الوصف', 'النوع', 'التاريخ', 'الرقم']
     : ['Status', 'Amount', 'Description', 'Type', 'Date', 'ID'];
@@ -64,7 +74,7 @@ export function buildTransactionReportDocDefinition(
       text: rtl(isAr ? 'تقرير المعاملات المالية' : 'Financial Transactions Report'),
       style: 'header',
       alignment: 'center',
-      margin: [0, 0, 0, 20],
+      margin: [0, 0, 0, PDF_SPACING[8]],
     },
     
     // Period
@@ -73,7 +83,7 @@ export function buildTransactionReportDocDefinition(
         ? `${rtl('الفترة:')} ${ltr(summary.startDate)} - ${ltr(summary.endDate)}`
         : `Period: ${summary.startDate} - ${summary.endDate}`,
       alignment: isAr ? 'right' : 'left',
-      margin: [0, 0, 0, 20],
+      margin: [0, 0, 0, PDF_SPACING[8]],
     },
     
     // Summary cards
@@ -82,21 +92,26 @@ export function buildTransactionReportDocDefinition(
         {
           stack: [
             { text: rtl(isAr ? 'صافي الرصيد' : 'Net Balance'), bold: true, alignment: 'right' },
-            { text: formatCurrency(summary.netAmount, currency), alignment: 'right', fontSize: 14 },
+            { 
+              text: formatCurrency(summary.netAmount, currency), 
+              alignment: 'right', 
+              fontSize: 14,
+              color: summary.netAmount >= 0 ? PDF_COLORS.success : PDF_COLORS.error,
+            },
           ],
           width: '*',
         },
         {
           stack: [
             { text: rtl(isAr ? 'المصروفات' : 'Expenses'), bold: true, alignment: 'right' },
-            { text: formatCurrency(summary.totalExpense, currency), alignment: 'right', color: '#dc2626' },
+            { text: formatCurrency(summary.totalExpense, currency), alignment: 'right', color: PDF_COLORS.error },
           ],
           width: '*',
         },
         {
           stack: [
             { text: rtl(isAr ? 'الإيرادات' : 'Income'), bold: true, alignment: 'right' },
-            { text: formatCurrency(summary.totalIncome, currency), alignment: 'right', color: '#059669' },
+            { text: formatCurrency(summary.totalIncome, currency), alignment: 'right', color: PDF_COLORS.success },
           ],
           width: '*',
         },
@@ -108,21 +123,25 @@ export function buildTransactionReportDocDefinition(
           width: '*',
         },
       ],
-      margin: [0, 0, 0, 30],
+      margin: [0, 0, 0, PDF_SPACING[12]],
     },
     
     // Transactions table
-    { text: rtl(isAr ? 'تفاصيل المعاملات' : 'Transaction Details'), style: 'subheader', margin: [0, 10, 0, 10] },
+    { 
+      text: rtl(isAr ? 'تفاصيل المعاملات' : 'Transaction Details'), 
+      style: 'subheader', 
+      margin: [0, PDF_SPACING[4], 0, PDF_SPACING[4]] 
+    },
     createRtlTable({
       headers,
       rows,
       widths: [60, 70, '*', 60, 70, 50],
-      numericCols: [1, 5], // Amount and ID
+      numericCols: [1, 5],
     }),
   ];
   
   return {
-    ...arabicDefaultStyles,
+    ...arabicDocumentStyles,
     pageSize: 'A4',
     pageOrientation: 'landscape',
     pageMargins: [40, 60, 40, 60],
@@ -137,25 +156,4 @@ export function buildTransactionReportDocDefinition(
       margin: [0, 20, 0, 0],
     }),
   };
-}
-
-/**
- * Convenience: create and download report
- */
-export async function createTransactionReportPDF(
-  summary: TransactionSummary,
-  options?: { language?: 'ar' | 'en'; download?: boolean }
-): Promise<Blob> {
-  const { createPdfBlob } = await import('../render');
-  const { safeDownloadPdf } = await import('../download');
-  
-  const doc = buildTransactionReportDocDefinition(summary, options);
-  const blob = await createPdfBlob(doc);
-  
-  if (options?.download) {
-    const filename = `transactions-report-${summary.startDate}-${summary.endDate}.pdf`;
-    safeDownloadPdf(blob, filename);
-  }
-  
-  return blob;
 }

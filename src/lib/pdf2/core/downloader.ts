@@ -1,8 +1,8 @@
 /**
- * GUARANTEED PDF DOWNLOAD ENGINE
+ * PDF DOWNLOAD ENGINE
  * 
- * Implements 3-level fallback strategy to ensure download works.
- * Strategy: Anchor → New Tab → Hidden Iframe
+ * Multi-strategy download with guaranteed fallbacks.
+ * Strategy: Anchor → New Tab → Iframe
  */
 
 import { toast } from 'sonner';
@@ -10,22 +10,22 @@ import { toast } from 'sonner';
 export type DownloadMethod = 'anchor' | 'tab' | 'iframe';
 
 export interface DownloadResult {
-  ok: boolean;
+  success: boolean;
   method?: DownloadMethod;
   error?: string;
 }
 
 /**
- * Check if device is iOS (Safari has download attribute issues)
+ * Detect iOS (Safari has download attribute issues)
  */
 function isIOS(): boolean {
   const ua = navigator.userAgent || '';
   return /iPad|iPhone|iPod/.test(ua) || 
-    (/(Macintosh)/.test(ua) && 'ontouchend' in document);
+    (ua.includes('Macintosh') && 'ontouchend' in document);
 }
 
 /**
- * Check if browser supports download attribute
+ * Check download attribute support
  */
 function supportsDownloadAttribute(): boolean {
   try {
@@ -36,23 +36,27 @@ function supportsDownloadAttribute(): boolean {
 }
 
 /**
- * Strategy 1: Anchor download (most reliable for modern browsers)
+ * Strategy 1: Anchor element download
  */
 function tryAnchorDownload(url: string, filename: string): boolean {
   try {
-    // iOS Safari ignores download attribute
-    if (isIOS()) return false;
-    if (!supportsDownloadAttribute()) return false;
+    if (isIOS() || !supportsDownloadAttribute()) {
+      return false;
+    }
     
     const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = filename;
     anchor.rel = 'noopener';
-    anchor.style.display = 'none';
+    anchor.style.cssText = 'position:fixed;left:-9999px;opacity:0';
     
     document.body.appendChild(anchor);
     anchor.click();
-    document.body.removeChild(anchor);
+    
+    // Cleanup after brief delay
+    setTimeout(() => {
+      try { anchor.remove(); } catch { /* ignore */ }
+    }, 100);
     
     return true;
   } catch {
@@ -61,19 +65,19 @@ function tryAnchorDownload(url: string, filename: string): boolean {
 }
 
 /**
- * Strategy 2: Open in new tab
+ * Strategy 2: New tab
  */
 function tryNewTabDownload(url: string): boolean {
   try {
     const win = window.open(url, '_blank', 'noopener,noreferrer');
-    return !!win;
+    return Boolean(win);
   } catch {
     return false;
   }
 }
 
 /**
- * Strategy 3: Hidden iframe (last resort)
+ * Strategy 3: Hidden iframe
  */
 function tryIframeDownload(url: string): boolean {
   try {
@@ -94,58 +98,55 @@ function tryIframeDownload(url: string): boolean {
 }
 
 /**
- * Safe PDF download with 3-level fallback
- * 
- * @param blob - PDF blob to download
- * @param filename - Filename for the download
- * @returns DownloadResult with success status and method used
+ * Download PDF blob with fallback strategies
  */
-export function safeDownloadPdf(blob: Blob, filename: string): DownloadResult {
+export function downloadPdfBlob(blob: Blob, filename: string): DownloadResult {
   // Validate blob
-  if (!blob || blob.size < 1000) {
+  if (!blob || blob.size < 500) {
     toast.error('فشل التحميل: ملف PDF غير صالح');
-    return { ok: false, error: 'INVALID_BLOB' };
+    return { success: false, error: 'INVALID_BLOB' };
   }
   
-  // Ensure correct MIME type
-  const pdfBlob = blob.type === 'application/pdf' 
-    ? blob 
+  // Ensure PDF MIME type
+  const pdfBlob = blob.type === 'application/pdf'
+    ? blob
     : new Blob([blob], { type: 'application/pdf' });
   
   // Create object URL
   const url = URL.createObjectURL(pdfBlob);
   
-  // Strategy 1: Anchor download
+  // Strategy 1: Anchor
   if (tryAnchorDownload(url, filename)) {
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
-    return { ok: true, method: 'anchor' };
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    return { success: true, method: 'anchor' };
   }
   
   // Strategy 2: New tab
   if (tryNewTabDownload(url)) {
     toast.info('تم فتح الملف في تبويب جديد');
     setTimeout(() => URL.revokeObjectURL(url), 60000);
-    return { ok: true, method: 'tab' };
+    return { success: true, method: 'tab' };
   }
   
-  // Strategy 3: Hidden iframe
+  // Strategy 3: Iframe
   if (tryIframeDownload(url)) {
     setTimeout(() => URL.revokeObjectURL(url), 60000);
-    return { ok: true, method: 'iframe' };
+    return { success: true, method: 'iframe' };
   }
   
-  // All strategies failed
+  // All failed
   URL.revokeObjectURL(url);
   toast.error('فشل تحميل الملف — جرب متصفحًا آخر');
-  return { ok: false, error: 'ALL_STRATEGIES_FAILED' };
+  return { success: false, error: 'ALL_STRATEGIES_FAILED' };
 }
 
 /**
- * Download blob directly (simple version)
+ * Simple download helper
  */
-export function downloadBlob(blob: Blob, filename: string): void {
-  const result = safeDownloadPdf(blob, filename);
-  if (!result.ok) {
+export function downloadBlob(blob: Blob, filename: string): boolean {
+  const result = downloadPdfBlob(blob, filename);
+  if (!result.success) {
     console.error('[PDF DOWNLOAD] Failed:', result.error);
   }
+  return result.success;
 }

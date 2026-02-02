@@ -1,15 +1,21 @@
 /**
- * CONTRACT PDF TEMPLATE — Arabic RTL Legal Corporate
+ * CONTRACT PDF TEMPLATE
  * 
- * Returns a pdfmake document definition ONLY.
- * Does NOT call createPdf — that's done in render.ts.
+ * Arabic RTL legal contract document
  */
 
-import { FONT_NAME } from '../init';
-import { rtl, ltr, formatCurrency, toArabicNumerals, arabicDefaultStyles } from '../arabic';
-import type { DocDefinition } from '../render';
+import { 
+  type DocDefinition,
+  arabicDocumentStyles,
+  rtl, 
+  ltr, 
+  formatCurrency,
+  toArabicOrdinal,
+  PDF_COLORS,
+  PDF_SPACING,
+} from '../core';
 
-// Contract data types
+// Contract types
 export interface ContractParty {
   name: string;
   nationalId?: string;
@@ -28,51 +34,37 @@ export interface ContractData {
   contractNumber: string;
   date: string | Date;
   
-  // Parties
   provider: ContractParty;
   customer: ContractParty;
   
-  // Service details
   serviceName: string;
   serviceDescription?: string;
   
-  // Pricing
   amount: number;
   vatRate?: number;
   vatAmount?: number;
   totalAmount?: number;
   currency?: string;
   
-  // Terms
   clauses: ContractClause[];
   
-  // Status
   status?: string;
   signedAt?: string | Date;
 }
 
 /**
- * Convert Date or string to display string
+ * Convert date to string
  */
-function toDateString(date: string | Date | undefined): string {
+function toDateStr(date: string | Date | undefined): string {
   if (!date) return '';
   if (typeof date === 'string') return date;
   return date.toISOString().split('T')[0];
 }
 
 /**
- * Convert number to Arabic ordinal (الأول، الثاني، ...)
- */
-function toArabicOrdinal(n: number): string {
-  const ordinals = ['', 'الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 
-    'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر'];
-  return ordinals[n] || `رقم ${toArabicNumerals(n)}`;
-}
-
-/**
  * Build contract document definition
  */
-export function buildContractDocDefinition(data: ContractData): DocDefinition {
+export function buildContractDoc(data: ContractData): DocDefinition {
   const currency = data.currency || 'SAR';
   const vatRate = data.vatRate ?? 0.15;
   const vatAmount = data.vatAmount ?? (data.amount * vatRate);
@@ -84,7 +76,7 @@ export function buildContractDocDefinition(data: ContractData): DocDefinition {
       text: rtl('عقد تقديم خدمات'),
       style: 'header',
       alignment: 'center',
-      margin: [0, 0, 0, 20],
+      margin: [0, 0, 0, PDF_SPACING[8]],
     },
     
     // Contract meta
@@ -97,7 +89,7 @@ export function buildContractDocDefinition(data: ContractData): DocDefinition {
             { text: rtl('رقم العقد'), alignment: 'right', bold: true },
           ],
           [
-            { text: rtl(toDateString(data.date)), alignment: 'right' },
+            { text: rtl(toDateStr(data.date)), alignment: 'right' },
             { text: rtl('التاريخ'), alignment: 'right', bold: true },
           ],
           [
@@ -107,57 +99,57 @@ export function buildContractDocDefinition(data: ContractData): DocDefinition {
         ],
       },
       layout: 'noBorders',
-      margin: [0, 0, 0, 20],
+      margin: [0, 0, 0, PDF_SPACING[8]],
     },
     
-    // Parties
-    { text: rtl('أطراف العقد'), style: 'subheader', margin: [0, 10, 0, 10] },
+    // Parties header
+    { text: rtl('أطراف العقد'), style: 'subheader', margin: [0, PDF_SPACING[4], 0, PDF_SPACING[4]] },
     
     // Provider (First party)
     {
       stack: [
-        { text: rtl('الطرف الأول (مقدم الخدمة)'), bold: true, margin: [0, 0, 0, 5] },
+        { text: rtl('الطرف الأول (مقدم الخدمة)'), bold: true, margin: [0, 0, 0, PDF_SPACING[2]] },
         { text: `${rtl('الاسم:')} ${rtl(data.provider.name)}` },
         ...(data.provider.nationalId ? [{ text: `${rtl('رقم الهوية:')} ${ltr(data.provider.nationalId)}` }] : []),
         ...(data.provider.address ? [{ text: `${rtl('العنوان:')} ${rtl(data.provider.address)}` }] : []),
         ...(data.provider.phone ? [{ text: `${rtl('الهاتف:')} ${ltr(data.provider.phone)}` }] : []),
       ],
-      margin: [0, 0, 0, 15],
+      margin: [0, 0, 0, PDF_SPACING[6]],
     },
     
     // Customer (Second party)
     {
       stack: [
-        { text: rtl('الطرف الثاني (العميل)'), bold: true, margin: [0, 0, 0, 5] },
+        { text: rtl('الطرف الثاني (العميل)'), bold: true, margin: [0, 0, 0, PDF_SPACING[2]] },
         { text: `${rtl('الاسم:')} ${rtl(data.customer.name)}` },
         ...(data.customer.nationalId ? [{ text: `${rtl('رقم الهوية:')} ${ltr(data.customer.nationalId)}` }] : []),
         ...(data.customer.address ? [{ text: `${rtl('العنوان:')} ${rtl(data.customer.address)}` }] : []),
         ...(data.customer.phone ? [{ text: `${rtl('الهاتف:')} ${ltr(data.customer.phone)}` }] : []),
       ],
-      margin: [0, 0, 0, 20],
+      margin: [0, 0, 0, PDF_SPACING[8]],
     },
     
     // Service description
     ...(data.serviceDescription ? [
-      { text: rtl('وصف الخدمة'), style: 'subheader', margin: [0, 10, 0, 10] },
-      { text: rtl(data.serviceDescription), margin: [0, 0, 0, 20] },
+      { text: rtl('وصف الخدمة'), style: 'subheader', margin: [0, PDF_SPACING[4], 0, PDF_SPACING[4]] },
+      { text: rtl(data.serviceDescription), margin: [0, 0, 0, PDF_SPACING[8]] },
     ] : []),
     
     // Clauses
-    { text: rtl('بنود العقد'), style: 'subheader', margin: [0, 10, 0, 10] },
+    { text: rtl('بنود العقد'), style: 'subheader', margin: [0, PDF_SPACING[4], 0, PDF_SPACING[4]] },
     ...data.clauses.map((clause, index) => ({
       stack: [
         { 
           text: rtl(`البند ${toArabicOrdinal(index + 1)}: ${clause.title}`), 
           bold: true, 
-          margin: [0, 10, 0, 5] 
+          margin: [0, PDF_SPACING[4], 0, PDF_SPACING[2]] 
         },
         { text: rtl(clause.content) },
       ],
     })),
     
     // Pricing
-    { text: rtl('القيمة المالية'), style: 'subheader', margin: [0, 20, 0, 10] },
+    { text: rtl('القيمة المالية'), style: 'subheader', margin: [0, PDF_SPACING[8], 0, PDF_SPACING[4]] },
     {
       table: {
         widths: [100, '*'],
@@ -171,35 +163,35 @@ export function buildContractDocDefinition(data: ContractData): DocDefinition {
             { text: rtl(`ضريبة القيمة المضافة (${Math.round(vatRate * 100)}%)`), alignment: 'right', bold: true },
           ],
           [
-            { text: formatCurrency(totalAmount, currency), alignment: 'right', bold: true, fillColor: '#f3f4f6' },
-            { text: rtl('الإجمالي'), alignment: 'right', bold: true, fillColor: '#f3f4f6' },
+            { text: formatCurrency(totalAmount, currency), alignment: 'right', bold: true, fillColor: PDF_COLORS.backgroundMuted },
+            { text: rtl('الإجمالي'), alignment: 'right', bold: true, fillColor: PDF_COLORS.backgroundMuted },
           ],
         ],
       },
       layout: 'lightHorizontalLines',
-      margin: [0, 0, 0, 30],
+      margin: [0, 0, 0, PDF_SPACING[12]],
     },
     
     // Signatures
-    { text: rtl('التوقيعات'), style: 'subheader', margin: [0, 20, 0, 20] },
+    { text: rtl('التوقيعات'), style: 'subheader', margin: [0, PDF_SPACING[8], 0, PDF_SPACING[8]] },
     {
       columns: [
         {
           width: '*',
           stack: [
             { text: rtl('الطرف الثاني (العميل)'), bold: true, alignment: 'center' },
-            { text: rtl(data.customer.name), alignment: 'center', margin: [0, 10, 0, 0] },
-            { text: '_____________________', alignment: 'center', margin: [0, 30, 0, 0] },
-            { text: rtl('التوقيع'), alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: rtl(data.customer.name), alignment: 'center', margin: [0, PDF_SPACING[4], 0, 0] },
+            { text: '_____________________', alignment: 'center', margin: [0, PDF_SPACING[12], 0, 0] },
+            { text: rtl('التوقيع'), alignment: 'center', margin: [0, PDF_SPACING[2], 0, 0] },
           ],
         },
         {
           width: '*',
           stack: [
             { text: rtl('الطرف الأول (مقدم الخدمة)'), bold: true, alignment: 'center' },
-            { text: rtl(data.provider.name), alignment: 'center', margin: [0, 10, 0, 0] },
-            { text: '_____________________', alignment: 'center', margin: [0, 30, 0, 0] },
-            { text: rtl('التوقيع'), alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: rtl(data.provider.name), alignment: 'center', margin: [0, PDF_SPACING[4], 0, 0] },
+            { text: '_____________________', alignment: 'center', margin: [0, PDF_SPACING[12], 0, 0] },
+            { text: rtl('التوقيع'), alignment: 'center', margin: [0, PDF_SPACING[2], 0, 0] },
           ],
         },
       ],
@@ -207,7 +199,7 @@ export function buildContractDocDefinition(data: ContractData): DocDefinition {
   ];
   
   return {
-    ...arabicDefaultStyles,
+    ...arabicDocumentStyles,
     pageSize: 'A4',
     pageMargins: [40, 60, 40, 60],
     content,
@@ -255,7 +247,7 @@ export const defaultContractClauses: ContractClause[] = [
 ];
 
 /**
- * Sample contract data for testing
+ * Sample contract for testing
  */
 export const sampleContractData: ContractData = {
   contractNumber: 'CNT-2025-0001',
