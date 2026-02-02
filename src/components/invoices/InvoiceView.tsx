@@ -114,6 +114,11 @@ export function InvoiceView({
           <span className="mx-2">•</span>
           <span dir="ltr" className="ltr-token font-mono text-[11px]">ash-holding.sa</span>
         </p>
+
+        {/* Strict verification marker: helps detect stale UI deployments */}
+        <p className="text-[10px] text-muted-foreground/80 mt-3">
+          <span dir="ltr" className="ltr-token font-mono">UI Template v2.0 - 2026</span>
+        </p>
       </div>
     </div>
   );
