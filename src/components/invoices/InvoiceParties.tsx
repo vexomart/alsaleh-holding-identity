@@ -1,12 +1,11 @@
 /**
  * Invoice Parties Component
- * Clean seller and buyer information cards
+ * Classic corporate billing/shipping style cards
  */
 
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Building2, User } from 'lucide-react';
 import { InvoiceParty } from './types';
 
 interface InvoicePartiesProps {
@@ -20,94 +19,73 @@ export function InvoiceParties({ seller, buyer, className }: InvoicePartiesProps
   const isRTL = language === 'ar';
 
   return (
-    <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-4', className)}>
-      {/* Seller Card */}
-      <PartyCard 
-        party={seller}
-        title={isRTL ? 'البائع' : 'Seller'}
-        icon={Building2}
-        index={0}
-      />
-      
-      {/* Buyer Card */}
-      <PartyCard 
-        party={buyer}
-        title={isRTL ? 'العميل' : 'Customer'}
-        icon={User}
-        index={1}
-      />
-    </div>
-  );
-}
-
-interface PartyCardProps {
-  party: InvoiceParty;
-  title: string;
-  icon: React.ElementType;
-  index: number;
-}
-
-function PartyCard({ party, title, icon: Icon, index }: PartyCardProps) {
-  const { language } = useLanguage();
-  const isRTL = language === 'ar';
-
-  const name = isRTL && party.nameAr ? party.nameAr : party.name;
-  const address = isRTL && party.addressAr ? party.addressAr : party.address;
-
-  return (
     <motion.div
-      initial={{ opacity: 0, y: 4 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, delay: index * 0.04 }}
-      className="rounded-xl border bg-card"
+      transition={{ duration: 0.3, delay: 0.1 }}
+      className={cn('grid grid-cols-1 md:grid-cols-2 gap-6', className)}
     >
-      {/* Header */}
-      <div className="px-4 py-3 border-b border-border/50 flex items-center gap-2">
-        <Icon className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-medium text-muted-foreground">{title}</span>
-      </div>
-
-      {/* Content */}
-      <div className="p-4 space-y-3">
-        {/* Name */}
-        <div>
-          <p className="font-semibold text-foreground">{name}</p>
-          {party.customerId && (
-            <p className="text-xs text-muted-foreground mt-0.5">
-              <span className="me-1">{isRTL ? 'رقم العميل:' : 'ID:'}</span>
-              <span dir="ltr" className="font-mono ltr-token">{party.customerId}</span>
+      {/* From (Seller) */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-5 bg-slate-900 dark:bg-slate-400 rounded-full" />
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            {isRTL ? 'من' : 'From'}
+          </h3>
+        </div>
+        <div className="bg-slate-50 dark:bg-slate-900/30 rounded-lg p-4 border border-slate-200 dark:border-slate-800">
+          <p className="font-bold text-foreground text-lg mb-2">
+            {isRTL && seller.nameAr ? seller.nameAr : seller.name}
+          </p>
+          {seller.vatNumber && (
+            <p className="text-sm text-muted-foreground mb-1">
+              <span className="font-medium">{isRTL ? 'الرقم الضريبي:' : 'VAT:'}</span>{' '}
+              <span dir="ltr" className="font-mono ltr-token">{seller.vatNumber}</span>
+            </p>
+          )}
+          {(seller.addressAr || seller.address) && (
+            <p className="text-sm text-muted-foreground mb-1">
+              {isRTL && seller.addressAr ? seller.addressAr : seller.address}
+            </p>
+          )}
+          {seller.email && (
+            <p className="text-sm text-muted-foreground">
+              <span dir="ltr" className="ltr-token">{seller.email}</span>
             </p>
           )}
         </div>
+      </div>
 
-        {/* VAT Number */}
-        {party.vatNumber && (
-          <div className="text-sm">
-            <span className="text-muted-foreground me-1">
-              {isRTL ? 'الرقم الضريبي:' : 'VAT:'}
-            </span>
-            <span dir="ltr" className="font-mono text-foreground ltr-token">
-              {party.vatNumber}
-            </span>
-          </div>
-        )}
-
-        {/* Address */}
-        {address && (
-          <p className="text-sm text-muted-foreground">{address}</p>
-        )}
-
-        {/* Contact */}
-        {(party.email || party.phone) && (
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            {party.email && (
-              <span dir="ltr" className="ltr-token">{party.email}</span>
-            )}
-            {party.phone && (
-              <span dir="ltr" className="ltr-token">{party.phone}</span>
-            )}
-          </div>
-        )}
+      {/* To (Buyer) */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-5 bg-primary rounded-full" />
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            {isRTL ? 'إلى' : 'Bill To'}
+          </h3>
+        </div>
+        <div className="bg-primary/5 dark:bg-primary/10 rounded-lg p-4 border border-primary/20">
+          <p className="font-bold text-foreground text-lg mb-2">
+            {isRTL && buyer.nameAr ? buyer.nameAr : buyer.name}
+          </p>
+          {buyer.customerId && (
+            <p className="text-sm text-muted-foreground mb-1">
+              <span className="font-medium">{isRTL ? 'رقم العميل:' : 'Customer ID:'}</span>{' '}
+              <span dir="ltr" className="font-mono ltr-token">{buyer.customerId}</span>
+            </p>
+          )}
+          {buyer.vatNumber && (
+            <p className="text-sm text-muted-foreground mb-1">
+              <span className="font-medium">{isRTL ? 'الرقم الضريبي:' : 'VAT:'}</span>{' '}
+              <span dir="ltr" className="font-mono ltr-token">{buyer.vatNumber}</span>
+            </p>
+          )}
+          {buyer.email && (
+            <p className="text-sm text-muted-foreground">
+              <span dir="ltr" className="ltr-token">{buyer.email}</span>
+            </p>
+          )}
+        </div>
       </div>
     </motion.div>
   );

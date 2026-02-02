@@ -1,6 +1,6 @@
 /**
  * Invoice Skeleton
- * Clean loading state with shimmer
+ * Classic loading state
  */
 
 import { cn } from '@/lib/utils';
@@ -12,41 +12,29 @@ interface InvoiceSkeletonProps {
 
 export function InvoiceSkeleton({ className }: InvoiceSkeletonProps) {
   return (
-    <div className={cn('space-y-6', className)}>
+    <div className={cn('space-y-8 max-w-4xl mx-auto', className)}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-7 w-32" />
-            <Skeleton className="h-6 w-20 rounded-full" />
+      <div>
+        <div className="bg-slate-200 dark:bg-slate-800 rounded-t-lg h-16" />
+        <div className="bg-slate-100 dark:bg-slate-900/50 rounded-b-lg p-4 border-x border-b">
+          <div className="grid grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i}>
+                <Skeleton className="h-3 w-16 mb-2" />
+                <Skeleton className="h-5 w-24" />
+              </div>
+            ))}
           </div>
-          <Skeleton className="h-4 w-28" />
         </div>
-        <div className="space-y-2 sm:items-end flex flex-col">
-          <Skeleton className="h-3 w-16" />
-          <Skeleton className="h-6 w-36" />
-        </div>
-      </div>
-
-      {/* Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="rounded-xl border bg-card p-4">
-            <Skeleton className="h-3 w-24 mb-2" />
-            <Skeleton className="h-6 w-28" />
-          </div>
-        ))}
       </div>
 
       {/* Parties */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="rounded-xl border bg-card">
-            <div className="px-4 py-3 border-b">
-              <Skeleton className="h-4 w-16" />
-            </div>
-            <div className="p-4 space-y-3">
-              <Skeleton className="h-5 w-40" />
+          <div key={i} className="space-y-3">
+            <Skeleton className="h-4 w-12" />
+            <div className="border rounded-lg p-4 space-y-2">
+              <Skeleton className="h-6 w-40" />
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-4 w-48" />
             </div>
@@ -54,14 +42,14 @@ export function InvoiceSkeleton({ className }: InvoiceSkeletonProps) {
         ))}
       </div>
 
-      {/* Items Table */}
-      <div className="rounded-xl border bg-card overflow-hidden">
-        <div className="px-4 py-3 border-b bg-muted/30">
-          <Skeleton className="h-3 w-20" />
-        </div>
-        <div className="p-4 space-y-3">
+      {/* Table */}
+      <div className="space-y-3">
+        <Skeleton className="h-4 w-24" />
+        <div className="border rounded-lg overflow-hidden">
+          <div className="bg-slate-200 dark:bg-slate-800 h-12" />
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center gap-4">
+            <div key={i} className="flex items-center gap-4 p-4 border-t">
+              <Skeleton className="h-4 w-8" />
               <Skeleton className="h-4 flex-1" />
               <Skeleton className="h-4 w-12" />
               <Skeleton className="h-4 w-20" />
@@ -72,27 +60,37 @@ export function InvoiceSkeleton({ className }: InvoiceSkeletonProps) {
       </div>
 
       {/* Totals */}
-      <div className="rounded-xl border bg-card p-5 space-y-4">
-        <div className="flex justify-between">
-          <Skeleton className="h-4 w-28" />
-          <Skeleton className="h-4 w-24" />
-        </div>
-        <div className="flex justify-between">
-          <Skeleton className="h-4 w-32" />
-          <Skeleton className="h-4 w-20" />
-        </div>
-        <div className="border-t pt-4">
-          <div className="flex justify-between items-center">
-            <Skeleton className="h-5 w-36" />
-            <Skeleton className="h-8 w-32" />
+      <div className="flex justify-end">
+        <div className="w-full max-w-sm border rounded-lg overflow-hidden">
+          <div className="p-4 space-y-3">
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+          </div>
+          <div className="bg-slate-200 dark:bg-slate-800 p-4">
+            <div className="flex justify-between items-center">
+              <Skeleton className="h-4 w-20 bg-slate-300 dark:bg-slate-700" />
+              <Skeleton className="h-8 w-32 bg-slate-300 dark:bg-slate-700" />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-4">
-        <Skeleton className="h-10 w-32" />
-        <Skeleton className="h-10 w-10 rounded-lg ms-auto" />
+      <div className="flex justify-between pt-6">
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-24" />
+          <Skeleton className="h-9 w-20" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-32" />
+          <Skeleton className="h-9 w-28" />
+        </div>
       </div>
     </div>
   );
