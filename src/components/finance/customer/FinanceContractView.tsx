@@ -109,9 +109,22 @@ export function FinanceContractView({
     try {
       const { downloadFinanceContractPdf } = await import('@/lib/invoices/generateContractPdf');
       
+      // Generate installments array for PDF
+      const installments = Array.from(
+        { length: Math.min(application.tenor_months, 12) },
+        (_, i) => ({
+          installment_no: i + 1,
+          due_date: new Date(
+            new Date().setMonth(new Date().getMonth() + i + 1)
+          ).toISOString(),
+          amount_sar: offer.monthly_payment_sar,
+        })
+      );
+      
       const contractData = {
         contract_number: contract.contract_number,
         signed_at: contract.signed_at,
+        admin_approved_at: contract.admin_approved_at,
         entity: {
           legal_name_ar: entity.legal_name_ar,
           entity_type: entity.entity_type,
@@ -131,6 +144,7 @@ export function FinanceContractView({
           monthly_payment_sar: offer.monthly_payment_sar,
           total_payable_sar: offer.total_payable_sar,
         },
+        installments,
       };
       
       const success = await downloadFinanceContractPdf(contractData);
