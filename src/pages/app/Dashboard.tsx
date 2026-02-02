@@ -19,6 +19,7 @@ import { CustomerTransactions } from '@/components/customer/CustomerTransactions
 import { CustomerContractsCenter } from '@/components/customer/contracts';
 import { CustomerContractDetails } from '@/components/customer/CustomerContractDetails';
 import { CustomerInvoicesCenter } from '@/components/customer/invoices';
+import ClientHubPage from '@/pages/customer/ClientHubPage';
 
 const CustomerDashboard = () => {
   return (
@@ -26,6 +27,7 @@ const CustomerDashboard = () => {
       <Routes>
         {/* Main Routes */}
         <Route index element={<ClientHub />} />
+        <Route path="client-hub" element={<ClientHubPage />} />
         <Route path="orders" element={<CustomerOrdersList />} />
         <Route path="services" element={<CustomerServices />} />
         <Route path="services/:category" element={<CustomerCategoryServices />} />

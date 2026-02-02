@@ -20,6 +20,7 @@ export const ROUTES = {
     OVERVIEW: '/admin',
     USERS: '/admin/users',
     ROLES: '/admin/roles',
+    CLIENT_HUB: (id: string) => `/admin/clients/${id}`,
     SERVICES: '/admin/services',
     ORDERS: '/admin/orders',
     CONTRACTS: '/admin/contracts',
@@ -41,6 +42,7 @@ export const ROUTES = {
   APP: {
     ROOT: '/app',
     OVERVIEW: '/app',
+    CLIENT_HUB: '/app/client-hub',
     ORDERS: '/app/orders',
     ORDER_DETAIL: (id: string) => `/app/orders/${id}`,
     SERVICES: '/app/services',

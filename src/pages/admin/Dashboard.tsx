@@ -19,6 +19,7 @@ import { NotificationsPage } from '@/components/admin/notifications/Notification
 import { SettingsPage } from '@/components/admin/settings/SettingsPage';
 import { AuditLogPage } from '@/components/admin/audit/AuditLogPage';
 import { FinanceCenter } from '@/components/admin/finance';
+import { AdminClientHub } from '@/components/admin/clients';
 import { Card, CardContent } from '@/components/ui/card';
 import { Construction } from 'lucide-react';
 
@@ -49,6 +50,9 @@ const AdminDashboard = () => {
         <Route index element={<AdminOverview />} />
         <Route path="users" element={<UsersManagement />} />
         <Route path="roles" element={<RolesPermissions />} />
+        
+        {/* Client Hub Route */}
+        <Route path="clients/:id" element={<AdminClientHub />} />
         
         {/* Business Routes */}
         <Route path="services" element={<ServicesManagement />} />
