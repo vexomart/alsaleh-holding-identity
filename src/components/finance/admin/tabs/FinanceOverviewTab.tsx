@@ -179,20 +179,20 @@ export function FinanceOverviewTab() {
       </div>
 
       {/* Entity Distribution */}
-      <Card>
+      <Card dir="rtl">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 flex-row-reverse justify-end">
             <Users className="h-5 w-5 text-primary" />
             توزيع الكيانات
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-4 rounded-lg bg-blue-500/10">
-              <p className="text-3xl font-bold text-blue-600">
-                {stats?.entityTypes.individual || 0}
+            <div className="text-center p-4 rounded-lg bg-green-500/10">
+              <p className="text-3xl font-bold text-green-600">
+                {stats?.entityTypes.institution || 0}
               </p>
-              <p className="text-sm text-muted-foreground mt-1">أفراد</p>
+              <p className="text-sm text-muted-foreground mt-1">مؤسسات</p>
             </div>
             <div className="text-center p-4 rounded-lg bg-purple-500/10">
               <p className="text-3xl font-bold text-purple-600">
@@ -200,11 +200,11 @@ export function FinanceOverviewTab() {
               </p>
               <p className="text-sm text-muted-foreground mt-1">شركات</p>
             </div>
-            <div className="text-center p-4 rounded-lg bg-green-500/10">
-              <p className="text-3xl font-bold text-green-600">
-                {stats?.entityTypes.institution || 0}
+            <div className="text-center p-4 rounded-lg bg-blue-500/10">
+              <p className="text-3xl font-bold text-blue-600">
+                {stats?.entityTypes.individual || 0}
               </p>
-              <p className="text-sm text-muted-foreground mt-1">مؤسسات</p>
+              <p className="text-sm text-muted-foreground mt-1">أفراد</p>
             </div>
           </div>
         </CardContent>
