@@ -26,7 +26,7 @@ console.log('Root element HTML:', rootElement?.outerHTML);
 // بعض المستخدمين ما زال لديهم Service Worker قديم يعمل بـ cache-first ويُظهر نسخة قديمة من الواجهة.
 // هذا الكود يقوم بإلغاء تسجيل الـSW ومسح الـCache **مرة واحدة فقط** ثم يعيد تحميل الصفحة لضمان
 // وصول أحدث نسخة (وبالتالي ظهور UI Template v2.0 - 2026 داخل واجهة الفاتورة).
-const SW_RESET_KEY = 'sw_reset_done_v3_2026_02_02';
+const SW_RESET_KEY = 'sw_reset_done_v4_2026_02_02';
 
 async function hardResetServiceWorkerOnce() {
   try {
