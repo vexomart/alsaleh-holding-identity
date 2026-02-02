@@ -11,31 +11,24 @@ function brotliReplacementPlugin(): Plugin {
   return {
     name: "brotli-replacement",
     enforce: "pre",
-    resolveId(source) {
-      // Replace entire brotli package
-      if (source === "brotli") {
-        return { id: brotliShimPath, moduleSideEffects: false };
-      }
-      // Replace decompress subpath
+    resolveId(source, importer) {
+      // Handle decompress subpath FIRST (more specific)
       if (source === "brotli/decompress" || source === "brotli/decompress.js") {
         return { id: brotliDecompressShimPath, moduleSideEffects: false };
+      }
+      // Handle any brotli subpath import
+      if (source.startsWith("brotli/")) {
+        return { id: brotliDecompressShimPath, moduleSideEffects: false };
+      }
+      // Replace exact brotli package import
+      if (source === "brotli") {
+        return { id: brotliShimPath, moduleSideEffects: false };
       }
       return null;
     },
     load(id) {
-      // Intercept any direct file access to brotli
-      if (id.includes("node_modules/brotli/decompress")) {
-        return `
-          function decompress(buffer) {
-            if (buffer instanceof Uint8Array) return buffer;
-            if (buffer instanceof ArrayBuffer) return new Uint8Array(buffer);
-            return new Uint8Array(buffer);
-          }
-          export default decompress;
-          export { decompress };
-        `;
-      }
-      if (id.includes("node_modules/brotli") && !id.includes("decompress")) {
+      // Intercept any direct file access to brotli in node_modules
+      if (id.includes("node_modules/brotli")) {
         return `
           function decompress(buffer) {
             if (buffer instanceof Uint8Array) return buffer;
@@ -47,8 +40,8 @@ function brotliReplacementPlugin(): Plugin {
             if (buffer instanceof ArrayBuffer) return new Uint8Array(buffer);
             return new Uint8Array(buffer);
           }
+          export default decompress;
           export { decompress, compress };
-          export default { decompress, compress };
         `;
       }
       return null;
@@ -79,14 +72,9 @@ export default defineConfig(({ mode }) => ({
       { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
       { find: /^base64-js$/, replacement: path.resolve(__dirname, "./src/shims/base64-js.ts") },
       { find: /^unicode-trie$/, replacement: path.resolve(__dirname, "./src/shims/unicode-trie.ts") },
-      // Alias entire brotli package
+      // Brotli aliases - subpaths MUST come first to prevent partial matching
+      { find: /^brotli\/decompress(\.js)?$/, replacement: brotliDecompressShimPath },
       { find: /^brotli$/, replacement: brotliShimPath },
-      { find: "brotli", replacement: brotliShimPath },
-      // Alias decompress subpath
-      { find: "brotli/decompress.js", replacement: brotliDecompressShimPath },
-      { find: "brotli/decompress", replacement: brotliDecompressShimPath },
-      { find: /^brotli\/decompress\.js$/, replacement: brotliDecompressShimPath },
-      { find: /^brotli\/decompress$/, replacement: brotliDecompressShimPath },
     ],
     preserveSymlinks: false,
     dedupe: [
