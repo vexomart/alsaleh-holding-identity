@@ -14,6 +14,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { CustomerSidebar } from "./CustomerSidebar";
 import { CustomerHeader } from "./CustomerHeader";
 import { Loader2 } from "lucide-react";
+import { CacheBuster } from "@/components/CacheBuster";
 
 interface CustomerLayoutProps {
   children: ReactNode;
@@ -93,25 +94,31 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
             {children}
           </main>
           
-          {/* Real-time connection indicators (debug) */}
+          {/* Real-time connection indicators + Cache Buster */}
           <div className={cn(
-            "fixed bottom-4 flex gap-2 z-50",
+            "fixed bottom-4 flex items-center gap-3 z-50",
             isRTL ? "start-4" : "end-4"
           )}>
-            <div 
-              className={cn(
-                "w-2 h-2 rounded-full transition-colors",
-                isServicesConnected ? "bg-primary" : "bg-muted"
-              )}
-              title={isRTL ? "اتصال الخدمات" : "Services connection"}
-            />
-            <div 
-              className={cn(
-                "w-2 h-2 rounded-full transition-colors",
-                isInvoicesConnected ? "bg-primary" : "bg-muted"
-              )}
-              title={isRTL ? "اتصال الفواتير" : "Invoices connection"}
-            />
+            {/* Cache Buster Button */}
+            <CacheBuster />
+            
+            {/* Connection indicators */}
+            <div className="flex gap-2">
+              <div 
+                className={cn(
+                  "w-2 h-2 rounded-full transition-colors",
+                  isServicesConnected ? "bg-primary" : "bg-muted"
+                )}
+                title={isRTL ? "اتصال الخدمات" : "Services connection"}
+              />
+              <div 
+                className={cn(
+                  "w-2 h-2 rounded-full transition-colors",
+                  isInvoicesConnected ? "bg-primary" : "bg-muted"
+                )}
+                title={isRTL ? "اتصال الفواتير" : "Invoices connection"}
+              />
+            </div>
           </div>
         </SidebarInset>
       </section>
