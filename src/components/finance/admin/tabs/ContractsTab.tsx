@@ -117,7 +117,12 @@ export function ContractsTab() {
     },
     onSuccess: () => {
       toast.success("تمت الموافقة على العقد وتفعيله");
-      queryClient.invalidateQueries({ queryKey: ["admin-finance-contracts"] });
+      // Invalidate all related queries for instant UI update
+      queryClient.invalidateQueries({ queryKey: ["admin-finance-contracts"], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ["admin-finance-applications"], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ["admin-finance-payments"], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ["finance-applications"], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ["finance-contracts"], refetchType: 'active' });
       setShowApproveDialog(false);
       setSelectedContract(null);
     },
