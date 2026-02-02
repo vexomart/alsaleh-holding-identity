@@ -2,13 +2,13 @@
  * PDFMAKE SINGLETON INSTANCE
  * 
  * Single source of truth for pdfmake in the entire application.
- * Uses traditional vfs assignment for maximum compatibility.
  * 
- * CRITICAL: This is the ONLY place where pdfMake is instantiated.
+ * CRITICAL FIX: Must assign pdfMake.vfs = pdfFonts.pdfMake.vfs directly
+ * to use pdfmake's internal VFS reference, NOT copy the data.
  */
 
-import pdfMakeRaw from 'pdfmake/build/pdfmake';
-import * as pdfFontsModule from 'pdfmake/build/vfs_fonts';
+import pdfMakeModule from 'pdfmake/build/pdfmake';
+import pdfFontsModule from 'pdfmake/build/vfs_fonts';
 
 export interface PdfDocument {
   getBlob: (callback: (blob: Blob) => void) => void;
@@ -25,7 +25,7 @@ export interface PdfMakeInstance {
 }
 
 // Global key to ensure singleton across HMR
-const SINGLETON_KEY = '__pdfMakeSingleton_v4__';
+const SINGLETON_KEY = '__pdfMakeSingleton_v6__';
 
 function createPdfMakeInstance(): PdfMakeInstance {
   // Check for existing singleton
@@ -36,43 +36,41 @@ function createPdfMakeInstance(): PdfMakeInstance {
   
   console.log('[PDFMAKE] Creating new singleton instance');
   
-  // Get the raw pdfmake instance
-  const instance = pdfMakeRaw as unknown as PdfMakeInstance;
+  // Get the pdfmake instance
+  const pdfMake = pdfMakeModule as unknown as PdfMakeInstance;
   
-  // Initialize VFS from pdfmake fonts module (contains Roboto)
-  const fontModule = pdfFontsModule as { pdfMake?: { vfs?: Record<string, string> } };
-  const defaultVfs = fontModule.pdfMake?.vfs || {};
+  // CRITICAL: Assign the VFS from pdfFonts module DIRECTLY
+  // This is the key fix - we must use pdfmake's internal VFS reference
+  const fontsVfs = (pdfFontsModule as any)?.pdfMake?.vfs || (pdfFontsModule as any)?.vfs || {};
   
-  // CRITICAL: Ensure vfs and fonts objects exist and are mutable
-  if (!instance.vfs || typeof instance.vfs !== 'object') {
-    instance.vfs = {};
+  console.log('[PDFMAKE] Default VFS keys:', Object.keys(fontsVfs).length);
+  
+  // Assign VFS directly (not copy)
+  pdfMake.vfs = fontsVfs;
+  
+  // Ensure fonts object exists
+  if (!pdfMake.fonts) {
+    pdfMake.fonts = {};
   }
   
-  // Copy default VFS (Roboto fonts)
-  Object.assign(instance.vfs, defaultVfs);
-  
-  // Initialize fonts object
-  if (!instance.fonts || typeof instance.fonts !== 'object') {
-    instance.fonts = {};
-  }
-  
-  // Register Roboto as fallback
-  instance.fonts.Roboto = {
+  // Register Roboto as fallback (already in default VFS)
+  pdfMake.fonts.Roboto = {
     normal: 'Roboto-Regular.ttf',
     bold: 'Roboto-Medium.ttf',
     italics: 'Roboto-Italic.ttf',
     bolditalics: 'Roboto-MediumItalic.ttf',
   };
   
-  console.log('[PDFMAKE] VFS initialized with', Object.keys(instance.vfs).length, 'entries');
-  console.log('[PDFMAKE] Fonts registered:', Object.keys(instance.fonts));
+  console.log('[PDFMAKE] VFS initialized with', Object.keys(pdfMake.vfs).length, 'entries');
+  console.log('[PDFMAKE] VFS sample keys:', Object.keys(pdfMake.vfs).slice(0, 5));
+  console.log('[PDFMAKE] Fonts registered:', Object.keys(pdfMake.fonts));
   
   // Store singleton in window for HMR persistence
   if (typeof window !== 'undefined') {
-    (window as any)[SINGLETON_KEY] = instance;
+    (window as any)[SINGLETON_KEY] = pdfMake;
   }
   
-  return instance;
+  return pdfMake;
 }
 
 export const pdfMake = createPdfMakeInstance();
