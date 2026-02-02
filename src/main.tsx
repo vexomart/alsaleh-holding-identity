@@ -27,7 +27,7 @@ console.log('Root element HTML:', rootElement?.outerHTML);
 // Duplicate React وبالتالي أخطاء hooks مثل `useRef`.
 // لذلك: في الـPreview/Dev نعمل unregister + clear cache على كل تحميل (بدون مرة واحدة).
 // في الإنتاج (النطاق المنشور) نُبقي السلوك “مرة واحدة” لتفادي إعادة تحميل متكررة.
-const SW_RESET_KEY = 'sw_reset_done_v13_react_alias';
+const SW_RESET_KEY = 'sw_reset_done_v14_contract_module';
 
 async function hardResetServiceWorkerOnce() {
   try {
