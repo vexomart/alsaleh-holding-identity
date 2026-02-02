@@ -107,55 +107,108 @@ export function FinanceContractView({
   const handleDownloadPdf = async () => {
     setDownloading(true);
     try {
-      const { downloadFinanceContractPdf } = await import('@/lib/invoices/generateContractPdf');
+      // Use new contract renderer module
+      const contractModule = await import('@/lib/contracts/contract-renderer');
       
-      // Generate installments array for PDF
+      // Calculate dates
+      const now = new Date();
+      const expiryDate = new Date(now);
+      expiryDate.setMonth(expiryDate.getMonth() + application.tenor_months);
+      
+      // Generate installments array
       const installments = Array.from(
-        { length: Math.min(application.tenor_months, 12) },
+        { length: application.tenor_months },
         (_, i) => ({
-          installment_no: i + 1,
-          due_date: new Date(
+          installmentNumber: i + 1,
+          dueDate: new Date(
             new Date().setMonth(new Date().getMonth() + i + 1)
           ).toISOString(),
-          amount_sar: offer.monthly_payment_sar,
+          amount: offer.monthly_payment_sar,
+          status: 'scheduled' as const,
         })
       );
-      
-      const contractData = {
-        contract_number: contract.contract_number,
-        signed_at: contract.signed_at,
-        admin_approved_at: contract.admin_approved_at,
-        entity: {
-          legal_name_ar: entity.legal_name_ar,
-          entity_type: entity.entity_type,
-          national_id: entity.national_id,
-          cr_number: entity.cr_number,
-          phone: entity.phone,
-          email: entity.email,
-          address_ar: entity.address_ar,
-        },
-        application: {
-          amount_sar: application.amount_sar,
-          tenor_months: application.tenor_months,
-        },
-        offer: {
-          apr_percent: offer.apr_percent,
-          fees_sar: offer.fees_sar,
-          monthly_payment_sar: offer.monthly_payment_sar,
-          total_payable_sar: offer.total_payable_sar,
-        },
-        installments,
+
+      // Map entity type to identity type
+      const getIdentityType = (entityType: EntityType): 'national_id' | 'commercial_registration' | 'iqama' => {
+        switch (entityType) {
+          case 'company':
+          case 'institution':
+            return 'commercial_registration';
+          default:
+            return 'national_id';
+        }
+      };
+
+      // Determine contract status
+      const getContractStatus = (): 'draft' | 'pending_signature' | 'signed' | 'active' | 'completed' | 'cancelled' => {
+        if (contract.status === 'active') return 'active';
+        if (contract.status === 'signed_by_customer' || contract.status === 'approved_by_admin') return 'signed';
+        if (contract.status === 'generated') return 'pending_signature';
+        if (contract.status === 'closed') return 'completed';
+        if (contract.status === 'canceled') return 'cancelled';
+        return 'draft';
       };
       
-      const success = await downloadFinanceContractPdf(contractData);
-      if (success) {
-        toast.success("تم تحميل العقد بنجاح");
-      } else {
-        toast.error("فشل في تحميل العقد");
-      }
+      const contractData = {
+        contractNumber: contract.contract_number,
+        issueDate: now.toISOString(),
+        effectiveDate: now.toISOString(),
+        expiryDate: expiryDate.toISOString(),
+        status: getContractStatus(),
+        
+        // First party (company)
+        firstParty: {
+          name: 'شركة علي صالح الشهري القابضة',
+          identityType: 'commercial_registration' as const,
+          identityNumber: '1010123456',
+          address: 'الرياض، المملكة العربية السعودية',
+          phone: '+966 11 123 4567',
+          email: 'info@alshahri-holding.sa',
+        },
+        
+        // Second party (customer)
+        secondParty: {
+          name: entity.legal_name_ar,
+          identityType: getIdentityType(entity.entity_type),
+          identityNumber: entity.national_id || entity.cr_number || '',
+          address: entity.address_ar || 'المملكة العربية السعودية',
+          phone: entity.phone || '',
+          email: entity.email || '',
+        },
+        
+        // Financial details
+        financials: {
+          principalAmount: application.amount_sar,
+          aprPercent: offer.apr_percent,
+          totalFees: offer.fees_sar || 0,
+          tenorMonths: application.tenor_months,
+          monthlyPayment: offer.monthly_payment_sar,
+          totalPayable: offer.total_payable_sar,
+          currency: 'SAR' as const,
+        },
+        
+        fundingPurpose: 'تمويل داخلي لشراء خدمات الشركة',
+        paymentSchedule: installments,
+        
+        // Signatures
+        firstPartySignature: {
+          signerName: 'شركة علي صالح الشهري القابضة',
+          isSigned: !!contract.admin_approved_at,
+          signedAt: contract.admin_approved_at || null,
+        },
+        secondPartySignature: {
+          signerName: entity.legal_name_ar,
+          isSigned: !!contract.signed_at,
+          signedAt: contract.signed_at || null,
+        },
+      };
+      
+      // Open contract preview in new window (user can print from there)
+      contractModule.previewContract(contractData);
+      toast.success("تم فتح العقد في نافذة جديدة - يمكنك طباعته أو حفظه كـ PDF");
     } catch (error) {
-      console.error("PDF download error:", error);
-      toast.error("حدث خطأ أثناء تحميل العقد");
+      console.error("Contract preview error:", error);
+      toast.error("حدث خطأ أثناء فتح العقد");
     } finally {
       setDownloading(false);
     }
