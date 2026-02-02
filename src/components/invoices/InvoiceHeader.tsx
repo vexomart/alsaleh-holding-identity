@@ -1,6 +1,6 @@
 /**
  * Invoice Header Component
- * Premium corporate invoice header - Global enterprise style
+ * Premium Voucher Design Style - تصميم سند الصرف
  */
 
 import { motion } from 'framer-motion';
@@ -42,49 +42,58 @@ export function InvoiceHeader({
       transition={{ duration: 0.3 }}
       className={cn('relative invoice-container', className)}
     >
-      {/* Premium Invoice Title Bar */}
-      <div className="bg-gradient-to-r from-[#1a1a2e] via-[#16213e] to-[#0f3460] text-white px-8 py-6 rounded-t-xl shadow-lg">
-        <div className="flex items-center justify-between">
+      {/* Premium Voucher-Style Header - Teal Gradient */}
+      <div className="bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 text-white px-8 py-6 rounded-t-2xl shadow-xl relative overflow-hidden">
+        {/* Decorative overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+        
+        <div className="relative flex items-center justify-between">
           <div className="flex items-center gap-5">
             {/* Company Logo */}
-            <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
-              <span className="text-2xl font-bold bg-gradient-to-br from-amber-400 to-amber-600 bg-clip-text text-transparent">
+            <div className="w-14 h-14 bg-white/15 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20 shadow-lg">
+              <span className="text-2xl font-bold text-white">
                 A
               </span>
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-wide invoice-title">
-                {isRTL ? 'فاتورة ضريبية' : 'TAX INVOICE'}
-              </h1>
-              <p className="text-sm text-white/80 mt-1 invoice-subtitle">
                 {isRTL ? 'شركة علي صالح الشهري القابضة' : 'Ali Saleh Al-Shahri Holding Co.'}
+              </h1>
+              <p className="text-sm text-white/75 mt-1 invoice-subtitle">
+                {isRTL ? 'Ali Saleh Al-Shahri Holding Co.' : 'شركة علي صالح الشهري القابضة'}
               </p>
             </div>
           </div>
-          <InvoiceStatusBadge status={status} size="lg" />
+          
+          {/* Gold Badge - Like Voucher */}
+          <div className="bg-gradient-to-r from-amber-400 to-amber-500 px-6 py-3 rounded-full shadow-lg">
+            <span className="text-slate-900 font-bold text-lg">
+              {isRTL ? 'فاتورة ضريبية' : 'TAX INVOICE'}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Invoice Details Bar */}
-      <div className="bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-900/80 border-x border-b border-slate-200 dark:border-slate-700 px-8 py-5 rounded-b-xl">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-sm">
+      {/* Navy Info Bar - Like Voucher */}
+      <div className="bg-slate-900 px-8 py-4">
+        <div className="flex items-center justify-between text-sm">
           {/* Invoice Number */}
-          <div className="invoice-field">
-            <p className="text-[11px] text-muted-foreground uppercase tracking-widest mb-1.5 invoice-label">
+          <div className="text-center">
+            <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1">
               {isRTL ? 'رقم الفاتورة' : 'Invoice No.'}
             </p>
-            <p dir="ltr" className="font-mono font-bold text-base text-foreground ltr-token invoice-value">
+            <p dir="ltr" className="font-mono font-bold text-white ltr-token">
               {invoiceNumber}
             </p>
           </div>
 
           {/* Issue Date */}
           {issuedAt && (
-            <div className="invoice-field">
-              <p className="text-[11px] text-muted-foreground uppercase tracking-widest mb-1.5 invoice-label">
+            <div className="text-center">
+              <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1">
                 {isRTL ? 'تاريخ الإصدار' : 'Issue Date'}
               </p>
-              <p className="font-semibold text-foreground invoice-value">
+              <p className="font-semibold text-white">
                 {formatDate(issuedAt)}
               </p>
             </div>
@@ -92,38 +101,28 @@ export function InvoiceHeader({
 
           {/* Due Date */}
           {dueDate && (
-            <div className="invoice-field">
-              <p className="text-[11px] text-muted-foreground uppercase tracking-widest mb-1.5 invoice-label">
+            <div className="text-center">
+              <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1">
                 {isRTL ? 'تاريخ الاستحقاق' : 'Due Date'}
               </p>
-              <p className="font-semibold text-foreground invoice-value">
+              <p className="font-semibold text-white">
                 {formatDate(dueDate)}
               </p>
             </div>
           )}
 
-          {/* Status Text */}
-          <div className="sm:text-end invoice-field">
-            <p className="text-[11px] text-muted-foreground uppercase tracking-widest mb-1.5 invoice-label">
+          {/* Status */}
+          <div className="text-center">
+            <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1">
               {isRTL ? 'الحالة' : 'Status'}
             </p>
-            <p className={cn(
-              'font-bold text-base invoice-status',
-              status === 'paid' && 'text-emerald-600 dark:text-emerald-400',
-              status === 'pending' && 'text-amber-600 dark:text-amber-400',
-              status === 'overdue' && 'text-red-600 dark:text-red-400',
-              !['paid', 'pending', 'overdue'].includes(status) && 'text-foreground'
-            )}>
-              {status === 'paid' && (isRTL ? 'مدفوعة' : 'PAID')}
-              {status === 'pending' && (isRTL ? 'بانتظار الدفع' : 'PENDING')}
-              {status === 'overdue' && (isRTL ? 'متأخرة' : 'OVERDUE')}
-              {status === 'issued' && (isRTL ? 'صادرة' : 'ISSUED')}
-              {status === 'draft' && (isRTL ? 'مسودة' : 'DRAFT')}
-              {status === 'cancelled' && (isRTL ? 'ملغاة' : 'CANCELLED')}
-            </p>
+            <InvoiceStatusBadge status={status} size="sm" />
           </div>
         </div>
       </div>
+
+      {/* Rounded bottom border */}
+      <div className="h-3 bg-gradient-to-b from-slate-900 to-transparent rounded-b-xl" />
     </motion.div>
   );
 }
