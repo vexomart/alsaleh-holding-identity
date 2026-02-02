@@ -139,26 +139,22 @@ export function OfferGenerator({ open, onOpenChange, application }: OfferGenerat
             </CardContent>
           </Card>
 
-          {/* APR Slider */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label className="flex items-center gap-2">
-                <Percent className="h-4 w-4 text-primary" />
-                نسبة الربح السنوية (APR)
-              </Label>
-              <span className="font-bold text-primary">{aprPercent}%</span>
-            </div>
-            <Slider
-              value={[aprPercent]}
-              onValueChange={(v) => setAprPercent(v[0])}
-              min={5}
-              max={30}
+          {/* APR Input */}
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Percent className="h-4 w-4 text-primary" />
+              نسبة الربح السنوية (APR) %
+            </Label>
+            <Input
+              type="number"
+              value={aprPercent}
+              onChange={(e) => setAprPercent(Number(e.target.value))}
+              min={0}
+              max={100}
               step={0.5}
+              className="text-left"
+              dir="ltr"
             />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>5%</span>
-              <span>30%</span>
-            </div>
           </div>
 
           {/* Fees Input */}
