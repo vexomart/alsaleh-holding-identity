@@ -39,6 +39,16 @@ import {
   EntityType,
 } from "@/types/finance";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+
+export interface FinancePayment {
+  id: string;
+  installment_no: number;
+  amount_sar: number;
+  due_date: string;
+  status: 'scheduled' | 'paid' | 'overdue' | 'partial';
+  paid_at?: string | null;
+}
 
 interface FinanceContractViewProps {
   contract: {
@@ -70,6 +80,8 @@ interface FinanceContractViewProps {
     amount_sar: number;
     tenor_months: number;
   };
+  payments?: FinancePayment[];
+  onPaymentSuccess?: () => void;
   canSign?: boolean;
   onSign?: () => Promise<void>;
   isLoading?: boolean;
@@ -80,6 +92,8 @@ export function FinanceContractView({
   offer,
   entity,
   application,
+  payments = [],
+  onPaymentSuccess,
   canSign = false,
   onSign,
   isLoading = false,
@@ -87,6 +101,34 @@ export function FinanceContractView({
   const [agreed, setAgreed] = useState(false);
   const [signing, setSigning] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [payingInstallment, setPayingInstallment] = useState<number | null>(null);
+
+  // دالة سداد القسط
+  const handlePayInstallment = async (payment: FinancePayment) => {
+    if (payment.status === 'paid') return;
+    
+    setPayingInstallment(payment.installment_no);
+    try {
+      const { error } = await supabase
+        .from('finance_payments')
+        .update({
+          status: 'paid',
+          paid_at: new Date().toISOString(),
+          method: 'wallet',
+        })
+        .eq('id', payment.id);
+
+      if (error) throw error;
+
+      toast.success(`تم سداد القسط رقم ${payment.installment_no} بنجاح`);
+      onPaymentSuccess?.();
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error('حدث خطأ أثناء سداد القسط');
+    } finally {
+      setPayingInstallment(null);
+    }
+  };
 
   const statusConfig = CONTRACT_STATUS_CONFIG[contract.status];
   const isSigned = ["signed_by_customer", "approved_by_admin", "active", "closed"].includes(
@@ -579,23 +621,34 @@ export function FinanceContractView({
               
               <div className="rounded-xl border overflow-hidden">
                 {/* Table Header */}
-                <div className="grid grid-cols-4 gap-2 bg-muted/70 p-3 text-sm font-semibold text-muted-foreground">
+                <div className="grid grid-cols-5 gap-2 bg-muted/70 p-3 text-sm font-semibold text-muted-foreground">
                   <div className="text-center">#</div>
                   <div>تاريخ الاستحقاق</div>
                   <div className="text-center">المبلغ</div>
                   <div className="text-center">الحالة</div>
+                  <div className="text-center">إجراء</div>
                 </div>
                 
                 {/* Table Body */}
                 <div className="divide-y">
                   {Array.from({ length: application.tenor_months }, (_, i) => {
-                    const dueDate = new Date();
-                    dueDate.setMonth(dueDate.getMonth() + i + 1);
-                    dueDate.setDate(27); // يوم 27 من كل شهر
+                    // استخدام بيانات الأقساط الفعلية إن وجدت
+                    const payment = payments.find(p => p.installment_no === i + 1);
                     
-                    const isPast = dueDate < new Date();
+                    const dueDate = payment 
+                      ? new Date(payment.due_date)
+                      : (() => {
+                          const d = new Date();
+                          d.setMonth(d.getMonth() + i + 1);
+                          d.setDate(27);
+                          return d;
+                        })();
+                    
+                    const isPaid = payment?.status === 'paid';
+                    const isOverdue = !isPaid && dueDate < new Date();
                     const isCurrentMonth = dueDate.getMonth() === new Date().getMonth() && 
                                            dueDate.getFullYear() === new Date().getFullYear();
+                    const canPay = !isPaid && (isCurrentMonth || isOverdue);
                     
                     return (
                       <motion.div
@@ -608,9 +661,10 @@ export function FinanceContractView({
                           ease: "easeOut" as const
                         }}
                         className={cn(
-                          "grid grid-cols-4 gap-2 p-3 text-sm items-center transition-colors",
-                          isCurrentMonth && "bg-primary/5 border-r-4 border-primary",
-                          isPast && "bg-muted/30"
+                          "grid grid-cols-5 gap-2 p-3 text-sm items-center transition-colors",
+                          isPaid && "bg-green-50/50",
+                          isCurrentMonth && !isPaid && "bg-primary/5 border-r-4 border-primary",
+                          isOverdue && "bg-red-50/50 border-r-4 border-red-400"
                         )}
                       >
                         <div className="text-center font-bold text-muted-foreground">
@@ -619,7 +673,8 @@ export function FinanceContractView({
                         <div className="flex items-center gap-2">
                           <span className={cn(
                             "font-medium",
-                            isCurrentMonth && "text-primary"
+                            isCurrentMonth && !isPaid && "text-primary",
+                            isOverdue && "text-red-600"
                           )}>
                             {dueDate.toLocaleDateString('ar-SA', {
                               year: 'numeric',
@@ -627,27 +682,57 @@ export function FinanceContractView({
                               day: 'numeric'
                             })}
                           </span>
-                          {isCurrentMonth && (
+                          {isCurrentMonth && !isPaid && (
                             <Badge className="text-[10px] px-1.5 py-0 bg-primary/20 text-primary border-0">
                               هذا الشهر
                             </Badge>
                           )}
                         </div>
                         <div className="text-center font-bold">
-                          {formatCurrencySAR(offer.monthly_payment_sar)}
+                          {formatCurrencySAR(payment?.amount_sar || offer.monthly_payment_sar)}
                         </div>
                         <div className="text-center">
                           <Badge 
                             variant="outline"
                             className={cn(
                               "text-xs",
-                              isPast ? "bg-green-500/10 text-green-600 border-green-200" : 
-                              isCurrentMonth ? "bg-yellow-500/10 text-yellow-600 border-yellow-200" :
-                              "bg-muted text-muted-foreground"
+                              isPaid && "bg-green-500/10 text-green-600 border-green-200",
+                              isOverdue && "bg-red-500/10 text-red-600 border-red-200",
+                              isCurrentMonth && !isPaid && !isOverdue && "bg-yellow-500/10 text-yellow-600 border-yellow-200",
+                              !isPaid && !isOverdue && !isCurrentMonth && "bg-muted text-muted-foreground"
                             )}
                           >
-                            {isPast ? "مدفوع" : isCurrentMonth ? "مستحق" : "قادم"}
+                            {isPaid ? "مدفوع ✓" : isOverdue ? "متأخر" : isCurrentMonth ? "مستحق" : "قادم"}
                           </Badge>
+                        </div>
+                        <div className="text-center">
+                          {payment && canPay ? (
+                            <Button
+                              size="sm"
+                              variant={isOverdue ? "destructive" : "default"}
+                              className={cn(
+                                "h-8 text-xs px-3",
+                                !isOverdue && "bg-green-600 hover:bg-green-700"
+                              )}
+                              disabled={payingInstallment === payment.installment_no}
+                              onClick={() => handlePayInstallment(payment)}
+                            >
+                              {payingInstallment === payment.installment_no ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <>
+                                  <CheckCircle className="h-3 w-3 ml-1" />
+                                  سداد
+                                </>
+                              )}
+                            </Button>
+                          ) : isPaid ? (
+                            <span className="text-green-600 text-xs">
+                              {payment?.paid_at && new Date(payment.paid_at).toLocaleDateString('ar-SA')}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground text-xs">-</span>
+                          )}
                         </div>
                       </motion.div>
                     );
@@ -659,13 +744,18 @@ export function FinanceContractView({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 + (application.tenor_months * 0.05) + 0.2 }}
-                  className="grid grid-cols-4 gap-2 p-4 bg-gradient-to-l from-primary/10 to-primary/5 border-t-2 border-primary/20"
+                  className="grid grid-cols-5 gap-2 p-4 bg-gradient-to-l from-primary/10 to-primary/5 border-t-2 border-primary/20"
                 >
                   <div className="col-span-2 font-bold text-primary">
                     إجمالي المبلغ المستحق
                   </div>
                   <div className="text-center font-bold text-lg text-primary">
                     {formatCurrencySAR(offer.total_payable_sar)}
+                  </div>
+                  <div className="text-center">
+                    <Badge variant="outline" className="text-xs">
+                      {payments.filter(p => p.status === 'paid').length}/{application.tenor_months} مدفوع
+                    </Badge>
                   </div>
                   <div></div>
                 </motion.div>
