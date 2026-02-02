@@ -6,6 +6,7 @@
  */
 
 import { Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import { CustomerLayout } from '@/components/customer/CustomerLayout';
 import { ClientHub } from '@/components/customer/ClientHub';
 import { CustomerOrdersList } from '@/components/customer/CustomerOrdersList';
@@ -22,6 +23,17 @@ import { CustomerInvoicesCenter } from '@/components/customer/invoices';
 import { FinanceCenter } from '@/components/finance/customer/FinanceCenter';
 import ClientHubPage from '@/pages/customer/ClientHubPage';
 import VersionPage from '@/pages/app/Version';
+import { Loader2 } from 'lucide-react';
+
+// Finance Pages
+const NewFinanceApplicationPage = lazy(() => import('@/pages/app/finance/NewApplicationPage'));
+const NewEntityPage = lazy(() => import('@/pages/app/finance/NewEntityPage'));
+
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[400px]">
+    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  </div>
+);
 
 const CustomerDashboard = () => {
   return (
@@ -39,7 +51,12 @@ const CustomerDashboard = () => {
         <Route path="invoices" element={<CustomerInvoicesCenter />} />
         <Route path="wallet" element={<CustomerWallet />} />
         <Route path="transactions" element={<CustomerTransactions />} />
+        
+        {/* Finance Routes */}
         <Route path="finance" element={<FinanceCenter />} />
+        <Route path="finance/apply" element={<Suspense fallback={<PageLoader />}><NewFinanceApplicationPage /></Suspense>} />
+        <Route path="finance/entities/new" element={<Suspense fallback={<PageLoader />}><NewEntityPage /></Suspense>} />
+        
         <Route path="notifications" element={<CustomerNotifications />} />
         <Route path="profile" element={<CustomerProfile />} />
         <Route path="version" element={<VersionPage />} />
