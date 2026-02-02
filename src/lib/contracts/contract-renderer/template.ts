@@ -1,6 +1,6 @@
 /**
- * Finance Contract HTML Template Renderer
- * مولد قالب HTML لعقد التمويل
+ * Finance Contract HTML Template Renderer - Enhanced
+ * مولد قالب HTML لعقد التمويل الداخلي
  * شركة علي صالح الشهري القابضة
  */
 
@@ -11,7 +11,6 @@ import {
   formatPercentArabic,
   formatDateArabic,
   formatDateShortArabic,
-  formatPageNumber,
   formatInstallmentNumber,
   numberToArabicWords,
 } from './arabic-utils';
@@ -39,8 +38,10 @@ export function renderContractHTML(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عقد تمويل - ${data.contractNumber}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>عقد تمويل داخلي - ${data.contractNumber}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
 ${getContractStyles()}
   </style>
@@ -50,6 +51,8 @@ ${getContractStyles()}
     ${opts.includeHeader ? renderHeader(data) : ''}
     
     ${renderCoverBlock(data)}
+    
+    ${renderInternalFinanceNotice()}
     
     ${renderPartiesSection(data)}
     
@@ -69,12 +72,16 @@ ${getContractStyles()}
 
 function renderHeader(data: FinanceContractData): string {
   return `
-    <div class="contract-header">
+    <div class="contract-header animate-fade-in">
       <div class="company-info">
-        <div class="company-name">شركة علي صالح الشهري القابضة</div>
-        <div class="document-type">عقد تمويل داخلي</div>
+        <div class="company-logo">🏛️</div>
+        <div>
+          <div class="company-name">شركة علي صالح الشهري القابضة</div>
+          <div class="company-subtitle">Ali Saleh Al-Shahri Holding Co.</div>
+        </div>
       </div>
       <div class="contract-meta">
+        <div class="contract-badge">عقد تمويل داخلي</div>
         <div class="contract-number">${data.contractNumber}</div>
         <div class="contract-date">${formatDateArabic(data.issueDate)}</div>
       </div>
@@ -84,10 +91,48 @@ function renderHeader(data: FinanceContractData): string {
 
 function renderCoverBlock(data: FinanceContractData): string {
   return `
-    <div class="cover-block">
+    <div class="cover-block animate-scale-in">
+      <div class="cover-icon">📄</div>
       <div class="cover-title">عقد تمويل داخلي</div>
-      <div class="cover-subtitle">بين شركة علي صالح الشهري القابضة والمستفيد</div>
+      <div class="cover-subtitle">Internal Financing Agreement</div>
+      <div class="cover-divider"></div>
+      <div class="cover-parties">
+        <span>بين</span>
+        <strong>شركة علي صالح الشهري القابضة</strong>
+        <span>والمستفيد</span>
+        <strong>${data.secondParty.name}</strong>
+      </div>
       <div class="cover-contract-number">${data.contractNumber}</div>
+    </div>
+  `;
+}
+
+function renderInternalFinanceNotice(): string {
+  return `
+    <div class="internal-notice animate-fade-in">
+      <div class="notice-icon">⚠️</div>
+      <div class="notice-content">
+        <div class="notice-title">تنويه هام - Important Notice</div>
+        <div class="notice-text">
+          هذا العقد هو <strong>عقد تمويل داخلي</strong> وليس قرضاً مالياً أو تمويلاً بنكياً.
+          يُستخدم هذا التمويل <strong>حصرياً لشراء الخدمات</strong> داخل منصة الشركة، 
+          ولا يجوز تحويله إلى نقد أو سحبه أو تسييله بأي شكل من الأشكال.
+        </div>
+        <div class="notice-features">
+          <div class="feature-item">
+            <span class="feature-icon">🔒</span>
+            <span>غير قابل للتسييل</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🏪</span>
+            <span>للخدمات فقط</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">✅</span>
+            <span>تسهيل ائتماني</span>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -103,48 +148,70 @@ function renderPartiesSection(data: FinanceContractData): string {
   };
 
   return `
-    <div class="section keep-together">
-      <div class="section-title keep-with-next">أطراف العقد</div>
-      <table class="parties-table">
-        <thead>
-          <tr>
-            <th colspan="2">الطرف الأول (الممول)</th>
-            <th colspan="2">الطرف الثاني (المستفيد)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="label-cell">الاسم</td>
-            <td class="value-cell no-overflow">${data.firstParty.name}</td>
-            <td class="label-cell">الاسم</td>
-            <td class="value-cell no-overflow">${data.secondParty.name}</td>
-          </tr>
-          <tr>
-            <td class="label-cell">${identityLabel(data.firstParty.identityType)}</td>
-            <td class="value-cell no-overflow">${data.firstParty.identityNumber}</td>
-            <td class="label-cell">${identityLabel(data.secondParty.identityType)}</td>
-            <td class="value-cell no-overflow">${data.secondParty.identityNumber}</td>
-          </tr>
-          <tr>
-            <td class="label-cell">العنوان</td>
-            <td class="value-cell no-overflow">${data.firstParty.address}</td>
-            <td class="label-cell">العنوان</td>
-            <td class="value-cell no-overflow">${data.secondParty.address}</td>
-          </tr>
-          <tr>
-            <td class="label-cell">الهاتف</td>
-            <td class="value-cell" dir="ltr" style="text-align: left;">${data.firstParty.phone}</td>
-            <td class="label-cell">الهاتف</td>
-            <td class="value-cell" dir="ltr" style="text-align: left;">${data.secondParty.phone}</td>
-          </tr>
-          <tr>
-            <td class="label-cell">البريد الإلكتروني</td>
-            <td class="value-cell no-overflow" dir="ltr" style="text-align: left; font-size: 10px;">${data.firstParty.email}</td>
-            <td class="label-cell">البريد الإلكتروني</td>
-            <td class="value-cell no-overflow" dir="ltr" style="text-align: left; font-size: 10px;">${data.secondParty.email}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="section keep-together animate-fade-in">
+      <div class="section-title keep-with-next">
+        <span class="section-icon">👥</span>
+        أطراف العقد
+      </div>
+      <div class="parties-grid">
+        <div class="party-card first-party">
+          <div class="party-header">
+            <span class="party-icon">🏢</span>
+            <span class="party-label">الطرف الأول (الممول)</span>
+          </div>
+          <div class="party-details">
+            <div class="detail-row">
+              <span class="detail-label">الاسم</span>
+              <span class="detail-value">${data.firstParty.name}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">${identityLabel(data.firstParty.identityType)}</span>
+              <span class="detail-value ltr">${data.firstParty.identityNumber}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">العنوان</span>
+              <span class="detail-value">${data.firstParty.address}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">الهاتف</span>
+              <span class="detail-value ltr">${data.firstParty.phone}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">البريد</span>
+              <span class="detail-value ltr email">${data.firstParty.email}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="party-card second-party">
+          <div class="party-header">
+            <span class="party-icon">👤</span>
+            <span class="party-label">الطرف الثاني (المستفيد)</span>
+          </div>
+          <div class="party-details">
+            <div class="detail-row">
+              <span class="detail-label">الاسم</span>
+              <span class="detail-value">${data.secondParty.name}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">${identityLabel(data.secondParty.identityType)}</span>
+              <span class="detail-value ltr">${data.secondParty.identityNumber}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">العنوان</span>
+              <span class="detail-value">${data.secondParty.address}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">الهاتف</span>
+              <span class="detail-value ltr">${data.secondParty.phone}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">البريد</span>
+              <span class="detail-value ltr email">${data.secondParty.email}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -153,41 +220,68 @@ function renderFinancialsSection(data: FinanceContractData): string {
   const f = data.financials;
   
   return `
-    <div class="section keep-together">
-      <div class="section-title keep-with-next">الملخص المالي</div>
+    <div class="section keep-together animate-fade-in">
+      <div class="section-title keep-with-next">
+        <span class="section-icon">💰</span>
+        الملخص المالي للتمويل الداخلي
+      </div>
       <div class="financials-box">
-        <div class="financials-title">تفاصيل التمويل</div>
+        <div class="financials-header">
+          <span class="fin-icon">📊</span>
+          <span>تفاصيل التمويل الداخلي</span>
+        </div>
         <div class="financials-grid">
           <div class="financial-item">
-            <span class="financial-label">مبلغ التمويل الأساسي</span>
-            <span class="financial-value">${formatCurrencyArabic(f.principalAmount)}</span>
+            <div class="fin-item-icon">💵</div>
+            <div class="fin-item-content">
+              <span class="financial-label">مبلغ التمويل الأساسي</span>
+              <span class="financial-value">${formatCurrencyArabic(f.principalAmount)}</span>
+            </div>
           </div>
           <div class="financial-item">
-            <span class="financial-label">معدل الربح السنوي</span>
-            <span class="financial-value">${formatPercentArabic(f.aprPercent)}</span>
+            <div class="fin-item-icon">📈</div>
+            <div class="fin-item-content">
+              <span class="financial-label">معدل الربح السنوي</span>
+              <span class="financial-value">${formatPercentArabic(f.aprPercent)}</span>
+            </div>
           </div>
           <div class="financial-item">
-            <span class="financial-label">إجمالي الرسوم</span>
-            <span class="financial-value">${formatCurrencyArabic(f.totalFees)}</span>
+            <div class="fin-item-icon">📝</div>
+            <div class="fin-item-content">
+              <span class="financial-label">رسوم الإدارة</span>
+              <span class="financial-value">${formatCurrencyArabic(f.totalFees)}</span>
+            </div>
           </div>
           <div class="financial-item">
-            <span class="financial-label">مدة التمويل</span>
-            <span class="financial-value">${toArabicDigits(f.tenorMonths)} شهر</span>
+            <div class="fin-item-icon">📅</div>
+            <div class="fin-item-content">
+              <span class="financial-label">مدة التمويل</span>
+              <span class="financial-value">${toArabicDigits(f.tenorMonths)} شهر</span>
+            </div>
           </div>
           <div class="financial-item">
-            <span class="financial-label">القسط الشهري</span>
-            <span class="financial-value">${formatCurrencyArabic(f.monthlyPayment)}</span>
+            <div class="fin-item-icon">🔄</div>
+            <div class="fin-item-content">
+              <span class="financial-label">القسط الشهري</span>
+              <span class="financial-value">${formatCurrencyArabic(f.monthlyPayment)}</span>
+            </div>
           </div>
           <div class="financial-item">
-            <span class="financial-label">الغرض من التمويل</span>
-            <span class="financial-value" style="font-size: 11px; direction: rtl; text-align: right;">${data.fundingPurpose}</span>
-          </div>
-          <div class="financial-item financial-total">
-            <span class="financial-label">إجمالي المبلغ المستحق</span>
-            <span class="financial-value">${formatCurrencyArabic(f.totalPayable)}</span>
+            <div class="fin-item-icon">🎯</div>
+            <div class="fin-item-content">
+              <span class="financial-label">الغرض من التمويل</span>
+              <span class="financial-value purpose">${data.fundingPurpose}</span>
+            </div>
           </div>
         </div>
-        <div style="text-align: center; margin-top: 12px; font-size: 11px; color: #374151;">
+        <div class="financial-total">
+          <div class="total-icon">💎</div>
+          <div class="total-content">
+            <span class="total-label">إجمالي المبلغ المستحق</span>
+            <span class="total-value">${formatCurrencyArabic(f.totalPayable)}</span>
+          </div>
+        </div>
+        <div class="amount-words">
           فقط ${numberToArabicWords(f.totalPayable)}
         </div>
       </div>
@@ -197,17 +291,30 @@ function renderFinancialsSection(data: FinanceContractData): string {
 
 function renderArticlesSection(): string {
   let html = '<div class="section">';
-  html += '<div class="section-title keep-with-next">الشروط والأحكام</div>';
+  html += `
+    <div class="section-title keep-with-next">
+      <span class="section-icon">📜</span>
+      الشروط والأحكام القانونية
+    </div>
+  `;
   
   for (const article of FINANCE_CONTRACT_ARTICLES) {
     html += `
-      <div class="article keep-together">
-        <div class="article-title keep-with-next">
+      <div class="article keep-together animate-fade-in">
+        <div class="article-header keep-with-next">
+          <span class="article-icon">${article.icon}</span>
           <span class="article-number">${toArabicDigits(article.number)}</span>
-          ${formatArticleNumber(article.number)}: ${article.title}
+          <span class="article-title-text">${formatArticleNumber(article.number)}: ${article.title}</span>
         </div>
         <div class="article-content">
-          ${article.content.map(p => `<p>${p}</p>`).join('')}
+          ${article.content.map(p => {
+            if (p.startsWith('⚠️')) {
+              return `<p class="warning-text">${p}</p>`;
+            } else if (p.startsWith('•')) {
+              return `<p class="bullet-point">${p}</p>`;
+            }
+            return `<p>${p}</p>`;
+          }).join('')}
         </div>
       </div>
     `;
@@ -223,23 +330,38 @@ function renderPaymentSchedule(data: FinanceContractData): string {
   
   const statusLabel = (status: string) => {
     switch (status) {
-      case 'paid': return '<span class="status-paid">مسدد</span>';
-      case 'pending': return '<span class="status-pending">قيد المعالجة</span>';
-      case 'overdue': return '<span class="status-pending">متأخر</span>';
-      default: return '<span class="status-scheduled">مجدول</span>';
+      case 'paid': return '<span class="status-badge status-paid">✅ مسدد</span>';
+      case 'pending': return '<span class="status-badge status-pending">⏳ قيد المعالجة</span>';
+      case 'overdue': return '<span class="status-badge status-overdue">⚠️ متأخر</span>';
+      default: return '<span class="status-badge status-scheduled">📅 مجدول</span>';
     }
   };
 
   let html = `
-    <div class="section page-break-before">
-      <div class="section-title keep-with-next">جدول السداد</div>
+    <div class="section page-break-before animate-fade-in">
+      <div class="section-title keep-with-next">
+        <span class="section-icon">📅</span>
+        جدول السداد
+      </div>
       <table class="schedule-table">
         <thead>
           <tr>
-            <th style="width: 15%;">رقم القسط</th>
-            <th style="width: 25%;">تاريخ الاستحقاق</th>
-            <th style="width: 30%;">مبلغ القسط</th>
-            <th style="width: 30%;">الحالة</th>
+            <th style="width: 12%;">
+              <span class="th-icon">#️⃣</span>
+              رقم القسط
+            </th>
+            <th style="width: 25%;">
+              <span class="th-icon">📆</span>
+              تاريخ الاستحقاق
+            </th>
+            <th style="width: 30%;">
+              <span class="th-icon">💰</span>
+              مبلغ القسط
+            </th>
+            <th style="width: 33%;">
+              <span class="th-icon">📋</span>
+              الحالة
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -248,7 +370,7 @@ function renderPaymentSchedule(data: FinanceContractData): string {
   for (const inst of schedule) {
     html += `
       <tr>
-        <td>${formatInstallmentNumber(inst.installmentNumber, totalInstallments)}</td>
+        <td class="installment-num">${formatInstallmentNumber(inst.installmentNumber, totalInstallments)}</td>
         <td>${formatDateShortArabic(inst.dueDate)}</td>
         <td class="amount-cell">${formatCurrencyArabic(inst.amount)}</td>
         <td>${statusLabel(inst.status)}</td>
@@ -259,8 +381,10 @@ function renderPaymentSchedule(data: FinanceContractData): string {
   html += `
         </tbody>
       </table>
-      <div style="text-align: center; margin-top: 16px; padding: 12px; background: #f3f4f6; border-radius: 4px;">
-        <strong>إجمالي المبلغ المستحق: ${formatCurrencyArabic(data.financials.totalPayable)}</strong>
+      <div class="schedule-total">
+        <span class="schedule-total-icon">💎</span>
+        <span class="schedule-total-label">إجمالي المبلغ المستحق:</span>
+        <span class="schedule-total-value">${formatCurrencyArabic(data.financials.totalPayable)}</span>
       </div>
     </div>
   `;
@@ -270,54 +394,75 @@ function renderPaymentSchedule(data: FinanceContractData): string {
 
 function renderSignaturesSection(data: FinanceContractData): string {
   const renderStamp = () => {
-    if (!data.firstPartySignature.isSigned) return '';
+    if (!data.firstPartySignature.isSigned) return '<div class="signature-placeholder">في انتظار الاعتماد</div>';
     const stampId = `STM-${data.contractNumber.replace('FIN-', '')}`;
     return `
-      <div class="digital-stamp">
-        <div class="stamp-title">ختم الاعتماد الإلكتروني</div>
-        <div class="stamp-company">شركة علي صالح الشهري القابضة</div>
-        <div class="stamp-date">${data.firstPartySignature.signedAt ? formatDateArabic(data.firstPartySignature.signedAt) : ''}</div>
-        <div class="stamp-id">${stampId}</div>
+      <div class="digital-stamp animate-scale-in">
+        <div class="stamp-border">
+          <div class="stamp-icon">🏛️</div>
+          <div class="stamp-title">ختم الاعتماد الإلكتروني</div>
+          <div class="stamp-company">شركة علي صالح الشهري القابضة</div>
+          <div class="stamp-divider"></div>
+          <div class="stamp-date">${data.firstPartySignature.signedAt ? formatDateArabic(data.firstPartySignature.signedAt) : ''}</div>
+          <div class="stamp-id">${stampId}</div>
+        </div>
       </div>
     `;
   };
 
   const renderCustomerSignature = () => {
     if (!data.secondPartySignature.isSigned) {
-      return '<div class="signature-placeholder">في انتظار التوقيع</div>';
+      return '<div class="signature-placeholder">✍️ في انتظار التوقيع</div>';
     }
     if (data.secondPartySignature.signatureData) {
       return `<img src="${data.secondPartySignature.signatureData}" class="signature-image" alt="توقيع العميل" />`;
     }
-    return '<div class="signature-placeholder">تم التوقيع إلكترونياً</div>';
+    return `
+      <div class="electronic-signature">
+        <div class="sig-icon">✅</div>
+        <div class="sig-text">تم التوقيع إلكترونياً</div>
+      </div>
+    `;
   };
 
   return `
-    <div class="signatures-section keep-together">
-      <div class="section-title keep-with-next">التوقيعات</div>
-      <p style="margin-bottom: 20px; font-size: 12px; color: #374151;">
-        تم الاتفاق على جميع الشروط والأحكام الواردة في هذا العقد، ووقع عليه الطرفان بمحض إرادتهما دون إكراه أو ضغط.
-      </p>
+    <div class="signatures-section keep-together animate-fade-in">
+      <div class="section-title keep-with-next">
+        <span class="section-icon">✍️</span>
+        التوقيعات والإقرار
+      </div>
+      <div class="signatures-intro">
+        <p>
+          تم الاتفاق على جميع الشروط والأحكام الواردة في هذا العقد، ووقع عليه الطرفان بمحض إرادتهما 
+          دون إكراه أو ضغط، ويُقر الطرف الثاني بفهمه الكامل لطبيعة التمويل الداخلي وشروطه.
+        </p>
+      </div>
       <div class="signatures-grid">
         <div class="signature-box first-party">
-          <div class="signature-title first-party">الطرف الأول (الممول)</div>
+          <div class="signature-title">
+            <span class="sig-title-icon">🏢</span>
+            الطرف الأول (الممول)
+          </div>
           <div class="signature-name">${data.firstPartySignature.signerName}</div>
           <div class="signature-area">
             ${renderStamp()}
           </div>
-          <div class="signature-date">
-            ${data.firstPartySignature.signedAt ? 'تاريخ الاعتماد: ' + formatDateArabic(data.firstPartySignature.signedAt) : ''}
+          <div class="signature-meta">
+            ${data.firstPartySignature.signedAt ? '📅 تاريخ الاعتماد: ' + formatDateArabic(data.firstPartySignature.signedAt) : ''}
           </div>
         </div>
         <div class="signature-box second-party">
-          <div class="signature-title second-party">الطرف الثاني (المستفيد)</div>
+          <div class="signature-title">
+            <span class="sig-title-icon">👤</span>
+            الطرف الثاني (المستفيد)
+          </div>
           <div class="signature-name">${data.secondPartySignature.signerName}</div>
           <div class="signature-area">
             ${renderCustomerSignature()}
           </div>
-          <div class="signature-date">
-            ${data.secondPartySignature.signedAt ? 'تاريخ التوقيع: ' + formatDateArabic(data.secondPartySignature.signedAt) : 'في انتظار التوقيع'}
-            ${data.secondPartySignature.ipAddress ? '<br/>IP: ' + data.secondPartySignature.ipAddress : ''}
+          <div class="signature-meta">
+            ${data.secondPartySignature.signedAt ? '📅 تاريخ التوقيع: ' + formatDateArabic(data.secondPartySignature.signedAt) : '⏳ في انتظار التوقيع'}
+            ${data.secondPartySignature.ipAddress ? '<br/>🌐 IP: ' + data.secondPartySignature.ipAddress : ''}
           </div>
         </div>
       </div>
@@ -328,11 +473,14 @@ function renderSignaturesSection(data: FinanceContractData): string {
 function renderFooter(data: FinanceContractData): string {
   return `
     <div class="contract-footer">
-      <div class="footer-disclaimer">
-        هذا العقد سند تنفيذي ملزم للطرفين - شركة علي صالح الشهري القابضة © ${new Date().getFullYear()}
-      </div>
-      <div class="page-number">
-        Contract Template v3.0 - 2026
+      <div class="footer-content">
+        <div class="footer-disclaimer">
+          <span class="footer-icon">⚖️</span>
+          هذا العقد سند تنفيذي ملزم للطرفين - شركة علي صالح الشهري القابضة © ${new Date().getFullYear()}
+        </div>
+        <div class="footer-meta">
+          <span class="version-stamp">Contract Template v3.1 - 2026</span>
+        </div>
       </div>
     </div>
   `;
@@ -341,20 +489,13 @@ function renderFooter(data: FinanceContractData): string {
 function getContractStyles(): string {
   return `
 /* ========================================
-   PAGE SETUP - A4
+   FONTS & BASE
    ======================================== */
 @page {
   size: A4;
-  margin: 24mm 18mm 20mm 18mm;
+  margin: 22mm 16mm 18mm 16mm;
 }
 
-@page :first {
-  margin-top: 20mm;
-}
-
-/* ========================================
-   ROOT & TYPOGRAPHY
-   ======================================== */
 * {
   margin: 0;
   padding: 0;
@@ -362,18 +503,46 @@ function getContractStyles(): string {
 }
 
 html {
-  font-size: 13px;
-  line-height: 1.8;
+  font-size: 12px;
+  line-height: 1.85;
 }
 
 body {
-  font-family: 'Cairo', 'Noto Kufi Arabic', 'Tajawal', 'Arial', sans-serif;
+  font-family: 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', 'Tajawal', sans-serif;
   direction: rtl;
   text-align: right;
-  color: #1a1a2e;
+  color: #1e293b;
   background: #ffffff;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
+  font-weight: 400;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+@media print {
+  .animate-fade-in, .animate-scale-in {
+    animation: none;
+  }
 }
 
 /* ========================================
@@ -396,26 +565,31 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 12px;
+  padding: 16px 0;
   margin-bottom: 20px;
-  border-bottom: 2px solid #1a1a2e;
+  border-bottom: 3px solid #0f172a;
 }
 
 .company-info {
-  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.company-logo {
+  font-size: 32px;
 }
 
 .company-name {
   font-size: 18px;
   font-weight: 700;
-  color: #1a1a2e;
-  margin-bottom: 4px;
+  color: #0f172a;
 }
 
-.document-type {
-  font-size: 14px;
-  font-weight: 600;
-  color: #0f172a;
+.company-subtitle {
+  font-size: 10px;
+  color: #64748b;
+  letter-spacing: 1px;
 }
 
 .contract-meta {
@@ -423,64 +597,27 @@ body {
   direction: ltr;
 }
 
+.contract-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
 .contract-number {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: #374151;
   font-family: 'SF Mono', 'Monaco', monospace;
 }
 
 .contract-date {
-  font-size: 11px;
-  color: #6b7280;
-}
-
-/* ========================================
-   FOOTER
-   ======================================== */
-.contract-footer {
-  margin-top: 40px;
-  padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
   font-size: 10px;
   color: #6b7280;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-disclaimer {
-  max-width: 70%;
-  text-align: right;
-}
-
-.page-number {
-  text-align: left;
-  direction: ltr;
-}
-
-/* ========================================
-   SECTION TITLES
-   ======================================== */
-.section {
-  margin-bottom: 24px;
-}
-
-.section-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a1a2e;
-  margin: 24px 0 12px 0;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e5e7eb;
-  page-break-after: avoid;
-  break-after: avoid;
-}
-
-.section-title::before {
-  content: '■';
-  margin-left: 8px;
-  color: #059669;
 }
 
 /* ========================================
@@ -488,76 +625,230 @@ body {
    ======================================== */
 .cover-block {
   text-align: center;
-  padding: 32px 0;
-  margin-bottom: 24px;
-  border: 2px solid #1a1a2e;
-  border-radius: 4px;
+  padding: 28px 20px;
+  margin-bottom: 20px;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
-.cover-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a2e;
-  margin-bottom: 16px;
-}
-
-.cover-subtitle {
-  font-size: 14px;
-  color: #374151;
+.cover-icon {
+  font-size: 36px;
   margin-bottom: 8px;
 }
 
+.cover-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.cover-subtitle {
+  font-size: 12px;
+  color: #64748b;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.cover-divider {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #059669, #10b981);
+  margin: 12px auto;
+  border-radius: 2px;
+}
+
+.cover-parties {
+  font-size: 12px;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.cover-parties strong {
+  color: #0f172a;
+  display: block;
+  margin: 4px 0;
+}
+
 .cover-contract-number {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: #059669;
   font-family: 'SF Mono', 'Monaco', monospace;
   direction: ltr;
   display: inline-block;
+  background: #ecfdf5;
+  padding: 4px 16px;
+  border-radius: 4px;
 }
 
 /* ========================================
-   PARTIES TABLE
+   INTERNAL NOTICE
    ======================================== */
-.parties-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 16px 0;
-  table-layout: fixed;
+.internal-notice {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 8px;
 }
 
-.parties-table th,
-.parties-table td {
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  text-align: right;
-  vertical-align: top;
+.notice-icon {
+  font-size: 28px;
+  flex-shrink: 0;
 }
 
-.parties-table th {
-  background: #1a1a2e;
-  color: #ffffff;
-  font-weight: 600;
+.notice-content {
+  flex: 1;
+}
+
+.notice-title {
   font-size: 13px;
+  font-weight: 700;
+  color: #92400e;
+  margin-bottom: 6px;
 }
 
-.parties-table td {
+.notice-text {
+  font-size: 11px;
+  color: #78350f;
+  line-height: 1.7;
+}
+
+.notice-features {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #92400e;
+  background: rgba(255,255,255,0.6);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.feature-icon {
   font-size: 12px;
 }
 
-.parties-table .label-cell {
-  background: #f3f4f6;
-  font-weight: 500;
-  width: 25%;
-  color: #374151;
+/* ========================================
+   SECTION TITLES
+   ======================================== */
+.section {
+  margin-bottom: 20px;
 }
 
-.parties-table .value-cell {
-  background: #ffffff;
-  width: 25%;
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 20px 0 12px 0;
+  padding: 8px 12px;
+  background: linear-gradient(90deg, #f1f5f9 0%, transparent 100%);
+  border-right: 4px solid #059669;
+  border-radius: 0 4px 4px 0;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.section-icon {
+  font-size: 16px;
+}
+
+/* ========================================
+   PARTIES GRID
+   ======================================== */
+.parties-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.party-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.party-card.first-party {
+  border-color: #059669;
+}
+
+.party-card.second-party {
+  border-color: #0f172a;
+}
+
+.party-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.first-party .party-header {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  color: #047857;
+}
+
+.second-party .party-header {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #0f172a;
+}
+
+.party-icon {
+  font-size: 18px;
+}
+
+.party-details {
+  padding: 12px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #e2e8f0;
+  font-size: 10px;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #1e293b;
+  font-weight: 600;
+  max-width: 60%;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.detail-value.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+.detail-value.email {
+  font-size: 9px;
 }
 
 /* ========================================
@@ -565,102 +856,182 @@ body {
    ======================================== */
 .financials-box {
   background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-  border: 1px solid #059669;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px 0;
+  border: 2px solid #059669;
+  border-radius: 10px;
+  padding: 16px;
 }
 
-.financials-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #059669;
-  margin-bottom: 16px;
-  text-align: center;
+.financials-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #047857;
+  margin-bottom: 14px;
+}
+
+.fin-icon {
+  font-size: 18px;
 }
 
 .financials-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .financial-item {
   display: flex;
-  justify-content: space-between;
-  padding: 8px 12px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
   background: #ffffff;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid #d1fae5;
 }
 
+.fin-item-icon {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ecfdf5;
+  border-radius: 6px;
+}
+
+.fin-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .financial-label {
-  font-size: 12px;
-  color: #374151;
+  font-size: 10px;
+  color: #64748b;
 }
 
 .financial-value {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1a1a2e;
-  direction: ltr;
-  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.financial-value.purpose {
+  font-size: 10px;
+  font-weight: 500;
 }
 
 .financial-total {
-  grid-column: span 2;
-  background: #059669;
-  border-color: #059669;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  border-radius: 8px;
 }
 
-.financial-total .financial-label,
-.financial-total .financial-value {
+.total-icon {
+  font-size: 24px;
+}
+
+.total-content {
+  text-align: center;
+}
+
+.total-label {
+  display: block;
+  font-size: 10px;
+  color: rgba(255,255,255,0.9);
+}
+
+.total-value {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
   color: #ffffff;
+}
+
+.amount-words {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 10px;
+  color: #047857;
+  font-weight: 500;
 }
 
 /* ========================================
    ARTICLES
    ======================================== */
 .article {
-  margin: 16px 0;
+  margin: 14px 0;
   page-break-inside: avoid;
   break-inside: avoid;
 }
 
-.article-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1a1a2e;
+.article-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 8px;
   page-break-after: avoid;
   break-after: avoid;
 }
 
-.article-title .article-number {
-  display: inline-block;
-  background: #1a1a2e;
+.article-icon {
+  font-size: 16px;
+}
+
+.article-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: #0f172a;
   color: #ffffff;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-left: 8px;
-  font-size: 11px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.article-title-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .article-content {
-  font-size: 12.5px;
+  font-size: 11px;
   line-height: 1.9;
-  text-align: justify;
-  text-justify: inter-word;
-  color: #374151;
-  padding-right: 16px;
+  color: #475569;
+  padding-right: 30px;
 }
 
 .article-content p {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   page-break-inside: avoid;
   break-inside: avoid;
   orphans: 3;
   widows: 3;
+}
+
+.article-content .warning-text {
+  background: #fef3c7;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border-right: 3px solid #f59e0b;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.article-content .bullet-point {
+  padding-right: 8px;
 }
 
 /* ========================================
@@ -669,9 +1040,9 @@ body {
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 16px 0;
+  margin: 14px 0;
   table-layout: fixed;
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .schedule-table thead {
@@ -679,7 +1050,7 @@ body {
 }
 
 .schedule-table th {
-  background: #1a1a2e;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #ffffff;
   padding: 10px 8px;
   text-align: center;
@@ -687,10 +1058,15 @@ body {
   border: 1px solid #0f172a;
 }
 
+.th-icon {
+  display: inline-block;
+  margin-left: 4px;
+}
+
 .schedule-table td {
   padding: 8px;
   text-align: center;
-  border: 1px solid #d1d5db;
+  border: 1px solid #e2e8f0;
   page-break-inside: avoid;
   break-inside: avoid;
 }
@@ -701,122 +1077,186 @@ body {
 }
 
 .schedule-table tbody tr:nth-child(even) {
-  background: #f9fafb;
+  background: #f8fafc;
 }
 
-.schedule-table tbody tr:nth-child(odd) {
-  background: #ffffff;
+.installment-num {
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.schedule-table .amount-cell {
-  font-weight: 600;
+.amount-cell {
+  font-weight: 700;
   color: #059669;
   direction: ltr;
 }
 
-.status-paid { color: #059669; }
-.status-pending { color: #f59e0b; }
-.status-scheduled { color: #6b7280; }
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.status-paid { background: #dcfce7; color: #166534; }
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-overdue { background: #fee2e2; color: #991b1b; }
+.status-scheduled { background: #f1f5f9; color: #475569; }
+
+.schedule-total {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px;
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.schedule-total-icon {
+  font-size: 18px;
+}
+
+.schedule-total-label {
+  font-size: 11px;
+  color: #475569;
+}
+
+.schedule-total-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: #059669;
+}
 
 /* ========================================
    SIGNATURES
    ======================================== */
 .signatures-section {
-  margin-top: 40px;
+  margin-top: 30px;
   page-break-inside: avoid;
   break-inside: avoid;
+}
+
+.signatures-intro {
+  font-size: 11px;
+  color: #475569;
+  margin-bottom: 16px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 6px;
 }
 
 .signatures-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  margin-top: 20px;
+  gap: 20px;
 }
 
 .signature-box {
-  border: 2px solid #d1d5db;
-  border-radius: 8px;
-  padding: 20px;
-  min-height: 180px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  min-height: 200px;
   page-break-inside: avoid;
   break-inside: avoid;
 }
 
 .signature-box.first-party { border-color: #059669; }
-.signature-box.second-party { border-color: #1a1a2e; }
+.signature-box.second-party { border-color: #0f172a; }
 
 .signature-title {
-  font-size: 13px;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.signature-title.first-party { color: #059669; }
-.signature-title.second-party { color: #1a1a2e; }
-
-.signature-name {
-  font-size: 12px;
-  text-align: center;
-  margin-bottom: 16px;
-  color: #374151;
-}
-
-.signature-area {
-  height: 80px;
-  border: 1px dashed #d1d5db;
-  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f9fafb;
-  margin-bottom: 12px;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.first-party .signature-title { color: #047857; }
+.second-party .signature-title { color: #0f172a; }
+
+.sig-title-icon {
+  font-size: 16px;
+}
+
+.signature-name {
+  font-size: 11px;
+  text-align: center;
+  margin-bottom: 14px;
+  color: #475569;
+}
+
+.signature-area {
+  min-height: 100px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  margin-bottom: 10px;
 }
 
 .signature-placeholder {
-  color: #9ca3af;
+  color: #94a3b8;
   font-size: 11px;
 }
 
 .signature-image {
-  max-height: 70px;
+  max-height: 80px;
   max-width: 100%;
 }
 
-.signature-date {
-  font-size: 10px;
+.signature-meta {
+  font-size: 9px;
   text-align: center;
-  color: #6b7280;
+  color: #64748b;
 }
 
 /* ========================================
    DIGITAL STAMP
    ======================================== */
 .digital-stamp {
-  display: inline-block;
-  padding: 12px 20px;
+  padding: 8px;
+}
+
+.stamp-border {
   border: 3px solid #059669;
-  border-radius: 8px;
+  border-radius: 10px;
+  padding: 12px;
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   text-align: center;
-  transform: rotate(-3deg);
+  transform: rotate(-2deg);
+}
+
+.stamp-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
 }
 
 .stamp-title {
-  font-size: 9px;
-  color: #059669;
+  font-size: 8px;
+  color: #047857;
   font-weight: 600;
-  margin-bottom: 2px;
 }
 
 .stamp-company {
   font-size: 10px;
-  font-weight: 700;
-  color: #059669;
-  margin-bottom: 2px;
+  font-weight: 800;
+  color: #047857;
+}
+
+.stamp-divider {
+  width: 40px;
+  height: 2px;
+  background: #059669;
+  margin: 6px auto;
 }
 
 .stamp-date {
@@ -829,6 +1269,60 @@ body {
   color: #059669;
   font-family: 'SF Mono', 'Monaco', monospace;
   direction: ltr;
+}
+
+.electronic-signature {
+  text-align: center;
+  padding: 12px;
+}
+
+.sig-icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.sig-text {
+  font-size: 10px;
+  color: #059669;
+  font-weight: 600;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+.contract-footer {
+  margin-top: 30px;
+  padding-top: 14px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-disclaimer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: #64748b;
+}
+
+.footer-icon {
+  font-size: 12px;
+}
+
+.footer-meta {
+  text-align: left;
+  direction: ltr;
+}
+
+.version-stamp {
+  font-size: 8px;
+  color: #94a3b8;
+  font-family: 'SF Mono', 'Monaco', monospace;
 }
 
 /* ========================================
@@ -849,19 +1343,13 @@ body {
   break-before: page;
 }
 
-.page-break-after {
-  page-break-after: always;
-  break-after: page;
-}
-
 .no-overflow {
   overflow-wrap: anywhere;
   word-break: break-word;
-  hyphens: auto;
 }
 
 /* ========================================
-   PRINT SPECIFIC
+   PRINT
    ======================================== */
 @media print {
   html, body {
@@ -872,10 +1360,6 @@ body {
   .contract-document {
     width: 100%;
     max-width: none;
-  }
-  
-  .no-print {
-    display: none !important;
   }
   
   * {
@@ -889,15 +1373,16 @@ body {
    ======================================== */
 @media screen {
   body {
-    background: #e5e7eb;
+    background: #94a3b8;
     padding: 20px;
   }
   
   .contract-document {
-    padding: 20mm;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 18mm;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
     margin: 20px auto;
     background: #ffffff;
+    border-radius: 4px;
   }
 }
   `;
