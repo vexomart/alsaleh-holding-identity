@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => ({
     ],
   },
   optimizeDeps: {
+    force: true,
     include: [
       "react",
       "react/jsx-runtime",
@@ -50,6 +51,8 @@ export default defineConfig(({ mode }) => ({
       "react-dom",
       "react-dom/client",
       "react-router-dom",
+      "@radix-ui/react-tooltip",
+      "@tanstack/react-query",
     ],
   },
 }));
