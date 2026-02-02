@@ -30,8 +30,10 @@ export default defineConfig(({ mode }) => ({
       { find: /^base64-js$/, replacement: path.resolve(__dirname, "./src/shims/base64-js.ts") },
       // Fix ESM default-import expectations for unicode-trie in some PDF/font deps
       { find: /^unicode-trie$/, replacement: path.resolve(__dirname, "./src/shims/unicode-trie.ts") },
-      // Fix ESM default-import expectations for brotli (used by @react-pdf/renderer)
-      { find: /^brotli$/, replacement: path.resolve(__dirname, "./src/shims/brotli.ts") },
+      // Some deps import the subpath directly and expect a default export:
+      //   import decompress from 'brotli/decompress.js'
+      { find: /^brotli\/decompress\.js$/, replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
+      { find: /^brotli\/decompress$/, replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
     ],
 
     // Be explicit (even though it's the default) so symlinked deps don't create duplicate React copies.
