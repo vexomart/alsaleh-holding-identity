@@ -19,6 +19,7 @@ import { CustomerTransactions } from '@/components/customer/CustomerTransactions
 import { CustomerContractsCenter } from '@/components/customer/contracts';
 import { CustomerContractDetails } from '@/components/customer/CustomerContractDetails';
 import { CustomerInvoicesCenter } from '@/components/customer/invoices';
+import { FinanceCenter } from '@/components/finance/customer/FinanceCenter';
 import ClientHubPage from '@/pages/customer/ClientHubPage';
 import VersionPage from '@/pages/app/Version';
 
@@ -38,6 +39,7 @@ const CustomerDashboard = () => {
         <Route path="invoices" element={<CustomerInvoicesCenter />} />
         <Route path="wallet" element={<CustomerWallet />} />
         <Route path="transactions" element={<CustomerTransactions />} />
+        <Route path="finance" element={<FinanceCenter />} />
         <Route path="notifications" element={<CustomerNotifications />} />
         <Route path="profile" element={<CustomerProfile />} />
         <Route path="version" element={<VersionPage />} />
