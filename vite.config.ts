@@ -24,16 +24,6 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Pin React to a single physical instance to avoid "dispatcher is null" hook crashes.
-      // IMPORTANT: point to files (not folders) to prevent Vite from resolving duplicates.
-      react: path.resolve(__dirname, "node_modules/react/index.js"),
-      "react-dom": path.resolve(__dirname, "node_modules/react-dom/index.js"),
-      "react-dom/client": path.resolve(__dirname, "node_modules/react-dom/client.js"),
-      "react/jsx-runtime": path.resolve(__dirname, "node_modules/react/jsx-runtime.js"),
-      "react/jsx-dev-runtime": path.resolve(
-        __dirname,
-        "node_modules/react/jsx-dev-runtime.js"
-      ),
     },
     dedupe: [
       "react", 
