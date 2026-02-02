@@ -29,6 +29,8 @@ import {
   Info,
   CreditCard,
 } from "lucide-react";
+import { DisbursementVoucherButton } from "@/components/finance/shared/DisbursementVoucherButton";
+import type { DisbursementVoucherData } from "@/lib/finance/disbursement-voucher/types";
 import { cn } from "@/lib/utils";
 import {
   FinanceContractStatus,
@@ -486,14 +488,14 @@ export function FinanceContractView({
             )}
           </AnimatePresence>
 
-          {/* Download Button - Show after signing */}
+          {/* Download Buttons - Show after signing */}
           {isSigned && (
-            <div className="flex gap-3 pt-4 border-t">
+            <div className="flex flex-col gap-3 pt-4 border-t">
               <Button
                 variant="outline"
                 onClick={handleDownloadPdf}
                 disabled={downloading}
-                className="flex-1 h-12"
+                className="w-full h-12"
               >
                 {downloading ? (
                   <>
@@ -507,6 +509,55 @@ export function FinanceContractView({
                   </>
                 )}
               </Button>
+              
+              {/* Disbursement Voucher Button */}
+              {isActive && (
+                <DisbursementVoucherButton
+                  voucherData={{
+                    voucherNumber: `DV-${contract.contract_number.replace('FIN-', '')}`,
+                    issueDate: contract.admin_approved_at || new Date().toISOString(),
+                    payer: {
+                      name: 'شركة علي صالح الشهري القابضة',
+                      identityType: 'commercial_registration',
+                      identityNumber: '1010123456',
+                      address: 'الرياض، المملكة العربية السعودية',
+                      phone: '+966 11 123 4567',
+                      email: 'info@alshahri-holding.sa',
+                    },
+                    payee: {
+                      name: entity.legal_name_ar,
+                      identityType: entity.entity_type === 'company' || entity.entity_type === 'institution' 
+                        ? 'commercial_registration' 
+                        : 'national_id',
+                      identityNumber: entity.national_id || entity.cr_number || '',
+                      address: entity.address_ar || 'المملكة العربية السعودية',
+                      phone: entity.phone || '',
+                      email: entity.email || '',
+                    },
+                    financials: {
+                      amount: application.amount_sar,
+                      currency: 'SAR',
+                      purpose: 'تمويل داخلي لشراء خدمات الشركة عبر المنصة الإلكترونية',
+                      contractNumber: contract.contract_number,
+                      applicationNumber: `APP-${contract.contract_number.split('-').slice(1).join('-')}`,
+                    },
+                    payerSignature: {
+                      signerName: 'شركة علي صالح الشهري القابضة',
+                      isSigned: !!contract.admin_approved_at,
+                      signedAt: contract.admin_approved_at || null,
+                      stampId: `STAMP-${contract.id.slice(0, 8).toUpperCase()}`,
+                    },
+                    payeeSignature: {
+                      signerName: entity.legal_name_ar,
+                      isSigned: !!contract.signed_at,
+                      signedAt: contract.signed_at || null,
+                    },
+                    notes: 'تم إيداع المبلغ في محفظة العميل الإلكترونية',
+                  } as DisbursementVoucherData}
+                  variant="default"
+                  className="w-full h-12 bg-gradient-to-l from-primary to-primary/90 hover:from-primary/90 hover:to-primary"
+                />
+              )}
             </div>
           )}
         </CardContent>
