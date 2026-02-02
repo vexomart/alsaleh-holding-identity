@@ -54,8 +54,10 @@ async function hardResetServiceWorkerOnce() {
       await Promise.all(keys.map((k) => caches.delete(k)));
     }
 
-    // Hard reload without cache.
-    window.location.reload();
+    // Force a cache-busting navigation (more reliable than reload in some cached/CDN/SW edge cases).
+    const url = new URL(window.location.href);
+    url.searchParams.set('_cb', String(Date.now()));
+    window.location.replace(url.toString());
   } catch (e) {
     // If anything fails, do not block app render.
     console.warn('[SW Reset] skipped due to error:', e);
