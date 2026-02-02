@@ -14,7 +14,7 @@ interface AdminDigitalStampProps {
 }
 
 export function AdminDigitalStamp({
-  adminName = "مدير التمويل",
+  adminName = "مدير التمويل الداخلي",
   approvalDate,
   stampId,
   size = "md",
@@ -52,8 +52,8 @@ export function AdminDigitalStamp({
       {/* Content */}
       <div className="absolute inset-4 rounded-full bg-emerald-50/50 flex flex-col items-center justify-center text-center p-2">
         {/* Company name - top curve text effect */}
-        <div className="text-emerald-800 font-bold leading-tight">
-          الصالح القابضة
+        <div className="text-emerald-800 font-bold leading-tight text-[8px]">
+          شركة علي صالح الشهري القابضة
         </div>
         
         {/* Approval text */}
