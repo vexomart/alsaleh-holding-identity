@@ -1,7 +1,22 @@
-import { defineConfig } from "vite";
+import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+
+// Custom plugin to intercept brotli/decompress imports before any processing
+function brotliShimPlugin(): Plugin {
+  const shimPath = path.resolve(__dirname, "./src/shims/brotli-decompress.ts");
+  return {
+    name: "brotli-shim-resolver",
+    enforce: "pre",
+    resolveId(source) {
+      if (source === "brotli/decompress" || source === "brotli/decompress.js") {
+        return shimPath;
+      }
+      return null;
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -17,6 +32,7 @@ export default defineConfig(({ mode }) => ({
     }
   },
   plugins: [
+    brotliShimPlugin(),
     react(),
     mode === 'development' &&
     componentTagger(),
@@ -69,17 +85,5 @@ export default defineConfig(({ mode }) => ({
       "@tanstack/react-query",
     ],
     exclude: ["@react-pdf/renderer", "brotli"],
-    esbuildOptions: {
-      plugins: [
-        {
-          name: 'brotli-shim',
-          setup(build) {
-            build.onResolve({ filter: /^brotli\/decompress/ }, () => ({
-              path: path.resolve(__dirname, './src/shims/brotli-decompress.ts'),
-            }));
-          },
-        },
-      ],
-    },
   },
 }));
