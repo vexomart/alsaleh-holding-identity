@@ -2,6 +2,7 @@
  * FONT MANAGEMENT FOR PDF GENERATION
  * 
  * Handles loading and registering Cairo fonts for Arabic RTL support.
+ * Uses direct VFS assignment for maximum compatibility.
  */
 
 import { pdfMake } from './pdfmake-instance';
@@ -13,8 +14,8 @@ export const FONT_FILES = {
   bold: 'Cairo-Bold.ttf',
 } as const;
 
-// Singleton state
-const STATE_KEY = '__pdfFonts_v3__';
+// Singleton state key for HMR persistence
+const STATE_KEY = '__pdfFontsState_v4__';
 
 interface FontState {
   loading: boolean;
@@ -28,16 +29,23 @@ interface FontState {
 }
 
 function getState(): FontState {
-  if (!(globalThis as Record<string, unknown>)[STATE_KEY]) {
-    (globalThis as Record<string, unknown>)[STATE_KEY] = {
-      loading: false,
-      ready: false,
-      error: null,
-      promise: null,
-      cache: { regular: null, bold: null },
-    };
+  if (typeof window !== 'undefined' && (window as any)[STATE_KEY]) {
+    return (window as any)[STATE_KEY];
   }
-  return (globalThis as Record<string, unknown>)[STATE_KEY] as FontState;
+  
+  const state: FontState = {
+    loading: false,
+    ready: false,
+    error: null,
+    promise: null,
+    cache: { regular: null, bold: null },
+  };
+  
+  if (typeof window !== 'undefined') {
+    (window as any)[STATE_KEY] = state;
+  }
+  
+  return state;
 }
 
 /**
@@ -60,50 +68,82 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
  * Load font file as ArrayBuffer
  */
 async function loadFont(filename: string): Promise<ArrayBuffer> {
-  const url = new URL(`../../../assets/fonts/${filename}`, import.meta.url).href;
+  // Try multiple paths for font loading
+  const paths = [
+    `/src/assets/fonts/${filename}`,
+    `./src/assets/fonts/${filename}`,
+    new URL(`../../../assets/fonts/${filename}`, import.meta.url).href,
+  ];
   
-  const response = await fetch(url, { 
-    cache: 'force-cache',
-    credentials: 'same-origin',
-  });
+  let lastError: Error | null = null;
   
-  if (!response.ok) {
-    throw new Error(`FONT_LOAD_FAILED: ${filename} (${response.status})`);
+  for (const url of paths) {
+    try {
+      const response = await fetch(url, { 
+        cache: 'force-cache',
+        credentials: 'same-origin',
+      });
+      
+      if (response.ok) {
+        const buffer = await response.arrayBuffer();
+        if (buffer.byteLength > 1000) {
+          console.log(`[PDF FONTS] Loaded ${filename} from ${url}`);
+          return buffer;
+        }
+      }
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+    }
   }
   
-  return response.arrayBuffer();
+  throw lastError || new Error(`FONT_LOAD_FAILED: ${filename} not found`);
 }
 
 /**
  * Validate TTF/OTF font signature
  */
-function validateFontSignature(buffer: ArrayBuffer, filename: string): void {
+function validateFontSignature(buffer: ArrayBuffer, filename: string): boolean {
   const bytes = new Uint8Array(buffer);
   
   if (bytes.length < 4) {
-    throw new Error(`FONT_INVALID: ${filename} is too small`);
+    console.error(`[PDF FONTS] ${filename} is too small (${bytes.length} bytes)`);
+    return false;
   }
   
   const isTTF = bytes[0] === 0x00 && bytes[1] === 0x01 && bytes[2] === 0x00 && bytes[3] === 0x00;
   const isOTF = String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3]) === 'OTTO';
   
   if (!isTTF && !isOTF) {
-    console.warn(`[PDF FONTS] Unusual signature for ${filename}: ${bytes[0]}, ${bytes[1]}, ${bytes[2]}, ${bytes[3]}`);
+    console.warn(`[PDF FONTS] Unusual signature for ${filename}: ${bytes.slice(0, 4).join(',')}`);
   }
+  
+  return true;
 }
 
 /**
- * Register fonts in pdfmake VFS using traditional assignment
+ * Register fonts in pdfmake VFS using direct assignment
  */
 function registerFonts(regularBuffer: ArrayBuffer, boldBuffer: ArrayBuffer): void {
   // Convert to base64
   const regularBase64 = arrayBufferToBase64(regularBuffer);
   const boldBase64 = arrayBufferToBase64(boldBuffer);
-
+  
+  console.log(`[PDF FONTS] Base64 sizes: Regular=${regularBase64.length}, Bold=${boldBase64.length}`);
+  
+  // Ensure VFS exists
+  if (!pdfMake.vfs) {
+    pdfMake.vfs = {};
+  }
+  
   // Direct VFS assignment (most compatible method)
   pdfMake.vfs[FONT_FILES.regular] = regularBase64;
   pdfMake.vfs[FONT_FILES.bold] = boldBase64;
-
+  
+  // Ensure fonts object exists
+  if (!pdfMake.fonts) {
+    pdfMake.fonts = {};
+  }
+  
   // Register font family
   pdfMake.fonts[FONT_NAME] = {
     normal: FONT_FILES.regular,
@@ -111,8 +151,10 @@ function registerFonts(regularBuffer: ArrayBuffer, boldBuffer: ArrayBuffer): voi
     italics: FONT_FILES.regular,
     bolditalics: FONT_FILES.bold,
   };
-
-  console.log('[PDF FONTS] ✅ Cairo fonts registered via direct VFS');
+  
+  console.log('[PDF FONTS] ✅ Cairo fonts registered');
+  console.log('[PDF FONTS] VFS keys:', Object.keys(pdfMake.vfs).filter(k => k.includes('Cairo')));
+  console.log('[PDF FONTS] Font families:', Object.keys(pdfMake.fonts));
 }
 
 /**
@@ -128,7 +170,18 @@ export function areFontsReady(): boolean {
   const hasBold = Boolean(pdfMake.vfs?.[FONT_FILES.bold]);
   const hasFamily = Boolean(pdfMake.fonts?.[FONT_NAME]);
   
-  return hasRegular && hasBold && hasFamily;
+  // Double-check the base64 data is substantial
+  const regularSize = pdfMake.vfs?.[FONT_FILES.regular]?.length || 0;
+  const boldSize = pdfMake.vfs?.[FONT_FILES.bold]?.length || 0;
+  
+  const isValid = hasRegular && hasBold && hasFamily && regularSize > 10000 && boldSize > 10000;
+  
+  if (!isValid && state.ready) {
+    console.warn('[PDF FONTS] Font validation failed, resetting state');
+    state.ready = false;
+  }
+  
+  return isValid;
 }
 
 /**
@@ -137,21 +190,26 @@ export function areFontsReady(): boolean {
 export async function initializeFonts(): Promise<void> {
   const state = getState();
   
-  // Already ready
+  // Already ready and validated
   if (areFontsReady()) {
+    console.log('[PDF FONTS] Already initialized');
     return;
   }
   
   // Recovery from cache
-  if (state.cache.regular && state.cache.bold && !areFontsReady()) {
+  if (state.cache.regular && state.cache.bold) {
     console.log('[PDF FONTS] Recovering from cache...');
     registerFonts(state.cache.regular, state.cache.bold);
     state.ready = true;
-    return;
+    
+    if (areFontsReady()) {
+      return;
+    }
   }
   
-  // Already loading
+  // Already loading - wait for it
   if (state.promise) {
+    console.log('[PDF FONTS] Already loading, waiting...');
     return state.promise;
   }
   
@@ -201,11 +259,11 @@ export async function initializeFonts(): Promise<void> {
  * Force reload fonts (emergency recovery)
  */
 export async function forceReloadFonts(): Promise<void> {
+  console.log('[PDF FONTS] Force reloading...');
   const state = getState();
   state.promise = null;
   state.ready = false;
-  state.cache.regular = null;
-  state.cache.bold = null;
+  // Keep cache if available
   return initializeFonts();
 }
 
@@ -218,6 +276,7 @@ export function getFontDiagnostics(): {
   error: string | null;
   vfsKeys: string[];
   families: string[];
+  vfsSizes: { regular: number; bold: number };
 } {
   const state = getState();
   
@@ -227,5 +286,9 @@ export function getFontDiagnostics(): {
     error: state.error?.message || null,
     vfsKeys: Object.keys(pdfMake.vfs || {}).filter(k => k.includes('Cairo')),
     families: Object.keys(pdfMake.fonts || {}),
+    vfsSizes: {
+      regular: pdfMake.vfs?.[FONT_FILES.regular]?.length || 0,
+      bold: pdfMake.vfs?.[FONT_FILES.bold]?.length || 0,
+    },
   };
 }

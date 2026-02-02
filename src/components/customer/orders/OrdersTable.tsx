@@ -111,6 +111,7 @@ export function OrdersTable({
 
   const handleDownloadInvoice = async (e: React.MouseEvent, order: CustomerOrder) => {
     e.stopPropagation();
+    console.log('[PDF] CLICK', { kind: 'invoice', id: order.id, orderNumber: order.order_number });
     setDownloadingId(order.id);
     
     try {
@@ -139,10 +140,18 @@ export function OrdersTable({
         services
       );
       
-      await downloadInvoicePdf(invoiceData);
-      toast.success(isRTL ? 'تم تنزيل الفاتورة' : 'Invoice downloaded');
+      console.log('[PDF] Generating invoice for:', order.order_number);
+      const success = await downloadInvoicePdf(invoiceData);
+      
+      if (success) {
+        toast.success(isRTL ? 'تم تنزيل الفاتورة' : 'Invoice downloaded');
+      } else {
+        throw new Error('Download returned false');
+      }
     } catch (error) {
-      toast.error(isRTL ? 'فشل التنزيل' : 'Download failed');
+      console.error('[PDF] Invoice download error:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      toast.error(isRTL ? `فشل التنزيل: ${errorMsg}` : `Download failed: ${errorMsg}`);
     } finally {
       setDownloadingId(null);
     }

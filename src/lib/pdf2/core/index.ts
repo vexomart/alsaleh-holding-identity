@@ -17,6 +17,9 @@ export {
   getFontDiagnostics,
 } from './fonts';
 
+// Re-export FONT_NAME for convenience
+export { FONT_NAME as PDF_FONT } from './fonts';
+
 // PDF generation
 export {
   generatePdfBlob,
