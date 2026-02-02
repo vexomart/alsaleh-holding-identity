@@ -3,15 +3,36 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// Custom plugin to intercept brotli/decompress imports before any processing
+const shimPath = path.resolve(__dirname, "./src/shims/brotli-decompress.ts");
+
+// Custom plugin to intercept ALL brotli/decompress imports
 function brotliShimPlugin(): Plugin {
-  const shimPath = path.resolve(__dirname, "./src/shims/brotli-decompress.ts");
   return {
     name: "brotli-shim-resolver",
     enforce: "pre",
-    resolveId(source) {
-      if (source === "brotli/decompress" || source === "brotli/decompress.js") {
-        return shimPath;
+    resolveId(source, importer, options) {
+      // Match any brotli/decompress import pattern
+      if (
+        source === "brotli/decompress" ||
+        source === "brotli/decompress.js" ||
+        source.includes("brotli/decompress")
+      ) {
+        return { id: shimPath, moduleSideEffects: false };
+      }
+      return null;
+    },
+    load(id) {
+      // If somehow the raw brotli/decompress is loaded, redirect
+      if (id.includes("node_modules/brotli/decompress")) {
+        return `
+          export default function decompress(buffer) {
+            console.warn("[brotli-shim] decompress called");
+            return buffer;
+          }
+          export const decompress = function(buffer) {
+            return buffer;
+          };
+        `;
       }
       return null;
     },
@@ -38,24 +59,15 @@ export default defineConfig(({ mode }) => ({
     componentTagger(),
   ].filter(Boolean),
   resolve: {
-    // Keep default Vite/Node resolution for React to avoid splitting across different entrypoints.
-    // We only alias our app path prefix.
     alias: [
       { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
-      // Fix ESM default-import expectations for base64-js in some PDF-related deps
       { find: /^base64-js$/, replacement: path.resolve(__dirname, "./src/shims/base64-js.ts") },
-      // Fix ESM default-import expectations for unicode-trie in some PDF/font deps
       { find: /^unicode-trie$/, replacement: path.resolve(__dirname, "./src/shims/unicode-trie.ts") },
-      // Some deps import the subpath directly and expect a default export:
-      //   import decompress from 'brotli/decompress.js'
-      // Use both string and regex aliases to cover all resolver code paths.
-      { find: "brotli/decompress.js", replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
-      { find: "brotli/decompress", replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
-      { find: /^brotli\/decompress\.js$/, replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
-      { find: /^brotli\/decompress$/, replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
+      { find: "brotli/decompress.js", replacement: shimPath },
+      { find: "brotli/decompress", replacement: shimPath },
+      { find: /^brotli\/decompress\.js$/, replacement: shimPath },
+      { find: /^brotli\/decompress$/, replacement: shimPath },
     ],
-
-    // Be explicit (even though it's the default) so symlinked deps don't create duplicate React copies.
     preserveSymlinks: false,
     dedupe: [
       "react", 
@@ -83,7 +95,19 @@ export default defineConfig(({ mode }) => ({
       "react-router-dom",
       "@radix-ui/react-tooltip",
       "@tanstack/react-query",
+      "@react-pdf/renderer",
     ],
-    exclude: ["@react-pdf/renderer", "brotli"],
+    esbuildOptions: {
+      plugins: [
+        {
+          name: "brotli-shim-esbuild",
+          setup(build) {
+            build.onResolve({ filter: /brotli\/decompress/ }, () => ({
+              path: shimPath,
+            }));
+          },
+        },
+      ],
+    },
   },
 }));
