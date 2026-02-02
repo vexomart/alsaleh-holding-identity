@@ -27,6 +27,7 @@ import { CustomerInvoice, SortField } from './types';
 
 // PDF imports
 import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
+import { SELLER_INFO } from '@/lib/invoices/constants';
 
 export function CustomerInvoicesCenter() {
   const { language } = useLanguage();
@@ -88,7 +89,7 @@ export function CustomerInvoicesCenter() {
         date: invoice.created_at,
         dueDate: invoice.due_date || undefined,
         status: invoice.status,
-        seller: { name: 'شركة الصالح القابضة', vatNumber: '310123456789012' },
+        seller: { name: SELLER_INFO.name_ar, vatNumber: SELLER_INFO.vat },
         buyer: { name: isRTL ? 'عميل' : 'Customer' },
         items: [{
           description: invoice.order 

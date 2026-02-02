@@ -24,6 +24,7 @@ import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
 import { InvoiceView, mapCustomerInvoiceToViewModel } from '@/components/invoices';
+import { SELLER_INFO } from '@/lib/invoices/constants';
 
 interface OrderInvoiceSectionProps {
   orderId: string;
@@ -181,7 +182,7 @@ export function OrderInvoiceSection({
         date: newInvoice.created_at,
         dueDate: dueDate || undefined,
         status: newInvoice.status,
-        seller: { name: 'شركة الصالح القابضة', vatNumber: '310123456789012' },
+        seller: { name: SELLER_INFO.name_ar, vatNumber: SELLER_INFO.vat },
         buyer: { name: isRTL ? 'عميل' : 'Customer' },
         items: [{ description: isRTL ? (orderTitleAr || orderTitle) : orderTitle, quantity: 1, unitPrice: newInvoice.subtotal }],
         subtotal: newInvoice.subtotal,
@@ -228,7 +229,7 @@ export function OrderInvoiceSection({
         date: invoice.created_at,
         dueDate: invoice.due_date || undefined,
         status: invoice.status,
-        seller: { name: 'شركة الصالح القابضة', vatNumber: '310123456789012' },
+        seller: { name: SELLER_INFO.name_ar, vatNumber: SELLER_INFO.vat },
         buyer: { name: isRTL ? 'عميل' : 'Customer' },
         items: [{ description: isRTL ? (orderTitleAr || orderTitle) : orderTitle, quantity: 1, unitPrice: invoice.subtotal }],
         subtotal: invoice.subtotal,

@@ -4,15 +4,16 @@
  */
 
 import type { InvoiceDataNew } from './types';
+import { SELLER_INFO } from './constants';
 
 // Sample data generators
 const SAMPLE_SELLER = {
-  name: 'Ali Saleh Al-Shahri Holding Co.',
-  name_ar: 'شركة علي صالح الشهري القابضة',
-  vat: '310123456789012',
-  address_ar: 'الرياض، المملكة العربية السعودية',
-  email: 'info@ash-holding.sa',
-  phone: '+966 11 123 4567',
+  name: SELLER_INFO.name_en,
+  name_ar: SELLER_INFO.name_ar,
+  vat: SELLER_INFO.vat,
+  address_ar: SELLER_INFO.address_ar,
+  email: SELLER_INFO.email,
+  phone: SELLER_INFO.phone,
 };
 
 const SAMPLE_BUYER = {

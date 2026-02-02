@@ -78,9 +78,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { db } from '@/integrations/supabase/db';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/hooks/useLanguage';
+import { SELLER_INFO } from '@/lib/invoices/constants';
+import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
 
 interface Order {
@@ -347,9 +348,9 @@ export function OrdersManagement() {
         status: order.status || 'pending',
         
         seller: {
-          name: 'شركة الصالح القابضة',
-          address: 'الرياض، المملكة العربية السعودية',
-          vatNumber: '310123456789012',
+          name: SELLER_INFO.name_ar,
+          address: SELLER_INFO.address_ar,
+          vatNumber: SELLER_INFO.vat,
         },
         
         buyer: {
