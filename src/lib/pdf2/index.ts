@@ -6,7 +6,7 @@
  */
 
 // Initialization
-export { ensurePdfReady, assertFontsReady, getFontDiagnostics, FONT_NAME } from './init';
+export { ensurePdfReady, assertFontsReady, getFontDiagnostics, forceReloadFonts, FONT_NAME } from './init';
 
 // Rendering (the ONLY place createPdf is called)
 export { createPdfBlob, createPdfDataUrl, type DocDefinition } from './render';
