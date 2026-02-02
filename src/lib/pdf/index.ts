@@ -164,6 +164,7 @@ export {
 // Debug/Golden pack
 export { generateGoldenPack, printVisualChecklist } from './debug/golden-pack';
 export { verifyBrandCompliance, validateDocDefinition } from './debug/brand-verify';
+export { debugPdfFonts, printFontState, getFullDiagnostics } from './debug/debug-pdf-fonts';
 
 // Low-level (internal use)
 export { ARABIC_FONT_NAME } from './core/fonts';
