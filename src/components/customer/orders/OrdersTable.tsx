@@ -34,7 +34,7 @@ import {
 import { toast } from 'sonner';
 import { CustomerOrder, OrdersSort, SortField } from './types';
 import { OrderStatusBadge } from './OrderStatusBadge';
-import { downloadInvoicePdf, orderToInvoiceData } from '@/lib/pdf2';
+import { downloadInvoicePdf, orderToInvoiceData } from '@/lib/invoices';
 
 interface OrdersTableProps {
   orders: CustomerOrder[];

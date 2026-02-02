@@ -32,7 +32,7 @@ import {
   type Invoice,
   type InvoiceStatus 
 } from '@/lib/api/invoices';
-import { type InvoiceData, downloadInvoicePdf } from '@/lib/pdf2';
+import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
 

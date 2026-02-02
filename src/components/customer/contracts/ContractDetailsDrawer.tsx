@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 import { CustomerContract, CONTRACT_STATUS_CONFIG } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
-import { type ContractData, downloadContractPdf } from '@/lib/pdf2';
+import { type ContractData, downloadContractPdf } from '@/lib/invoices';
 
 interface ContractDetailsDrawerProps {
   contract: CustomerContract | null;

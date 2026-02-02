@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { CustomerInvoice } from './types';
 import { InvoiceStatusBadge } from './InvoiceStatusBadge';
-import { type InvoiceData, downloadInvoicePdf } from '@/lib/pdf2';
+import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 
 interface InvoiceDetailsDrawerProps {
   invoice: CustomerInvoice | null;

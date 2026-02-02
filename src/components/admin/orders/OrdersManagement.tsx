@@ -80,7 +80,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { type InvoiceData, downloadInvoicePdf } from '@/lib/pdf2';
+import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
 
 interface Order {

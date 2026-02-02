@@ -25,7 +25,7 @@ import { ContractDetailsDrawer } from './ContractDetailsDrawer';
 import { ContractsEmptyState, ContractsErrorState } from './ContractsEmptyState';
 import { CustomerContract, SortField, ContractStatus } from './types';
 
-import { type ContractData, downloadContractPdf } from '@/lib/pdf2';
+import { type ContractData, downloadContractPdf } from '@/lib/invoices';
 
 export function CustomerContractsCenter() {
   const { language } = useLanguage();

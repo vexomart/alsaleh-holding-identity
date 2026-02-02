@@ -26,7 +26,7 @@ import { InvoicesEmptyState, InvoicesErrorState } from './InvoicesEmptyState';
 import { CustomerInvoice, SortField } from './types';
 
 // PDF imports
-import { type InvoiceData, downloadInvoicePdf } from '@/lib/pdf2';
+import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 
 export function CustomerInvoicesCenter() {
   const { language } = useLanguage();
