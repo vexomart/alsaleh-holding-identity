@@ -75,6 +75,11 @@ export default defineConfig(({ mode }) => ({
       // Brotli aliases - subpaths MUST come first to prevent partial matching
       { find: /^brotli\/decompress(\.js)?$/, replacement: brotliDecompressShimPath },
       { find: /^brotli$/, replacement: brotliShimPath },
+      // Force single React instance for all packages
+      { find: /^react$/, replacement: path.resolve(__dirname, "node_modules/react") },
+      { find: /^react-dom$/, replacement: path.resolve(__dirname, "node_modules/react-dom") },
+      { find: /^react\/jsx-runtime$/, replacement: path.resolve(__dirname, "node_modules/react/jsx-runtime") },
+      { find: /^react\/jsx-dev-runtime$/, replacement: path.resolve(__dirname, "node_modules/react/jsx-dev-runtime") },
     ],
     preserveSymlinks: false,
     dedupe: [
