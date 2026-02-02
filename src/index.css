@@ -1299,3 +1299,176 @@
 [dir="ltr"] .rtl-mirror {
   transform: scaleX(1);
 }
+
+/* ===========================================
+   PREMIUM INVOICE TYPOGRAPHY SYSTEM
+   Global Enterprise Invoice Styling
+   =========================================== */
+
+/* Invoice Container Base */
+.invoice-container {
+  font-family: 'Inter', 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Arabic Invoice Container Override */
+html[dir="rtl"] .invoice-container,
+html[lang="ar"] .invoice-container {
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Invoice Title - Bold Display */
+.invoice-title {
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Invoice Subtitle */
+.invoice-subtitle {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Invoice Section Titles */
+.invoice-section-title {
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+/* Invoice Labels */
+.invoice-label {
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Invoice Values */
+.invoice-value {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Invoice Party Names */
+.invoice-party-name {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+/* Invoice Party Info */
+.invoice-party-info {
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+/* Invoice Table */
+.invoice-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.invoice-th {
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  font-size: 0.65rem;
+}
+
+.invoice-td {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Invoice Description */
+.invoice-description {
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Invoice Amounts - Monospace for alignment */
+.invoice-amount,
+.invoice-price {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', monospace;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Invoice Grand Total */
+.invoice-grand-total {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', monospace;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Invoice Total Label */
+.invoice-total-label {
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Invoice Status */
+.invoice-status {
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Invoice Note */
+.invoice-note {
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  opacity: 0.8;
+}
+
+/* Invoice VAT/ID Numbers */
+.invoice-vat,
+.invoice-customer-id {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', monospace;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* Invoice Field Container */
+.invoice-field {
+  position: relative;
+}
+
+.invoice-field::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.invoice-field:hover::after {
+  opacity: 0.5;
+}
+
+/* Invoice Quantity */
+.invoice-qty {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+/* Invoice Item Description */
+.invoice-item-description {
+  font-weight: 600;
+  line-height: 1.4;
+}

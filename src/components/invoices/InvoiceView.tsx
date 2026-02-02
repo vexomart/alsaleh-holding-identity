@@ -1,6 +1,7 @@
 /**
  * Invoice View Component
- * Classic corporate invoice UI - Shared between Admin & Customer
+ * Premium corporate invoice UI - Global Enterprise Style
+ * Shared between Admin & Customer
  */
 
 import { cn } from '@/lib/utils';
@@ -42,12 +43,12 @@ export function InvoiceView({
       dir={isRTL ? 'rtl' : 'ltr'}
       lang={isRTL ? 'ar' : 'en'}
       className={cn(
-        'max-w-4xl mx-auto',
+        'max-w-4xl mx-auto invoice-container',
         isMobile && 'pb-32',
         className
       )}
     >
-      {/* Classic Header */}
+      {/* Premium Header */}
       <InvoiceHeader 
         invoiceNumber={invoice.invoiceNumber}
         status={invoice.status}
@@ -90,16 +91,28 @@ export function InvoiceView({
         />
       </div>
 
-      {/* Footer */}
-      <div className="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 text-center">
-        <p className="text-xs text-muted-foreground">
+      {/* Premium Footer */}
+      <div className="mt-12 pt-8 border-t-2 border-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent text-center">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <div className="h-px w-12 bg-gradient-to-r from-transparent to-slate-300 dark:to-slate-600" />
+          <div className="w-8 h-8 bg-gradient-to-br from-[#1a1a2e] to-[#0f3460] rounded-lg flex items-center justify-center">
+            <span className="text-xs font-bold text-white">A</span>
+          </div>
+          <div className="h-px w-12 bg-gradient-to-l from-transparent to-slate-300 dark:to-slate-600" />
+        </div>
+        <p className="text-sm text-muted-foreground font-medium invoice-note">
           {isRTL 
-            ? 'شكراً لتعاملكم معنا • شركة علي صالح الشهري القابضة'
-            : 'Thank you for your business • Ali Saleh Al-Shahri Holding Co.'
+            ? 'شكراً لتعاملكم معنا'
+            : 'Thank you for your business'
           }
         </p>
-        <p className="text-xs text-muted-foreground mt-1">
-          <span dir="ltr" className="ltr-token">info@ash-holding.sa</span>
+        <p className="text-xs text-muted-foreground mt-1 font-semibold">
+          {isRTL ? 'شركة علي صالح الشهري القابضة' : 'Ali Saleh Al-Shahri Holding Co.'}
+        </p>
+        <p className="text-xs text-muted-foreground mt-2">
+          <span dir="ltr" className="ltr-token font-mono text-[11px]">info@ash-holding.sa</span>
+          <span className="mx-2">•</span>
+          <span dir="ltr" className="ltr-token font-mono text-[11px]">ash-holding.sa</span>
         </p>
       </div>
     </div>
