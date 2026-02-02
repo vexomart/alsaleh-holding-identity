@@ -93,34 +93,26 @@ function validateFontSignature(buffer: ArrayBuffer, filename: string): void {
 }
 
 /**
- * Register fonts in pdfmake VFS
+ * Register fonts in pdfmake VFS using traditional assignment
  */
 function registerFonts(regularBuffer: ArrayBuffer, boldBuffer: ArrayBuffer): void {
-  if (typeof pdfMake.addVirtualFileSystem !== 'function' || typeof pdfMake.addFonts !== 'function') {
-    throw new Error('PDFMAKE_API_MISSING: addVirtualFileSystem/addFonts not available');
-  }
-
   // Convert to base64
   const regularBase64 = arrayBufferToBase64(regularBuffer);
   const boldBase64 = arrayBufferToBase64(boldBuffer);
 
-  // Register in VFS
-  pdfMake.addVirtualFileSystem({
-    [FONT_FILES.regular]: regularBase64,
-    [FONT_FILES.bold]: boldBase64,
-  });
+  // Direct VFS assignment (most compatible method)
+  pdfMake.vfs[FONT_FILES.regular] = regularBase64;
+  pdfMake.vfs[FONT_FILES.bold] = boldBase64;
 
   // Register font family
-  pdfMake.addFonts({
-    [FONT_NAME]: {
-      normal: FONT_FILES.regular,
-      bold: FONT_FILES.bold,
-      italics: FONT_FILES.regular,
-      bolditalics: FONT_FILES.bold,
-    },
-  });
+  pdfMake.fonts[FONT_NAME] = {
+    normal: FONT_FILES.regular,
+    bold: FONT_FILES.bold,
+    italics: FONT_FILES.regular,
+    bolditalics: FONT_FILES.bold,
+  };
 
-  console.log('[PDF FONTS] ✅ Cairo fonts registered');
+  console.log('[PDF FONTS] ✅ Cairo fonts registered via direct VFS');
 }
 
 /**
@@ -131,9 +123,9 @@ export function areFontsReady(): boolean {
   
   if (!state.ready) return false;
   
-  // Verify VFS contains fonts
-  const hasRegular = pdfMake.virtualfs?.existsSync?.(FONT_FILES.regular) ?? false;
-  const hasBold = pdfMake.virtualfs?.existsSync?.(FONT_FILES.bold) ?? false;
+  // Verify VFS contains fonts (direct check)
+  const hasRegular = Boolean(pdfMake.vfs?.[FONT_FILES.regular]);
+  const hasBold = Boolean(pdfMake.vfs?.[FONT_FILES.bold]);
   const hasFamily = Boolean(pdfMake.fonts?.[FONT_NAME]);
   
   return hasRegular && hasBold && hasFamily;
@@ -228,13 +220,12 @@ export function getFontDiagnostics(): {
   families: string[];
 } {
   const state = getState();
-  const storage = pdfMake.virtualfs?.storage || {};
   
   return {
     ready: state.ready,
     loading: state.loading,
     error: state.error?.message || null,
-    vfsKeys: Object.keys(storage).filter(k => k.includes('Cairo')),
+    vfsKeys: Object.keys(pdfMake.vfs || {}).filter(k => k.includes('Cairo')),
     families: Object.keys(pdfMake.fonts || {}),
   };
 }
