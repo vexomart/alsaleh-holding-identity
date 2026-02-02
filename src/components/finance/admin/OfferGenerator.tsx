@@ -47,7 +47,7 @@ interface OfferGeneratorProps {
 
 export function OfferGenerator({ open, onOpenChange, application }: OfferGeneratorProps) {
   const queryClient = useQueryClient();
-  const [aprPercent, setAprPercent] = useState(15);
+  const [aprPercent, setAprPercent] = useState(0);
   const [feesSar, setFeesSar] = useState(0);
 
   // Calculate offer values
