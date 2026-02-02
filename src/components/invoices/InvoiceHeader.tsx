@@ -1,6 +1,6 @@
 /**
  * Invoice Header Component
- * Modern minimal header with status and invoice number
+ * Classic corporate header with branding
  */
 
 import { motion } from 'framer-motion';
@@ -13,6 +13,7 @@ interface InvoiceHeaderProps {
   invoiceNumber: string;
   status: InvoiceViewStatus;
   issuedAt?: string;
+  dueDate?: string | null;
   className?: string;
 }
 
@@ -20,6 +21,7 @@ export function InvoiceHeader({
   invoiceNumber, 
   status,
   issuedAt,
+  dueDate,
   className 
 }: InvoiceHeaderProps) {
   const { language } = useLanguage();
@@ -35,40 +37,90 @@ export function InvoiceHeader({
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: -4 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      className={cn(
-        'flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/50',
-        className
-      )}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className={cn('relative', className)}
     >
-      {/* Title & Status */}
-      <div className="space-y-1">
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
-            {isRTL ? 'فاتورة ضريبية' : 'Tax Invoice'}
-          </h1>
-          <InvoiceStatusBadge status={status} size="md" />
+      {/* Classic Invoice Title Bar */}
+      <div className="bg-slate-900 dark:bg-slate-800 text-white px-6 py-4 rounded-t-lg">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            {/* Company Logo Placeholder */}
+            <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+              <span className="text-lg font-bold">A</span>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold tracking-wide">
+                {isRTL ? 'فاتورة ضريبية' : 'TAX INVOICE'}
+              </h1>
+              <p className="text-xs text-white/70 mt-0.5">
+                {isRTL ? 'شركة علي صالح الشهري القابضة' : 'Ali Saleh Al-Shahri Holding Co.'}
+              </p>
+            </div>
+          </div>
+          <InvoiceStatusBadge status={status} size="lg" />
         </div>
-        {issuedAt && (
-          <p className="text-sm text-muted-foreground">
-            {formatDate(issuedAt)}
-          </p>
-        )}
       </div>
 
-      {/* Invoice Number */}
-      <div className="sm:text-end">
-        <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-          {isRTL ? 'رقم الفاتورة' : 'Invoice No.'}
-        </p>
-        <p 
-          dir="ltr" 
-          className="text-lg font-mono font-medium text-foreground ltr-token"
-        >
-          {invoiceNumber}
-        </p>
+      {/* Invoice Details Bar */}
+      <div className="bg-slate-100 dark:bg-slate-900/50 border-x border-b border-slate-200 dark:border-slate-700 px-6 py-4 rounded-b-lg">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+          {/* Invoice Number */}
+          <div>
+            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+              {isRTL ? 'رقم الفاتورة' : 'Invoice No.'}
+            </p>
+            <p dir="ltr" className="font-mono font-semibold text-foreground ltr-token">
+              {invoiceNumber}
+            </p>
+          </div>
+
+          {/* Issue Date */}
+          {issuedAt && (
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                {isRTL ? 'تاريخ الإصدار' : 'Issue Date'}
+              </p>
+              <p className="font-medium text-foreground">
+                {formatDate(issuedAt)}
+              </p>
+            </div>
+          )}
+
+          {/* Due Date */}
+          {dueDate && (
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                {isRTL ? 'تاريخ الاستحقاق' : 'Due Date'}
+              </p>
+              <p className="font-medium text-foreground">
+                {formatDate(dueDate)}
+              </p>
+            </div>
+          )}
+
+          {/* Status Text */}
+          <div className="sm:text-end">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+              {isRTL ? 'الحالة' : 'Status'}
+            </p>
+            <p className={cn(
+              'font-semibold',
+              status === 'paid' && 'text-emerald-600 dark:text-emerald-400',
+              status === 'pending' && 'text-amber-600 dark:text-amber-400',
+              status === 'overdue' && 'text-red-600 dark:text-red-400',
+              !['paid', 'pending', 'overdue'].includes(status) && 'text-foreground'
+            )}>
+              {status === 'paid' && (isRTL ? 'مدفوعة' : 'PAID')}
+              {status === 'pending' && (isRTL ? 'بانتظار الدفع' : 'PENDING')}
+              {status === 'overdue' && (isRTL ? 'متأخرة' : 'OVERDUE')}
+              {status === 'issued' && (isRTL ? 'صادرة' : 'ISSUED')}
+              {status === 'draft' && (isRTL ? 'مسودة' : 'DRAFT')}
+              {status === 'cancelled' && (isRTL ? 'ملغاة' : 'CANCELLED')}
+            </p>
+          </div>
+        </div>
       </div>
     </motion.div>
   );

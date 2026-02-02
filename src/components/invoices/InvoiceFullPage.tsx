@@ -1,6 +1,6 @@
 /**
  * Invoice Full Page View
- * Standalone full-page invoice experience
+ * Classic standalone invoice experience
  */
 
 import { useState } from 'react';
@@ -136,14 +136,14 @@ export function InvoiceFullPage({
   return (
     <div 
       dir={isRTL ? 'rtl' : 'ltr'} 
-      className="min-h-screen bg-background"
+      className="min-h-screen bg-slate-50 dark:bg-background"
     >
       {/* Back Navigation */}
       {backUrl && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="border-b bg-background sticky top-0 z-40"
+          className="bg-white dark:bg-card border-b sticky top-0 z-40"
         >
           <div className="container max-w-4xl py-3">
             <Button 
@@ -161,22 +161,24 @@ export function InvoiceFullPage({
 
       {/* Main Content */}
       <div className={cn(
-        'container max-w-4xl py-6 sm:py-8',
+        'container max-w-4xl py-8',
         isMobile && 'px-4'
       )}>
-        {isLoading ? (
-          <InvoiceSkeleton />
-        ) : invoice ? (
-          <InvoiceView
-            invoice={invoice}
-            onDownload={handleDownload}
-            onPayNow={invoice.status !== 'paid' && invoice.status !== 'cancelled' ? handlePayNow : undefined}
-          />
-        ) : (
-          <div className="text-center py-20 text-muted-foreground">
-            {isRTL ? 'لم يتم العثور على الفاتورة' : 'Invoice not found'}
-          </div>
-        )}
+        <div className="bg-white dark:bg-card rounded-xl shadow-sm border p-6 sm:p-8">
+          {isLoading ? (
+            <InvoiceSkeleton />
+          ) : invoice ? (
+            <InvoiceView
+              invoice={invoice}
+              onDownload={handleDownload}
+              onPayNow={invoice.status !== 'paid' && invoice.status !== 'cancelled' ? handlePayNow : undefined}
+            />
+          ) : (
+            <div className="text-center py-20 text-muted-foreground">
+              {isRTL ? 'لم يتم العثور على الفاتورة' : 'Invoice not found'}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Payment Sheet */}
