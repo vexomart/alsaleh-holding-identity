@@ -203,9 +203,9 @@ export function FinanceContractView({
         },
       };
       
-      // Open contract preview in new window (user can print from there)
-      contractModule.previewContract(contractData);
-      toast.success("تم فتح العقد في نافذة جديدة - يمكنك طباعته أو حفظه كـ PDF");
+      // Download contract directly as HTML file
+      contractModule.downloadContractHTML(contractData);
+      toast.success("تم تحميل العقد بنجاح");
     } catch (error) {
       console.error("Contract preview error:", error);
       toast.error("حدث خطأ أثناء فتح العقد");
