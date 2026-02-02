@@ -128,18 +128,18 @@ export function ApplicationsTab() {
             لا توجد طلبات تمويل
           </div>
         ) : (
-          <div className="overflow-x-auto" dir="rtl">
-            <Table>
+          <div className="overflow-x-auto">
+            <Table dir="rtl" className="w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-right">إجراءات</TableHead>
-                  <TableHead className="text-right">التاريخ</TableHead>
-                  <TableHead className="text-right">الحالة</TableHead>
-                  <TableHead className="text-right">المدة</TableHead>
-                  <TableHead className="text-right">المبلغ</TableHead>
-                  <TableHead className="text-right">النوع</TableHead>
-                  <TableHead className="text-right">الكيان</TableHead>
-                  <TableHead className="text-right">رقم الطلب</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">إجراءات</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">التاريخ</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">الحالة</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">المدة</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">المبلغ</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">النوع</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">الكيان</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">رقم الطلب</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
