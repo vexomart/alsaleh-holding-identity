@@ -80,8 +80,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { type InvoiceData } from '@/lib/pdf';
-import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
+import { type InvoiceData, downloadInvoicePdf } from '@/lib/pdf2';
 import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
 
 interface Order {
@@ -343,38 +342,40 @@ export function OrdersManagement() {
 
       const invoiceData: InvoiceData = {
         invoiceNumber: order.order_number,
-        issueDate: order.created_at ? new Date(order.created_at) : new Date(),
-        dueDate: order.due_date ? new Date(order.due_date) : undefined,
-        status: (order.status as 'pending' | 'paid' | 'overdue' | 'cancelled') || 'pending',
+        date: order.created_at || new Date().toISOString(),
+        dueDate: order.due_date || undefined,
+        status: order.status || 'pending',
         
-        customer: {
+        seller: {
+          name: 'شركة الصالح القابضة',
+          address: 'الرياض، المملكة العربية السعودية',
+          vatNumber: '310123456789012',
+        },
+        
+        buyer: {
           name: isRTL ? 'عميل' : 'Customer',
-          email: 'customer@example.com',
         },
         
         items: [{
           description: isRTL ? (order.title_ar || order.title) : order.title,
           quantity: 1,
           unitPrice: order.total_amount || 0,
-          total: order.total_amount || 0,
         }],
         
         subtotal: order.total_amount || 0,
-        taxRate: 15,
-        taxAmount: (order.total_amount || 0) * 0.15,
+        vatRate: 0.15,
+        vatAmount: (order.total_amount || 0) * 0.15,
         total: (order.total_amount || 0) * 1.15,
         
         currency: order.currency || 'SAR',
         notes: order.description || undefined,
       };
 
-      const report = await runDownloadAudit('invoice', invoiceData);
+      const success = await downloadInvoicePdf(invoiceData);
 
-      if (report.ok === false) {
-        const msg = report.error instanceof Error ? report.error.message : String(report.error);
+      if (!success) {
         toast({
           title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
-          description: msg,
           variant: 'destructive',
         });
         return;

@@ -43,8 +43,7 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
-import { type ContractData } from '@/lib/pdf';
-import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
+import { type ContractData, downloadContractPdf } from '@/lib/pdf2';
 
 import { ThumbsUp, Hourglass } from 'lucide-react';
 
@@ -184,25 +183,33 @@ export function CustomerContractDetails() {
     setIsGeneratingPdf(true);
 
     try {
-      // Build contract data for PDF
+      // Build contract data for PDF using new PDF2 structure
       const contractData: ContractData = {
         contractNumber: contract.contract_number,
-        contractType: 'عقد تقديم خدمات',
-        date: new Date(contract.created_at),
-        firstParty: {
+        date: contract.created_at,
+        serviceName: contract.service?.name_ar || contract.service?.name || 'خدمة',
+        serviceDescription: contract.scope_summary_ar || contract.scope_summary || undefined,
+        
+        provider: {
           name: 'شركة علي صالح الشهري القابضة',
-          title: 'Ali Saleh Al-Shehri Holding Company',
           address: 'المملكة العربية السعودية - الرياض',
           phone: '+966 11 123 4567',
-          email: 'info@ash-holding.sa',
+          role: 'provider' as const,
         },
-        secondParty: {
+        
+        customer: {
           name: signature?.signer_name || profile?.full_name || '',
-          idNumber: signature?.signer_national_id || undefined,
+          nationalId: signature?.signer_national_id || undefined,
           phone: signature?.signer_phone || profile?.phone || undefined,
-          email: profile?.email,
+          role: 'customer' as const,
         },
-        preamble: contract.scope_summary_ar || contract.scope_summary || undefined,
+        
+        amount: contract.pricing_json?.subtotal || 0,
+        vatRate: (contract.pricing_json?.vat_rate || 15) / 100,
+        vatAmount: contract.pricing_json?.vat_amount || 0,
+        totalAmount: contract.pricing_json?.total || 0,
+        currency: contract.pricing_json?.currency || 'SAR',
+        
         clauses: [
           {
             title: 'نطاق العمل',
@@ -212,7 +219,7 @@ export function CustomerContractDetails() {
           },
           {
             title: 'المقابل المالي',
-            content: `يلتزم الطرف الثاني بدفع مبلغ ${formatCurrency(contract.pricing_json?.total || 0, contract.pricing_json?.currency || 'SAR')} شاملاً ضريبة القيمة المضافة بنسبة ${contract.pricing_json?.vat_rate || 15}%.`,
+            content: `يلتزم الطرف الثاني بدفع مبلغ ${formatCurrency(contract.pricing_json?.total || 0, contract.pricing_json?.currency || 'SAR')} شاملاً ضريبة القيمة المضافة.`,
           },
           {
             title: 'الالتزامات',
@@ -227,26 +234,13 @@ export function CustomerContractDetails() {
             content: 'في حال نشوء أي خلاف، يتم حله ودياً، وإلا تختص محاكم المملكة العربية السعودية بالفصل فيه.',
           },
         ],
-        pricing: {
-          subtotal: contract.pricing_json?.subtotal || 0,
-          vatRate: contract.pricing_json?.vat_rate || 15,
-          vatAmount: contract.pricing_json?.vat_amount || 0,
-          total: contract.pricing_json?.total || 0,
-          currency: contract.pricing_json?.currency || 'SAR',
-          paymentTerms: 'الدفع عند التوقيع أو وفق جدول الدفع المتفق عليه',
-        },
+        
+        status: contract.status,
+        signedAt: contract.signed_at || undefined,
       };
 
-      // Add signed date info
-      if (contract.signed_at) {
-        (contractData.clauses as Array<{title: string; content: string}>).push({
-          title: 'التوقيع',
-          content: `تم التوقيع على هذا العقد إلكترونياً بتاريخ ${formatDate(contract.signed_at)} من قبل ${signature?.signer_name || profile?.full_name}.`,
-        });
-      }
-
-      const report = await runDownloadAudit('contract', contractData);
-      if (report.ok === false) throw report.error;
+      const success = await downloadContractPdf(contractData);
+      if (!success) throw new Error('Download failed');
       toast.success('تم تنزيل الملف', { id: toastId });
     } catch (err) {
       console.error('Error generating PDF:', err);

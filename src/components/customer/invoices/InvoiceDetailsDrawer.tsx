@@ -28,8 +28,7 @@ import {
 } from 'lucide-react';
 import { CustomerInvoice } from './types';
 import { InvoiceStatusBadge } from './InvoiceStatusBadge';
-import { type InvoiceData } from '@/lib/pdf';
-import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
+import { type InvoiceData, downloadInvoicePdf } from '@/lib/pdf2';
 
 interface InvoiceDetailsDrawerProps {
   invoice: CustomerInvoice | null;
@@ -74,15 +73,15 @@ export function InvoiceDetailsDrawer({
     try {
       const invoiceData: InvoiceData = {
         invoiceNumber: invoice.invoice_number,
-        issueDate: new Date(invoice.created_at),
-        dueDate: invoice.due_date ? new Date(invoice.due_date) : undefined,
-        status: invoice.status === 'paid' ? 'paid' 
-          : invoice.status === 'overdue' ? 'overdue'
-          : invoice.status === 'cancelled' ? 'cancelled'
-          : 'pending',
-        customer: {
+        date: invoice.created_at,
+        dueDate: invoice.due_date || undefined,
+        status: invoice.status,
+        seller: {
+          name: 'شركة الصالح القابضة',
+          vatNumber: '310123456789012',
+        },
+        buyer: {
           name: isRTL ? 'عميل' : 'Customer',
-          email: '',
         },
         items: [{
           description: invoice.order 
@@ -90,17 +89,16 @@ export function InvoiceDetailsDrawer({
             : (isRTL ? 'خدمة' : 'Service'),
           quantity: 1,
           unitPrice: invoice.subtotal,
-          total: invoice.subtotal,
         }],
         subtotal: invoice.subtotal,
-        taxRate: invoice.vat_rate,
-        taxAmount: invoice.vat_amount,
+        vatRate: invoice.vat_rate / 100,
+        vatAmount: invoice.vat_amount,
         total: invoice.total,
         currency: invoice.currency,
         notes: invoice.notes || undefined,
       };
-      const report = await runDownloadAudit('invoice', invoiceData);
-      if (report.ok === false) throw report.error;
+      const success = await downloadInvoicePdf(invoiceData);
+      if (!success) throw new Error('Download failed');
       toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
     } catch (err) {
       console.error('Error downloading PDF:', err);

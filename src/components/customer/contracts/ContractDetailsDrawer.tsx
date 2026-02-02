@@ -38,8 +38,7 @@ import {
 } from 'lucide-react';
 import { CustomerContract, CONTRACT_STATUS_CONFIG } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
-import { type ContractData } from '@/lib/pdf';
-import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
+import { type ContractData, downloadContractPdf } from '@/lib/pdf2';
 
 interface ContractDetailsDrawerProps {
   contract: CustomerContract | null;
@@ -151,50 +150,25 @@ export function ContractDetailsDrawer({
     try {
       const contractData: ContractData = {
         contractNumber: contract.contract_number,
-        contractType: 'عقد تقديم خدمات',
-        date: new Date(contract.created_at),
-        firstParty: {
-          name: 'شركة علي صالح الشهري القابضة',
-          title: 'Ali Saleh Al-Shehri Holding Company',
-          address: 'المملكة العربية السعودية - الرياض',
-        },
-        secondParty: {
-          name: signature?.signer_name || '',
-          idNumber: signature?.signer_national_id || undefined,
-          phone: signature?.signer_phone || undefined,
-        },
-        preamble: contract.scope_summary_ar || contract.scope_summary || undefined,
+        date: contract.created_at,
+        serviceName: contract.service?.name_ar || contract.service?.name || 'خدمة',
+        provider: { name: 'شركة علي صالح الشهري القابضة', address: 'المملكة العربية السعودية - الرياض', role: 'provider' as const },
+        customer: { name: signature?.signer_name || '', nationalId: signature?.signer_national_id || undefined, phone: signature?.signer_phone || undefined, role: 'customer' as const },
+        amount: contract.pricing_json?.subtotal || 0,
+        vatRate: (contract.pricing_json?.vat_rate || 15) / 100,
+        vatAmount: contract.pricing_json?.vat_amount || 0,
+        totalAmount: contract.pricing_json?.total || 0,
+        currency: contract.pricing_json?.currency || 'SAR',
         clauses: [
-          {
-            title: 'نطاق العمل',
-            content: contract.service 
-              ? `تقديم خدمة ${contract.service.name_ar || contract.service.name} وفقاً للمواصفات المتفق عليها.`
-              : 'تقديم الخدمات المتفق عليها وفقاً للمواصفات.',
-          },
-          {
-            title: 'المقابل المالي',
-            content: `يلتزم الطرف الثاني بدفع مبلغ ${formatCurrency(contract.pricing_json?.total || 0, contract.pricing_json?.currency || 'SAR')} شاملاً ضريبة القيمة المضافة.`,
-          },
-          {
-            title: 'الالتزامات',
-            content: 'يلتزم الطرف الأول بتقديم الخدمة وفق أعلى معايير الجودة.',
-          },
-          {
-            title: 'السرية',
-            content: 'يتعهد الطرفان بالحفاظ على سرية المعلومات المتبادلة.',
-          },
+          { title: 'نطاق العمل', content: contract.service ? `تقديم خدمة ${contract.service.name_ar || contract.service.name} وفقاً للمواصفات المتفق عليها.` : 'تقديم الخدمات المتفق عليها وفقاً للمواصفات.' },
+          { title: 'المقابل المالي', content: `يلتزم الطرف الثاني بدفع مبلغ ${formatCurrency(contract.pricing_json?.total || 0, contract.pricing_json?.currency || 'SAR')} شاملاً ضريبة القيمة المضافة.` },
+          { title: 'الالتزامات', content: 'يلتزم الطرف الأول بتقديم الخدمة وفق أعلى معايير الجودة.' },
+          { title: 'السرية', content: 'يتعهد الطرفان بالحفاظ على سرية المعلومات المتبادلة.' },
         ],
-        pricing: {
-          subtotal: contract.pricing_json?.subtotal || 0,
-          vatRate: contract.pricing_json?.vat_rate || 15,
-          vatAmount: contract.pricing_json?.vat_amount || 0,
-          total: contract.pricing_json?.total || 0,
-          currency: contract.pricing_json?.currency || 'SAR',
-        },
       };
 
-      const report = await runDownloadAudit('contract', contractData);
-      if (report.ok === false) throw report.error;
+      const success = await downloadContractPdf(contractData);
+      if (!success) throw new Error('Download failed');
       toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
     } catch (err) {
       console.error('Error generating PDF:', err);
