@@ -103,6 +103,9 @@ export {
   type UploadOptions,
 } from './services';
 
+// ============ AUDIT ============
+export { runPdfAudit, type AuditReport } from './audit';
+
 // ============ CONVENIENCE FUNCTIONS ============
 
 /**

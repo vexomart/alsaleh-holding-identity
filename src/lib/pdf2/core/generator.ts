@@ -2,10 +2,11 @@
  * PDF GENERATION ENGINE
  * 
  * Single point for all PDF generation. All templates go through here.
+ * FIXED: Added getBuffer fallback and proper error handling.
  */
 
 import { pdfMake, type PdfDocument } from './pdfmake-instance';
-import { initializeFonts, areFontsReady, forceReloadFonts, getFontDiagnostics } from './fonts';
+import { initializeFonts, areFontsReady, forceReloadFonts, getFontDiagnostics, FONT_NAME } from './fonts';
 
 // Document definition type
 export interface DocDefinition {
@@ -27,11 +28,27 @@ export interface DocDefinition {
 
 // Generation options
 export interface GenerateOptions {
-  timeout?: number;  // Default: 60000ms
-  retries?: number;  // Default: 1
+  timeout?: number;  // Default: 30000ms
+  retries?: number;  // Default: 2
 }
 
-const DEFAULT_TIMEOUT = 60000; // 60 seconds
+const DEFAULT_TIMEOUT = 30000; // 30 seconds (reduced for faster failure detection)
+const DEFAULT_RETRIES = 2;
+
+/**
+ * Validate document definition before generation
+ */
+function validateDocDefinition(doc: DocDefinition): void {
+  if (!doc) {
+    throw new Error('PDF_INVALID_DOC: Document definition is null');
+  }
+  if (!doc.content || !Array.isArray(doc.content)) {
+    throw new Error('PDF_INVALID_DOC: content must be an array');
+  }
+  if (doc.defaultStyle?.font && doc.defaultStyle.font !== FONT_NAME) {
+    console.warn(`[PDF GEN] Warning: defaultStyle.font is ${doc.defaultStyle.font}, expected ${FONT_NAME}`);
+  }
+}
 
 /**
  * Generate PDF blob from document definition
@@ -40,22 +57,25 @@ export async function generatePdfBlob(
   docDefinition: DocDefinition,
   options: GenerateOptions = {}
 ): Promise<Blob> {
-  const { timeout = DEFAULT_TIMEOUT, retries = 1 } = options;
+  const { timeout = DEFAULT_TIMEOUT, retries = DEFAULT_RETRIES } = options;
   
   console.log('[PDF GEN] Starting generation...');
+  
+  // Validate document
+  validateDocDefinition(docDefinition);
   
   // Ensure fonts are ready
   if (!areFontsReady()) {
     console.log('[PDF GEN] Fonts not ready, initializing...');
     try {
       await initializeFonts();
-    } catch {
-      console.warn('[PDF GEN] Font init failed, force reloading...');
+    } catch (err) {
+      console.warn('[PDF GEN] Font init failed, force reloading...', err);
       await forceReloadFonts();
     }
   }
   
-  // Verify fonts
+  // Verify fonts after initialization
   const diag = getFontDiagnostics();
   console.log('[PDF GEN] Font status:', diag);
   
@@ -68,6 +88,7 @@ export async function generatePdfBlob(
   
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
+      console.log(`[PDF GEN] Attempt ${attempt + 1}/${retries + 1}...`);
       const blob = await generateWithTimeout(docDefinition, timeout);
       console.log(`[PDF GEN] ✅ Success: ${blob.size} bytes`);
       return blob;
@@ -75,8 +96,9 @@ export async function generatePdfBlob(
       lastError = error instanceof Error ? error : new Error(String(error));
       console.warn(`[PDF GEN] Attempt ${attempt + 1} failed:`, lastError.message);
       
-      // On timeout, try force reload fonts
-      if (lastError.message.includes('TIMEOUT') && attempt < retries) {
+      // On timeout or font error, try force reload fonts
+      if ((lastError.message.includes('TIMEOUT') || lastError.message.includes('FONT')) && attempt < retries) {
+        console.log('[PDF GEN] Reloading fonts before retry...');
         await forceReloadFonts();
       }
     }
@@ -87,10 +109,12 @@ export async function generatePdfBlob(
 
 /**
  * Internal: Generate with timeout protection
+ * Uses getBlob with getBuffer fallback
  */
 function generateWithTimeout(docDefinition: DocDefinition, timeout: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
     let settled = false;
+    let pdfDoc: PdfDocument | null = null;
     
     const timeoutId = setTimeout(() => {
       if (!settled) {
@@ -100,42 +124,86 @@ function generateWithTimeout(docDefinition: DocDefinition, timeout: number): Pro
       }
     }, timeout);
     
+    const cleanup = () => {
+      clearTimeout(timeoutId);
+    };
+    
+    const handleSuccess = (blob: Blob) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      
+      console.log(`[PDF GEN] Blob received: ${blob?.size || 0} bytes`);
+      
+      if (!blob || blob.size < 100) {
+        reject(new Error(`PDF_GENERATE_FAILED: Invalid blob size (${blob?.size || 0})`));
+        return;
+      }
+      
+      // Ensure MIME type
+      const finalBlob = blob.type === 'application/pdf'
+        ? blob
+        : new Blob([blob], { type: 'application/pdf' });
+      
+      resolve(finalBlob);
+    };
+    
+    const handleError = (error: unknown) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      const msg = error instanceof Error ? error.message : String(error);
+      reject(new Error(`PDF_GENERATE_FAILED: ${msg}`));
+    };
+    
     try {
       console.log('[PDF GEN] Creating PDF document...');
       
       // Create PDF - ONLY pass docDefinition (no second parameter!)
-      const pdfDoc: PdfDocument = pdfMake.createPdf(docDefinition);
+      pdfDoc = pdfMake.createPdf(docDefinition);
       
-      console.log('[PDF GEN] Extracting blob...');
+      if (!pdfDoc) {
+        handleError(new Error('createPdf returned null'));
+        return;
+      }
       
-      // Extract blob
+      console.log('[PDF GEN] Extracting blob (primary method)...');
+      
+      // Primary method: getBlob
+      let blobCallbackCalled = false;
+      
       pdfDoc.getBlob((blob: Blob) => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timeoutId);
-        
-        console.log(`[PDF GEN] Blob received: ${blob?.size || 0} bytes`);
-        
-        if (!blob || blob.size < 500) {
-          reject(new Error(`PDF_GENERATE_FAILED: Invalid blob size (${blob?.size || 0})`));
-          return;
-        }
-        
-        // Ensure MIME type
-        const finalBlob = blob.type === 'application/pdf'
-          ? blob
-          : new Blob([blob], { type: 'application/pdf' });
-        
-        resolve(finalBlob);
+        blobCallbackCalled = true;
+        handleSuccess(blob);
       });
       
+      // Fallback: If getBlob doesn't call back within 5 seconds, try getBuffer
+      setTimeout(() => {
+        if (!blobCallbackCalled && !settled && pdfDoc) {
+          console.log('[PDF GEN] getBlob timeout, trying getBuffer fallback...');
+          
+          try {
+            pdfDoc.getBuffer((buffer: ArrayBuffer) => {
+              if (settled) return;
+              console.log(`[PDF GEN] Buffer received: ${buffer?.byteLength || 0} bytes`);
+              
+              if (!buffer || buffer.byteLength < 100) {
+                handleError(new Error('Buffer too small'));
+                return;
+              }
+              
+              const blob = new Blob([buffer], { type: 'application/pdf' });
+              handleSuccess(blob);
+            });
+          } catch (bufferErr) {
+            console.error('[PDF GEN] getBuffer also failed:', bufferErr);
+            // Don't reject here, let the main timeout handle it
+          }
+        }
+      }, 5000);
+      
     } catch (error) {
-      if (!settled) {
-        settled = true;
-        clearTimeout(timeoutId);
-        const msg = error instanceof Error ? error.message : String(error);
-        reject(new Error(`PDF_GENERATE_FAILED: ${msg}`));
-      }
+      handleError(error);
     }
   });
 }

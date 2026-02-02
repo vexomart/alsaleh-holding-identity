@@ -3,6 +3,8 @@
  * 
  * Multi-strategy download with guaranteed fallbacks.
  * Strategy: Anchor → New Tab → Iframe
+ * 
+ * CRITICAL: Download MUST work independently of storage uploads.
  */
 
 import { toast } from 'sonner';
@@ -41,6 +43,7 @@ function supportsDownloadAttribute(): boolean {
 function tryAnchorDownload(url: string, filename: string): boolean {
   try {
     if (isIOS() || !supportsDownloadAttribute()) {
+      console.log('[PDF DL] Anchor skipped: iOS or no download attribute');
       return false;
     }
     
@@ -58,8 +61,10 @@ function tryAnchorDownload(url: string, filename: string): boolean {
       try { anchor.remove(); } catch { /* ignore */ }
     }, 100);
     
+    console.log('[PDF DL] Anchor download initiated');
     return true;
-  } catch {
+  } catch (err) {
+    console.warn('[PDF DL] Anchor failed:', err);
     return false;
   }
 }
@@ -70,8 +75,14 @@ function tryAnchorDownload(url: string, filename: string): boolean {
 function tryNewTabDownload(url: string): boolean {
   try {
     const win = window.open(url, '_blank', 'noopener,noreferrer');
-    return Boolean(win);
-  } catch {
+    if (win) {
+      console.log('[PDF DL] New tab opened');
+      return true;
+    }
+    console.warn('[PDF DL] New tab blocked');
+    return false;
+  } catch (err) {
+    console.warn('[PDF DL] New tab failed:', err);
     return false;
   }
 }
@@ -91,20 +102,29 @@ function tryIframeDownload(url: string): boolean {
       try { iframe.remove(); } catch { /* ignore */ }
     }, 60000);
     
+    console.log('[PDF DL] Iframe download initiated');
     return true;
-  } catch {
+  } catch (err) {
+    console.warn('[PDF DL] Iframe failed:', err);
     return false;
   }
 }
 
 /**
  * Download PDF blob with fallback strategies
+ * 
+ * CRITICAL: This function MUST NOT depend on any external services.
+ * It operates purely on the provided Blob.
  */
 export function downloadPdfBlob(blob: Blob, filename: string): DownloadResult {
+  console.log(`[PDF DL] Starting download: ${filename}, size: ${blob?.size || 0} bytes`);
+  
   // Validate blob
-  if (!blob || blob.size < 500) {
+  if (!blob || blob.size < 100) {
+    const error = `INVALID_BLOB: size=${blob?.size || 0}`;
+    console.error('[PDF DL]', error);
     toast.error('فشل التحميل: ملف PDF غير صالح');
-    return { success: false, error: 'INVALID_BLOB' };
+    return { success: false, error };
   }
   
   // Ensure PDF MIME type
@@ -114,6 +134,7 @@ export function downloadPdfBlob(blob: Blob, filename: string): DownloadResult {
   
   // Create object URL
   const url = URL.createObjectURL(pdfBlob);
+  console.log('[PDF DL] Object URL created');
   
   // Strategy 1: Anchor
   if (tryAnchorDownload(url, filename)) {
@@ -136,8 +157,10 @@ export function downloadPdfBlob(blob: Blob, filename: string): DownloadResult {
   
   // All failed
   URL.revokeObjectURL(url);
+  const error = 'ALL_STRATEGIES_FAILED';
+  console.error('[PDF DL]', error);
   toast.error('فشل تحميل الملف — جرب متصفحًا آخر');
-  return { success: false, error: 'ALL_STRATEGIES_FAILED' };
+  return { success: false, error };
 }
 
 /**
@@ -145,8 +168,5 @@ export function downloadPdfBlob(blob: Blob, filename: string): DownloadResult {
  */
 export function downloadBlob(blob: Blob, filename: string): boolean {
   const result = downloadPdfBlob(blob, filename);
-  if (!result.success) {
-    console.error('[PDF DOWNLOAD] Failed:', result.error);
-  }
   return result.success;
 }
