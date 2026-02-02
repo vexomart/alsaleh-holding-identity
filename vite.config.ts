@@ -103,8 +103,9 @@ export default defineConfig(({ mode }) => ({
       "react-router-dom",
       "@radix-ui/react-tooltip",
       "@tanstack/react-query",
+      "@react-pdf/renderer",
     ],
-    exclude: ["brotli", "@react-pdf/renderer"],
+    exclude: ["brotli"],
     esbuildOptions: {
       plugins: [
         {
