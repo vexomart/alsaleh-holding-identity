@@ -37,9 +37,10 @@ export async function debugArabicPdfSystem(): Promise<void> {
   const afterInit = getFontDiagnostics();
   console.log('After init:', afterInit);
   
-  // VFS check
-  console.log('VFS keys:', Object.keys(pdfMake.vfs).filter(k => k.includes('Cairo')));
-  console.log('Fonts registered:', Object.keys(pdfMake.fonts));
+  // Internal VFS check (browser build)
+  const storage = ((pdfMake as any).virtualfs?.storage || {}) as Record<string, any>;
+  console.log('Internal VFS keys:', Object.keys(storage).filter((k) => k.includes('Cairo')));
+  console.log('Fonts registered:', Object.keys((pdfMake as any).fonts || {}));
   
   // Generate test PDF
   console.log('📄 Generating test PDF...');

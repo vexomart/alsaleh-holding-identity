@@ -81,21 +81,39 @@ async function loadFontAsBase64(fontName: string): Promise<string> {
  * Inject fonts into pdfMake VFS
  */
 function injectFonts(regular: string, bold: string): void {
-  // Inject into VFS with EXACT keys
-  pdfMake.vfs[FONT_FILES.regular] = regular;
-  pdfMake.vfs[FONT_FILES.bold] = bold;
-  
-  // Register font family
-  pdfMake.fonts[FONT_NAME] = {
-    normal: FONT_FILES.regular,
-    bold: FONT_FILES.bold,
-    italics: FONT_FILES.regular,
-    bolditalics: FONT_FILES.bold,
-  };
-  
-  console.log('[PDF2 INIT] Fonts injected into VFS');
-  console.log('[PDF2 INIT] VFS keys:', Object.keys(pdfMake.vfs).filter(k => k.includes('Cairo')));
-  console.log('[PDF2 INIT] Fonts registered:', Object.keys(pdfMake.fonts));
+  if (typeof (pdfMake as any).addVirtualFileSystem !== 'function' || typeof (pdfMake as any).addFonts !== 'function') {
+    throw new Error('PDF_INIT_FAILED: pdfMake browser extensions not available');
+  }
+
+  // IMPORTANT: pdfmake v0.3.x reads fonts from its INTERNAL virtualfs.
+  // The correct way is addVirtualFileSystem + addFonts (NOT setting pdfMake.vfs).
+  (pdfMake as any).addVirtualFileSystem({
+    [FONT_FILES.regular]: regular,
+    [FONT_FILES.bold]: bold,
+  });
+
+  (pdfMake as any).addFonts({
+    [FONT_NAME]: {
+      normal: FONT_FILES.regular,
+      bold: FONT_FILES.bold,
+      italics: FONT_FILES.regular,
+      bolditalics: FONT_FILES.bold,
+    },
+  });
+
+  const vfsKeys = Object.keys((pdfMake as any).virtualfs?.storage || {}).filter((k) => k.includes('Cairo'));
+  const fontFamilies = Object.keys((pdfMake as any).fonts || {});
+  console.log('[PDF2 INIT] Fonts registered into internal virtualfs');
+  console.log('[PDF2 INIT] internal VFS keys:', vfsKeys);
+  console.log('[PDF2 INIT] fonts families:', fontFamilies);
+}
+
+function hasFontInInternalVfs(fontFile: string): boolean {
+  try {
+    return !!(pdfMake as any).virtualfs?.existsSync?.(fontFile);
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -105,10 +123,10 @@ function injectFonts(regular: string, bold: string): void {
 export async function ensurePdfReady(): Promise<void> {
   const state = getState();
   
-  // Check if fonts are already in VFS
-  const hasRegular = pdfMake.vfs[FONT_FILES.regular]?.length > 10000;
-  const hasBold = pdfMake.vfs[FONT_FILES.bold]?.length > 10000;
-  const hasFamily = !!pdfMake.fonts[FONT_NAME];
+  // Check if fonts are already in INTERNAL virtualfs
+  const hasRegular = hasFontInInternalVfs(FONT_FILES.regular);
+  const hasBold = hasFontInInternalVfs(FONT_FILES.bold);
+  const hasFamily = !!(pdfMake as any).fonts?.[FONT_NAME];
   
   // Already ready
   if (state.fontsReady && hasRegular && hasBold && hasFamily) {
@@ -178,30 +196,19 @@ async function loadFontsInternal(): Promise<void> {
  */
 export function assertFontsReady(): void {
   const errors: string[] = [];
-  
-  const regularLen = pdfMake.vfs[FONT_FILES.regular]?.length || 0;
-  const boldLen = pdfMake.vfs[FONT_FILES.bold]?.length || 0;
-  
-  if (!pdfMake.vfs[FONT_FILES.regular]) {
-    errors.push(`${FONT_FILES.regular} missing from VFS`);
-  } else if (regularLen < 10000) {
-    errors.push(`${FONT_FILES.regular} too small (${regularLen})`);
-  }
-  
-  if (!pdfMake.vfs[FONT_FILES.bold]) {
-    errors.push(`${FONT_FILES.bold} missing from VFS`);
-  } else if (boldLen < 10000) {
-    errors.push(`${FONT_FILES.bold} too small (${boldLen})`);
-  }
-  
-  if (!pdfMake.fonts[FONT_NAME]) {
-    errors.push(`${FONT_NAME} font family not registered`);
-  }
+
+  const hasRegular = hasFontInInternalVfs(FONT_FILES.regular);
+  const hasBold = hasFontInInternalVfs(FONT_FILES.bold);
+  const hasFamily = !!(pdfMake as any).fonts?.[FONT_NAME];
+
+  if (!hasRegular) errors.push(`${FONT_FILES.regular} missing from internal VFS`);
+  if (!hasBold) errors.push(`${FONT_FILES.bold} missing from internal VFS`);
+  if (!hasFamily) errors.push(`${FONT_NAME} font family not registered`);
   
   if (errors.length > 0) {
     console.error('[PDF2 INIT] Font assertion failed:', errors);
-    console.error('[PDF2 INIT] VFS keys:', Object.keys(pdfMake.vfs));
-    console.error('[PDF2 INIT] Font families:', Object.keys(pdfMake.fonts));
+    console.error('[PDF2 INIT] internal VFS keys:', Object.keys((pdfMake as any).virtualfs?.storage || {}));
+    console.error('[PDF2 INIT] Font families:', Object.keys((pdfMake as any).fonts || {}));
     throw new Error(`PDF_FONTS_NOT_READY: ${errors.join(', ')}`);
   }
   
@@ -232,12 +239,13 @@ export function getFontDiagnostics(): {
   fontFamilies: string[];
 } {
   const state = getState();
+  const storage = ((pdfMake as any).virtualfs?.storage || {}) as Record<string, any>;
   return {
     fontsReady: state.fontsReady,
-    regularSize: pdfMake.vfs[FONT_FILES.regular]?.length || 0,
-    boldSize: pdfMake.vfs[FONT_FILES.bold]?.length || 0,
-    fontFamily: !!pdfMake.fonts[FONT_NAME],
-    vfsKeys: Object.keys(pdfMake.vfs).filter(k => k.includes('Cairo')),
-    fontFamilies: Object.keys(pdfMake.fonts),
+    regularSize: (storage[FONT_FILES.regular]?.length || 0) as number,
+    boldSize: (storage[FONT_FILES.bold]?.length || 0) as number,
+    fontFamily: !!(pdfMake as any).fonts?.[FONT_NAME],
+    vfsKeys: Object.keys(storage).filter((k) => k.includes('Cairo')),
+    fontFamilies: Object.keys((pdfMake as any).fonts || {}),
   };
 }

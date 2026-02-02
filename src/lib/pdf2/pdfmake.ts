@@ -1,26 +1,14 @@
 /**
  * SINGLE PDFMAKE WRAPPER — THE ONLY PDFMAKE IMPORT IN THE PROJECT
- * 
- * ALL other files MUST import from this file.
- * DO NOT import pdfmake directly anywhere else.
- * 
- * CRITICAL: This module protects VFS from HMR resets.
+ *
+ * IMPORTANT (pdfmake v0.3.x in browser):
+ * - Fonts are stored in an internal VirtualFileSystem (virtualfs)
+ * - The supported way to register fonts is via addFontContainer/addVirtualFileSystem/addFonts
+ * - Do NOT rely on pdfMake.vfs being read during generation
  */
 
 import pdfMakeRaw from 'pdfmake/build/pdfmake';
 import * as pdfFontsModule from 'pdfmake/build/vfs_fonts';
-
-// Type for extended pdfMake with VFS and fonts
-export interface PdfMakeInstance {
-  vfs: Record<string, string>;
-  fonts: Record<string, {
-    normal: string;
-    bold: string;
-    italics: string;
-    bolditalics: string;
-  }>;
-  createPdf: (docDefinition: unknown) => PdfDocument;
-}
 
 export interface PdfDocument {
   getBlob: (callback: (blob: Blob) => void) => void;
@@ -29,121 +17,48 @@ export interface PdfDocument {
   open: () => void;
 }
 
-// Singleton key for global storage
-const SINGLETON_KEY = '__pdfMakeSingleton_v3__';
-const VFS_STORAGE_KEY = '__pdfMakeVfsStorage__';
-const FONTS_STORAGE_KEY = '__pdfMakeFontsStorage__';
+export interface PdfMakeInstance {
+  // Browser extension API
+  addFontContainer?: (fontContainer: { vfs: Record<string, any>; fonts: Record<string, any> }) => void;
+  addVirtualFileSystem?: (vfs: Record<string, any>) => void;
+  addFonts?: (fonts: Record<string, any>) => void;
 
-// Initialize global storage for VFS
-if (!(globalThis as any)[VFS_STORAGE_KEY]) {
-  (globalThis as any)[VFS_STORAGE_KEY] = {};
-}
-if (!(globalThis as any)[FONTS_STORAGE_KEY]) {
-  (globalThis as any)[FONTS_STORAGE_KEY] = {};
+  // Exposed by pdfmake base class — useful for diagnostics
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  virtualfs?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fonts?: any;
+
+  // PDF generation
+  createPdf: (docDefinition: unknown) => PdfDocument;
 }
 
-// Get or create singleton instance
-function getOrCreateSingleton(): PdfMakeInstance {
+const SINGLETON_KEY = '__pdfMakeSingleton_pdf2__';
+
+function initPdfMakeOnce(): PdfMakeInstance {
   if ((globalThis as any)[SINGLETON_KEY]) {
-    return (globalThis as any)[SINGLETON_KEY];
+    return (globalThis as any)[SINGLETON_KEY] as PdfMakeInstance;
   }
 
-  // Cast to our extended type
   const pdfMake = pdfMakeRaw as unknown as PdfMakeInstance;
 
-  // Initialize with default VFS (Roboto fonts from vfs_fonts)
-  const vfsFonts = pdfFontsModule as unknown as { pdfMake?: { vfs?: Record<string, string> } };
-  if (vfsFonts.pdfMake?.vfs) {
-    Object.assign((globalThis as any)[VFS_STORAGE_KEY], vfsFonts.pdfMake.vfs);
+  // Register default built-in font container (Roboto)
+  // This also initializes internal virtualfs.
+  const fontContainer = (pdfFontsModule as any).pdfMake;
+  if (fontContainer?.vfs && fontContainer?.fonts && typeof pdfMake.addFontContainer === 'function') {
+    pdfMake.addFontContainer(fontContainer);
+  } else {
+    // Fallback (should rarely be needed)
+    if (fontContainer?.vfs && typeof pdfMake.addVirtualFileSystem === 'function') {
+      pdfMake.addVirtualFileSystem(fontContainer.vfs);
+    }
+    if (fontContainer?.fonts && typeof pdfMake.addFonts === 'function') {
+      pdfMake.addFonts(fontContainer.fonts);
+    }
   }
 
-  // Create protected VFS proxy that syncs with global storage
-  const vfsHandler: ProxyHandler<Record<string, string>> = {
-    get(target, prop: string) {
-      return (globalThis as any)[VFS_STORAGE_KEY][prop];
-    },
-    set(target, prop: string, value: string) {
-      (globalThis as any)[VFS_STORAGE_KEY][prop] = value;
-      return true;
-    },
-    has(target, prop: string) {
-      return prop in (globalThis as any)[VFS_STORAGE_KEY];
-    },
-    ownKeys() {
-      return Object.keys((globalThis as any)[VFS_STORAGE_KEY]);
-    },
-    getOwnPropertyDescriptor(target, prop) {
-      if (prop in (globalThis as any)[VFS_STORAGE_KEY]) {
-        return {
-          configurable: true,
-          enumerable: true,
-          value: (globalThis as any)[VFS_STORAGE_KEY][prop],
-        };
-      }
-      return undefined;
-    },
-  };
-
-  // Create protected fonts proxy
-  const fontsHandler: ProxyHandler<Record<string, any>> = {
-    get(target, prop: string) {
-      return (globalThis as any)[FONTS_STORAGE_KEY][prop];
-    },
-    set(target, prop: string, value: any) {
-      (globalThis as any)[FONTS_STORAGE_KEY][prop] = value;
-      return true;
-    },
-    has(target, prop: string) {
-      return prop in (globalThis as any)[FONTS_STORAGE_KEY];
-    },
-    ownKeys() {
-      return Object.keys((globalThis as any)[FONTS_STORAGE_KEY]);
-    },
-    getOwnPropertyDescriptor(target, prop) {
-      if (prop in (globalThis as any)[FONTS_STORAGE_KEY]) {
-        return {
-          configurable: true,
-          enumerable: true,
-          value: (globalThis as any)[FONTS_STORAGE_KEY][prop],
-        };
-      }
-      return undefined;
-    },
-  };
-
-  // Create proxied VFS and fonts
-  const protectedVfs = new Proxy({} as Record<string, string>, vfsHandler);
-  const protectedFonts = new Proxy({} as Record<string, any>, fontsHandler);
-
-  // Override pdfMake properties with our protected versions
-  Object.defineProperty(pdfMake, 'vfs', {
-    get: () => protectedVfs,
-    set: (newVfs: Record<string, string>) => {
-      // Merge instead of replace to prevent data loss
-      if (newVfs && typeof newVfs === 'object') {
-        Object.assign((globalThis as any)[VFS_STORAGE_KEY], newVfs);
-      }
-    },
-    configurable: false,
-  });
-
-  Object.defineProperty(pdfMake, 'fonts', {
-    get: () => protectedFonts,
-    set: (newFonts: Record<string, any>) => {
-      // Merge instead of replace
-      if (newFonts && typeof newFonts === 'object') {
-        Object.assign((globalThis as any)[FONTS_STORAGE_KEY], newFonts);
-      }
-    },
-    configurable: false,
-  });
-
-  // Store singleton
   (globalThis as any)[SINGLETON_KEY] = pdfMake;
-  
-  console.log('[PDF2] pdfMake singleton initialized with protected VFS');
-
   return pdfMake;
 }
 
-export default getOrCreateSingleton();
+export default initPdfMakeOnce();
