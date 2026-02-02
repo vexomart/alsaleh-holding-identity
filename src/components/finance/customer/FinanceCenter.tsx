@@ -37,10 +37,14 @@ import {
   KYCStatus,
 } from "@/types/finance";
 import { Skeleton } from "@/components/ui/skeleton";
+import { NewEntityDrawer } from "./NewEntityDrawer";
+import { NewFinanceApplicationDrawer } from "./NewFinanceApplicationDrawer";
 
 export function FinanceCenter() {
   const { user } = useAuth();
   const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
+  const [showNewEntityDrawer, setShowNewEntityDrawer] = useState(false);
+  const [showNewApplicationDrawer, setShowNewApplicationDrawer] = useState(false);
 
   // Fetch user's entities
   const { data: entities, isLoading: entitiesLoading } = useQuery({
@@ -142,7 +146,7 @@ export function FinanceCenter() {
           <h1 className="text-2xl font-bold">مركز التمويل</h1>
           <p className="text-muted-foreground">إدارة طلبات التمويل والأقساط</p>
         </div>
-        <Button>
+        <Button onClick={() => setShowNewApplicationDrawer(true)}>
           <Plus className="h-4 w-4 ml-2" />
           طلب تمويل جديد
         </Button>
@@ -233,7 +237,7 @@ export function FinanceCenter() {
               <Building2 className="h-5 w-5 text-primary" />
               الكيانات المسجلة
             </CardTitle>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => setShowNewEntityDrawer(true)}>
               <Plus className="h-4 w-4 ml-1" />
               إضافة كيان
             </Button>
@@ -244,7 +248,7 @@ export function FinanceCenter() {
             <div className="text-center py-8 text-muted-foreground">
               <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>لم تقم بتسجيل أي كيان بعد</p>
-              <Button className="mt-4">
+              <Button className="mt-4" onClick={() => setShowNewEntityDrawer(true)}>
                 <Plus className="h-4 w-4 ml-2" />
                 تسجيل كيان جديد
               </Button>
@@ -374,6 +378,17 @@ export function FinanceCenter() {
           </CardContent>
         </Card>
       )}
+
+      {/* Drawers */}
+      <NewEntityDrawer 
+        open={showNewEntityDrawer} 
+        onOpenChange={setShowNewEntityDrawer} 
+      />
+      <NewFinanceApplicationDrawer 
+        open={showNewApplicationDrawer} 
+        onOpenChange={setShowNewApplicationDrawer}
+        entities={entities || []}
+      />
     </div>
   );
 }
